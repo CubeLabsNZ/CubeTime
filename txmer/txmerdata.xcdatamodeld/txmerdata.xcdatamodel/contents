@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19461" systemVersion="20G224" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Sessions" representedClassName="Sessions" syncable="YES" codeGenerationType="class">
+        <attribute name="event_name" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="solves" toMany="YES" deletionRule="Cascade" destinationEntity="Solves" inverseName="session" inverseEntity="Solves"/>
+    </entity>
+    <entity name="Solves" representedClassName="Solves" parentEntity="Sessions" syncable="YES" codeGenerationType="class">
+        <attribute name="comment" optional="YES" attributeType="String"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="penalty" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="puzzle_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="scramble" optional="YES" attributeType="Binary"/>
+        <attribute name="scramble_type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="starred" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="time" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="session" maxCount="1" deletionRule="Nullify" destinationEntity="Sessions" inverseName="solves" inverseEntity="Sessions"/>
+    </entity>
+    <elements>
+        <element name="Solves" positionX="-63" positionY="-18" width="128" height="14"/>
+        <element name="Sessions" positionX="-54" positionY="63" width="128" height="14"/>
+    </elements>
+</model>
