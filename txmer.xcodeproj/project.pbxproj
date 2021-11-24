@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
+		23D2FC55274E1C9800D7071A /* SolvePopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC54274E1C9800D7071A /* SolvePopupView.swift */; };
 		23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* txmerApp.swift */; };
 		23DE3BDD274DDBE200254D29 /* MainTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDC274DDBE200254D29 /* MainTimerView.swift */; };
 		23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23DE3BDE274DDBE300254D29 /* Assets.xcassets */; };
@@ -38,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		23D2FC4C274E12DE00D7071A /* TimeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeListView.swift; sourceTree = "<group>"; };
+		23D2FC54274E1C9800D7071A /* SolvePopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolvePopupView.swift; sourceTree = "<group>"; };
 		23DE3BD7274DDBE200254D29 /* txmer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = txmer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		23DE3BDA274DDBE200254D29 /* txmerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerApp.swift; sourceTree = "<group>"; };
 		23DE3BDC274DDBE200254D29 /* MainTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTimerView.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				23DE3BDA274DDBE200254D29 /* txmerApp.swift */,
 				23DE3BDC274DDBE200254D29 /* MainTimerView.swift */,
 				23D2FC4C274E12DE00D7071A /* TimeListView.swift */,
+				23D2FC54274E1C9800D7071A /* SolvePopupView.swift */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				23DE3BE3274DDBE300254D29 /* Persistence.swift */,
 				23DE3BE5274DDBE300254D29 /* txmer.xcdatamodeld */,
@@ -271,6 +274,7 @@
 				23DE3BE7274DDBE300254D29 /* txmer.xcdatamodeld in Sources */,
 				23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */,
 				23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */,
+				23D2FC55274E1C9800D7071A /* SolvePopupView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
