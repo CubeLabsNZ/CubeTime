@@ -13,19 +13,18 @@ import UIKit
 
 
 
-var userTapDuration: Double = 0.5 /// todo make so user can set in settings
+var userHoldTime: Double = 0.5 /// todo make so user can set in setting
 
-let timerDefault = Color.black
+let timerColourDefault = Color.black
 let timerColourHeld = Color.red
 let timerColourHeldCanStart = Color.green
-
-var timerColour: Color = timerDefault
 
 
 enum stopWatchMode {
     case running
     case stopped
 }
+
 
 class StopWatchManager: ObservableObject {
     @Published var mode: stopWatchMode = .stopped
@@ -50,6 +49,47 @@ class StopWatchManager: ObservableObject {
         timer.invalidate()
         mode = .stopped
 
+    }
+    
+    @Published var timerColour: Color = timerColourDefault
+    
+    private var canStartTimer = false
+    
+    private var taskAfterHold: DispatchWorkItem?
+    
+    private let feedbackStyle = UIImpactFeedbackGenerator(style: .soft)
+    
+    func touchDown() {
+        NSLog("Touch down recieved!")
+        if mode == .running {
+            NSLog("Stopping timer...")
+            stop()
+        } else {
+            NSLog("setting touchDownTime")
+            let newTaskAfterHold = DispatchWorkItem {
+                self.canStartTimer = true
+                self.timerColour = timerColourHeldCanStart
+                self.feedbackStyle.impactOccurred()
+                
+                
+            }
+            taskAfterHold = newTaskAfterHold
+            DispatchQueue.main.asyncAfter(deadline: .now() + userHoldTime, execute: newTaskAfterHold)
+            
+        }
+        timerColour = timerColourHeld
+    }
+    
+    func touchUp() {
+        /// This is wayyyy more robust than using async task to set a var to true, but using async task is fine for the color
+        if canStartTimer {
+            NSLog("minimumTapDurationMet, starting timer.")
+            start()
+            canStartTimer = false
+        }
+        taskAfterHold?.cancel()
+        
+        timerColour = timerColourDefault
     }
 }
 
@@ -94,16 +134,6 @@ extension UIScreen{
 struct MainTimerView: View {
     @ObservedObject var stopWatchManager = StopWatchManager()
 
-    @State var timerColour = Color.black
-
-    @State var buttonPressed = false
-    @State var justPressed = false
-    @State var minimumTapDurationMet = false
-    
-    @State var doNotStart = false
-    
-    @State var tapId = 0
-    @State var currentTapId = 0
     
     //let bgColourGrey = Color(red: 242 / 255, green: 241 / 255, blue: 246 / 255)
     let bgNoFill = Color.black.opacity(0.00001)
@@ -118,6 +148,10 @@ struct MainTimerView: View {
     var body: some View {
         
         
+        
+
+        
+        
         ZStack {
             Color(UIColor.systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
                 .ignoresSafeArea()
@@ -125,7 +159,7 @@ struct MainTimerView: View {
             
             
             VStack {
-                Text(String("(0,2)/ (0,-3)/ (3,0)/ (-5,-5)/ (6,-3)/ (-1,-4)/ (1,0)/ (-3,0)/ (-1,0)/ (0,-2)/ (2,-3)/ (-4,0)/ (1,0)"))
+                Text("(0,2)/ (0,-3)/ (3,0)/ (-5,-5)/ (6,-3)/ (-1,-4)/ (1,0)/ (-3,0)/ (-1,0)/ (0,-2)/ (2,-3)/ (-4,0)/ (1,0)")
                     //.background(Color.red)
                     .padding(22)
                     .multilineTextAlignment(.center)
@@ -139,10 +173,10 @@ struct MainTimerView: View {
             
             Text(String(format: "%.3f", stopWatchManager.secondsElapsed))
                 .font(.system(size: 48, weight: .bold, design: .monospaced))
-                .foregroundColor(timerColour)
+                .foregroundColor(stopWatchManager.timerColour)
             
             tabBar
-            
+                       
             GeometryReader { geometry in
                 VStack {
                     Rectangle()
@@ -155,50 +189,14 @@ struct MainTimerView: View {
                             //height:  - safeAreaInset(edge: .bottom) - CGFloat(tabBarHeight),
                         )
                         .modifier(Touch(changeState: { (buttonState) in
-                            let taskAfterHold = DispatchWorkItem {
-                                NSLog("buttonPressed state on hold duration start" + String(buttonPressed))
-                                if self.buttonPressed {
-                                    minimumTapDurationMet = true
-                                    timerColour = timerColourHeldCanStart
-                                    NSLog("minimumTapDurationMet = " + String(minimumTapDurationMet))
-                                }
+                            
+                            
+                            if buttonState == .pressed { /// ON TOUCH DOWN EVENT
+                                self.stopWatchManager.touchDown()
+                            } else { /// ON TOUCH UP (FINGER RELEASE) EVENT
+                                self.stopWatchManager.touchUp()
                             }
-                                if buttonState == .pressed { /// ON TOUCH DOWN EVENT
-                                    buttonPressed = true /// BUG: if users press fast enough, the timer will be activated (maybe fix by detecting second True before False??@?!?!)
-                                    NSLog("buttonPressed state on first touchdown" + String(buttonPressed))
-                                    timerColour = timerColourHeld
-                                    if self.stopWatchManager.mode == .running {
-                                        self.stopWatchManager.stop()
-                                    } else {
-                                        NSLog("buttonPressed state before hold duration start" + String(buttonPressed))
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + userTapDuration, execute: taskAfterHold)
-                                        NSLog("async started")
-                                    }
-                                } else { /// ON TOUCH UP (FINGER RELEASE) EVENT
-                                    buttonPressed = false
-                                    
-                                    taskAfterHold.cancel()
-                                    NSLog("task cancelled")
-                                    
-                                    NSLog("\n\n" + String(buttonPressed))
-                                    if !self.justPressed {
-                                        if self.minimumTapDurationMet {
-                                            timerColour = timerDefault
-                                            if self.stopWatchManager.mode == .stopped {
-                                                self.stopWatchManager.start()
-                                                self.justPressed = true
-                                            }
-                                            self.minimumTapDurationMet = false
-                                            
-                                        } else {
-                                            timerColour = timerDefault
-                                        }
-                                    } else {
-                                        self.justPressed = false
-                                        timerColour = timerDefault
-                                    }
-                                }
-                            }))
+                        }))
                         //.safeAreaInset(edge: .bottom)
                         //.aspectRatio(contentMode: ContentMode.fit)
                 }
