@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* txmerApp.swift */; };
-		23DE3BDD274DDBE200254D29 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDC274DDBE200254D29 /* ContentView.swift */; };
+		23DE3BDD274DDBE200254D29 /* MainTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDC274DDBE200254D29 /* MainTimerView.swift */; };
 		23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23DE3BDE274DDBE300254D29 /* Assets.xcassets */; };
 		23DE3BE2274DDBE300254D29 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23DE3BE1274DDBE300254D29 /* Preview Assets.xcassets */; };
 		23DE3BE4274DDBE300254D29 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BE3274DDBE300254D29 /* Persistence.swift */; };
@@ -38,7 +38,7 @@
 /* Begin PBXFileReference section */
 		23DE3BD7274DDBE200254D29 /* txmer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = txmer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		23DE3BDA274DDBE200254D29 /* txmerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerApp.swift; sourceTree = "<group>"; };
-		23DE3BDC274DDBE200254D29 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		23DE3BDC274DDBE200254D29 /* MainTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTimerView.swift; sourceTree = "<group>"; };
 		23DE3BDE274DDBE300254D29 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		23DE3BE1274DDBE300254D29 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		23DE3BE3274DDBE300254D29 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -99,7 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				23DE3BDA274DDBE200254D29 /* txmerApp.swift */,
-				23DE3BDC274DDBE200254D29 /* ContentView.swift */,
+				23DE3BDC274DDBE200254D29 /* MainTimerView.swift */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				23DE3BE3274DDBE300254D29 /* Persistence.swift */,
 				23DE3BE0274DDBE300254D29 /* Preview Content */,
@@ -264,8 +264,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				23DE3BE4274DDBE300254D29 /* Persistence.swift in Sources */,
-				23DE3BDD274DDBE200254D29 /* ContentView.swift in Sources */,
-				7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */,
+				23DE3BDD274DDBE200254D29 /* MainTimerView.swift in Sources */,
+				7D7D2060274DE13A0016D804 /* txmer.xcdatamodeld in Sources */,
 				23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
