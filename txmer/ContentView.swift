@@ -5,6 +5,7 @@
 //  Created by Tim Xie on 21/11/21.
 //
 
+import CoreData
 import SwiftUI
 
 
@@ -24,7 +25,6 @@ enum stopWatchMode {
 }
 
 class StopWatchManager: ObservableObject {
-    
     @Published var mode: stopWatchMode = .stopped
     
     @Published var secondsElapsed = 0.0
@@ -44,14 +44,10 @@ class StopWatchManager: ObservableObject {
     }
     
     func stop() {
-            timer.invalidate()
-            mode = .stopped
-        }
+        timer.invalidate()
+        mode = .stopped
 
-    
-
-
-
+    }
 }
 
 public enum ButtonState {
@@ -81,6 +77,7 @@ public struct Touch: ViewModifier {
 }
 
 struct ContentView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     @ObservedObject var stopWatchManager = StopWatchManager()
 
     @State var timerColour = Color.black
@@ -116,6 +113,39 @@ struct ContentView: View {
                         
                         if self.stopWatchManager.mode == .running {
                             self.stopWatchManager.stop()
+                            
+                            NSLog("Stopped at \(stopWatchManager.secondsElapsed)")
+                            
+                            #if DEBUG
+                            // where are you?
+                            if let directoryLocation = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).last {
+                                NSLog("Documents Directory: \(directoryLocation)Application Support")
+                            }
+                            #endif
+                            
+                            let sessionItem = Sessions(context: viewContext)
+                            let newItem = Solves(context: viewContext)
+                            newItem.date = Date()
+                            newItem.comment = "TODO" // TODO customizable
+                            newItem.penalty = 0 // TODO
+                            newItem.puzzle_id = 0 // TODO
+                            //newItem.scramble = Null // TODO
+                            newItem.scramble_type = 0 // TODO
+                            newItem.starred = false // TODO
+                            newItem.time = stopWatchManager.secondsElapsed
+                            newItem.session = sessionItem
+                            
+
+                            do {
+                                try viewContext.save()
+                            } catch {
+                                // Replace this implementation with code to handle the error appropriately.
+                                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                                let nsError = error as NSError
+                                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                            }
+                            
+                            
                         } else {
                             
                             NSLog("buttonPressed state before hold duration start" + String(buttonPressed))

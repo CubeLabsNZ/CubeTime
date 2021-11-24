@@ -12,10 +12,10 @@
 		23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23DE3BDE274DDBE300254D29 /* Assets.xcassets */; };
 		23DE3BE2274DDBE300254D29 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23DE3BE1274DDBE300254D29 /* Preview Assets.xcassets */; };
 		23DE3BE4274DDBE300254D29 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BE3274DDBE300254D29 /* Persistence.swift */; };
-		23DE3BE7274DDBE300254D29 /* txmer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BE5274DDBE300254D29 /* txmer.xcdatamodeld */; };
 		23DE3BF1274DDBE400254D29 /* txmerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BF0274DDBE400254D29 /* txmerTests.swift */; };
 		23DE3BFB274DDBE400254D29 /* txmerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BFA274DDBE400254D29 /* txmerUITests.swift */; };
 		23DE3BFD274DDBE400254D29 /* txmerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BFC274DDBE400254D29 /* txmerUITestsLaunchTests.swift */; };
+		7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,12 +42,12 @@
 		23DE3BDE274DDBE300254D29 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		23DE3BE1274DDBE300254D29 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		23DE3BE3274DDBE300254D29 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
-		23DE3BE6274DDBE300254D29 /* txmer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = txmer.xcdatamodel; sourceTree = "<group>"; };
 		23DE3BEC274DDBE400254D29 /* txmerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = txmerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		23DE3BF0274DDBE400254D29 /* txmerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerTests.swift; sourceTree = "<group>"; };
 		23DE3BF6274DDBE400254D29 /* txmerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = txmerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		23DE3BFA274DDBE400254D29 /* txmerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerUITests.swift; sourceTree = "<group>"; };
 		23DE3BFC274DDBE400254D29 /* txmerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		7D7D205F274DE13A0016D804 /* txmerdata.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = txmerdata.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,8 +102,8 @@
 				23DE3BDC274DDBE200254D29 /* ContentView.swift */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				23DE3BE3274DDBE300254D29 /* Persistence.swift */,
-				23DE3BE5274DDBE300254D29 /* txmer.xcdatamodeld */,
 				23DE3BE0274DDBE300254D29 /* Preview Content */,
+				7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */,
 			);
 			path = txmer;
 			sourceTree = "<group>";
@@ -265,7 +265,7 @@
 			files = (
 				23DE3BE4274DDBE300254D29 /* Persistence.swift in Sources */,
 				23DE3BDD274DDBE200254D29 /* ContentView.swift in Sources */,
-				23DE3BE7274DDBE300254D29 /* txmer.xcdatamodeld in Sources */,
+				7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */,
 				23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -615,13 +615,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		23DE3BE5274DDBE300254D29 /* txmer.xcdatamodeld */ = {
+		7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				23DE3BE6274DDBE300254D29 /* txmer.xcdatamodel */,
+				7D7D205F274DE13A0016D804 /* txmerdata.xcdatamodel */,
 			);
-			currentVersion = 23DE3BE6274DDBE300254D29 /* txmer.xcdatamodel */;
-			path = txmer.xcdatamodeld;
+			currentVersion = 7D7D205F274DE13A0016D804 /* txmerdata.xcdatamodel */;
+			path = txmerdata.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
