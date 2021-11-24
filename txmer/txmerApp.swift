@@ -13,7 +13,7 @@ struct txmerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainTimerView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
