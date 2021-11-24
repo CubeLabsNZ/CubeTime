@@ -5,6 +5,7 @@
 //  Created by Tim Xie on 21/11/21.
 //
 
+import CoreData
 import SwiftUI
 import CoreGraphics
 
@@ -27,7 +28,6 @@ enum stopWatchMode {
 }
 
 class StopWatchManager: ObservableObject {
-    
     @Published var mode: stopWatchMode = .stopped
     
     @Published var secondsElapsed = 0.0
@@ -47,14 +47,10 @@ class StopWatchManager: ObservableObject {
     }
     
     func stop() {
-            timer.invalidate()
-            mode = .stopped
-        }
+        timer.invalidate()
+        mode = .stopped
 
-    
-
-
-
+    }
 }
 
 public enum ButtonState {
