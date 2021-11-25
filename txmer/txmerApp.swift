@@ -12,13 +12,15 @@ import SwiftUI
 struct txmerApp: App {
     let persistenceController = PersistenceController.shared
 
+    @StateObject var tabRouter = TabRouter()
+    
     var body: some Scene {
         WindowGroup {
             //MainTimerView()
             //TimeListView()
             //TimesView()
             // NEW UPDATE USE THIS - REAGAN
-            MainTabsView()
+            MainTabsView(tabRouter: tabRouter)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }

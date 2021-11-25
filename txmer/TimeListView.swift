@@ -21,13 +21,6 @@ struct TimeListView: View {
     @State private var sortAscending: Bool = true // sorting ascending or descending method (true = ascending, false = descending)as
     
     
-    
-    
-  
-    
-    var values = SetValues()
-    
-    
     private func ascendingButtonIcon() -> some View {
         
         let icon = Image(systemName: "chevron.up.circle")
@@ -46,14 +39,12 @@ struct TimeListView: View {
      
     //let descendingButtonIcon: Image = Image(systemName: "chevron.down.circle")
    
-     
-    var userLastState = "user's last state"
     
     //var buttonIcon: String = userLastState
     
     
     var times: [GridItem] {
-      Array(repeating: .init(.adaptive(minimum: 120)), count: 2)
+      Array(repeating: .init(.adaptive(minimum: 6)), count: 2)
     }
     
     
@@ -62,6 +53,7 @@ struct TimeListView: View {
         NavigationView {
             ZStack {
                 Color(UIColor.systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
+                /// YES FULL BLACK FOR AMOLED DO YOU HATE YOUR BATTERY LIFE
                     .ignoresSafeArea()
                 
                 
@@ -73,7 +65,7 @@ struct TimeListView: View {
                                 
                                 Spacer()
                                 
-                                Picker("Favorite Color", selection: $sortMode, content: {
+                                Picker("Sort Method", selection: $sortMode, content: {
                                     Text("Sort by Date").tag(0)
                                     Text("Sort by Time").tag(1)
                                 })
@@ -132,7 +124,7 @@ struct TimeListView: View {
                                     sortAscending ? AnyView(ascendingButtonIcon()) : AnyView(descendingButtonIcon())
                                 }
                                 .padding(.trailing, 16)
-                                .offset(y: (32 / 2) - (values.iconFontSize / 2) + 6)
+                                .offset(y: (32 / 2) - (SetValues.iconFontSize / 2) + 6)
                                 
                                 
                                  
@@ -145,7 +137,7 @@ struct TimeListView: View {
                 }
                 //.frame(maxHeight: UIScreen.screenHeight)
             }
-        }
+        }.navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

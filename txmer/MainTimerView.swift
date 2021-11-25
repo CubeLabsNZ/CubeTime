@@ -128,29 +128,16 @@ extension UIScreen{
    static let screenSize = UIScreen.main.bounds.size
 }
 
-
-
-
-
 struct MainTimerView: View {
     @ObservedObject var stopWatchManager = StopWatchManager()
 
     
     //let bgColourGrey = Color(red: 242 / 255, green: 241 / 255, blue: 246 / 255)
     
-    var values = SetValues()
-    
     
     //let safeAreaBottomHeight = 34
     
-    
-    
     var body: some View {
-        
-        
-        
-
-        
         
         ZStack {
             Color(UIColor.systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
@@ -174,8 +161,6 @@ struct MainTimerView: View {
             Text(String(format: "%.3f", stopWatchManager.secondsElapsed))
                 .font(.system(size: 48, weight: .bold, design: .monospaced))
                 .foregroundColor(stopWatchManager.timerColour)
-            
-            tabBar
                        
             GeometryReader { geometry in
                 VStack {
@@ -183,7 +168,7 @@ struct MainTimerView: View {
                         .fill(Color.white.opacity(0.0000000001)) /// TODO: fix this don't just use this workaround: https://stackoverflow.com/questions/56819847/tap-action-not-working-when-color-is-clear-swiftui
                         .frame(
                             width: geometry.size.width,
-                            height: geometry.size.height - CGFloat(values.tabBarHeight) /* - CGFloat(safeAreaBottomHeight) */,
+                            height: geometry.size.height - CGFloat(SetValues.tabBarHeight) /* - CGFloat(safeAreaBottomHeight) */,
                             alignment: .center
                             //height: geometry.safeAreaInsets.top,
                             //height:  - safeAreaInset(edge: .bottom) - CGFloat(tabBarHeight),
@@ -203,37 +188,6 @@ struct MainTimerView: View {
             }
         }
     }
-    
-    var tabBar: some View {
-        GeometryReader { geometry in
-            VStack {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.red)
-                
-                    .frame(
-                        width: geometry.size.width - CGFloat(values.marginLeftRight * 2),
-                        height: CGFloat(values.tabBarHeight),
-                        alignment: .center
-                        //height: geometry.safeAreaInsets.top,
-                        //height:  - safeAreaInset(edge: .bottom) - CGFloat(tabBarHeight),
-                    )
-                
-                    .position(
-                        x: geometry.size.width / 2 - CGFloat(values.marginLeftRight),
-                        y: geometry.size.height - 0.5 * CGFloat(values.tabBarHeight)
-                    )
-                
-                    /*
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .frame(height: 50)
-                     */
-                    .padding(.leading, CGFloat(values.marginLeftRight))
-                    .padding(.trailing, CGFloat(values.marginLeftRight))
-            }
-        }
-        .frame(alignment: .bottom)
-    }
-    
     
 }
 

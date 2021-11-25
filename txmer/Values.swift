@@ -13,7 +13,11 @@ class UserDefinedValues {
 }
 
 class SetValues {
-    let tabBarHeight = 50
-    let marginLeftRight = 16
-    let iconFontSize: CGFloat = 20.0
+    static let tabBarHeight = 50
+    static let marginLeftRight = 16
+    static let paddingIcons = 14
+    static let spacingIcons = 20
+    static let marginBottom = 10
+    static let iconFontSize = CGFloat(22)
+    static let hasBottomBar = UIApplication.shared.windows[0].safeAreaInsets.bottom > 0
 }

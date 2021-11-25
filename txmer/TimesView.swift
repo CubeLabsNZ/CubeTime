@@ -51,7 +51,7 @@ struct SolvePopupView: View {
 struct TimesView: View {
     @State private var showingPopupSlideover = false
     
-    let time = (1...100).map { "Time \($0)" }
+    let time = (1...5).map { "Time \($0)" }
     
     /*
     let columns: [GridItem] = [
