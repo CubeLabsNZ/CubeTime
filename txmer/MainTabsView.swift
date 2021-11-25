@@ -162,7 +162,12 @@ struct MainTabsView: View {
                                 
                                 
                                 Spacer()
-                                TabIcon(assignedTab: .settings, tabRouter: tabRouter, systemIconName: "gearshape")
+                                TabIcon(
+                                    assignedTab: .settings,
+                                    tabRouter: tabRouter,
+                                    systemIconName: "gearshape",
+                                    systemIconNameSelected: "gearshape.fill"
+                                )
                                     .padding(.trailing, CGFloat(SetValues.marginLeftRight + 12))
                                 
                                 
