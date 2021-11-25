@@ -122,18 +122,27 @@ struct MainTabsView: View {
                                         systemIconNameSelected: "stopwatch.fill"
                                     )
                                         .padding(.leading, 12)
+                                    
+                                    Spacer()
+                                    
                                     TabIcon(
                                         assignedTab: .solves,
                                         tabRouter: tabRouter,
                                         systemIconName: "hourglass.bottomhalf.filled",
                                         systemIconNameSelected: "hourglass.tophalf.filled"
                                     )
+                                    
+                                    Spacer()
+                                    
                                     TabIcon(
                                         assignedTab: .stats,
                                         tabRouter: tabRouter,
                                         systemIconName: "chart.pie",
                                         systemIconNameSelected: "chart.pie.fill"
                                     )
+                                    
+                                    Spacer()
+                                    
                                     TabIcon(
                                         assignedTab: .sessions,
                                         tabRouter: tabRouter,
