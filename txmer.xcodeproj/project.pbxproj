@@ -17,6 +17,7 @@
 		23DE3BF1274DDBE400254D29 /* txmerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BF0274DDBE400254D29 /* txmerTests.swift */; };
 		23DE3BFB274DDBE400254D29 /* txmerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BFA274DDBE400254D29 /* txmerUITests.swift */; };
 		23DE3BFD274DDBE400254D29 /* txmerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BFC274DDBE400254D29 /* txmerUITestsLaunchTests.swift */; };
+		7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */; };
 		7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +52,7 @@
 		23DE3BF6274DDBE400254D29 /* txmerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = txmerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		23DE3BFA274DDBE400254D29 /* txmerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerUITests.swift; sourceTree = "<group>"; };
 		23DE3BFC274DDBE400254D29 /* txmerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabsView.swift; sourceTree = "<group>"; };
 		7D7D205F274DE13A0016D804 /* txmerdata.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = txmerdata.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,6 +84,7 @@
 		23DE3BCE274DDBE200254D29 = {
 			isa = PBXGroup;
 			children = (
+				7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */,
 				23DE3BD9274DDBE200254D29 /* txmer */,
 				23DE3BEF274DDBE400254D29 /* txmerTests */,
 				23DE3BF9274DDBE400254D29 /* txmerUITests */,
@@ -271,9 +274,10 @@
 			files = (
 				23DE3BE4274DDBE300254D29 /* Persistence.swift in Sources */,
 				23DE3BDD274DDBE200254D29 /* MainTimerView.swift in Sources */,
-				7D7D2060274DE13A0016D804 /* txmer.xcdatamodeld in Sources */,
+				7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */,
 				23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */,
 				23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */,
+				7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */,
 				23D2FC55274E1C9800D7071A /* SolvePopupView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

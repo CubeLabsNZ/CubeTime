@@ -33,7 +33,8 @@ class StopWatchManager: ObservableObject {
     
     var timer = Timer()
     
-    var frameTime: Double = 1/60 /// todo dynamic make epic 120hz support
+    /// todo set custom fps for battery purpose, promotion can set as low as 10 / 24hz ,others 60 fixed, no option for them >:C
+    var frameTime: Double = 1/60
     
     func start() {
         mode = .running

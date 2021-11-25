@@ -14,7 +14,9 @@ struct txmerApp: App {
     var body: some Scene {
         WindowGroup {
             // MainTimerView() // USE THIS WHEN TESTING YOUR THING
-            TimeListView() // COMMENT THIS OUT WHEN TESTING
+            // TimeListView() // COMMENT THIS OUT WHEN TESTING
+            // NEW UPDATE USE THIS - REAGAN
+            MainTabsView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
