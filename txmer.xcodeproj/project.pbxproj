@@ -92,6 +92,7 @@
 		233FE7B7274F3C4F00C6F1DF /* other */ = {
 			isa = PBXGroup;
 			children = (
+				233FE7B5274F109600C6F1DF /* Values.swift */,
 			);
 			path = other;
 			sourceTree = "<group>";
@@ -128,7 +129,6 @@
 				7D7A9EBF274F38CD00C2E125 /* SessionsView.swift */,
 				7D7A9EC5274F396E00C2E125 /* SettingsView.swift */,
 				233FE7B7274F3C4F00C6F1DF /* other */,
-				233FE7B5274F109600C6F1DF /* Values.swift */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				23DE3BE3274DDBE300254D29 /* Persistence.swift */,
 				23DE3BE0274DDBE300254D29 /* Preview Content */,

@@ -9,7 +9,46 @@ import SwiftUI
 
 struct StatsView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            ZStack {
+                Color(UIColor.systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
+                    .ignoresSafeArea()
+                
+                ScrollView() {
+                    VStack (spacing: 16) {
+                        
+                        Button(action: {
+                            print("hi")
+                        }) {
+                            Text("hi")
+                                .font(.system(size: 17, weight: .bold, design: .default))
+                                .foregroundColor(Color.black)
+                                .frame(width: UIScreen.screenWidth - 32, height: 100)
+                                
+                                .background(Color.white)
+                                .cornerRadius(10)
+                        }
+                        
+                        Button(action: {
+                            print("hi")
+                        }) {
+                            Text("hi")
+                                .font(.system(size: 17, weight: .bold, design: .default))
+                                .foregroundColor(Color.black)
+                                .frame(width: UIScreen.screenWidth - 32, height: 100)
+                                
+                                .background(Color.white)
+                                .cornerRadius(10)
+                        }
+                    }
+                }
+                .navigationTitle("Your Sessions")
+            }
+        }
+        
+        
+        
+        
     }
 }
 

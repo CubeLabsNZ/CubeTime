@@ -44,7 +44,7 @@ struct TimeListView: View {
     
     
     var times: [GridItem] {
-      Array(repeating: .init(.adaptive(minimum: 6)), count: 2)
+        Array(repeating: .init(.adaptive(minimum: 0)), count: 2)
     }
     
     

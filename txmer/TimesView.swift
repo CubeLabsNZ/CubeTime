@@ -41,9 +41,9 @@ struct SolvePopupView: View {
                         
                         VStack (spacing: 16) {
                             List {
-                                Text("Row 1")
-                                Text("Row 2")
-                                Text("Row 3")
+                                Text("Event (Puzzle TYPE)")
+                                Text("Scramble TYPE")
+                                Text("Scramble")
                             }
                             .frame(minHeight: minRowHeight * 7)
                             .listStyle(.insetGrouped)
