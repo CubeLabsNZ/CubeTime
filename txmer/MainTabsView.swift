@@ -44,88 +44,131 @@ struct MainTabsView: View {
     var body: some View {
         VStack {
             
-            switch tabRouter.currentTab {
-            case .timer:
-                MainTimerView()
-            case .solves:
-                TimeListView()
-            case .stats:
-                StatsView()
-            case .sessions:
-                SessionsView()
-            case .settings:
-                SettingsView()
-            }
-            
-            GeometryReader { geometry in
-                ZStack {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color(UIColor.systemGray3))
-                    
-                        .frame(
-                            width: geometry.size.width - CGFloat(SetValues.marginLeftRight * 2),
-                            height: CGFloat(SetValues.tabBarHeight),
-                            alignment: .center
-                            //height: geometry.safeAreaInsets.top,
-                            //height:  - safeAreaInset(edge: .bottom) - CGFloat(tabBarHeight),
-                        )
-                    
-                        .position(
-                            x: geometry.size.width / 2 - CGFloat(SetValues.marginLeftRight),
-                            y: geometry.size.height - 0.5 * CGFloat(SetValues.tabBarHeight)
-                        )
-                    
-                        /*
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .frame(height: 50)
-                         */
-                        .padding(.leading, CGFloat(SetValues.marginLeftRight))
-                        .padding(.trailing, CGFloat(SetValues.marginLeftRight))
-                    HStack (){
-                        ZStack {
+            ZStack {
+                switch tabRouter.currentTab {
+                case .timer:
+                    MainTimerView()
+                case .solves:
+                    TimeListView()
+                case .stats:
+                    StatsView()
+                case .sessions:
+                    SessionsView()
+                case .settings:
+                    SettingsView()
+                }
+                
+                
+                GeometryReader { geometry in
+                    ZStack {
+                        VStack {
+                            
+                            Spacer()
+                            
                             RoundedRectangle(cornerRadius: 12)
-                                .fill(Color(UIColor.systemGray2))
-                                .frame(maxWidth: (22+14) * 4)
+                                .fill(Color(UIColor.systemGray5))
+                            
+                                .frame(
+                                    width: geometry.size.width - CGFloat(SetValues.marginLeftRight * 2),
+                                    height: CGFloat(SetValues.tabBarHeight),
+                                    alignment: .center
+                                )
+                            
+                                .shadow(color: .black.opacity(0.16), radius: 10, x: 0, y: 3)
+                            
+                                /*
+                                .position(
+                                    x: geometry.size.width / 2 - CGFloat(SetValues.marginLeftRight),
+                                    y: geometry.size.height - 0.5 * CGFloat(SetValues.tabBarHeight)
+                                )
+                            */
+                            
+                                .padding(.leading, CGFloat(SetValues.marginLeftRight))
+                                .padding(.trailing, CGFloat(SetValues.marginLeftRight))
+                            
+                            
+                        }
+                        /*
+                        VStack {
+                            
+                            Spacer()
                             HStack {
-                                TabIcon(assignedTab: .timer, tabRouter: tabRouter, systemIconName: "stopwatch")
-                                TabIcon(assignedTab: .solves, tabRouter: tabRouter, systemIconName: "hourglass.bottomhalf.filled", systemIconNameSelected: "hourglass.tophalf.filled")
-                                TabIcon(assignedTab: .stats, tabRouter: tabRouter, systemIconName: "chart.pie")
-                                TabIcon(assignedTab: .sessions, tabRouter: tabRouter, systemIconName: "line.3.horizontal.circle")
+                                RoundedRectangle(cornerRadius: 12)
+                                    
+                                
+                                
+                                Spacer()
+                            }
+                            
+                        }
+                         */
+                        
+                        VStack {
+                            
+                            Spacer()
+                            
+                            HStack {
+                                
+                                HStack {
+                                    TabIcon(assignedTab: .timer, tabRouter: tabRouter, systemIconName: "stopwatch")
+                                        .padding(.leading, 12)
+                                    Spacer()
+                                    TabIcon(assignedTab: .solves, tabRouter: tabRouter, systemIconName: "hourglass.bottomhalf.filled", systemIconNameSelected: "hourglass.tophalf.filled")
+                                    Spacer()
+                                    TabIcon(assignedTab: .stats, tabRouter: tabRouter, systemIconName: "chart.pie")
+                                    Spacer()
+                                    TabIcon(assignedTab: .sessions, tabRouter: tabRouter, systemIconName: "line.3.horizontal.circle")
+                                        .padding(.trailing, 12)
+                                }
+                                
+                                //.frame(maxWidth: 240)
+                                
+                                //.fill(Color(UIColor.systemGray4))
+                                
+                                .frame(
+                                    width: 220,
+                                    height: CGFloat(SetValues.tabBarHeight),
+                                    alignment: .leading
+                                )
+                                
+                                //.padding(.leading, CGFloat(SetValues.marginLeftRight))
+                                //.padding(.trailing, CGFloat(SetValues.marginLeftRight))
+                                
+                                .background(Color(UIColor.systemGray4).clipShape(RoundedRectangle(cornerRadius:12)))
+                                .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 3.5)
+                                .padding(.leading, CGFloat(SetValues.marginLeftRight))
+                                
+                                
+                                Spacer()
+                                TabIcon(assignedTab: .settings, tabRouter: tabRouter, systemIconName: "gearshape")
+                                    .padding(.trailing, CGFloat(SetValues.marginLeftRight + 12))
+                                
                                 
                             }
+                            //.padding(.bottom, 12)
+                            
+                            
                         }
-                        Spacer()
-                        TabIcon(assignedTab: .settings, tabRouter: tabRouter, systemIconName: "gearshape")
+                        
+                        
+                        
+                                            
+                       
+                            
+                        /*
+                        .padding(.leading, CGFloat(SetValues.marginLeftRight))
+                        .padding(.trailing, CGFloat(SetValues.marginLeftRight))
+                         */
                     }
-                    .padding(.leading, CGFloat(SetValues.marginLeftRight))
-                    .padding(.trailing, CGFloat(SetValues.marginLeftRight))
-                }
-            }.frame(height: CGFloat(SetValues.tabBarHeight), alignment: .bottom)
-                .offset(y: SetValues.hasBottomBar ? CGFloat(0) : CGFloat(-SetValues.marginBottom))
-        }
-        /*
-        TabView {
-            MainTimerView()
-                .tabItem {
-                    Image(systemName: "stopwatch")
+                }//.frame(height: CGFloat(SetValues.tabBarHeight), alignment: .bottom)
+                   // .offset(y: SetValues.hasBottomBar ? CGFloat(0) : CGFloat(-SetValues.marginBottom))
+                .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : CGFloat(SetValues.marginBottom))
             }
-            TimeListView()
-                .tabItem {
-                    Image(systemName: "hourglass.bottomhalf.filled")
+            
+                
+                
+                
             }
-            StatsView()
-                .tabItem {
-                    Image(systemName: "chart.pie")
-            }
-            SessionsView()
-                .tabItem {
-                    Image(systemName: "line.3.horizontal.circle")
-            }
-            SettingsView()
-                .tabItem {
-                    Image(systemName: "line.3.horizontal.circle")
-            }
-        }*/
     }
 }
 

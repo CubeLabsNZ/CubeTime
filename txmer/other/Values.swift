@@ -17,7 +17,7 @@ class SetValues {
     static let marginLeftRight = 16
     static let paddingIcons = 14
     static let spacingIcons = 20
-    static let marginBottom = 10
+    static let marginBottom = 16
     static let iconFontSize = CGFloat(22)
     static let hasBottomBar = UIApplication.shared.windows[0].safeAreaInsets.bottom > 0
 }
