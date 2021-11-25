@@ -19,8 +19,8 @@
 		23DE3BFB274DDBE400254D29 /* txmerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BFA274DDBE400254D29 /* txmerUITests.swift */; };
 		23DE3BFD274DDBE400254D29 /* txmerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BFC274DDBE400254D29 /* txmerUITestsLaunchTests.swift */; };
 		7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */; };
-		7D7A9EC0274F38CD00C2E125 /* SessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EBF274F38CD00C2E125 /* SessionsView.swift */; };
-		7D7A9EC4274F392700C2E125 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EC3274F392700C2E125 /* StatsView.swift */; };
+		7D7A9EC0274F38CD00C2E125 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EBF274F38CD00C2E125 /* StatsView.swift */; };
+		7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EC3274F392700C2E125 /* SessionsView.swift */; };
 		7D7A9EC6274F396E00C2E125 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EC5274F396E00C2E125 /* SettingsView.swift */; };
 		7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */; };
 /* End PBXBuildFile section */
@@ -58,8 +58,8 @@
 		23DE3BFA274DDBE400254D29 /* txmerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerUITests.swift; sourceTree = "<group>"; };
 		23DE3BFC274DDBE400254D29 /* txmerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabsView.swift; sourceTree = "<group>"; };
-		7D7A9EBF274F38CD00C2E125 /* SessionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsView.swift; sourceTree = "<group>"; };
-		7D7A9EC3274F392700C2E125 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		7D7A9EBF274F38CD00C2E125 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		7D7A9EC3274F392700C2E125 /* SessionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsView.swift; sourceTree = "<group>"; };
 		7D7A9EC5274F396E00C2E125 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7D7D205F274DE13A0016D804 /* txmerdata.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = txmerdata.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -125,8 +125,8 @@
 				23DE3BDC274DDBE200254D29 /* MainTimerView.swift */,
 				23D2FC4C274E12DE00D7071A /* TimeListView.swift */,
 				233FE7B3274F090900C6F1DF /* TimesView.swift */,
-				7D7A9EC3274F392700C2E125 /* StatsView.swift */,
-				7D7A9EBF274F38CD00C2E125 /* SessionsView.swift */,
+				7D7A9EC3274F392700C2E125 /* SessionsView.swift */,
+				7D7A9EBF274F38CD00C2E125 /* StatsView.swift */,
 				7D7A9EC5274F396E00C2E125 /* SettingsView.swift */,
 				233FE7B7274F3C4F00C6F1DF /* other */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
@@ -296,9 +296,9 @@
 				233FE7B4274F090900C6F1DF /* TimesView.swift in Sources */,
 				23DE3BDD274DDBE200254D29 /* MainTimerView.swift in Sources */,
 				7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */,
-				7D7A9EC0274F38CD00C2E125 /* SessionsView.swift in Sources */,
+				7D7A9EC0274F38CD00C2E125 /* StatsView.swift in Sources */,
 				23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */,
-				7D7A9EC4274F392700C2E125 /* StatsView.swift in Sources */,
+				7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */,
 				23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */,
 				7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */,
 				233FE7B6274F109600C6F1DF /* Values.swift in Sources */,
