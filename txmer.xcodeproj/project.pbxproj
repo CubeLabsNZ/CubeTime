@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		233FE7B4274F090900C6F1DF /* TimesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B3274F090900C6F1DF /* TimesView.swift */; };
+		233FE7B6274F109600C6F1DF /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Values.swift */; };
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
-		23D2FC55274E1C9800D7071A /* SolvePopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC54274E1C9800D7071A /* SolvePopupView.swift */; };
 		23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* txmerApp.swift */; };
 		23DE3BDD274DDBE200254D29 /* MainTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDC274DDBE200254D29 /* MainTimerView.swift */; };
 		23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23DE3BDE274DDBE300254D29 /* Assets.xcassets */; };
@@ -39,8 +40,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		233FE7B3274F090900C6F1DF /* TimesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimesView.swift; sourceTree = "<group>"; };
+		233FE7B5274F109600C6F1DF /* Values.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Values.swift; sourceTree = "<group>"; };
 		23D2FC4C274E12DE00D7071A /* TimeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeListView.swift; sourceTree = "<group>"; };
-		23D2FC54274E1C9800D7071A /* SolvePopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolvePopupView.swift; sourceTree = "<group>"; };
 		23DE3BD7274DDBE200254D29 /* txmer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = txmer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		23DE3BDA274DDBE200254D29 /* txmerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerApp.swift; sourceTree = "<group>"; };
 		23DE3BDC274DDBE200254D29 /* MainTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTimerView.swift; sourceTree = "<group>"; };
@@ -108,7 +110,8 @@
 				23DE3BDA274DDBE200254D29 /* txmerApp.swift */,
 				23DE3BDC274DDBE200254D29 /* MainTimerView.swift */,
 				23D2FC4C274E12DE00D7071A /* TimeListView.swift */,
-				23D2FC54274E1C9800D7071A /* SolvePopupView.swift */,
+				233FE7B3274F090900C6F1DF /* TimesView.swift */,
+				233FE7B5274F109600C6F1DF /* Values.swift */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				23DE3BE3274DDBE300254D29 /* Persistence.swift */,
 				23DE3BE0274DDBE300254D29 /* Preview Content */,
@@ -273,12 +276,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				23DE3BE4274DDBE300254D29 /* Persistence.swift in Sources */,
+				233FE7B4274F090900C6F1DF /* TimesView.swift in Sources */,
 				23DE3BDD274DDBE200254D29 /* MainTimerView.swift in Sources */,
 				7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */,
 				23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */,
 				23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */,
 				7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */,
-				23D2FC55274E1C9800D7071A /* SolvePopupView.swift in Sources */,
+				233FE7B6274F109600C6F1DF /* Values.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

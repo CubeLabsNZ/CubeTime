@@ -58,7 +58,7 @@ class StopWatchManager: ObservableObject {
     
     private var taskAfterHold: DispatchWorkItem?
     
-    private let feedbackStyle = UIImpactFeedbackGenerator(style: .soft)
+    private let feedbackStyle = UIImpactFeedbackGenerator(style: .medium) /// TODO: add option to change heaviness/turn on off in settings
     
     func touchDown() {
         NSLog("Touch down recieved!")
@@ -137,9 +137,8 @@ struct MainTimerView: View {
 
     
     //let bgColourGrey = Color(red: 242 / 255, green: 241 / 255, blue: 246 / 255)
-    let bgNoFill = Color.black.opacity(0.00001)
-    let tabBarHeight = 50
-    let marginLeftRight = 16
+    
+    var values = SetValues()
     
     
     //let safeAreaBottomHeight = 34
@@ -181,10 +180,10 @@ struct MainTimerView: View {
             GeometryReader { geometry in
                 VStack {
                     Rectangle()
-                        .fill(Color.red.opacity(0.01))
+                        .fill(Color.white.opacity(0.0000000001)) /// TODO: fix this don't just use this workaround: https://stackoverflow.com/questions/56819847/tap-action-not-working-when-color-is-clear-swiftui
                         .frame(
                             width: geometry.size.width,
-                            height: geometry.size.height - CGFloat(tabBarHeight) /* - CGFloat(safeAreaBottomHeight) */,
+                            height: geometry.size.height - CGFloat(values.tabBarHeight) /* - CGFloat(safeAreaBottomHeight) */,
                             alignment: .center
                             //height: geometry.safeAreaInsets.top,
                             //height:  - safeAreaInset(edge: .bottom) - CGFloat(tabBarHeight),
@@ -212,24 +211,24 @@ struct MainTimerView: View {
                     .fill(Color.red)
                 
                     .frame(
-                        width: geometry.size.width - CGFloat(marginLeftRight * 2),
-                        height: CGFloat(tabBarHeight),
+                        width: geometry.size.width - CGFloat(values.marginLeftRight * 2),
+                        height: CGFloat(values.tabBarHeight),
                         alignment: .center
                         //height: geometry.safeAreaInsets.top,
                         //height:  - safeAreaInset(edge: .bottom) - CGFloat(tabBarHeight),
                     )
                 
                     .position(
-                        x: geometry.size.width / 2 - CGFloat(marginLeftRight),
-                        y: geometry.size.height - 0.5 * CGFloat(tabBarHeight)
+                        x: geometry.size.width / 2 - CGFloat(values.marginLeftRight),
+                        y: geometry.size.height - 0.5 * CGFloat(values.tabBarHeight)
                     )
                 
                     /*
                     .frame(maxWidth: .infinity, alignment: .center)
                     .frame(height: 50)
                      */
-                    .padding(.leading, CGFloat(marginLeftRight))
-                    .padding(.trailing, CGFloat(marginLeftRight))
+                    .padding(.leading, CGFloat(values.marginLeftRight))
+                    .padding(.trailing, CGFloat(values.marginLeftRight))
             }
         }
         .frame(alignment: .bottom)
@@ -238,10 +237,10 @@ struct MainTimerView: View {
     
 }
 
-/*
+
 struct MainTimerView_Previews: PreviewProvider {
     static var previews: some View {
         MainTimerView()
     }
 }
-*/
+
