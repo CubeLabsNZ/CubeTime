@@ -17,13 +17,22 @@ enum Tab {
 
 
 
+class TabRouter: ObservableObject {
+    @Published var currentTab: Tab = .stats
+}
+
+
 struct TabIcon: View {
     let assignedTab: Tab
-    let tabRouter: TabRouter
+    @StateObject var tabRouter: TabRouter
     let systemIconName: String
-    var systemIconNameSelected: String?
+    var systemIconNameSelected: String
     var body: some View {
-        Image(systemName: systemIconName).font(.system(size: SetValues.iconFontSize))
+        Image(
+            systemName:
+                tabRouter.currentTab == assignedTab ? systemIconNameSelected : systemIconName
+        )
+            .font(.system(size: SetValues.iconFontSize))
             .onTapGesture {
                 tabRouter.currentTab = assignedTab
             }
@@ -31,10 +40,6 @@ struct TabIcon: View {
 }
 
 
-class TabRouter: ObservableObject {
-    @Published var currentTab: Tab = .timer
-    
-}
 
 @available(iOS 15.0, *) /// TODO: remove all `@available(iOS 15.0, *)` in the project and change the button role BECAUSE iOS 15 + ONLY :sob:
 struct MainTabsView: View {
@@ -87,15 +92,40 @@ struct MainTabsView: View {
                                 .fill(Color(UIColor.systemGray2))
                                 .frame(maxWidth: (22+14) * 4)
                             HStack {
-                                TabIcon(assignedTab: .timer, tabRouter: tabRouter, systemIconName: "stopwatch")
-                                TabIcon(assignedTab: .solves, tabRouter: tabRouter, systemIconName: "hourglass.bottomhalf.filled", systemIconNameSelected: "hourglass.tophalf.filled")
-                                TabIcon(assignedTab: .stats, tabRouter: tabRouter, systemIconName: "chart.pie")
-                                TabIcon(assignedTab: .sessions, tabRouter: tabRouter, systemIconName: "line.3.horizontal.circle")
+                                TabIcon(
+                                    assignedTab: .timer,
+                                    tabRouter: tabRouter,
+                                    systemIconName: "stopwatch",
+                                    systemIconNameSelected: "stopwatch.fill"
+                                )
+                                TabIcon(
+                                    assignedTab: .solves,
+                                    tabRouter: tabRouter,
+                                    systemIconName: "hourglass.bottomhalf.filled",
+                                    systemIconNameSelected: "hourglass.tophalf.filled"
+                                )
+                                TabIcon(
+                                    assignedTab: .stats,
+                                    tabRouter: tabRouter,
+                                    systemIconName: "chart.pie",
+                                    systemIconNameSelected: "chart.pie.fill"
+                                )
+                                TabIcon(
+                                    assignedTab: .sessions,
+                                    tabRouter: tabRouter,
+                                    systemIconName: "line.3.horizontal.circle",
+                                    systemIconNameSelected: "line.3.horizontal.circle.fill"
+                                )
                                 
                             }
                         }
                         Spacer()
-                        TabIcon(assignedTab: .settings, tabRouter: tabRouter, systemIconName: "gearshape")
+                        TabIcon(
+                            assignedTab: .settings,
+                            tabRouter: tabRouter,
+                            systemIconName: "gearshape",
+                            systemIconNameSelected: "gearshape.fill"
+                        )
                     }
                     .padding(.leading, CGFloat(SetValues.marginLeftRight))
                     .padding(.trailing, CGFloat(SetValues.marginLeftRight))

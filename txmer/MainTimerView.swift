@@ -82,7 +82,6 @@ class StopWatchManager: ObservableObject {
     }
     
     func touchUp() {
-        /// This is wayyyy more robust than using async task to set a var to true, but using async task is fine for the color
         if canStartTimer {
             NSLog("minimumTapDurationMet, starting timer.")
             start()
