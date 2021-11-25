@@ -86,7 +86,6 @@
 		23DE3BCE274DDBE200254D29 = {
 			isa = PBXGroup;
 			children = (
-				7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */,
 				23DE3BD9274DDBE200254D29 /* txmer */,
 				23DE3BEF274DDBE400254D29 /* txmerTests */,
 				23DE3BF9274DDBE400254D29 /* txmerUITests */,
@@ -107,6 +106,7 @@
 		23DE3BD9274DDBE200254D29 /* txmer */ = {
 			isa = PBXGroup;
 			children = (
+				7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */,
 				23DE3BDA274DDBE200254D29 /* txmerApp.swift */,
 				23DE3BDC274DDBE200254D29 /* MainTimerView.swift */,
 				23D2FC4C274E12DE00D7071A /* TimeListView.swift */,
