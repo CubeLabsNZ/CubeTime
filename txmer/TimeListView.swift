@@ -57,12 +57,10 @@ struct TimeListView: View {
                     .ignoresSafeArea()
                 
                 
-                ScrollView {
+                ScrollView() {
                     ZStack {
                         VStack (spacing: 16) {
-                            
                             HStack {
-                                
                                 Spacer()
                                 
                                 Picker("Sort Method", selection: $sortMode, content: {
@@ -74,40 +72,13 @@ struct TimeListView: View {
                                 .padding(.top, 8)
                                 .padding(.bottom, 2)
                                
-                                
-                                /*
-                                ScrollView(.vertical, showsIndicators: false) {
-                                    ForEach(viewModel.reminderCategories, id: \.id) { category in
-                                      LazyVGrid(columns: times, spacing: 10) {
-                                        ReminderListView(category: category)
-                                      }
-                                      .padding(.horizontal)
-                                    }
-                                  }
-                                */
-                                
-                                
                                 Spacer()
                             }
                                  
                             TimesView()
-                            //Text(String(sortMode))
                             
                             Spacer()
                         }
-                        .navigationTitle("Session Times")
-                        .toolbar {
-                            
-                            
-                            Button {
-                                print("button tapped")
-                            } label: {
-                                Image(systemName: "ellipsis.circle")
-                                    .font(.system(size: 17, weight: .medium))
-                            }
-                            
-                        }
-                        .frame(minHeight: UIScreen.screenHeight)
                         
                         
                         VStack /* (alignment: .center)*/ {
@@ -135,6 +106,20 @@ struct TimeListView: View {
                         }
                     }
                 }
+                .navigationTitle("Session Times")
+                .toolbar {
+                    
+                    
+                    Button {
+                        print("button tapped")
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .font(.system(size: 17, weight: .medium))
+                    }
+                    
+                }
+                
+                
                 //.frame(maxHeight: UIScreen.screenHeight)
             }
         }.navigationViewStyle(StackNavigationViewStyle())
