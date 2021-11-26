@@ -15,11 +15,6 @@ import UIKit
 
 var userHoldTime: Double = 0.5 /// todo make so user can set in setting
 
-let timerColourDefault = Color.black
-let timerColourHeld = Color.red
-let timerColourHeldCanStart = Color.green
-
-
 enum stopWatchMode {
     case running
     case stopped
@@ -30,6 +25,8 @@ class StopWatchManager: ObservableObject {
     @Published var mode: stopWatchMode = .stopped
     
     @Published var secondsElapsed = 0.0
+    
+    @Environment(\.colorScheme) var colourScheme
     
     var timer = Timer()
     
@@ -52,7 +49,7 @@ class StopWatchManager: ObservableObject {
 
     }
     
-    @Published var timerColour: Color = timerColourDefault
+    @Published var timerColour: Color = TimerTextColours.timerDefaultColour
     
     private var canStartTimer = false
     
@@ -69,7 +66,7 @@ class StopWatchManager: ObservableObject {
             NSLog("setting touchDownTime")
             let newTaskAfterHold = DispatchWorkItem {
                 self.canStartTimer = true
-                self.timerColour = timerColourHeldCanStart
+                self.timerColour = TimerTextColours.timerCanStartColour
                 self.feedbackStyle.impactOccurred()
                 
                 
@@ -78,7 +75,7 @@ class StopWatchManager: ObservableObject {
             DispatchQueue.main.asyncAfter(deadline: .now() + userHoldTime, execute: newTaskAfterHold)
             
         }
-        timerColour = timerColourHeld
+        timerColour = TimerTextColours.timerHeldDownColour
     }
     
     func touchUp() {
@@ -89,7 +86,7 @@ class StopWatchManager: ObservableObject {
         }
         taskAfterHold?.cancel()
         
-        timerColour = timerColourDefault
+        timerColour = ((colourScheme == .light) ? Color.black : Color.white)
     }
 }
 
@@ -129,6 +126,7 @@ extension UIScreen{
 
 struct MainTimerView: View {
     @ObservedObject var stopWatchManager = StopWatchManager()
+    @Environment(\.colorScheme) var colourScheme
 
     
     //let bgColourGrey = Color(red: 242 / 255, green: 241 / 255, blue: 246 / 255)
@@ -139,7 +137,9 @@ struct MainTimerView: View {
     var body: some View {
         
         ZStack {
-            Color(UIColor.systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
+            
+            
+            Color(colourScheme == .light ? UIColor.systemGray6 : UIColor.black) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
                 .ignoresSafeArea()
             
             
