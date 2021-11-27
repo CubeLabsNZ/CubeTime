@@ -2,7 +2,7 @@
 //  SettingsView.swift
 //  txmer
 //
-//  Created by macos sucks balls on 11/25/21.
+//  Created by Reagan Bohan on 11/25/21.
 //
 
 import SwiftUI
