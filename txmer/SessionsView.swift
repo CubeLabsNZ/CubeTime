@@ -47,7 +47,7 @@ struct NewStandardSessionView: View {
 @available(iOS 15.0, *)
 struct NewSessionPopUpView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var showNewSessionView = true
+    @State private var showNewSessionView = false
     
     var body: some View {
         VStack {
