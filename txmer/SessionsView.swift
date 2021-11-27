@@ -8,17 +8,33 @@
 import SwiftUI
 
 @available(iOS 15.0, *)
-class UserSessions {
-    @State static var session = [1, 2]
-}
-
-@available(iOS 15.0, *)
 struct NewStandardSessionView: View {
     var body: some View {
         Text("yuou do no t have choice just use this session for now :)")
         
         Button {
-            UserSessions.$session.append("session")
+            let controller = PersistenceController.shared
+            let viewContext = controller.container.viewContext
+            let sessionItem = Sessions(context: viewContext)
+            sessionItem.name = "Mwuhahahaahahaahahaha"
+            do {
+                try viewContext.save()
+            } catch {
+                if let error = error as NSError? {
+                    // Replace this implementation with code to handle the error appropriately.
+                    // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+
+                    /*
+                    Typical reasons for an error here include:
+                    * The parent directory does not exist, cannot be created, or disallows writing.
+                    * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+                    * The device is out of space.
+                    * The store could not be migrated to the current model version.
+                    Check the error message to determine what the actual problem was.
+                    */
+                    fatalError("Unresolved error \(error), \(error.userInfo)")
+                }
+            }
             
         } label: {
             Text("create")
@@ -84,11 +100,15 @@ struct SessionsView: View {
     
     @State var showNewSessionPopUp: Bool
     
-    
-    
-    
     var solveCount: Int = 1603
     
+    
+    @FetchRequest(
+        entity: Sessions.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
+        ]
+    ) var sessions: FetchedResults<Sessions>
     
     var body: some View {
         NavigationView {
@@ -98,11 +118,11 @@ struct SessionsView: View {
                 
                 ScrollView() {
                     VStack (spacing: 10) {
-                        ForEach(UserSessions.session, id: \.self) { item in
+                        ForEach(sessions, id: \.self) { item in
                             VStack {
                                 HStack {
                                     VStack(alignment: .leading) {
-                                        Text(item)
+                                        Text(item.name!)
                                             .font(.system(size: 22, weight: .bold, design: .default))
                                         Text("Square-1")
                                             .font(.system(size: 15, weight: .medium, design: .default))
@@ -131,7 +151,7 @@ struct SessionsView: View {
                             .padding(.trailing)
                             .padding(.leading)
                         }
-                    }
+                    }/*
                     
                     VStack {
                         HStack {
@@ -190,7 +210,7 @@ struct SessionsView: View {
                     .frame(height: 65)
                     .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
                     .padding(.trailing)
-                    .padding(.leading)
+                    .padding(.leading) */
                     
                     
                     Button("+ New Session") {
