@@ -17,10 +17,14 @@ func getDismiss() {
 
 
 
-//@available(iOS 15.0, *)
+@available(iOS 15.0, *)
 struct SolvePopupView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.defaultMinListRowHeight) var minRowHeight
+    @Environment(\.dismiss) var dismiss
+    
+    @State private var userComment: String = ""
+    @State private var solveStarred = false
     
     var body: some View {
         NavigationView {
@@ -29,7 +33,7 @@ struct SolvePopupView: View {
                     .ignoresSafeArea()
                 
                 ScrollView() {
-                    VStack (spacing: 10) {
+                    VStack (spacing: 12) {
                         HStack {
                             Text("date of solve")
                                 .padding(.leading, 16)
@@ -39,15 +43,154 @@ struct SolvePopupView: View {
                             Spacer()
                         }
                         
+                        VStack {
+                            HStack {
+                                //Image("sq-1")
+                                  //  .padding(.trailing, 8)
+                                Image(systemName: "square.fill")
+                                    .font(.system(size: 30, weight: .semibold))
+                                    //.padding(.leading)
+                                
+                                Text("Square-1")
+                                    .font(.system(size: 17, weight: .semibold, design: .default))
+                                
+                                Spacer()
+                                
+                                Text("RANDOM STATE")
+                                    .font(.system(size: 13, weight: .semibold, design: .default))
+                            }
+                            .padding(.leading, 12)
+                            .padding(.trailing, 16)
+                            .padding(.top, 12)
+                            
+                            Divider()
+                                .padding(.leading)
+                            
+                            Text("(0,2)/ (0,-3)/ (3,0)/ (-5,-5)/ (6,-3)/ (-1,-4)/ (1,0)/ (-3,0)/ (-1,0)/ (0,-2)/ (2,-3)/ (-4,0)/ (1,0)")
+                                .font(.system(size: 17, weight: .regular, design: .monospaced))
+                                .padding(.leading)
+                                .padding(.trailing)
+                                
+                                         
+                            Divider()
+                                .padding(.leading)
+                            
+                            Image("scramble-placeholder")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding(.leading, 32)
+                                .padding(.trailing, 32)
+                                .padding(.bottom, 12)
+                            
+                        }
+                        //.frame(minHeight: minRowHeight * 10)
+                        //.frame(height: 300)
+                        .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:10)))
+                        //.listStyle(.insetGrouped)
+                        .padding(.trailing)
+                        .padding(.leading)
+                        
+                        VStack {
+                            HStack {
+                                Image(systemName: "square.text.square.fill")
+                                    .symbolRenderingMode(.hierarchical)
+                                    .font(.system(size: 30, weight: .semibold))
+                                    //.padding(.trailing, 8)
+                                Text("Comment")
+                                    .font(.system(size: 17, weight: .semibold, design: .default))
+                                
+                                Spacer()
+                                
+                            }
+                            //.padding(.leading)
+//                            .padding(.trailing)
+//                            .padding(.top)
+                            .padding(.leading, 12)
+                            .padding(.trailing, 16)
+                            .padding(.top, 12)
+                            
+                            Divider()
+                                .padding(.leading)
+//                                .padding(.bottom)
+                            
+                            TextField("Notes", text: $userComment)
+                            
+                                //.font(.system(size: 17, weight: .regular, design: .monospaced))
+                                .padding(.leading)
+                                .padding(.trailing)
+                                .padding(.bottom, 12)
+                                                              
+                        }
+                        //.frame(minHeight: minRowHeight * 10)
+                        //.frame(height: 300)
+                        .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:10)))
+                        //.listStyle(.insetGrouped)
+                        .padding(.trailing)
+                        .padding(.leading)
+                        
+                        
+                        VStack {
+                            HStack {
+                                Image(systemName: "star.square.fill")
+                                    .symbolRenderingMode(.multicolor)
+                                    .font(.system(size: 30, weight: .semibold))
+                                
+                                Spacer()
+                                
+                                Toggle(isOn: $solveStarred) {
+                                    Text("Star")
+                                }
+                                
+                                Spacer()
+                                
+                            }
+                            .padding(.leading, 12)
+                            .padding(.trailing, 16)
+                            .padding(.top, 12)
+                            .padding(.bottom, 12)
+                        }
+                        .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:10)))
+                        .padding(.trailing)
+                        .padding(.leading)
+                        
+                        
+                        VStack {
+                            HStack {
+                                Button {
+                                    print("copy solve tapped")
+                                } label: {
+                                    Text("Copy Solve")
+                                }
+                                
+                                Spacer()
+                            }
+                            .padding()
+//                            .padding(.leading, 12)
+//                            .padding(.trailing, 16)
+//                            .padding(.top, 12)
+//                            .padding(.bottom, 12)
+                        }
+                        .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:10)))
+                        .padding(.trailing)
+                        .padding(.leading)
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        /*
+                         
+                
                         VStack (spacing: 16) {
-                            List {
-                                Text("Event (Puzzle TYPE)")
-                                Text("Scramble TYPE")
-                                Text("Scramble")
-                            }
-                            .frame(minHeight: minRowHeight * 7)
-                            .listStyle(.insetGrouped)
                             
+                            
+                            
+                            /*
                             Button(action: {
                                 print("hi")
                             }) {
@@ -71,9 +214,11 @@ struct SolvePopupView: View {
                                     .background(Color.white)
                                     .cornerRadius(10)
                             }
+                            */
                             
                             
                         }
+                         */
                         
                         
                         
@@ -96,11 +241,14 @@ struct SolvePopupView: View {
                             ToolbarItem(placement: .navigationBarLeading) {
                                 Button {
                                     print("button tapped")
+                                    presentationMode.wrappedValue.dismiss()
                                 } label: {
                                     
                                     Image(systemName: "chevron.left")
                                         .font(.system(size: 17, weight: .medium))
+                                        .padding(.leading, -4)
                                     Text("Time List")
+                                        .padding(.leading, -4)
                                 }
                             }
 
@@ -229,9 +377,9 @@ struct TimesView: View {
     
     
 
-struct TimesView_Previews: PreviewProvider {
-    static var previews: some View {
-        SolvePopupView()
-    }
-}
+//struct TimesView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SolvePopupView()
+//    }
+//}
 
