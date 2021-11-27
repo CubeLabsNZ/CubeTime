@@ -121,7 +121,7 @@ struct MainTabsView: View {
                                         systemIconName: "stopwatch",
                                         systemIconNameSelected: "stopwatch.fill"
                                     )
-                                        .padding(.leading, 12)
+                                        .padding(.leading, 14)
                                     
                                     Spacer()
                                     
@@ -149,7 +149,7 @@ struct MainTabsView: View {
                                         systemIconName: "line.3.horizontal.circle",
                                         systemIconNameSelected: "line.3.horizontal.circle.fill"
                                     )
-                                        .padding(.trailing, 12)
+                                        .padding(.trailing, 14)
                                 }
                                 
                                 //.frame(maxWidth: 240)
