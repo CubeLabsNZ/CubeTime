@@ -20,6 +20,8 @@ struct SolvePopupView: View {
     @State private var userComment: String
     @State private var solveStarred: Bool
     
+    let viewContext = PersistenceController.shared.container.viewContext
+    
     init(solve: Solves){
         self.solve = solve
         _userComment = State(initialValue: solve.comment ?? "")
@@ -35,7 +37,7 @@ struct SolvePopupView: View {
                 ScrollView() {
                     VStack (spacing: 12) {
                         HStack {
-                            Text(solve.date!, format: .dateTime.day().month().year())
+                            Text(solve.date ?? Date(timeIntervalSince1970: 0), format: .dateTime.day().month().year())
                                 .padding(.leading, 16)
                                 .font(.system(size: 22, weight: .semibold, design: .default))
                                 .foregroundColor(Color(UIColor.systemGray))
@@ -183,7 +185,26 @@ struct SolvePopupView: View {
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
-                                print("button tapped")
+                                
+                                viewContext.delete(solve)
+                                do {
+                                    try viewContext.save()
+                                } catch {
+                                    if let error = error as NSError? {
+                                        // Replace this implementation with code to handle the error appropriately.
+                                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                                        
+                                        /*
+                                         Typical reasons for an error here include:
+                                         * The parent directory does not exist, cannot be created, or disallows writing.
+                                         * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+                                         * The device is out of space.
+                                         * The store could not be migrated to the current model version.
+                                         Check the error message to determine what the actual problem was.
+                                         */
+                                        fatalError("Unresolved error \(error), \(error.userInfo)")
+                                    }
+                                }
                             } label: {
                                 Text("Delete Solve")
                                     .font(.system(size: 17, weight: .medium))
@@ -218,6 +239,9 @@ struct SolvePopupView: View {
 struct TimeCard: View {
     let solve: Solves
     @State var showingPopupSlideover: Bool
+    
+    let viewContext = PersistenceController.shared.container.viewContext
+    
     var body: some View {
         Button(action: {
             print(solve.time)
@@ -266,12 +290,28 @@ struct TimeCard: View {
                 Label("DNF", systemImage: "slash.circle") /// TODO: add custom icons because no good icons
             }
             
-            
-            
             Divider()
             
             Button (role: .destructive) {
-                print("delete time pressed")
+                viewContext.delete(solve)
+                do {
+                    try viewContext.save()
+                } catch {
+                    if let error = error as NSError? {
+                        // Replace this implementation with code to handle the error appropriately.
+                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                        
+                        /*
+                         Typical reasons for an error here include:
+                         * The parent directory does not exist, cannot be created, or disallows writing.
+                         * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+                         * The device is out of space.
+                         * The store could not be migrated to the current model version.
+                         Check the error message to determine what the actual problem was.
+                         */
+                        fatalError("Unresolved error \(error), \(error.userInfo)")
+                    }
+                }
             } label: {
                 Label {
                     Text("Delete Solve")
@@ -286,9 +326,9 @@ struct TimeCard: View {
 }
 
 /*
-struct TimeCard_Previews: PreviewProvider {
-    static var previews: some View {
-        TimeCard()
-    }
-}
-*/
+ struct TimeCard_Previews: PreviewProvider {
+ static var previews: some View {
+ TimeCard()
+ }
+ }
+ */
