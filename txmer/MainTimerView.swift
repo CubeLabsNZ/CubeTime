@@ -48,8 +48,8 @@ class StopWatchManager: ObservableObject {
         
         secondsElapsed = 0
         
-        timer = Timer.scheduledTimer(withTimeInterval: frameTime, repeats: true) { [self] timer in
-            self.secondsElapsed += self.frameTime
+        timer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) { [self] timer in
+            self.secondsElapsed += 0.001
         }
     }
     
