@@ -17,25 +17,10 @@ enum buttonMode {
 
 @available(iOS 15.0, *)
 struct TimeListView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
     @State private var sortMode = 0
     @State private var sortAscending: Bool = true // sorting ascending or descending method (true = ascending, false = descending)as
     
-    
-    private func ascendingButtonIcon() -> some View {
-        
-        let icon = Image(systemName: "chevron.up.circle")
-            .font(.system(size: 20, weight: .medium))
-        
-        return icon
-    }
-    
-    private func descendingButtonIcon() -> some View {
-        
-        let icon = Image(systemName: "chevron.down.circle")
-            .font(.system(size: 20, weight: .medium))
-        
-        return icon
-    }
      
     //let descendingButtonIcon: Image = Image(systemName: "chevron.down.circle")
    
@@ -43,9 +28,15 @@ struct TimeListView: View {
     //var buttonIcon: String = userLastState
     
     
-    var times: [GridItem] {
-        Array(repeating: .init(.adaptive(minimum: 0)), count: 2)
-    }
+    @FetchRequest(
+        entity: Solves.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \Solves.date, ascending: true)
+        ]
+    ) var solves: FetchedResults<Solves>
+    
+    //private var fetchRequest = FetchRequest<Solves>(entity: Solves.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Solves.date, ascending: true)])
+    //private var solves: FetchedResults<Solves>
     
     
     var body: some View {
@@ -75,7 +66,7 @@ struct TimeListView: View {
                                 Spacer()
                             }
                                  
-                            TimesView()
+                            TimesView(solves: solves)
                             
                             Spacer()
                         }
@@ -86,13 +77,13 @@ struct TimeListView: View {
                                 
                                 Spacer()
                                 
-                                
-                                
-                                
                                 Button {
                                     sortAscending.toggle()
+                                    // let sortDesc: NSSortDescriptor = NSSortDescriptor(key: "date", ascending: sortAscending)
+                                    //solves.sortDescriptors = [sortDesc]
                                 } label: {
-                                    sortAscending ? AnyView(ascendingButtonIcon()) : AnyView(descendingButtonIcon())
+                                    Image(systemName: sortAscending ? "chevron.up.circle" : "chevron.down.circle")
+                                        .font(.system(size: 20, weight: .medium))
                                 }
                                 .padding(.trailing, 16)
                                 .offset(y: (32 / 2) - (SetValues.iconFontSize / 2) + 6)

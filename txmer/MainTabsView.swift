@@ -57,6 +57,7 @@ struct MainTabsView: View {
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .solves:
                     TimeListView()
+                        .environment(\.managedObjectContext, managedObjectContext)
                 case .stats:
                     StatsView()
                 case .sessions:

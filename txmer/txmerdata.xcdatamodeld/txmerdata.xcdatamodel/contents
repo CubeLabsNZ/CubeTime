@@ -3,11 +3,12 @@
     <entity name="Sessions" representedClassName="Sessions" syncable="YES" codeGenerationType="class">
         <attribute name="event_name" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="pinned" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <relationship name="solves" toMany="YES" deletionRule="Cascade" destinationEntity="Solves" inverseName="session" inverseEntity="Solves"/>
     </entity>
     <entity name="Solves" representedClassName="Solves" parentEntity="Sessions" syncable="YES" codeGenerationType="class">
         <attribute name="comment" optional="YES" attributeType="String"/>
-        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="penalty" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="puzzle_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="scramble" optional="YES" attributeType="Binary"/>
@@ -17,7 +18,7 @@
         <relationship name="session" maxCount="1" deletionRule="Nullify" destinationEntity="Sessions" inverseName="solves" inverseEntity="Sessions"/>
     </entity>
     <elements>
-        <element name="Sessions" positionX="-54" positionY="63" width="128" height="14"/>
-        <element name="Solves" positionX="-63" positionY="-18" width="128" height="164"/>
+        <element name="Sessions" positionX="-54" positionY="63" width="128" height="89"/>
+        <element name="Solves" positionX="-63" positionY="-18" width="128" height="14"/>
     </elements>
 </model>
