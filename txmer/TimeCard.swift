@@ -12,8 +12,9 @@ import SwiftUI
 @available(iOS 15.0, *)
 struct SolvePopupView: View {
     @Environment(\.presentationMode) var presentationMode
-    @Environment(\.defaultMinListRowHeight) var minRowHeight
     @Environment(\.dismiss) var dismiss
+    @Environment(\.defaultMinListRowHeight) var minRowHeight
+    
     
     let solve: Solves
     
