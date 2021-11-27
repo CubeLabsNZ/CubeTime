@@ -68,7 +68,7 @@ struct SolvePopupView: View {
                             Divider()
                                 .padding(.leading)
                             
-                            Text("(0,2)/ (0,-3)/ (3,0)/ (-5,-5)/ (6,-3)/ (-1,-4)/ (1,0)/ (-3,0)/ (-1,0)/ (0,-2)/ (2,-3)/ (-4,0)/ (1,0)")
+                            Text(solve.scramble ?? "Retrieving scramble failed.")
                                 .font(.system(size: 17, weight: .regular, design: .monospaced))
                                 .padding(.leading)
                                 .padding(.trailing)

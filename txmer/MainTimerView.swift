@@ -23,6 +23,10 @@ class StopWatchManager: ObservableObject {
     
     let scrambler = CHTScrambler.init()
     
+    var scrambleType: Int32 = 0
+    var scrambleSubType: Int32 = 0
+    
+    var prevScrambleStr: String? = nil
     var scrambleStr: String? = nil
     
     var managedObjectContext: NSManagedObjectContext
@@ -30,7 +34,7 @@ class StopWatchManager: ObservableObject {
     init (managedObjectContext: NSManagedObjectContext) {
         self.managedObjectContext = managedObjectContext
         scrambler.initSq1()
-        let scr = CHTScramble.getNewScramble(by: scrambler, type: 0, subType: 0)
+        let scr = CHTScramble.getNewScramble(by: scrambler, type: scrambleType, subType: scrambleSubType)
         scrambleStr = scr?.scramble
     }
     
@@ -78,8 +82,9 @@ class StopWatchManager: ObservableObject {
             // .penalty
             // .puzzle_id
             solveItem.session = Sessions(context: viewContext) // TODO
-            // .scramble
-            // .scramble_type
+            solveItem.scramble = prevScrambleStr
+            solveItem.scramble_type = scrambleType
+            solveItem.scramble_subtype = scrambleSubType
             // .starred
             solveItem.time = self.secondsElapsed
             do {
@@ -118,7 +123,8 @@ class StopWatchManager: ObservableObject {
             NSLog("minimumTapDurationMet, starting timer.")
             start()
             canStartTimer = false
-            let scr = CHTScramble.getNewScramble(by: scrambler, type: 0, subType: 0)
+            prevScrambleStr = scrambleStr
+            let scr = CHTScramble.getNewScramble(by: scrambler, type: scrambleType, subType: scrambleSubType)
             scrambleStr = scr?.scramble
         }
         taskAfterHold?.cancel()
