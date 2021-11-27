@@ -29,6 +29,12 @@ enum stopWatchMode {
 class StopWatchManager: ObservableObject {
     @Published var mode: stopWatchMode = .stopped
     
+    var managedObjectContext: NSManagedObjectContext
+    
+    init (managedObjectContext: NSManagedObjectContext) {
+        self.managedObjectContext = managedObjectContext
+    }
+    
     @Published var secondsElapsed = 0.0
     
     var timer = Timer()
@@ -61,18 +67,43 @@ class StopWatchManager: ObservableObject {
     private let feedbackStyle = UIImpactFeedbackGenerator(style: .medium) /// TODO: add option to change heaviness/turn on off in settings
     
     func touchDown() {
-        NSLog("Touch down recieved!")
         if mode == .running {
-            NSLog("Stopping timer...")
             stop()
+            let controller = PersistenceController.shared
+            let viewContext = controller.container.viewContext
+            let solveItem = Solves(context: viewContext)
+            // .comment
+            solveItem.date = Date()
+            // .penalty
+            // .puzzle_id
+            solveItem.session = Sessions(context: viewContext) // TODO
+            // .scramble
+            // .scramble_type
+            // .starred
+            solveItem.time = self.secondsElapsed
+            do {
+                try viewContext.save()
+            } catch {
+                if let error = error as NSError? {
+                    // Replace this implementation with code to handle the error appropriately.
+                    // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+
+                    /*
+                    Typical reasons for an error here include:
+                    * The parent directory does not exist, cannot be created, or disallows writing.
+                    * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+                    * The device is out of space.
+                    * The store could not be migrated to the current model version.
+                    Check the error message to determine what the actual problem was.
+                    */
+                    fatalError("Unresolved error \(error), \(error.userInfo)")
+                }
+            }
         } else {
-            NSLog("setting touchDownTime")
             let newTaskAfterHold = DispatchWorkItem {
                 self.canStartTimer = true
                 self.timerColour = timerColourHeldCanStart
                 self.feedbackStyle.impactOccurred()
-                
-                
             }
             taskAfterHold = newTaskAfterHold
             DispatchQueue.main.asyncAfter(deadline: .now() + userHoldTime, execute: newTaskAfterHold)
@@ -127,17 +158,12 @@ extension UIScreen{
    static let screenSize = UIScreen.main.bounds.size
 }
 
-struct MainTimerView: View {
-    @ObservedObject var stopWatchManager = StopWatchManager()
 
+struct SubTimerView: View {
     
-    //let bgColourGrey = Color(red: 242 / 255, green: 241 / 255, blue: 246 / 255)
-    
-    
-    //let safeAreaBottomHeight = 34
+    @ObservedObject var stopWatchManager: StopWatchManager
     
     var body: some View {
-        
         ZStack {
             Color(UIColor.systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
                 .ignoresSafeArea()
@@ -186,6 +212,25 @@ struct MainTimerView: View {
                 }
             }
         }
+    }
+}
+
+struct MainTimerView: View {
+    
+    @Environment(\.managedObjectContext) var managedObjectContext
+    
+    
+
+    
+    //let bgColourGrey = Color(red: 242 / 255, green: 241 / 255, blue: 246 / 255)
+    
+    
+    //let safeAreaBottomHeight = 34
+    
+    var body: some View {
+        /// Please see https://developer.apple.com/forums/thread/658313
+        /// For why this is done this way
+        SubTimerView(stopWatchManager: StopWatchManager(managedObjectContext: managedObjectContext))
     }
     
 }
