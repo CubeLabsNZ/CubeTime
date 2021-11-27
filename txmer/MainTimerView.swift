@@ -30,7 +30,7 @@ class StopWatchManager: ObservableObject {
     init (managedObjectContext: NSManagedObjectContext) {
         self.managedObjectContext = managedObjectContext
         scrambler.initSq1()
-        let scr = CHTScramble.getNewScramble(by: scrambler, type: 0, subType: 0)
+        let scr = CHTScramble.getNewScramble(by: scrambler, type: 6, subType: 0)
         scrambleStr = scr?.scramble
     }
     

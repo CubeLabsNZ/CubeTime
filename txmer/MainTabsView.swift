@@ -61,7 +61,7 @@ struct MainTabsView: View {
                 case .stats:
                     StatsView()
                 case .sessions:
-                    SessionsView()
+                    SessionsView(showNewSessionPopUp: false)
                 case .settings:
                     SettingsView()
                 }
