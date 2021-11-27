@@ -310,6 +310,7 @@ struct TimesView: View {
                         .font(.system(size: 17, weight: .bold, design: .default))
                         .foregroundColor(Color.black)
                         .frame(width: 112, height: 53)
+//                        .frame(height: 53)
                         
                         .background(Color.white)
                         .cornerRadius(10)

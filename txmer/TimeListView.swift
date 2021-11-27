@@ -59,8 +59,25 @@ struct TimeListView: View {
                 
                 ScrollView() {
                     ZStack {
-                        VStack (spacing: 16) {
+                        VStack {
+                            
+                            HStack (alignment: .center) {
+                                Text("penis")
+                                    .font(.system(size: 20, weight: .semibold, design: .default))
+                                    .foregroundColor(Color(UIColor.systemGray))
+                                Spacer()
+                                
+                                Text("SQUARE-1")
+                                    .font(.system(size: 16, weight: .semibold, design: .default))
+                                    .foregroundColor(Color(UIColor.systemGray))
+                            }
+                            .padding(.leading)
+                            .padding(.trailing)
+                            
+                            
                             HStack {
+                                
+                                
                                 Spacer()
                                 
                                 Picker("Sort Method", selection: $sortMode, content: {
@@ -69,8 +86,8 @@ struct TimeListView: View {
                                 })
                                 .pickerStyle(SegmentedPickerStyle())
                                 .frame(maxWidth: 200, alignment: .center)
-                                .padding(.top, 8)
-                                .padding(.bottom, 2)
+                                .padding(.top, -6)
+                                .padding(.bottom, 4)
                                
                                 Spacer()
                             }
@@ -79,6 +96,8 @@ struct TimeListView: View {
                             
                             Spacer()
                         }
+                        .padding(.top, -6)
+                        .padding(.bottom, -6)
                         
                         
                         VStack /* (alignment: .center)*/ {
@@ -94,8 +113,8 @@ struct TimeListView: View {
                                 } label: {
                                     sortAscending ? AnyView(ascendingButtonIcon()) : AnyView(descendingButtonIcon())
                                 }
-                                .padding(.trailing, 16)
-                                .offset(y: (32 / 2) - (SetValues.iconFontSize / 2) + 6)
+                                .padding(.trailing, 16.5) /// TODO don't hardcode padding
+                                .offset(y: (32 / 2) - (SetValues.iconFontSize / 2) + 6 + 18)
                                 
                                 
                                  
