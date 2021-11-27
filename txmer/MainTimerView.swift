@@ -9,9 +9,6 @@ import CoreData
 import SwiftUI
 import CoreGraphics
 
-import UIKit
-
-
 
 var userHoldTime: Double = 0.5 /// todo make so user can set in setting
 
@@ -22,12 +19,19 @@ enum stopWatchMode {
 
 
 class StopWatchManager: ObservableObject {
-    @Published var mode: stopWatchMode = .stopped
+    var mode: stopWatchMode = .stopped
+    
+    let scrambler = CHTScrambler.init()
+    
+    var scrambleStr: String? = nil
     
     var managedObjectContext: NSManagedObjectContext
     
     init (managedObjectContext: NSManagedObjectContext) {
         self.managedObjectContext = managedObjectContext
+        scrambler.initSq1()
+        let scr = CHTScramble.getNewScramble(by: scrambler, type: 0, subType: 0)
+        scrambleStr = scr?.scramble
     }
     
     @Published var secondsElapsed = 0.0
@@ -114,6 +118,8 @@ class StopWatchManager: ObservableObject {
             NSLog("minimumTapDurationMet, starting timer.")
             start()
             canStartTimer = false
+            let scr = CHTScramble.getNewScramble(by: scrambler, type: 0, subType: 0)
+            scrambleStr = scr?.scramble
         }
         taskAfterHold?.cancel()
         
@@ -171,7 +177,7 @@ struct SubTimerView: View {
             
             
             VStack {
-                Text("(0,2)/ (0,-3)/ (3,0)/ (-5,-5)/ (6,-3)/ (-1,-4)/ (1,0)/ (-3,0)/ (-1,0)/ (0,-2)/ (2,-3)/ (-4,0)/ (1,0)")
+                Text(stopWatchManager.scrambleStr ?? "Loading scramble")
                     //.background(Color.red)
                     .padding(22)
                     .multilineTextAlignment(.center)

@@ -116,14 +116,7 @@ struct SessionsView: View {
                     .padding(.trailing)
                     .padding(.leading)
                     
-                    
-                    
                 }
-                    
-                    
-                          
-                        
-                        
             }
             .navigationTitle("Your Sessions")
             .toolbar {

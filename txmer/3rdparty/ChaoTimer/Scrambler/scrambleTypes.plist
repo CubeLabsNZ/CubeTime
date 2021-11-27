@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>2x2x2</key>
+	<array>
+		<string>random state</string>
+		<string>3-gen</string>
+		<string>6-gen</string>
+		<string>CLL training</string>
+		<string>EG1 training</string>
+		<string>EG2 training</string>
+	</array>
+	<key>3x3x3</key>
+	<array>
+		<string>random state</string>
+		<string>old style</string>
+		<string>cross solved</string>
+		<string>last layer</string>
+		<string>PLL</string>
+		<string>corners only</string>
+		<string>edges only</string>
+		<string>LSLL</string>
+		<string>ZBLL</string>
+		<string>COLL</string>
+		<string>ELL</string>
+		<string>last six edges</string>
+		<string>CMLL</string>
+	</array>
+	<key>4x4x4</key>
+	<array>
+		<string>WCA</string>
+		<string>SiGN</string>
+		<string>YJ</string>
+		<string>edges</string>
+		<string>&lt;R,r,U,u&gt;</string>
+	</array>
+	<key>5x5x5</key>
+	<array>
+		<string>WCA</string>
+		<string>SiGN</string>
+		<string>edges</string>
+	</array>
+	<key>6x6x6</key>
+	<array>
+		<string>prefix</string>
+		<string>SiGN</string>
+		<string>suffix</string>
+		<string>edges</string>
+	</array>
+	<key>7x7x7</key>
+	<array>
+		<string>prefix</string>
+		<string>SiGN</string>
+		<string>suffix</string>
+		<string>edges</string>
+	</array>
+	<key>Square-1</key>
+	<array>
+		<string>random state</string>
+		<string>face turn metric</string>
+		<string>twist metric</string>
+	</array>
+	<key>Megaminx</key>
+	<array>
+		<string>Pochmann</string>
+		<string>old style</string>
+	</array>
+	<key>Pyraminx</key>
+	<array>
+		<string>random state</string>
+		<string>random moves</string>
+	</array>
+	<key>Clock</key>
+	<array>
+		<string>WCA</string>
+		<string>Jaap order</string>
+		<string>concise</string>
+		<string>efficient pin order</string>
+	</array>
+	<key>Skewb</key>
+	<array>
+		<string>random state</string>
+		<string>&lt;L,R,D,B&gt;</string>
+	</array>
+	<key>Gear</key>
+	<array>
+		<string>random state</string>
+		<string>3-gen</string>
+	</array>
+	<key>3x3 subsets</key>
+	<array>
+		<string>2-gen R, U</string>
+		<string>2-gen L, U</string>
+		<string>Roux-gen M, U</string>
+		<string>3-gen F, R, U</string>
+		<string>3-gen R, U, L</string>
+		<string>3-gen R, r, U</string>
+		<string>half turns only</string>
+		<string>LSLL(old)</string>
+	</array>
+</dict>
+</plist>
