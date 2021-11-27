@@ -18,7 +18,7 @@ enum Tab {
 
 
 class TabRouter: ObservableObject {
-    @Published var currentTab: Tab = .stats
+    @Published var currentTab: Tab = .timer
 }
 
 
@@ -45,6 +45,7 @@ struct TabIcon: View {
 struct MainTabsView: View {
     
     @StateObject var tabRouter: TabRouter
+    @Environment(\.managedObjectContext) var managedObjectContext
     
     var body: some View {
         VStack {
@@ -53,6 +54,7 @@ struct MainTabsView: View {
                 switch tabRouter.currentTab {
                 case .timer:
                     MainTimerView()
+                        .environment(\.managedObjectContext, managedObjectContext)
                 case .solves:
                     TimeListView()
                 case .stats:
