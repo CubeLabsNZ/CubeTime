@@ -17,6 +17,8 @@ enum buttonMode {
 
 @available(iOS 15.0, *)
 struct TimeListView: View {
+    @Binding var currentSession: Sessions
+    
     @Environment(\.managedObjectContext) var managedObjectContext
     @State private var sortMode = 0
     @State private var sortAscending: Bool = true // sorting ascending or descending method (true = ascending, false = descending)as
@@ -53,7 +55,7 @@ struct TimeListView: View {
                         VStack {
                             
                             HStack (alignment: .center) {
-                                Text("penis")
+                                Text(currentSession.name ?? "Unnamed Session")
                                     .font(.system(size: 20, weight: .semibold, design: .default))
                                     .foregroundColor(Color(UIColor.systemGray))
                                 Spacer()
@@ -135,10 +137,11 @@ struct TimeListView: View {
         }.navigationViewStyle(StackNavigationViewStyle())
     }
 }
-
+/* TODO make previews that take ags work
 @available(iOS 15.0, *)
 struct TimeListView_Previews: PreviewProvider {
     static var previews: some View {
         TimeListView()
     }
 }
+*/

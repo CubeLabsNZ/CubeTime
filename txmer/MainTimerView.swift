@@ -81,7 +81,8 @@ class StopWatchManager: ObservableObject {
             solveItem.date = Date()
             // .penalty
             // .puzzle_id
-            solveItem.session = Sessions(context: viewContext) // TODO
+            let session = Sessions(context: viewContext) // TODO
+            solveItem.session = session
             solveItem.scramble = prevScrambleStr
             solveItem.scramble_type = scrambleType
             solveItem.scramble_subtype = scrambleSubType

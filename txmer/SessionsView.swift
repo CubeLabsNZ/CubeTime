@@ -9,14 +9,20 @@ import SwiftUI
 
 @available(iOS 15.0, *)
 struct NewStandardSessionView: View {
+    
+    @Binding var showNewSessionPopUp: Bool
+    @State private var name: String = ""
+    
     var body: some View {
-        Text("yuou do no t have choice just use this session for now :)")
+        Text("just pick name tim cant make textfield")
+        
+        TextField("name", text: $name)
         
         Button {
             let controller = PersistenceController.shared
             let viewContext = controller.container.viewContext
             let sessionItem = Sessions(context: viewContext)
-            sessionItem.name = "Mwuhahahaahahaahahaha"
+            sessionItem.name = name
             do {
                 try viewContext.save()
             } catch {
@@ -36,6 +42,8 @@ struct NewStandardSessionView: View {
                 }
             }
             
+            showNewSessionPopUp = false
+            
         } label: {
             Text("create")
             //.font(.system(size: 17, weight: .medium))
@@ -48,6 +56,8 @@ struct NewStandardSessionView: View {
 struct NewSessionPopUpView: View {
     @Environment(\.dismiss) var dismiss
     @State private var showNewSessionView = false
+    
+    @Binding var showNewSessionPopUp: Bool
     
     var body: some View {
         VStack {
@@ -62,7 +72,7 @@ struct NewSessionPopUpView: View {
                     Section(header: Text("Normal Sessions")) {
                         NavigationLink(
                             "next",
-                            destination: NewStandardSessionView(),
+                            destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp),
                             isActive: $showNewSessionView)
                         
                         
@@ -97,8 +107,9 @@ struct NewSessionPopUpView: View {
 
 @available(iOS 15.0, *)
 struct SessionsView: View {
+    @Binding var currentSession: Sessions
     
-    @State var showNewSessionPopUp: Bool
+    @State var showNewSessionPopUp = false
     
     var solveCount: Int = 1603
     
@@ -150,41 +161,14 @@ struct SessionsView: View {
                             .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
                             .padding(.trailing)
                             .padding(.leading)
-                        }
-                    }/*
-                    
-                    VStack {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text("squan after nic")
-                                    .font(.system(size: 22, weight: .bold, design: .default))
-                                Text("Square-1")
-                                    .font(.system(size: 15, weight: .medium, design: .default))
-                                Spacer()
-                                Text("\(solveCount) Solves")
-                                    .font(.system(size: 15, weight: .bold, design: .default))
-                                    .foregroundColor(Color(UIColor.systemGray))
-                                    .padding(.bottom, 4)
+                            .onTapGesture {
+                                NSLog("Session tapped")
+                                currentSession = item
                             }
-                            
-                            Spacer()
-                            
-                            Image(systemName: "square.fill")
-                                .font(.system(size: 90))
-                            //.padding(.trailing, -12)
-                            
                         }
-                        .padding(.leading)
-                        .padding(.trailing, 4)
-                        .padding(.top, 8)
-                        .padding(.bottom, 8)
-                        
                     }
-                    .frame(height: 110)
-                    .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
-                    .padding(.trailing)
-                    .padding(.leading)
                     
+                    /* only keeping because i think this is unpineneds size
                     VStack {
                         HStack {
                             VStack(alignment: .leading) {
@@ -217,7 +201,7 @@ struct SessionsView: View {
                         showNewSessionPopUp.toggle()
                     }
                     .sheet(isPresented: $showNewSessionPopUp) {
-                        NewSessionPopUpView()
+                        NewSessionPopUpView(showNewSessionPopUp: $showNewSessionPopUp)
                     }
                 }
                 .navigationTitle("Your Sessions")

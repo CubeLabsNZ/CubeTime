@@ -47,6 +47,8 @@ struct MainTabsView: View {
     @StateObject var tabRouter: TabRouter
     @Environment(\.managedObjectContext) var managedObjectContext
     
+    @State var currentSession = Sessions()
+    
     var body: some View {
         VStack {
             
@@ -56,12 +58,12 @@ struct MainTabsView: View {
                     MainTimerView()
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .solves:
-                    TimeListView()
+                    TimeListView(currentSession: $currentSession)
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .stats:
                     StatsView()
                 case .sessions:
-                    SessionsView(showNewSessionPopUp: false)
+                    SessionsView(currentSession: $currentSession)
                 case .settings:
                     SettingsView()
                 }
