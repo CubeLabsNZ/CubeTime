@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 enum Tab {
     case timer
@@ -47,7 +48,9 @@ struct MainTabsView: View {
     @StateObject var tabRouter: TabRouter
     @Environment(\.managedObjectContext) var managedObjectContext
     
-    @State var currentSession = Sessions()
+    @State var currentSession: Sessions = Sessions() //TODO YES THIS ISTHE CAUSE
+    // MAKE THE LOW LEVEL THINGS SET THIS
+    // TRY OBSERVEDOBJECT SESIONConTROLLER?!?!
     
     var body: some View {
         VStack {
@@ -55,7 +58,7 @@ struct MainTabsView: View {
             ZStack {
                 switch tabRouter.currentTab {
                 case .timer:
-                    MainTimerView()
+                    MainTimerView(currentSession: $currentSession)
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .solves:
                     TimeListView(currentSession: $currentSession)
@@ -64,6 +67,7 @@ struct MainTabsView: View {
                     StatsView()
                 case .sessions:
                     SessionsView(currentSession: $currentSession)
+                        .environment(\.managedObjectContext, managedObjectContext)
                 case .settings:
                     SettingsView()
                 }

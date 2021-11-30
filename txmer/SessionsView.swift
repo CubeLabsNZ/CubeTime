@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import CoreData
 
 @available(iOS 15.0, *)
 struct NewStandardSessionView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
     
     @Binding var showNewSessionPopUp: Bool
     @State private var name: String = ""
@@ -19,12 +21,10 @@ struct NewStandardSessionView: View {
         TextField("name", text: $name)
         
         Button {
-            let controller = PersistenceController.shared
-            let viewContext = controller.container.viewContext
-            let sessionItem = Sessions(context: viewContext)
+            let sessionItem = Sessions(context: managedObjectContext)
             sessionItem.name = name
             do {
-                try viewContext.save()
+                try managedObjectContext.save()
             } catch {
                 if let error = error as NSError? {
                     // Replace this implementation with code to handle the error appropriately.
@@ -54,6 +54,7 @@ struct NewStandardSessionView: View {
 
 @available(iOS 15.0, *)
 struct NewSessionPopUpView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.dismiss) var dismiss
     @State private var showNewSessionView = true
     
@@ -72,7 +73,8 @@ struct NewSessionPopUpView: View {
                     Section(header: Text("Normal Sessions")) {
                         NavigationLink(
                             "next",
-                            destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp),
+                            destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp)
+                                .environment(\.managedObjectContext, managedObjectContext),
                             isActive: $showNewSessionView)
                         
                         
@@ -108,10 +110,14 @@ struct NewSessionPopUpView: View {
 @available(iOS 15.0, *)
 struct SessionsView: View {
     @Binding var currentSession: Sessions
+    @Environment(\.managedObjectContext) var managedObjectContext
+
     
     @State var showNewSessionPopUp = false
     
     var solveCount: Int = 1603
+    
+    
     
     
     @FetchRequest(
@@ -133,7 +139,7 @@ struct SessionsView: View {
                             VStack {
                                 HStack {
                                     VStack(alignment: .leading) {
-                                        Text(item.name!)
+                                        Text(item.name ?? "Unkown session name")
                                             .font(.system(size: 22, weight: .bold, design: .default))
                                         Text("Square-1")
                                             .font(.system(size: 15, weight: .medium, design: .default))
@@ -162,7 +168,9 @@ struct SessionsView: View {
                             .padding(.trailing)
                             .padding(.leading)
                             .onTapGesture {
-                                NSLog("Session tapped")
+                                print("Setting current sesion to \(item)")
+                                NSLog("Its context is \(item.managedObjectContext)")
+                                NSLog("managedObjectContext is \(managedObjectContext)")
                                 currentSession = item
                             }
                         }
@@ -202,6 +210,7 @@ struct SessionsView: View {
                     }
                     .sheet(isPresented: $showNewSessionPopUp) {
                         NewSessionPopUpView(showNewSessionPopUp: $showNewSessionPopUp)
+                            .environment(\.managedObjectContext, managedObjectContext)
                     }
                 }
                 .navigationTitle("Your Sessions")

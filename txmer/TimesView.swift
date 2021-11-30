@@ -42,7 +42,7 @@ struct TimesView: View {
     var body: some View {
         
         LazyVGrid(columns: columns, spacing: 12) {
-            ForEach(solves, id: \.self) { item in
+            ForEach(solves, id: \.self) { item in // foreach currentsesion.solves TODO
                 TimeCard(solve: item, showingPopupSlideover: showingPopupSlideover)
             }
         }

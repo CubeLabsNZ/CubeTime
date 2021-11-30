@@ -187,7 +187,7 @@ struct SolvePopupView: View {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
                                 
-                                viewContext.delete(solve)
+                                viewContext.delete(solve) // Todo read context from environment
                                 do {
                                     try viewContext.save()
                                 } catch {
@@ -294,7 +294,7 @@ struct TimeCard: View {
             Divider()
             
             Button (role: .destructive) {
-                viewContext.delete(solve)
+                viewContext.delete(solve) // TODO read viewcontext from encironmtn
                 do {
                     try viewContext.save()
                 } catch {

@@ -19,6 +19,8 @@ enum stopWatchMode {
 
 
 class StopWatchManager: ObservableObject {
+    @Binding var currentSession: Sessions
+    let managedObjectContext: NSManagedObjectContext
     var mode: stopWatchMode = .stopped
     
     let scrambler = CHTScrambler.init()
@@ -29,9 +31,8 @@ class StopWatchManager: ObservableObject {
     var prevScrambleStr: String? = nil
     var scrambleStr: String? = nil
     
-    var managedObjectContext: NSManagedObjectContext
-    
-    init (managedObjectContext: NSManagedObjectContext) {
+    init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
+        _currentSession = currentSession
         self.managedObjectContext = managedObjectContext
         scrambler.initSq1()
         let scr = CHTScramble.getNewScramble(by: scrambler, type: scrambleType, subType: scrambleSubType)
@@ -74,22 +75,23 @@ class StopWatchManager: ObservableObject {
     func touchDown() {
         if mode == .running {
             stop()
-            let controller = PersistenceController.shared
-            let viewContext = controller.container.viewContext
-            let solveItem = Solves(context: viewContext)
+            let solveItem = Solves(context: managedObjectContext)
             // .comment
             solveItem.date = Date()
             // .penalty
             // .puzzle_id
-            let session = Sessions(context: viewContext) // TODO
-            solveItem.session = session
+            NSLog("Saving with sesion \(currentSession)")
+            NSLog("Saving with context \(solveItem.managedObjectContext)")
+            NSLog("currentSession's context is \(currentSession.managedObjectContext)")
+            // solveItem.session = currentSession
+            currentSession.addToSolves(solveItem)
             solveItem.scramble = prevScrambleStr
             solveItem.scramble_type = scrambleType
             solveItem.scramble_subtype = scrambleSubType
             // .starred
             solveItem.time = self.secondsElapsed
             do {
-                try viewContext.save()
+                try managedObjectContext.save()
             } catch {
                 if let error = error as NSError? {
                     // Replace this implementation with code to handle the error appropriately.
@@ -139,7 +141,7 @@ public enum ButtonState {
     case notPressed
 }
 
-public struct Touch: ViewModifier {
+public struct Touch: ViewModifier { // TODO cleanup
     @GestureState private var isPressed = false
     let changeState: (ButtonState) -> Void
     public func body(content: Content) -> some View {
@@ -170,9 +172,18 @@ extension UIScreen{
 
 
 struct SubTimerView: View {
+    //@ObservedObject var currentSession: Sessions
     
     @ObservedObject var stopWatchManager: StopWatchManager
+    
+    
     @Environment(\.colorScheme) var colourScheme
+    
+    
+    init(/*currentSession: ObservedObject<Sessions>, */stopWatchManager: StopWatchManager) {
+        //_currentSession = currentSession
+        self.stopWatchManager = stopWatchManager
+    }
 
     var body: some View {
         ZStack {
@@ -229,29 +240,23 @@ struct SubTimerView: View {
 }
 
 struct MainTimerView: View {
-    
+    @Binding var currentSession: Sessions
     @Environment(\.managedObjectContext) var managedObjectContext
-    
-    
-
-    
-    //let bgColourGrey = Color(red: 242 / 255, green: 241 / 255, blue: 246 / 255)
-    
-    
-    //let safeAreaBottomHeight = 34
+          
     
     var body: some View {
         /// Please see https://developer.apple.com/forums/thread/658313
-        /// For why this is done this way
-        SubTimerView(stopWatchManager: StopWatchManager(managedObjectContext: managedObjectContext))
+        /// For why I did this abomination
+        /// Please file a PR if you know a better way
+        SubTimerView(stopWatchManager: StopWatchManager(currentSession: _currentSession, managedObjectContext: managedObjectContext))
     }
-    
 }
 
-
+/*
 struct MainTimerView_Previews: PreviewProvider {
     static var previews: some View {
         MainTimerView()
     }
 }
 
+*/
