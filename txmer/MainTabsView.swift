@@ -54,7 +54,6 @@ struct MainTabsView: View {
     
     var body: some View {
         VStack {
-            
             ZStack {
                 switch tabRouter.currentTab {
                 case .timer:
@@ -71,12 +70,10 @@ struct MainTabsView: View {
                 case .settings:
                     SettingsView()
                 }
-                
-                
+
                 GeometryReader { geometry in
                     ZStack {
                         VStack {
-                            
                             Spacer()
                             
                             RoundedRectangle(cornerRadius: 12)
@@ -87,42 +84,15 @@ struct MainTabsView: View {
                                     height: CGFloat(SetValues.tabBarHeight),
                                     alignment: .center
                                 )
-                            
                                 .shadow(color: .black.opacity(0.16), radius: 10, x: 0, y: 3)
-                            
-                                /*
-                                .position(
-                                    x: geometry.size.width / 2 - CGFloat(SetValues.marginLeftRight),
-                                    y: geometry.size.height - 0.5 * CGFloat(SetValues.tabBarHeight)
-                                )
-                            */
-                            
                                 .padding(.leading, CGFloat(SetValues.marginLeftRight))
                                 .padding(.trailing, CGFloat(SetValues.marginLeftRight))
-                            
-                            
                         }
-                        /*
-                        VStack {
-                            
-                            Spacer()
-                            HStack {
-                                RoundedRectangle(cornerRadius: 12)
-                                    
-                                
-                                
-                                Spacer()
-                            }
-                            
-                        }
-                         */
                         
                         VStack {
-                            
                             Spacer()
                             
                             HStack {
-                                
                                 HStack {
                                     TabIcon(
                                         assignedTab: .timer,
@@ -160,26 +130,17 @@ struct MainTabsView: View {
                                     )
                                         .padding(.trailing, 14)
                                 }
-                                
-                                //.frame(maxWidth: 240)
-                                
-                                //.fill(Color(UIColor.systemGray4))
-                                
                                 .frame(
                                     width: 220,
                                     height: CGFloat(SetValues.tabBarHeight),
                                     alignment: .leading
                                 )
-                                
-                                //.padding(.leading, CGFloat(SetValues.marginLeftRight))
-                                //.padding(.trailing, CGFloat(SetValues.marginLeftRight))
-                                
                                 .background(Color(UIColor.systemGray4).clipShape(RoundedRectangle(cornerRadius:12)))
                                 .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 3.5)
                                 .padding(.leading, CGFloat(SetValues.marginLeftRight))
                                 
-                                
                                 Spacer()
+                                
                                 TabIcon(
                                     assignedTab: .settings,
                                     tabRouter: tabRouter,
@@ -187,33 +148,13 @@ struct MainTabsView: View {
                                     systemIconNameSelected: "gearshape.fill"
                                 )
                                     .padding(.trailing, CGFloat(SetValues.marginLeftRight + 12))
-                                
-                                
                             }
-                            //.padding(.bottom, 12)
-                            
-                            
                         }
-                        
-                        
-                        
-                                            
-                       
-                            
-                        /*
-                        .padding(.leading, CGFloat(SetValues.marginLeftRight))
-                        .padding(.trailing, CGFloat(SetValues.marginLeftRight))
-                         */
                     }
-                }//.frame(height: CGFloat(SetValues.tabBarHeight), alignment: .bottom)
-                   // .offset(y: SetValues.hasBottomBar ? CGFloat(0) : CGFloat(-SetValues.marginBottom))
+                }
                 .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : CGFloat(SetValues.marginBottom))
             }
-            
-                
-                
-                
-            }
+        }
     }
 }
 
