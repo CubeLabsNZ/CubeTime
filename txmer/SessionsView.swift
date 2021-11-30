@@ -59,11 +59,16 @@ struct NewSessionPopUpView: View {
     
     @Binding var showNewSessionPopUp: Bool
     
+    /*
     init(showNewSessionPopUp: Binding<Bool>) {
         //UITableView.appearance().separatorStyle = .none
         UITableViewCell.appearance().backgroundColor = .white
         UITableView.appearance().backgroundColor = .systemGray6
+        
+        //showNewSessionView = false
+        //@Binding showNewSessionPopUp = false
     }
+     */
     
     var body: some View {
         VStack {
@@ -100,13 +105,13 @@ struct NewSessionPopUpView: View {
                     
                     
                     List {
-                        /*
+                        
                         NavigationLink("Standard Session", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp), isActive: $showNewSessionView)
                         NavigationLink("Algorithm Trainer DO NOT CLICK RN", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp), isActive: $showNewSessionView)
                         NavigationLink("Playground DO NOT CLICK RN", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp), isActive: $showNewSessionView)
                         
                         NavigationLink("Comp Sim Mode DO NOT CLICK", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp), isActive: $showNewSessionView)
-                         */
+                        
                         Text("hi")
                         Text("hi")
                         Text("hi")
@@ -215,7 +220,7 @@ struct SessionsView: View {
                         }
                     }
                     
-                    /* only keeping because i think this is unpineneds size
+                    // only keeping because i think this is unpineneds size
                      VStack {
                      HStack {
                      VStack(alignment: .leading) {
@@ -241,7 +246,7 @@ struct SessionsView: View {
                      .frame(height: 65)
                      .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
                      .padding(.trailing)
-                     .padding(.leading) */
+                     .padding(.leading)
                     
                     
                     Button("+ New Session") {
