@@ -19,7 +19,7 @@ enum stopWatchMode {
 
 
 class StopWatchManager: ObservableObject {
-    @Binding var currentSession: Sessions
+    @Binding var currentSession: Sessions?
     let managedObjectContext: NSManagedObjectContext
     var mode: stopWatchMode = .stopped
     
@@ -31,7 +31,7 @@ class StopWatchManager: ObservableObject {
     var prevScrambleStr: String? = nil
     var scrambleStr: String? = nil
     
-    init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
+    init (currentSession: Binding<Sessions?>, managedObjectContext: NSManagedObjectContext) {
         _currentSession = currentSession
         self.managedObjectContext = managedObjectContext
         scrambler.initSq1()
@@ -82,9 +82,9 @@ class StopWatchManager: ObservableObject {
             // .puzzle_id
             NSLog("Saving with sesion \(currentSession)")
             NSLog("Saving with context \(solveItem.managedObjectContext)")
-            NSLog("currentSession's context is \(currentSession.managedObjectContext)")
-            // solveItem.session = currentSession
-            currentSession.addToSolves(solveItem)
+            NSLog("currentSession's context is \(currentSession!.managedObjectContext)")
+            solveItem.session = currentSession
+            // currentSession!.addToSolves(solveItem)
             solveItem.scramble = prevScrambleStr
             solveItem.scramble_type = scrambleType
             solveItem.scramble_subtype = scrambleSubType
@@ -240,7 +240,7 @@ struct SubTimerView: View {
 }
 
 struct MainTimerView: View {
-    @Binding var currentSession: Sessions
+    @Binding var currentSession: Sessions?
     @Environment(\.managedObjectContext) var managedObjectContext
           
     
