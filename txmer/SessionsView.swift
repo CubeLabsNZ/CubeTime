@@ -54,6 +54,12 @@ struct NewStandardSessionView: View {
                 .padding(.trailing)
                 .padding(.leading)
                 
+                
+                
+                
+                
+                
+                
 //                RoundedRectangle(cornerRadius: 10)
 //                    .frame(height: 100)
 //
@@ -598,7 +604,10 @@ struct SessionsView: View {
                         //                        .ultraThickMaterial
                         .buttonStyle(.bordered)
                         .controlSize(.small)
+                        
+                        
                         .background(.ultraThinMaterial, in: Capsule())
+//                        .background(VisualEffectBlurView(blurStyle: .dark), in: Capsule())
                         
                         .sheet(isPresented: $showNewSessionPopUp) {
                             NewSessionPopUpView(showNewSessionPopUp: $showNewSessionPopUp)

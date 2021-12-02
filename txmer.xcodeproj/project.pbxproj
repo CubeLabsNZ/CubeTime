@@ -380,6 +380,8 @@
 			dependencies = (
 			);
 			name = txmer;
+			packageProductDependencies = (
+			);
 			productName = txmer;
 			productReference = 23DE3BD7274DDBE200254D29 /* txmer.app */;
 			productType = "com.apple.product-type.application";
@@ -452,6 +454,8 @@
 				Base,
 			);
 			mainGroup = 23DE3BCE274DDBE200254D29;
+			packageReferences = (
+			);
 			productRefGroup = 23DE3BD8274DDBE200254D29 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
