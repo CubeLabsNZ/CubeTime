@@ -17,7 +17,7 @@ enum buttonMode {
 
 @available(iOS 15.0, *)
 struct TimeListView: View {
-    @Binding var currentSession: Sessions
+    @Binding var currentSession: Sessions?
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @State private var sortMode = 0
@@ -55,7 +55,7 @@ struct TimeListView: View {
                         VStack {
                             
                             HStack (alignment: .center) {
-                                Text(currentSession.name ?? "Unnamed Session")
+                                Text(currentSession!.name ?? "Unnamed Session")
                                     .font(.system(size: 20, weight: .semibold, design: .default))
                                     .foregroundColor(Color(UIColor.systemGray))
                                 Spacer()

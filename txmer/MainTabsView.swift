@@ -45,10 +45,10 @@ struct TabIcon: View {
 @available(iOS 15.0, *) /// TODO: remove all `@available(iOS 15.0, *)` in the project and change the button role BECAUSE iOS 15 + ONLY :sob:
 struct MainTabsView: View {
     
-    @StateObject var tabRouter: TabRouter
+    @StateObject var tabRouter: TabRouter = TabRouter()
     @Environment(\.managedObjectContext) var managedObjectContext
     
-    @State var currentSession: Sessions = Sessions() //TODO YES THIS ISTHE CAUSE
+    @State var currentSession: Sessions? = nil //TODO YES THIS ISTHE CAUSE
     // MAKE THE LOW LEVEL THINGS SET THIS
     // TRY OBSERVEDOBJECT SESIONConTROLLER?!?!
     
@@ -157,10 +157,11 @@ struct MainTabsView: View {
         }
     }
 }
-
+/*
 @available(iOS 15.0, *) /// TODO: remove all `@available(iOS 15.0, *)` in the project and change the button role BECAUSE iOS 15 + ONLY :sob:
 struct MainTabsView_Previews: PreviewProvider {
     static var previews: some View {
         MainTabsView(tabRouter: TabRouter())
     }
 }
+*/

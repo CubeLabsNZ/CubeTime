@@ -396,7 +396,7 @@ struct NewSessionPopUpView: View {
 
 @available(iOS 15.0, *)
 struct SessionsView: View {
-    @Binding var currentSession: Sessions
+    @Binding var currentSession: Sessions?
     @Environment(\.managedObjectContext) var managedObjectContext
     
     
