@@ -18,6 +18,7 @@ func getDismiss() {
 @available(iOS 15.0, *)
 struct TimesView: View {
     @State private var showingPopupSlideover = false
+    @Environment(\.managedObjectContext) var managedObjectContext
     
     /*
      let columns: [GridItem] = [
@@ -38,7 +39,7 @@ struct TimesView: View {
     
     
     
-    var solves: FetchedResults<Solves>
+    var solves: [Solves]
     
     
     
@@ -47,6 +48,7 @@ struct TimesView: View {
         LazyVGrid(columns: columns, spacing: 12) {
             ForEach(solves, id: \.self) { item in // foreach currentsesion.solves TODO
                 TimeCard(solve: item, showingPopupSlideover: showingPopupSlideover)
+                    .environment(\.managedObjectContext, managedObjectContext)
             }
         }
         .padding(.leading)

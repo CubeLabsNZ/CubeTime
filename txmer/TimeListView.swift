@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import CoreData
 
 /*
 enum buttonMode {
@@ -29,17 +30,24 @@ struct TimeListView: View {
     
     //var buttonIcon: String = userLastState
     
+    private var fetchRequest: NSFetchRequest<Solves>
+    private var solves: [Solves]
     
-    @FetchRequest(
-        entity: Solves.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \Solves.date, ascending: true)
-        ]
-    ) var solves: FetchedResults<Solves>
-    
-    //private var fetchRequest = FetchRequest<Solves>(entity: Solves.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Solves.date, ascending: true)])
-    //private var solves: FetchedResults<Solves>
-    
+    init (currentSession: Binding<Sessions?>, managedObjectContext: NSManagedObjectContext) {
+        self._currentSession = currentSession
+        self.fetchRequest = NSFetchRequest<Solves>(entityName: "Solves")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Solves.date, ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "session == %@", currentSession.wrappedValue!)
+        //fetchRequest = NSFetchRequest<Solves>(entity: Solves.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Solves.date, ascending: true)], predicate: NSPredicate(format: "session == %@", self.currentSession!))
+        do {
+            try solves = managedObjectContext.fetch(fetchRequest)
+        } catch {
+            // Replace this implementation with code to handle the error appropriately.
+            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
     
     var body: some View {
         
@@ -55,7 +63,7 @@ struct TimeListView: View {
                         VStack {
                             
                             HStack (alignment: .center) {
-                                Text(currentSession!.name ?? "Unnamed Session")
+                                Text(currentSession!.name!)
                                     .font(.system(size: 20, weight: .semibold, design: .default))
                                     .foregroundColor(Color(UIColor.systemGray))
                                 Spacer()
@@ -86,6 +94,7 @@ struct TimeListView: View {
                             }
                                  
                             TimesView(solves: solves)
+                                .environment(\.managedObjectContext, managedObjectContext)
                             
                             Spacer()
                         }

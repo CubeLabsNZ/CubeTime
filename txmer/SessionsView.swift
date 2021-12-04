@@ -554,7 +554,7 @@ struct SessionsView: View {
                                             .font(.system(size: 15, weight: .medium, design: .default))
                                             .foregroundColor(Color.black)
                                         Spacer()
-                                        Text("\(solveCount) Solves")
+                                        Text("\(item.solves!.count) Solves")
                                             .font(.system(size: 15, weight: .bold, design: .default))
                                             .foregroundColor(Color(UIColor.systemGray))
                                             .padding(.bottom, 4)
@@ -619,7 +619,16 @@ struct SessionsView: View {
                             
                             .confirmationDialog("Are you sure you want to delete this session? All solves will be deleted and this cannot be undone.", isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
                                 Button("Confirm", role: .destructive) {
-                                    print("session delete pressed")
+                                    managedObjectContext.delete(item)
+                                    do {
+                                        try managedObjectContext.save()
+                                    } catch {
+                                        if let error = error as NSError? {
+                                            // Replace this implementation with code to handle the error appropriately.
+                                            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                                            fatalError("Unresolved error \(error), \(error.userInfo)")
+                                        }
+                                    }
                                 }
                                 Button("Cancel", role: .cancel) {
                                     

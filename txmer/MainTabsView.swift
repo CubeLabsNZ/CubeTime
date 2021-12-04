@@ -60,7 +60,7 @@ struct MainTabsView: View {
                     MainTimerView(currentSession: $currentSession)
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .solves:
-                    TimeListView(currentSession: $currentSession)
+                    TimeListView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .stats:
                     StatsView()

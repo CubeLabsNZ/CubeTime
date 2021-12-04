@@ -11,6 +11,8 @@ import SwiftUI
 
 @available(iOS 15.0, *)
 struct SolvePopupView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
+    
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.dismiss) var dismiss
     @Environment(\.defaultMinListRowHeight) var minRowHeight
@@ -20,8 +22,6 @@ struct SolvePopupView: View {
     
     @State private var userComment: String
     @State private var solveStarred: Bool
-    
-    let viewContext = PersistenceController.shared.container.viewContext
     
     init(solve: Solves){
         self.solve = solve
@@ -187,9 +187,9 @@ struct SolvePopupView: View {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
                                 
-                                viewContext.delete(solve) // Todo read context from environment
+                                managedObjectContext.delete(solve) // Todo read context from environment
                                 do {
-                                    try viewContext.save()
+                                    try managedObjectContext.save()
                                 } catch {
                                     if let error = error as NSError? {
                                         // Replace this implementation with code to handle the error appropriately.
@@ -240,8 +240,7 @@ struct SolvePopupView: View {
 struct TimeCard: View {
     let solve: Solves
     @State var showingPopupSlideover: Bool
-    
-    let viewContext = PersistenceController.shared.container.viewContext
+    @Environment(\.managedObjectContext) var managedObjectContext
     
     var body: some View {
         Button(action: {
@@ -264,6 +263,7 @@ struct TimeCard: View {
         }
         .sheet(isPresented: $showingPopupSlideover) {
             SolvePopupView(solve: solve)
+                .environment(\.managedObjectContext, managedObjectContext)
         }
         .contextMenu {
             
@@ -296,9 +296,9 @@ struct TimeCard: View {
             Divider()
             
             Button (role: .destructive) {
-                viewContext.delete(solve) // TODO read viewcontext from encironmtn
+                managedObjectContext.delete(solve)
                 do {
-                    try viewContext.save()
+                    try managedObjectContext.save()
                 } catch {
                     if let error = error as NSError? {
                         // Replace this implementation with code to handle the error appropriately.

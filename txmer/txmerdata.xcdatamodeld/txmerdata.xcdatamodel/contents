@@ -3,7 +3,7 @@
     <entity name="Sessions" representedClassName="Sessions" syncable="YES" codeGenerationType="class">
         <attribute name="color" optional="YES" attributeType="Binary"/>
         <attribute name="event_name" optional="YES" attributeType="String"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
         <attribute name="pinned" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="session_scramble_type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="session_type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
