@@ -28,7 +28,10 @@ struct TimesView: View {
      */
     
     let columns = [
-        GridItem(.adaptive(minimum: 112), spacing: 11)
+        // GridItem(.adaptive(minimum: 112), spacing: 11)
+        GridItem(spacing: 10),
+        GridItem(spacing: 10),
+        GridItem(spacing: 10)
     ]
     
     let values = SetValues()

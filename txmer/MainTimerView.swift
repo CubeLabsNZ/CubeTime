@@ -83,7 +83,7 @@ class StopWatchManager: ObservableObject {
             NSLog("Saving with sesion \(currentSession)")
             NSLog("Saving with context \(solveItem.managedObjectContext)")
             NSLog("currentSession's context is \(currentSession!.managedObjectContext)")
-            solveItem.session = currentSession
+            solveItem.session = currentSession /// ???
             // currentSession!.addToSolves(solveItem)
             solveItem.scramble = prevScrambleStr
             solveItem.scramble_type = scrambleType

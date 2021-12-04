@@ -251,7 +251,9 @@ struct TimeCard: View {
             Text(String(format: "%.3f", solve.time))
                 .font(.system(size: 17, weight: .bold, design: .default))
                 .foregroundColor(Color.black)
-                .frame(width: 112, height: 53)
+                //.frame(width: 112, height: 53)
+                //.frame(height: 55)
+                .frame(maxWidth: 120, minHeight: 55, maxHeight: 55)
             
                 .background(Color.white)
                 .cornerRadius(10)

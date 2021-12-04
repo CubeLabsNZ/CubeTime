@@ -8,12 +8,44 @@
 import SwiftUI
 import CoreData
 
+struct NewStandardSessionViewBlocks: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .background(Color.white)
+            .cornerRadius(10)
+            
+            .padding(.trailing)
+            .padding(.leading)
+    }
+}
+
+
 @available(iOS 15.0, *)
 struct NewStandardSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     
     @Binding var showNewSessionPopUp: Bool
     @State private var name: String = ""
+    
+    @State private var sessionEventType = "3x3"
+    
+    //@State private var sessionColour: Color?
+    @State private var sessionColour: Color = .indigo
+    
+    @State var pinnedSession: Bool /// TODO: link to database
+    
+    let allEventTypes = ["3x3", "2x2", "4x4", "5x5", "6x6", "7x7", "Square-1", "Pyraminx", "Skewb", "Clock", "Megaminx", "3BLD"]
+    
+    let sessionColors: [Color] = [.indigo, .purple, .pink, .red, .orange, .yellow, .green, .mint, .teal, .cyan, .blue]
+    
+    let sessionColorColumns = [
+        //GridItem(.fixed(40))
+        GridItem(.adaptive(minimum: 40)) /// TODO FIX ~~AND ALSO USE IN THE TIMES VIEW BECAUSE IT SHOULD DYNAMICALLY ADJUST FOR SMALLER SCREENS (FIXED 3 COLUMNS!)~~
+        
+        
+        
+    ]
+    
     
     var body: some View {
         
@@ -47,33 +79,92 @@ struct NewStandardSessionView: View {
                         .padding(.bottom)
                         
                 }
+                .frame(height: 220)
+                .modifier(NewStandardSessionViewBlocks())
+                /*
                 .background(Color.white)
                 .cornerRadius(10)
                 .frame(height: 220)
                 
                 .padding(.trailing)
                 .padding(.leading)
+                */
                 
+                VStack (spacing: 0) {
+                    HStack {
+                        Text("Session Event")
+                            .font(.system(size: 17, weight: .medium))
+                        
+                        
+                        Spacer()
+                        
+                        Picker("", selection: $sessionEventType) {
+                            ForEach(allEventTypes, id: \.self) {
+                                Text($0)
+                                    
+                                    //.foregroundColor(Color(UIColor.systemGray4))
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .font(.system(size: 17, weight: .regular))
+                        .accentColor(Color(UIColor.systemGray))
+                        
+                        
+                        //Text("Square-1")
+                    }
+                    .padding()
+                }
+                .frame(height: 45)
+                .modifier(NewStandardSessionViewBlocks())
+
                 
+                VStack (spacing: 0) {
+                    HStack {
+                        //Text("Pin Session?")
+                          //  .font(.system(size: 17, weight: .medium))
+                        
+                        
+                        //Spacer()
+                        
+                        
+                        Toggle(isOn: $pinnedSession) {
+                            Text("Pin Session?")
+                                .font(.system(size: 17, weight: .medium))
+                        }
+                        .tint(.yellow)
+                        
+                        
+                        //Text("Square-1")
+                    }
+                    .padding()
+                }
+                .frame(height: 45)
+                .modifier(NewStandardSessionViewBlocks())
                 
-                
-                
-                
-                
-//                RoundedRectangle(cornerRadius: 10)
-//                    .frame(height: 100)
-//
-//                RoundedRectangle(cornerRadius: 10)
-//                    .frame(height: 100)
-//
-//                RoundedRectangle(cornerRadius: 10)
-//                    .frame(height: 100)
-//
-//                RoundedRectangle(cornerRadius: 10)
-//                    .frame(height: 100)
-                
-                
-                
+                VStack (spacing: 0) {
+                    LazyVGrid(columns: sessionColorColumns, spacing: 10) {
+                        ForEach(sessionColors, id: \.self) { colour in
+                            Button {
+                                sessionColour = colour
+                                
+                                
+                            } label: {
+                                Image(systemName: "circle.fill")
+                                    .foregroundColor(colour)
+                                    .font(.system(size: 40))
+                            }
+                            
+                            
+                        }
+                        
+                    }
+                    .padding()
+                }
+                .frame(height: 130)
+                .modifier(NewStandardSessionViewBlocks())
+        
+                Text("current colour selected")
+                    .foregroundColor(sessionColour)
                 
                 Spacer()
                 
@@ -211,7 +302,7 @@ struct NewSessionPopUpView: View {
                             .padding(.leading, 20)
                             .padding(.bottom, 8)
                         
-                        NavigationLink(destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp)) {
+                        NavigationLink(destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false)) {
                             Button {
                                 showNewSessionView.toggle()
                             } label: {
@@ -245,7 +336,7 @@ struct NewSessionPopUpView: View {
                             .padding(.leading, 64)
                             .padding(.trailing)
                         
-                        NavigationLink(destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp)) {
+                        NavigationLink(destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false)) {
                             Button {
                                 showNewSessionView.toggle()
                             } label: {
@@ -276,7 +367,7 @@ struct NewSessionPopUpView: View {
                             .padding(.leading, 64)
                             .padding(.trailing)
                         
-                        NavigationLink(destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp)) {
+                        NavigationLink(destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false)) {
                             Button {
                                 showNewSessionView.toggle()
                             } label: {
@@ -312,7 +403,7 @@ struct NewSessionPopUpView: View {
                             .padding(.leading, 20)
                             .padding(.bottom, 8)
                         
-                        NavigationLink(destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp)) {
+                        NavigationLink(destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false)) {
                             Button {
                                 showNewSessionView.toggle()
                                 NSLog(String(showNewSessionPopUp))
@@ -348,7 +439,7 @@ struct NewSessionPopUpView: View {
                     
                     
                     
-                    NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp), isActive: $showNewSessionView)
+                    NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false), isActive: $showNewSessionView)
                     
                     
                     /*
@@ -389,6 +480,28 @@ struct NewSessionPopUpView: View {
             
             //Spacer()
         }
+    }
+}
+
+@available(iOS 15.0, *)
+struct BottomSafeArea: ViewModifier {
+    func body(content: Content) -> some View {
+        if SetValues.hasBottomBar {
+            content
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.clear)
+                        .frame(height: 50)
+                }
+        } else {
+            content
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.clear)
+                        .frame(height: 50 + CGFloat(SetValues.marginBottom))
+                }
+        }
+        
     }
 }
 
@@ -506,7 +619,7 @@ struct SessionsView: View {
                             
                             .confirmationDialog("Are you sure you want to delete this session? All solves will be deleted and this cannot be undone.", isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
                                 Button("Confirm", role: .destructive) {
-                                    // Handle the delete action.
+                                    print("session delete pressed")
                                 }
                                 Button("Cancel", role: .cancel) {
                                     
@@ -585,28 +698,43 @@ struct SessionsView: View {
                     Spacer()
                     
                     HStack {
-                        Button {
-                            showNewSessionPopUp.toggle()
-                        } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.system(size: 24, weight: .semibold))
-                                .padding(.leading, -4)
-                            Text("New Session")
-                                .font(.system(size: 18, weight: .medium))
+                        
+                        
+                        ZStack {
+                            //Color.teal
+                            
+//                            Button {
+//
+//                            } label: {
+//                                Image(systemName: "plus.circle.fill")
+//                                    .font(.system(size: 24, weight: .semibold))
+//                                    .padding(.leading, -4)
+//                                    .foregroundColor(Color.clear)
+//                                Text("New Session")
+//                                    .font(.system(size: 18, weight: .medium))
+//                                    .foregroundColor(Color.clear)
+//                            }
+//                            .buttonStyle(.bordered)
+//                            .controlSize(.small)
+//                            .background(Color.blue.opacity(0.3), in: Capsule())
+                            
+                            Button {
+                                showNewSessionPopUp.toggle()
+                            } label: {
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.system(size: 24, weight: .semibold))
+                                    .padding(.leading, -4)
+                                Text("New Session")
+                                    .font(.system(size: 18, weight: .medium))
+                            }
+                            .shadow(color: .black.opacity(0.12), radius: 10, x: 0, y: 3)
+                            .overlay(Capsule().stroke(Color.black.opacity(0.05), lineWidth: 0.5))
+                            .buttonStyle(.bordered)
+                            
+                            .controlSize(.small)
+                            .background(.ultraThinMaterial, in: Capsule())
                         }
-                        .shadow(color: .black.opacity(0.10), radius: 10, x: 0, y: 3)
-                        //.buttonStyle(.capsule)
                         
-                        //                        .tint(.blue)
-                        //                        .buttonStyle(.bordered)
-                        //                        .buttonStyle(.borderedProminent)
-                        //                        .clipShape(Capsule())
-                        //                        .ultraThickMaterial
-                        .buttonStyle(.bordered)
-                        .controlSize(.small)
-                        
-                        
-                        .background(.ultraThinMaterial, in: Capsule())
 //                        .background(VisualEffectBlurView(blurStyle: .dark), in: Capsule())
                         
                         .sheet(isPresented: $showNewSessionPopUp) {
@@ -623,14 +751,9 @@ struct SessionsView: View {
                         Spacer()
                     }
                 }
-                .safeAreaInset(edge: .bottom, spacing: 0) {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.clear)
-                        .frame(height: 50)
+                .modifier(BottomSafeArea())
+                
                     
-                }
-                
-                
                 
             }
         }
