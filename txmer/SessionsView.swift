@@ -169,7 +169,9 @@ struct NewStandardSessionView: View {
                 Spacer()
                 
             }
+            .ignoresSafeArea(.keyboard)
             .navigationBarTitle("New Standard Session", displayMode: .inline)
+//            .ignoresSafeArea(.keyboard)
             //.navigationTitle("")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -207,6 +209,7 @@ struct NewStandardSessionView: View {
             
             
         }
+        .ignoresSafeArea(.keyboard)
          
          
          

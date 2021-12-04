@@ -7,8 +7,22 @@
 
 import SwiftUI
 
+extension View {
+    public func gradientForeground(colors: [Color]) -> some View {
+        self.overlay(LinearGradient(gradient: .init(colors: colors),
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing))
+            .mask(self)
+    }
+}
+
+
 struct StatsView: View {
     
+    let gradientColour: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 136/255, green: 94/255, blue: 191/255)]),
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing)
     
     let columns = [
         // GridItem(.adaptive(minimum: 112), spacing: 11)
@@ -28,84 +42,104 @@ struct StatsView: View {
                         HStack (spacing: 10) {
                             VStack (spacing: 10) {
                                 HStack {
-                                    VStack (spacing: 2) {
+                                    VStack (alignment: .leading, spacing: 0) {
                                         Text("BEST SINGLE")
                                             .font(.system(size: 13, weight: .medium, design: .default))
                                             .foregroundColor(Color(UIColor.systemGray6))
-                                            
-//                                            .padding(.bottom, -5)
-                                        // Spacer()
                                         
                                         Text("3.741")
                                             .font(.system(size: 34, weight: .bold, design: .default))
                                             .foregroundColor(.white)
-                                            
-                                            
                                     }
                                     .padding(.top)
                                     .padding(.bottom)
                                     .padding(.leading, 12)
                                     
-                                    
                                     Spacer()
                                 }
                                 .frame(height: 75)
-                                .background(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 136/255, green: 94/255, blue: 191/255)]),
-//                                        gradient: Gradient(colors: [.blue, .green]),
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing)
-                                        .clipShape(RoundedRectangle(cornerRadius:16)))
+                                .background(gradientColour                                        .clipShape(RoundedRectangle(cornerRadius:16)))
                                 
-                                
-                                
-
-                                VStack {
-                                    Text("best ao12")
-                                    
-                                    Text("7.41")
-                                    
-                                    Divider()
-                                    
-                                    
-                                    Text("best ao100")
-                                    
-                                    Text("8.02")
-                                    
+                                HStack {
+                                    VStack (alignment: .leading, spacing: 0) {
+                                        Text("BEST AO12")
+                                            .font(.system(size: 13, weight: .medium, design: .default))
+                                            .foregroundColor(Color(UIColor.systemGray))
+                                            .padding(.leading, 12)
+                                        
+                                        Text("7.41")
+                                            .font(.system(size: 34, weight: .bold, design: .default))
+                                            .foregroundColor(.black)
+                                            .padding(.leading, 12)
+                                        
+                                        Divider()
+                                            .padding(.leading, 12)
+                                            .padding(.bottom, 4)
+                                        
+                                        Text("BEST AO100")
+                                            .font(.system(size: 13, weight: .medium, design: .default))
+                                            .foregroundColor(Color(UIColor.systemGray))
+                                            .padding(.leading, 12)
+                                        
+                                        Text("8.02")
+                                            .font(.system(size: 34, weight: .bold, design: .default))
+                                            .foregroundColor(.black)
+                                            .padding(.leading, 12)
+                                        
+                                    }
+                                    .frame(height: 130)
+                                    .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
                                 }
-                                .frame(height: 125)
-                                .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
                                 
                                 
                             }
                             .frame(minWidth: 0, maxWidth: .infinity)
-
-                             
-                             VStack {
-                                 Text("Best ao5")
-                                 
-                                 Text("6.142")
-                                 
-                                 Text("solve")
-                                 Text("solve")
-                                 Text("solve")
-                                 Text("solve")
-                                 Text("solve")
-                             }
-                             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 210)
-                             .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
-                             
+                            
+                            VStack (spacing: 10) {
+                                HStack {
+                                    VStack (alignment: .leading, spacing: 0) {
+                                        Text("BEST AO5")
+                                            .font(.system(size: 13, weight: .medium, design: .default))
+                                            .foregroundColor(Color(UIColor.systemGray))
+                                            
+                                        Text("6.142")
+                                            .font(.system(size: 34, weight: .bold, design: .default))
+                                            .gradientForeground(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 136/255, green: 94/255, blue: 191/255)])
+                                        
+//                                        gradientColour.mask(Text("6.142").font(.system(size: 34, weight: .bold, design: .default)))
+                                        
+                                        Spacer()
+                                        
+                                        
+                                        Text("(5.58)\n6.24\n(8.87)\n6.18\n5.99") /// TODO: make text gray when they are () and AUTO BRACKET
+                                            .font(.system(size: 17, weight: .regular, design: .default))
+                                        
+                                    }
+//                                    .padding(.top)
+                                    .padding(.top, 10)
+                                    .padding(.bottom, 10)
+                                    .padding(.leading, 12)
+                                    
+                                    
+                                    
+                                    Spacer()
+                                }
+                                .frame(height: 215)
+                                .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                            }
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            
+                            
                         }
-
+                        
                         HStack {
                             Text("Session mean")
                             Text("Number of solves")
                         }
                         
-//                        LazyVGrid(columns: columns, spacing: 10) {
-//                            Text("yes")
-//                        }
+                        //                        LazyVGrid(columns: columns, spacing: 10) {
+                        //                            Text("yes")
+                        //                        }
                         
                         
                         
@@ -126,6 +160,8 @@ struct StatsView: View {
 
 struct StatsViewPreview: PreviewProvider {
     static var previews: some View {
-        StatsView()
+        Group {
+            StatsView()
+        }
     }
 }
