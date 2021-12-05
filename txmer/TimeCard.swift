@@ -239,13 +239,13 @@ struct SolvePopupView: View {
 @available(iOS 15.0, *)
 struct TimeCard: View {
     let solve: Solves
-    @State var showingPopupSlideover: Bool
+    @State var showingPopupSlideover = false
     @Environment(\.managedObjectContext) var managedObjectContext
     
     var body: some View {
         Button(action: {
             print(solve.time)
-            showingPopupSlideover.toggle()
+            showingPopupSlideover = true
         }) {
             Text(String(format: "%.3f", solve.time))
                 .font(.system(size: 17, weight: .bold, design: .default))

@@ -16,6 +16,11 @@ enum buttonMode {
 }
  */
 
+class TimeListManager: ObservableObject {
+    @Published var solves: [Solves]?
+    
+}
+
 @available(iOS 15.0, *)
 struct TimeListView: View {
     @Binding var currentSession: Sessions?
@@ -32,6 +37,13 @@ struct TimeListView: View {
     
     private var fetchRequest: NSFetchRequest<Solves>
     private var solves: [Solves]
+    
+    private let columns = [
+        // GridItem(.adaptive(minimum: 112), spacing: 11)
+        GridItem(spacing: 10),
+        GridItem(spacing: 10),
+        GridItem(spacing: 10)
+    ]
     
     init (currentSession: Binding<Sessions?>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
@@ -93,8 +105,14 @@ struct TimeListView: View {
                                 Spacer()
                             }
                                  
-                            TimesView(solves: solves)
-                                .environment(\.managedObjectContext, managedObjectContext)
+                            LazyVGrid(columns: columns, spacing: 12) {
+                                ForEach(solves, id: \.self) { item in
+                                    TimeCard(solve: item)
+                                        .environment(\.managedObjectContext, managedObjectContext)
+                                }
+                            }
+                            .padding(.leading)
+                            .padding(.trailing)
                             
                             Spacer()
                         }
@@ -104,7 +122,6 @@ struct TimeListView: View {
                         
                         VStack /* (alignment: .center)*/ {
                             HStack {
-                                
                                 Spacer()
                                 
                                 Button {
@@ -117,30 +134,20 @@ struct TimeListView: View {
                                 }
                                 .padding(.trailing, 16.5) /// TODO don't hardcode padding
                                 .offset(y: (32 / 2) - (SetValues.iconFontSize / 2) + 6 + 18)
-                                
-                                
-                                 
                             }
-                            
                             Spacer()
-
                         }
                     }
                 }
                 .navigationTitle("Session Times")
                 .toolbar {
-                    
-                    
                     Button {
                         print("button tapped")
                     } label: {
                         Image(systemName: "ellipsis.circle")
                             .font(.system(size: 17, weight: .medium))
                     }
-                    
                 }
-                
-                
                 //.frame(maxHeight: UIScreen.screenHeight)
             }
         }.navigationViewStyle(StackNavigationViewStyle())

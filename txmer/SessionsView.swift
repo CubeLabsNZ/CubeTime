@@ -487,27 +487,119 @@ struct NewSessionPopUpView: View {
 }
 
 @available(iOS 15.0, *)
-struct BottomSafeArea: ViewModifier {
-    func body(content: Content) -> some View {
-        if SetValues.hasBottomBar {
-            content
-                .safeAreaInset(edge: .bottom, spacing: 0) {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.clear)
-                        .frame(height: 50)
+struct SessionCard: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
+    
+    @Binding var currentSession: Sessions?
+    
+    
+    @State private var isShowingDeleteDialog = false
+    var item: Sessions
+    
+    var body: some View {
+        Button {
+            print("Setting current sesion to \(item)")
+            NSLog("Its context is \(item.managedObjectContext)")
+            NSLog("managedObjectContext is \(managedObjectContext)")
+            currentSession = item
+        } label: {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(item.name ?? "Unkown session name")
+                        .font(.system(size: 22, weight: .bold, design: .default))
+                        .foregroundColor(Color.black)
+                    Text("Square-1")
+                        .font(.system(size: 15, weight: .medium, design: .default))
+                        .foregroundColor(Color.black)
+                    Spacer()
+                    Text("\(item.solves?.count ?? -1) Solves")
+                        .font(.system(size: 15, weight: .bold, design: .default))
+                        .foregroundColor(Color(UIColor.systemGray))
+                        .padding(.bottom, 4)
                 }
-        } else {
-            content
-                .safeAreaInset(edge: .bottom, spacing: 0) {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.clear)
-                        .frame(height: 50 + CGFloat(SetValues.marginBottom))
+                
+                Spacer()
+                
+                Image(systemName: "square.fill")
+                    .font(.system(size: 90))
+                    .foregroundColor(Color.black)
+                //.padding(.trailing, -12)
+                
+            }
+            .padding(.leading)
+            .padding(.trailing, 6)
+            .padding(.top, 12)
+            .padding(.bottom, 12)
+            
+        }
+        .frame(height: 110)
+        .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+        
+        
+        
+        
+        
+        
+        .contextMenu {
+            
+            Button {
+                print("Customise pressed")
+            } label: {
+                Label("Customise", systemImage: "pencil")
+            }
+            
+            //                                       Divider()
+            
+            Button {
+                print("Pin pressed")
+            } label: {
+                Label("Pin", systemImage: "pin") /// TODO: add custom icons because no good icons
+            }
+            
+            Divider()
+            
+            Button (role: .destructive) {
+                print("session delete pressed")
+                isShowingDeleteDialog.toggle()
+            } label: {
+                Label {
+                    Text("Delete Session")
+                        .foregroundColor(Color.red)
+                } icon: {
+                    Image(systemName: "trash")
+                        .foregroundColor(Color.green) /// FIX: colours not working
                 }
+            }
+            
+            
+            
         }
         
+        .confirmationDialog("Are you sure you want to delete this session? All solves will be deleted and this cannot be undone.", isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
+            let _ = NSLog("Confimation Dialog for \(item.name), presented: \(isShowingDeleteDialog)")
+            Button("Confirm", role: .destructive) {
+                managedObjectContext.delete(item)
+                NSLog("\(item.name)")
+                do {
+                    try managedObjectContext.save()
+                } catch {
+                    if let error = error as NSError? {
+                        // Replace this implementation with code to handle the error appropriately.
+                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                        fatalError("Unresolved error \(error), \(error.userInfo)")
+                    }
+                }
+            }
+            Button("Cancel", role: .cancel) {
+                
+            }
+        }
+        
+        
+        .padding(.trailing)
+        .padding(.leading)
     }
 }
-
 
 
 @available(iOS 15.0, *)
@@ -531,7 +623,6 @@ struct SessionsView: View {
     ) var sessions: FetchedResults<Sessions>
     
     
-    @State private var isShowingDeleteDialog = false
     
     var body: some View {
         NavigationView {
@@ -542,116 +633,9 @@ struct SessionsView: View {
                 ScrollView() {
                     VStack (spacing: 10) {
                         ForEach(sessions, id: \.self) { item in
-                            Button {
-                                print("Setting current sesion to \(item)")
-                                NSLog("Its context is \(item.managedObjectContext)")
-                                NSLog("managedObjectContext is \(managedObjectContext)")
-                                currentSession = item
-                            } label: {
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text(item.name ?? "Unkown session name")
-                                            .font(.system(size: 22, weight: .bold, design: .default))
-                                            .foregroundColor(Color.black)
-                                        Text("Square-1")
-                                            .font(.system(size: 15, weight: .medium, design: .default))
-                                            .foregroundColor(Color.black)
-                                        Spacer()
-                                        Text("\(item.solves!.count) Solves")
-                                            .font(.system(size: 15, weight: .bold, design: .default))
-                                            .foregroundColor(Color(UIColor.systemGray))
-                                            .padding(.bottom, 4)
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    Image(systemName: "square.fill")
-                                        .font(.system(size: 90))
-                                        .foregroundColor(Color.black)
-                                    //.padding(.trailing, -12)
-                                    
-                                }
-                                .padding(.leading)
-                                .padding(.trailing, 6)
-                                .padding(.top, 12)
-                                .padding(.bottom, 12)
-                                
-                            }
-                            .frame(height: 110)
-                            .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
-                            
-                            
-                            
-                            
-                            
-                            
-                            .contextMenu {
-                                
-                                Button {
-                                    print("Customise pressed")
-                                } label: {
-                                    Label("Customise", systemImage: "pencil")
-                                }
-                                
-                                //                                       Divider()
-                                
-                                Button {
-                                    print("Pin pressed")
-                                } label: {
-                                    Label("Pin", systemImage: "pin") /// TODO: add custom icons because no good icons
-                                }
-                                
-                                Divider()
-                                
-                                Button (role: .destructive) {
-                                    print("session delete pressed")
-                                    isShowingDeleteDialog.toggle()
-                                } label: {
-                                    Label {
-                                        Text("Delete Session")
-                                            .foregroundColor(Color.red)
-                                    } icon: {
-                                        Image(systemName: "trash")
-                                            .foregroundColor(Color.green) /// FIX: colours not working
-                                    }
-                                }
-                                
-                                
-                                
-                            }
-                            
-                            .confirmationDialog("Are you sure you want to delete this session? All solves will be deleted and this cannot be undone.", isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
-                                Button("Confirm", role: .destructive) {
-                                    managedObjectContext.delete(item)
-                                    do {
-                                        try managedObjectContext.save()
-                                    } catch {
-                                        if let error = error as NSError? {
-                                            // Replace this implementation with code to handle the error appropriately.
-                                            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                                            fatalError("Unresolved error \(error), \(error.userInfo)")
-                                        }
-                                    }
-                                }
-                                Button("Cancel", role: .cancel) {
-                                    
-                                }
-                            }
-                            
-                            
-                            .padding(.trailing)
-                            .padding(.leading)
-                            
-                            
-                            
-                            
-                            
-                            
-                            
+                            SessionCard(currentSession: $currentSession, item: item)
+                                .environment(\.managedObjectContext, managedObjectContext)
                         }
-                        
-                        
-                        
                     }
                     
                     /*
@@ -763,10 +747,11 @@ struct SessionsView: View {
                         Spacer()
                     }
                 }
-                .modifier(BottomSafeArea())
-                
-                    
-                
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.clear)
+                        .frame(height: 50 + (SetValues.hasBottomBar ? 0 : CGFloat(SetValues.marginBottom)))
+                }
             }
         }
     }
