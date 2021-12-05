@@ -14,10 +14,6 @@ struct txmerApp: App {
     
     var body: some Scene {
         WindowGroup {
-            //MainTimerView()
-            //TimeListView()
-            //TimesView()
-            // NEW UPDATE USE THIS - REAGAN
             MainTabsView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }

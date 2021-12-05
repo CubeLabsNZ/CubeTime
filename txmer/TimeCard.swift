@@ -17,14 +17,17 @@ struct SolvePopupView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.defaultMinListRowHeight) var minRowHeight
     
+    var timeListManager: TimeListManager
+    
     
     let solve: Solves
     
     @State private var userComment: String
     @State private var solveStarred: Bool
     
-    init(solve: Solves){
+    init(solve: Solves, timeListManager: TimeListManager){
         self.solve = solve
+        self.timeListManager = timeListManager
         _userComment = State(initialValue: solve.comment ?? "")
         _solveStarred = State(initialValue: solve.starred)
     }
@@ -206,6 +209,7 @@ struct SolvePopupView: View {
                                         fatalError("Unresolved error \(error), \(error.userInfo)")
                                     }
                                 }
+                                timeListManager.resort()
                             } label: {
                                 Text("Delete Solve")
                                     .font(.system(size: 17, weight: .medium))
@@ -239,13 +243,15 @@ struct SolvePopupView: View {
 @available(iOS 15.0, *)
 struct TimeCard: View {
     let solve: Solves
-    @State var showingPopupSlideover: Bool
+    @State var showingPopupSlideover = false
     @Environment(\.managedObjectContext) var managedObjectContext
+    
+    var timeListManager: TimeListManager
     
     var body: some View {
         Button(action: {
             print(solve.time)
-            showingPopupSlideover.toggle()
+            showingPopupSlideover = true
         }) {
             Text(String(format: "%.3f", solve.time))
                 .font(.system(size: 17, weight: .bold, design: .default))
@@ -262,7 +268,7 @@ struct TimeCard: View {
             UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
         }
         .sheet(isPresented: $showingPopupSlideover) {
-            SolvePopupView(solve: solve)
+            SolvePopupView(solve: solve, timeListManager: timeListManager)
                 .environment(\.managedObjectContext, managedObjectContext)
         }
         .contextMenu {
@@ -315,6 +321,7 @@ struct TimeCard: View {
                         fatalError("Unresolved error \(error), \(error.userInfo)")
                     }
                 }
+                timeListManager.resort()
             } label: {
                 Label {
                     Text("Delete Solve")

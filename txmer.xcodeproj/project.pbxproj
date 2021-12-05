@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		233FE7B4274F090900C6F1DF /* TimesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B3274F090900C6F1DF /* TimesView.swift */; };
 		233FE7B6274F109600C6F1DF /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Values.swift */; };
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
 		23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* txmerApp.swift */; };
@@ -73,7 +72,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		233FE7B3274F090900C6F1DF /* TimesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimesView.swift; sourceTree = "<group>"; };
 		233FE7B5274F109600C6F1DF /* Values.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Values.swift; sourceTree = "<group>"; };
 		23D2FC4C274E12DE00D7071A /* TimeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeListView.swift; sourceTree = "<group>"; };
 		23DE3BD7274DDBE200254D29 /* txmer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = txmer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -213,7 +211,6 @@
 				7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */,
 				23DE3BDC274DDBE200254D29 /* MainTimerView.swift */,
 				23D2FC4C274E12DE00D7071A /* TimeListView.swift */,
-				233FE7B3274F090900C6F1DF /* TimesView.swift */,
 				7D6159F82751B53E00DC9A4C /* TimeCard.swift */,
 				7D7A9EC3274F392700C2E125 /* SessionsView.swift */,
 				7D7A9EBF274F38CD00C2E125 /* StatsView.swift */,
@@ -507,7 +504,6 @@
 				7D69E0AD2751FDEA007211CC /* Cross.m in Sources */,
 				7D69E0BB2751FDEB007211CC /* CHTUtil.m in Sources */,
 				23DE3BE4274DDBE300254D29 /* Persistence.swift in Sources */,
-				233FE7B4274F090900C6F1DF /* TimesView.swift in Sources */,
 				7D69E0AC2751FDEA007211CC /* CHTScrambler.m in Sources */,
 				7D69E0B92751FDEA007211CC /* CHTSettings.m in Sources */,
 				7D69E0BD2751FDEB007211CC /* RubiksTimerDataProcessing.m in Sources */,

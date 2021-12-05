@@ -16,29 +16,34 @@ enum buttonMode {
 }
  */
 
-@available(iOS 15.0, *)
-struct TimeListView: View {
+enum SortBy {
+    case date
+    case time
+}
+
+class TimeListManager: ObservableObject {
+    @Published var solves: [Solves]?
+    @Published var fetchError: NSError?
     @Binding var currentSession: Sessions?
+    let managedObjectContext: NSManagedObjectContext
+    @Published var sortBy: Int = 0
+    var ascending = true
     
-    @Environment(\.managedObjectContext) var managedObjectContext
-    @State private var sortMode = 0
-    @State private var sortAscending: Bool = true // sorting ascending or descending method (true = ascending, false = descending)as
-    
-     
-    //let descendingButtonIcon: Image = Image(systemName: "chevron.down.circle")
-   
-    
-    //var buttonIcon: String = userLastState
-    
-    private var fetchRequest: NSFetchRequest<Solves>
-    private var solves: [Solves]
+    private let fetchRequest = NSFetchRequest<Solves>(entityName: "Solves")
     
     init (currentSession: Binding<Sessions?>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
-        self.fetchRequest = NSFetchRequest<Solves>(entityName: "Solves")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Solves.date, ascending: true)]
+        self.managedObjectContext = managedObjectContext
         fetchRequest.predicate = NSPredicate(format: "session == %@", currentSession.wrappedValue!)
-        //fetchRequest = NSFetchRequest<Solves>(entity: Solves.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Solves.date, ascending: true)], predicate: NSPredicate(format: "session == %@", self.currentSession!))
+        resort()
+    }
+    
+    func resort() {
+        if sortBy == 0 {
+            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Solves.date, ascending: ascending)]
+        } else {
+            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Solves.time, ascending: ascending)]
+        }
         do {
             try solves = managedObjectContext.fetch(fetchRequest)
         } catch {
@@ -47,6 +52,33 @@ struct TimeListView: View {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
+    }
+}
+
+@available(iOS 15.0, *)
+struct TimeListView: View {
+    @Binding var currentSession: Sessions?
+    
+    @Environment(\.managedObjectContext) var managedObjectContext
+    
+    @StateObject var timeListManager: TimeListManager
+    
+     
+    //let descendingButtonIcon: Image = Image(systemName: "chevron.down.circle")
+    //var buttonIcon: String = userLastState
+    
+    private let columns = [
+        // GridItem(.adaptive(minimum: 112), spacing: 11)
+        GridItem(spacing: 10),
+        GridItem(spacing: 10),
+        GridItem(spacing: 10)
+    ]
+    
+    init (currentSession: Binding<Sessions?>, managedObjectContext: NSManagedObjectContext) {
+        self._currentSession = currentSession
+        self._timeListManager = StateObject(wrappedValue: TimeListManager(currentSession: currentSession, managedObjectContext: managedObjectContext))
+        //fetchRequest = NSFetchRequest<Solves>(entity: Solves.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Solves.date, ascending: true)], predicate: NSPredicate(format: "session == %@", self.currentSession!))
+        
     }
     
     var body: some View {
@@ -81,20 +113,30 @@ struct TimeListView: View {
                                 
                                 Spacer()
                                 
-                                Picker("Sort Method", selection: $sortMode, content: {
+                                Picker("Sort Method", selection: $timeListManager.sortBy) {
                                     Text("Sort by Date").tag(0)
                                     Text("Sort by Time").tag(1)
-                                })
+                                }
+                                .onChange(of: timeListManager.sortBy) {_ in
+                                    timeListManager.resort() // TODO make this work automatically in the TimeListManager
+                                }
                                 .pickerStyle(SegmentedPickerStyle())
                                 .frame(maxWidth: 200, alignment: .center)
                                 .padding(.top, -6)
                                 .padding(.bottom, 4)
+                                
                                
                                 Spacer()
                             }
                                  
-                            TimesView(solves: solves)
-                                .environment(\.managedObjectContext, managedObjectContext)
+                            LazyVGrid(columns: columns, spacing: 12) {
+                                ForEach(timeListManager.solves!, id: \.self) { item in
+                                    TimeCard(solve: item, timeListManager: timeListManager)
+                                        .environment(\.managedObjectContext, managedObjectContext)
+                                }
+                            }
+                            .padding(.leading)
+                            .padding(.trailing)
                             
                             Spacer()
                         }
@@ -104,43 +146,33 @@ struct TimeListView: View {
                         
                         VStack /* (alignment: .center)*/ {
                             HStack {
-                                
                                 Spacer()
                                 
                                 Button {
-                                    sortAscending.toggle()
+                                    timeListManager.ascending.toggle()
+                                    timeListManager.resort()
                                     // let sortDesc: NSSortDescriptor = NSSortDescriptor(key: "date", ascending: sortAscending)
                                     //solves.sortDescriptors = [sortDesc]
                                 } label: {
-                                    Image(systemName: sortAscending ? "chevron.up.circle" : "chevron.down.circle")
+                                    Image(systemName: timeListManager.ascending ? "chevron.up.circle" : "chevron.down.circle")
                                         .font(.system(size: 20, weight: .medium))
                                 }
                                 .padding(.trailing, 16.5) /// TODO don't hardcode padding
                                 .offset(y: (32 / 2) - (SetValues.iconFontSize / 2) + 6 + 18)
-                                
-                                
-                                 
                             }
-                            
                             Spacer()
-
                         }
                     }
                 }
                 .navigationTitle("Session Times")
                 .toolbar {
-                    
-                    
                     Button {
                         print("button tapped")
                     } label: {
                         Image(systemName: "ellipsis.circle")
                             .font(.system(size: 17, weight: .medium))
                     }
-                    
                 }
-                
-                
                 //.frame(maxHeight: UIScreen.screenHeight)
             }
         }.navigationViewStyle(StackNavigationViewStyle())
