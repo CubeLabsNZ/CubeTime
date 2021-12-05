@@ -34,17 +34,20 @@ struct NewStandardSessionView: View {
     
     @State var pinnedSession: Bool /// TODO: link to database
     
-    let allEventTypes = ["3x3", "2x2", "4x4", "5x5", "6x6", "7x7", "Square-1", "Pyraminx", "Skewb", "Clock", "Megaminx", "3BLD"]
+    let allEventTypes = ["3x3", "2x2", "4x4", "5x5", "6x6", "7x7", "Square-1", "Pyraminx", "Skewb", "Clock", "Megaminx", "OH", "3BLD", "4BLD", "5BLD"]
     
     let sessionColors: [Color] = [.indigo, .purple, .pink, .red, .orange, .yellow, .green, .mint, .teal, .cyan, .blue]
+    
+    
+    
+    
     
     let sessionColorColumns = [
         //GridItem(.fixed(40))
         GridItem(.adaptive(minimum: 40)) /// TODO FIX ~~AND ALSO USE IN THE TIMES VIEW BECAUSE IT SHOULD DYNAMICALLY ADJUST FOR SMALLER SCREENS (FIXED 3 COLUMNS!)~~
-        
-        
-        
     ]
+    
+    let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
     
     
     var body: some View {
@@ -58,117 +61,146 @@ struct NewStandardSessionView: View {
             Color(UIColor.systemGray6)
                 .ignoresSafeArea()
             
-            VStack (spacing: 16) {
-                
-                VStack (alignment: .center, spacing: 0) {
-                    Image(systemName: "square.fill")
-                        .font(.system(size: 120))
-                        .padding(.top, 8)
-                        .padding(.bottom, 8)
-                        .shadow(color: .black.opacity(0.16), radius: 12, x: 0, y: 3)
-                        
+            ScrollView {
+                VStack (spacing: 16) {
                     
-                    TextField("Session Name", text: $name)
-                        .padding()
-                        .font(.system(size: 22, weight: .bold))
-                        .multilineTextAlignment(TextAlignment.center)
-                        .background(Color(UIColor.systemGray5))
-                        .cornerRadius(10)
-                        .padding(.leading)
-                        .padding(.trailing)
-                        .padding(.bottom)
+                    VStack (alignment: .center, spacing: 0) {
+                        Image(systemName: "square.fill")
+                            .font(.system(size: 120))
+                            .padding(.top, 8)
+                            .padding(.bottom, 8)
+                            .shadow(color: .black.opacity(0.16), radius: 12, x: 0, y: 3)
+                            
                         
-                }
-                .frame(height: 220)
-                .modifier(NewStandardSessionViewBlocks())
-                /*
-                .background(Color.white)
-                .cornerRadius(10)
-                .frame(height: 220)
-                
-                .padding(.trailing)
-                .padding(.leading)
-                */
-                
-                VStack (spacing: 0) {
-                    HStack {
-                        Text("Session Event")
-                            .font(.system(size: 17, weight: .medium))
-                        
-                        
-                        Spacer()
-                        
-                        Picker("", selection: $sessionEventType) {
-                            ForEach(allEventTypes, id: \.self) {
-                                Text($0)
+                        TextField("Session Name", text: $name)
+                            .padding()
+                            .font(.system(size: 22, weight: .bold))
+                            .multilineTextAlignment(TextAlignment.center)
+                            .background(Color(UIColor.systemGray5))
+                            .cornerRadius(10)
+                            .padding(.leading)
+                            .padding(.trailing)
+                            .padding(.bottom)
+                            
+                    }
+                    .frame(height: 220)
+                    .modifier(NewStandardSessionViewBlocks())
+                    /*
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .frame(height: 220)
+                    
+                    .padding(.trailing)
+                    .padding(.leading)
+                    */
+                    
+                    
+                    
+                    VStack (spacing: 0) {
+                        LazyVGrid(columns: sessionEventTypeColumns, spacing: 10) {
+                            ForEach(allEventTypes, id: \.self) { event in
+                                Button {
+                                    sessionEventType = event
                                     
-                                    //.foregroundColor(Color(UIColor.systemGray4))
+                                    
+                                } label: {
+                                    Image(systemName: "circle.fill")
+                                        .font(.system(size: 40))
+                                }
+                                
+                                
                             }
+                            
                         }
-                        .pickerStyle(.menu)
-                        .font(.system(size: 17, weight: .regular))
-                        .accentColor(Color(UIColor.systemGray))
-                        
-                        
-                        //Text("Square-1")
+                        .padding()
                     }
-                    .padding()
-                }
-                .frame(height: 45)
-                .modifier(NewStandardSessionViewBlocks())
-
-                
-                VStack (spacing: 0) {
-                    HStack {
-                        //Text("Pin Session?")
-                          //  .font(.system(size: 17, weight: .medium))
-                        
-                        
-                        //Spacer()
-                        
-                        
-                        Toggle(isOn: $pinnedSession) {
-                            Text("Pin Session?")
+                    .frame(height: 130)
+                    .modifier(NewStandardSessionViewBlocks())
+                    
+                    
+                    
+                    VStack (spacing: 0) {
+                        HStack {
+                            Text("Session Event")
                                 .font(.system(size: 17, weight: .medium))
+                            
+                            
+                            Spacer()
+                            
+                            Picker("", selection: $sessionEventType) {
+                                ForEach(allEventTypes, id: \.self) {
+                                    Text($0)
+                                        
+                                        //.foregroundColor(Color(UIColor.systemGray4))
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .font(.system(size: 17, weight: .regular))
+                            .accentColor(Color(UIColor.systemGray))
+                            
+                            
+                            //Text("Square-1")
                         }
-                        .tint(.yellow)
-                        
-                        
-                        //Text("Square-1")
+                        .padding()
                     }
-                    .padding()
-                }
-                .frame(height: 45)
-                .modifier(NewStandardSessionViewBlocks())
-                
-                VStack (spacing: 0) {
-                    LazyVGrid(columns: sessionColorColumns, spacing: 10) {
-                        ForEach(sessionColors, id: \.self) { colour in
-                            Button {
-                                sessionColour = colour
+                    .frame(height: 45)
+                    .modifier(NewStandardSessionViewBlocks())
+
+                    
+                    VStack (spacing: 0) {
+                        HStack {
+                            //Text("Pin Session?")
+                              //  .font(.system(size: 17, weight: .medium))
+                            
+                            
+                            //Spacer()
+                            
+                            
+                            Toggle(isOn: $pinnedSession) {
+                                Text("Pin Session?")
+                                    .font(.system(size: 17, weight: .medium))
+                            }
+                            .tint(.yellow)
+                            
+                            
+                            //Text("Square-1")
+                        }
+                        .padding()
+                    }
+                    .frame(height: 45)
+                    .modifier(NewStandardSessionViewBlocks())
+                    
+                    VStack (spacing: 0) {
+                        LazyVGrid(columns: sessionColorColumns, spacing: 10) {
+                            ForEach(sessionColors, id: \.self) { colour in
+                                Button {
+                                    sessionColour = colour
+                                    
+                                    
+                                } label: {
+                                    Image(systemName: "circle.fill")
+                                        .foregroundColor(colour)
+                                        .font(.system(size: 40))
+                                }
                                 
                                 
-                            } label: {
-                                Image(systemName: "circle.fill")
-                                    .foregroundColor(colour)
-                                    .font(.system(size: 40))
                             }
                             
-                            
                         }
-                        
+                        .padding()
                     }
-                    .padding()
+                    .frame(height: 130)
+                    .modifier(NewStandardSessionViewBlocks())
+            
+                    Text("current colour selected")
+                        .foregroundColor(sessionColour)
+                    
+                    Spacer()
+                    
                 }
-                .frame(height: 130)
-                .modifier(NewStandardSessionViewBlocks())
-        
-                Text("current colour selected")
-                    .foregroundColor(sessionColour)
-                
-                Spacer()
-                
             }
+            
+            
             .ignoresSafeArea(.keyboard)
             .navigationBarTitle("New Standard Session", displayMode: .inline)
 //            .ignoresSafeArea(.keyboard)
