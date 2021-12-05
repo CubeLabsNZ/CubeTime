@@ -17,6 +17,7 @@ extension View {
 }
 
 
+@available(iOS 15.0, *)
 struct StatsView: View {
     
     let gradientColour: LinearGradient = LinearGradient(
@@ -41,111 +42,270 @@ struct StatsView: View {
                     VStack (spacing: 10) {
                         HStack (spacing: 10) {
                             VStack (spacing: 10) {
-                                HStack {
-                                    VStack (alignment: .leading, spacing: 0) {
-                                        Text("BEST SINGLE")
-                                            .font(.system(size: 13, weight: .medium, design: .default))
-                                            .foregroundColor(Color(UIColor.systemGray6))
+                                Button {
+                                    print("best single pressed")
+                                } label: {
+                                    HStack {
+                                        VStack (alignment: .leading, spacing: 0) {
+                                            Text("BEST SINGLE")
+                                                .font(.system(size: 13, weight: .medium, design: .default))
+                                                .foregroundColor(Color(UIColor.systemGray6))
+                                                .padding(.bottom, 4)
+                                            
+                                            Text("3.741")
+                                                .font(.system(size: 34, weight: .bold, design: .default))
+                                                .foregroundColor(.white)
+                                        }
+                                        .padding(.top)
+                                        .padding(.bottom, 12)
+                                        .padding(.leading, 12)
                                         
-                                        Text("3.741")
-                                            .font(.system(size: 34, weight: .bold, design: .default))
-                                            .foregroundColor(.white)
+                                        Spacer()
                                     }
-                                    .padding(.top)
-                                    .padding(.bottom)
-                                    .padding(.leading, 12)
-                                    
-                                    Spacer()
+                                    .frame(height: 75)
+                                    .background(gradientColour                                        .clipShape(RoundedRectangle(cornerRadius:16)))
                                 }
-                                .frame(height: 75)
-                                .background(gradientColour                                        .clipShape(RoundedRectangle(cornerRadius:16)))
+                                
                                 
                                 HStack {
                                     VStack (alignment: .leading, spacing: 0) {
-                                        Text("BEST AO12")
-                                            .font(.system(size: 13, weight: .medium, design: .default))
-                                            .foregroundColor(Color(UIColor.systemGray))
-                                            .padding(.leading, 12)
                                         
-                                        Text("7.41")
-                                            .font(.system(size: 34, weight: .bold, design: .default))
-                                            .foregroundColor(.black)
-                                            .padding(.leading, 12)
+                                        Button {
+                                            print("best ao12 pressed")
+                                        } label: {
+                                            
+                                            VStack {
+                                                Text("BEST AO12")
+                                                    .font(.system(size: 13, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(UIColor.systemGray))
+                                                    .padding(.leading, 12)
+                                                
+                                                Text("7.41")
+                                                    .font(.system(size: 34, weight: .bold, design: .default))
+                                                    .foregroundColor(.black)
+                                                    .padding(.leading, 12)
+                                            }
+                                        }
+                                        
                                         
                                         Divider()
                                             .padding(.leading, 12)
                                             .padding(.bottom, 4)
                                         
-                                        Text("BEST AO100")
-                                            .font(.system(size: 13, weight: .medium, design: .default))
-                                            .foregroundColor(Color(UIColor.systemGray))
-                                            .padding(.leading, 12)
+                                        Button {
+                                            print("best ao100 pressed")
+                                        } label: {
+                                            
+                                            VStack {
+                                                Text("BEST AO100")
+                                                    .font(.system(size: 13, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(UIColor.systemGray))
+                                                    .padding(.leading, 12)
+                                                
+                                                Text("8.02")
+                                                    .font(.system(size: 34, weight: .bold, design: .default))
+                                                    .foregroundColor(.black)
+                                                    .padding(.leading, 12)
+                                            }
+                                        }
                                         
-                                        Text("8.02")
-                                            .font(.system(size: 34, weight: .bold, design: .default))
-                                            .foregroundColor(.black)
-                                            .padding(.leading, 12)
                                         
                                     }
-                                    .frame(height: 130)
-                                    .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                                    
+                                    
+                                    Spacer()
+                                    
                                 }
+                                .frame(height: 130)
+                                .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                HStack {
+                                    VStack (alignment: .leading, spacing: 0) {
+                                        Text("SESSION MEAN")
+                                            .font(.system(size: 13, weight: .medium, design: .default))
+                                            .foregroundColor(Color(UIColor.systemGray))
+                                            .padding(.bottom, 4)
+                                        
+                                        
+                                        Text("9.80")
+                                            .font(.system(size: 34, weight: .bold, design: .default))
+                                            .foregroundColor(.black)
+                                    }
+                                    .padding(.top)
+                                    .padding(.bottom, 12)
+                                    .padding(.leading, 12)
+                                    
+                                    Spacer()
+                                }
+                                .frame(height: 75)
+                                .background(Color.white                                        .clipShape(RoundedRectangle(cornerRadius:16)))
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
                                 
                                 
                             }
                             .frame(minWidth: 0, maxWidth: .infinity)
                             
                             VStack (spacing: 10) {
-                                HStack {
-                                    VStack (alignment: .leading, spacing: 0) {
-                                        Text("BEST AO5")
-                                            .font(.system(size: 13, weight: .medium, design: .default))
-                                            .foregroundColor(Color(UIColor.systemGray))
+                                
+                                Button {
+                                    print("best ao5 pressed")
+                                } label: {
+                                    
+                                    
+                                    HStack {
+                                        VStack (alignment: .leading, spacing: 0) {
+                                            Text("BEST AO5")
+                                                .font(.system(size: 13, weight: .medium, design: .default))
+                                                .foregroundColor(Color(UIColor.systemGray))
+                                                .padding(.bottom, 4)
                                             
-                                        Text("6.142")
-                                            .font(.system(size: 34, weight: .bold, design: .default))
-                                            .gradientForeground(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 136/255, green: 94/255, blue: 191/255)])
+                                            Text("6.142")
+                                                .font(.system(size: 34, weight: .bold, design: .default))
+                                                .gradientForeground(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 136/255, green: 94/255, blue: 191/255)])
+                                            
+                                            //                                        gradientColour.mask(Text("6.142").font(.system(size: 34, weight: .bold, design: .default)))
+                                            
+                                            Spacer()
+                                            
+                                            
+                                            Text("(5.58)\n6.24\n(8.87)\n6.18\n5.99") /// TODO: make text gray when they are () and AUTO BRACKET
+                                                .font(.system(size: 17, weight: .regular, design: .default))
+                                                .foregroundColor(.black)
+                                                .multilineTextAlignment(.leading)
+                                            
+                                        }
+                                        //                                    .padding(.top)
+                                        .padding(.top, 10)
+                                        .padding(.bottom, 10)
+                                        .padding(.leading, 12)
                                         
-//                                        gradientColour.mask(Text("6.142").font(.system(size: 34, weight: .bold, design: .default)))
+                                        
                                         
                                         Spacer()
-                                        
-                                        
-                                        Text("(5.58)\n6.24\n(8.87)\n6.18\n5.99") /// TODO: make text gray when they are () and AUTO BRACKET
-                                            .font(.system(size: 17, weight: .regular, design: .default))
-                                        
                                     }
-//                                    .padding(.top)
-                                    .padding(.top, 10)
-                                    .padding(.bottom, 10)
+                                    .frame(height: 215)
+                                    .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                                }
+                                
+                                
+                                
+                                
+                                
+                                
+                                HStack {
+                                    VStack (alignment: .leading, spacing: 0) {
+                                        Text("NUMBER OF SOLVES")
+                                            .font(.system(size: 13, weight: .medium, design: .default))
+                                            .foregroundColor(Color(UIColor.systemGray))
+                                            .padding(.bottom, 4)
+                                        
+                                        Text("1034")
+                                            .font(.system(size: 34, weight: .bold, design: .default))
+                                            .foregroundColor(.black)
+                                    }
+                                    .padding(.top)
+                                    .padding(.bottom, 12)
                                     .padding(.leading, 12)
-                                    
-                                    
                                     
                                     Spacer()
                                 }
-                                .frame(height: 215)
-                                .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                                .frame(height: 75)
+                                .background(Color.white                                        .clipShape(RoundedRectangle(cornerRadius:16)))
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
                             }
                             .frame(minWidth: 0, maxWidth: .infinity)
                             
                             
                         }
-                        
-                        HStack {
-                            Text("Session mean")
-                            Text("Number of solves")
-                        }
-                        
+                                                
                         //                        LazyVGrid(columns: columns, spacing: 10) {
                         //                            Text("yes")
                         //                        }
                         
                         
                         
-                        Text("Time trend")
                         
-                        Text("Time distribution")
+                        
+                        
+                        
+                        Button {
+                            print("time trend pressed")
+                        } label: {
+                            VStack {
+                                HStack {
+                                    Text("TIME TREND")
+                                        .font(.system(size: 13, weight: .medium, design: .default))
+                                        .foregroundColor(Color(UIColor.systemGray))
+                                        .padding(.bottom, 4)
+                                    
+                                    Spacer()
+                                }
+                                
+                                
+                                Spacer()
+                                
+                            }
+                            .padding(.top, 12)
+                            .padding(.bottom, 12)
+                            .padding(.leading, 12)
+                            
+                        }
+                        .frame(height: 200)
+                        .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                        
+                        
+                        
+                        Button {
+                            print("time distribution pressed")
+                        } label: {
+                            VStack {
+                                HStack {
+                                    Text("TIME DISTRIBUTION")
+                                        .font(.system(size: 13, weight: .medium, design: .default))
+                                        .foregroundColor(Color(UIColor.systemGray))
+                                        .padding(.bottom, 4)
+                                    
+                                    Spacer()
+                                }
+                                
+                                Spacer()
+                                
+                            }
+                            .padding(.top, 12)
+                            .padding(.bottom, 12)
+                            .padding(.leading, 12)
+                            
+                        }
+                        .frame(height: 200)
+                        .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                        .padding(.bottom, 16)
+                        
                         
                     }
                     .navigationTitle("Your Solves")
@@ -153,15 +313,14 @@ struct StatsView: View {
                     .padding(.trailing)
                     
                 }
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.clear)
+                        .frame(height: 50)
+                        
+                }
             }
         }
     }
 }
 
-struct StatsViewPreview: PreviewProvider {
-    static var previews: some View {
-        Group {
-            StatsView()
-        }
-    }
-}
