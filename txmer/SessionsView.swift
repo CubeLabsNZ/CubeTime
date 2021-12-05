@@ -296,7 +296,7 @@ extension View {
 struct NewSessionPopUpView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.dismiss) var dismiss
-    @State private var showNewSessionView = false
+    @State private var showNewStandardSessionView = false
     
     @State private var testBool = false
     
@@ -374,7 +374,7 @@ struct NewSessionPopUpView: View {
                         
                         .background(Color(UIColor.systemGray6))
                         .onTapGesture {
-                            showNewSessionView.toggle()
+                            showNewStandardSessionView = true
                         }
                         .cornerRadius(10, corners: .topRight)
                         .cornerRadius(10, corners: .topLeft)
@@ -382,24 +382,9 @@ struct NewSessionPopUpView: View {
                         .padding(.trailing)
                         
                         
-                        
-                        
-                        
-//                        {
-//                            Button {
-//
-//                            } label: {
-//
-//                            }
-////                            .background(Color(UIColor.systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
-//
-//
-//                        }
-                        
                         Divider()
                             .padding(.leading, 64)
                             .padding(.trailing)
-                        
                         
                         
                         
@@ -492,18 +477,8 @@ struct NewSessionPopUpView: View {
                         .padding(.leading)
                         .padding(.trailing)
                         
-                        
-                        
-                        
-                        
-                        
-                        
-                        
                     
-                    
-                    
-                    
-                    NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false))
+                        NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewStandardSessionView, pinnedSession: false), isActive: $showNewStandardSessionView)
                     
                     /// TODO: **ADD NAV LINKS FOR ALL THE OTHER PAGES** and include for the on tap
                     
@@ -547,6 +522,7 @@ struct NewSessionPopUpView: View {
             //Spacer()
         }
     }
+}
 }
 
 @available(iOS 15.0, *)
