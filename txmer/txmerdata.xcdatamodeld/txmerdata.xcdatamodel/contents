@@ -13,8 +13,8 @@
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="penalty" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="scramble" attributeType="String"/>
-        <attribute name="scramble_subtype" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="scramble_type" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="scramble_subtype" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="scramble_type" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="starred" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="time" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="session" maxCount="1" deletionRule="Nullify" destinationEntity="Sessions" inverseName="solves" inverseEntity="Sessions"/>
