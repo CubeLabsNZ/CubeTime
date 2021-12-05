@@ -56,16 +56,18 @@ struct SolvePopupView: View {
                             HStack {
                                 //Image("sq-1")
                                 //  .padding(.trailing, 8)
-                                Image(systemName: "square.fill")
-                                    .font(.system(size: 30, weight: .semibold))
+                                Image(puzzle_types[Int(solve.scramble_type)].name)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 32, height: 32)
                                 //.padding(.leading)
                                 
-                                Text("Square-1")
+                                Text(puzzle_types[Int(solve.scramble_type)].name)
                                     .font(.system(size: 17, weight: .semibold, design: .default))
                                 
                                 Spacer()
                                 
-                                Text("RANDOM STATE")
+                                Text(puzzle_types[Int(solve.scramble_type)].subtypes[Int(solve.scramble_subtype)]!)
                                     .font(.system(size: 13, weight: .semibold, design: .default))
                             }
                             .padding(.leading, 12)

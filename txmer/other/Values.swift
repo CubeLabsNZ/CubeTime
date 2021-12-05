@@ -34,8 +34,8 @@ let puzzle_types: [PuzzleType] = [
     PuzzleType(name: "3x3", subtypes: [0: "Random State", 2: "Cross Solved"]),
     PuzzleType(name: "4x4", subtypes: [0: "WCA"]),
     PuzzleType(name: "5x5", subtypes: [0: "WCA"]),
-    PuzzleType(name: "6x6", subtypes: [1: "SiGN (OLD)"]),
-    PuzzleType(name: "7x7", subtypes: [1: "SiGN (OLD)"]),
+    PuzzleType(name: "6x6", subtypes: [0: "prefix", 1: "SiGN (OLD)"]), // TODO remove prefix only here because 0 hardcoded
+    PuzzleType(name: "7x7", subtypes: [0: "prefix", 1: "SiGN (OLD)"]), // TODO remove prefix
     PuzzleType(name: "Square-1", subtypes: [0: "Random State"]),
     PuzzleType(name: "Megaminx", subtypes:  [0: "Pochmann"]),
     PuzzleType(name: "Pyraminx", subtypes: [0: "Random State", 1: "Random Moves"]),

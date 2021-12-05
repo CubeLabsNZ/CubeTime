@@ -119,7 +119,7 @@ struct TimeListView: View {
                                     .foregroundColor(Color(UIColor.systemGray))
                                 Spacer()
                                 
-                                Text("SQUARE-1")
+                                Text(puzzle_types[Int(currentSession!.scramble_type)].name) // TODO playground
                                     .font(.system(size: 16, weight: .semibold, design: .default))
                                     .foregroundColor(Color(UIColor.systemGray))
                             }

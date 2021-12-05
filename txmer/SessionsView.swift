@@ -64,7 +64,7 @@ struct NewStandardSessionView: View {
                         Image(puzzle_types[Int(sessionEventType)].name)
 //                            .font(.system(size: 120))
                             .resizable()
-                            .aspectRatio(contentMode: .fit)
+                            .aspectRatio(contentMode: .fill)
                             .padding(.top)
                             .padding(.bottom)
                             .shadow(color: .black.opacity(0.24), radius: 12, x: 0, y: 4)
@@ -259,17 +259,6 @@ struct NewStandardSessionView: View {
             
         }
         .ignoresSafeArea(.keyboard)
-         
-         
-         
-         
-         
-         
-         
-         
-        
-        
-        
     }
 }
 
