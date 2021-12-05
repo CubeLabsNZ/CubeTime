@@ -11,6 +11,7 @@ import CoreGraphics
 
 
 var userHoldTime: Double = 0.5 /// todo make so user can set in setting
+let gestureKillTime: Double = 0.2
 
 enum stopWatchMode {
     case running
@@ -54,7 +55,13 @@ class StopWatchManager: ObservableObject {
     /// todo set custom fps for battery purpose, promotion can set as low as 10 / 24hz ,others 60 fixed, no option for them >:C
     var frameTime: Double = 1/60
     
+    
+    private var canStartTimer = false
+    private var allowGesture = true
+    
     func start() {
+        NSLog("start called")
+        canStartTimer = false
         mode = .running
         
         secondsElapsed = 0
@@ -63,6 +70,10 @@ class StopWatchManager: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: frameTime, repeats: true) { [self] timer in
             self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
         }
+        
+        prevScrambleStr = scrambleStr
+        let scr = CHTScramble.getNewScramble(by: scrambler, type: scrambleType, subType: scrambleSubType)
+        scrambleStr = scr?.scramble
     }
     
     func stop() {
@@ -73,16 +84,20 @@ class StopWatchManager: ObservableObject {
     
     @Published var timerColour: Color = TimerTextColours.timerDefaultColour
     
-    private var canStartTimer = false
     
     private var taskTimerReady: DispatchWorkItem?
+    private var taskKillGestures: DispatchWorkItem?
+    
     
     private let feedbackStyle = UIImpactFeedbackGenerator(style: .medium) /// TODO: add option to change heaviness/turn on off in settings
     
     private var prevIsDown = false
     
+    let threshold = 20 as CGFloat
+    
     func touchDown() {
         if !prevIsDown {
+            allowGesture = true
             prevIsDown = true
             timerColour = TimerTextColours.timerHeldDownColour
             NSLog("Down")
@@ -130,6 +145,12 @@ class StopWatchManager: ObservableObject {
                 taskTimerReady = newTaskTimerReady
                 DispatchQueue.main.asyncAfter(deadline: .now() + userHoldTime, execute: newTaskTimerReady)
                 
+                // Kill the gestures after 200ms (default) not only does this stop uninteded gestures but it also improves performance since the caclculations for directions of gestures is not done
+                let newTaskKillGestures = DispatchWorkItem {
+                    self.allowGesture = false
+                }
+                taskKillGestures = newTaskKillGestures
+                DispatchQueue.main.asyncAfter(deadline: .now() + gestureKillTime, execute: newTaskKillGestures)
             }
         }
     }
@@ -137,36 +158,25 @@ class StopWatchManager: ObservableObject {
     func touchUp(value: DragGesture.Value) {
         prevIsDown = false
         NSLog("up")
-        taskTimerReady?.cancel()
         
-        timerColour = ((colourScheme == .light) ? Color.black : Color.white)
-        
-        let hAmount = value.translation.width as CGFloat
-        let vAmount = value.translation.height as CGFloat
-        let threshold = 20 as CGFloat
-        
-        if abs(hAmount) > threshold && abs(vAmount) < abs(hAmount) {
-            if hAmount > 0 {
+        if !allowGesture && canStartTimer {
+            NSLog("calling start")
+            start()
+        } else if abs(value.translation.width) > threshold && abs(value.translation.height) < abs(value.translation.width) {
+            if value.translation.width > 0 {
                 NSLog("Right")
             } else {
                 NSLog("Left")
             }
-        } else if abs(vAmount) > threshold && abs(hAmount) < abs(vAmount) {
-            if vAmount > 0 {
+        } else if abs(value.translation.height) > threshold && abs(value.translation.width) < abs(value.translation.height) {
+            if value.translation.height > 0 {
                 NSLog("Down")
             } else {
                 NSLog("Up")
-            }
+            } // TODO disallow gestures after 200 ms
         }
-        // TODO disallow gestures after 200 ms
-        if canStartTimer {
-            NSLog("minimumTapDurationMet, starting timer.")
-            start()
-            canStartTimer = false
-            prevScrambleStr = scrambleStr
-            let scr = CHTScramble.getNewScramble(by: scrambler, type: scrambleType, subType: scrambleSubType)
-            scrambleStr = scr?.scramble
-        }
+        timerColour = ((colourScheme == .light) ? Color.black : Color.white)
+        taskTimerReady?.cancel()
     }
 }
 
