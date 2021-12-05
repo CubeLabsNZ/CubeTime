@@ -94,6 +94,33 @@ struct NewStandardSessionView: View {
                     
                     
                     
+                    VStack (spacing: 0) {
+                        HStack {
+                            Text("Session Event")
+                                .font(.system(size: 17, weight: .medium))
+                            
+                            
+                            Spacer()
+
+                            Picker("", selection: $sessionEventType) {
+                                    ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
+                                    Text(element.name).tag(Int32(index))
+
+                                    //.foregroundColor(Color(UIColor.systemGray4))
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .font(.system(size: 17, weight: .regular))
+                            .accentColor(Color(UIColor.systemGray))
+
+
+                            //Text("Square-1")
+                        }
+                        .padding()
+                    }
+                    .frame(height: 45)
+                    .modifier(NewStandardSessionViewBlocks())
+                    
                     
                     
                     VStack (spacing: 0) {
@@ -132,32 +159,7 @@ struct NewStandardSessionView: View {
                     
                     
                     
-                    VStack (spacing: 0) {
-                        HStack {
-                            Text("Session Event")
-                                .font(.system(size: 17, weight: .medium))
-                            
-                            
-                            Spacer()
-
-                            Picker("", selection: $sessionEventType) {
-                                    ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
-                                    Text(element.name).tag(Int32(index))
-
-                                    //.foregroundColor(Color(UIColor.systemGray4))
-                                }
-                            }
-                            .pickerStyle(.menu)
-                            .font(.system(size: 17, weight: .regular))
-                            .accentColor(Color(UIColor.systemGray))
-
-
-                            //Text("Square-1")
-                        }
-                        .padding()
-                    }
-                    .frame(height: 45)
-                    .modifier(NewStandardSessionViewBlocks())
+                    
 
                     
                     VStack (spacing: 0) {
@@ -734,7 +736,7 @@ struct SessionsView: View {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(Color.clear)
                         .frame(height: 50)
-                    
+                     
                 }
                 
                 
