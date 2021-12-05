@@ -42,49 +42,49 @@ struct StatsView: View {
                     VStack (spacing: 10) {
                         HStack (spacing: 10) {
                             VStack (spacing: 10) {
-                                Button {
-                                    print("best single pressed")
-                                } label: {
-                                    HStack {
-                                        VStack (alignment: .leading, spacing: 0) {
-                                            Text("BEST SINGLE")
-                                                .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(UIColor.systemGray6))
-                                                .padding(.bottom, 4)
-                                            
-                                            Text("3.741")
-                                                .font(.system(size: 34, weight: .bold, design: .default))
-                                                .foregroundColor(.white)
-                                        }
-                                        .padding(.top)
-                                        .padding(.bottom, 12)
-                                        .padding(.leading, 12)
+                                
+                                
+                                HStack {
+                                    VStack (alignment: .leading, spacing: 0) {
+                                        Text("BEST SINGLE")
+                                            .font(.system(size: 13, weight: .medium, design: .default))
+                                            .foregroundColor(Color(UIColor.systemGray6))
+                                            .padding(.bottom, 4)
                                         
-                                        Spacer()
+                                        Text("3.741")
+                                            .font(.system(size: 34, weight: .bold, design: .default))
+                                            .foregroundColor(.white)
                                     }
-                                    .frame(height: 75)
-                                    .background(gradientColour                                        .clipShape(RoundedRectangle(cornerRadius:16)))
+                                    .padding(.top)
+                                    .padding(.bottom, 12)
+                                    .padding(.leading, 12)
+                                    
+                                    Spacer()
                                 }
+                                .frame(height: 75)
+                                .background(gradientColour                                        .clipShape(RoundedRectangle(cornerRadius:16)))
+                                .onTapGesture {
+                                    print("best single pressed!")
+                                }
+                                
                                 
                                 
                                 HStack {
                                     VStack (alignment: .leading, spacing: 0) {
                                         
-                                        Button {
-                                            print("best ao12 pressed")
-                                        } label: {
+                                        VStack {
+                                            Text("BEST AO12")
+                                                .font(.system(size: 13, weight: .medium, design: .default))
+                                                .foregroundColor(Color(UIColor.systemGray))
+                                                .padding(.leading, 12)
                                             
-                                            VStack {
-                                                Text("BEST AO12")
-                                                    .font(.system(size: 13, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(UIColor.systemGray))
-                                                    .padding(.leading, 12)
-                                                
-                                                Text("7.41")
-                                                    .font(.system(size: 34, weight: .bold, design: .default))
-                                                    .foregroundColor(.black)
-                                                    .padding(.leading, 12)
-                                            }
+                                            Text("7.41")
+                                                .font(.system(size: 34, weight: .bold, design: .default))
+                                                .foregroundColor(.black)
+                                                .padding(.leading, 12)
+                                        }
+                                        .onTapGesture {
+                                            print("best ao12 pressed")
                                         }
                                         
                                         
@@ -92,21 +92,21 @@ struct StatsView: View {
                                             .padding(.leading, 12)
                                             .padding(.bottom, 4)
                                         
-                                        Button {
-                                            print("best ao100 pressed")
-                                        } label: {
+                                        
+                                        
+                                        VStack {
+                                            Text("BEST AO100")
+                                                .font(.system(size: 13, weight: .medium, design: .default))
+                                                .foregroundColor(Color(UIColor.systemGray))
+                                                .padding(.leading, 12)
                                             
-                                            VStack {
-                                                Text("BEST AO100")
-                                                    .font(.system(size: 13, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(UIColor.systemGray))
-                                                    .padding(.leading, 12)
-                                                
-                                                Text("8.02")
-                                                    .font(.system(size: 34, weight: .bold, design: .default))
-                                                    .foregroundColor(.black)
-                                                    .padding(.leading, 12)
-                                            }
+                                            Text("8.02")
+                                                .font(.system(size: 34, weight: .bold, design: .default))
+                                                .foregroundColor(.black)
+                                                .padding(.leading, 12)
+                                        }
+                                        .onTapGesture {
+                                            print("best ao100 pressed")
                                         }
                                         
                                         
@@ -163,44 +163,41 @@ struct StatsView: View {
                             
                             VStack (spacing: 10) {
                                 
-                                Button {
-                                    print("best ao5 pressed")
-                                } label: {
-                                    
-                                    
-                                    HStack {
-                                        VStack (alignment: .leading, spacing: 0) {
-                                            Text("BEST AO5")
-                                                .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(UIColor.systemGray))
-                                                .padding(.bottom, 4)
-                                            
-                                            Text("6.142")
-                                                .font(.system(size: 34, weight: .bold, design: .default))
-                                                .gradientForeground(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 136/255, green: 94/255, blue: 191/255)])
-                                            
-                                            //                                        gradientColour.mask(Text("6.142").font(.system(size: 34, weight: .bold, design: .default)))
-                                            
-                                            Spacer()
-                                            
-                                            
-                                            Text("(5.58)\n6.24\n(8.87)\n6.18\n5.99") /// TODO: make text gray when they are () and AUTO BRACKET
-                                                .font(.system(size: 17, weight: .regular, design: .default))
-                                                .foregroundColor(.black)
-                                                .multilineTextAlignment(.leading)
-                                            
-                                        }
-                                        //                                    .padding(.top)
-                                        .padding(.top, 10)
-                                        .padding(.bottom, 10)
-                                        .padding(.leading, 12)
+                                HStack {
+                                    VStack (alignment: .leading, spacing: 0) {
+                                        Text("BEST AO5")
+                                            .font(.system(size: 13, weight: .medium, design: .default))
+                                            .foregroundColor(Color(UIColor.systemGray))
+                                            .padding(.bottom, 4)
                                         
+                                        Text("6.142")
+                                            .font(.system(size: 34, weight: .bold, design: .default))
+                                            .gradientForeground(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 136/255, green: 94/255, blue: 191/255)])
                                         
+                                        //                                        gradientColour.mask(Text("6.142").font(.system(size: 34, weight: .bold, design: .default)))
                                         
                                         Spacer()
+                                        
+                                        
+                                        Text("(5.58)\n6.24\n(8.87)\n6.18\n5.99") /// TODO: make text gray when they are () and AUTO BRACKET
+                                            .font(.system(size: 17, weight: .regular, design: .default))
+                                            .foregroundColor(.black)
+                                            .multilineTextAlignment(.leading)
+                                        
                                     }
-                                    .frame(height: 215)
-                                    .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                                    //                                    .padding(.top)
+                                    .padding(.top, 10)
+                                    .padding(.bottom, 10)
+                                    .padding(.leading, 12)
+                                    
+                                    
+                                    
+                                    Spacer()
+                                }
+                                .frame(height: 215)
+                                .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                                .onTapGesture {
+                                    print("best ao5 pressed")
                                 }
                                 
                                 
