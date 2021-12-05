@@ -285,7 +285,7 @@ extension View {
 struct NewSessionPopUpView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.dismiss) var dismiss
-    @State private var showNewSessionView = false
+    @State private var showNewStandardSessionView = false
     
     @State private var testBool = false
     
@@ -315,9 +315,11 @@ struct NewSessionPopUpView: View {
                             dismiss()
                         } label: {
                             Image(systemName: "xmark.circle.fill")
-                                .font(.system(size: 22, weight: .semibold))
+                                .font(.system(size: 26, weight: .semibold))
                                 .symbolRenderingMode(.hierarchical)
+                                .foregroundStyle(.secondary)
                                 .foregroundStyle(.black)
+                                
                                 .padding(.top)
                                 .padding(.trailing)
                         }
@@ -343,99 +345,94 @@ struct NewSessionPopUpView: View {
                             .padding(.leading, 20)
                             .padding(.bottom, 8)
                         
-                        NavigationLink(destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false)) {
-                            Button {
-                                showNewSessionView.toggle()
-                            } label: {
-                                HStack {
-                                    Image(systemName: "timer.square")
-                                        .font(.system(size: 30, weight: .regular))
-                                        .foregroundColor(.black)
-                                        .symbolRenderingMode(.hierarchical)
-                                        .padding(.leading, 8)
-                                        .padding(.trailing, 4)
-                                        .padding(.top, 8)
-                                        .padding(.bottom, 8)
-                                    Text("Standard Session")
-                                        .font(.system(size: 17, weight: .regular, design: .default))
-                                        .foregroundColor(.black)
-                                        //.padding(10)
-                                    Spacer()
-                                }
-                            }
-//                            .background(Color(UIColor.systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
-                            .background(Color(UIColor.systemGray6))
-
-                            .cornerRadius(10, corners: .topRight)
-                            .cornerRadius(10, corners: .topLeft)
-                            .padding(.leading)
-                            .padding(.trailing)
-                        
+                        HStack {
+                            Image(systemName: "timer.square")
+                                .font(.system(size: 30, weight: .regular))
+                                .foregroundColor(.black)
+                                .symbolRenderingMode(.hierarchical)
+                                .padding(.leading, 8)
+                                .padding(.trailing, 4)
+                                .padding(.top, 8)
+                                .padding(.bottom, 8)
+                            Text("Standard Session")
+                                .font(.system(size: 17, weight: .regular, design: .default))
+                                .foregroundColor(.black)
+                                //.padding(10)
+                            Spacer()
                         }
+                        
+                        .background(Color(UIColor.systemGray6))
+                        .onTapGesture {
+                            showNewStandardSessionView = true
+                        }
+                        .cornerRadius(10, corners: .topRight)
+                        .cornerRadius(10, corners: .topLeft)
+                        .padding(.leading)
+                        .padding(.trailing)
+                        
                         
                         Divider()
                             .padding(.leading, 64)
                             .padding(.trailing)
                         
-                        NavigationLink(destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false)) {
-                            Button {
-                                showNewSessionView.toggle()
-                            } label: {
-                                HStack {
-                                    Image(systemName: "command.square")
-                                        .font(.system(size: 30, weight: .regular))
-                                        .foregroundColor(.black)
-                                        .symbolRenderingMode(.hierarchical)
-                                        .padding(.leading, 8)
-                                        .padding(.trailing, 4)
-                                        .padding(.top, 8)
-                                        .padding(.bottom, 8)
-                                    Text("Algorithm Trainer (WIP)")
-                                        .font(.system(size: 17, weight: .regular, design: .default))
-                                        .foregroundColor(.black)
-                                        
-                                    Spacer()
-                                }
-                            }
-                            .background(Color(UIColor.systemGray6)
-                                            .clipShape(Rectangle()))
-                            .padding(.leading)
-                            .padding(.trailing)
-                            
+                        
+                        
+                        HStack {
+                            Image(systemName: "command.square")
+                                .font(.system(size: 30, weight: .regular))
+                                .foregroundColor(.black)
+                                .symbolRenderingMode(.hierarchical)
+                                .padding(.leading, 8)
+                                .padding(.trailing, 4)
+                                .padding(.top, 8)
+                                .padding(.bottom, 8)
+                            Text("Algorithm Trainer (WIP)")
+                                .font(.system(size: 17, weight: .regular, design: .default))
+                                .foregroundColor(.black)
+                                
+                            Spacer()
                         }
+                        .background(Color(UIColor.systemGray6)
+                                        .clipShape(Rectangle()))
+                        .onTapGesture {
+                            print("alg trainer pressed")
+                        }
+                        .padding(.leading)
+                        .padding(.trailing)
+                        
                         
                         Divider()
                             .padding(.leading, 64)
                             .padding(.trailing)
                         
-                        NavigationLink(destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false)) {
-                            Button {
-                                showNewSessionView.toggle()
-                            } label: {
-                                HStack {
-                                    Image(systemName: "square.on.square")
-                                        .font(.system(size: 26, weight: .medium))
-                                        .foregroundColor(.black)
-                                        .symbolRenderingMode(.hierarchical)
-                                        .padding(.leading, 8)
-                                        .padding(.trailing, 4)
-                                        .padding(.top, 8)
-                                        .padding(.bottom, 8)
-                                    Text("Playground (WIP)")
-                                        .font(.system(size: 17, weight: .regular, design: .default))
-                                        .foregroundColor(.black)
-                                        
-                                    Spacer()
-                                }
-                            }
-                            .background(Color(UIColor.systemGray6))
-
-                            .cornerRadius(10, corners: .bottomRight)
-                            .cornerRadius(10, corners: .bottomLeft)
-                            .padding(.leading)
-                            .padding(.trailing)
-                            
+                        
+                        
+                        HStack {
+                            Image(systemName: "square.on.square")
+                                .font(.system(size: 26, weight: .medium))
+                                .foregroundColor(.black)
+                                .symbolRenderingMode(.hierarchical)
+                                .padding(.leading, 8)
+                                .padding(.trailing, 4)
+                                .padding(.top, 8)
+                                .padding(.bottom, 8)
+                            Text("Playground (WIP)")
+                                .font(.system(size: 17, weight: .regular, design: .default))
+                                .foregroundColor(.black)
+                                
+                            Spacer()
                         }
+                        .background(Color(UIColor.systemGray6))
+                        .onTapGesture {
+                            print("show session pressed")
+                        }
+                        .cornerRadius(10, corners: .bottomRight)
+                        .cornerRadius(10, corners: .bottomLeft)
+                        .padding(.leading)
+                        .padding(.trailing)
+                        
+                        
+                        
                         
                         
                         Text("Other Sessions")
@@ -444,43 +441,35 @@ struct NewSessionPopUpView: View {
                             .padding(.leading, 20)
                             .padding(.bottom, 8)
                         
-                        NavigationLink(destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false)) {
-                            Button {
-                                showNewSessionView.toggle()
-                                NSLog(String(showNewSessionPopUp))
-                                NSLog(String(testBool))
-                            } label: {
-                                HStack {
-                                    Image(systemName: "globe.asia.australia")
-                                        .font(.system(size: 26, weight: .medium))
-                                        .foregroundColor(.black)
-                                        .symbolRenderingMode(.hierarchical)
-                                        .padding(.leading, 8)
-                                        .padding(.trailing, 4)
-                                        .padding(.top, 8)
-                                        .padding(.bottom, 8)
-                                    Text("Comp Sim Mode (WIP)")
-                                        .font(.system(size: 17, weight: .regular, design: .default))
-                                        .foregroundColor(.black)
-                                        
-                                    Spacer()
-                                }
-                            }
-                            .background(Color(UIColor.systemGray6)
-                                            .clipShape(RoundedRectangle(cornerRadius: 10)))
-
-                            .padding(.leading)
-                            .padding(.trailing)
-                            
+                        
+                        
+                        HStack {
+                            Image(systemName: "globe.asia.australia")
+                                .font(.system(size: 26, weight: .medium))
+                                .foregroundColor(.black)
+                                .symbolRenderingMode(.hierarchical)
+                                .padding(.leading, 8)
+                                .padding(.trailing, 4)
+                                .padding(.top, 8)
+                                .padding(.bottom, 8)
+                            Text("Comp Sim Mode (WIP)")
+                                .font(.system(size: 17, weight: .regular, design: .default))
+                                .foregroundColor(.black)
+                                
+                            Spacer()
                         }
+                        .background(Color(UIColor.systemGray6)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10)))
+                        .onTapGesture {
+                            print("comp sim pressed")
+                        }
+                        .padding(.leading)
+                        .padding(.trailing)
                         
-                        
-                    }
                     
+                        NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewStandardSessionView, pinnedSession: false), isActive: $showNewStandardSessionView)
                     
-                    
-                    
-                    NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false), isActive: $showNewSessionView)
+                    /// TODO: **ADD NAV LINKS FOR ALL THE OTHER PAGES** and include for the on tap
                     
                     
                     /*
@@ -523,6 +512,7 @@ struct NewSessionPopUpView: View {
         }
     }
 }
+}
 
 @available(iOS 15.0, *)
 struct SessionCard: View {
@@ -535,12 +525,117 @@ struct SessionCard: View {
     var item: Sessions
     
     var body: some View {
-        Button {
-            print("Setting current sesion to \(item)")
-            NSLog("Its context is \(item.managedObjectContext)")
-            NSLog("managedObjectContext is \(managedObjectContext)")
-            currentSession = item
-        } label: {
+//        Button {
+//            print("Setting current sesion to \(item)")
+//            NSLog("Its context is \(item.managedObjectContext)")
+//            NSLog("managedObjectContext is \(managedObjectContext)")
+//            currentSession = item
+//        } label: {
+//            HStack {
+//                VStack(alignment: .leading) {
+//                    Text(item.name ?? "Unkown session name")
+//                        .font(.system(size: 22, weight: .bold, design: .default))
+//                        .foregroundColor(Color.black)
+//                    let _ = NSLog("scr type = \(item.scramble_type)")
+//                    Text(puzzle_types[Int(item.scramble_type)].name)
+////                        .font(.system(size: 15, weight: .medium, design: .default))
+//                        .foregroundColor(Color.black)
+//                    Spacer()
+//                    Text("\(item.solves?.count ?? -1) Solves")
+//                        .font(.system(size: 15, weight: .bold, design: .default))
+//                        .foregroundColor(Color(UIColor.systemGray))
+//                        .padding(.bottom, 4)
+//                }
+//
+//                Spacer()
+//
+//                Image(puzzle_types[Int(item.scramble_type)].name)
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fit)
+//                    .foregroundColor(Color.black)
+//                    .padding(.top, 4)
+//                    .padding(.bottom, 4)
+//                    .padding(.trailing, 12)
+//
+//
+//                //.padding(.trailing, -12)
+//
+//            }
+//            .padding(.leading)
+//            .padding(.trailing, 6)
+//            .padding(.top, 12)
+//            .padding(.bottom, 12)
+//
+//        }
+//        .frame(height: 110)
+//        .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+//
+//
+//
+//
+//
+//
+//        .contextMenu {
+//
+//            Button {
+//                print("Customise pressed")
+//            } label: {
+//                Label("Customise", systemImage: "pencil")
+//            }
+//
+//            //                                       Divider()
+//
+//            Button {
+//                print("Pin pressed")
+//            } label: {
+//                Label("Pin", systemImage: "pin") /// TODO: add custom icons because no good icons
+//            }
+//
+//            Divider()
+//
+//            Button (role: .destructive) {
+//                print("session delete pressed")
+//                isShowingDeleteDialog.toggle()
+//            } label: {
+//                Label {
+//                    Text("Delete Session")
+//                        .foregroundColor(Color.red)
+//                } icon: {
+//                    Image(systemName: "trash")
+//                        .foregroundColor(Color.green) /// FIX: colours not working
+//                }
+//            }
+//
+//
+//
+//        }
+//
+//        .confirmationDialog("Are you sure you want to delete this session? All solves will be deleted and this cannot be undone.", isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
+//            let _ = NSLog("Confimation Dialog for \(item.name), presented: \(isShowingDeleteDialog)")
+//            Button("Confirm", role: .destructive) {
+//                managedObjectContext.delete(item)
+//                NSLog("\(item.name)")
+//                do {
+//                    try managedObjectContext.save()
+//                } catch {
+//                    if let error = error as NSError? {
+//                        // Replace this implementation with code to handle the error appropriately.
+//                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//                        fatalError("Unresolved error \(error), \(error.userInfo)")
+//                    }
+//                }
+//            }
+//            Button("Cancel", role: .cancel) {
+//
+//            }
+//        }
+//
+//
+//        .padding(.trailing)
+//        .padding(.leading)
+        
+        
+        VStack {
             HStack {
                 VStack(alignment: .leading) {
                     Text(item.name ?? "Unkown session name")
@@ -563,6 +658,11 @@ struct SessionCard: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .foregroundColor(Color.black)
+                    .padding(.top, 4)
+                    .padding(.bottom, 4)
+                    .padding(.trailing, 12)
+                
+                
                 //.padding(.trailing, -12)
                 
             }
@@ -570,16 +670,15 @@ struct SessionCard: View {
             .padding(.trailing, 6)
             .padding(.top, 12)
             .padding(.bottom, 12)
-            
         }
         .frame(height: 110)
         .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
-        
-        
-        
-        
-        
-        
+        .onTapGesture {
+            print("Setting current sesion to \(item)")
+            NSLog("Its context is \(item.managedObjectContext)")
+            NSLog("managedObjectContext is \(managedObjectContext)")
+            currentSession = item
+        }
         .contextMenu {
             
             Button {
@@ -635,9 +734,62 @@ struct SessionCard: View {
             }
         }
         
+    
         
         .padding(.trailing)
         .padding(.leading)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
 }
 
@@ -726,6 +878,7 @@ struct SessionsView: View {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(Color.clear)
                         .frame(height: 50)
+                        .padding(.top)
                      
                 }
                 
