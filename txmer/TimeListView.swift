@@ -131,7 +131,7 @@ struct TimeListView: View {
                                  
                             LazyVGrid(columns: columns, spacing: 12) {
                                 ForEach(timeListManager.solves!, id: \.self) { item in
-                                    TimeCard(solve: item)
+                                    TimeCard(solve: item, timeListManager: timeListManager)
                                         .environment(\.managedObjectContext, managedObjectContext)
                                 }
                             }
