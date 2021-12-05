@@ -36,6 +36,7 @@ struct NewStandardSessionView: View {
     
     let sessionColors: [Color] = [.indigo, .purple, .pink, .red, .orange, .yellow, .green, .mint, .teal, .cyan, .blue]
     
+    
     let sessionColorColumns = [
         //GridItem(.fixed(40))
         GridItem(.adaptive(minimum: 40)) /// TODO FIX ~~AND ALSO USE IN THE TIMES VIEW BECAUSE IT SHOULD DYNAMICALLY ADJUST FOR SMALLER SCREENS (FIXED 3 COLUMNS!)~~
@@ -59,11 +60,14 @@ struct NewStandardSessionView: View {
                 VStack (spacing: 16) {
                     
                     VStack (alignment: .center, spacing: 0) {
-                        Image(systemName: "square.fill")
-                            .font(.system(size: 120))
-                            .padding(.top, 8)
-                            .padding(.bottom, 8)
-                            .shadow(color: .black.opacity(0.16), radius: 12, x: 0, y: 3)
+//                        Image(systemName: "square.fill")
+                        Image(puzzle_types[Int(sessionEventType)].name)
+//                            .font(.system(size: 120))
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .padding(.top)
+                            .padding(.bottom)
+                            .shadow(color: .black.opacity(0.24), radius: 12, x: 0, y: 4)
                             
                         
                         TextField("Session Name", text: $name)
@@ -89,28 +93,43 @@ struct NewStandardSessionView: View {
                     */
                     
                     
-                    /*
+                    
+                    
+                    
                     VStack (spacing: 0) {
-                        LazyVGrid(columns: sessionEventTypeColumns, spacing: 10) {
-                            ForEach(allEventTypes, id: \.self) { event in
+                        LazyVGrid(columns: sessionColorColumns, spacing: 0) {
+                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
                                 Button {
-                                    sessionEventType = event
-                                    
-                                    
+                                    sessionEventType = Int32(index)
+
+
                                 } label: {
-                                    Image(systemName: "circle.fill")
-                                        .font(.system(size: 40))
+                                    ZStack {
+                                        Image("circular-" + element.name)
+                                        
+                                        Circle()
+                                            .strokeBorder(Color(UIColor.systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
+                                            .frame(width: 54, height: 54)
+                                            .offset(x: -0.2)
+                                            
+                                        
+                                    }
+                                    
+//                                    Image("circular-Square-1")
+//                                    Image("circular-Square-1-alt")
                                 }
-                                
-                                
+
+
                             }
+                            
                             
                         }
                         .padding()
                     }
-                    .frame(height: 130)
+                    .frame(height: 180)
                     .modifier(NewStandardSessionViewBlocks())
-                    */
+                    
+                    
                     
                     
                     VStack (spacing: 0) {

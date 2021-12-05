@@ -23,6 +23,7 @@ func formatSolveTime(secs: Double) -> String {
 struct PuzzleType {
     let name: String
     let subtypes: [Int: String]
+    
 }
 
 
@@ -40,6 +41,12 @@ let puzzle_types: [PuzzleType] = [
     PuzzleType(name: "Pyraminx", subtypes: [0: "Random State", 1: "Random Moves"]),
     PuzzleType(name: "Clock", subtypes: [0: "WCA"]),
     PuzzleType(name: "Skewb", subtypes: [0: "Random State"]),
+    
+    PuzzleType(name: "3x3 OH", subtypes: [0: "Random State"]),
+    PuzzleType(name: "3x3 Blindfolded", subtypes: [0: "Random State"]),
+    PuzzleType(name: "4x4 Blindfolded", subtypes: [0: "Random State"]),
+    PuzzleType(name: "5x5 Blindfolded", subtypes: [0: "Random State"]),
+    
 ]
 
 
