@@ -185,7 +185,7 @@ struct SolvePopupView: View {
                         
                     }
                     .offset(y: -6)
-                    .navigationTitle(String(format: "%.3f", solve.time))
+                    .navigationTitle(formatSolveTime(secs: solve.time))
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
@@ -253,7 +253,7 @@ struct TimeCard: View {
             print(solve.time)
             showingPopupSlideover = true
         }) {
-            Text(String(format: "%.3f", solve.time))
+            Text(formatSolveTime(secs: solve.time))
                 .font(.system(size: 17, weight: .bold, design: .default))
                 .foregroundColor(Color.black)
                 //.frame(width: 112, height: 53)

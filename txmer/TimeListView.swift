@@ -23,10 +23,20 @@ enum SortBy {
 
 class TimeListManager: ObservableObject {
     @Published var solves: [Solves]?
+    private var allsolves: [Solves]?
     @Published var fetchError: NSError?
     @Binding var currentSession: Sessions?
     let managedObjectContext: NSManagedObjectContext
-    @Published var sortBy: Int = 0
+    @Published var sortBy: Int = 0 {
+        didSet {
+            self.resort()
+        }
+    }
+    @Published var filter: String = "" {
+        didSet {
+            self.refilter()
+        }
+    }
     var ascending = true
     
     private let fetchRequest = NSFetchRequest<Solves>(entityName: "Solves")
@@ -45,12 +55,21 @@ class TimeListManager: ObservableObject {
             fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Solves.time, ascending: ascending)]
         }
         do {
-            try solves = managedObjectContext.fetch(fetchRequest)
+            try allsolves = managedObjectContext.fetch(fetchRequest)
         } catch {
             // Replace this implementation with code to handle the error appropriately.
             // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+        solves = allsolves
+        refilter()
+    }
+    func refilter() {
+        if filter == "" {
+            solves = allsolves
+        } else {
+            solves = allsolves?.filter{ formatSolveTime(secs: $0.time).hasPrefix(filter) }
         }
     }
 }
@@ -117,9 +136,6 @@ struct TimeListView: View {
                                     Text("Sort by Date").tag(0)
                                     Text("Sort by Time").tag(1)
                                 }
-                                .onChange(of: timeListManager.sortBy) {_ in
-                                    timeListManager.resort() // TODO make this work automatically in the TimeListManager
-                                }
                                 .pickerStyle(SegmentedPickerStyle())
                                 .frame(maxWidth: 200, alignment: .center)
                                 .padding(.top, -6)
@@ -175,6 +191,7 @@ struct TimeListView: View {
                 }
                 //.frame(maxHeight: UIScreen.screenHeight)
             }
+            .searchable(text: $timeListManager.filter)
         }.navigationViewStyle(StackNavigationViewStyle())
     }
 }

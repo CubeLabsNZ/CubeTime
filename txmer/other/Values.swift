@@ -8,6 +8,18 @@
 import Foundation
 import SwiftUI
 
+
+func formatSolveTime(secs: Double) -> String {
+    if secs < 60 {
+        return String(format: "%.3f", secs) // TODO set DP
+    } else {
+        let mins: Int = Int((secs / 60).rounded(.down))
+        let secs = secs.truncatingRemainder(dividingBy: 60)
+        return String(format: "%d:%06.3f", secs, mins)
+    }
+}
+
+
 struct PuzzleType {
     let name: String
     let subtypes: [Int: String]

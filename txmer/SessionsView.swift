@@ -89,7 +89,7 @@ struct NewStandardSessionView: View {
                     */
                     
                     
-                    
+                    /*
                     VStack (spacing: 0) {
                         LazyVGrid(columns: sessionEventTypeColumns, spacing: 10) {
                             ForEach(allEventTypes, id: \.self) { event in
@@ -110,7 +110,7 @@ struct NewStandardSessionView: View {
                     }
                     .frame(height: 130)
                     .modifier(NewStandardSessionViewBlocks())
-                    
+                    */
                     
                     
                     VStack (spacing: 0) {

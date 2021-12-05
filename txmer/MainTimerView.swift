@@ -17,6 +17,9 @@ enum stopWatchMode {
     case stopped
 }
 
+// TO left = discard
+// TO right = reload scramble
+// Double Tap = penalty menu
 
 class StopWatchManager: ObservableObject {
     @Binding var currentSession: Sessions?
@@ -40,6 +43,8 @@ class StopWatchManager: ObservableObject {
         scrambleStr = scr?.scramble
     }
     
+    private var timerStartTime: Date?
+    
     @Published var secondsElapsed = 0.0
     
     @Environment(\.colorScheme) var colourScheme
@@ -53,9 +58,10 @@ class StopWatchManager: ObservableObject {
         mode = .running
         
         secondsElapsed = 0
+        timerStartTime = Date()
         
-        timer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) { [self] timer in
-            self.secondsElapsed += 0.001
+        timer = Timer.scheduledTimer(withTimeInterval: frameTime, repeats: true) { [self] timer in
+            self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
         }
     }
     
@@ -69,60 +75,90 @@ class StopWatchManager: ObservableObject {
     
     private var canStartTimer = false
     
-    private var taskAfterHold: DispatchWorkItem?
+    private var taskTimerReady: DispatchWorkItem?
     
     private let feedbackStyle = UIImpactFeedbackGenerator(style: .medium) /// TODO: add option to change heaviness/turn on off in settings
     
+    private var prevIsDown = false
+    
     func touchDown() {
-        if mode == .running {
-            stop()
-            let solveItem = Solves(context: managedObjectContext)
-            // .comment
-            solveItem.date = Date()
-            // .penalty
-            // .puzzle_id
-            NSLog("Saving with sesion \(currentSession)")
-            NSLog("Saving with context \(solveItem.managedObjectContext)")
-            NSLog("currentSession's context is \(currentSession!.managedObjectContext)")
-            solveItem.session = currentSession /// ???
-            // currentSession!.addToSolves(solveItem)
-            solveItem.scramble = prevScrambleStr
-            solveItem.scramble_type = scrambleType
-            solveItem.scramble_subtype = scrambleSubType
-            // .starred
-            solveItem.time = self.secondsElapsed
-            do {
-                try managedObjectContext.save()
-            } catch {
-                if let error = error as NSError? {
-                    // Replace this implementation with code to handle the error appropriately.
-                    // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+        if !prevIsDown {
+            prevIsDown = true
+            timerColour = TimerTextColours.timerHeldDownColour
+            NSLog("Down")
+            if mode == .running {
+                stop()
+                let solveItem = Solves(context: managedObjectContext)
+                // .comment
+                solveItem.date = Date()
+                // .penalty
+                // .puzzle_id
+                NSLog("Saving with sesion \(currentSession)")
+                NSLog("Saving with context \(solveItem.managedObjectContext)")
+                NSLog("currentSession's context is \(currentSession!.managedObjectContext)")
+                solveItem.session = currentSession /// ???
+                // currentSession!.addToSolves(solveItem)
+                solveItem.scramble = prevScrambleStr
+                solveItem.scramble_type = scrambleType
+                solveItem.scramble_subtype = scrambleSubType
+                // .starred
+                solveItem.time = self.secondsElapsed
+                do {
+                    try managedObjectContext.save()
+                } catch {
+                    if let error = error as NSError? {
+                        // Replace this implementation with code to handle the error appropriately.
+                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
 
-                    /*
-                    Typical reasons for an error here include:
-                    * The parent directory does not exist, cannot be created, or disallows writing.
-                    * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                    * The device is out of space.
-                    * The store could not be migrated to the current model version.
-                    Check the error message to determine what the actual problem was.
-                    */
-                    fatalError("Unresolved error \(error), \(error.userInfo)")
+                        /*
+                        Typical reasons for an error here include:
+                        * The parent directory does not exist, cannot be created, or disallows writing.
+                        * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+                        * The device is out of space.
+                        * The store could not be migrated to the current model version.
+                        Check the error message to determine what the actual problem was.
+                        */
+                        fatalError("Unresolved error \(error), \(error.userInfo)")
+                    }
                 }
+            } else { // TODO on update gesture cancels the taskAfterHold once a drag started past a certain threshold
+                let newTaskTimerReady = DispatchWorkItem {
+                    self.canStartTimer = true
+                    self.timerColour = TimerTextColours.timerCanStartColour
+                    self.feedbackStyle.impactOccurred()
+                }
+                taskTimerReady = newTaskTimerReady
+                DispatchQueue.main.asyncAfter(deadline: .now() + userHoldTime, execute: newTaskTimerReady)
+                
             }
-        } else {
-            let newTaskAfterHold = DispatchWorkItem {
-                self.canStartTimer = true
-                self.timerColour = TimerTextColours.timerCanStartColour
-                self.feedbackStyle.impactOccurred()
-            }
-            taskAfterHold = newTaskAfterHold
-            DispatchQueue.main.asyncAfter(deadline: .now() + userHoldTime, execute: newTaskAfterHold)
-            
         }
-        timerColour = TimerTextColours.timerHeldDownColour
     }
     
-    func touchUp() {
+    func touchUp(value: DragGesture.Value) {
+        prevIsDown = false
+        NSLog("up")
+        taskTimerReady?.cancel()
+        
+        timerColour = ((colourScheme == .light) ? Color.black : Color.white)
+        
+        let hAmount = value.translation.width as CGFloat
+        let vAmount = value.translation.height as CGFloat
+        let threshold = 20 as CGFloat
+        
+        if abs(hAmount) > threshold && abs(vAmount) < abs(hAmount) {
+            if hAmount > 0 {
+                NSLog("Right")
+            } else {
+                NSLog("Left")
+            }
+        } else if abs(vAmount) > threshold && abs(hAmount) < abs(vAmount) {
+            if vAmount > 0 {
+                NSLog("Down")
+            } else {
+                NSLog("Up")
+            }
+        }
+        // TODO disallow gestures after 200 ms
         if canStartTimer {
             NSLog("minimumTapDurationMet, starting timer.")
             start()
@@ -131,9 +167,6 @@ class StopWatchManager: ObservableObject {
             let scr = CHTScramble.getNewScramble(by: scrambler, type: scrambleType, subType: scrambleSubType)
             scrambleStr = scr?.scramble
         }
-        taskAfterHold?.cancel()
-        
-        timerColour = ((colourScheme == .light) ? Color.black : Color.white)
     }
 }
 
@@ -141,29 +174,6 @@ public enum ButtonState {
     case pressed
     case notPressed
 }
-
-public struct Touch: ViewModifier { // TODO cleanup
-    @GestureState private var isPressed = false
-    let changeState: (ButtonState) -> Void
-    public func body(content: Content) -> some View {
-        let drag = DragGesture(minimumDistance: 0)
-            .updating($isPressed) { (value, gestureState, transaction) in
-                gestureState = true
-            }
-        
-        return content
-            .gesture(drag)
-            .onChange(of: isPressed, perform: { (pressed) in
-                        if pressed {
-                            self.changeState(.pressed)
-                        } else {
-                            self.changeState(.notPressed)
-                        }
-                    })
-    }
-}
-
-
 
 extension UIScreen{
    static let screenWidth = UIScreen.main.bounds.size.width
@@ -208,7 +218,7 @@ struct SubTimerView: View {
             }
             
             
-            Text(String(format: "%.3f", stopWatchManager.secondsElapsed))
+            Text(formatSolveTime(secs: stopWatchManager.secondsElapsed))
                 .font(.system(size: 48, weight: .bold, design: .monospaced))
                 .foregroundColor(stopWatchManager.timerColour)
                        
@@ -223,6 +233,7 @@ struct SubTimerView: View {
                             //height: geometry.safeAreaInsets.top,
                             //height:  - safeAreaInset(edge: .bottom) - CGFloat(tabBarHeight),
                         )
+                        /*
                         .modifier(Touch(changeState: { (buttonState) in
                             
                             
@@ -233,7 +244,17 @@ struct SubTimerView: View {
                             }
                         }))
                         //.safeAreaInset(edge: .bottom)
-                        //.aspectRatio(contentMode: ContentMode.fit)
+                         //.aspectRatio(contentMode: ContentMode.fit)
+                         */
+                        .gesture(
+                            DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                                .onChanged({_ in
+                                    stopWatchManager.touchDown()
+                                })
+                                .onEnded({ value in
+                                    stopWatchManager.touchUp(value: value)
+                                })
+                        )
                 }
             }
         }
