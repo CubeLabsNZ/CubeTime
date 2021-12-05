@@ -557,7 +557,7 @@ struct SessionCard: View {
                         .foregroundColor(Color.black)
                     let _ = NSLog("scr type = \(item.scramble_type)")
                     Text(puzzle_types[Int(item.scramble_type)].name)
-                        .font(.system(size: 15, weight: .medium, design: .default))
+//                        .font(.system(size: 15, weight: .medium, design: .default))
                         .foregroundColor(Color.black)
                     Spacer()
                     Text("\(item.solves?.count ?? -1) Solves")
@@ -568,8 +568,9 @@ struct SessionCard: View {
                 
                 Spacer()
                 
-                Image(systemName: "square.fill")
-                    .font(.system(size: 90))
+                Image(puzzle_types[Int(item.scramble_type)].name)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .foregroundColor(Color.black)
                 //.padding(.trailing, -12)
                 
