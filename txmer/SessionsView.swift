@@ -27,14 +27,12 @@ struct NewStandardSessionView: View {
     @Binding var showNewSessionPopUp: Bool
     @State private var name: String = ""
     
-    @State private var sessionEventType = "3x3"
+    @State private var sessionEventType: Int32 = 0
     
     //@State private var sessionColour: Color?
     @State private var sessionColour: Color = .indigo
     
     @State var pinnedSession: Bool /// TODO: link to database
-    
-    let allEventTypes = ["3x3", "2x2", "4x4", "5x5", "6x6", "7x7", "Square-1", "Pyraminx", "Skewb", "Clock", "Megaminx", "3BLD"]
     
     let sessionColors: [Color] = [.indigo, .purple, .pink, .red, .orange, .yellow, .green, .mint, .teal, .cyan, .blue]
     
@@ -99,8 +97,9 @@ struct NewStandardSessionView: View {
                         Spacer()
                         
                         Picker("", selection: $sessionEventType) {
-                            ForEach(allEventTypes, id: \.self) {
-                                Text($0)
+                            ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
+                                Text(element.name).tag(Int32(index))
+                                let _ = NSLog("making picked item with name \(element.name) and index \(index)")
                                     
                                     //.foregroundColor(Color(UIColor.systemGray4))
                             }
@@ -178,6 +177,8 @@ struct NewStandardSessionView: View {
                     Button {
                         let sessionItem = Sessions(context: managedObjectContext)
                         sessionItem.name = name
+                        NSLog("sessioneventyype is \(sessionEventType)")
+                        sessionItem.scramble_type = sessionEventType
                         do {
                             try managedObjectContext.save()
                         } catch {
@@ -508,7 +509,8 @@ struct SessionCard: View {
                     Text(item.name ?? "Unkown session name")
                         .font(.system(size: 22, weight: .bold, design: .default))
                         .foregroundColor(Color.black)
-                    Text("Square-1")
+                    let _ = NSLog("scr type = \(item.scramble_type)")
+                    Text(puzzle_types[Int(item.scramble_type)].name)
                         .font(.system(size: 15, weight: .medium, design: .default))
                         .foregroundColor(Color.black)
                     Spacer()

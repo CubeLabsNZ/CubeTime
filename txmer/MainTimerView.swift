@@ -25,7 +25,7 @@ class StopWatchManager: ObservableObject {
     
     let scrambler = CHTScrambler.init()
     
-    var scrambleType: Int32 = 0
+    var scrambleType: Int32
     var scrambleSubType: Int32 = 0
     
     var prevScrambleStr: String? = nil
@@ -35,6 +35,7 @@ class StopWatchManager: ObservableObject {
         _currentSession = currentSession
         self.managedObjectContext = managedObjectContext
         scrambler.initSq1()
+        scrambleType = (currentSession.wrappedValue?.scramble_type)!
         let scr = CHTScramble.getNewScramble(by: scrambler, type: scrambleType, subType: scrambleSubType)
         scrambleStr = scr?.scramble
     }
