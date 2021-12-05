@@ -382,9 +382,17 @@ struct NewSessionPopUpView: View {
                         .padding(.trailing)
                         
                         
-                        Divider()
-                            .padding(.leading, 64)
-                            .padding(.trailing)
+                        ZStack {
+                            Rectangle()
+                                .fill(Color(UIColor.systemGray6))
+                                .frame(height: 1)
+                                .padding(.leading)
+                                .padding(.trailing)
+                            
+                            Divider()
+                                .padding(.leading, 64)
+                                .padding(.trailing)
+                        }
                         
                         
                         
@@ -412,9 +420,24 @@ struct NewSessionPopUpView: View {
                         .padding(.trailing)
                         
                         
-                        Divider()
-                            .padding(.leading, 64)
-                            .padding(.trailing)
+                        ZStack {
+                            Rectangle()
+                                .fill(Color(UIColor.systemGray6))
+                                .frame(height: 1)
+                                .padding(.leading)
+                                .padding(.trailing)
+//                            Divider()
+////                                .background(Color(UIColor.systemGray6))
+//                                .background(Color.red)
+//                                .padding(.leading)
+//                                .padding(.trailing)
+                         
+                            
+                            Divider()
+                                .padding(.leading, 64)
+                                .padding(.trailing)
+                        }
+                        
                         
                         
                         
@@ -435,7 +458,7 @@ struct NewSessionPopUpView: View {
                         }
                         .background(Color(UIColor.systemGray6))
                         .onTapGesture {
-                            print("show session pressed")
+                            print("playground pressed")
                         }
                         .cornerRadius(10, corners: .bottomRight)
                         .cornerRadius(10, corners: .bottomLeft)
@@ -889,7 +912,7 @@ struct SessionsView: View {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(Color.clear)
                         .frame(height: 50)
-                        .padding(.top)
+                        .padding(.top, 32)
                      
                 }
                 
