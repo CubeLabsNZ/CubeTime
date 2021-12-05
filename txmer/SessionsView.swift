@@ -27,14 +27,12 @@ struct NewStandardSessionView: View {
     @Binding var showNewSessionPopUp: Bool
     @State private var name: String = ""
     
-    @State private var sessionEventType = "3x3"
+    @State private var sessionEventType: Int32 = 0
     
     //@State private var sessionColour: Color?
     @State private var sessionColour: Color = .indigo
     
     @State var pinnedSession: Bool /// TODO: link to database
-    
-    let allEventTypes = ["3x3": "3x3", "2x2": "2x2", "4x4": "4x4", "5x5": "5x5", "6x6": "6x6", "7x7": "7x7", "Square-1": "square-1", "Pyraminx": "pyra", "Skewb": "skewb", "Clock": "clock", "Megaminx": "mega", "OH": "oh", "3x3 Blindfolded": "3bld", "4x4 Blindfolded": "4bld", "5x5 Blindfolded": "5bld"]
     
     let sessionColors: [Color] = [.indigo, .purple, .pink, .red, .orange, .yellow, .green, .mint, .teal, .cyan, .blue]
     
@@ -95,9 +93,9 @@ struct NewStandardSessionView: View {
                     
                     VStack (spacing: 0) {
                         LazyVGrid(columns: sessionEventTypeColumns, spacing: 10) {
-                            ForEach(allEventTypes.sorted(by: >), id: \.key) { event, icon in
+                            ForEach(allEventTypes, id: \.self) { event in
                                 Button {
-                                    sessionEventType = icon
+                                    sessionEventType = event
                                     
                                     
                                 } label: {
@@ -123,27 +121,19 @@ struct NewStandardSessionView: View {
                             
                             
                             Spacer()
-                            
+
                             Picker("", selection: $sessionEventType) {
-//                                ForEach(allEventTypes, id: \.self) {
-//                                    Text($0)
-//
-//                                        //.foregroundColor(Color(UIColor.systemGray4))
-//                                }
-                                
-                                Text("1")
-                                Text("2")
-                                Text("3")
-                                Text("4")
-                                Text("5")
-                                Text("6")
-                                
+                                    ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
+                                    Text(element.name).tag(Int32(index))
+
+                                    //.foregroundColor(Color(UIColor.systemGray4))
+                                }
                             }
                             .pickerStyle(.menu)
                             .font(.system(size: 17, weight: .regular))
                             .accentColor(Color(UIColor.systemGray))
-                            
-                            
+
+
                             //Text("Square-1")
                         }
                         .padding()
@@ -215,6 +205,8 @@ struct NewStandardSessionView: View {
                     Button {
                         let sessionItem = Sessions(context: managedObjectContext)
                         sessionItem.name = name
+                        NSLog("sessioneventyype is \(sessionEventType)")
+                        sessionItem.scramble_type = sessionEventType
                         do {
                             try managedObjectContext.save()
                         } catch {
@@ -545,7 +537,8 @@ struct SessionCard: View {
                     Text(item.name ?? "Unkown session name")
                         .font(.system(size: 22, weight: .bold, design: .default))
                         .foregroundColor(Color.black)
-                    Text("Square-1")
+                    let _ = NSLog("scr type = \(item.scramble_type)")
+                    Text(puzzle_types[Int(item.scramble_type)].name)
                         .font(.system(size: 15, weight: .medium, design: .default))
                         .foregroundColor(Color.black)
                     Spacer()

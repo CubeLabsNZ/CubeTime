@@ -19,7 +19,7 @@ enum Tab {
 
 
 class TabRouter: ObservableObject {
-    @Published var currentTab: Tab = .timer
+    @Published var currentTab: Tab = .sessions
 }
 
 

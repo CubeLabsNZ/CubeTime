@@ -8,9 +8,28 @@
 import Foundation
 import SwiftUI
 
-class UserDefinedValues {
-    let colouryes: Color = Color.black
+struct PuzzleType {
+    let name: String
+    let subtypes: [Int: String]
 }
+
+
+// TODO 3BLD
+
+let puzzle_types: [PuzzleType] = [
+    PuzzleType(name: "2x2", subtypes: [0: "Random State"]),
+    PuzzleType(name: "3x3", subtypes: [0: "Random State", 2: "Cross Solved"]),
+    PuzzleType(name: "4x4", subtypes: [0: "WCA"]),
+    PuzzleType(name: "5x5", subtypes: [0: "WCA"]),
+    PuzzleType(name: "6x6", subtypes: [1: "SiGN (OLD)"]),
+    PuzzleType(name: "7x7", subtypes: [1: "SiGN (OLD)"]),
+    PuzzleType(name: "Square-1", subtypes: [0: "Random State"]),
+    PuzzleType(name: "Megaminx", subtypes:  [0: "Pochmann"]),
+    PuzzleType(name: "Pyraminx", subtypes: [0: "Random State", 1: "Random Moves"]),
+    PuzzleType(name: "Clock", subtypes: [0: "WCA"]),
+    PuzzleType(name: "Skewb", subtypes: [0: "Random State"]),
+]
+
 
 class SetValues {
     
