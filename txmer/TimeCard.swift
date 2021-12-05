@@ -25,11 +25,14 @@ struct SolvePopupView: View {
     @State private var userComment: String
     @State private var solveStarred: Bool
     
-    init(solve: Solves, timeListManager: TimeListManager){
+    @Binding var showingPopupSlideover: Bool
+    
+    init(solve: Solves, timeListManager: TimeListManager, showingPopupSlideover: Binding<Bool>){
         self.solve = solve
         self.timeListManager = timeListManager
         _userComment = State(initialValue: solve.comment ?? "")
         _solveStarred = State(initialValue: solve.starred)
+        _showingPopupSlideover = showingPopupSlideover
     }
     
     var body: some View {
@@ -189,7 +192,7 @@ struct SolvePopupView: View {
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
-                                
+                                showingPopupSlideover = false
                                 managedObjectContext.delete(solve) // Todo read context from environment
                                 do {
                                     try managedObjectContext.save()
@@ -222,7 +225,7 @@ struct SolvePopupView: View {
                         ToolbarItem(placement: .navigationBarLeading) {
                             Button {
                                 print("button tapped")
-                                presentationMode.wrappedValue.dismiss()
+                                showingPopupSlideover = false
                             } label: {
                                 
                                 Image(systemName: "chevron.left")
@@ -268,7 +271,7 @@ struct TimeCard: View {
             UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
         }
         .sheet(isPresented: $showingPopupSlideover) {
-            SolvePopupView(solve: solve, timeListManager: timeListManager)
+            SolvePopupView(solve: solve, timeListManager: timeListManager, showingPopupSlideover: $showingPopupSlideover)
                 .environment(\.managedObjectContext, managedObjectContext)
         }
         .contextMenu {
