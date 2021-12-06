@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		233FE7B6274F109600C6F1DF /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Values.swift */; };
+		239D62A3275DE0360026FF00 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = 239D62A2275DE0360026FF00 /* SwiftUICharts */; };
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
 		23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* txmerApp.swift */; };
 		23DE3BDD274DDBE200254D29 /* MainTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDC274DDBE200254D29 /* MainTimerView.swift */; };
@@ -165,6 +166,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				239D62A3275DE0360026FF00 /* SwiftUICharts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,6 +198,7 @@
 		23DE3BCE274DDBE200254D29 = {
 			isa = PBXGroup;
 			children = (
+				23E81E89275DDCBE00B741E3 /* Packages */,
 				23DE3BD9274DDBE200254D29 /* txmer */,
 				23DE3BEF274DDBE400254D29 /* txmerTests */,
 				23DE3BF9274DDBE400254D29 /* txmerUITests */,
@@ -279,6 +282,13 @@
 				7D878BB0275D8DB3008AC443 /* Stats.swift */,
 			);
 			path = Stats;
+			sourceTree = "<group>";
+		};
+		23E81E89275DDCBE00B741E3 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Packages;
 			sourceTree = "<group>";
 		};
 		7D69E0632751FDBB007211CC /* 3rdparty */ = {
@@ -409,6 +419,7 @@
 			);
 			name = txmer;
 			packageProductDependencies = (
+				239D62A2275DE0360026FF00 /* SwiftUICharts */,
 			);
 			productName = txmer;
 			productReference = 23DE3BD7274DDBE200254D29 /* txmer.app */;
@@ -483,6 +494,7 @@
 			);
 			mainGroup = 23DE3BCE274DDBE200254D29;
 			packageReferences = (
+				239D62A1275DE0360026FF00 /* XCRemoteSwiftPackageReference "ChartView" */,
 			);
 			productRefGroup = 23DE3BD8274DDBE200254D29 /* Products */;
 			projectDirPath = "";
@@ -928,6 +940,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		239D62A1275DE0360026FF00 /* XCRemoteSwiftPackageReference "ChartView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AppPear/ChartView";
+			requirement = {
+				kind = exactVersion;
+				version = "2.0.0-beta.2";
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		239D62A2275DE0360026FF00 /* SwiftUICharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 239D62A1275DE0360026FF00 /* XCRemoteSwiftPackageReference "ChartView" */;
+			productName = SwiftUICharts;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */ = {

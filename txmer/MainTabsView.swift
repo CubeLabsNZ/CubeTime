@@ -69,6 +69,7 @@ struct MainTabsView: View {
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .settings:
                     SettingsView()
+                    
                 }
 
                 GeometryReader { geometry in

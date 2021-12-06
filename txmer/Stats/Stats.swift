@@ -49,11 +49,17 @@ class Stats {
         // calculate top and bottom n percent using my alg, maybe add a global length var
     }
     
-    func getMin() -> Solves {
+    func getMin() -> Solves? {
+        if solves.count == 0 {
+            return nil
+        }
         return solves[0]
     }
     
-    func getSessionMean() -> Double {
+    func getSessionMean() -> Double? {
+        if solves.count == 0 {
+            return nil
+        } 
         var noDNFs = solves
         noDNFs.removeAll(where: { $0.penalty == 3 })
         let sum = noDNFs.reduce(0, {$0 + $1.time})
@@ -61,17 +67,21 @@ class Stats {
     }
     
     func getNumberOfSolves() -> Int {
+        
         return solves.count
     }
     
-    func getBestMovingAverageOf(_ period: Int) -> (Double, ArraySlice<Solves>) {
+    func getBestMovingAverageOf(_ period: Int) -> (Double, ArraySlice<Solves>)? {
         precondition(period > 1)
-        precondition(solves.count >= period)
+        if solves.count < period {
+            return nil
+        }
+            
         
         var lowest_average: Double = solves[solves.count-1].time
         var lowest_values: ArraySlice<Solves>?
         
-        for i in period..<solves.count {
+        for i in period..<solves.count+1 {
             let range = i - period + 1..<i - 1
             
             
@@ -85,6 +95,7 @@ class Stats {
             
             let result = Double(sum) / Double(period-2)
             if result < lowest_average {
+                print("here")
                 lowest_values = solves[i - period ..< i]
                 lowest_average = result
             }

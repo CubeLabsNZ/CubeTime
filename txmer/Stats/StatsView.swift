@@ -8,6 +8,10 @@
 import SwiftUI
 import CoreData
 
+import SwiftUICharts
+
+
+
 extension View {
     public func gradientForeground(colors: [Color]) -> some View {
         self.overlay(LinearGradient(gradient: .init(colors: colors),
@@ -34,17 +38,35 @@ struct StatsView: View {
         GridItem(spacing: 10)
     ]
     
+     
+    
     @Binding var currentSession: Sessions?
     
     
 //    let stats = Stats(currentSession: $currentSession, managedObjectContext: managedObjectContext)
 //        .environment(\.managedObjectContext, managedObjectContext)
     
+    let ao5: (Double, ArraySlice<Solves>)?
+    let ao12: (Double, ArraySlice<Solves>)?
+    let ao100: (Double, ArraySlice<Solves>)?
+    
+    
+    let bestSingle: Solves?
+    let sessionMean: Double?
+    
+    
     let stats: Stats
     init(currentSession: Binding<Sessions?>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
         
+        
         stats = Stats(currentSession: currentSession.wrappedValue!, managedObjectContext: managedObjectContext)
+        
+        self.ao5 = stats.getBestMovingAverageOf(5)
+        self.ao12 = stats.getBestMovingAverageOf(12)
+        self.ao100 = stats.getBestMovingAverageOf(100)
+        self.bestSingle = stats.getMin()
+        self.sessionMean = stats.getSessionMean()
     }
     
     
@@ -61,6 +83,18 @@ struct StatsView: View {
                 
                 
                 ScrollView() {
+                    
+                    LineChart()
+                        .data([1, 2, 3, 4, 5, 60])
+                        .chartStyle(ChartStyle(backgroundColor: .white,
+                                                           foregroundColor: [ColorGradient(.blue, .purple),
+                                                                             ColorGradient(.orange, .red)]))
+                    
+                    
+                    
+                    
+                    
+                    
 //                    ForEach(stats.solves, id: \.self) { solve in
 //                        Text(formatSolveTime(secs: solve.time))
 //                    }
@@ -103,6 +137,9 @@ struct StatsView: View {
                     
                     /// this whole section make lazyvgrid because performance currently :trend_dwoin::"
                     VStack {
+                        
+                       
+                        
                         VStack (spacing: 0) {
                             HStack (alignment: .center) {
                                 Text(currentSession!.name!)
@@ -132,9 +169,18 @@ struct StatsView: View {
                                                 .padding(.bottom, 4)
                                             
 //                                            Text("88:88:888")
-                                            Text(String(formatSolveTime(secs: stats.getMin().time)))
-                                                .font(.system(size: 34, weight: .bold, design: .default))
-                                                .foregroundColor(.white)
+                                            
+                                            if bestSingle != nil {
+                                                Text(String(formatSolveTime(secs: bestSingle!.time)))
+                                                    .font(.system(size: 34, weight: .bold, design: .default))
+                                                    .foregroundColor(.white)
+                                            } else {
+                                                Text("N/A")
+                                                    .font(.system(size: 28, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(UIColor.systemGray5))
+                                            }
+                                            
+                                            
                                         }
                                         .padding(.top)
                                         .padding(.bottom, 12)
@@ -159,10 +205,18 @@ struct StatsView: View {
                                                     .foregroundColor(Color(UIColor.systemGray))
                                                     .padding(.leading, 12)
                                                 
-                                                Text(String(formatSolveTime(secs: stats.getBestMovingAverageOf(12).0)))
+                                                if ao12 != nil {
+                                                    Text(String(formatSolveTime(secs: ao12!.0)))
                                                     .font(.system(size: 34, weight: .bold, design: .default))
                                                     .foregroundColor(.black)
                                                     .padding(.leading, 12)
+                                                } else {
+                                                    Text("N/A")
+                                                        .font(.system(size: 28, weight: .medium, design: .default))
+                                                        .foregroundColor(Color(UIColor.systemGray2))
+//                                                        .padding(.leading, -16)
+                                                    
+                                                }
                                             }
                                             .onTapGesture {
                                                 print("best ao12 pressed")
@@ -181,10 +235,19 @@ struct StatsView: View {
                                                     .foregroundColor(Color(UIColor.systemGray))
                                                     .padding(.leading, 12)
                                                 
-                                                Text(String(formatSolveTime(secs: stats.getBestMovingAverageOf(100).0)))
-                                                    .font(.system(size: 34, weight: .bold, design: .default))
-                                                    .foregroundColor(.black)
-                                                    .padding(.leading, 12)
+                                                if ao100 != nil {
+                                                    Text(String(formatSolveTime(secs: ao100!.0)))
+                                                        .font(.system(size: 34, weight: .bold, design: .default))
+                                                        .foregroundColor(.black)
+                                                        .padding(.leading, 12)
+                                                } else {
+                                                    Text("N/A")
+                                                        .font(.system(size: 28, weight: .medium, design: .default))
+                                                        .foregroundColor(Color(UIColor.systemGray2))
+//                                                        .padding(.leading, -16)
+                                                        
+                                                }
+                                                
                                             }
                                             .onTapGesture {
                                                 print("best ao100 pressed")
@@ -215,9 +278,17 @@ struct StatsView: View {
                                                 .padding(.bottom, 4)
                                             
                                             
-                                            Text(String(formatSolveTime(secs: stats.getSessionMean())))
-                                                .font(.system(size: 34, weight: .bold, design: .default))
-                                                .foregroundColor(.black)
+                                            if sessionMean != nil {
+                                                Text(String(formatSolveTime(secs: sessionMean!)))
+                                                    .font(.system(size: 34, weight: .bold, design: .default))
+                                                    .foregroundColor(.black)
+                                            } else {
+                                                Text("N/A")
+                                                    .font(.system(size: 28, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(UIColor.systemGray2))
+                                            }
+                                            
+                                            
                                         }
                                         .padding(.top)
                                         .padding(.bottom, 12)
@@ -252,21 +323,40 @@ struct StatsView: View {
                                                 .padding(.bottom, 4)
                                             
 //                                            Text("6.142")
-                                            Text(String(formatSolveTime(secs: stats.getBestMovingAverageOf(5).0)))
-                                                .font(.system(size: 34, weight: .bold, design: .default))
-                                                .gradientForeground(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 136/255, green: 94/255, blue: 191/255)])
+                                            
+                                            
+                                            if ao5 != nil {
+                                                Text(String(formatSolveTime(secs: ao5!.0)))
+                                                    .font(.system(size: 34, weight: .bold, design: .default))
+                                                    .gradientForeground(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 136/255, green: 94/255, blue: 191/255)])
+                                                
+                                                Spacer()
+                                                
+                                                
+                                                ForEach((0...4), id: \.self) {
+                                                    Text(String(formatSolveTime(secs: ao5!.1[$0].time)))
+                                                        .font(.system(size: 17, weight: .regular, design: .default))
+                                                        .foregroundColor(.black)
+                                                        .multilineTextAlignment(.leading)
+                                                }
+                                                
+                                            } else {
+                                                Text("N/A")
+                                                    .font(.system(size: 28, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(UIColor.systemGray2))
+                                                
+                                                Spacer()
+                                            }
+                                            
+                                            
                                             
                                             //                                        gradientColour.mask(Text("6.142").font(.system(size: 34, weight: .bold, design: .default)))
                                             
-                                            Spacer()
                                             
+
                                             
-                                            
-//                                            Text(String(secs: stats.getBestMovingAverageOf(5).1.time))
-                                            Text("(5.58)\n6.24\n(8.87)\n6.18\n5.99") /// TODO: make text gray when they are () and AUTO BRACKET
-                                                .font(.system(size: 17, weight: .regular, design: .default))
-                                                .foregroundColor(.black)
-                                                .multilineTextAlignment(.leading)
+                                            /// TODO: make text gray when they are () and AUTO BRACKET
+                                                
                                             
                                         }
                                         //                                    .padding(.top)
@@ -335,36 +425,58 @@ struct StatsView: View {
                             
                             
                             
-                            Button {
-                                print("time trend pressed")
-                            } label: {
+                            VStack {
                                 VStack {
-                                    HStack {
-                                        Text("TIME TREND")
-                                            .font(.system(size: 13, weight: .medium, design: .default))
-                                            .foregroundColor(Color(UIColor.systemGray))
-                                            .padding(.bottom, 4)
+                                    
+                                    
+                                    
+                                    ZStack {
+                                        HStack {
+                                            Text("TIME TREND")
+                                                .font(.system(size: 13, weight: .medium, design: .default))
+                                                .foregroundColor(Color(UIColor.systemGray))
+                                                .padding(.bottom, 4)
+                                            
+                                            Spacer()
+                                        }
                                         
-                                        Spacer()
+                                                                                    
+                                        
                                     }
                                     
                                     
-                                    Spacer()
+                                    
+                                    /*
+                                    MultiLineChartView(data: [([8,32,11,23,40,28], GradientColors.green), ([90,99,78,111,70,60,77], GradientColors.purple), ([34,56,72,38,43,100,50], GradientColors.orngPink)], title: "Title")
+                                     */
+                                     // legend is optional
+//                                    BarChart()
+//                                            .data([1, 2, 3, 4, 5, 6])
+//                                            .chartStyle(ChartStyle(backgroundColor: .white,
+//                                                                   foregroundColor: ColorGradient(.blue, .purple)))
+                                    
+//                                        .data(stats.solves.sorted(by: { $0.date! < $1.date! }).map { $0.time })
+                                        
+                                 
+                                    
+//                                    Spacer()
                                     
                                 }
                                 .padding(.top, 12)
                                 .padding(.bottom, 12)
                                 .padding(.leading, 12)
-                                
+                                .padding(.trailing, 12)
                             }
                             .frame(height: 200)
                             .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                            .onTapGesture {
+                                print("time trend pressed")
+                            }
                             
                             
                             
-                            Button {
-                                print("time distribution pressed")
-                            } label: {
+                            
+                            VStack {
                                 VStack {
                                     HStack {
                                         Text("TIME DISTRIBUTION")
@@ -381,11 +493,15 @@ struct StatsView: View {
                                 .padding(.top, 12)
                                 .padding(.bottom, 12)
                                 .padding(.leading, 12)
-                                
                             }
                             .frame(height: 200)
                             .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
                             .padding(.bottom, 16)
+                            .onTapGesture {
+                                print("time distribution pressed")
+                            }
+                            
+                            
                             
                             
                         }
