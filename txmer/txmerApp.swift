@@ -6,16 +6,23 @@
 //
 
 import SwiftUI
+import CoreData
 
 @main
 @available(iOS 15.0, *) /// TODO: remove all `@available(iOS 15.0, *)` in the project and change the button role BECAUSE iOS 15 + ONLY :sob:
 struct txmerApp: App {
-    let persistenceController = PersistenceController.shared
+    let persistenceController: PersistenceController
+    private let moc: NSManagedObjectContext
+    
+    init() {
+        persistenceController = PersistenceController.shared
+        moc = persistenceController.container.viewContext
+    }
     
     var body: some Scene {
         WindowGroup {
-            MainTabsView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            MainTabsView(managedObjectContext: moc)
+                .environment(\.managedObjectContext,moc )
         }
     }
 }

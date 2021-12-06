@@ -8,10 +8,33 @@
 import SwiftUI
 
 
+enum ProjectLicense {
+    case txmer
+    case chaotimer
+    case chartview
+    case icons
+    case recursivefont
+}
+
+
 struct LicensePopUpView: View {
+    @Binding var projectLicense: ProjectLicense?
     var body: some View {
         ScrollView {
-            MITLicense(year: "2019", holder: "Andras Samu")
+            switch projectLicense {
+            case .txmer:
+                TxmerLicense()
+            case .chaotimer:
+                ChaoTimerLicense()
+            case .chartview:
+                ChartViewLicense()
+            case .icons:
+                CuingIconsLicense()
+            case .recursivefont:
+                Text("OFL TODO")
+            default:
+                Text("Could not get license for project")
+            }
         }
     }
 }
@@ -22,6 +45,7 @@ struct LicensesPopUpView: View {
     @Environment(\.dismiss) var dismiss
     @State var showLicense = false
     @Binding var showLicenses: Bool
+    @State var projectLicense: ProjectLicense?
     
     var body: some View {
         NavigationView {
@@ -44,21 +68,26 @@ struct LicensesPopUpView: View {
                     }
                 }
                 Button("txmer itself") {
+                    projectLicense = .txmer
                     showLicense = true
                 }
                 Button("ChaoTimer") {
+                    projectLicense = .chaotimer
                     showLicense = true
                 }
                 Button("ChartView") {
+                    projectLicense = .chartview
                     showLicense = true
                 }
                 Button("Cubing Icons") {
+                    projectLicense = .icons
                     showLicense = true
                 }
                 Button("Recursive Font") {
+                    projectLicense = .recursivefont
                     showLicense = true
                 }
-                NavigationLink("", destination: LicensePopUpView(), isActive: $showLicense)
+                NavigationLink("", destination: LicensePopUpView(projectLicense: $projectLicense), isActive: $showLicense)
                 Spacer()
             }
             

@@ -7,6 +7,40 @@
 
 import SwiftUI
 
+
+
+struct TxmerLicense: View {
+    var body: some View {
+        Text("© 2021 Tim Xie and Reagan Bohan\nTxmer is licensed under the GPL v3 license, which is shown below.")
+        Divider()
+        GPLLicense()
+    }
+}
+
+struct ChaoTimerLicense: View {
+    var body: some View {
+        Text("ChoTimer's scrambler is used in txmer and is © 2014 Juchao Li.")
+        Divider()
+        GPLLicense()
+    }
+}
+
+struct ChartViewLicense: View {
+    var body: some View {
+        Text("ChartView is used in the stats view of txmer.")
+        Divider()
+        MITLicense(year: "2019", holder: "Andras Samu")
+    }
+}
+
+struct CuingIconsLicense: View {
+    var body: some View {
+        Text("A derivative of \"Cubing's\" icons are used throughout txmer.")
+        Divider()
+        MITLicense(year: "2015", holder: "Devin Corr-Robinett")
+    }
+}
+
 struct MITLicense: View {
     var year: String
     var holder: String

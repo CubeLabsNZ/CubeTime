@@ -40,7 +40,7 @@ struct StatsView: View {
     
      
     
-    @Binding var currentSession: Sessions?
+    @Binding var currentSession: Sessions
     
     
 //    let stats = Stats(currentSession: $currentSession, managedObjectContext: managedObjectContext)
@@ -56,11 +56,11 @@ struct StatsView: View {
     
     
     let stats: Stats
-    init(currentSession: Binding<Sessions?>, managedObjectContext: NSManagedObjectContext) {
+    init(currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
         
         
-        stats = Stats(currentSession: currentSession.wrappedValue!, managedObjectContext: managedObjectContext)
+        stats = Stats(currentSession: currentSession.wrappedValue, managedObjectContext: managedObjectContext)
         
         self.ao5 = stats.getBestMovingAverageOf(5)
         self.ao12 = stats.getBestMovingAverageOf(12)
@@ -142,12 +142,12 @@ struct StatsView: View {
                         
                         VStack (spacing: 0) {
                             HStack (alignment: .center) {
-                                Text(currentSession!.name!)
+                                Text(currentSession.name!)
                                     .font(.system(size: 20, weight: .semibold, design: .default))
                                     .foregroundColor(Color(UIColor.systemGray))
                                 Spacer()
                                 
-                                Text(puzzle_types[Int(currentSession!.scramble_type)].name) // TODO playground
+                                Text(puzzle_types[Int(currentSession.scramble_type)].name) // TODO playground
                                     .font(.system(size: 16, weight: .semibold, design: .default))
                                     .foregroundColor(Color(UIColor.systemGray))
                             }

@@ -536,7 +536,7 @@ struct NewSessionPopUpView: View {
 struct SessionCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     
-    @Binding var currentSession: Sessions?
+    @Binding var currentSession: Sessions
     
     
     @State private var isShowingDeleteDialog = false
@@ -692,9 +692,6 @@ struct SessionCard: View {
         .frame(height: 110)
         .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
         .onTapGesture {
-            print("Setting current sesion to \(item)")
-            NSLog("Its context is \(item.managedObjectContext)")
-            NSLog("managedObjectContext is \(managedObjectContext)")
             currentSession = item
         }
         .contextMenu {
@@ -814,7 +811,7 @@ struct SessionCard: View {
 
 @available(iOS 15.0, *)
 struct SessionsView: View {
-    @Binding var currentSession: Sessions?
+    @Binding var currentSession: Sessions
     @Environment(\.managedObjectContext) var managedObjectContext
     
     

@@ -177,7 +177,7 @@ struct SolvePopupView: View {
                             HStack {
                                 Button {
                                     print("Button tapped")
-                                    //UIPasteboard.general.string = solve.scramble
+                                    UIPasteboard.general.string = "\(solve.time): \(solve.scramble!)"
                                 } label: {
                                     Text("Copy Solve")
                                 }

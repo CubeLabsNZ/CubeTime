@@ -23,7 +23,7 @@ enum stopWatchMode {
 // Double Tap = penalty menu
 
 class StopWatchManager: ObservableObject {
-    @Binding var currentSession: Sessions?
+    @Binding var currentSession: Sessions
     let managedObjectContext: NSManagedObjectContext
     var mode: stopWatchMode = .stopped
     
@@ -35,11 +35,11 @@ class StopWatchManager: ObservableObject {
     var prevScrambleStr: String? = nil
     var scrambleStr: String? = nil
     
-    init (currentSession: Binding<Sessions?>, managedObjectContext: NSManagedObjectContext) {
+    init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         _currentSession = currentSession
         self.managedObjectContext = managedObjectContext
         scrambler.initSq1()
-        scrambleType = (currentSession.wrappedValue?.scramble_type)!
+        scrambleType = currentSession.wrappedValue.scramble_type
         let scr = CHTScramble.getNewScramble(by: scrambler, type: scrambleType, subType: scrambleSubType)
         scrambleStr = scr?.scramble
     }
@@ -142,7 +142,7 @@ class StopWatchManager: ObservableObject {
                 // .puzzle_id
                 NSLog("Saving with sesion \(currentSession)")
                 NSLog("Saving with context \(solveItem.managedObjectContext)")
-                NSLog("currentSession's context is \(currentSession!.managedObjectContext)")
+                NSLog("currentSession's context is \(currentSession.managedObjectContext)")
                 solveItem.session = currentSession /// ???
                 // currentSession!.addToSolves(solveItem)
                 solveItem.scramble = prevScrambleStr
@@ -292,7 +292,7 @@ struct SubTimerView: View {
 }
 
 struct MainTimerView: View {
-    @Binding var currentSession: Sessions?
+    @Binding var currentSession: Sessions
     @Environment(\.managedObjectContext) var managedObjectContext
           
     

@@ -25,7 +25,7 @@ class TimeListManager: ObservableObject {
     @Published var solves: [Solves]?
     private var allsolves: [Solves]?
     @Published var fetchError: NSError?
-    @Binding var currentSession: Sessions?
+    @Binding var currentSession: Sessions
     let managedObjectContext: NSManagedObjectContext
     @Published var sortBy: Int = 0 {
         didSet {
@@ -41,10 +41,10 @@ class TimeListManager: ObservableObject {
     
     private let fetchRequest = NSFetchRequest<Solves>(entityName: "Solves")
     
-    init (currentSession: Binding<Sessions?>, managedObjectContext: NSManagedObjectContext) {
+    init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
         self.managedObjectContext = managedObjectContext
-        fetchRequest.predicate = NSPredicate(format: "session == %@", currentSession.wrappedValue!)
+        fetchRequest.predicate = NSPredicate(format: "session == %@", currentSession.wrappedValue)
         resort()
     }
     
@@ -76,7 +76,7 @@ class TimeListManager: ObservableObject {
 
 @available(iOS 15.0, *)
 struct TimeListView: View {
-    @Binding var currentSession: Sessions?
+    @Binding var currentSession: Sessions
     
     @Environment(\.managedObjectContext) var managedObjectContext
     
@@ -93,7 +93,7 @@ struct TimeListView: View {
         GridItem(spacing: 10)
     ]
     
-    init (currentSession: Binding<Sessions?>, managedObjectContext: NSManagedObjectContext) {
+    init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
         self._timeListManager = StateObject(wrappedValue: TimeListManager(currentSession: currentSession, managedObjectContext: managedObjectContext))
         //fetchRequest = NSFetchRequest<Solves>(entity: Solves.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Solves.date, ascending: true)], predicate: NSPredicate(format: "session == %@", self.currentSession!))
@@ -114,12 +114,12 @@ struct TimeListView: View {
                         VStack {
                             
                             HStack (alignment: .center) {
-                                Text(currentSession!.name!)
+                                Text(currentSession.name!)
                                     .font(.system(size: 20, weight: .semibold, design: .default))
                                     .foregroundColor(Color(UIColor.systemGray))
                                 Spacer()
                                 
-                                Text(puzzle_types[Int(currentSession!.scramble_type)].name) // TODO playground
+                                Text(puzzle_types[Int(currentSession.scramble_type)].name) // TODO playground
                                     .font(.system(size: 16, weight: .semibold, design: .default))
                                     .foregroundColor(Color(UIColor.systemGray))
                             }
