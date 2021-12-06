@@ -152,6 +152,7 @@ struct MainTabsView: View {
                             }
                         }
                     }
+                    .ignoresSafeArea(.keyboard)
                 }
                 .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : CGFloat(SetValues.marginBottom))
             }

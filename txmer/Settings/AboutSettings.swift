@@ -11,7 +11,7 @@ import SwiftUI
 struct LicensePopUpView: View {
     var body: some View {
         ScrollView {
-            MITLicense(year: "2019", holder: "Andras Samu")
+            GPLLicense()
         }
     }
 }
