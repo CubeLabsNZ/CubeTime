@@ -467,7 +467,7 @@ struct NewSessionPopUpView: View {
                         .padding(.trailing)
                         
                     
-                        NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewStandardSessionView, pinnedSession: false), isActive: $showNewStandardSessionView)
+                        NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false), isActive: $showNewStandardSessionView)
                     
                     /// TODO: **ADD NAV LINKS FOR ALL THE OTHER PAGES** and include for the on tap
                     

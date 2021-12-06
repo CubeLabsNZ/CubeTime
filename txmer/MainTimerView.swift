@@ -56,6 +56,13 @@ class StopWatchManager: ObservableObject {
     var frameTime: Double = 1/60
     
     
+    func rescramble() {
+        prevScrambleStr = scrambleStr
+        let scr = CHTScramble.getNewScramble(by: scrambler, type: scrambleType, subType: scrambleSubType)
+        scrambleStr = scr?.scramble
+    }
+    
+    
     private var canStartTimer = false
     private var allowGesture = true
     
@@ -67,13 +74,14 @@ class StopWatchManager: ObservableObject {
         secondsElapsed = 0
         timerStartTime = Date()
         
-        timer = Timer.scheduledTimer(withTimeInterval: frameTime, repeats: true) { [self] timer in
+        timer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) { [self] timer in
             self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
         }
+        NSLog("started timer i think")
         
-        prevScrambleStr = scrambleStr
-        let scr = CHTScramble.getNewScramble(by: scrambler, type: scrambleType, subType: scrambleSubType)
-        scrambleStr = scr?.scramble
+        rescramble()
+        
+        NSLog("scrambled")
     }
     
     func stop() {
@@ -88,6 +96,8 @@ class StopWatchManager: ObservableObject {
     private var taskTimerReady: DispatchWorkItem?
     private var taskKillGestures: DispatchWorkItem?
     
+    var solveItem: Solves!
+    
     
     private let feedbackStyle = UIImpactFeedbackGenerator(style: .medium) /// TODO: add option to change heaviness/turn on off in settings
     
@@ -97,27 +107,8 @@ class StopWatchManager: ObservableObject {
     
     func touchDown() {
         if !prevIsDown {
-            allowGesture = true
-            prevIsDown = true
-            timerColour = TimerTextColours.timerHeldDownColour
-            NSLog("Down")
-            if mode == .running {
-                stop()
-                let solveItem = Solves(context: managedObjectContext)
-                // .comment
-                solveItem.date = Date()
-                // .penalty
-                // .puzzle_id
-                NSLog("Saving with sesion \(currentSession)")
-                NSLog("Saving with context \(solveItem.managedObjectContext)")
-                NSLog("currentSession's context is \(currentSession!.managedObjectContext)")
-                solveItem.session = currentSession /// ???
-                // currentSession!.addToSolves(solveItem)
-                solveItem.scramble = prevScrambleStr
-                solveItem.scramble_type = scrambleType
-                solveItem.scramble_subtype = scrambleSubType
-                // .starred
-                solveItem.time = self.secondsElapsed
+            
+            if solveItem != nil {
                 do {
                     try managedObjectContext.save()
                 } catch {
@@ -136,6 +127,29 @@ class StopWatchManager: ObservableObject {
                         fatalError("Unresolved error \(error), \(error.userInfo)")
                     }
                 }
+            }
+            
+            allowGesture = true
+            prevIsDown = true
+            timerColour = TimerTextColours.timerHeldDownColour
+            NSLog("Down")
+            if mode == .running {
+                stop()
+                solveItem = Solves(context: managedObjectContext)
+                // .comment
+                solveItem.date = Date()
+                // .penalty
+                // .puzzle_id
+                NSLog("Saving with sesion \(currentSession)")
+                NSLog("Saving with context \(solveItem.managedObjectContext)")
+                NSLog("currentSession's context is \(currentSession!.managedObjectContext)")
+                solveItem.session = currentSession /// ???
+                // currentSession!.addToSolves(solveItem)
+                solveItem.scramble = prevScrambleStr
+                solveItem.scramble_type = scrambleType
+                solveItem.scramble_subtype = scrambleSubType
+                // .starred
+                solveItem.time = self.secondsElapsed
             } else { // TODO on update gesture cancels the taskAfterHold once a drag started past a certain threshold
                 let newTaskTimerReady = DispatchWorkItem {
                     self.canStartTimer = true
@@ -165,8 +179,14 @@ class StopWatchManager: ObservableObject {
         } else if abs(value.translation.width) > threshold && abs(value.translation.height) < abs(value.translation.width) {
             if value.translation.width > 0 {
                 NSLog("Right")
+                rescramble() // TODO customize
+                self.feedbackStyle.impactOccurred()
             } else {
                 NSLog("Left")
+                managedObjectContext.delete(solveItem)
+                solveItem = nil
+                secondsElapsed = 0
+                self.feedbackStyle.impactOccurred()
             }
         } else if abs(value.translation.height) > threshold && abs(value.translation.width) < abs(value.translation.height) {
             if value.translation.height > 0 {
