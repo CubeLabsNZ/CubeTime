@@ -7,54 +7,207 @@
 
 import SwiftUI
 
+let settingsPages = ["Appearance", "General", "Import &\nExport", "About"]
+let settingsPagesIcons = ["paintpalette", "gearshape.2", "square.and.arrow.up.on.square", "info"]
+
 @available(iOS 15.0, *)
 struct SettingsView: View {
+    
+    
+    
+    
+    let settingsColumns = [
+        GridItem(spacing: 16),
+        GridItem()
+    ]
+    
+    @State var heroAnimation = false
+    
     var body: some View {
+        
+        
         /*
+         AppearanceSettingsView()
+         GeneralSettingsView()
+         ImportExportSettingsView()
+         AboutSettingsView()
+         */
+        
+        
+        NavigationView {
+            ZStack {
+                Color(UIColor.systemGray6)
+                    .ignoresSafeArea()
+                
+                VStack (spacing: 16) {
+                    /*
+                     LazyVGrid (columns: settingsColumns, spacing: 16) {
+                     ForEach(settingsPages.sorted(by: >), id: \.key) { key, icon in
+                     
+                     }
+                     }
+                     */
+                    
+                    HStack (spacing: 16) {
+                        GeneralView()
+                        
+                        AppearanceView()
+                    }
+                    
+                    HStack (spacing: 16) {
+                        ImportExportView()
+                        
+                        AboutView()
+                    }
+                        
+                   
+                    
+                    Spacer()
+                    
+                }
+                .navigationTitle("Settings")
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.clear)
+                        .frame(height: 50)
+                        .padding(.top)
+                }
+                .padding([.top, .bottom], 6)
+                .padding(.leading)
+                .padding(.trailing)
+                
+                
+                
+                
+            }
+            
+        }
+        
+        
+    }
+}
+
+
+struct GeneralView: View {
+    var body: some View {
+        
+        
         VStack {
             HStack {
-                VStack {
-                    Image(systemName: "paintpalette.fill")
-                    Text("Apperance")
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(uiColor: UIColor.systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                VStack {
-                    Image(systemName: "gearshape.2.fill")
-                    Text("General")
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(uiColor: UIColor.systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                Text(settingsPages[1])
+                    .font(.system(size: 22, weight: .bold))
+                    .padding(.horizontal)
+                    .padding(.top, 12)
+                
+                Spacer()
             }
+            
+            Spacer()
+            
             HStack {
-                VStack {
-                    Image(systemName: "square.and.arrow.up.on.square.fill")
-                    Text("Import/Export")
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(uiColor: UIColor.systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                VStack {
-                    Image(systemName: "info.circle.fill")
-                    Text("General")
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(uiColor: UIColor.systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                                   
+                Image(systemName: settingsPagesIcons[1])
+                    .font(.system(size: 44, weight: .light))
+                    .padding(12)
+                
+                Spacer()
             }
-        }*/
-        ScrollView() {
-            AppearanceSettingsView()
-            GeneralSettingsView()
-            ImportExportSettingsView()
-            AboutSettingsView()
         }
+        .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+        .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
+        
+        
     }
 }
 
 
-@available(iOS 15.0, *)
-
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
+struct AppearanceView: View {
+    var body: some View {
+        VStack {
+            HStack {
+                Spacer()
+                Text(settingsPages[0])
+                    .font(.system(size: 22, weight: .bold))
+                    .padding(.horizontal)
+                    .padding(.top, 12)
+                
+                
+            }
+            
+            Spacer()
+            
+            HStack {
+                Spacer()
+                
+                Image(systemName: settingsPagesIcons[0])
+                    .font(.system(size: 44, weight: .light))
+                    .padding(12)
+                
+                
+            }
+        }
+        .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+        .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
     }
 }
+
+struct ImportExportView: View {
+    var body: some View {
+        VStack {
+            HStack {
+                Text(settingsPages[2])
+                    .font(.system(size: 22, weight: .bold))
+                    .padding(.horizontal)
+                    .padding(.top, 12)
+                
+                Spacer()
+            }
+            
+            Spacer()
+            
+            HStack {
+                                                   
+                Image(systemName: settingsPagesIcons[2])
+                    .font(.system(size: 32, weight: .regular))
+                    .padding()
+                
+                Spacer()
+            }
+        }
+        .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+        .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
+    }
+}
+
+struct AboutView: View {
+    var body: some View {
+        VStack {
+            HStack {
+                Spacer()
+                Text(settingsPages[3])
+                    .font(.system(size: 22, weight: .bold))
+                    .padding(.horizontal)
+                    .padding(.top, 12)
+                
+                
+            }
+            
+            Spacer()
+            
+            HStack {
+                Spacer()
+                Image(systemName: settingsPagesIcons[3])
+                    .font(.system(size: 44, weight: .light))
+                    .padding(12)
+                
+                
+            }
+        }
+        .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+        .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
+    }
+}
+
+
+
+

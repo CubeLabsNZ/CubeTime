@@ -209,8 +209,6 @@ struct NewStandardSessionView: View {
                     
                 }
             }
-            
-            
             .ignoresSafeArea(.keyboard)
             .navigationBarTitle("New Standard Session", displayMode: .inline)
 //            .ignoresSafeArea(.keyboard)
@@ -248,6 +246,7 @@ struct NewStandardSessionView: View {
                         //.font(.system(size: 17, weight: .medium))
                         //.foregroundColor(Color.red)
                     }
+                    .disabled(self.name.isEmpty)
                 }
             }
             
@@ -753,58 +752,7 @@ struct SessionCard: View {
         
         .padding(.trailing)
         .padding(.leading)
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+         
     }
 }
 
