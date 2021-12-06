@@ -24,6 +24,7 @@ struct NewStandardSessionViewBlocks: ViewModifier {
 struct NewStandardSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     
+    
     @Binding var showNewSessionPopUp: Bool
     @State private var name: String = ""
     
@@ -64,7 +65,7 @@ struct NewStandardSessionView: View {
                         Image(puzzle_types[Int(sessionEventType)].name)
 //                            .font(.system(size: 120))
                             .resizable()
-                            .aspectRatio(contentMode: .fill)
+                            .aspectRatio(contentMode: .fit)
                             .padding(.top)
                             .padding(.bottom)
                             .shadow(color: .black.opacity(0.24), radius: 12, x: 0, y: 4)
@@ -490,7 +491,7 @@ struct NewSessionPopUpView: View {
                         .padding(.trailing)
                         
                     
-                        NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewStandardSessionView, pinnedSession: false), isActive: $showNewStandardSessionView)
+                        NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false), isActive: $showNewStandardSessionView)
                     
                     /// TODO: **ADD NAV LINKS FOR ALL THE OTHER PAGES** and include for the on tap
                     

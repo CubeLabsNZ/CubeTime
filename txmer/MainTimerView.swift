@@ -67,7 +67,7 @@ class StopWatchManager: ObservableObject {
         secondsElapsed = 0
         timerStartTime = Date()
         
-        timer = Timer.scheduledTimer(withTimeInterval: frameTime, repeats: true) { [self] timer in
+        timer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) { [self] timer in
             self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
         }
         
