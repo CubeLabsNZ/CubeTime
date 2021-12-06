@@ -189,6 +189,14 @@ struct TimeListView: View {
                             .font(.system(size: 17, weight: .medium))
                     }
                 }
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.clear)
+                        .frame(height: 50)
+                        .padding(.top)
+                }
+                
+                
                 //.frame(maxHeight: UIScreen.screenHeight)
             }
             .searchable(text: $timeListManager.filter)

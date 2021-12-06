@@ -60,6 +60,12 @@ struct SolvePopupView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 32, height: 32)
+//                                    .padding(.leading, 2)
+//                                    .padding(.top, 2)
+//                                    .padding(.bottom, 2)
+//                                    .padding([.bottom, .leading], 1)
+                                    .padding(.leading, 2)
+                                    .padding(.trailing, 4)
                                 //.padding(.leading)
                                 
                                 Text(puzzle_types[Int(solve.scramble_type)].name)
@@ -67,8 +73,10 @@ struct SolvePopupView: View {
                                 
                                 Spacer()
                                 
-                                Text(puzzle_types[Int(solve.scramble_type)].subtypes[Int(solve.scramble_subtype)]!)
+                                Text(puzzle_types[Int(solve.scramble_type)].subtypes[Int(solve.scramble_subtype)]!.uppercased())
                                     .font(.system(size: 13, weight: .semibold, design: .default))
+                                    .offset(y: 2)
+                                
                             }
                             .padding(.leading, 12)
                             .padding(.trailing, 16)
@@ -340,10 +348,4 @@ struct TimeCard: View {
     }
 }
 
-/*
- struct TimeCard_Previews: PreviewProvider {
- static var previews: some View {
- TimeCard()
- }
- }
- */
+ 
