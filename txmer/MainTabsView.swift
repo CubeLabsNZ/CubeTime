@@ -51,16 +51,16 @@ struct MainTabsView: View {
     @State var currentSession: Sessions
     
     init(managedObjectContext: NSManagedObjectContext) {
-        let lastUsedSessionURI = UserDefaults.standard.object(forKey: "last_used_session")
+        let lastUsedSessionURI = UserDefaults.standard.url(forKey: "last_used_session")
         if lastUsedSessionURI == nil {
             NSLog("Saved ID is nil, creating default object")
             currentSession = Sessions(context: managedObjectContext) // TODO make it playground
             currentSession.scramble_type = 0
             currentSession.name = "Default Session"
-            UserDefaults.standard.set(currentSession.objectID.uriRepresentation as! URL?, forKey: "last_used_session")
+            UserDefaults.standard.set(currentSession.objectID.uriRepresentation(), forKey: "last_used_session")
         } else {
-            let objID = managedObjectContext.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI as! URL)!
-            currentSession = try! managedObjectContext.existingObject(with: objID) as! Sessions
+            let objID = managedObjectContext.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI!)!
+            currentSession = try! managedObjectContext.existingObject(with: objID) as! Sessions // TODO better error handling
         }
     }
     
@@ -80,7 +80,7 @@ struct MainTabsView: View {
                     SessionsView(currentSession: $currentSession)
                         .environment(\.managedObjectContext, managedObjectContext)
                         .onChange(of: currentSession) { [currentSession] newSession in
-                            UserDefaults.standard.set(newSession.objectID.uriRepresentation as! URL?, forKey: "last_used_session")
+                            UserDefaults.standard.set(newSession.objectID.uriRepresentation(), forKey: "last_used_session")
                         }
                 case .settings:
                     SettingsView()
