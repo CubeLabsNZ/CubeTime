@@ -52,6 +52,7 @@
 		7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EC3274F392700C2E125 /* SessionsView.swift */; };
 		7D7A9EC6274F396E00C2E125 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EC5274F396E00C2E125 /* SettingsView.swift */; };
 		7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */; };
+		7D878BB1275D8DB3008AC443 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D878BB0275D8DB3008AC443 /* Stats.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,6 +149,7 @@
 		7D7A9EC5274F396E00C2E125 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7D7C45C42751DE2C0073885C /* 3rdparty-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "3rdparty-Bridging-Header.h"; sourceTree = "<group>"; };
 		7D7D205F274DE13A0016D804 /* txmerdata.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = txmerdata.xcdatamodel; sourceTree = "<group>"; };
+		7D878BB0275D8DB3008AC443 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,6 +223,7 @@
 				23DE3BE0274DDBE300254D29 /* Preview Content */,
 				7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */,
 				7D7C45C42751DE2C0073885C /* 3rdparty-Bridging-Header.h */,
+				7D878BB0275D8DB3008AC443 /* Stats.swift */,
 			);
 			path = txmer;
 			sourceTree = "<group>";
@@ -498,6 +501,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D69E0AF2751FDEA007211CC /* TwoPhaseScrambler.m in Sources */,
+				7D878BB1275D8DB3008AC443 /* Stats.swift in Sources */,
 				7D69E0A62751FDEA007211CC /* Clock.m in Sources */,
 				7D69E0B02751FDEA007211CC /* CoordCube.m in Sources */,
 				7D69E0B52751FDEA007211CC /* CHTSolve.m in Sources */,

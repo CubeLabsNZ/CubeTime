@@ -106,7 +106,8 @@ class StopWatchManager: ObservableObject {
     let threshold = 20 as CGFloat
     
     func touchDown() {
-        if !prevIsDown {
+        if !prevIsDown { // touchDown is called on DragGesture's onChange, which calls every time finger is moved a substantial amount
+            prevIsDown = true
             
             if solveItem != nil {
                 do {
@@ -130,7 +131,6 @@ class StopWatchManager: ObservableObject {
             }
             
             allowGesture = true
-            prevIsDown = true
             timerColour = TimerTextColours.timerHeldDownColour
             NSLog("Down")
             if mode == .running {
