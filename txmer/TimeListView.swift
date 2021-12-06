@@ -174,7 +174,8 @@ struct TimeListView: View {
                                         .font(.system(size: 20, weight: .medium))
                                 }
                                 .padding(.trailing, 16.5) /// TODO don't hardcode padding
-                                .offset(y: (32 / 2) - (SetValues.iconFontSize / 2) + 6 + 18)
+                                .offset(y: SetValues.iconFontSize)
+//                                .offset(y: (32 / 2) - (SetValues.iconFontSize / 2) + 6 + 18)
                             }
                             Spacer()
                         }

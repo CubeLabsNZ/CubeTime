@@ -63,12 +63,13 @@ struct MainTabsView: View {
                     TimeListView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .stats:
-                    StatsView(currentSession: $currentSession)
+                    StatsView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
                 case .sessions:
                     SessionsView(currentSession: $currentSession)
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .settings:
                     SettingsView()
+                    
                 }
 
                 GeometryReader { geometry in
