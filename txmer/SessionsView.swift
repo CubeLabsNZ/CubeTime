@@ -505,12 +505,12 @@ struct NewSessionPopUpView: View {
                     Spacer()
                     
                 }
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationBarHidden(true)
                 
                 
                 
             }
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarHidden(true)
             
             /*
              .toolbar {

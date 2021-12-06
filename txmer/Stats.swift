@@ -8,7 +8,7 @@
 import Foundation
 
 import CoreData
-
+/*
 class Stats {
     private var solves: [Solves]
     private var top: [Solves]
@@ -43,3 +43,4 @@ class Stats {
         // Return the smallest element of bottom
     }
 }
+*/
