@@ -47,12 +47,6 @@ struct NewStandardSessionView: View {
     
     
     var body: some View {
-        
-        
-        
-        
-        
-        
         ZStack {
             Color(UIColor.systemGray6)
                 .ignoresSafeArea()
