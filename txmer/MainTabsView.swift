@@ -58,6 +58,7 @@ struct MainTabsView: View {
             currentSession.scramble_type = 0
             currentSession.name = "Default Session"
             UserDefaults.standard.set(currentSession.objectID.uriRepresentation(), forKey: "last_used_session")
+            try! managedObjectContext.save()
         } else {
             let objID = managedObjectContext.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI!)!
             currentSession = try! managedObjectContext.existingObject(with: objID) as! Sessions // TODO better error handling
