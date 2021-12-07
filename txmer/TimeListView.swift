@@ -49,6 +49,7 @@ class TimeListManager: ObservableObject {
     }
     
     func resort() {
+        NSLog("resort")
         if sortBy == 0 {
             fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Solves.date, ascending: ascending)]
         } else {
@@ -66,6 +67,7 @@ class TimeListManager: ObservableObject {
         refilter()
     }
     func refilter() {
+        NSLog("refilter")
         if filter == "" {
             solves = allsolves
         } else {

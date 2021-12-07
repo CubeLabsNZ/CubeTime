@@ -59,6 +59,7 @@ struct MainTabsView: View {
             currentSession.name = "Default Session"
             UserDefaults.standard.set(currentSession.objectID.uriRepresentation(), forKey: "last_used_session")
             try! managedObjectContext.save()
+            NSLog("Successfully created default session with id \(currentSession.objectID)")
         } else {
             let objID = managedObjectContext.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI!)!
             currentSession = try! managedObjectContext.existingObject(with: objID) as! Sessions // TODO better error handling

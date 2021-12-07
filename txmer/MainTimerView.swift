@@ -33,7 +33,7 @@ class StopWatchManager: ObservableObject {
     var scrambleSubType: Int32 = 0
     
     var prevScrambleStr: String? = nil
-    var scrambleStr: String? = nil
+    @Published var scrambleStr: String? = nil
     
     init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         _currentSession = currentSession
@@ -94,7 +94,6 @@ class StopWatchManager: ObservableObject {
     
     
     private var taskTimerReady: DispatchWorkItem?
-    private var taskKillGestures: DispatchWorkItem?
     
     var solveItem: Solves!
     
@@ -102,47 +101,53 @@ class StopWatchManager: ObservableObject {
     private let feedbackStyle = UIImpactFeedbackGenerator(style: .medium) /// TODO: add option to change heaviness/turn on off in settings
     
     private var prevIsDown = false
+    private var prevDownStoppedTheTimer = false
     
     let threshold = 20 as CGFloat
     
-    func touchDown() {
-        if !prevIsDown { // touchDown is called on DragGesture's onChange, which calls every time finger is moved a substantial amount
-            prevIsDown = true
-            
-            if solveItem != nil {
-                do {
-                    try managedObjectContext.save()
-                } catch {
-                    if let error = error as NSError? {
-                        // Replace this implementation with code to handle the error appropriately.
-                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-
-                        /*
-                        Typical reasons for an error here include:
-                        * The parent directory does not exist, cannot be created, or disallows writing.
-                        * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                        * The device is out of space.
-                        * The store could not be migrated to the current model version.
-                        Check the error message to determine what the actual problem was.
-                        */
-                        fatalError("Unresolved error \(error), \(error.userInfo)")
+    func touchDown(value: DragGesture.Value) {
+        if prevIsDown {
+            if allowGesture && !canStartTimer && !prevDownStoppedTheTimer {
+                if abs(value.translation.width) > threshold && abs(value.translation.height) < abs(value.translation.width) {
+                    taskTimerReady?.cancel() // TODO maybe dont do this idk ask tim
+                    allowGesture = false
+                    if value.translation.width > 0 {
+                        NSLog("Right")
+                        rescramble() // TODO customize
+                        self.feedbackStyle.impactOccurred()
+                    } else {
+                        NSLog("Left")
+                            if solveItem != nil {
+                            managedObjectContext.delete(solveItem)
+                            solveItem = nil
+                            secondsElapsed = 0
+                            self.feedbackStyle.impactOccurred()
+                        }
                     }
+                } else if abs(value.translation.height) > threshold && abs(value.translation.width) < abs(value.translation.height) {
+                    taskTimerReady?.cancel() // TODO maybe dont do this idk ask tim
+                    allowGesture = false
+                    if value.translation.height > 0 {
+                        NSLog("Down")
+                    } else {
+                        NSLog("Up")
+                    } // TODO disallow gestures after 200 ms
                 }
             }
+        } else { // touchDown is called on DragGesture's onChange, which calls every time finger is moved a substantial amount
+            prevIsDown = true
+            prevDownStoppedTheTimer = false
             
-            allowGesture = true
             timerColour = TimerTextColours.timerHeldDownColour
             NSLog("Down")
             if mode == .running {
                 stop()
+                prevDownStoppedTheTimer = true
                 solveItem = Solves(context: managedObjectContext)
                 // .comment
                 solveItem.date = Date()
                 // .penalty
                 // .puzzle_id
-                NSLog("Saving with sesion \(currentSession)")
-                NSLog("Saving with context \(solveItem.managedObjectContext)")
-                NSLog("currentSession's context is \(currentSession.managedObjectContext)")
                 solveItem.session = currentSession /// ???
                 // currentSession!.addToSolves(solveItem)
                 solveItem.scramble = prevScrambleStr
@@ -150,6 +155,7 @@ class StopWatchManager: ObservableObject {
                 solveItem.scramble_subtype = scrambleSubType
                 // .starred
                 solveItem.time = self.secondsElapsed
+                try! managedObjectContext.save()
             } else { // TODO on update gesture cancels the taskAfterHold once a drag started past a certain threshold
                 let newTaskTimerReady = DispatchWorkItem {
                     self.canStartTimer = true
@@ -158,42 +164,18 @@ class StopWatchManager: ObservableObject {
                 }
                 taskTimerReady = newTaskTimerReady
                 DispatchQueue.main.asyncAfter(deadline: .now() + userHoldTime, execute: newTaskTimerReady)
-                
-                // Kill the gestures after 200ms (default) not only does this stop uninteded gestures but it also improves performance since the caclculations for directions of gestures is not done
-                let newTaskKillGestures = DispatchWorkItem {
-                    self.allowGesture = false
-                }
-                taskKillGestures = newTaskKillGestures
-                DispatchQueue.main.asyncAfter(deadline: .now() + gestureKillTime, execute: newTaskKillGestures)
             }
         }
     }
     
     func touchUp(value: DragGesture.Value) {
         prevIsDown = false
+        allowGesture = true
         NSLog("up")
         
-        if !allowGesture && canStartTimer {
+        if canStartTimer {
             NSLog("calling start")
             start()
-        } else if abs(value.translation.width) > threshold && abs(value.translation.height) < abs(value.translation.width) {
-            if value.translation.width > 0 {
-                NSLog("Right")
-                rescramble() // TODO customize
-                self.feedbackStyle.impactOccurred()
-            } else {
-                NSLog("Left")
-                managedObjectContext.delete(solveItem)
-                solveItem = nil
-                secondsElapsed = 0
-                self.feedbackStyle.impactOccurred()
-            }
-        } else if abs(value.translation.height) > threshold && abs(value.translation.width) < abs(value.translation.height) {
-            if value.translation.height > 0 {
-                NSLog("Down")
-            } else {
-                NSLog("Up")
-            } // TODO disallow gestures after 200 ms
         }
         timerColour = ((colourScheme == .light) ? Color.black : Color.white)
         taskTimerReady?.cancel()
@@ -278,8 +260,8 @@ struct SubTimerView: View {
                          */
                         .gesture(
                             DragGesture(minimumDistance: 0, coordinateSpace: .local)
-                                .onChanged({_ in
-                                    stopWatchManager.touchDown()
+                                .onChanged({value in
+                                    stopWatchManager.touchDown(value: value)
                                 })
                                 .onEnded({ value in
                                     stopWatchManager.touchUp(value: value)
