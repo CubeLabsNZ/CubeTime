@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		233FE7B6274F109600C6F1DF /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Values.swift */; };
-		239D62A3275DE0360026FF00 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = 239D62A2275DE0360026FF00 /* SwiftUICharts */; };
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
 		23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* txmerApp.swift */; };
 		23DE3BDD274DDBE200254D29 /* MainTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDC274DDBE200254D29 /* MainTimerView.swift */; };
@@ -22,6 +21,7 @@
 		23E81E6F275D8DCA00B741E3 /* AppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */; };
 		23E81E71275D8DDA00B741E3 /* IESettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E70275D8DDA00B741E3 /* IESettings.swift */; };
 		23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E72275D8DEA00B741E3 /* AboutSettings.swift */; };
+		23FA3D1E275ED12A00064572 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = 23FA3D1D275ED12A00064572 /* SwiftUICharts */; };
 		7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */; };
 		7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6159F82751B53E00DC9A4C /* TimeCard.swift */; };
 		7D69E0A22751FDEA007211CC /* Sq12phase.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0662751FDEA007211CC /* Sq12phase.m */; settings = {COMPILER_FLAGS = "-w"; }; };
@@ -96,6 +96,7 @@
 		23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettings.swift; sourceTree = "<group>"; };
 		23E81E70275D8DDA00B741E3 /* IESettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IESettings.swift; sourceTree = "<group>"; };
 		23E81E72275D8DEA00B741E3 /* AboutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettings.swift; sourceTree = "<group>"; };
+		23FA3D20275F297B00064572 /* ChartView */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ChartView; path = packages/ChartView; sourceTree = "<group>"; };
 		7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabsView.swift; sourceTree = "<group>"; };
 		7D6159F82751B53E00DC9A4C /* TimeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCard.swift; sourceTree = "<group>"; };
 		7D69E0662751FDEA007211CC /* Sq12phase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sq12phase.m; sourceTree = "<group>"; };
@@ -168,7 +169,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				239D62A3275DE0360026FF00 /* SwiftUICharts in Frameworks */,
+				23FA3D1E275ED12A00064572 /* SwiftUICharts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,6 +291,7 @@
 		23E81E89275DDCBE00B741E3 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
+				23FA3D20275F297B00064572 /* ChartView */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -422,7 +424,7 @@
 			);
 			name = txmer;
 			packageProductDependencies = (
-				239D62A2275DE0360026FF00 /* SwiftUICharts */,
+				23FA3D1D275ED12A00064572 /* SwiftUICharts */,
 			);
 			productName = txmer;
 			productReference = 23DE3BD7274DDBE200254D29 /* txmer.app */;
@@ -497,7 +499,7 @@
 			);
 			mainGroup = 23DE3BCE274DDBE200254D29;
 			packageReferences = (
-				239D62A1275DE0360026FF00 /* XCRemoteSwiftPackageReference "ChartView" */,
+				23FA3D1C275ED12A00064572 /* XCRemoteSwiftPackageReference "ChartView" */,
 			);
 			productRefGroup = 23DE3BD8274DDBE200254D29 /* Products */;
 			projectDirPath = "";
@@ -946,20 +948,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		239D62A1275DE0360026FF00 /* XCRemoteSwiftPackageReference "ChartView" */ = {
+		23FA3D1C275ED12A00064572 /* XCRemoteSwiftPackageReference "ChartView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AppPear/ChartView";
 			requirement = {
 				kind = exactVersion;
-				version = "2.0.0-beta.2";
+				version = 1.5.5;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		239D62A2275DE0360026FF00 /* SwiftUICharts */ = {
+		23FA3D1D275ED12A00064572 /* SwiftUICharts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 239D62A1275DE0360026FF00 /* XCRemoteSwiftPackageReference "ChartView" */;
+			package = 23FA3D1C275ED12A00064572 /* XCRemoteSwiftPackageReference "ChartView" */;
 			productName = SwiftUICharts;
 		};
 /* End XCSwiftPackageProductDependency section */

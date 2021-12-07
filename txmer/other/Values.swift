@@ -78,3 +78,8 @@ class TimerTextColours {
     static let timerHeldDownColour: Color = Color.red
     static let timerCanStartColour: Color = Color.green
 }
+
+class CustomGradientColours {
+    static let ccPink: Color = Color(red: 236/255, green: 74/255, blue: 134/255)
+    static let ccPrpl: Color = Color(red: 126/255, green: 94/255, blue: 191/255)
+}

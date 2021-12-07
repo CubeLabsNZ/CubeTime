@@ -104,4 +104,9 @@ class Stats {
         return (lowest_average, lowest_values!)
         
     }
+    
+    
+    
+   
+    
 }

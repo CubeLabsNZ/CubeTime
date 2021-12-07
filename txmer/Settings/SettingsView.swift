@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUICharts
 
 let settingsPages = ["Appearance", "General", "Import &\nExport", "About"]
 let settingsPagesIcons = ["paintpalette", "gearshape.2", "square.and.arrow.up.on.square", "info"]
@@ -48,17 +49,19 @@ struct SettingsView: View {
                      }
                      */
                     
-                    HStack (spacing: 16) {
-                        GeneralView()
-                        
-                        AppearanceView()
-                    }
                     
-                    HStack (spacing: 16) {
-                        ImportExportView()
-                        
-                        AboutView()
-                    }
+                    
+//                    HStack (spacing: 16) {
+//                        GeneralView()
+//
+//                        AppearanceView()
+//                    }
+//
+//                    HStack (spacing: 16) {
+//                        ImportExportView()
+//
+//                        AboutView()
+//                    }
                         
                    
                     
