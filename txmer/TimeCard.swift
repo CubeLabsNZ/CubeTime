@@ -267,6 +267,7 @@ struct TimeCard: View {
             showingPopupSlideover = true
         }) {
             Text(formatSolveTime(secs: solve.time))
+//            Text(solve.scramble!)
                 .font(.system(size: 17, weight: .bold, design: .default))
                 .foregroundColor(Color.black)
                 //.frame(width: 112, height: 53)
