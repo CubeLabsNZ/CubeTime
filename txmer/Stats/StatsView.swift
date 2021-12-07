@@ -48,10 +48,11 @@ struct StatsView: View {
     //    let stats = Stats(currentSession: $currentSession, managedObjectContext: managedObjectContext)
     //        .environment(\.managedObjectContext, managedObjectContext)
     
-    let ao5: (Double, ArraySlice<Solves>)?
-    let ao12: (Double, ArraySlice<Solves>)?
-    let ao100: (Double, ArraySlice<Solves>)?
+    let ao5: (Double, [Solves])?
+    let ao12: (Double, [Solves])?
+    let ao100: (Double, [Solves])?
     
+    let timesByDate: [Double]
     
     let bestSingle: Solves?
     let sessionMean: Double?
@@ -69,6 +70,9 @@ struct StatsView: View {
         self.ao100 = stats.getBestMovingAverageOf(100)
         self.bestSingle = stats.getMin()
         self.sessionMean = stats.getSessionMean()
+        
+        self.timesByDate = stats.solvesByDate.map{$0.time}
+        
     }
     
     
@@ -99,6 +103,54 @@ struct StatsView: View {
                         .padding(.bottom, -2)
                         
                         VStack (spacing: 10) {
+                            
+                            Text("generate random")
+                                .onTapGesture {
+                                    for _ in 1..<10000 {
+                                        let solveItem: Solves!
+
+                                        solveItem = Solves(context: managedObjectContext)
+                                        solveItem.date = Date()
+                                        solveItem.session = currentSession
+                                        solveItem.scramble = "sdlfikj"
+                                        solveItem.scramble_type = 0
+                                        solveItem.scramble_subtype = 0
+                                        solveItem.time = Double.random(in: 1..<100)
+
+                                    }
+                                    do {
+                                        try managedObjectContext.save()
+                                    } catch {
+                                        if let error = error as NSError? {
+                                            fatalError("Unresolved error \(error), \(error.userInfo)")
+                                        }
+                                    }
+                                }
+                            
+                            
+//                            Text("generate random")
+//                                .onTapGesture {
+//
+//                                    let solveItem: Solves!
+//
+//                                    solveItem = Solves(context: managedObjectContext)
+//                                    solveItem.date = Date()
+//                                    solveItem.session = currentSession
+//                                    solveItem.scramble = "sdlfikj"
+//                                    solveItem.scramble_type = 0
+//                                    solveItem.scramble_subtype = 0
+//                                    solveItem.time = 862
+//
+//
+//                                    do {
+//                                        try managedObjectContext.save()
+//                                    } catch {
+//                                        if let error = error as NSError? {
+//                                            fatalError("Unresolved error \(error), \(error.userInfo)")
+//                                        }
+//                                    }
+//                                }
+                            
                             
                             HStack (spacing: 10) {
                                 VStack (spacing: 10) {
@@ -379,7 +431,7 @@ struct StatsView: View {
                                     
                                     
                                     
-                                    LineView(data: [18,23,54,32,12,37,11,23,43], title: nil, style: ChartStyle(backgroundColor: .white, accentColor: CustomGradientColours.ccPink, secondGradientColor: CustomGradientColours.ccPrpl, textColor: .black, legendTextColor: .gray, dropShadowColor: Color.black.opacity(0.24)), legendSpecifier: "%.2g") /// todo fix string formatting
+                                    LineView(data: timesByDate, title: nil, style: ChartStyle(backgroundColor: .white, accentColor: CustomGradientColours.ccPink, secondGradientColor: CustomGradientColours.ccPrpl, textColor: .black, legendTextColor: .gray, dropShadowColor: Color.black.opacity(0.24)), legendSpecifier: "%.2g") /// todo fix string formatting
                                         .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
                                     
                                     /// todo fix buggy animation and see if can change the animation of text to be opacity animated

@@ -15,7 +15,8 @@ func formatSolveTime(secs: Double) -> String {
     } else {
         let mins: Int = Int((secs / 60).rounded(.down))
         let secs = secs.truncatingRemainder(dividingBy: 60)
-        return String(format: "%d:%06.3f", secs, mins)
+        
+        return String(format: "%d:%06.3f", mins, secs)
     }
 }
 
