@@ -21,8 +21,13 @@ enum SortBy {
     case time
 }
 
+struct SmallSolveObj {
+    let time: String
+    let id: NSManagedObjectID
+}
+
 class TimeListManager: ObservableObject {
-    @Published var solves: [Solves]?
+    @Published var solves: [SmallSolveObj]?
     private var allsolves: [Solves]?
     @Published var fetchError: NSError?
     @Binding var currentSession: Sessions
@@ -63,15 +68,26 @@ class TimeListManager: ObservableObject {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
-        solves = allsolves
+        solves = allsolves!.map { solve in
+            return SmallSolveObj(time: formatSolveTime(secs: solve.time), id: solve.objectID)
+        }
         refilter()
     }
     func refilter() {
         NSLog("refilter")
         if filter == "" {
-            solves = allsolves
+            solves = allsolves!.map { solve in
+                return SmallSolveObj(time: formatSolveTime(secs: solve.time), id: solve.objectID)
+            }
         } else {
-            solves = allsolves?.filter{ formatSolveTime(secs: $0.time).hasPrefix(filter) }
+            solves = allsolves!.compactMap { solve in
+                let fmtdTime = formatSolveTime(secs: solve.time)
+                if fmtdTime.hasPrefix(filter) {
+                    return SmallSolveObj(time: fmtdTime, id: solve.objectID)
+                }
+                return nil
+            }
+            //solves = allsolves?.filter{ formatSolveTime(secs: $0.time).hasPrefix(filter) }
         }
     }
 }
@@ -148,10 +164,11 @@ struct TimeListView: View {
                             }
                                  
                             LazyVGrid(columns: columns, spacing: 12) {
-                                ForEach(timeListManager.solves!, id: \.self) { item in
+                                ForEach(timeListManager.solves!, id: \.id) { item in
                                     TimeCard(solve: item, timeListManager: timeListManager)
                                         .environment(\.managedObjectContext, managedObjectContext)
                                 }
+                                // .id(UUID()) maybe =++++ speed?!!? probably not
                             }
                             .padding(.leading)
                             .padding(.trailing)

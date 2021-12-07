@@ -255,7 +255,7 @@ struct SolvePopupView: View {
 
 @available(iOS 15.0, *)
 struct TimeCard: View {
-    let solve: Solves
+    let solve: SmallSolveObj
     @State var showingPopupSlideover = false
     @Environment(\.managedObjectContext) var managedObjectContext
     
@@ -266,7 +266,7 @@ struct TimeCard: View {
             print(solve.time)
             showingPopupSlideover = true
         }) {
-            Text(formatSolveTime(secs: solve.time))
+            Text(solve.time)
 //            Text(solve.scramble!)
                 .font(.system(size: 17, weight: .bold, design: .default))
                 .foregroundColor(Color.black)
@@ -281,10 +281,10 @@ struct TimeCard: View {
         .onLongPressGesture {
             UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
         }
-        .sheet(isPresented: $showingPopupSlideover) {
+        /*.sheet(isPresented: $showingPopupSlideover) {
             SolvePopupView(solve: solve, timeListManager: timeListManager, showingPopupSlideover: $showingPopupSlideover)
                 .environment(\.managedObjectContext, managedObjectContext)
-        }
+        }*/
         .contextMenu {
             
             Button {
@@ -316,6 +316,7 @@ struct TimeCard: View {
             Divider()
             
             Button (role: .destructive) {
+                /*
                 managedObjectContext.delete(solve)
                 do {
                     try managedObjectContext.save()
@@ -335,7 +336,9 @@ struct TimeCard: View {
                         fatalError("Unresolved error \(error), \(error.userInfo)")
                     }
                 }
-                timeListManager.resort()
+                 */
+                print("Button tapped")
+                //timeListManager.resort()
             } label: {
                 Label {
                     Text("Delete Solve")
