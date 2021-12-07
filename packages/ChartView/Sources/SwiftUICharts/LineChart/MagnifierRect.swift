@@ -14,7 +14,8 @@ public struct MagnifierRect: View {
     public var body: some View {
         ZStack{
             if #available(iOS 15.0, *) {
-                Text("\(self.currentNumber, specifier: valueSpecifier)")
+//                Text()
+                Text(formatSolveTime(secs: self.currentNumber))
                     .font(.system(size: 18, weight: .bold))
                     .padding(.horizontal, 4)
                     .padding(.vertical, 2)

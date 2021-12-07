@@ -51,17 +51,17 @@ struct SettingsView: View {
                     
                     
                     
-//                    HStack (spacing: 16) {
-//                        GeneralView()
-//
-//                        AppearanceView()
-//                    }
-//
-//                    HStack (spacing: 16) {
-//                        ImportExportView()
-//
-//                        AboutView()
-//                    }
+                    HStack (spacing: 16) {
+                        GeneralView()
+
+                        AppearanceView()
+                    }
+
+                    HStack (spacing: 16) {
+                        ImportExportView()
+
+                        AboutView()
+                    }
                         
                    
                     

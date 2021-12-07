@@ -8,6 +8,22 @@
 
 import SwiftUI
 
+func formatSolveTime(secs: Double) -> String {
+    
+    if secs < 10 {
+        return String(format: "%.1f", secs)
+    } else if secs < 60 {
+        return String(format: "%.0f", secs) // TODO set DP
+    } else if secs < 600 {
+        let mins: Int = Int((secs / 60).rounded(.down))
+        let secs = Int(secs.truncatingRemainder(dividingBy: 60))
+        return String(format: "%d:%02d", mins, secs)
+    } else {
+        let mins: Int = Int((secs / 60).rounded(.down))
+        return String(format: "%dm", mins)
+    }
+}
+
 struct Legend: View {
     @ObservedObject var data: ChartData
     @Binding var frame: CGRect
@@ -52,7 +68,14 @@ struct Legend: View {
                 HStack(alignment: .center){
                     VStack (alignment: .center) {
 //                        Text("\(self.getYLegendSafe(height: height), specifier: specifier)").offset(x: 0, y: self.getYposition(height: height) )
-                        Text(String(format: specifier, self.getYLegendSafe(height: height))).offset(x: 0, y: self.getYposition(height: height))
+                        
+                        
+                        Text(formatSolveTime(secs: self.getYLegendSafe(height: height)))
+                        
+                        
+                        
+//                        Text(String(format: specifier, self.getYLegendSafe(height: height)))
+                            .offset(x: 0, y: self.getYposition(height: height))
                             .foregroundColor(Colors.LegendText)
                             .font(.system(size: 10, weight: .medium, design: .monospaced))
                             .offset(x: 2)

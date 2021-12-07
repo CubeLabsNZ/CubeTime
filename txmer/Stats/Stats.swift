@@ -14,6 +14,8 @@ class Stats {
     //    private var top: [Solves]
     //    private var bottom: [Solves]
     
+    var solvesByDate: [Solves]
+    
     private let currentSession: Sessions
     
     private let managedObjectContext: NSManagedObjectContext
@@ -29,6 +31,7 @@ class Stats {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Solves.time, ascending: true)]
         do {
             try solves = managedObjectContext.fetch(fetchRequest)
+            
             
         } catch {
             // Replace this implementation with code to handle the error appropriately.
@@ -47,7 +50,11 @@ class Stats {
         
         // your code here
         // calculate top and bottom n percent using my alg, maybe add a global length var
+        
+        solvesByDate = solves.sorted(by: {$0.date! < $1.date!})
     }
+    
+    
     
     func getMin() -> Solves? {
         if solves.count == 0 {
@@ -71,7 +78,7 @@ class Stats {
         return solves.count
     }
     
-    func getBestMovingAverageOf(_ period: Int) -> (Double, ArraySlice<Solves>)? {
+    func getBestMovingAverageOf(_ period: Int) -> (Double, [Solves])? {
         precondition(period > 1)
         if solves.count < period {
             return nil
@@ -79,7 +86,7 @@ class Stats {
             
         
         var lowest_average: Double = solves[solves.count-1].time
-        var lowest_values: ArraySlice<Solves>?
+        var lowest_values: [Solves]?
         
         for i in period..<solves.count+1 {
             let range = i - period + 1..<i - 1
@@ -90,13 +97,11 @@ class Stats {
             //            range.removeLast()
             //            range.removeFirst()
             
-            
             let sum = solves[range].reduce(0, {$0 + $1.time})
             
             let result = Double(sum) / Double(period-2)
             if result < lowest_average {
-                print("here")
-                lowest_values = solves[i - period ..< i]
+                lowest_values = solves[i - period ..< i].sorted(by: {$0.date! > $1.date!})
                 lowest_average = result
             }
         }
@@ -104,6 +109,7 @@ class Stats {
         return (lowest_average, lowest_values!)
         
     }
+
     
     
     
