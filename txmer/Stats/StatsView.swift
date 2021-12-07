@@ -38,13 +38,15 @@ struct StatsView: View {
         GridItem(spacing: 10)
     ]
     
-     
+    
+    
+    
     
     @Binding var currentSession: Sessions?
     
     
-//    let stats = Stats(currentSession: $currentSession, managedObjectContext: managedObjectContext)
-//        .environment(\.managedObjectContext, managedObjectContext)
+    //    let stats = Stats(currentSession: $currentSession, managedObjectContext: managedObjectContext)
+    //        .environment(\.managedObjectContext, managedObjectContext)
     
     let ao5: (Double, ArraySlice<Solves>)?
     let ao12: (Double, ArraySlice<Solves>)?
@@ -78,68 +80,9 @@ struct StatsView: View {
                 Color(UIColor.systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
                     .ignoresSafeArea()
                 
-                
-                
-                
-                
                 ScrollView() {
-                    
-                    LineChart()
-                        .data([1, 2, 3, 4, 5, 60])
-                        .chartStyle(ChartStyle(backgroundColor: .white,
-                                                           foregroundColor: [ColorGradient(.blue, .purple),
-                                                                             ColorGradient(.orange, .red)]))
-                    
-                    
-                    
-                    
-                    
-                    
-//                    ForEach(stats.solves, id: \.self) { solve in
-//                        Text(formatSolveTime(secs: solve.time))
-//                    }
-                    
-                    
-//                    Text("generate random")
-//                        .onTapGesture {
-//                            for _ in 1..<100000 {
-//                                let solveItem: Solves!
-//
-//                                solveItem = Solves(context: managedObjectContext)
-//                                solveItem.date = Date()
-//                                solveItem.session = currentSession
-//                                solveItem.scramble = "sdlfikj"
-//                                solveItem.scramble_type = 0
-//                                solveItem.scramble_subtype = 0
-//                                solveItem.time = Double.random(in: 1..<100)
-//
-//                            }
-//                            do {
-//                                try managedObjectContext.save()
-//                            } catch {
-//                                if let error = error as NSError? {
-//                                    fatalError("Unresolved error \(error), \(error.userInfo)")
-//                                }
-//                            }
-//
-//
-//                        }
-//
-//                    Text("stats button")
-//                        .onTapGesture {
-//                            print(stats.getMin().time)
-//                            print(stats.getSessionMean())
-//                            print(stats.getNumberOfSolves())
-//                            print("\n\n\n")
-//                            print(stats.getBestMovingAverageOf(5))
-//                        }
-                    
-                    
                     /// this whole section make lazyvgrid because performance currently :trend_dwoin::"
                     VStack {
-                        
-                       
-                        
                         VStack (spacing: 0) {
                             HStack (alignment: .center) {
                                 Text(currentSession!.name!)
@@ -168,7 +111,7 @@ struct StatsView: View {
                                                 .foregroundColor(Color(UIColor.systemGray6))
                                                 .padding(.bottom, 4)
                                             
-//                                            Text("88:88:888")
+                                            //                                            Text("88:88:888")
                                             
                                             if bestSingle != nil {
                                                 Text(String(formatSolveTime(secs: bestSingle!.time)))
@@ -199,7 +142,7 @@ struct StatsView: View {
                                     HStack {
                                         VStack (alignment: .leading, spacing: 0) {
                                             
-                                            VStack {
+                                            VStack (alignment: .leading, spacing: 0) {
                                                 Text("BEST AO12")
                                                     .font(.system(size: 13, weight: .medium, design: .default))
                                                     .foregroundColor(Color(UIColor.systemGray))
@@ -207,14 +150,14 @@ struct StatsView: View {
                                                 
                                                 if ao12 != nil {
                                                     Text(String(formatSolveTime(secs: ao12!.0)))
-                                                    .font(.system(size: 34, weight: .bold, design: .default))
-                                                    .foregroundColor(.black)
-                                                    .padding(.leading, 12)
+                                                        .font(.system(size: 34, weight: .bold, design: .default))
+                                                        .foregroundColor(.black)
+                                                        .padding(.leading, 12)
                                                 } else {
                                                     Text("N/A")
                                                         .font(.system(size: 28, weight: .medium, design: .default))
                                                         .foregroundColor(Color(UIColor.systemGray2))
-//                                                        .padding(.leading, -16)
+                                                        .padding(.leading, 12)
                                                     
                                                 }
                                             }
@@ -225,11 +168,11 @@ struct StatsView: View {
                                             
                                             Divider()
                                                 .padding(.leading, 12)
-                                                .padding(.bottom, 4)
+                                                .padding(.vertical, 4)
                                             
                                             
                                             
-                                            VStack {
+                                            VStack (alignment: .leading, spacing: 0) {
                                                 Text("BEST AO100")
                                                     .font(.system(size: 13, weight: .medium, design: .default))
                                                     .foregroundColor(Color(UIColor.systemGray))
@@ -244,8 +187,8 @@ struct StatsView: View {
                                                     Text("N/A")
                                                         .font(.system(size: 28, weight: .medium, design: .default))
                                                         .foregroundColor(Color(UIColor.systemGray2))
-//                                                        .padding(.leading, -16)
-                                                        
+                                                        .padding(.leading, 12)
+                                                    
                                                 }
                                                 
                                             }
@@ -322,7 +265,7 @@ struct StatsView: View {
                                                 .foregroundColor(Color(UIColor.systemGray))
                                                 .padding(.bottom, 4)
                                             
-//                                            Text("6.142")
+                                            //                                            Text("6.142")
                                             
                                             
                                             if ao5 != nil {
@@ -353,10 +296,10 @@ struct StatsView: View {
                                             //                                        gradientColour.mask(Text("6.142").font(.system(size: 34, weight: .bold, design: .default)))
                                             
                                             
-
+                                            
                                             
                                             /// TODO: make text gray when they are () and AUTO BRACKET
-                                                
+                                            
                                             
                                         }
                                         //                                    .padding(.top)
@@ -414,23 +357,11 @@ struct StatsView: View {
                                 
                                 
                             }
-                                                    
-                            //                        LazyVGrid(columns: columns, spacing: 10) {
-                            //                            Text("yes")
-                            //                        }
-                            
-                            
-                            
-                            
-                            
-                            
                             
                             VStack {
-                                VStack {
-                                    
-                                    
-                                    
-                                    ZStack {
+                                
+                                ZStack {
+                                    VStack {
                                         HStack {
                                             Text("TIME TREND")
                                                 .font(.system(size: 13, weight: .medium, design: .default))
@@ -440,74 +371,81 @@ struct StatsView: View {
                                             Spacer()
                                         }
                                         
-                                                                                    
-                                        
+                                        Spacer()
                                     }
+                                    .padding(12)
                                     
                                     
                                     
-                                    /*
-                                    MultiLineChartView(data: [([8,32,11,23,40,28], GradientColors.green), ([90,99,78,111,70,60,77], GradientColors.purple), ([34,56,72,38,43,100,50], GradientColors.orngPink)], title: "Title")
-                                     */
-                                     // legend is optional
-//                                    BarChart()
-//                                            .data([1, 2, 3, 4, 5, 6])
-//                                            .chartStyle(ChartStyle(backgroundColor: .white,
-//                                                                   foregroundColor: ColorGradient(.blue, .purple)))
                                     
-//                                        .data(stats.solves.sorted(by: { $0.date! < $1.date! }).map { $0.time })
-                                        
-                                 
                                     
-//                                    Spacer()
+                                    LineView(data: [18,23,54,32,12,37,11,23,43], title: nil, style: ChartStyle(backgroundColor: .white, accentColor: CustomGradientColours.ccPink, secondGradientColor: CustomGradientColours.ccPrpl, textColor: .black, legendTextColor: .gray, dropShadowColor: Color.black.opacity(0.24)), legendSpecifier: "%.2g") /// todo fix string formatting
+                                        .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
                                     
+                                    /// todo fix buggy animation and see if can change the animation of text to be opacity animated
+                                    /// and not a translation -> although very weird because doesn't seem like there is optnion!??
+                                    
+                                    
+                                    
+                                    
+                                    //                                    LineView(data: [8,23,54,32,12,37,7,23,43], title: nil, style: ChartStyle(backgroundColor: .white, accentColor: ccPink, secondGradientColor: ccPrpl, textColor: .black, legendTextColor: .gray, dropShadowColor: Color.black.opacity(0.24)))
+                                    //                                        .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12), height: 100)
                                 }
-                                .padding(.top, 12)
-                                .padding(.bottom, 12)
-                                .padding(.leading, 12)
-                                .padding(.trailing, 12)
+                                
+                                
+                                
+                                
+                                
+                                
                             }
-                            .frame(height: 200)
+                            .frame(height: 300)
                             .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
                             .onTapGesture {
                                 print("time trend pressed")
-                            }
-                            
-                            
-                            
-                            
-                            VStack {
-                                VStack {
-                                    HStack {
-                                        Text("TIME DISTRIBUTION")
-                                            .font(.system(size: 13, weight: .medium, design: .default))
-                                            .foregroundColor(Color(UIColor.systemGray))
-                                            .padding(.bottom, 4)
-                                        
-                                        Spacer()
-                                    }
-                                    
-                                    Spacer()
-                                    
+                                
+                                for i in 0..<5 {
+                                    print(stats.solves[i].time)
                                 }
-                                .padding(.top, 12)
-                                .padding(.bottom, 12)
-                                .padding(.leading, 12)
+                                
+                                
+                                
                             }
-                            .frame(height: 200)
-                            .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
-                            .padding(.bottom, 16)
-                            .onTapGesture {
-                                print("time distribution pressed")
-                            }
+                            
+                            
+                            
+                            
+                            //                            VStack {
+                            //                                VStack {
+                            //                                    HStack {
+                            //                                        Text("TIME DISTRIBUTION")
+                            //                                            .font(.system(size: 13, weight: .medium, design: .default))
+                            //                                            .foregroundColor(Color(UIColor.systemGray))
+                            //                                            .padding(.bottom, 4)
+                            //
+                            //                                        Spacer()
+                            //                                    }
+                            //
+                            //                                    Spacer()
+                            //
+                            //                                }
+                            //                                .padding(.top, 12)
+                            //                                .padding(.bottom, 12)
+                            //                                .padding(.leading, 12)
+                            //                            }
+                            //                            .frame(height: 200)
+                            //                            .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                            //                            .padding(.bottom, 16)
+                            //                            .onTapGesture {
+                            //                                print("time distribution pressed")
+                            //                            }
                             
                             
                             
                             
                         }
                         .navigationTitle("Your Solves")
-//                        .padding(.leading)
-//                        .padding(.trailing)
+                        //                        .padding(.leading)
+                        //                        .padding(.trailing)
                     }
                     .padding(.leading)
                     .padding(.trailing)
@@ -517,7 +455,7 @@ struct StatsView: View {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(Color.clear)
                         .frame(height: 50)
-                        
+                    
                 }
             }
         }
