@@ -22,17 +22,31 @@ struct SolvePopupView: View {
     
     let solve: Solves
     
+    // Copy all items out of solve that are used by the UI
+    // This is so that when the item is deleted they don't reset to default values
+    let date: Date
+    let time: String
+    let puzzle_type: PuzzleType
+    let puzzle_subtype: String
+    let scramble: String
+    
+    @Binding var currentSolve: Solves?
+    
     @State private var userComment: String
     @State private var solveStarred: Bool
     
-    @Binding var showingPopupSlideover: Bool
     
-    init(solve: Solves, timeListManager: TimeListManager, showingPopupSlideover: Binding<Bool>){
+    init(solve: Solves, currentSolve: Binding<Solves?>, timeListManager: TimeListManager){
         self.solve = solve
+        self.date = solve.date ?? Date(timeIntervalSince1970: 0)
+        self.time = formatSolveTime(secs: solve.time)
+        self.puzzle_type = puzzle_types[Int(solve.scramble_type)]
+        self.puzzle_subtype = puzzle_type.subtypes[Int(solve.scramble_subtype)]!
+        self.scramble = solve.scramble ?? "Retrieving scramble failed."
+        self._currentSolve = currentSolve
         self.timeListManager = timeListManager
         _userComment = State(initialValue: solve.comment ?? "")
         _solveStarred = State(initialValue: solve.starred)
-        _showingPopupSlideover = showingPopupSlideover
     }
     
     var body: some View {
@@ -44,7 +58,7 @@ struct SolvePopupView: View {
                 ScrollView() {
                     VStack (spacing: 12) {
                         HStack {
-                            Text(solve.date ?? Date(timeIntervalSince1970: 0), format: .dateTime.day().month().year())
+                            Text(date, format: .dateTime.day().month().year())
                                 .padding(.leading, 16)
                                 .font(.system(size: 22, weight: .semibold, design: .default))
                                 .foregroundColor(Color(UIColor.systemGray))
@@ -56,7 +70,7 @@ struct SolvePopupView: View {
                             HStack {
                                 //Image("sq-1")
                                 //  .padding(.trailing, 8)
-                                Image(puzzle_types[Int(solve.scramble_type)].name)
+                                Image(puzzle_type.name)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 32, height: 32)
@@ -68,12 +82,12 @@ struct SolvePopupView: View {
                                     .padding(.trailing, 4)
                                 //.padding(.leading)
                                 
-                                Text(puzzle_types[Int(solve.scramble_type)].name)
+                                Text(puzzle_type.name)
                                     .font(.system(size: 17, weight: .semibold, design: .default))
                                 
                                 Spacer()
                                 
-                                Text(puzzle_types[Int(solve.scramble_type)].subtypes[Int(solve.scramble_subtype)]!.uppercased())
+                                Text(puzzle_subtype.uppercased())
                                     .font(.system(size: 13, weight: .semibold, design: .default))
                                     .offset(y: 2)
                                 
@@ -85,7 +99,7 @@ struct SolvePopupView: View {
                             Divider()
                                 .padding(.leading)
                             
-                            Text(solve.scramble ?? "Retrieving scramble failed.")
+                            Text(scramble)
                                 .font(.system(size: 17, weight: .regular, design: .monospaced))
                                 .padding(.leading)
                                 .padding(.trailing)
@@ -177,7 +191,7 @@ struct SolvePopupView: View {
                             HStack {
                                 Button {
                                     print("Button tapped")
-                                    UIPasteboard.general.string = "\(solve.time): \(solve.scramble!)"
+                                    UIPasteboard.general.string = "\(time): \(scramble)"
                                 } label: {
                                     Text("Copy Solve")
                                 }
@@ -198,11 +212,13 @@ struct SolvePopupView: View {
                         
                     }
                     .offset(y: -6)
-                    .navigationTitle(formatSolveTime(secs: solve.time))
+                    .navigationTitle(time)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
-                                showingPopupSlideover = false
+                                withAnimation {
+                                    currentSolve = nil
+                                }
                                 managedObjectContext.delete(solve) // Todo read context from environment
                                 do {
                                     try managedObjectContext.save()
@@ -234,8 +250,7 @@ struct SolvePopupView: View {
                         
                         ToolbarItem(placement: .navigationBarLeading) {
                             Button {
-                                print("button tapped")
-                                showingPopupSlideover = false
+                                currentSolve = nil
                             } label: {
                                 
                                 Image(systemName: "chevron.left")
@@ -258,11 +273,7 @@ struct TimeCard: View {
     let solve: Solves
     
     @Binding var currentSolve: Solves?
-    @Binding var showingPopupSlideover: Bool
     
-    // @Environment(\.managedObjectContext) var managedObjectContext
-    
-    var timeListManager: TimeListManager
     
     var body: some View {
         
@@ -272,7 +283,6 @@ struct TimeCard: View {
                 .frame(maxWidth: 120, minHeight: 55, maxHeight: 55) /// todo check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectange
                 .onTapGesture {
                     currentSolve = solve
-                    showingPopupSlideover = true
                 }
                 .onLongPressGesture {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()

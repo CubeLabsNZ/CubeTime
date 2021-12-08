@@ -85,7 +85,6 @@ struct TimeListView: View {
     
     @StateObject var timeListManager: TimeListManager
     
-    @State var showingPopupSlideover: Bool = false
     @State var solve: Solves?
     
     
@@ -156,7 +155,7 @@ struct TimeListView: View {
                                  
                             LazyVGrid(columns: columns, spacing: 12) {
                                 ForEach(timeListManager.solves!, id: \.self) { item in
-                                    TimeCard(solve: item, currentSolve: $solve, showingPopupSlideover: $showingPopupSlideover, timeListManager: timeListManager)
+                                    TimeCard(solve: item, currentSolve: $solve)
                                         .environment(\.managedObjectContext, managedObjectContext)
                                 }
                                 // .id(UUID()) maybe =++++ speed?!!? probably not
@@ -194,7 +193,7 @@ struct TimeListView: View {
                 .navigationTitle("Session Times")
                 .sheet(item: $solve /*isPresented: $showingPopupSlideover*/) { item in
                     
-                    SolvePopupView(solve: item, timeListManager: timeListManager, showingPopupSlideover: $showingPopupSlideover)
+                    SolvePopupView(solve: item, currentSolve: $solve, timeListManager: timeListManager)
                         .environment(\.managedObjectContext, managedObjectContext)
                 }
                 .toolbar {
