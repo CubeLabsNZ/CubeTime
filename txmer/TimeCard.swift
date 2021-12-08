@@ -60,10 +60,10 @@ struct SolvePopupView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 32, height: 32)
-//                                    .padding(.leading, 2)
-//                                    .padding(.top, 2)
-//                                    .padding(.bottom, 2)
-//                                    .padding([.bottom, .leading], 1)
+                                //                                    .padding(.leading, 2)
+                                //                                    .padding(.top, 2)
+                                //                                    .padding(.bottom, 2)
+                                //                                    .padding([.bottom, .leading], 1)
                                     .padding(.leading, 2)
                                     .padding(.trailing, 4)
                                 //.padding(.leading)
@@ -255,104 +255,140 @@ struct SolvePopupView: View {
 
 @available(iOS 15.0, *)
 struct TimeCard: View {
-    let solve: SmallSolveObj
-    @State var showingPopupSlideover = false
-    @Environment(\.managedObjectContext) var managedObjectContext
+    let solve: Solves
+    
+    @Binding var currentSolve: Solves?
+    @Binding var showingPopupSlideover: Bool
+    
+    // @Environment(\.managedObjectContext) var managedObjectContext
     
     var timeListManager: TimeListManager
     
     var body: some View {
         
-        let _ = NSLog("TimeCard View loaded")
-        
-//        Button(action: {
-//            print(solve.time)
-//            showingPopupSlideover = true
-//        }) {
-            Text(solve.time)
-//            Text(solve.scramble!)
+        ZStack {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(Color.white)
+                .frame(maxWidth: 120, minHeight: 55, maxHeight: 55) /// todo check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectange
+                .onTapGesture {
+                    currentSolve = solve
+                    showingPopupSlideover = true
+                }
+                .onLongPressGesture {
+                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                }
+            Text(formatSolveTime(secs: solve.time))
                 .font(.system(size: 17, weight: .bold, design: .default))
-                .foregroundColor(Color.black)
-                //.frame(width: 112, height: 53)
-                //.frame(height: 55)
-                .frame(maxWidth: .infinity, minHeight: 55, maxHeight: 55)
-            
-                .background(Color.white)
-                //.cornerRadius(10)
-            
-//        }
-        .onLongPressGesture {
-            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
         }
-        /*.sheet(isPresented: $showingPopupSlideover) {
-            SolvePopupView(solve: solve, timeListManager: timeListManager, showingPopupSlideover: $showingPopupSlideover)
-                .environment(\.managedObjectContext, managedObjectContext)
-        }*/
-//        .contextMenu {
-//
-//            Button {
-//                print("MOVE TO PRESSED")
-//            } label: {
-//                Label("Move To", systemImage: "arrow.up.forward.circle")
-//            }
-//
-//            Divider()
-//
-//            Button {
-//                print("OK PRESSED")
-//            } label: {
-//                Label("No Penalty", systemImage: "checkmark.circle") /// TODO: add custom icons because no good icons
-//            }
-//
-//            Button {
-//                print("+2 pressed")
-//            } label: {
-//                Label("+2", systemImage: "plus.circle") /// TODO: add custom icons because no good icons
-//            }
-//
-//            Button {
-//                print("DNF pressed")
-//            } label: {
-//                Label("DNF", systemImage: "slash.circle") /// TODO: add custom icons because no good icons
-//            }
-//
-//            Divider()
-//
-//            Button (role: .destructive) {
-//                /*
-//                managedObjectContext.delete(solve)
-//                do {
-//                    try managedObjectContext.save()
-//                } catch {
-//                    if let error = error as NSError? {
-//                        // Replace this implementation with code to handle the error appropriately.
-//                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//
-//                        /*
-//                         Typical reasons for an error here include:
-//                         * The parent directory does not exist, cannot be created, or disallows writing.
-//                         * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-//                         * The device is out of space.
-//                         * The store could not be migrated to the current model version.
-//                         Check the error message to determine what the actual problem was.
-//                         */
-//                        fatalError("Unresolved error \(error), \(error.userInfo)")
-//                    }
-//                }
-//                 */
-//                print("Button tapped")
-//                //timeListManager.resort()
-//            } label: {
-//                Label {
-//                    Text("Delete Solve")
-//                        .foregroundColor(Color.red)
-//                } icon: {
-//                    Image(systemName: "trash")
-//                        .foregroundColor(Color.green) /// FIX: colours not working
-//                }
-//            }
+//        .sheet(isPresented: $showingPopupSlideover) {
+//            SolvePopupView(solve: solve, timeListManager: timeListManager, showingPopupSlideover: $showingPopupSlideover)
+//                .environment(\.managedObjectContext, managedObjectContext)
 //        }
-    }
-}
+    
 
- 
+                
+            //                    .frame(maxWidth: 120, minHeight: 55, maxHeight: 55)
+            //                    .overlay(Rectangle().frame(width: 112, height: 53))
+            
+            //
+            
+            //        Rectangle()
+            //            .background(Color.white)
+            //            .frame(width: 112, height: 53)
+            
+            //        Text(formatSolveTime(secs: solve.time))
+            //            .font(.system(size: 17, weight: .bold, design: .default))
+            //            .foregroundColor(Color.black)
+            //            //.frame(width: 112, height: 53)
+            //            //.frame(height: 55)
+            //            .frame(maxWidth: 120, minHeight: 55, maxHeight: 55)
+            //
+            //            .background(Color.white)
+            //            .cornerRadius(10)
+                        
+            //            .onLongPressGesture {
+            //                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+            //            }
+            //            .onTapGesture {
+            //                showingPopupSlideover = true
+            //            }
+            //            .contextMenu {
+            //
+            //                Button {
+            //                    print("MOVE TO PRESSED")
+            //                } label: {
+            //                    Label("Move To", systemImage: "arrow.up.forward.circle")
+            //                }
+            //
+            //                Divider()
+            //
+            //                Button {
+            //                    print("OK PRESSED")
+            //                } label: {
+            //                    Label("No Penalty", systemImage: "checkmark.circle") /// TODO: add custom icons because no good icons
+            //                }
+            //
+            //                Button {
+            //                    print("+2 pressed")
+            //                } label: {
+            //                    Label("+2", systemImage: "plus.circle") /// TODO: add custom icons because no good icons
+            //                }
+            //
+            //                Button {
+            //                    print("DNF pressed")
+            //                } label: {
+            //                    Label("DNF", systemImage: "slash.circle") /// TODO: add custom icons because no good icons
+            //                }
+            //
+            //                Divider()
+            //
+            //                Button (role: .destructive) {
+            //                    /*
+            //                    managedObjectContext.delete(solve)
+            //                    do {
+            //                        try managedObjectContext.save()
+            //                    } catch {
+            //                        if let error = error as NSError? {
+            //                            // Replace this implementation with code to handle the error appropriately.
+            //                            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+            //
+            //                            /*
+            //                             Typical reasons for an error here include:
+            //                             * The parent directory does not exist, cannot be created, or disallows writing.
+            //                             * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+            //                             * The device is out of space.
+            //                             * The store could not be migrated to the current model version.
+            //                             Check the error message to determine what the actual problem was.
+            //                             */
+            //                            fatalError("Unresolved error \(error), \(error.userInfo)")
+            //                        }
+            //                    }
+            //                     */
+            //                    print("Button tapped")
+            //                    //timeListManager.resort()
+            //                } label: {
+            //                    Label {
+            //                        Text("Delete Solve")
+            //                            .foregroundColor(Color.red)
+            //                    } icon: {
+            //                        Image(systemName: "trash")
+            //                            .foregroundColor(Color.green) /// FIX: colours not working
+            //                    }
+            //                }
+            //            }
+            
+            
+            //        Button(action: {
+            //            print(solve.time)
+            //
+            //        }) {
+            
+            
+            //        }
+            
+            //
+            
+        }
+    }
+    
+    

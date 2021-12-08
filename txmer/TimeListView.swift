@@ -21,13 +21,10 @@ enum SortBy {
     case time
 }
 
-struct SmallSolveObj {
-    let time: String
-    let id: NSManagedObjectID
-}
+
 
 class TimeListManager: ObservableObject {
-    @Published var solves: [SmallSolveObj]?
+    @Published var solves: [Solves]?
     private var allsolves: [Solves]?
     @Published var fetchError: NSError?
     @Binding var currentSession: Sessions
@@ -68,26 +65,14 @@ class TimeListManager: ObservableObject {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
-        solves = allsolves!.map { solve in
-            return SmallSolveObj(time: formatSolveTime(secs: solve.time), id: solve.objectID)
-        }
+        solves = allsolves!
         refilter()
     }
     func refilter() {
-        NSLog("refilter")
         if filter == "" {
-            solves = allsolves!.map { solve in
-                return SmallSolveObj(time: formatSolveTime(secs: solve.time), id: solve.objectID)
-            }
+            solves = allsolves
         } else {
-            solves = allsolves!.compactMap { solve in
-                let fmtdTime = formatSolveTime(secs: solve.time)
-                if fmtdTime.hasPrefix(filter) {
-                    return SmallSolveObj(time: fmtdTime, id: solve.objectID)
-                }
-                return nil
-            }
-            //solves = allsolves?.filter{ formatSolveTime(secs: $0.time).hasPrefix(filter) }
+            solves = allsolves?.filter{ formatSolveTime(secs: $0.time).hasPrefix(filter) }
         }
     }
 }
@@ -100,18 +85,22 @@ struct TimeListView: View {
     
     @StateObject var timeListManager: TimeListManager
     
+    @State var showingPopupSlideover: Bool = false
+    @State var solve: Solves?
+    
+    
      
     //let descendingButtonIcon: Image = Image(systemName: "chevron.down.circle")
     //var buttonIcon: String = userLastState
     
-//    private let columns = [
-//        // GridItem(.adaptive(minimum: 112), spacing: 11)
-//        GridItem(spacing: 10),
-//        GridItem(spacing: 10),
-//        GridItem(spacing: 10)
-//    ]
+    private let columns = [
+        // GridItem(.adaptive(minimum: 112), spacing: 11)
+        GridItem(spacing: 10),
+        GridItem(spacing: 10),
+        GridItem(spacing: 10)
+    ]
     
-    var columns: [GridItem] = Array(repeating: .init(.flexible()), count: 3)
+//    var columns: [GridItem] = Array(repeating: .init(.flexible()), count: 3)
     
     init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
@@ -166,8 +155,8 @@ struct TimeListView: View {
                             }
                                  
                             LazyVGrid(columns: columns, spacing: 12) {
-                                ForEach(timeListManager.solves!, id: \.id) { item in
-                                    TimeCard(solve: item, timeListManager: timeListManager)
+                                ForEach(timeListManager.solves!, id: \.self) { item in
+                                    TimeCard(solve: item, currentSolve: $solve, showingPopupSlideover: $showingPopupSlideover, timeListManager: timeListManager)
                                         .environment(\.managedObjectContext, managedObjectContext)
                                 }
                                 // .id(UUID()) maybe =++++ speed?!!? probably not
@@ -203,6 +192,11 @@ struct TimeListView: View {
                     }
                 }
                 .navigationTitle("Session Times")
+                .sheet(item: $solve /*isPresented: $showingPopupSlideover*/) { item in
+                    
+                    SolvePopupView(solve: item, timeListManager: timeListManager, showingPopupSlideover: $showingPopupSlideover)
+                        .environment(\.managedObjectContext, managedObjectContext)
+                }
                 .toolbar {
                     Button {
                         print("button tapped")
@@ -219,17 +213,9 @@ struct TimeListView: View {
                 }
                 
                 
-                //.frame(maxHeight: UIScreen.screenHeight)
+                .frame(maxHeight: UIScreen.screenHeight)
             }
             .searchable(text: $timeListManager.filter)
         }.navigationViewStyle(StackNavigationViewStyle())
     }
 }
-/* TODO make previews that take ags work
-@available(iOS 15.0, *)
-struct TimeListView_Previews: PreviewProvider {
-    static var previews: some View {
-        TimeListView()
-    }
-}
-*/

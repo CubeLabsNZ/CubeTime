@@ -98,7 +98,7 @@ class StopWatchManager: ObservableObject {
     var solveItem: Solves!
     
     
-    private let feedbackStyle = UIImpactFeedbackGenerator(style: .medium) /// TODO: add option to change heaviness/turn on off in settings
+    private let feedbackStyle = UIImpactFeedbackGenerator(style: .rigid) /// TODO: add option to change heaviness/turn on off in settings
     
     private var prevIsDown = false
     private var prevDownStoppedTheTimer = false
