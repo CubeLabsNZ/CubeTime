@@ -155,7 +155,7 @@ struct TimeListView: View {
                                  
                             LazyVGrid(columns: columns, spacing: 12) {
                                 ForEach(timeListManager.solves!, id: \.self) { item in
-                                    TimeCard(solve: item, currentSolve: $solve, timeListManager: timeListManager)
+                                    TimeCard(solve: item, currentSolve: $solve)
                                         .environment(\.managedObjectContext, managedObjectContext)
                                 }
                                 // .id(UUID()) maybe =++++ speed?!!? probably not

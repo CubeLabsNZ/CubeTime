@@ -216,7 +216,9 @@ struct SolvePopupView: View {
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
-                                currentSolve = nil
+                                withAnimation {
+                                    currentSolve = nil
+                                }
                                 managedObjectContext.delete(solve) // Todo read context from environment
                                 do {
                                     try managedObjectContext.save()
@@ -248,7 +250,7 @@ struct SolvePopupView: View {
                         
                         ToolbarItem(placement: .navigationBarLeading) {
                             Button {
-                                print("button tapped")
+                                currentSolve = nil
                             } label: {
                                 
                                 Image(systemName: "chevron.left")
@@ -271,10 +273,8 @@ struct TimeCard: View {
     let solve: Solves
     
     @Binding var currentSolve: Solves?
+    var contextMenuView: AnyView
     
-    // @Environment(\.managedObjectContext) var managedObjectContext
-    
-    var timeListManager: TimeListManager
     
     var body: some View {
         
