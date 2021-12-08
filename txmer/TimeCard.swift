@@ -280,37 +280,10 @@ struct TimeCard: View {
             Text(formatSolveTime(secs: solve.time))
                 .font(.system(size: 17, weight: .bold, design: .default))
         }
-//        .sheet(isPresented: $showingPopupSlideover) {
-//            SolvePopupView(solve: solve, timeListManager: timeListManager, showingPopupSlideover: $showingPopupSlideover)
-//                .environment(\.managedObjectContext, managedObjectContext)
-//        }
-    
-                
-            //                    .frame(maxWidth: 120, minHeight: 55, maxHeight: 55)
-            //                    .overlay(Rectangle().frame(width: 112, height: 53))
-            
-            //
-            
-            //        Rectangle()
-            //            .background(Color.white)
-            //            .frame(width: 112, height: 53)
-            
-            //        Text(formatSolveTime(secs: solve.time))
-            //            .font(.system(size: 17, weight: .bold, design: .default))
-            //            .foregroundColor(Color.black)
-            //            //.frame(width: 112, height: 53)
-            //            //.frame(height: 55)
-            //            .frame(maxWidth: 120, minHeight: 55, maxHeight: 55)
-            //
-            //            .background(Color.white)
-            //            .cornerRadius(10)
-                        
-            //            .onLongPressGesture {
-            //                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-            //            }
-            //            .onTapGesture {
-            //                showingPopupSlideover = true
-            //            }
+        
+        
+        
+        
             //            .contextMenu {
             //
             //                Button {

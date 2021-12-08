@@ -15,6 +15,8 @@ let settingsPagesIcons = ["paintpalette", "gearshape.2", "square.and.arrow.up.on
 struct SettingsView: View {
     
     
+    @State private var showGeneralSettingsView = false
+    
     
     
     let settingsColumns = [
@@ -40,6 +42,8 @@ struct SettingsView: View {
                 Color(UIColor.systemGray6)
                     .ignoresSafeArea()
                 
+                NavigationLink("", destination: GeneralSettingsView(), isActive: $showGeneralSettingsView)
+                
                 VStack (spacing: 16) {
                     /*
                      LazyVGrid (columns: settingsColumns, spacing: 16) {
@@ -52,7 +56,12 @@ struct SettingsView: View {
                     
                     
                     HStack (spacing: 16) {
+                        
+                        
                         GeneralView()
+                            .onTapGesture {
+                                showGeneralSettingsView.toggle()
+                            }
 
                         AppearanceView()
                     }

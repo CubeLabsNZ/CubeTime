@@ -45,6 +45,9 @@ struct TabIcon: View {
 @available(iOS 15.0, *) /// TODO: remove all `@available(iOS 15.0, *)` in the project and change the button role BECAUSE iOS 15 + ONLY :sob:
 struct MainTabsView: View {
     
+    @Namespace private var namespace
+    
+    
     @StateObject var tabRouter: TabRouter = TabRouter()
     @Environment(\.managedObjectContext) var managedObjectContext
     
@@ -92,7 +95,7 @@ struct MainTabsView: View {
                     
                 }
 
-                BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab)
+                BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
                     .zIndex(1)
             }
         }

@@ -83,4 +83,12 @@ class TimerTextColours {
 class CustomGradientColours {
     static let ccPink: Color = Color(red: 236/255, green: 74/255, blue: 134/255)
     static let ccPrpl: Color = Color(red: 126/255, green: 94/255, blue: 191/255)
+    
+    
+    static let gradientColour: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 136/255, green: 94/255, blue: 191/255)]),
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing)
+
+    
 }

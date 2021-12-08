@@ -32,6 +32,7 @@ struct AnimatingFontSize: AnimatableModifier {
 
 
 
+
 struct TimerView: View {
     //@ObservedObject var currentSession: Sessions
     
@@ -62,16 +63,22 @@ struct TimerView: View {
             
             
             if stopWatchManager.mode == .stopped{
-                Text(stopWatchManager.scrambleStr ?? "Loading scramble")
-                    //.background(Color.red)
-                    .padding(22)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .position(x: UIScreen.screenWidth / 2, y: 108)
-                    .font(.system(size: 17, weight: .semibold, design: .monospaced))
-                
-                
-                    .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+                VStack {
+                    Text(stopWatchManager.scrambleStr ?? "Loading scramble")
+                        //.background(Color.red)
+                        
+                        .padding(.top, 48)
+                        .padding(.horizontal)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: UIScreen.screenWidth)
+    //                    .position(x: UIScreen.screenWidth / 2, y: 108)
+                        .font(.system(size: 17, weight: .semibold, design: .monospaced))
+                    
+                    
+                        .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+                    
+                    Spacer()
+                }
             }
             
             
@@ -86,7 +93,7 @@ struct TimerView: View {
             
                 .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 64 : 48))
                 .animation(Animation.spring(), value: stopWatchManager.mode == .running)
-            
+                .ignoresSafeArea(edges: .top)
             
             
             
@@ -126,6 +133,7 @@ struct TimerView: View {
                         )
                 }
             }
+            .ignoresSafeArea(edges: .top)
         }
         .onReceive(stopWatchManager.$mode) { newMode in
             hideTabBar = (newMode == .running)
@@ -137,7 +145,6 @@ struct TimerView: View {
             }
         }
         .statusBar(hidden: hideStatusBar) /// TODO MAKE SO ANIMATION IS ASYMMETRIC WITH VALUES OF THE OTHER ANIMATIONS
-        .ignoresSafeArea(edges: .top)
     }
 }
 
