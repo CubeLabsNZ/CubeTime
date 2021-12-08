@@ -22,6 +22,49 @@ class TabRouter: ObservableObject {
     @Published var currentTab: Tab = .timer
 }
 
+struct TabIconWithBar: View {
+    let assignedTab: Tab
+    @Binding var currentTab: Tab
+    let systemIconName: String
+    var systemIconNameSelected: String
+    var namespace: Namespace.ID
+    
+    var body: some View {
+        ZStack {
+            VStack {
+                Spacer()
+                
+                //                                            CustomGradientColours.gradientColour
+                
+                if currentTab == assignedTab {
+                    Color.black
+                        .frame(width: 32, height: 2)
+                        .matchedGeometryEffect(id: "underline", in: namespace, properties: .frame)
+                        .offset(x: 7, y: -48)
+                    //                                                .padding(.leading, 14)
+                } else {
+                    Color.clear
+                        .frame(width: 32, height: 2)
+                        .offset(x: 7, y: -48)
+                }
+            }
+            
+            
+            
+            Image(
+                systemName:
+                    currentTab == assignedTab ? systemIconNameSelected : systemIconName
+            )
+            .font(.system(size: SetValues.iconFontSize))
+            .onTapGesture {
+                currentTab = assignedTab
+            }
+                .padding(.leading, 14)
+                
+        }
+    }
+}
+
 
 struct TabIcon: View {
     let assignedTab: Tab
