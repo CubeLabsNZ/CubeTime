@@ -104,12 +104,14 @@ struct TimeListView: View {
     //let descendingButtonIcon: Image = Image(systemName: "chevron.down.circle")
     //var buttonIcon: String = userLastState
     
-    private let columns = [
-        // GridItem(.adaptive(minimum: 112), spacing: 11)
-        GridItem(spacing: 10),
-        GridItem(spacing: 10),
-        GridItem(spacing: 10)
-    ]
+//    private let columns = [
+//        // GridItem(.adaptive(minimum: 112), spacing: 11)
+//        GridItem(spacing: 10),
+//        GridItem(spacing: 10),
+//        GridItem(spacing: 10)
+//    ]
+    
+    var columns: [GridItem] = Array(repeating: .init(.flexible()), count: 3)
     
     init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
