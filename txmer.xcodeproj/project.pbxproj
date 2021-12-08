@@ -10,7 +10,7 @@
 		233FE7B6274F109600C6F1DF /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Values.swift */; };
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
 		23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* txmerApp.swift */; };
-		23DE3BDD274DDBE200254D29 /* MainTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDC274DDBE200254D29 /* MainTimerView.swift */; };
+		23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDC274DDBE200254D29 /* TimerView.swift */; };
 		23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23DE3BDE274DDBE300254D29 /* Assets.xcassets */; };
 		23DE3BE2274DDBE300254D29 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23DE3BE1274DDBE300254D29 /* Preview Assets.xcassets */; };
 		23DE3BE4274DDBE300254D29 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BE3274DDBE300254D29 /* Persistence.swift */; };
@@ -53,6 +53,8 @@
 		7D69E0BC2751FDEB007211CC /* RubiksTimerTimeObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E09C2751FDEA007211CC /* RubiksTimerTimeObj.m */; settings = {COMPILER_FLAGS = "-w"; }; };
 		7D69E0BD2751FDEB007211CC /* RubiksTimerDataProcessing.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E09F2751FDEA007211CC /* RubiksTimerDataProcessing.m */; settings = {COMPILER_FLAGS = "-w"; }; };
 		7D69E0BE2751FDEB007211CC /* CHTUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0A12751FDEA007211CC /* CHTUpdater.m */; settings = {COMPILER_FLAGS = "-w"; }; };
+		7D78FF8C276084C2008BB82E /* StopWatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78FF8B276084C2008BB82E /* StopWatchManager.swift */; };
+		7D78FF8E276087AF008BB82E /* BottomTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78FF8D276087AF008BB82E /* BottomTabsView.swift */; };
 		7D7A9EC0274F38CD00C2E125 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EBF274F38CD00C2E125 /* StatsView.swift */; };
 		7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EC3274F392700C2E125 /* SessionsView.swift */; };
 		7D7A9EC6274F396E00C2E125 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EC5274F396E00C2E125 /* SettingsView.swift */; };
@@ -83,7 +85,7 @@
 		23D2FC4C274E12DE00D7071A /* TimeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeListView.swift; sourceTree = "<group>"; };
 		23DE3BD7274DDBE200254D29 /* txmer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = txmer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		23DE3BDA274DDBE200254D29 /* txmerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerApp.swift; sourceTree = "<group>"; };
-		23DE3BDC274DDBE200254D29 /* MainTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTimerView.swift; sourceTree = "<group>"; };
+		23DE3BDC274DDBE200254D29 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		23DE3BDE274DDBE300254D29 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		23DE3BE1274DDBE300254D29 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		23DE3BE3274DDBE300254D29 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -155,6 +157,8 @@
 		7D69E09F2751FDEA007211CC /* RubiksTimerDataProcessing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RubiksTimerDataProcessing.m; sourceTree = "<group>"; };
 		7D69E0A02751FDEA007211CC /* RubiksTimerTimeObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RubiksTimerTimeObj.h; sourceTree = "<group>"; };
 		7D69E0A12751FDEA007211CC /* CHTUpdater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTUpdater.m; sourceTree = "<group>"; };
+		7D78FF8B276084C2008BB82E /* StopWatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopWatchManager.swift; sourceTree = "<group>"; };
+		7D78FF8D276087AF008BB82E /* BottomTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomTabsView.swift; sourceTree = "<group>"; };
 		7D7A9EBF274F38CD00C2E125 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		7D7A9EC3274F392700C2E125 /* SessionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsView.swift; sourceTree = "<group>"; };
 		7D7A9EC5274F396E00C2E125 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -225,7 +229,8 @@
 				7D69E0632751FDBB007211CC /* 3rdparty */,
 				23DE3BDA274DDBE200254D29 /* txmerApp.swift */,
 				7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */,
-				23DE3BDC274DDBE200254D29 /* MainTimerView.swift */,
+				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
+				7D78FF8B276084C2008BB82E /* StopWatchManager.swift */,
 				23D2FC4C274E12DE00D7071A /* TimeListView.swift */,
 				7D6159F82751B53E00DC9A4C /* TimeCard.swift */,
 				7D7A9EC3274F392700C2E125 /* SessionsView.swift */,
@@ -237,6 +242,7 @@
 				23DE3BE0274DDBE300254D29 /* Preview Content */,
 				7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */,
 				7D7C45C42751DE2C0073885C /* 3rdparty-Bridging-Header.h */,
+				7D78FF8D276087AF008BB82E /* BottomTabsView.swift */,
 			);
 			path = txmer;
 			sourceTree = "<group>";
@@ -560,7 +566,8 @@
 				7D69E0AB2751FDEA007211CC /* Im.m in Sources */,
 				7D69E0A32751FDEA007211CC /* Gear.m in Sources */,
 				7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */,
-				23DE3BDD274DDBE200254D29 /* MainTimerView.swift in Sources */,
+				23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */,
+				7D78FF8C276084C2008BB82E /* StopWatchManager.swift in Sources */,
 				7D69E0B72751FDEA007211CC /* CHTSessionManager.m in Sources */,
 				7D69E0A72751FDEA007211CC /* Skewb.m in Sources */,
 				23E81E6C275D8DAE00B741E3 /* GeneralSettings.swift in Sources */,
@@ -573,6 +580,7 @@
 				23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */,
 				7D69E0A22751FDEA007211CC /* Sq12phase.m in Sources */,
 				7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */,
+				7D78FF8E276087AF008BB82E /* BottomTabsView.swift in Sources */,
 				23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */,
 				7D69E0B82751FDEA007211CC /* CHTTheme.m in Sources */,
 				7D69E0B12751FDEA007211CC /* Search.m in Sources */,

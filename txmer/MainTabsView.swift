@@ -19,23 +19,23 @@ enum Tab {
 
 
 class TabRouter: ObservableObject {
-    @Published var currentTab: Tab = .sessions
+    @Published var currentTab: Tab = .timer
 }
 
 
 struct TabIcon: View {
     let assignedTab: Tab
-    @StateObject var tabRouter: TabRouter
+    @Binding var currentTab: Tab
     let systemIconName: String
     var systemIconNameSelected: String
     var body: some View {
         Image(
             systemName:
-                tabRouter.currentTab == assignedTab ? systemIconNameSelected : systemIconName
+                currentTab == assignedTab ? systemIconNameSelected : systemIconName
         )
             .font(.system(size: SetValues.iconFontSize))
             .onTapGesture {
-                tabRouter.currentTab = assignedTab
+                currentTab = assignedTab
             }
     }
 }
@@ -47,6 +47,8 @@ struct MainTabsView: View {
     
     @StateObject var tabRouter: TabRouter = TabRouter()
     @Environment(\.managedObjectContext) var managedObjectContext
+    
+    @State var hideTabBar = false
     
     @State var currentSession: Sessions
     
@@ -71,7 +73,8 @@ struct MainTabsView: View {
             ZStack {
                 switch tabRouter.currentTab {
                 case .timer:
-                    MainTimerView(currentSession: $currentSession)
+                    let _ = NSLog("Here")
+                    TimerView(stopWatchManager: StopWatchManager(currentSession: $currentSession, managedObjectContext: managedObjectContext), hideTabBar: $hideTabBar)
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .solves:
                     TimeListView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
@@ -89,89 +92,7 @@ struct MainTabsView: View {
                     
                 }
 
-                GeometryReader { geometry in
-                    ZStack {
-                        VStack {
-                            Spacer()
-                            
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(Color(UIColor.systemGray5))
-                            
-                                .frame(
-                                    width: geometry.size.width - CGFloat(SetValues.marginLeftRight * 2),
-                                    height: CGFloat(SetValues.tabBarHeight),
-                                    alignment: .center
-                                )
-                                .shadow(color: .black.opacity(0.16), radius: 10, x: 0, y: 3)
-                                .padding(.leading, CGFloat(SetValues.marginLeftRight))
-                                .padding(.trailing, CGFloat(SetValues.marginLeftRight))
-                        }
-                        
-                        VStack {
-                            Spacer()
-                            
-                            HStack {
-                                HStack {
-                                    TabIcon(
-                                        assignedTab: .timer,
-                                        tabRouter: tabRouter,
-                                        systemIconName: "stopwatch",
-                                        systemIconNameSelected: "stopwatch.fill"
-                                    )
-                                        .padding(.leading, 14)
-                                    
-                                    Spacer()
-                                    
-                                    TabIcon(
-                                        assignedTab: .solves,
-                                        tabRouter: tabRouter,
-                                        systemIconName: "hourglass.bottomhalf.filled",
-                                        systemIconNameSelected: "hourglass.tophalf.filled"
-                                    )
-                                    
-                                    Spacer()
-                                    
-                                    TabIcon(
-                                        assignedTab: .stats,
-                                        tabRouter: tabRouter,
-                                        systemIconName: "chart.pie",
-                                        systemIconNameSelected: "chart.pie.fill"
-                                    )
-                                    
-                                    Spacer()
-                                    
-                                    TabIcon(
-                                        assignedTab: .sessions,
-                                        tabRouter: tabRouter,
-                                        systemIconName: "line.3.horizontal.circle",
-                                        systemIconNameSelected: "line.3.horizontal.circle.fill"
-                                    )
-                                        .padding(.trailing, 14)
-                                }
-                                .frame(
-                                    width: 220,
-                                    height: CGFloat(SetValues.tabBarHeight),
-                                    alignment: .leading
-                                )
-                                .background(Color(UIColor.systemGray4).clipShape(RoundedRectangle(cornerRadius:12)))
-                                .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 3.5)
-                                .padding(.leading, CGFloat(SetValues.marginLeftRight))
-                                
-                                Spacer()
-                                
-                                TabIcon(
-                                    assignedTab: .settings,
-                                    tabRouter: tabRouter,
-                                    systemIconName: "gearshape",
-                                    systemIconNameSelected: "gearshape.fill"
-                                )
-                                    .padding(.trailing, CGFloat(SetValues.marginLeftRight + 12))
-                            }
-                        }
-                    }
-                    .ignoresSafeArea(.keyboard)
-                }
-                .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : CGFloat(SetValues.marginBottom))
+                BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab)
             }
         }
     }
