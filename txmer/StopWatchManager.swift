@@ -102,7 +102,7 @@ class StopWatchManager: ObservableObject {
     private var prevIsDown = false
     private var prevDownStoppedTheTimer = false
     
-    let threshold = 20 as CGFloat
+    let threshold = 50 as CGFloat
     
     func touchDown(value: DragGesture.Value) {
         if prevIsDown {
