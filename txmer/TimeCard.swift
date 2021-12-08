@@ -273,7 +273,6 @@ struct TimeCard: View {
     let solve: Solves
     
     @Binding var currentSolve: Solves?
-    var contextMenuView: AnyView
     
     
     var body: some View {
