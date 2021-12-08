@@ -229,8 +229,9 @@
 				7D69E0632751FDBB007211CC /* 3rdparty */,
 				23DE3BDA274DDBE200254D29 /* txmerApp.swift */,
 				7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */,
-				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
+				7D78FF8D276087AF008BB82E /* BottomTabsView.swift */,
 				7D78FF8B276084C2008BB82E /* StopWatchManager.swift */,
+				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
 				23D2FC4C274E12DE00D7071A /* TimeListView.swift */,
 				7D6159F82751B53E00DC9A4C /* TimeCard.swift */,
 				7D7A9EC3274F392700C2E125 /* SessionsView.swift */,
@@ -242,7 +243,6 @@
 				23DE3BE0274DDBE300254D29 /* Preview Content */,
 				7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */,
 				7D7C45C42751DE2C0073885C /* 3rdparty-Bridging-Header.h */,
-				7D78FF8D276087AF008BB82E /* BottomTabsView.swift */,
 			);
 			path = txmer;
 			sourceTree = "<group>";

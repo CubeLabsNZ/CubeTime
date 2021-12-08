@@ -29,7 +29,7 @@ struct BottomTabsView: View {
                             .shadow(color: .black.opacity(0.16), radius: 10, x: 0, y: 3)
                             .padding(.leading, CGFloat(SetValues.marginLeftRight))
                             .padding(.trailing, CGFloat(SetValues.marginLeftRight))
-                    }
+                    }.zIndex(0)
                     
                     VStack {
                         Spacer()
@@ -92,13 +92,20 @@ struct BottomTabsView: View {
                                 .padding(.trailing, CGFloat(SetValues.marginLeftRight + 12))
                         }
                     }
+                    .zIndex(1)
                 }
+                
                 .ignoresSafeArea(.keyboard)
+                
             }
             .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : CGFloat(SetValues.marginBottom))
-            .transition(AnyTransition.opacity.animation(.linear(duration: 0.3)))
+            .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+//            .transition(AnyTransition.scale.animation(.easeIn(duration: 1)))
+            //
+            
         }
     }
+        
 }
 
 //struct BottomTabsView_Previews: PreviewProvider {

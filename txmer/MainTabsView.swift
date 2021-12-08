@@ -93,6 +93,7 @@ struct MainTabsView: View {
                 }
 
                 BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab)
+                    .zIndex(1)
             }
         }
     }

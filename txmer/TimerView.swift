@@ -15,6 +15,22 @@ extension UIScreen{
    static let screenSize = UIScreen.main.bounds.size
 }
 
+struct AnimatingFontSize: AnimatableModifier {
+    var fontSize: CGFloat
+
+    var animatableData: CGFloat {
+        get { fontSize }
+        set { fontSize = newValue }
+    }
+
+    func body(content: Self.Content) -> some View {
+        content
+            .font(.system(size: self.fontSize, weight: .bold, design: .monospaced))
+    }
+}
+
+
+
 
 struct TimerView: View {
     //@ObservedObject var currentSession: Sessions
@@ -24,6 +40,7 @@ struct TimerView: View {
     @Binding var hideTabBar: Bool
     
     @State var hideStatusBar = true
+    
     
     
     @Environment(\.colorScheme) var colourScheme
@@ -44,7 +61,7 @@ struct TimerView: View {
             
             
             
-            VStack {
+            if stopWatchManager.mode == .stopped{
                 Text(stopWatchManager.scrambleStr ?? "Loading scramble")
                     //.background(Color.red)
                     .padding(22)
@@ -53,13 +70,26 @@ struct TimerView: View {
                     .position(x: UIScreen.screenWidth / 2, y: 108)
                     .font(.system(size: 17, weight: .semibold, design: .monospaced))
                 
-                               
+                
+                    .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
             }
             
             
+                
+            
+            
+            
+            
             Text(formatSolveTime(secs: stopWatchManager.secondsElapsed))
-                .font(.system(size: 48, weight: .bold, design: .monospaced))
+                                
                 .foregroundColor(stopWatchManager.timerColour)
+            
+                .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 64 : 48))
+                .animation(Animation.spring(), value: stopWatchManager.mode == .running)
+            
+            
+            
+            
                        
             GeometryReader { geometry in
                 VStack {
@@ -98,12 +128,16 @@ struct TimerView: View {
             }
         }
         .onReceive(stopWatchManager.$mode) { newMode in
-            withAnimation {
-                hideStatusBar = newMode == .running
-                hideTabBar = newMode == .running
+            hideTabBar = (newMode == .running)
+            
+            
+            withAnimation(.easeIn(duration: 0.1)) {
+                hideStatusBar = (newMode == .running)
+                
             }
         }
-        .statusBar(hidden: hideStatusBar)
+        .statusBar(hidden: hideStatusBar) /// TODO MAKE SO ANIMATION IS ASYMMETRIC WITH VALUES OF THE OTHER ANIMATIONS
+        .ignoresSafeArea(edges: .top)
     }
 }
 

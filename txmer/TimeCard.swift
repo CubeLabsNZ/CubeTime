@@ -285,7 +285,6 @@ struct TimeCard: View {
 //                .environment(\.managedObjectContext, managedObjectContext)
 //        }
     
-
                 
             //                    .frame(maxWidth: 120, minHeight: 55, maxHeight: 55)
             //                    .overlay(Rectangle().frame(width: 112, height: 53))
