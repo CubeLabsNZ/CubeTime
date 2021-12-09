@@ -15,12 +15,11 @@
         <attribute name="scramble" attributeType="String"/>
         <attribute name="scramble_subtype" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="scramble_type" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="starred" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="time" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="session" maxCount="1" deletionRule="Nullify" destinationEntity="Sessions" inverseName="solves" inverseEntity="Sessions"/>
     </entity>
     <elements>
         <element name="Sessions" positionX="-298.021484375" positionY="72.0087890625" width="128" height="14"/>
-        <element name="Solves" positionX="-525.0341796875" positionY="55.00390625" width="128" height="164"/>
+        <element name="Solves" positionX="-525.0341796875" positionY="55.00390625" width="128" height="149"/>
     </elements>
 </model>

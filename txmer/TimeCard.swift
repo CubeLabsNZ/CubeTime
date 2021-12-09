@@ -33,7 +33,6 @@ struct SolvePopupView: View {
     @Binding var currentSolve: Solves?
     
     @State private var userComment: String
-    @State private var solveStarred: Bool
     
     
     init(solve: Solves, currentSolve: Binding<Solves?>, timeListManager: TimeListManager){
@@ -46,7 +45,6 @@ struct SolvePopupView: View {
         self._currentSolve = currentSolve
         self.timeListManager = timeListManager
         _userComment = State(initialValue: solve.comment ?? "")
-        _solveStarred = State(initialValue: solve.starred)
     }
     
     var body: some View {
@@ -152,6 +150,9 @@ struct SolvePopupView: View {
                                 .padding(.leading)
                                 .padding(.trailing)
                                 .padding(.bottom, 12)
+                                .onChange(of: userComment) { newValue in
+                                    solve.comment = newValue
+                                }
                             
                         }
                         //.frame(minHeight: minRowHeight * 10)
@@ -160,32 +161,6 @@ struct SolvePopupView: View {
                         //.listStyle(.insetGrouped)
                         .padding(.trailing)
                         .padding(.leading)
-                        
-                        
-                        VStack {
-                            HStack {
-                                Image(systemName: "star.square.fill")
-                                    .symbolRenderingMode(.multicolor)
-                                    .font(.system(size: 30, weight: .semibold))
-                                
-                                Spacer()
-                                
-                                Toggle(isOn: $solveStarred) {
-                                    Text("Star")
-                                }
-                                
-                                Spacer()
-                                
-                            }
-                            .padding(.leading, 12)
-                            .padding(.trailing, 16)
-                            .padding(.top, 12)
-                            .padding(.bottom, 12)
-                        }
-                        .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:10)))
-                        .padding(.trailing)
-                        .padding(.leading)
-                        
                         
                         VStack {
                             HStack {
