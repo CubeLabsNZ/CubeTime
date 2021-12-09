@@ -253,7 +253,7 @@ struct TimeCard: View {
     var body: some View {
         
         ZStack {
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
+            RoundedRectangle(cornerRadius: 10)
                 .fill(Color.white)
                 .frame(maxWidth: 120, minHeight: 55, maxHeight: 55) /// todo check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectange
                 .onTapGesture {

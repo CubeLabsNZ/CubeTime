@@ -24,6 +24,7 @@ struct SettingsView: View {
     
     var body: some View {
         
+        
         NavigationView {
             ZStack {
                 Color(UIColor.systemGray6)
@@ -33,8 +34,8 @@ struct SettingsView: View {
                 
                 VStack (spacing: 16) {
                     
-                    if !showingCard {
                     
+                    if !showingCard {
                         HStack (spacing: 16) {
                             SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[0], namespace: namespace)
                             SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[1], namespace: namespace)
@@ -44,11 +45,11 @@ struct SettingsView: View {
                             SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[2], namespace: namespace)
                             SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[3], namespace: namespace)
                         }
-                    }
+                    
                     
                         
                     Spacer()
-                    
+                    }
                     
                     
                 }
@@ -66,7 +67,6 @@ struct SettingsView: View {
             .overlay(SettingsDetail(showingCard: $showingCard, currentCard: $currentCard, namespace: namespace))
             
         }
-        
         
     }
 }
@@ -101,9 +101,9 @@ struct SettingsCard: View {
             }
         }
         .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
-        .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
+        .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)).matchedGeometryEffect(id: "\(info.name)background", in: namespace))
         .onTapGesture {
-            withAnimation(.easeIn(duration: 5)) {
+            withAnimation(.easeIn(duration: 0.5)) {
                 currentCard = info
                 showingCard = true
             }
@@ -119,19 +119,39 @@ struct SettingsDetail: View {
     
     var body: some View {
         if showingCard {
-            VStack {
-                Text(currentCard.name)
-                    .font(.system(size: 22, weight: .bold))
-                    .matchedGeometryEffect(id: currentCard.name, in: namespace)
+            ZStack {
+                Color.white
+                    .ignoresSafeArea()
+                    .matchedGeometryEffect(id: "\(currentCard.name)background", in: namespace)
                 
-                switch currentCard.name{
-                case "About":
-                    AboutSettingsView()
-                default:
-                    Text("hi")
+                VStack {
+                    Text(currentCard.name)
+                        .font(.system(size: 22, weight: .bold))
+                        .matchedGeometryEffect(id: currentCard.name, in: namespace)
+                    
+                    switch currentCard.name{
+                    case "About":
+                        AboutSettingsView()
+                    default:
+                        Text("hi")
+                    }
                 }
+                
+                Text("close")
+                    .onTapGesture {
+                        showingCard = false
+                    }
+                
             }
         }
+    }
+}
+
+struct CardButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        return configuration.label
+            .scaleEffect(configuration.isPressed ? 0.96 : 1)
+            .animation(.easeIn, value: configuration.isPressed)
     }
 }
 
