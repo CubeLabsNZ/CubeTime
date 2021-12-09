@@ -24,50 +24,48 @@ struct SettingsView: View {
     
     var body: some View {
         
-        NavigationView {
-            ZStack {
-                Color(UIColor.systemGray6)
-                    .ignoresSafeArea()
-                
-                //NavigationLink("", destination: GeneralSettingsView(), isActive: $showingCard)
-                
-                VStack (spacing: 16) {
+        if !showingCard {
+            NavigationView {
+                ZStack {
+                    Color(UIColor.systemGray6)
+                        .ignoresSafeArea()
                     
-                    if !showingCard {
+                    //NavigationLink("", destination: GeneralSettingsView(), isActive: $showingCard)
                     
+                    VStack (spacing: 16) {
+                        
+                        
                         HStack (spacing: 16) {
                             SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[0], namespace: namespace)
                             SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[1], namespace: namespace)
                         }
-
+                        
                         HStack (spacing: 16) {
                             SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[2], namespace: namespace)
                             SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[3], namespace: namespace)
                         }
-                    }
-                    
                         
-                    Spacer()
-                    
-                    
-                    
+                        
+                        Spacer()
+                        
+                        
+                        
+                    }
+                    .navigationTitle("Settings")
+                    .safeAreaInset(edge: .bottom, spacing: 0) {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.clear)
+                            .frame(height: 50)
+                            .padding(.top)
+                    }
+                    .padding([.top, .bottom], 6)
+                    .padding(.leading)
+                    .padding(.trailing)
                 }
-                .navigationTitle("Settings")
-                .safeAreaInset(edge: .bottom, spacing: 0) {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.clear)
-                        .frame(height: 50)
-                        .padding(.top)
-                }
-                .padding([.top, .bottom], 6)
-                .padding(.leading)
-                .padding(.trailing)
             }
-            .overlay(SettingsDetail(showingCard: $showingCard, currentCard: $currentCard, namespace: namespace))
-            
+        } else {
+            SettingsDetail(showingCard: $showingCard, currentCard: $currentCard, namespace: namespace)
         }
-        
-        
     }
 }
 
@@ -95,6 +93,7 @@ struct SettingsCard: View {
                                                    
                 Image(systemName: info.icon)
                     .font(info.iconStyle)
+                    .matchedGeometryEffect(id: info.icon, in: namespace)
                     .padding(12)
                 
                 Spacer()
@@ -102,8 +101,9 @@ struct SettingsCard: View {
         }
         .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
         .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
+        .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
         .onTapGesture {
-            withAnimation(.easeIn(duration: 5)) {
+            withAnimation {
                 currentCard = info
                 showingCard = true
             }
@@ -119,16 +119,36 @@ struct SettingsDetail: View {
     
     var body: some View {
         if showingCard {
-            VStack {
-                Text(currentCard.name)
-                    .font(.system(size: 22, weight: .bold))
-                    .matchedGeometryEffect(id: currentCard.name, in: namespace)
-                
-                switch currentCard.name{
-                case "About":
-                    AboutSettingsView()
-                default:
-                    Text("hi")
+            ZStack {
+                Color(UIColor.systemGray6)
+                    .ignoresSafeArea()
+
+                VStack {
+                        
+                    HStack {
+                        Text(currentCard.name)
+                            .font(.system(size: 22, weight: .bold))
+                            .matchedGeometryEffect(id: currentCard.name, in: namespace)
+                        
+                        Spacer()
+                        
+                        Image(systemName: currentCard.icon)
+                            .font(currentCard.iconStyle)
+                            .matchedGeometryEffect(id: currentCard.icon, in: namespace)
+                        
+                    }
+                    .background(Color.white)
+                    .matchedGeometryEffect(id: "bg " + currentCard.name, in: namespace)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    
+                    
+                    switch currentCard.name {
+                    case "About":
+                        AboutSettingsView()
+                    default:
+                        Text("hi")
+                    }
+                    Spacer()
                 }
             }
         }
