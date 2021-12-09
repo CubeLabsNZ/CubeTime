@@ -9,6 +9,7 @@ import SwiftUI
 import CoreData
 
 import SwiftUICharts
+import Charts
 
 
 
@@ -20,6 +21,7 @@ extension View {
             .mask(self)
     }
 }
+
 
 
 @available(iOS 15.0, *)
@@ -454,11 +456,7 @@ struct StatsView: View {
                             .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
                             .onTapGesture {
                                 print("time trend pressed")
-                                
-                                for i in 0..<5 {
-                                    print(stats.solves[i].time)
-                                }
-                                
+                                                              
                                 
                                 
                             }
@@ -466,30 +464,35 @@ struct StatsView: View {
                             
                             
                             
-                            //                            VStack {
-                            //                                VStack {
-                            //                                    HStack {
-                            //                                        Text("TIME DISTRIBUTION")
-                            //                                            .font(.system(size: 13, weight: .medium, design: .default))
-                            //                                            .foregroundColor(Color(UIColor.systemGray))
-                            //                                            .padding(.bottom, 4)
-                            //
-                            //                                        Spacer()
-                            //                                    }
-                            //
-                            //                                    Spacer()
-                            //
-                            //                                }
-                            //                                .padding(.top, 12)
-                            //                                .padding(.bottom, 12)
-                            //                                .padding(.leading, 12)
-                            //                            }
-                            //                            .frame(height: 200)
-                            //                            .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
-                            //                            .padding(.bottom, 16)
-                            //                            .onTapGesture {
-                            //                                print("time distribution pressed")
-                            //                            }
+                            
+                            BarChartView(data: ChartData(points: [8,23,54,32,12,37,7,23,43]), title: "Title", form: ChartForm.extraLarge)
+                            
+                            
+                            
+                            VStack {
+                                VStack {
+                                    HStack {
+                                        Text("TIME DISTRIBUTION")
+                                            .font(.system(size: 13, weight: .medium, design: .default))
+                                            .foregroundColor(Color(UIColor.systemGray))
+                                            .padding(.bottom, 4)
+                                        
+                                        Spacer()
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                }
+                                .padding(.top, 12)
+                                .padding(.bottom, 12)
+                                .padding(.leading, 12)
+                            }
+                            .frame(height: 200)
+                            .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                            .padding(.bottom, 16)
+                            .onTapGesture {
+                                print("time distribution pressed")
+                            }
                             
                             
                             

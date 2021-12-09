@@ -529,6 +529,39 @@ struct NewSessionPopUpView: View {
     }
 }
 
+struct ContextMenuButton: View {
+    var action: () -> Void
+    var title: String
+    var systemImage: String? = nil
+    
+    var body: some View {
+        Button(action: delayedAction) {
+            HStack {
+                Text(title)
+                if image != nil {
+                    Image(uiImage: image!)
+                }
+            }
+        }
+    }
+    
+    private var image: UIImage? {
+        if let systemName = systemImage {
+            let config = UIImage.SymbolConfiguration(font: .preferredFont(forTextStyle: .body), scale: .medium)
+            return UIImage(systemName: systemName, withConfiguration: config)
+        } else {
+            return nil
+        }
+    }
+    private func delayedAction() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+            self.action()
+        }
+    }
+}
+
+
+
 @available(iOS 15.0, *)
 struct SessionCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -570,8 +603,9 @@ struct SessionCard: View {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color(UIColor.systemGray5))
                 .frame(height: item.pinned ? 110 : 65)
-                .padding(.leading)
-                .padding(.trailing)
+            
+                .animation(.spring())
+                .zIndex(0)
         
             
             RoundedRectangle(cornerRadius: 16)
@@ -579,10 +613,12 @@ struct SessionCard: View {
                 .frame(width: currentSession == item ? 16 : UIScreen.screenWidth - 32, height: item.pinned ? 110 : 65)
             
             
-                .matchedGeometryEffect(id: "bar", in: namespace, properties: .frame)
+//                .matchedGeometryEffect(id: "bar", in: namespace, properties: .frame)
+            
                 .animation(.spring())
                 .offset(x: currentSession == item ? -((UIScreen.screenWidth - 16)/2) + 16 : 0)
             
+                .zIndex(1)
             
             
             
@@ -597,14 +633,17 @@ struct SessionCard: View {
                             Text(item.name ?? "Unkown session name")
                                 .font(.system(size: 22, weight: .bold, design: .default))
                                 .foregroundColor(Color.black)
+                                .animation(.spring())
                             Text(puzzle_types[Int(item.scramble_type)].name)
         //                        .font(.system(size: 15, weight: .medium, design: .default))
                                 .foregroundColor(Color.black)
+                                .animation(.spring())
                             Spacer()
                             Text("\(item.solves?.count ?? -1) Solves")
                                 .font(.system(size: 15, weight: .bold, design: .default))
                                 .foregroundColor(Color(UIColor.systemGray))
                                 .padding(.bottom, 4)
+                                .animation(.spring())
                         } else {
                             Text(item.name ?? "Unkown session name")
                                 .font(.system(size: 22, weight: .bold, design: .default))
@@ -638,61 +677,84 @@ struct SessionCard: View {
                 .padding(.top, item.pinned ? 12 : 8)
                 .padding(.bottom, item.pinned ? 12 : 8)
             }
+            
             .frame(height: item.pinned ? 110 : 65)
         
 //            .background(currentSession == item ? Color.clear : Color.white)
             .background(Color.clear)
-            
             .clipShape(RoundedRectangle(cornerRadius: 16))
             
             
+            .animation(.spring())
             
             
-            .padding(.trailing)
-            .padding(.leading)
+            .zIndex(2)
+            
+            
+            
             
         }
+        .contentShape(RoundedRectangle(cornerRadius: 16))
+        
+//        .animation(.spring())
         .onTapGesture {
             currentSession = item
         }
-        .contextMenu {
-            Button {
-                print("Customise pressed")
-            } label: {
-                Label("Customise", systemImage: "pencil")
-            }
-
-            Button {
+        
+        .contextMenu(menuItems: {
+            ContextMenuButton(action: {
                 item.pinned.toggle()
                 try! managedObjectContext.save()
-            } label: {
-                Label(item.pinned ? "Unpin" : "Pin", systemImage: item.pinned ? "pin.slash" : "pin") /// TODO: add custom icons because no good icons
-            }
-            
-            Divider()
-            
-            Button (role: .destructive) {
-                print("session delete pressed")
-                isShowingDeleteDialog.toggle()
-            } label: {
-                Label {
-                    Text("Delete Session")
-                        .foregroundColor(Color.red)
-                } icon: {
-                    Image(systemName: "trash")
-                        .foregroundColor(Color.green) /// FIX: colours not working
-                }
-            }
-        }
-        .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unkown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
-            Button("Confirm", role: .destructive) {
-                managedObjectContext.delete(item)
-                try! managedObjectContext.save()
-            }
-            Button("Cancel", role: .cancel) {
-                
-            }
-        }
+            },
+                              title: "PENIS",
+                              systemImage: "pin")
+        })
+        .padding(.trailing)
+        .padding(.leading)
+        
+        .animation(.spring())
+        
+        
+        
+        
+//        .contextMenu {
+//            Button {
+//                print("Customise pressed")
+//            } label: {
+//                Label("Customise", systemImage: "pencil")
+//            }
+//
+//            Button {
+//                item.pinned.toggle()
+//                try! managedObjectContext.save()
+//            } label: {
+//                Label(item.pinned ? "Unpin" : "Pin", systemImage: item.pinned ? "pin.slash" : "pin") /// TODO: add custom icons because no good icons
+//            }
+//
+//            Divider()
+//
+//            Button (role: .destructive) {
+//                print("session delete pressed")
+//                isShowingDeleteDialog.toggle()
+//            } label: {
+//                Label {
+//                    Text("Delete Session")
+//                        .foregroundColor(Color.red)
+//                } icon: {
+//                    Image(systemName: "trash")
+//                        .foregroundColor(Color.green) /// FIX: colours not working
+//                }
+//            }
+//        }
+//        .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unkown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
+//            Button("Confirm", role: .destructive) {
+//                managedObjectContext.delete(item)
+//                try! managedObjectContext.save()
+//            }
+//            Button("Cancel", role: .cancel) {
+//
+//            }
+//        }
         
         
     }
@@ -744,19 +806,29 @@ struct SessionsView: View {
                         ForEach(pinnedSessions) { item in
                             SessionCard(currentSession: $currentSession, item: item)
                                 .environment(\.managedObjectContext, managedObjectContext)
+                                
                         }
+                        
+//                        .matchedGeometryEffect(id: $currentSession.item, in: Namespace)
                         
                         ForEach(unPinnedSessions) { item in
                             SessionCard(currentSession: $currentSession, item: item)
                                 .environment(\.managedObjectContext, managedObjectContext)
+                                
                         }
+                        
+//                        .matchedGeometryEffect(id: currentSession.item, in: Namespace)
                     }
+                    .animation(.spring())
+//                    .transition(.slide)
+//                    .animation(.spring())
                     
                     
                     
                     
                     
                 }
+//                .animation(.spring())
                 .navigationTitle("Your Sessions")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		233FE7B6274F109600C6F1DF /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Values.swift */; };
+		2357953A2761E6180087CEB0 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 235795392761E6180087CEB0 /* Charts */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
 		23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* txmerApp.swift */; };
@@ -176,6 +177,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				23FA3D1E275ED12A00064572 /* SwiftUICharts in Frameworks */,
+				2357953A2761E6180087CEB0 /* Charts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,6 +428,7 @@
 			name = txmer;
 			packageProductDependencies = (
 				23FA3D1D275ED12A00064572 /* SwiftUICharts */,
+				235795392761E6180087CEB0 /* Charts */,
 			);
 			productName = txmer;
 			productReference = 23DE3BD7274DDBE200254D29 /* txmer.app */;
@@ -501,6 +504,9 @@
 			mainGroup = 23DE3BCE274DDBE200254D29;
 			packageReferences = (
 				23FA3D1C275ED12A00064572 /* XCRemoteSwiftPackageReference "ChartView" */,
+				235795382761E6180087CEB0 /* XCRemoteSwiftPackageReference "Charts" */,
+				2357953E2761E6460087CEB0 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
+				235795412761E6890087CEB0 /* XCRemoteSwiftPackageReference "swift-numerics" */,
 			);
 			productRefGroup = 23DE3BD8274DDBE200254D29 /* Products */;
 			projectDirPath = "";
@@ -953,6 +959,30 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		235795382761E6180087CEB0 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielgindi/Charts";
+			requirement = {
+				kind = exactVersion;
+				version = 4.0.1;
+			};
+		};
+		2357953E2761E6460087CEB0 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.2.1;
+			};
+		};
+		235795412761E6890087CEB0 /* XCRemoteSwiftPackageReference "swift-numerics" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-numerics.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.1.0;
+			};
+		};
 		23FA3D1C275ED12A00064572 /* XCRemoteSwiftPackageReference "ChartView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AppPear/ChartView";
@@ -964,6 +994,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		235795392761E6180087CEB0 /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 235795382761E6180087CEB0 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = Charts;
+		};
 		23FA3D1D275ED12A00064572 /* SwiftUICharts */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 23FA3D1C275ED12A00064572 /* XCRemoteSwiftPackageReference "ChartView" */;

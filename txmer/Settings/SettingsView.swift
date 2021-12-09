@@ -66,6 +66,7 @@ struct SettingsView: View {
         } else {
             SettingsDetail(showingCard: $showingCard, currentCard: $currentCard, namespace: namespace)
         }
+        
     }
 }
 
@@ -150,8 +151,22 @@ struct SettingsDetail: View {
                     }
                     Spacer()
                 }
+                
+                Text("close")
+                    .onTapGesture {
+                        showingCard = false
+                    }
+                
             }
         }
+    }
+}
+
+struct CardButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        return configuration.label
+            .scaleEffect(configuration.isPressed ? 0.96 : 1)
+            .animation(.easeIn, value: configuration.isPressed)
     }
 }
 
