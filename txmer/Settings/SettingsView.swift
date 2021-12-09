@@ -134,3 +134,4 @@ struct SettingsDetail: View {
         }
     }
 }
+
