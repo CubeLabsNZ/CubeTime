@@ -8,134 +8,49 @@
 import SwiftUI
 import SwiftUICharts
 
-let settingsPages = ["Appearance", "General", "Import &\nExport", "About"]
-let settingsPagesIcons = ["paintpalette", "gearshape.2", "square.and.arrow.up.on.square", "info"]
 
 @available(iOS 15.0, *)
 struct SettingsView: View {
+    @State var currentCard: SettingsCardInfo = settingsCards[0]
+    @State var showingCard = false // TODO try make the above one optional
     
-    @State var showAppearanceSettings = false
-    @State var showGeneralSettings = false
-    @State var showIESettings = false
-    @State var showAboutSettings = false
-    
-    var tabRouter: TabRouter
+    @Namespace private var namespace
     
     let settingsColumns = [
         GridItem(spacing: 16),
         GridItem()
     ]
     
-//    @State var heroAnimation = false
-    
-    var animation: Namespace.ID
     
     var body: some View {
-        
-        
-        /*
-         AppearanceSettingsView()
-         GeneralSettingsView()
-         ImportExportSettingsView()
-         AboutSettingsView()
-         */
-        
         
         NavigationView {
             ZStack {
                 Color(UIColor.systemGray6)
                     .ignoresSafeArea()
                 
-                NavigationLink("", destination: AppearanceSettingsView(), isActive: $showAppearanceSettings)
-                NavigationLink("", destination: GeneralSettingsView(), isActive: $showGeneralSettings)
-                NavigationLink("", destination: ImportExportSettingsView(), isActive: $showIESettings)
-                NavigationLink("", destination: AboutSettingsView(), isActive: $showAboutSettings)
+                //NavigationLink("", destination: GeneralSettingsView(), isActive: $showingCard)
                 
                 VStack (spacing: 16) {
-                    LazyVGrid(columns: [GridItem(spacing: 16), GridItem(spacing: 16)], spacing: 16) {
-                        ForEach(settingsCards) { settingsCard in
-                            if settingsCard.name == "Appearance" || settingsCard.name == "Import &\nExport" {
-                                Button {
-                                    withAnimation(.spring()) {
-                                        tabRouter.currentSettingsCard = settingsCard
-                                        tabRouter.showDetail = true
-//                                        @Published var currentSettingsCard: SettingsCard?
-//                                        @Published var showDetail: Bool = false
-                                        if settingsCard.name == "Appearance" {
-                                            showAppearanceSettings = true
-                                        } else {
-                                            showGeneralSettings = true
-                                        }
-                                        
-                                    }
-                                } label: {
-                                    VStack {
-                                        HStack {
-                                            Text(settingsCard.name)
-                                                .font(.system(size: 22, weight: .bold))
-                                                .padding(.horizontal)
-                                                .padding(.top, 12)
-                                            Spacer()
-                                        }
-                                        Spacer()
-                                        HStack {
-                                            Image(systemName: settingsCard.icon)
-                                                .font(settingsCard.iconStyle)
-                                                .padding(12)
-                                            Spacer()
-                                        }
-                                    }
-                                    .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
-                                    .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
-                                }
-                                .buttonStyle(CardButtonStyle())
-                            } else {
-                                if settingsCard.name == "General" || settingsCard.name == "About" {
-                                    Button {
-                                        withAnimation(.spring()) {
-                                            tabRouter.currentSettingsCard = settingsCard
-                                            tabRouter.showDetail = true
-    //                                        @Published var currentSettingsCard: SettingsCard?
-    //                                        @Published var showDetail: Bool = false
-                                            if settingsCard.name == "General" {
-                                                showGeneralSettings = true
-                                            } else {
-                                                showAboutSettings = true
-                                            }
-                                            
-                                        }
-                                    } label: {
-                                        VStack {
-                                            HStack {
-                                                Spacer()
-                                                Text(settingsCard.name)
-                                                    .font(.system(size: 22, weight: .bold))
-                                                    .padding(.horizontal)
-                                                    .padding(.top, 12)
-                                            }
-                                            Spacer()
-                                            HStack {
-                                                Spacer()
-                                                Image(systemName: settingsCard.icon)
-                                                    .font(settingsCard.iconStyle)
-                                                    .padding(12)
-                                            }
-                                        }
-                                        .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
-                                        .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
-                                    }
-                                    .buttonStyle(CardButtonStyle())
-                                }
-                                
-                                
-                                
-                                
-                                
-                            }
+                    
+                    if !showingCard {
+                    
+                        HStack (spacing: 16) {
+                            SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[0], namespace: namespace)
+                            SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[1], namespace: namespace)
+                        }
+
+                        HStack (spacing: 16) {
+                            SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[2], namespace: namespace)
+                            SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[3], namespace: namespace)
                         }
                     }
-           
+                    
+                        
                     Spacer()
+                    
+                    
+                    
                 }
                 .navigationTitle("Settings")
                 .safeAreaInset(edge: .bottom, spacing: 0) {
@@ -148,14 +63,74 @@ struct SettingsView: View {
                 .padding(.leading)
                 .padding(.trailing)
             }
+            .overlay(SettingsDetail(showingCard: $showingCard, currentCard: $currentCard, namespace: namespace))
+            
+        }
+        
+        
+    }
+}
+
+
+struct SettingsCard: View {
+    @Binding var currentCard: SettingsCardInfo
+    @Binding var showingCard: Bool
+    var info: SettingsCardInfo
+    var namespace: Namespace.ID
+    var body: some View {
+        VStack {
+            HStack {
+                Text(info.name)
+                    .font(.system(size: 22, weight: .bold))
+                    .matchedGeometryEffect(id: info.name, in: namespace)
+                    .padding(.horizontal)
+                    .padding(.top, 12)
+                
+                Spacer()
+            }
+            
+            Spacer()
+            
+            HStack {
+                                                   
+                Image(systemName: info.icon)
+                    .font(info.iconStyle)
+                    .padding(12)
+                
+                Spacer()
+            }
+        }
+        .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+        .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
+        .onTapGesture {
+            withAnimation(.easeIn(duration: 5)) {
+                currentCard = info
+                showingCard = true
+            }
         }
     }
 }
 
-struct CardButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        return configuration.label
-            .scaleEffect(configuration.isPressed ? 0.96 : 1)
-            .animation(.easeIn, value: configuration.isPressed)
+@available(iOS 15.0, *)
+struct SettingsDetail: View {
+    @Binding var showingCard: Bool
+    @Binding var currentCard: SettingsCardInfo
+    var namespace: Namespace.ID
+    
+    var body: some View {
+        if showingCard {
+            VStack {
+                Text(currentCard.name)
+                    .font(.system(size: 22, weight: .bold))
+                    .matchedGeometryEffect(id: currentCard.name, in: namespace)
+                
+                switch currentCard.name{
+                case "About":
+                    AboutSettingsView()
+                default:
+                    Text("hi")
+                }
+            }
+        }
     }
 }
