@@ -539,230 +539,162 @@ struct SessionCard: View {
     @Namespace var namespace
     
     var body: some View {
-        if currentSession == item {
-            ZStack {
-                VStack {
-                    HStack {
-                        VStack(alignment: .leading) {
-                            if item.pinned {
-                                Text(item.name ?? "Unkown session name")
-                                    .font(.system(size: 22, weight: .bold, design: .default))
-                                    .foregroundColor(Color.black)
-                                Text(puzzle_types[Int(item.scramble_type)].name)
-            //                        .font(.system(size: 15, weight: .medium, design: .default))
-                                    .foregroundColor(Color.black)
-                                Spacer()
-                                Text("\(item.solves?.count ?? -1) Solves")
-                                    .font(.system(size: 15, weight: .bold, design: .default))
-                                    .foregroundColor(Color(UIColor.systemGray))
-                                    .padding(.bottom, 4)
-                            } else {
-                                Text(item.name ?? "Unkown session name")
-                                    .font(.system(size: 22, weight: .bold, design: .default))
-                                Text(puzzle_types[Int(item.scramble_type)].name)
-                                    .font(.system(size: 15, weight: .medium, design: .default))
-                            }
-                        }
-                        
-                        Spacer()
-                        
-                        if item.pinned {
-                            Image(puzzle_types[Int(item.scramble_type)].name)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(Color.black)
-                                .padding(.top, 4)
-                                .padding(.bottom, 4)
-                                .padding(.trailing, 12)
-                        } else {
-                            Image(puzzle_types[Int(item.scramble_type)].name)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .padding(.trailing, 6)
-                        }
-                        
-                    }
-                    .padding(.leading)
-                    .padding(.trailing, item.pinned ? 6 : 4)
-                    .padding(.top, item.pinned ? 12 : 8)
-                    .padding(.bottom, item.pinned ? 12 : 8)
-                }
+//        ZStack {
+//            RoundedRectangle(cornerRadius: 16)
+//                .fill(Color(UIColor.systemGray5))
+//                .frame(height: item.pinned ? 110 : 65)
+//                .padding(.leading)
+//                .padding(.trailing)
+//
+//            HStack {
+//                RoundedRectangle(cornerRadius: 16)
+//                    .fill(Color.white)
+//                    .frame(width: currentSession == item ? 16 : UIScreen.screenWidth - 32, height: item.pinned ? 110 : 65)
+//
+//
+//                    .matchedGeometryEffect(id: "bar", in: namespace, properties: .frame)
+//                    .animation(.spring())
+//
+//
+//                Spacer()
+//            }
+//            .padding(.leading)
+//            .padding(.trailing)
+//
+//
+//        }
+        
+        
+        ZStack {
+            
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(UIColor.systemGray5))
                 .frame(height: item.pinned ? 110 : 65)
-                .background(Color(UIColor.systemGray5).clipShape(RoundedRectangle(cornerRadius:16)))
-                
-                .contextMenu {
-                    Button {
-                        print("Customise pressed")
-                    } label: {
-                        Label("Customise", systemImage: "pencil")
-                    }
-                    
-                    //                                       Divider()
-                    
-                    Button {
-                        item.pinned.toggle()
-                        try! managedObjectContext.save()
-                    } label: {
-                        Label(item.pinned ? "Unpin" : "Pin", systemImage: item.pinned ? "pin.slash" : "pin") /// TODO: add custom icons because no good icons
-                    }
-                    
-                    Divider()
-                    
-                    Button (role: .destructive) {
-                        print("session delete pressed")
-                        isShowingDeleteDialog.toggle()
-                    } label: {
-                        Label {
-                            Text("Delete Session")
-                                .foregroundColor(Color.red)
-                        } icon: {
-                            Image(systemName: "trash")
-                                .foregroundColor(Color.green) /// FIX: colours not working
+                .padding(.leading)
+                .padding(.trailing)
+        
+            
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.white)
+                .frame(width: currentSession == item ? 16 : UIScreen.screenWidth - 32, height: item.pinned ? 110 : 65)
+            
+            
+                .matchedGeometryEffect(id: "bar", in: namespace, properties: .frame)
+                .animation(.spring())
+                .offset(x: currentSession == item ? -((UIScreen.screenWidth - 16)/2) + 16 : 0)
+            
+            
+            
+            
+//                .offset(x: -((UIScreen.screenWidth-16)/2))
+        
+            
+            
+            VStack {
+                HStack {
+                    VStack(alignment: .leading) {
+                        if item.pinned {
+                            Text(item.name ?? "Unkown session name")
+                                .font(.system(size: 22, weight: .bold, design: .default))
+                                .foregroundColor(Color.black)
+                            Text(puzzle_types[Int(item.scramble_type)].name)
+        //                        .font(.system(size: 15, weight: .medium, design: .default))
+                                .foregroundColor(Color.black)
+                            Spacer()
+                            Text("\(item.solves?.count ?? -1) Solves")
+                                .font(.system(size: 15, weight: .bold, design: .default))
+                                .foregroundColor(Color(UIColor.systemGray))
+                                .padding(.bottom, 4)
+                        } else {
+                            Text(item.name ?? "Unkown session name")
+                                .font(.system(size: 22, weight: .bold, design: .default))
+                            Text(puzzle_types[Int(item.scramble_type)].name)
+                                .font(.system(size: 15, weight: .medium, design: .default))
                         }
                     }
-                }
-                .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unkown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
-                    Button("Confirm", role: .destructive) {
-                        managedObjectContext.delete(item)
-                        try! managedObjectContext.save()
-                    }
-                    Button("Cancel", role: .cancel) {
-                        
-                    }
-                }
-                .padding(.trailing)
-                .padding(.leading)
-                
-                HStack {
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color.white)
-                        .frame(width: 16, height: item.pinned ? 110 : 65)
-                        .padding(.leading)
-                        .matchedGeometryEffect(id: "bar", in: namespace, properties: .frame)
+                    .offset(x: currentSession == item ? 10 : 0)
+                    .animation(.spring())
                     
                     Spacer()
-                }
-                
-            }
-            
-            
-            
-        } else {
-            ZStack {
-                VStack {
-                    HStack {
-                        VStack(alignment: .leading) {
-                            if item.pinned {
-                                Text(item.name ?? "Unkown session name")
-                                    .font(.system(size: 22, weight: .bold, design: .default))
-                                    .foregroundColor(Color.black)
-                                Text(puzzle_types[Int(item.scramble_type)].name)
-            //                        .font(.system(size: 15, weight: .medium, design: .default))
-                                    .foregroundColor(Color.black)
-                                Spacer()
-                                Text("\(item.solves?.count ?? -1) Solves")
-                                    .font(.system(size: 15, weight: .bold, design: .default))
-                                    .foregroundColor(Color(UIColor.systemGray))
-                                    .padding(.bottom, 4)
-                            } else {
-                                Text(item.name ?? "Unkown session name")
-                                    .font(.system(size: 22, weight: .bold, design: .default))
-                                Text(puzzle_types[Int(item.scramble_type)].name)
-                                    .font(.system(size: 15, weight: .medium, design: .default))
-                            }
-                        }
-                        
-                        Spacer()
-                        
-                        if item.pinned {
-                            Image(puzzle_types[Int(item.scramble_type)].name)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(Color.black)
-                                .padding(.top, 4)
-                                .padding(.bottom, 4)
-                                .padding(.trailing, 12)
-                        } else {
-                            Image(puzzle_types[Int(item.scramble_type)].name)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .padding(.trailing, 6)
-                        }
-                        
-                    }
-                    .padding(.leading)
-                    .padding(.trailing, item.pinned ? 6 : 4)
-                    .padding(.top, item.pinned ? 12 : 8)
-                    .padding(.bottom, item.pinned ? 12 : 8)
-                }
-                .frame(height: item.pinned ? 110 : 65)
-                .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)).matchedGeometryEffect(id: "bar", in: namespace, properties: .frame))
-                
-                .onTapGesture {
-                    withAnimation (.spring()) {
-                        currentSession = item
+                    
+                    if item.pinned {
+                        Image(puzzle_types[Int(item.scramble_type)].name)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .foregroundColor(Color.black)
+                            .padding(.top, 4)
+                            .padding(.bottom, 4)
+                            .padding(.trailing, 12)
+                    } else {
+                        Image(puzzle_types[Int(item.scramble_type)].name)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .padding(.trailing, 6)
                     }
                     
                 }
-                .contextMenu {
-                    Button {
-                        print("Customise pressed")
-                    } label: {
-                        Label("Customise", systemImage: "pencil")
-                    }
-                    
-                    //                                       Divider()
-                    
-                    Button {
-                        item.pinned.toggle()
-                        try! managedObjectContext.save()
-                    } label: {
-                        Label(item.pinned ? "Unpin" : "Pin", systemImage: item.pinned ? "pin.slash" : "pin") /// TODO: add custom icons because no good icons
-                    }
-                    
-                    Divider()
-                    
-                    Button (role: .destructive) {
-                        print("session delete pressed")
-                        isShowingDeleteDialog.toggle()
-                    } label: {
-                        Label {
-                            Text("Delete Session")
-                                .foregroundColor(Color.red)
-                        } icon: {
-                            Image(systemName: "trash")
-                                .foregroundColor(Color.green) /// FIX: colours not working
-                        }
-                    }
-                }
-                .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unkown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
-                    Button("Confirm", role: .destructive) {
-                        managedObjectContext.delete(item)
-                        try! managedObjectContext.save()
-                    }
-                    Button("Cancel", role: .cancel) {
-                        
-                    }
-                }
-                .padding(.trailing)
                 .padding(.leading)
-                
-                HStack {
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color.clear)
-                        .frame(width: 16, height: item.pinned ? 110 : 65)
-                        .padding(.leading)
-                    
-                    Spacer()
-                }
-                
-                
+                .padding(.trailing, item.pinned ? 6 : 4)
+                .padding(.top, item.pinned ? 12 : 8)
+                .padding(.bottom, item.pinned ? 12 : 8)
             }
+            .frame(height: item.pinned ? 110 : 65)
+        
+//            .background(currentSession == item ? Color.clear : Color.white)
+            .background(Color.clear)
+            
+            .clipShape(RoundedRectangle(cornerRadius: 16))
             
             
             
+            
+            .padding(.trailing)
+            .padding(.leading)
             
         }
+        .onTapGesture {
+            currentSession = item
+        }
+        .contextMenu {
+            Button {
+                print("Customise pressed")
+            } label: {
+                Label("Customise", systemImage: "pencil")
+            }
+
+            Button {
+                item.pinned.toggle()
+                try! managedObjectContext.save()
+            } label: {
+                Label(item.pinned ? "Unpin" : "Pin", systemImage: item.pinned ? "pin.slash" : "pin") /// TODO: add custom icons because no good icons
+            }
+            
+            Divider()
+            
+            Button (role: .destructive) {
+                print("session delete pressed")
+                isShowingDeleteDialog.toggle()
+            } label: {
+                Label {
+                    Text("Delete Session")
+                        .foregroundColor(Color.red)
+                } icon: {
+                    Image(systemName: "trash")
+                        .foregroundColor(Color.green) /// FIX: colours not working
+                }
+            }
+        }
+        .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unkown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
+            Button("Confirm", role: .destructive) {
+                managedObjectContext.delete(item)
+                try! managedObjectContext.save()
+            }
+            Button("Cancel", role: .cancel) {
+                
+            }
+        }
+        
+        
     }
 }
 
@@ -853,23 +785,7 @@ struct SessionsView: View {
                         
                         
                         ZStack {
-                            //Color.teal
-                            
-//                            Button {
-//
-//                            } label: {
-//                                Image(systemName: "plus.circle.fill")
-//                                    .font(.system(size: 24, weight: .semibold))
-//                                    .padding(.leading, -4)
-//                                    .foregroundColor(Color.clear)
-//                                Text("New Session")
-//                                    .font(.system(size: 18, weight: .medium))
-//                                    .foregroundColor(Color.clear)
-//                            }
-//                            .buttonStyle(.bordered)
-//                            .controlSize(.small)
-//                            .background(Color.blue.opacity(0.3), in: Capsule())
-                            
+
                             Button {
                                 showNewSessionPopUp.toggle()
                             } label: {
