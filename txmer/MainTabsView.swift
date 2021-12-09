@@ -20,10 +20,6 @@ enum Tab {
 
 class TabRouter: ObservableObject {
     @Published var currentTab: Tab = .timer
-    
-    @Published var currentSettingsCard: SettingsCard?
-    @Published var showDetail: Bool = false
-    
 }
 
 struct TabIconWithBar: View {
@@ -93,7 +89,6 @@ struct TabIcon: View {
 struct MainTabsView: View {
     
     @Namespace private var namespace
-    @Namespace var animation
     
     
     @StateObject var tabRouter: TabRouter = TabRouter()
@@ -139,11 +134,11 @@ struct MainTabsView: View {
                             UserDefaults.standard.set(newSession.objectID.uriRepresentation(), forKey: "last_used_session")
                         }
                 case .settings:
-                    SettingsView(tabRouter: tabRouter, animation: animation)
+                    SettingsView()
                     
                 }
 
-                BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, showDetail: $tabRouter.showDetail, namespace: namespace, animation: animation)
+                BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
                     .zIndex(1)
             }
         }

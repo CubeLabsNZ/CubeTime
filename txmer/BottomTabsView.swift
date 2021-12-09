@@ -13,10 +13,7 @@ struct BottomTabsView: View {
     @Binding var hide: Bool
     @Binding var currentTab: Tab
     
-    @Binding var showDetail: Bool
-    
     var namespace: Namespace.ID
-    var animation: Namespace.ID
     
     var body: some View {
         if !hide {
@@ -110,11 +107,7 @@ struct BottomTabsView: View {
                     }
                     .zIndex(1)
                 }
-                .ignoresSafeArea(.keyboard)
-                .overlay(
-                    SettingsDetailView(animation: animation, tabRouter: TabRouter())
-                )
-                
+                .ignoresSafeArea(.keyboard)                
             }
             .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : CGFloat(SetValues.marginBottom))
             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
