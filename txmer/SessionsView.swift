@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 
+
 struct NewStandardSessionViewBlocks: ViewModifier {
     func body(content: Content) -> some View {
         content
@@ -18,7 +19,6 @@ struct NewStandardSessionViewBlocks: ViewModifier {
             .padding(.leading)
     }
 }
-
 
 @available(iOS 15.0, *)
 struct NewStandardSessionView: View {
@@ -267,13 +267,11 @@ struct RoundedCorner: Shape {
     }
 }
 
-
 extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         clipShape(RoundedCorner(radius: radius, corners: corners))
     }
 }
-
 
 @available(iOS 15.0, *)
 struct NewSessionPopUpView: View {
