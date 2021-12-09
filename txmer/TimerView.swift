@@ -72,7 +72,7 @@ struct TimerView: View {
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: UIScreen.screenWidth, maxHeight: UIScreen.screenHeight/3)
     //                    .position(x: UIScreen.screenWidth / 2, y: 108)
-                        .font(.system(size: stopWatchManager.scrambleType == 8 ? 17 : 14, weight: .semibold, design: .monospaced))
+                        .font(.system(size: stopWatchManager.scrambleType == 7 ? 13 : 17, weight: .semibold, design: .monospaced))
 //                        .font(.system(size: 17, weight: .semibold, design: .monospaced))
                         .allowsTightening(true)
 
