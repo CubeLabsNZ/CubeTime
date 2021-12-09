@@ -17,14 +17,16 @@ struct SettingsView: View {
     
     @State private var showGeneralSettingsView = false
     
-    
+    var tabRouter: TabRouter
     
     let settingsColumns = [
         GridItem(spacing: 16),
         GridItem()
     ]
     
-    @State var heroAnimation = false
+//    @State var heroAnimation = false
+    
+    var animation: Namespace.ID
     
     var body: some View {
         
@@ -45,37 +47,60 @@ struct SettingsView: View {
                 NavigationLink("", destination: GeneralSettingsView(), isActive: $showGeneralSettingsView)
                 
                 VStack (spacing: 16) {
-                    /*
-                     LazyVGrid (columns: settingsColumns, spacing: 16) {
-                     ForEach(settingsPages.sorted(by: >), id: \.key) { key, icon in
-                     
-                     }
-                     }
-                     */
-                    
-                    
-                    
-                    HStack (spacing: 16) {
-                        
-                        
-                        GeneralView()
-                            .onTapGesture {
-                                showGeneralSettingsView.toggle()
+                    LazyVGrid(columns: [GridItem(spacing: 16), GridItem(spacing: 16)], spacing: 16) {
+                        ForEach(settingsCards) { settingsCard in
+                            if settingsCard.name == "Appearance" || settingsCard.name == "Import &\nExport" {
+                                Button {
+                                    withAnimation(.spring()) {
+                                        tabRouter.currentSettingsCard = settingsCard
+                                        tabRouter.showDetail = false
+//                                        @Published var currentSettingsCard: SettingsCard?
+//                                        @Published var showDetail: Bool = false
+                                    }
+                                } label: {
+                                    VStack {
+                                        HStack {
+                                            Text(settingsCard.name)
+                                                .font(.system(size: 22, weight: .bold))
+                                                .padding(.horizontal)
+                                                .padding(.top, 12)
+                                            Spacer()
+                                        }
+                                        Spacer()
+                                        HStack {
+                                            Image(systemName: settingsCard.icon)
+                                                .font(settingsCard.iconStyle)
+                                                .padding(12)
+                                            Spacer()
+                                        }
+                                    }
+                                    .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+                                    .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
+                                }
+                            } else {
+                                VStack {
+                                    HStack {
+                                        Spacer()
+                                        Text(settingsCard.name)
+                                            .font(.system(size: 22, weight: .bold))
+                                            .padding(.horizontal)
+                                            .padding(.top, 12)
+                                    }
+                                    Spacer()
+                                    HStack {
+                                        Spacer()
+                                        Image(systemName: settingsCard.icon)
+                                            .font(settingsCard.iconStyle)
+                                            .padding(12)
+                                    }
+                                }
+                                .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+                                .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
                             }
-
-                        AppearanceView()
+                        }
                     }
-
-                    HStack (spacing: 16) {
-                        ImportExportView()
-
-                        AboutView()
-                    }
-                        
-                   
-                    
+           
                     Spacer()
-                    
                 }
                 .navigationTitle("Settings")
                 .safeAreaInset(edge: .bottom, spacing: 0) {
@@ -87,139 +112,7 @@ struct SettingsView: View {
                 .padding([.top, .bottom], 6)
                 .padding(.leading)
                 .padding(.trailing)
-                
-                
-                
-                
-            }
-            
-        }
-        
-        
-    }
-}
-
-
-struct GeneralView: View {
-    var body: some View {
-        
-        
-        VStack {
-            HStack {
-                Text(settingsPages[1])
-                    .font(.system(size: 22, weight: .bold))
-                    .padding(.horizontal)
-                    .padding(.top, 12)
-                
-                Spacer()
-            }
-            
-            Spacer()
-            
-            HStack {
-                                                   
-                Image(systemName: settingsPagesIcons[1])
-                    .font(.system(size: 44, weight: .light))
-                    .padding(12)
-                
-                Spacer()
             }
         }
-        .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
-        .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
-        
-        
     }
 }
-
-
-struct AppearanceView: View {
-    var body: some View {
-        VStack {
-            HStack {
-                Spacer()
-                Text(settingsPages[0])
-                    .font(.system(size: 22, weight: .bold))
-                    .padding(.horizontal)
-                    .padding(.top, 12)
-                
-                
-            }
-            
-            Spacer()
-            
-            HStack {
-                Spacer()
-                
-                Image(systemName: settingsPagesIcons[0])
-                    .font(.system(size: 44, weight: .light))
-                    .padding(12)
-                
-                
-            }
-        }
-        .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
-        .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
-    }
-}
-
-struct ImportExportView: View {
-    var body: some View {
-        VStack {
-            HStack {
-                Text(settingsPages[2])
-                    .font(.system(size: 22, weight: .bold))
-                    .padding(.horizontal)
-                    .padding(.top, 12)
-                
-                Spacer()
-            }
-            
-            Spacer()
-            
-            HStack {
-                                                   
-                Image(systemName: settingsPagesIcons[2])
-                    .font(.system(size: 32, weight: .regular))
-                    .padding()
-                
-                Spacer()
-            }
-        }
-        .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
-        .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
-    }
-}
-
-struct AboutView: View {
-    var body: some View {
-        VStack {
-            HStack {
-                Spacer()
-                Text(settingsPages[3])
-                    .font(.system(size: 22, weight: .bold))
-                    .padding(.horizontal)
-                    .padding(.top, 12)
-                
-                
-            }
-            
-            Spacer()
-            
-            HStack {
-                Spacer()
-                Image(systemName: settingsPagesIcons[3])
-                    .font(.system(size: 44, weight: .light))
-                    .padding(12)
-                
-                
-            }
-        }
-        .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
-        .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
-    }
-}
-
-
-
-
