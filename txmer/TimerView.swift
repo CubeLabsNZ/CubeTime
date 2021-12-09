@@ -67,18 +67,26 @@ struct TimerView: View {
                     Text(stopWatchManager.scrambleStr ?? "Loading scramble")
                         //.background(Color.red)
                         
-                        .padding(.top, 48)
+//                        .padding(.top, 48)
                         .padding(.horizontal)
                         .multilineTextAlignment(.center)
-                        .frame(maxWidth: UIScreen.screenWidth)
+                        .frame(maxWidth: UIScreen.screenWidth, maxHeight: UIScreen.screenHeight/3)
     //                    .position(x: UIScreen.screenWidth / 2, y: 108)
-                        .font(.system(size: 17, weight: .semibold, design: .monospaced))
+                        .font(.system(size: stopWatchManager.scrambleType == 7 ? 13 : 17, weight: .semibold, design: .monospaced))
+//                        .font(.system(size: 17, weight: .semibold, design: .monospaced))
+                        .allowsTightening(true)
+
+//                        .background(Color.red)
                     
                     
                         .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+                    /// TODO: **FIX MEGA SCRAMBLES GOES OFF SCREEN AND MAKE [U, D] GO ON LAST**
+                    
                     
                     Spacer()
                 }
+                
+                
             }
             
             
