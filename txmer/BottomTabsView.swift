@@ -31,8 +31,7 @@ struct BottomTabsView: View {
                                 alignment: .center
                             )
                             .shadow(color: .black.opacity(0.16), radius: 10, x: 0, y: 3)
-                            .padding(.leading, CGFloat(SetValues.marginLeftRight))
-                            .padding(.trailing, CGFloat(SetValues.marginLeftRight))
+                            .padding(.horizontal)
                     }
                     .zIndex(0)
                     
@@ -50,7 +49,7 @@ struct BottomTabsView: View {
                                     namespace: namespace
                                 )
                                 
-                                Spacer()
+//                                Spacer()
                                 
                                 TabIconWithBar(
                                     assignedTab: .solves,
@@ -60,7 +59,7 @@ struct BottomTabsView: View {
                                     namespace: namespace
                                 )
                                 
-                                Spacer()
+//                                Spacer()
                                 
                                 TabIconWithBar(
                                     assignedTab: .stats,
@@ -71,7 +70,7 @@ struct BottomTabsView: View {
                                 )
                                 
                                 
-                                Spacer()
+//                                Spacer()
                                 
                                 TabIconWithBar(
                                     assignedTab: .sessions,
@@ -80,16 +79,16 @@ struct BottomTabsView: View {
                                     systemIconNameSelected: "line.3.horizontal.circle.fill",
                                     namespace: namespace
                                 )
-                                    .padding(.trailing, 14)
+//                                    .padding(.trailing, 14)
                             }
                             .frame(
-                                width: 220,
+                                width: nil,
                                 height: CGFloat(SetValues.tabBarHeight),
                                 alignment: .leading
                             )
                             .background(Color(UIColor.systemGray4).clipShape(RoundedRectangle(cornerRadius:12)))
                             .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 3.5)
-                            .padding(.leading, CGFloat(SetValues.marginLeftRight))
+//                            .padding(.leading, CGFloat(SetValues.marginLeftRight))
                             .animation(.spring(), value: self.currentTab)
                             
                             Spacer()
@@ -102,14 +101,17 @@ struct BottomTabsView: View {
                                 systemIconName: "gearshape",
                                 systemIconNameSelected: "gearshape.fill"
                             )
-                                .padding(.trailing, CGFloat(SetValues.marginLeftRight + 12))
+//                                .padding(.trailing, CGFloat(SetValues.marginLeftRight + 12))
                         }
+                        .padding(.horizontal)
+                        
+                        
                     }
                     .zIndex(1)
                 }
                 .ignoresSafeArea(.keyboard)                
             }
-            .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : CGFloat(SetValues.marginBottom))
+            .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : nil)
             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
 //            .transition(AnyTransition.scale.animation(.easeIn(duration: 1)))
             //

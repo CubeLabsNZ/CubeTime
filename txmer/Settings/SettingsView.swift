@@ -78,8 +78,10 @@ struct SettingsView: View {
                 }
             }
         } else {
+            
             SettingsDetail(showingCard: $showingCard, currentCard: $currentCard, namespace: namespace)
         }
+        
         
     }
 }
@@ -142,7 +144,7 @@ struct SettingsDetail: View {
                 VStack {
                     
                     ZStack {
-                        Color(UIColor.white)
+                        Color(UIColor.green)
                             .ignoresSafeArea()
                             .clipShape(RoundedRectangle(cornerRadius: 16))
                             .matchedGeometryEffect(id: "bg " + currentCard.name, in: namespace)

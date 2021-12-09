@@ -33,34 +33,29 @@ struct TabIconWithBar: View {
         ZStack {
             VStack {
                 Spacer()
-                
-                //                                            CustomGradientColours.gradientColour
-                
                 if currentTab == assignedTab {
                     Color.black
                         .frame(width: 32, height: 2)
+                        .clipShape(Capsule())
                         .matchedGeometryEffect(id: "underline", in: namespace, properties: .frame)
-                        .offset(x: 7, y: -48)
+                        .shadow(color: .black.opacity(0.6), radius: 6, x: 0, y: 2)
+                        .offset(y: -48)
                     //                                                .padding(.leading, 14)
                 } else {
                     Color.clear
                         .frame(width: 32, height: 2)
-                        .offset(x: 7, y: -48)
+                        .offset(y: -48)
                 }
             }
             
-            
-            
-            Image(
-                systemName:
-                    currentTab == assignedTab ? systemIconNameSelected : systemIconName
-            )
+            Image(systemName: currentTab == assignedTab ? systemIconNameSelected : systemIconName)
             .font(.system(size: SetValues.iconFontSize))
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .contentShape(Rectangle())
             .onTapGesture {
                 currentTab = assignedTab
             }
-                .padding(.leading, 14)
-                
         }
     }
 }
@@ -77,6 +72,9 @@ struct TabIcon: View {
                 currentTab == assignedTab ? systemIconNameSelected : systemIconName
         )
             .font(.system(size: SetValues.iconFontSize))
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .contentShape(Rectangle())
             .onTapGesture {
                 currentTab = assignedTab
             }
