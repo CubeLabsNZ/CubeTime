@@ -19,7 +19,7 @@ struct TxmerLicense: View {
 
 struct ChaoTimerLicense: View {
     var body: some View {
-        Text("ChoTimer's scrambler is used in txmer and is © 2014 Juchao Li.")
+        Text("ChaoTimer's scrambler is used in txmer and is © 2014 Jichao Li.")
         Divider()
         GPLLicense()
     }

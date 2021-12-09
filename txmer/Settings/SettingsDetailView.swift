@@ -7,8 +7,26 @@
 
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct SettingsDetailView: View {
+    var animation: Namespace.ID
+    var tabRouter: TabRouter
+    
+    
     var body: some View {
-        Text("HELLOW OWERLD")
+        if tabRouter.showDetail {
+            VStack {
+//                Image()
+                Text("hi")
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fit)
+//                    .padding()
+//                    .background(Color.red)
+                
+                Spacer()
+                
+            }
+            .background(.ultraThinMaterial)
+        }
     }
 }

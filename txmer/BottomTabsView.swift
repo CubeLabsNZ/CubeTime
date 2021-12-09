@@ -13,7 +13,10 @@ struct BottomTabsView: View {
     @Binding var hide: Bool
     @Binding var currentTab: Tab
     
+    @Binding var showDetail: Bool
+    
     var namespace: Namespace.ID
+    var animation: Namespace.ID
     
     var body: some View {
         if !hide {
@@ -107,20 +110,10 @@ struct BottomTabsView: View {
                     }
                     .zIndex(1)
                 }
-                
-//                VStack {
-//                    Spacer()
-//
-//
-//
-//
-//
-//                    }
-//                }
-//                .zIndex(2)
-                
-                
                 .ignoresSafeArea(.keyboard)
+                .overlay(
+                    SettingsDetailView(animation: animation, tabRouter: TabRouter())
+                )
                 
             }
             .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : CGFloat(SetValues.marginBottom))

@@ -143,7 +143,7 @@ struct MainTabsView: View {
                     
                 }
 
-                BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
+                BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, showDetail: $tabRouter.showDetail, namespace: namespace, animation: animation)
                     .zIndex(1)
             }
         }

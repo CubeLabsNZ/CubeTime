@@ -14,8 +14,10 @@ let settingsPagesIcons = ["paintpalette", "gearshape.2", "square.and.arrow.up.on
 @available(iOS 15.0, *)
 struct SettingsView: View {
     
-    
-    @State private var showGeneralSettingsView = false
+    @State var showAppearanceSettings = false
+    @State var showGeneralSettings = false
+    @State var showIESettings = false
+    @State var showAboutSettings = false
     
     var tabRouter: TabRouter
     
@@ -44,7 +46,10 @@ struct SettingsView: View {
                 Color(UIColor.systemGray6)
                     .ignoresSafeArea()
                 
-                NavigationLink("", destination: GeneralSettingsView(), isActive: $showGeneralSettingsView)
+                NavigationLink("", destination: AppearanceSettingsView(), isActive: $showAppearanceSettings)
+                NavigationLink("", destination: GeneralSettingsView(), isActive: $showGeneralSettings)
+                NavigationLink("", destination: ImportExportSettingsView(), isActive: $showIESettings)
+                NavigationLink("", destination: AboutSettingsView(), isActive: $showAboutSettings)
                 
                 VStack (spacing: 16) {
                     LazyVGrid(columns: [GridItem(spacing: 16), GridItem(spacing: 16)], spacing: 16) {
@@ -53,9 +58,15 @@ struct SettingsView: View {
                                 Button {
                                     withAnimation(.spring()) {
                                         tabRouter.currentSettingsCard = settingsCard
-                                        tabRouter.showDetail = false
+                                        tabRouter.showDetail = true
 //                                        @Published var currentSettingsCard: SettingsCard?
 //                                        @Published var showDetail: Bool = false
+                                        if settingsCard.name == "Appearance" {
+                                            showAppearanceSettings = true
+                                        } else {
+                                            showGeneralSettings = true
+                                        }
+                                        
                                     }
                                 } label: {
                                     VStack {
@@ -77,25 +88,49 @@ struct SettingsView: View {
                                     .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
                                     .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
                                 }
+                                .buttonStyle(CardButtonStyle())
                             } else {
-                                VStack {
-                                    HStack {
-                                        Spacer()
-                                        Text(settingsCard.name)
-                                            .font(.system(size: 22, weight: .bold))
-                                            .padding(.horizontal)
-                                            .padding(.top, 12)
+                                if settingsCard.name == "General" || settingsCard.name == "About" {
+                                    Button {
+                                        withAnimation(.spring()) {
+                                            tabRouter.currentSettingsCard = settingsCard
+                                            tabRouter.showDetail = true
+    //                                        @Published var currentSettingsCard: SettingsCard?
+    //                                        @Published var showDetail: Bool = false
+                                            if settingsCard.name == "General" {
+                                                showGeneralSettings = true
+                                            } else {
+                                                showAboutSettings = true
+                                            }
+                                            
+                                        }
+                                    } label: {
+                                        VStack {
+                                            HStack {
+                                                Spacer()
+                                                Text(settingsCard.name)
+                                                    .font(.system(size: 22, weight: .bold))
+                                                    .padding(.horizontal)
+                                                    .padding(.top, 12)
+                                            }
+                                            Spacer()
+                                            HStack {
+                                                Spacer()
+                                                Image(systemName: settingsCard.icon)
+                                                    .font(settingsCard.iconStyle)
+                                                    .padding(12)
+                                            }
+                                        }
+                                        .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+                                        .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
                                     }
-                                    Spacer()
-                                    HStack {
-                                        Spacer()
-                                        Image(systemName: settingsCard.icon)
-                                            .font(settingsCard.iconStyle)
-                                            .padding(12)
-                                    }
+                                    .buttonStyle(CardButtonStyle())
                                 }
-                                .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
-                                .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 16)))
+                                
+                                
+                                
+                                
+                                
                             }
                         }
                     }
@@ -114,5 +149,13 @@ struct SettingsView: View {
                 .padding(.trailing)
             }
         }
+    }
+}
+
+struct CardButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        return configuration.label
+            .scaleEffect(configuration.isPressed ? 0.96 : 1)
+            .animation(.easeIn, value: configuration.isPressed)
     }
 }
