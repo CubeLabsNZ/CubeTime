@@ -3,7 +3,7 @@
     <entity name="Sessions" representedClassName="Sessions" syncable="YES" codeGenerationType="class">
         <attribute name="color" optional="YES" attributeType="Binary"/>
         <attribute name="name" attributeType="String"/>
-        <attribute name="pinned" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="pinned" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="scramble_type" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="session_type" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="solves" toMany="YES" deletionRule="Cascade" destinationEntity="Solves" inverseName="session" inverseEntity="Solves"/>
@@ -19,7 +19,7 @@
         <relationship name="session" maxCount="1" deletionRule="Nullify" destinationEntity="Sessions" inverseName="solves" inverseEntity="Sessions"/>
     </entity>
     <elements>
-        <element name="Sessions" positionX="-298.021484375" positionY="72.0087890625" width="128" height="14"/>
+        <element name="Sessions" positionX="-298.021484375" positionY="72.0087890625" width="128" height="119"/>
         <element name="Solves" positionX="-525.0341796875" positionY="55.00390625" width="128" height="149"/>
     </elements>
 </model>

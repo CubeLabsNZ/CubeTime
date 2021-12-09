@@ -218,6 +218,7 @@ struct NewStandardSessionView: View {
                     Button {
                         let sessionItem = Sessions(context: managedObjectContext)
                         sessionItem.name = name
+                        sessionItem.pinned = pinnedSession
                         NSLog("sessioneventyype is \(sessionEventType)")
                         sessionItem.scramble_type = sessionEventType
                         do {
@@ -311,7 +312,6 @@ struct NewSessionPopUpView: View {
                                 .symbolRenderingMode(.hierarchical)
                                 .foregroundStyle(.secondary)
                                 .foregroundStyle(.black)
-                                
                                 .padding(.top)
                                 .padding(.trailing)
                         }
@@ -349,7 +349,7 @@ struct NewSessionPopUpView: View {
                             Text("Standard Session")
                                 .font(.system(size: 17, weight: .regular, design: .default))
                                 .foregroundColor(.black)
-                                //.padding(10)
+                            //.padding(10)
                             Spacer()
                         }
                         
@@ -389,7 +389,7 @@ struct NewSessionPopUpView: View {
                             Text("Algorithm Trainer (WIP)")
                                 .font(.system(size: 17, weight: .regular, design: .default))
                                 .foregroundColor(.black)
-                                
+                            
                             Spacer()
                         }
                         .background(Color(UIColor.systemGray6)
@@ -407,12 +407,12 @@ struct NewSessionPopUpView: View {
                                 .frame(height: 1)
                                 .padding(.leading)
                                 .padding(.trailing)
-//                            Divider()
-////                                .background(Color(UIColor.systemGray6))
-//                                .background(Color.red)
-//                                .padding(.leading)
-//                                .padding(.trailing)
-                         
+                            //                            Divider()
+                            ////                                .background(Color(UIColor.systemGray6))
+                            //                                .background(Color.red)
+                            //                                .padding(.leading)
+                            //                                .padding(.trailing)
+                            
                             
                             Divider()
                                 .padding(.leading, 64)
@@ -434,7 +434,7 @@ struct NewSessionPopUpView: View {
                             Text("Playground (WIP)")
                                 .font(.system(size: 17, weight: .regular, design: .default))
                                 .foregroundColor(.black)
-                                
+                            
                             Spacer()
                         }
                         .background(Color(UIColor.systemGray6))
@@ -470,7 +470,7 @@ struct NewSessionPopUpView: View {
                             Text("Comp Sim Mode (WIP)")
                                 .font(.system(size: 17, weight: .regular, design: .default))
                                 .foregroundColor(.black)
-                                
+                            
                             Spacer()
                         }
                         .background(Color(UIColor.systemGray6)
@@ -481,218 +481,117 @@ struct NewSessionPopUpView: View {
                         .padding(.leading)
                         .padding(.trailing)
                         
-                    
+                        
                         NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false), isActive: $showNewStandardSessionView)
+                        
+                        /// TODO: **ADD NAV LINKS FOR ALL THE OTHER PAGES** and include for the on tap
+                        
+                        
+                        /*
+                         .onAppear { UITableView.appearance().isScrollEnabled = false }
+                         .onDisappear{ UITableView.appearance().isScrollEnabled = true }
+                         */
+                        
+                        
+                        Spacer()
+                        
+                    }
                     
-                    /// TODO: **ADD NAV LINKS FOR ALL THE OTHER PAGES** and include for the on tap
                     
-                    
-                    /*
-                     .onAppear { UITableView.appearance().isScrollEnabled = false }
-                     .onDisappear{ UITableView.appearance().isScrollEnabled = true }
-                     */
-                    
-                    
-                    Spacer()
                     
                 }
-                
-                
-                
-            }
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarHidden(true)
-            
-            /*
-             .toolbar {
-             ToolbarItem(placement: .navigationBarTrailing) {
-             Button {
-             print("new session view closed")
-             dismiss()
-             } label: {
-             Image(systemName: "xmark.circle.fill")
-             .font(.system(size: 22, weight: .semibold))
-             .symbolRenderingMode(.hierarchical)
-             .padding(.top)
-             .padding(.trailing)
-             
-             }
-             }
-             
-             }
-             */
-            
-            
-            //Spacer()
+                
+                /*
+                 .toolbar {
+                 ToolbarItem(placement: .navigationBarTrailing) {
+                 Button {
+                 print("new session view closed")
+                 dismiss()
+                 } label: {
+                 Image(systemName: "xmark.circle.fill")
+                 .font(.system(size: 22, weight: .semibold))
+                 .symbolRenderingMode(.hierarchical)
+                 .padding(.top)
+                 .padding(.trailing)
+                 
+                 }
+                 }
+                 
+                 }
+                 */
+                
+                
+                //Spacer()
+            }
         }
     }
-}
 }
 
 @available(iOS 15.0, *)
 struct SessionCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    
     @Binding var currentSession: Sessions
-    
-    
     @State private var isShowingDeleteDialog = false
     var item: Sessions
     
     var body: some View {
-//        Button {
-//            print("Setting current sesion to \(item)")
-//            NSLog("Its context is \(item.managedObjectContext)")
-//            NSLog("managedObjectContext is \(managedObjectContext)")
-//            currentSession = item
-//        } label: {
-//            HStack {
-//                VStack(alignment: .leading) {
-//                    Text(item.name ?? "Unkown session name")
-//                        .font(.system(size: 22, weight: .bold, design: .default))
-//                        .foregroundColor(Color.black)
-//                    let _ = NSLog("scr type = \(item.scramble_type)")
-//                    Text(puzzle_types[Int(item.scramble_type)].name)
-////                        .font(.system(size: 15, weight: .medium, design: .default))
-//                        .foregroundColor(Color.black)
-//                    Spacer()
-//                    Text("\(item.solves?.count ?? -1) Solves")
-//                        .font(.system(size: 15, weight: .bold, design: .default))
-//                        .foregroundColor(Color(UIColor.systemGray))
-//                        .padding(.bottom, 4)
-//                }
-//
-//                Spacer()
-//
-//                Image(puzzle_types[Int(item.scramble_type)].name)
-//                    .resizable()
-//                    .aspectRatio(contentMode: .fit)
-//                    .foregroundColor(Color.black)
-//                    .padding(.top, 4)
-//                    .padding(.bottom, 4)
-//                    .padding(.trailing, 12)
-//
-//
-//                //.padding(.trailing, -12)
-//
-//            }
-//            .padding(.leading)
-//            .padding(.trailing, 6)
-//            .padding(.top, 12)
-//            .padding(.bottom, 12)
-//
-//        }
-//        .frame(height: 110)
-//        .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
-//
-//
-//
-//
-//
-//
-//        .contextMenu {
-//
-//            Button {
-//                print("Customise pressed")
-//            } label: {
-//                Label("Customise", systemImage: "pencil")
-//            }
-//
-//            //                                       Divider()
-//
-//            Button {
-//                print("Pin pressed")
-//            } label: {
-//                Label("Pin", systemImage: "pin") /// TODO: add custom icons because no good icons
-//            }
-//
-//            Divider()
-//
-//            Button (role: .destructive) {
-//                print("session delete pressed")
-//                isShowingDeleteDialog.toggle()
-//            } label: {
-//                Label {
-//                    Text("Delete Session")
-//                        .foregroundColor(Color.red)
-//                } icon: {
-//                    Image(systemName: "trash")
-//                        .foregroundColor(Color.green) /// FIX: colours not working
-//                }
-//            }
-//
-//
-//
-//        }
-//
-//        .confirmationDialog("Are you sure you want to delete this session? All solves will be deleted and this cannot be undone.", isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
-//            let _ = NSLog("Confimation Dialog for \(item.name), presented: \(isShowingDeleteDialog)")
-//            Button("Confirm", role: .destructive) {
-//                managedObjectContext.delete(item)
-//                NSLog("\(item.name)")
-//                do {
-//                    try managedObjectContext.save()
-//                } catch {
-//                    if let error = error as NSError? {
-//                        // Replace this implementation with code to handle the error appropriately.
-//                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//                        fatalError("Unresolved error \(error), \(error.userInfo)")
-//                    }
-//                }
-//            }
-//            Button("Cancel", role: .cancel) {
-//
-//            }
-//        }
-//
-//
-//        .padding(.trailing)
-//        .padding(.leading)
+        
         
         
         VStack {
             HStack {
                 VStack(alignment: .leading) {
-                    Text(item.name ?? "Unkown session name")
-                        .font(.system(size: 22, weight: .bold, design: .default))
-                        .foregroundColor(Color.black)
-                    let _ = NSLog("scr type = \(item.scramble_type)")
-                    Text(puzzle_types[Int(item.scramble_type)].name)
-//                        .font(.system(size: 15, weight: .medium, design: .default))
-                        .foregroundColor(Color.black)
-                    Spacer()
-                    Text("\(item.solves?.count ?? -1) Solves")
-                        .font(.system(size: 15, weight: .bold, design: .default))
-                        .foregroundColor(Color(UIColor.systemGray))
-                        .padding(.bottom, 4)
+                    if item.pinned {
+                        Text(item.name ?? "Unkown session name")
+                            .font(.system(size: 22, weight: .bold, design: .default))
+                            .foregroundColor(Color.black)
+                        Text(puzzle_types[Int(item.scramble_type)].name)
+    //                        .font(.system(size: 15, weight: .medium, design: .default))
+                            .foregroundColor(Color.black)
+                        Spacer()
+                        Text("\(item.solves?.count ?? -1) Solves")
+                            .font(.system(size: 15, weight: .bold, design: .default))
+                            .foregroundColor(Color(UIColor.systemGray))
+                            .padding(.bottom, 4)
+                    } else {
+                        Text(item.name ?? "Unkown session name")
+                            .font(.system(size: 22, weight: .bold, design: .default))
+                        Text(puzzle_types[Int(item.scramble_type)].name)
+                            .font(.system(size: 15, weight: .medium, design: .default))
+                    }
                 }
                 
                 Spacer()
                 
-                Image(puzzle_types[Int(item.scramble_type)].name)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(Color.black)
-                    .padding(.top, 4)
-                    .padding(.bottom, 4)
-                    .padding(.trailing, 12)
-                
-                
-                //.padding(.trailing, -12)
+                if item.pinned {
+                    Image(puzzle_types[Int(item.scramble_type)].name)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(Color.black)
+                        .padding(.top, 4)
+                        .padding(.bottom, 4)
+                        .padding(.trailing, 12)
+                } else {
+                    Image(puzzle_types[Int(item.scramble_type)].name)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(.trailing, 6)
+                }
                 
             }
             .padding(.leading)
-            .padding(.trailing, 6)
-            .padding(.top, 12)
-            .padding(.bottom, 12)
+            .padding(.trailing, item.pinned ? 6 : 4)
+            .padding(.top, item.pinned ? 12 : 8)
+            .padding(.bottom, item.pinned ? 12 : 8)
         }
-        .frame(height: 110)
+        .frame(height: item.pinned ? 110 : 65)
         .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
         .onTapGesture {
             currentSession = item
         }
         .contextMenu {
-            
             Button {
                 print("Customise pressed")
             } label: {
@@ -702,9 +601,10 @@ struct SessionCard: View {
             //                                       Divider()
             
             Button {
-                print("Pin pressed")
+                item.pinned.toggle()
+                try! managedObjectContext.save()
             } label: {
-                Label("Pin", systemImage: "pin") /// TODO: add custom icons because no good icons
+                Label(item.pinned ? "Unpin" : "Pin", systemImage: item.pinned ? "pin.slash" : "pin") /// TODO: add custom icons because no good icons
             }
             
             Divider()
@@ -721,33 +621,16 @@ struct SessionCard: View {
                         .foregroundColor(Color.green) /// FIX: colours not working
                 }
             }
-            
-            
-            
         }
-        
-        .confirmationDialog("Are you sure you want to delete this session? All solves will be deleted and this cannot be undone.", isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
-            let _ = NSLog("Confimation Dialog for \(item.name), presented: \(isShowingDeleteDialog)")
+        .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unkown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
                 managedObjectContext.delete(item)
-                NSLog("\(item.name)")
-                do {
-                    try managedObjectContext.save()
-                } catch {
-                    if let error = error as NSError? {
-                        // Replace this implementation with code to handle the error appropriately.
-                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                        fatalError("Unresolved error \(error), \(error.userInfo)")
-                    }
-                }
+                try! managedObjectContext.save()
             }
             Button("Cancel", role: .cancel) {
                 
             }
         }
-        
-    
-        
         .padding(.trailing)
         .padding(.leading)
          
@@ -767,13 +650,25 @@ struct SessionsView: View {
     
     
     
+    // I know that this is bad
+    // I tried to use SectionedFetchRequest to no avail
+    // send a PR if you can make this good :)
+    @FetchRequest(
+        entity: Sessions.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
+        ],
+        predicate: NSPredicate(format: "pinned == YES")
+    ) var pinnedSessions: FetchedResults<Sessions>
     
     @FetchRequest(
         entity: Sessions.entity(),
         sortDescriptors: [
             NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
-        ]
-    ) var sessions: FetchedResults<Sessions>
+        ],
+        predicate: NSPredicate(format: "pinned == NO")
+    ) var unPinnedSessions: FetchedResults<Sessions>
+    
     
     
     
@@ -785,40 +680,18 @@ struct SessionsView: View {
                 
                 ScrollView() {
                     VStack (spacing: 10) {
-                        ForEach(sessions, id: \.self) { item in
+                        ForEach(pinnedSessions) { item in
+                            SessionCard(currentSession: $currentSession, item: item)
+                                .environment(\.managedObjectContext, managedObjectContext)
+                        }
+                        
+                        ForEach(unPinnedSessions) { item in
                             SessionCard(currentSession: $currentSession, item: item)
                                 .environment(\.managedObjectContext, managedObjectContext)
                         }
                     }
                     
-                    /*
-                     VStack {
-                     HStack {
-                     VStack(alignment: .leading) {
-                     Text("3x3 main session")
-                     .font(.system(size: 22, weight: .bold, design: .default))
-                     Text("3x3")
-                     .font(.system(size: 15, weight: .medium, design: .default))
-                     }
-                     
-                     Spacer()
-                     
-                     Image(systemName: "square.fill")
-                     .font(.system(size: 44))
-                     .padding(.trailing, 6)
-                     
-                     }
-                     .padding(.leading)
-                     .padding(.trailing, 4)
-                     .padding(.top, 8)
-                     .padding(.bottom, 8)
-                     
-                     }
-                     .frame(height: 65)
-                     .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
-                     .padding(.trailing)
-                     .padding(.leading)
-                     */ /// only keeping for the sizing
+                    
                     
                     
                     
