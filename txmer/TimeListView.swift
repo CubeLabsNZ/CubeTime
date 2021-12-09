@@ -191,7 +191,11 @@ struct TimeListView: View {
                     }
                 }
                 .navigationTitle("Session Times")
-                .sheet(item: $solve /*isPresented: $showingPopupSlideover*/) { item in
+                .sheet(item: $solve /*isPresented: $showingPopupSlideover*/, onDismiss: {
+                    if managedObjectContext.hasChanges {
+                        try! managedObjectContext.save()
+                    }
+                }) { item in
                     
                     SolvePopupView(solve: item, currentSolve: $solve, timeListManager: timeListManager)
                         .environment(\.managedObjectContext, managedObjectContext)
