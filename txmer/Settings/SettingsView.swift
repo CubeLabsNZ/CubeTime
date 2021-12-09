@@ -155,6 +155,7 @@ struct SettingsDetail: View {
                             
                             HStack {
                                 Text(currentCard.name)
+                                    .font(.system(size: 22, weight: .bold))
                                     .matchedGeometryEffect(id: currentCard.name, in: namespace)
                                 
                                 
