@@ -132,7 +132,6 @@ struct MainTabsView: View {
                 }
 
                 BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
-                    .offset(y: hideTabBar ? 250 : 0)
                     .zIndex(1)
             }
         }
