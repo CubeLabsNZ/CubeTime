@@ -23,7 +23,7 @@ struct BottomTabsView: View {
                         Spacer()
                         
                         RoundedRectangle(cornerRadius: 12)
-                            .fill(Color(UIColor.systemGray5))
+                            .fill(Color(uiColor: .systemGray5))
                         
                             .frame(
                                 width: geometry.size.width - CGFloat(SetValues.marginLeftRight * 2),
@@ -86,7 +86,7 @@ struct BottomTabsView: View {
                                 height: CGFloat(SetValues.tabBarHeight),
                                 alignment: .leading
                             )
-                            .background(Color(UIColor.systemGray4).clipShape(RoundedRectangle(cornerRadius:12)))
+                            .background(Color(uiColor: .systemGray4).clipShape(RoundedRectangle(cornerRadius:12)))
                             .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 3.5)
 //                            .padding(.leading, CGFloat(SetValues.marginLeftRight))
                             .animation(.spring(), value: self.currentTab)

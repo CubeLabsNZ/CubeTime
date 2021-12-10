@@ -83,7 +83,7 @@ struct StatsView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color(UIColor.systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
+                Color(uiColor: .systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
                     .ignoresSafeArea()
                 
                 ScrollView() {
@@ -93,12 +93,12 @@ struct StatsView: View {
                             HStack (alignment: .center) {
                                 Text(currentSession.name!)
                                     .font(.system(size: 20, weight: .semibold, design: .default))
-                                    .foregroundColor(Color(UIColor.systemGray))
+                                    .foregroundColor(Color(uiColor: .systemGray))
                                 Spacer()
                                 
                                 Text(puzzle_types[Int(currentSession.scramble_type)].name) // TODO playground
                                     .font(.system(size: 16, weight: .semibold, design: .default))
-                                    .foregroundColor(Color(UIColor.systemGray))
+                                    .foregroundColor(Color(uiColor: .systemGray))
                             }
                         }
                         .padding(.top, -6)
@@ -162,7 +162,7 @@ struct StatsView: View {
                                         VStack (alignment: .leading, spacing: 0) {
                                             Text("BEST SINGLE")
                                                 .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(UIColor.systemGray6))
+                                                .foregroundColor(Color(uiColor: .systemGray6))
                                                 .padding(.bottom, 4)
                                             
                                             //                                            Text("88:88:888")
@@ -174,7 +174,7 @@ struct StatsView: View {
                                             } else {
                                                 Text("N/A")
                                                     .font(.system(size: 28, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(UIColor.systemGray5))
+                                                    .foregroundColor(Color(uiColor: .systemGray5))
                                             }
                                             
                                             
@@ -199,7 +199,7 @@ struct StatsView: View {
                                             VStack (alignment: .leading, spacing: 0) {
                                                 Text("BEST AO12")
                                                     .font(.system(size: 13, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(UIColor.systemGray))
+                                                    .foregroundColor(Color(uiColor: .systemGray))
                                                     .padding(.leading, 12)
                                                 
                                                 if ao12 != nil {
@@ -210,7 +210,7 @@ struct StatsView: View {
                                                 } else {
                                                     Text("N/A")
                                                         .font(.system(size: 28, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(UIColor.systemGray2))
+                                                        .foregroundColor(Color(uiColor:.systemGray2))
                                                         .padding(.leading, 12)
                                                     
                                                 }
@@ -229,7 +229,7 @@ struct StatsView: View {
                                             VStack (alignment: .leading, spacing: 0) {
                                                 Text("BEST AO100")
                                                     .font(.system(size: 13, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(UIColor.systemGray))
+                                                    .foregroundColor(Color(uiColor: .systemGray))
                                                     .padding(.leading, 12)
                                                 
                                                 if ao100 != nil {
@@ -240,7 +240,7 @@ struct StatsView: View {
                                                 } else {
                                                     Text("N/A")
                                                         .font(.system(size: 28, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(UIColor.systemGray2))
+                                                        .foregroundColor(Color(uiColor: .systemGray2))
                                                         .padding(.leading, 12)
                                                     
                                                 }
@@ -258,7 +258,7 @@ struct StatsView: View {
                                         
                                     }
                                     .frame(height: 130)
-                                    .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                                    .background(Color(uiColor: .white).clipShape(RoundedRectangle(cornerRadius:16)))
                                     
                                     
                                     
@@ -271,7 +271,7 @@ struct StatsView: View {
                                         VStack (alignment: .leading, spacing: 0) {
                                             Text("SESSION MEAN")
                                                 .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(UIColor.systemGray))
+                                                .foregroundColor(Color(uiColor: .systemGray))
                                                 .padding(.bottom, 4)
                                             
                                             
@@ -282,7 +282,7 @@ struct StatsView: View {
                                             } else {
                                                 Text("N/A")
                                                     .font(.system(size: 28, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(UIColor.systemGray2))
+                                                    .foregroundColor(Color(uiColor: .systemGray2))
                                             }
                                             
                                             
@@ -316,14 +316,14 @@ struct StatsView: View {
                                         VStack (alignment: .leading, spacing: 0) {
                                             Text("BEST AO5")
                                                 .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(UIColor.systemGray))
+                                                .foregroundColor(Color(uiColor: .systemGray))
                                                 .padding(.bottom, 4)
                                             
                                             //                                            Text("6.142")
                                             
                                             
                                             if ao5 != nil {
-                                                Text(String(formatSolveTime(secs: ao5!.0)))
+                                                Text(formatSolveTime(secs: ao5!.0))
                                                     .font(.system(size: 34, weight: .bold, design: .default))
                                                     .gradientForeground(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 136/255, green: 94/255, blue: 191/255)])
                                                 
@@ -331,7 +331,7 @@ struct StatsView: View {
                                                 
                                                 
                                                 ForEach((0...4), id: \.self) {
-                                                    Text(String(formatSolveTime(secs: ao5!.1[$0].time)))
+                                                    Text(formatSolveTime(secs: ao5!.1[$0].time))
                                                         .font(.system(size: 17, weight: .regular, design: .default))
                                                         .foregroundColor(.black)
                                                         .multilineTextAlignment(.leading)
@@ -340,7 +340,7 @@ struct StatsView: View {
                                             } else {
                                                 Text("N/A")
                                                     .font(.system(size: 28, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(UIColor.systemGray2))
+                                                    .foregroundColor(Color(uiColor: .systemGray2))
                                                 
                                                 Spacer()
                                             }
@@ -366,7 +366,7 @@ struct StatsView: View {
                                         Spacer()
                                     }
                                     .frame(height: 215)
-                                    .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                                    .background(Color(uiColor: .white).clipShape(RoundedRectangle(cornerRadius:16)))
                                     .onTapGesture {
                                         print("best ao5 pressed")
                                     }
@@ -380,7 +380,7 @@ struct StatsView: View {
                                         VStack (alignment: .leading, spacing: 0) {
                                             Text("NUMBER OF SOLVES")
                                                 .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(UIColor.systemGray))
+                                                .foregroundColor(Color(uiColor: .systemGray))
                                                 .padding(.bottom, 4)
                                             
                                             Text(String(stats.getNumberOfSolves()))
@@ -419,7 +419,7 @@ struct StatsView: View {
                                         HStack {
                                             Text("TIME TREND")
                                                 .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(UIColor.systemGray))
+                                                .foregroundColor(Color(uiColor: .systemGray))
                                                 .padding(.bottom, 4)
                                             
                                             Spacer()
@@ -453,7 +453,7 @@ struct StatsView: View {
                                 
                             }
                             .frame(height: 300)
-                            .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                            .background(Color(uiColor: .white).clipShape(RoundedRectangle(cornerRadius:16)))
                             .onTapGesture {
                                 print("time trend pressed")
                                                               
@@ -474,7 +474,7 @@ struct StatsView: View {
                                     HStack {
                                         Text("TIME DISTRIBUTION")
                                             .font(.system(size: 13, weight: .medium, design: .default))
-                                            .foregroundColor(Color(UIColor.systemGray))
+                                            .foregroundColor(Color(uiColor: .systemGray))
                                             .padding(.bottom, 4)
                                         
                                         Spacer()
@@ -488,7 +488,7 @@ struct StatsView: View {
                                 .padding(.leading, 12)
                             }
                             .frame(height: 200)
-                            .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
+                            .background(Color(uiColor: .white).clipShape(RoundedRectangle(cornerRadius:16)))
                             .padding(.bottom)
                             .onTapGesture {
                                 print("time distribution pressed")

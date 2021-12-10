@@ -42,7 +42,7 @@ struct SettingsView: View {
     
         NavigationView {
             ZStack {
-                Color(UIColor.systemGray6)
+                Color(uiColor: .systemGray6)
                     .ignoresSafeArea()
                 
                 //NavigationLink("", destination: GeneralSettingsView(), isActive: $showingCard)
@@ -156,7 +156,7 @@ struct SettingsDetail: View {
     var body: some View {
         if showingCard {
             ZStack {
-                Color(UIColor.systemGray6)
+                Color(uiColor: .systemGray6)
                     .ignoresSafeArea()
                     .zIndex(0)
 

@@ -124,7 +124,7 @@ struct MainTabsView: View {
                     SessionsView(currentSession: $currentSession)
                         .environment(\.managedObjectContext, managedObjectContext)
                         .onChange(of: currentSession) { [currentSession] newSession in
-                            UserDefaults.standard.set(newSession.objectID.uriRepresentation(), forKey: "last_used_session")
+                            UserDefaults.standard.set(newSession.objectID.uriRepresentation(), forKey: "last_used_session") // TODO what was i thinking move this logic into SessionsView
                         }
                 case .settings:
                     SettingsView()
