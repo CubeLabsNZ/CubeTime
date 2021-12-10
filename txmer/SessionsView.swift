@@ -611,7 +611,7 @@ struct SessionCard: View {
                 .fill(Color(UIColor.systemGray5))
                 .frame(height: item.pinned ? 110 : 65)
             
-                .animation(.spring())
+                .animation(.spring(response: 0.325))
                 .zIndex(0)
         
             
@@ -622,7 +622,7 @@ struct SessionCard: View {
             
 //                .matchedGeometryEffect(id: "bar", in: namespace, properties: .frame)
             
-                .animation(.spring())
+                .animation(.spring(response: 0.325))
                 .offset(x: currentSession == item ? -((UIScreen.screenWidth - 16)/2) + 16 : 0)
             
                 .zIndex(1)
