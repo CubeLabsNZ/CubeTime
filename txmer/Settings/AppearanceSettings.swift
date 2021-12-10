@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import TextView
   
 
 struct AppearanceSettingsView: View {

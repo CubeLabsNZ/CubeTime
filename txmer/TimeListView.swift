@@ -194,7 +194,8 @@ struct TimeListView: View {
                     }
                     .padding(.vertical, -6)
                 }
-                .navigationTitle("Session Times")
+                .navigationTitle(isSelectMode ? "Select Solves" : "Session Times")
+//                .navigationBarTitleDisplayMode(isSelectMode ? .inline : .large)
                 
                 .sheet(item: $solve /*isPresented: $showingPopupSlideover*/, onDismiss: {
                     if managedObjectContext.hasChanges {
@@ -208,21 +209,17 @@ struct TimeListView: View {
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {
                         if isSelectMode {
-                            Button {
-                                isSelectMode = false
-                            } label: {
-                                
-                                Image(systemName: "chevron.left")
-                                    .font(.system(size: 17, weight: .medium))
-                                    .padding(.leading, -4)
-                                Text("Stop Selecting")
-                                    .padding(.leading, -4)
-                            }
-                        }
-                    }
-                    
-                    ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        if isSelectMode {
+//                            Button {
+//                                isSelectMode = false
+//                                actionOnSelectedItems = .delete
+//                                NSLog("hi")
+//                                try! managedObjectContext.save()
+//                                timeListManager.resort()
+//                            } label: {
+//                                Image(systemName: "trash.circle.fill")
+//                                    .font(.system(size: 17, weight: .medium))
+//                                    .foregroundColor(Color.red)
+//                            }
                             Button {
                                 isSelectMode = false
                                 actionOnSelectedItems = .delete
@@ -230,9 +227,30 @@ struct TimeListView: View {
                                 try! managedObjectContext.save()
                                 timeListManager.resort()
                             } label: {
-                                Image(systemName: "trash.circle.fill")
-                                    .font(.system(size: 17, weight: .medium))
+                                Text("Delete Solves")
+                                    .font(.system(size: 15, weight: .medium))
                                     .foregroundColor(Color.red)
+                            }
+                            .tint(.red)
+                            .buttonStyle(.bordered)
+                            .clipShape(Capsule())
+                            .controlSize(.small)
+//                            .background(.red.opacity(0.25), in: Capsule())
+                            
+                            
+                            
+                            
+                        }
+                    }
+                    
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        if isSelectMode {
+                            Button {
+                                isSelectMode = false
+                            } label: {
+                                
+                                Text("Cancel")
+                                    .padding(.leading, -4)
                             }
                         
                         } else {
