@@ -489,7 +489,7 @@ struct StatsView: View {
                             }
                             .frame(height: 200)
                             .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:16)))
-                            .padding(.bottom, 16)
+                            .padding(.bottom)
                             .onTapGesture {
                                 print("time distribution pressed")
                             }
@@ -502,8 +502,7 @@ struct StatsView: View {
                         //                        .padding(.leading)
                         //                        .padding(.trailing)
                     }
-                    .padding(.leading)
-                    .padding(.trailing)
+                    .padding(.horizontal)
                     
                 }
                 .safeAreaInset(edge: .bottom, spacing: 0) {

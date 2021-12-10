@@ -273,8 +273,8 @@
 			children = (
 				7D7A9EC5274F396E00C2E125 /* SettingsView.swift */,
 				237B354F2761995F00CC39BF /* SettingsCard.swift */,
-				23E81E6B275D8DAE00B741E3 /* GeneralSettings.swift */,
 				23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */,
+				23E81E6B275D8DAE00B741E3 /* GeneralSettings.swift */,
 				23E81E70275D8DDA00B741E3 /* IESettings.swift */,
 				23E81E72275D8DEA00B741E3 /* AboutSettings.swift */,
 				7D7E2011275DD52600ADF01D /* Licenses.swift */,

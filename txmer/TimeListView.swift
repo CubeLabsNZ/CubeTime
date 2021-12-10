@@ -118,26 +118,21 @@ struct TimeListView: View {
                 
                 
                 ScrollView() {
-                    ZStack {
-                        VStack {
+                    VStack {
+                        HStack (alignment: .center) {
+                            Text(currentSession.name!)
+                                .font(.system(size: 20, weight: .semibold, design: .default))
+                                .foregroundColor(Color(UIColor.systemGray))
+                            Spacer()
                             
-                            HStack (alignment: .center) {
-                                Text(currentSession.name!)
-                                    .font(.system(size: 20, weight: .semibold, design: .default))
-                                    .foregroundColor(Color(UIColor.systemGray))
-                                Spacer()
-                                
-                                Text(puzzle_types[Int(currentSession.scramble_type)].name) // TODO playground
-                                    .font(.system(size: 16, weight: .semibold, design: .default))
-                                    .foregroundColor(Color(UIColor.systemGray))
-                            }
-                            .padding(.leading)
-                            .padding(.trailing)
-                            
-                            
+                            Text(puzzle_types[Int(currentSession.scramble_type)].name) // TODO playground
+                                .font(.system(size: 16, weight: .semibold, design: .default))
+                                .foregroundColor(Color(UIColor.systemGray))
+                        }
+                        .padding(.horizontal)
+                        
+                        ZStack {
                             HStack {
-                                
-                                
                                 Spacer()
                                 
                                 Picker("Sort Method", selection: $timeListManager.sortBy) {
@@ -152,24 +147,7 @@ struct TimeListView: View {
                                
                                 Spacer()
                             }
-                                 
-                            LazyVGrid(columns: columns, spacing: 12) {
-                                ForEach(timeListManager.solves!, id: \.self) { item in
-                                    TimeCard(solve: item, currentSolve: $solve)
-                                        .environment(\.managedObjectContext, managedObjectContext)
-                                }
-                                // .id(UUID()) maybe =++++ speed?!!? probably not
-                            }
-                            .padding(.leading)
-                            .padding(.trailing)
                             
-                            Spacer()
-                        }
-                        .padding(.top, -6)
-                        .padding(.bottom, -6)
-                        
-                        
-                        VStack /* (alignment: .center)*/ {
                             HStack {
                                 Spacer()
                                 
@@ -182,15 +160,27 @@ struct TimeListView: View {
                                     Image(systemName: timeListManager.ascending ? "chevron.up.circle" : "chevron.down.circle")
                                         .font(.system(size: 20, weight: .medium))
                                 }
-                                .padding(.trailing, 16.5) /// TODO don't hardcode padding
-                                .offset(y: 30)
-//                                .offset(y: (32 / 2) - (SetValues.iconFontSize / 2) + 6 + 18)
+//                                        .padding(.trailing, 16.5)
+                                .padding(.trailing)
+                                .padding(.top, -6)
+                                .padding(.bottom, 4)
                             }
-                            Spacer()
                         }
+                             
+                        LazyVGrid(columns: columns, spacing: 12) {
+                            ForEach(timeListManager.solves!, id: \.self) { item in
+                                TimeCard(solve: item, currentSolve: $solve)
+                                    .environment(\.managedObjectContext, managedObjectContext)
+                            }
+                        }
+                        .padding(.horizontal)
+                        
+//                        Spacer()
                     }
+                    .padding(.vertical, -6)
                 }
                 .navigationTitle("Session Times")
+                
                 .sheet(item: $solve /*isPresented: $showingPopupSlideover*/, onDismiss: {
                     if managedObjectContext.hasChanges {
                         try! managedObjectContext.save()
@@ -214,11 +204,10 @@ struct TimeListView: View {
                         .frame(height: 50)
                         .padding(.top)
                 }
-                
-                
-                .frame(maxHeight: UIScreen.screenHeight)
             }
-            .searchable(text: $timeListManager.filter)
-        }.navigationViewStyle(StackNavigationViewStyle())
+            
+        }
+        .searchable(text: $timeListManager.filter, placement: .navigationBarDrawer)
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
