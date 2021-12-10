@@ -113,6 +113,7 @@ struct SettingsCard: View {
                 RoundedRectangle(cornerRadius: 16)
                     .fill(Color.white)
                     .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+                    .shadow(color: .black.opacity(0.1), radius: 8, x: 3, y: 3)
                     .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
                 
                 VStack {
@@ -159,46 +160,11 @@ struct SettingsDetail: View {
                     .ignoresSafeArea()
                     .zIndex(0)
 
-                VStack {
-                    
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.white)
-                            .ignoresSafeArea()
-                            .matchedGeometryEffect(id: "bg " + currentCard.name, in: namespace)
-                            
-                            
-                            
-                        
-                        VStack {
-                            Spacer()
-                            
-                            HStack {
-                                Text(currentCard.name)
-//                                    .font(.title.bold())
-                                    .font(.system(size: 22, weight: .bold))
-                                    .matchedGeometryEffect(id: currentCard.name, in: namespace)
-                                
-                                
-                                    
-                                    
-                                
-                                Spacer()
-                                
-                                Image(systemName: currentCard.icon)
-                                    .font(currentCard.iconStyle)
-                                    .matchedGeometryEffect(id: currentCard.icon, in: namespace)
-                            }
-                            .padding()
-                        }
-                        
-                    }
-                    .ignoresSafeArea()
-                    .frame(maxHeight: UIScreen.screenHeight / 6)
-                    
-                    Spacer()
-                    
+                
+                ScrollView {
                     switch currentCard.name {
+                    case "Appearance":
+                        AppearanceSettingsView()
                     case "About":
                         AboutSettingsView()
                             .safeAreaInset(edge: .bottom, spacing: 0) {
@@ -207,10 +173,55 @@ struct SettingsDetail: View {
                                     .frame(height: 50 + (SetValues.hasBottomBar ? 0 : CGFloat(SetValues.marginBottom)))
                                     .padding(.top)
                             }
+                            .animation(.easeIn(duration: 2).delay(2))
                     default:
-                        Text("unable to load view")
+                        Text("unable to load view: please report this issue to us on github!")
                     }
+                }
+                .safeAreaInset(edge: .top, spacing: 0) {
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color.clear)
+                        .frame(maxHeight: UIScreen.screenHeight / 7)
+                        .padding(.bottom)
+                }
+
+                
+                
+                
+                VStack {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color.white)
+                            .ignoresSafeArea()
+                            .shadow(color: .black.opacity(0.16), radius: 8, x: 0, y: 3)
+                            .matchedGeometryEffect(id: "bg " + currentCard.name, in: namespace)
+                            
+                            
+                            
+                        
+                        VStack {
+                            Spacer()
+                            
+                            HStack(alignment: .center) {
+                                Text(currentCard.name)
+//                                    .font(.title.bold())
+                                    .font(.system(size: 22, weight: .bold))
+                                    .matchedGeometryEffect(id: currentCard.name, in: namespace)
+                                
+
+                                Spacer()
+                                
+                                Image(systemName: currentCard.icon)
+                                    .font(currentCard.iconStyle)
+                                    .matchedGeometryEffect(id: currentCard.icon, in: namespace)
+                            }
+                            .padding()
+                        }
+                    }
+                    .ignoresSafeArea()
+                    .frame(maxHeight: UIScreen.screenHeight / 7)
                     
+                    Spacer()
                 }
                 .zIndex(1)
                 .overlay(
@@ -223,9 +234,10 @@ struct SettingsDetail: View {
                                 .symbolRenderingMode(.hierarchical)
                                 .foregroundStyle(.secondary)
                                 .foregroundStyle(.black)
-                                .padding()
+                                .padding([.horizontal, .bottom])
+                                .padding(.top, 8)
                                 .onTapGesture {
-                                    withAnimation(.spring(response: 0.6)) {
+                                    withAnimation(.spring(response: 0.5)) {
                                         showingCard = false
 //                                        hideTabBar = false
                                     }
@@ -247,4 +259,3 @@ struct CardButtonStyle: ButtonStyle {
             .animation(.easeIn, value: configuration.isPressed)
     }
 }
-

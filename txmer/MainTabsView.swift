@@ -127,7 +127,7 @@ struct MainTabsView: View {
                             UserDefaults.standard.set(newSession.objectID.uriRepresentation(), forKey: "last_used_session")
                         }
                 case .settings:
-                    SettingsView(hideTabBar: $hideTabBar)
+                    SettingsView()
                     
                 }
 
