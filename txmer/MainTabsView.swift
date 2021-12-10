@@ -127,12 +127,13 @@ struct MainTabsView: View {
                             UserDefaults.standard.set(newSession.objectID.uriRepresentation(), forKey: "last_used_session")
                         }
                 case .settings:
-                    SettingsView(hideTabBar: $hideTabBar)
+//                    SettingsView(hideTabBar: $hideTabBar)
+                    SettingsView()
                     
                 }
 
                 BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
-                    .offset(y: hideTabBar ? 250 : 0)
+//                    .offset(y: hideTabBar ? 250 : 0)
                     .zIndex(1)
             }
         }

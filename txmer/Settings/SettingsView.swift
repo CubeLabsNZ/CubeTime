@@ -27,7 +27,7 @@ struct AnimatingFontSizeV2: AnimatableModifier {
 struct SettingsView: View {
     @State var currentCard: SettingsCardInfo = settingsCards[0]
     @State var showingCard = false // TODO try make the above one optional
-    @Binding var hideTabBar: Bool
+//    @Binding var hideTabBar: Bool
     
     @Namespace private var namespace
     
@@ -58,13 +58,13 @@ struct SettingsView: View {
                     
                     
                     HStack (spacing: 16) {
-                        SettingsCard(currentCard: $currentCard, showingCard: $showingCard, hideTabBar: $hideTabBar, info: settingsCards[0], namespace: namespace)
-                        SettingsCard(currentCard: $currentCard, showingCard: $showingCard, hideTabBar: $hideTabBar, info: settingsCards[1], namespace: namespace)
+                        SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[0], namespace: namespace)
+                        SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[1], namespace: namespace)
                     }
                     
                     HStack (spacing: 16) {
-                        SettingsCard(currentCard: $currentCard, showingCard: $showingCard, hideTabBar: $hideTabBar, info: settingsCards[2], namespace: namespace)
-                        SettingsCard(currentCard: $currentCard, showingCard: $showingCard, hideTabBar: $hideTabBar, info: settingsCards[3], namespace: namespace)
+                        SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[2], namespace: namespace)
+                        SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[3], namespace: namespace)
                     }
                     
                     
@@ -88,7 +88,7 @@ struct SettingsView: View {
             }
         }
         .overlay(
-            SettingsDetail(showingCard: $showingCard, currentCard: $currentCard, hideTabBar: $hideTabBar, namespace: namespace)
+            SettingsDetail(showingCard: $showingCard, currentCard: $currentCard, namespace: namespace)
         )
         
     }
@@ -98,7 +98,7 @@ struct SettingsView: View {
 struct SettingsCard: View {
     @Binding var currentCard: SettingsCardInfo
     @Binding var showingCard: Bool
-    @Binding var hideTabBar: Bool
+//    @Binding var hideTabBar: Bool
     var info: SettingsCardInfo
     var namespace: Namespace.ID
     var body: some View {
@@ -106,7 +106,7 @@ struct SettingsCard: View {
             withAnimation(.spring(response: 0.6)) {
                 currentCard = info
                 showingCard = true
-                hideTabBar = true
+//                hideTabBar = true
             }
         } label: {
             ZStack {
@@ -149,7 +149,7 @@ struct SettingsCard: View {
 struct SettingsDetail: View {
     @Binding var showingCard: Bool
     @Binding var currentCard: SettingsCardInfo
-    @Binding var hideTabBar: Bool
+//    @Binding var hideTabBar: Bool
     var namespace: Namespace.ID
     
     var body: some View {
@@ -227,7 +227,7 @@ struct SettingsDetail: View {
                                 .onTapGesture {
                                     withAnimation(.spring(response: 0.6)) {
                                         showingCard = false
-                                        hideTabBar = false
+//                                        hideTabBar = false
                                     }
                                     
                                 }
