@@ -50,7 +50,7 @@ struct SolvePopupView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color(UIColor.systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
+                Color(uiColor: .systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
                     .ignoresSafeArea()
                 
                 ScrollView() {
@@ -59,7 +59,7 @@ struct SolvePopupView: View {
                             Text(date, format: .dateTime.day().month().year())
                                 .padding(.leading, 16)
                                 .font(.system(size: 22, weight: .semibold, design: .default))
-                                .foregroundColor(Color(UIColor.systemGray))
+                                .foregroundColor(Color(uiColor: .systemGray))
                             
                             Spacer()
                         }
@@ -116,7 +116,7 @@ struct SolvePopupView: View {
                         }
                         //.frame(minHeight: minRowHeight * 10)
                         //.frame(height: 300)
-                        .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:10)))
+                        .background(Color(uiColor: .white).clipShape(RoundedRectangle(cornerRadius:10)))
                         //.listStyle(.insetGrouped)
                         .padding(.trailing)
                         .padding(.leading)
@@ -157,7 +157,7 @@ struct SolvePopupView: View {
                         }
                         //.frame(minHeight: minRowHeight * 10)
                         //.frame(height: 300)
-                        .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:10)))
+                        .background(Color(uiColor: .white).clipShape(RoundedRectangle(cornerRadius:10)))
                         //.listStyle(.insetGrouped)
                         .padding(.trailing)
                         .padding(.leading)
@@ -179,7 +179,7 @@ struct SolvePopupView: View {
                             //                            .padding(.top, 12)
                             //                            .padding(.bottom, 12)
                         }
-                        .background(Color(UIColor.white).clipShape(RoundedRectangle(cornerRadius:10)))
+                        .background(Color(uiColor: .white).clipShape(RoundedRectangle(cornerRadius:10)))
                         .padding(.trailing)
                         .padding(.leading)
                         
@@ -195,24 +195,6 @@ struct SolvePopupView: View {
                                     currentSolve = nil
                                 }
                                 managedObjectContext.delete(solve) // Todo read context from environment
-                                do {
-                                    try managedObjectContext.save()
-                                } catch {
-                                    if let error = error as NSError? {
-                                        // Replace this implementation with code to handle the error appropriately.
-                                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                                        
-                                        /*
-                                         Typical reasons for an error here include:
-                                         * The parent directory does not exist, cannot be created, or disallows writing.
-                                         * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                                         * The device is out of space.
-                                         * The store could not be migrated to the current model version.
-                                         Check the error message to determine what the actual problem was.
-                                         */
-                                        fatalError("Unresolved error \(error), \(error.userInfo)")
-                                    }
-                                }
                                 timeListManager.resort()
                             } label: {
                                 Text("Delete Solve")
@@ -245,25 +227,53 @@ struct SolvePopupView: View {
 
 @available(iOS 15.0, *)
 struct TimeCard: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
     let solve: Solves
     
     @Binding var currentSolve: Solves?
+    @Binding var isSelectMode: Bool
+    
+    @Binding var actionOnSelectedItems: ActionOnSelectedItems?
+    
+    @State var isSelected = false
     
     
     var body: some View {
-        
         ZStack {
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color.white)
+                .fill(isSelected ? Color(uiColor: .systemGray4) : Color.white)
                 .frame(maxWidth: 120, minHeight: 55, maxHeight: 55) /// todo check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectange
                 .onTapGesture {
-                    currentSolve = solve
+                    if isSelectMode {
+                        withAnimation {
+                            isSelected.toggle()
+                        }
+                    } else {
+                        currentSolve = solve
+                    }
                 }
                 .onLongPressGesture {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 }
-            Text(formatSolveTime(secs: solve.time))
-                .font(.system(size: 17, weight: .bold, design: .default))
+            VStack {
+                Text(formatSolveTime(secs: solve.time))
+                    .font(.system(size: 17, weight: .bold, design: .default))
+                if isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(Color("AccentColor"))
+                }
+            }
+        }.onChange(of: isSelectMode) {newValue in
+            if !newValue && isSelected {
+                NSLog("hello")
+                withAnimation {
+                    isSelected = false // TODO delete logic
+                    if actionOnSelectedItems == .delete {
+                        NSLog("action is delete and i deleted")
+                        managedObjectContext.delete(solve)
+                    }
+                }
+            }
         }
         
         

@@ -32,7 +32,7 @@ struct AnimatingFontSize: AnimatableModifier {
 
 
 
-
+@available(iOS 15.0, *)
 struct TimerView: View {
     //@ObservedObject var currentSession: Sessions
     
@@ -57,7 +57,7 @@ struct TimerView: View {
         ZStack {
             
             
-            Color(colourScheme == .light ? UIColor.systemGray6 : UIColor.black) /// ~~todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)~~
+            Color(uiColor: colourScheme == .light ? .systemGray6 : .black) /// ~~todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)~~
                 .ignoresSafeArea()
             
             

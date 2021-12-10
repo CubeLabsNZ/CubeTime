@@ -22,6 +22,12 @@ enum SortBy {
 }
 
 
+enum ActionOnSelectedItems {
+    case nothing
+    case delete
+    case moveTo
+}
+
 
 class TimeListManager: ObservableObject {
     @Published var solves: [Solves]?
@@ -75,17 +81,27 @@ class TimeListManager: ObservableObject {
             solves = allsolves?.filter{ formatSolveTime(secs: $0.time).hasPrefix(filter) }
         }
     }
+    
+    func remove(solve: Solves) {
+        let index = allsolves?.firstIndex(of: solve)
+        if let index = index {
+            allsolves?.remove(at: index)
+        }
+    }
 }
 
 @available(iOS 15.0, *)
 struct TimeListView: View {
-    @Binding var currentSession: Sessions
-    
     @Environment(\.managedObjectContext) var managedObjectContext
+    
+    @Binding var currentSession: Sessions
     
     @StateObject var timeListManager: TimeListManager
     
     @State var solve: Solves?
+    
+    @State var isSelectMode = false
+    @State var actionOnSelectedItems: ActionOnSelectedItems? = nil
     
     
      
@@ -109,10 +125,9 @@ struct TimeListView: View {
     }
     
     var body: some View {
-        
         NavigationView {
             ZStack {
-                Color(UIColor.systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
+                Color(uiColor: .systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
                 /// YES FULL BLACK FOR AMOLED DO YOU HATE YOUR BATTERY LIFE
                     .ignoresSafeArea()
                 
@@ -122,12 +137,12 @@ struct TimeListView: View {
                         HStack (alignment: .center) {
                             Text(currentSession.name!)
                                 .font(.system(size: 20, weight: .semibold, design: .default))
-                                .foregroundColor(Color(UIColor.systemGray))
+                                .foregroundColor(Color(uiColor: .systemGray))
                             Spacer()
                             
                             Text(puzzle_types[Int(currentSession.scramble_type)].name) // TODO playground
                                 .font(.system(size: 16, weight: .semibold, design: .default))
-                                .foregroundColor(Color(UIColor.systemGray))
+                                .foregroundColor(Color(uiColor: .systemGray))
                         }
                         .padding(.horizontal)
                         
@@ -169,7 +184,7 @@ struct TimeListView: View {
                              
                         LazyVGrid(columns: columns, spacing: 12) {
                             ForEach(timeListManager.solves!, id: \.self) { item in
-                                TimeCard(solve: item, currentSolve: $solve)
+                                TimeCard(solve: item, currentSolve: $solve, isSelectMode: $isSelectMode, actionOnSelectedItems: $actionOnSelectedItems)
                                     .environment(\.managedObjectContext, managedObjectContext)
                             }
                         }
@@ -191,11 +206,43 @@ struct TimeListView: View {
                         .environment(\.managedObjectContext, managedObjectContext)
                 }
                 .toolbar {
-                    Button {
-                        print("button tapped")
-                    } label: {
-                        Image(systemName: "ellipsis.circle")
-                            .font(.system(size: 17, weight: .medium))
+                    ToolbarItemGroup(placement: .navigationBarLeading) {
+                        if isSelectMode {
+                            Button {
+                                isSelectMode = false
+                            } label: {
+                                
+                                Image(systemName: "chevron.left")
+                                    .font(.system(size: 17, weight: .medium))
+                                    .padding(.leading, -4)
+                                Text("Stop Selecting")
+                                    .padding(.leading, -4)
+                            }
+                        }
+                    }
+                    
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        if isSelectMode {
+                            Button {
+                                isSelectMode = false
+                                actionOnSelectedItems = .delete
+                                NSLog("hi")
+                                try! managedObjectContext.save()
+                                timeListManager.resort()
+                            } label: {
+                                Image(systemName: "trash.circle.fill")
+                                    .font(.system(size: 17, weight: .medium))
+                                    .foregroundColor(Color.red)
+                            }
+                        
+                        } else {
+                            Button {
+                                isSelectMode = true
+                            } label: {
+                                Image(systemName: "ellipsis.circle")
+                                    .font(.system(size: 17, weight: .medium))
+                            }
+                        }
                     }
                 }
                 .safeAreaInset(edge: .bottom, spacing: 0) {

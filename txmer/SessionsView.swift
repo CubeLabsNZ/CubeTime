@@ -48,7 +48,7 @@ struct NewStandardSessionView: View {
     
     var body: some View {
         ZStack {
-            Color(UIColor.systemGray6)
+            Color(uiColor: .systemGray6)
                 .ignoresSafeArea()
             
             ScrollView {
@@ -69,7 +69,7 @@ struct NewStandardSessionView: View {
                             .padding()
                             .font(.system(size: 22, weight: .bold))
                             .multilineTextAlignment(TextAlignment.center)
-                            .background(Color(UIColor.systemGray5))
+                            .background(Color(uiColor: .systemGray5))
                             .cornerRadius(10)
                             .padding(.leading)
                             .padding(.trailing)
@@ -101,12 +101,12 @@ struct NewStandardSessionView: View {
                                     ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
                                     Text(element.name).tag(Int32(index))
 
-                                    //.foregroundColor(Color(UIColor.systemGray4))
+                                    //.foregroundColor(Color(uiColor: .systemGray4))
                                 }
                             }
                             .pickerStyle(.menu)
                             .font(.system(size: 17, weight: .regular))
-                            .accentColor(Color(UIColor.systemGray))
+                            .accentColor(Color(uiColor: .systemGray))
 
 
                             //Text("Square-1")
@@ -130,7 +130,7 @@ struct NewStandardSessionView: View {
                                         Image("circular-" + element.name)
                                         
                                         Circle()
-                                            .strokeBorder(Color(UIColor.systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
+                                            .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
                                             .frame(width: 54, height: 54)
                                             .offset(x: -0.2)
                                             
@@ -353,7 +353,7 @@ struct NewSessionPopUpView: View {
                             Spacer()
                         }
                         
-                        .background(Color(UIColor.systemGray6))
+                        .background(Color(uiColor: .systemGray6))
                         .onTapGesture {
                             showNewStandardSessionView = true
                         }
@@ -365,7 +365,7 @@ struct NewSessionPopUpView: View {
                         
                         ZStack {
                             Rectangle()
-                                .fill(Color(UIColor.systemGray6))
+                                .fill(Color(uiColor: .systemGray6))
                                 .frame(height: 1)
                                 .padding(.leading)
                                 .padding(.trailing)
@@ -392,7 +392,7 @@ struct NewSessionPopUpView: View {
                             
                             Spacer()
                         }
-                        .background(Color(UIColor.systemGray6)
+                        .background(Color(uiColor: .systemGray6)
                                         .clipShape(Rectangle()))
                         .onTapGesture {
                             print("alg trainer pressed")
@@ -403,7 +403,7 @@ struct NewSessionPopUpView: View {
                         
                         ZStack {
                             Rectangle()
-                                .fill(Color(UIColor.systemGray6))
+                                .fill(Color(uiColor: .systemGray6))
                                 .frame(height: 1)
                                 .padding(.leading)
                                 .padding(.trailing)
@@ -437,7 +437,7 @@ struct NewSessionPopUpView: View {
                             
                             Spacer()
                         }
-                        .background(Color(UIColor.systemGray6))
+                        .background(Color(uiColor: .systemGray6))
                         .onTapGesture {
                             print("playground pressed")
                         }
@@ -608,7 +608,7 @@ struct SessionCard: View {
         ZStack {
             
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color(UIColor.systemGray5))
+                .fill(Color(uiColor: .systemGray5))
                 .frame(height: item.pinned ? 110 : 65)
             
                 .animation(.spring(response: 0.325))
@@ -648,7 +648,7 @@ struct SessionCard: View {
                             Spacer()
                             Text("\(item.solves?.count ?? -1) Solves")
                                 .font(.system(size: 15, weight: .bold, design: .default))
-                                .foregroundColor(Color(UIColor.systemGray))
+                                .foregroundColor(Color(uiColor: .systemGray))
                                 .padding(.bottom, 4)
                                 .animation(.spring())
                         } else {
@@ -821,7 +821,7 @@ struct SessionsView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color(UIColor.systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
+                Color(uiColor: .systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
                     .ignoresSafeArea()
                 
                 ScrollView() {
