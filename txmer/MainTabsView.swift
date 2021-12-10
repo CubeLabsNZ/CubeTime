@@ -16,15 +16,13 @@ enum Tab {
     case settings
 }
 
-
-
 class TabRouter: ObservableObject {
     @Published var currentTab: Tab = .timer
 }
 
 struct TabIconWithBar: View {
-    let assignedTab: Tab
     @Binding var currentTab: Tab
+    let assignedTab: Tab
     let systemIconName: String
     var systemIconNameSelected: String
     var namespace: Namespace.ID
@@ -62,8 +60,8 @@ struct TabIconWithBar: View {
 
 
 struct TabIcon: View {
-    let assignedTab: Tab
     @Binding var currentTab: Tab
+    let assignedTab: Tab
     let systemIconName: String
     var systemIconNameSelected: String
     var body: some View {
@@ -85,17 +83,14 @@ struct TabIcon: View {
 
 @available(iOS 15.0, *) /// TODO: remove all `@available(iOS 15.0, *)` in the project and change the button role BECAUSE iOS 15 + ONLY :sob:
 struct MainTabsView: View {
-    
+    @Environment(\.managedObjectContext) var managedObjectContext
     @Namespace private var namespace
     
-    
     @StateObject var tabRouter: TabRouter = TabRouter()
-    @Environment(\.managedObjectContext) var managedObjectContext
     
     @State var hideTabBar = false
-    
     @State var currentSession: Sessions
-    
+        
     init(managedObjectContext: NSManagedObjectContext) {
         let lastUsedSessionURI = UserDefaults.standard.url(forKey: "last_used_session")
         if lastUsedSessionURI == nil {
@@ -132,21 +127,14 @@ struct MainTabsView: View {
                             UserDefaults.standard.set(newSession.objectID.uriRepresentation(), forKey: "last_used_session")
                         }
                 case .settings:
-                    SettingsView()
+                    SettingsView(hideTabBar: $hideTabBar)
                     
                 }
 
                 BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
+                    .offset(y: hideTabBar ? 250 : 0)
                     .zIndex(1)
             }
         }
     }
 }
-/*
-@available(iOS 15.0, *) /// TODO: remove all `@available(iOS 15.0, *)` in the project and change the button role BECAUSE iOS 15 + ONLY :sob:
-struct MainTabsView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainTabsView(tabRouter: TabRouter())
-    }
-}
-*/

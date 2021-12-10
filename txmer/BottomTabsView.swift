@@ -42,8 +42,8 @@ struct BottomTabsView: View {
                         HStack {
                             HStack {
                                 TabIconWithBar(
-                                    assignedTab: .timer,
                                     currentTab: $currentTab,
+                                    assignedTab: .timer,
                                     systemIconName: "stopwatch",
                                     systemIconNameSelected: "stopwatch.fill",
                                     namespace: namespace
@@ -52,8 +52,8 @@ struct BottomTabsView: View {
 //                                Spacer()
                                 
                                 TabIconWithBar(
-                                    assignedTab: .solves,
                                     currentTab: $currentTab,
+                                    assignedTab: .solves,
                                     systemIconName: "hourglass.bottomhalf.filled",
                                     systemIconNameSelected: "hourglass.tophalf.filled",
                                     namespace: namespace
@@ -62,8 +62,8 @@ struct BottomTabsView: View {
 //                                Spacer()
                                 
                                 TabIconWithBar(
-                                    assignedTab: .stats,
                                     currentTab: $currentTab,
+                                    assignedTab: .stats,
                                     systemIconName: "chart.pie",
                                     systemIconNameSelected: "chart.pie.fill",
                                     namespace: namespace
@@ -73,8 +73,8 @@ struct BottomTabsView: View {
 //                                Spacer()
                                 
                                 TabIconWithBar(
-                                    assignedTab: .sessions,
                                     currentTab: $currentTab,
+                                    assignedTab: .sessions,
                                     systemIconName: "line.3.horizontal.circle",
                                     systemIconNameSelected: "line.3.horizontal.circle.fill",
                                     namespace: namespace
@@ -96,8 +96,8 @@ struct BottomTabsView: View {
                             
                             
                             TabIcon(
-                                assignedTab: .settings,
                                 currentTab: $currentTab,
+                                assignedTab: .settings,
                                 systemIconName: "gearshape",
                                 systemIconNameSelected: "gearshape.fill"
                             )
