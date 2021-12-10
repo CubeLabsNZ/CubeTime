@@ -529,25 +529,32 @@ struct NewSessionPopUpView: View {
     }
 }
 
+@available(iOS 15.0, *)
 struct ContextMenuButton: View {
     var action: () -> Void
     var title: String
     var systemImage: String? = nil
     
     var body: some View {
-        Button(action: delayedAction) {
-            HStack {
-                Text(title)
-                if image != nil {
-                    Image(uiImage: image!)
+        
+        
+            Button(role: title == "Delete Session" ? .destructive : nil, action: delayedAction) {
+                HStack {
+                    Text(title)
+                    if image != nil {
+                        Image(uiImage: image!)
+                    }
                 }
             }
-        }
+        
+        
+        
     }
     
     private var image: UIImage? {
         if let systemName = systemImage {
             let config = UIImage.SymbolConfiguration(font: .preferredFont(forTextStyle: .body), scale: .medium)
+            
             return UIImage(systemName: systemName, withConfiguration: config)
         } else {
             return nil
@@ -703,16 +710,41 @@ struct SessionCard: View {
         
         .contextMenu(menuItems: {
             ContextMenuButton(action: {
+                print("customise pressed")
+                
+            },
+                              title: "Customise",
+                              systemImage: "pencil");
+            ContextMenuButton(action: {
                 item.pinned.toggle()
                 try! managedObjectContext.save()
             },
-                              title: "PENIS",
-                              systemImage: "pin")
+                              title: item.pinned ? "Unpin" : "Pin",
+                              systemImage: item.pinned ? "pin.slash" : "pin");
+            Divider()
+            
+            ContextMenuButton(action: {
+                isShowingDeleteDialog.toggle()
+            },
+                              title: "Delete Session",
+                              systemImage: "trash")
+                .foregroundColor(Color.red)
         })
         .padding(.trailing)
         .padding(.leading)
         
         .animation(.spring())
+                
+        .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unknown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
+            Button("Confirm", role: .destructive) {
+                managedObjectContext.delete(item)
+                try! managedObjectContext.save()
+            }
+            Button("Cancel", role: .cancel) {
+                
+            }
+        }
+
         
         
         
@@ -735,7 +767,7 @@ struct SessionCard: View {
 //
 //            Button (role: .destructive) {
 //                print("session delete pressed")
-//                isShowingDeleteDialog.toggle()
+
 //            } label: {
 //                Label {
 //                    Text("Delete Session")
@@ -744,15 +776,6 @@ struct SessionCard: View {
 //                    Image(systemName: "trash")
 //                        .foregroundColor(Color.green) /// FIX: colours not working
 //                }
-//            }
-//        }
-//        .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unkown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
-//            Button("Confirm", role: .destructive) {
-//                managedObjectContext.delete(item)
-//                try! managedObjectContext.save()
-//            }
-//            Button("Cancel", role: .cancel) {
-//
 //            }
 //        }
         
