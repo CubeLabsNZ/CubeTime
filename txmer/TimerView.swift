@@ -86,25 +86,22 @@ struct TimerView: View {
                     
                     Spacer()
                 }
-                
-                
+                .ignoresSafeArea(edges: .top)
             }
             
+            VStack {
+                Spacer()
+                
+                Text(formatSolveTime(secs: stopWatchManager.secondsElapsed))
+                    .foregroundColor(stopWatchManager.timerColour)
+                    .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 64 : 48))
+                    .animation(Animation.spring(), value: stopWatchManager.mode == .running)
+            
             
                 
-            
-            
-            
-            
-            Text(formatSolveTime(secs: stopWatchManager.secondsElapsed))
-                                
-                .foregroundColor(stopWatchManager.timerColour)
-            
-                .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 64 : 48))
-                .animation(Animation.spring(), value: stopWatchManager.mode == .running)
-                .ignoresSafeArea(edges: .top)
-            
-            
+                Spacer()
+            }
+                    .ignoresSafeArea(edges: .all)
             
                        
             GeometryReader { geometry in

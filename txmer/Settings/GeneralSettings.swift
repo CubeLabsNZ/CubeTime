@@ -50,6 +50,7 @@ struct GeneralSettingsView: View {
                 
                 Divider()
                 
+                
                 VStack (alignment: .leading) {
                     HStack {
                         Stepper(value: $holdDownTime, in: 0.2...1.0, step: 0.05) {
@@ -82,8 +83,8 @@ struct GeneralSettingsView: View {
                     .padding(.bottom, 10)
                 }
             }
-            .modifier(settingsBlocks())
-            
+//            .modifier(settingsBlocks())
+            .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3))
             
             VStack {
                 HStack {
@@ -150,6 +151,7 @@ struct GeneralSettingsView: View {
                 
                 Divider()
                 
+                
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Gesture Activation Distance")
                         .font(.system(size: 17, weight: .medium))
@@ -179,15 +181,15 @@ struct GeneralSettingsView: View {
                 
                 
             }
-            .modifier(settingsBlocks())
-            
+//            .modifier(settingsBlocks())
+            .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3))
             
             VStack {
                 HStack {
-                    Image(systemName: "eye")
+                    Image(systemName: "chart.bar.xaxis")
                         .font(.system(size: 15, weight: .bold, design: .rounded))
                         .foregroundColor(Color("AccentColor"))
-                    Text("Accessibility")
+                    Text("Statistics")
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                     
                     Spacer()
@@ -214,8 +216,8 @@ struct GeneralSettingsView: View {
                 
                 
             }
-            .modifier(settingsBlocks())
-            
+//            .modifier(settingsBlocks())
+            .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3))
             
         }
         .padding(.horizontal)

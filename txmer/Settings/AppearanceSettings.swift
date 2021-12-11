@@ -11,8 +11,9 @@ import SwiftUI
 struct settingsBlocks: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12)))
-            .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
+            .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3))
+            
+//            .drawingGroup()
     }
 }
 
@@ -66,6 +67,7 @@ struct AppearanceSettingsView: View {
                                         .foregroundColor(colour)
                                         .font(.system(size: 24))
                                         .shadow(color: (colour == accentColour) ? .black.opacity(0.16) : .clear, radius: 6, x: 0, y: 2)
+                                        .drawingGroup()
                                         .onTapGesture {
                                             accentColour = colour
                                         }
@@ -122,7 +124,8 @@ struct AppearanceSettingsView: View {
                 }
                 
             }
-            .modifier(settingsBlocks())
+//            .modifier(settingsBlocks())
+            .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3))
             
             VStack {
                 HStack {
@@ -187,7 +190,8 @@ struct AppearanceSettingsView: View {
                 }
                 
             }
-            .modifier(settingsBlocks())
+//            .modifier(settingsBlocks())
+            .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3))
             
             
 //            VStack {
