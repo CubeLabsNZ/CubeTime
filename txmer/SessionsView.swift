@@ -420,32 +420,15 @@ struct NewSessionPopUpView: View {
         VStack {
             NavigationView {
                 VStack {
-                    HStack {
-                        Spacer()
-                        
-                        Button {
-                            print("new session view closed")
-                            dismiss()
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .font(.system(size: 26, weight: .semibold))
-                                .symbolRenderingMode(.hierarchical)
-                                .foregroundStyle(.secondary)
-                                .foregroundStyle(.black)
-                                .padding(.top)
-                                .padding(.trailing)
-                        }
-                    }
-                    
-                    
                     VStack(alignment: .center) {
                         Text("Add New Session")
                             .font(.system(size: 34, weight: .bold, design: .default))
                             .padding(.bottom, 8)
-                            .padding(.top, 36)
+                            .padding(.top, UIScreen.screenHeight/12)
                         Text("You can choose from four different types of sessions, out of the following: ")
                             .font(.system(size: 17, weight: .regular, design: .default))
                             .multilineTextAlignment(.center)
+                            .padding(.horizontal)
                             .padding(.bottom)
                     }
                     
@@ -622,6 +605,27 @@ struct NewSessionPopUpView: View {
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarHidden(true)
+                .overlay(
+                    VStack {
+                        HStack {
+                            Spacer()
+                            
+                            Button {
+                                print("new session view closed")
+                                dismiss()
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(.system(size: 26, weight: .semibold))
+                                    .symbolRenderingMode(.hierarchical)
+                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(.black)
+                                    .padding(.top)
+                                    .padding(.trailing)
+                            }
+                        }
+                        Spacer()
+                    }
+                )
                 
                 /*
                  .toolbar {
@@ -944,34 +948,23 @@ struct SessionsView: View {
                 Color(uiColor: .systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
                     .ignoresSafeArea()
                 
-                ScrollView() {
+                ScrollView {
                     VStack (spacing: 10) {
                         ForEach(pinnedSessions) { item in
                             SessionCard(currentSession: $currentSession, item: item)
                                 .environment(\.managedObjectContext, managedObjectContext)
                                 
                         }
-                        
-//                        .matchedGeometryEffect(id: $currentSession.item, in: Namespace)
-                        
                         ForEach(unPinnedSessions) { item in
                             SessionCard(currentSession: $currentSession, item: item)
                                 .environment(\.managedObjectContext, managedObjectContext)
                                 
                         }
-                        
-//                        .matchedGeometryEffect(id: currentSession.item, in: Namespace)
                     }
                     .animation(.spring())
-//                    .transition(.slide)
-//                    .animation(.spring())
-                    
-                    
-                    
                     
                     
                 }
-//                .animation(.spring())
                 .navigationTitle("Your Sessions")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -979,66 +972,40 @@ struct SessionsView: View {
                             print("button tapped")
                         } label: {
                             Text("Edit")
-                            //.font(.system(size: 17, weight: .medium))
-                            //.foregroundColor(Color.red)
                         }
                     }
                 }
-                .safeAreaInset(edge: .bottom, spacing: 0) {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.clear)
-                        .frame(height: 50)
-                        .padding(.top, 32)
-                     
-                }
+                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
                 
                 
                 VStack {
                     Spacer()
-                    
                     HStack {
-                        
-                        
-                        ZStack {
-
-                            Button {
-                                showNewSessionPopUp.toggle()
-                            } label: {
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.system(size: 24, weight: .semibold))
-                                    .padding(.leading, -4)
-                                Text("New Session")
-                                    .font(.system(size: 18, weight: .medium))
-                            }
-                            .shadow(color: .black.opacity(0.12), radius: 10, x: 0, y: 3)
-                            .overlay(Capsule().stroke(Color.black.opacity(0.05), lineWidth: 0.5))
-                            .buttonStyle(.bordered)
-                            
-                            .controlSize(.small)
-                            .background(.ultraThinMaterial, in: Capsule())
+                        Button {
+                            showNewSessionPopUp.toggle()
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.system(size: 24, weight: .semibold))
+                                .padding(.leading, -4)
+                            Text("New Session")
+                                .font(.system(size: 18, weight: .medium))
                         }
-                        
-//                        .background(VisualEffectBlurView(blurStyle: .dark), in: Capsule())
-                        
+                        .shadow(color: .black.opacity(0.12), radius: 10, x: 0, y: 3)
+                        .overlay(Capsule().stroke(Color.black.opacity(0.05), lineWidth: 0.5))
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+                        .background(.ultraThinMaterial, in: Capsule())
                         .sheet(isPresented: $showNewSessionPopUp) {
                             NewSessionPopUpView(showNewSessionPopUp: $showNewSessionPopUp)
                                 .environment(\.managedObjectContext, managedObjectContext)
-                            //NewSessionPopUpView()
                         }
-                        
-                        //                        .padding(.top, 64)
                         .padding(.leading)
-                        //                        .padding(.trailing)
                         .padding(.bottom, 8)
                         
                         Spacer()
                     }
                 }
-                .safeAreaInset(edge: .bottom, spacing: 0) {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.clear)
-                        .frame(height: 50 + (SetValues.hasBottomBar ? 0 : CGFloat(SetValues.marginBottom)))
-                }
+                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
             }
         }
     }

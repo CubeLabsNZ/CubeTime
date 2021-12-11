@@ -53,13 +53,13 @@ struct SettingsView: View {
                         //NavigationLink("", destination: GeneralSettingsView(), isActive: $showingCard)
                         
                         VStack (spacing: 16) {
-                            HStack {
-                                Text("Settings")
-                                    .font(.largeTitle.bold())
-                                    .multilineTextAlignment(.leading)
-                                    .padding(.top, UIScreen.screenHeight/20)
-                                Spacer()
-                            }
+//                            HStack {
+//                                Text("Settings")
+//                                    .font(.largeTitle.bold())
+//                                    .multilineTextAlignment(.leading)
+//                                    .padding(.top, UIScreen.screenHeight/20)
+//                                Spacer()
+//                            }
                             
                             
                             HStack (spacing: 16) {
@@ -78,22 +78,17 @@ struct SettingsView: View {
                             
                             
                         }
-                        .navigationBarTitle("")
-                        .navigationBarHidden(true)
-                        .navigationBarBackButtonHidden(true)
+                        .navigationBarTitle("Settings")
+//                        .navigationBarHidden(true)
+//                        .navigationBarBackButtonHidden(true)
                         
-                        .safeAreaInset(edge: .bottom, spacing: 0) {
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(Color.clear)
-                                .frame(height: 50)
-                                .padding(.top)
-                        }
+                        .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
                         .padding(.vertical, 6)
                         .padding(.horizontal)
-                    }.animation(.spring(), value: showingCard)
+                    }
+                    .animation(.spring(), value: showingCard)
                 }
                 .zIndex(showingCard ? 0 : 1)
-                .navigationViewStyle(.stack)
             } else {
                 SettingsDetail(showingCard: $showingCard, currentCard: $currentCard, namespace: namespace, namespace1: namespace1, namespace2: namespace2)
                     .zIndex(showingCard ? 1 : 0)
@@ -197,11 +192,7 @@ struct SettingsDetail: View {
                         .frame(maxHeight: UIScreen.screenHeight / 7)
                         .padding(.bottom)
                 }
-                .safeAreaInset(edge: .bottom, spacing: 0) {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.clear)
-                        .frame(height: 50 + (SetValues.hasBottomBar ? 0 : CGFloat(SetValues.marginBottom)))
-                }
+                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
 
                 
                 
