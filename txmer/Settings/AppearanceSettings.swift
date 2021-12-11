@@ -54,20 +54,18 @@ struct AppearanceSettingsView: View {
                         HStack(spacing: 6) {
                             ForEach(accentColours, id: \.self) { colour in
                                 ZStack {
-                                    /*
-                                    if colour == accentColour {
-                                        Circle()
-//                                            .strokeBorder(colour.opacity(0.25), lineWidth: (colour == accentColour) ? 2 : 0)
-                                            .strokeBorder(colour.opacity(0.25), lineWidth: 2)
-                                            .frame(width: 31, height: 31)
-                                    }
-                                     */
+                                    
+                                    Circle()
+                                        .strokeBorder(colour.opacity(0.25), lineWidth: (colour == accentColour) ? 2 : 0)
+//                                            .strokeBorder(colour.opacity(0.25), lineWidth: 2)
+                                        .frame(width: 31, height: 31)
+                                     
                                     
                                     
                                     Image(systemName: "circle.fill")
                                         .foregroundColor(colour)
                                         .font(.system(size: 24))
-//                                        .shadow(color: (colour == accentColour) ? .black.opacity(0.16) : .clear, radius: 6, x: 0, y: 2)
+                                        .shadow(color: (colour == accentColour) ? .black.opacity(0.16) : .clear, radius: 6, x: 0, y: 2)
                                         .onTapGesture {
                                             accentColour = colour
                                         }
@@ -82,14 +80,8 @@ struct AppearanceSettingsView: View {
                             }
                             
                             Spacer()
-                                
                             
-                            Image(systemName: "plus.circle.fill")
-                                .font(.system(size: 24))
-                                .symbolRenderingMode(.hierarchical)
-                                .onTapGesture {
-                                    
-                                }
+                            ColorPicker("", selection: $accentColour)
                             
                         }
                         .padding(.vertical, 4)

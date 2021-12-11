@@ -20,6 +20,150 @@ struct NewStandardSessionViewBlocks: ViewModifier {
     }
 }
 
+struct CustomiseSessionView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
+    
+    @State private var name: String = ""
+    
+    @State private var sessionEventType: Int32 = 0
+    
+    
+    @State var pinnedSession: Bool /// TODO: link to database
+    
+    let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
+    
+    
+    var body: some View {
+        ZStack {
+            Color(uiColor: .systemGray6)
+                .ignoresSafeArea()
+            
+            ScrollView {
+                VStack (spacing: 16) {
+                    VStack (alignment: .center, spacing: 0) {
+                        Image(puzzle_types[Int(sessionEventType)].name)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .padding(.top)
+                            .padding(.bottom)
+                            .shadow(color: .black.opacity(0.24), radius: 12, x: 0, y: 4)
+                            
+                        
+                        TextField("Session Name", text: $name)
+                            .padding()
+                            .font(.system(size: 22, weight: .bold))
+                            .multilineTextAlignment(TextAlignment.center)
+                            .background(Color(uiColor: .systemGray5))
+                            .cornerRadius(10)
+                            .padding(.leading)
+                            .padding(.trailing)
+                            .padding(.bottom)
+                            
+                    }
+                    .frame(height: 220)
+                    .modifier(NewStandardSessionViewBlocks())
+                    
+                    VStack (spacing: 0) {
+                        HStack {
+                            Text("Session Event")
+                                .font(.system(size: 17, weight: .medium))
+                            
+                            
+                            Spacer()
+
+                            Picker("", selection: $sessionEventType) {
+                                    ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
+                                    Text(element.name).tag(Int32(index))
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .font(.system(size: 17, weight: .regular))
+                        }
+                        .padding()
+                    }
+                    .frame(height: 45)
+                    .modifier(NewStandardSessionViewBlocks())
+                    
+                    
+                    
+                    VStack (spacing: 0) {
+                        LazyVGrid(columns: sessionEventTypeColumns, spacing: 0) {
+                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                                Button {
+                                    sessionEventType = Int32(index)
+                                    
+                                } label: {
+                                    ZStack {
+                                        Image("circular-" + element.name)
+                                        
+                                        Circle()
+                                            .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
+                                            .frame(width: 54, height: 54)
+                                            .offset(x: -0.2)
+                                    }
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                    .frame(height: 180)
+                    .modifier(NewStandardSessionViewBlocks())
+
+                    VStack (spacing: 0) {
+                        HStack {
+                            Toggle(isOn: $pinnedSession) {
+                                Text("Pin Session?")
+                                    .font(.system(size: 17, weight: .medium))
+                            }
+                            .tint(.yellow)
+                        }
+                        .padding()
+                    }
+                    .frame(height: 45)
+                    .modifier(NewStandardSessionViewBlocks())
+                }
+            }
+            .ignoresSafeArea(.keyboard)
+            .navigationBarTitle("Customise Session", displayMode: .inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        let sessionItem = Sessions(context: managedObjectContext)
+                        sessionItem.name = name
+                        sessionItem.pinned = pinnedSession
+                        NSLog("sessioneventyype is \(sessionEventType)")
+                        sessionItem.scramble_type = sessionEventType
+                        do {
+                            try managedObjectContext.save()
+                        } catch {
+                            if let error = error as NSError? {
+                                // Replace this implementation with code to handle the error appropriately.
+                                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                                
+                                /*
+                                 Typical reasons for an error here include:
+                                 * The parent directory does not exist, cannot be created, or disallows writing.
+                                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+                                 * The device is out of space.
+                                 * The store could not be migrated to the current model version.
+                                 Check the error message to determine what the actual problem was.
+                                 */
+                                fatalError("Unresolved error \(error), \(error.userInfo)")
+                            }
+                        }
+                        
+                    } label: {
+                        Text("Done")
+                    }
+                    .disabled(self.name.isEmpty)
+                }
+            }
+        }
+        .ignoresSafeArea(.keyboard)
+    }
+}
+
+
 @available(iOS 15.0, *)
 struct NewStandardSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -118,7 +262,7 @@ struct NewStandardSessionView: View {
                     
                     
                     VStack (spacing: 0) {
-                        LazyVGrid(columns: sessionColorColumns, spacing: 0) {
+                        LazyVGrid(columns: sessionEventTypeColumns, spacing: 0) {
                             ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
                                 Button {
                                     sessionEventType = Int32(index)
@@ -179,30 +323,7 @@ struct NewStandardSessionView: View {
                     .frame(height: 45)
                     .modifier(NewStandardSessionViewBlocks())
                     
-                    VStack (spacing: 0) {
-                        LazyVGrid(columns: sessionColorColumns, spacing: 10) {
-                            ForEach(sessionColors, id: \.self) { colour in
-                                Button {
-                                    sessionColour = colour
-                                    
-                                    
-                                } label: {
-                                    Image(systemName: "circle.fill")
-                                        .foregroundColor(colour)
-                                        .font(.system(size: 40))
-                                }
-                                
-                                
-                            }
-                            
-                        }
-                        .padding()
-                    }
-                    .frame(height: 130)
-                    .modifier(NewStandardSessionViewBlocks())
-            
-                    Text("current colour selected")
-                        .foregroundColor(sessionColour)
+                    
                     
                     Spacer()
                     
