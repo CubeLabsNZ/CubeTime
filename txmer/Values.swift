@@ -75,7 +75,7 @@ class TimerTextColours {
 //    } /// doesn't work wtf
     
     static let timerDefaultColour: Color = Color.black
-    static let timerDefaultColourDarkMode: Color = Color.white
+    static let timerDefaultColourDarkMode: Color = Color.primary
     static let timerHeldDownColour: Color = Color.red
     static let timerCanStartColour: Color = Color.green
 }

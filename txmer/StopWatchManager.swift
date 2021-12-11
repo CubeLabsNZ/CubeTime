@@ -178,7 +178,7 @@ class StopWatchManager: ObservableObject {
             NSLog("calling start")
             start()
         }
-        timerColour = ((colourScheme == .light) ? Color.black : Color.white)
+        timerColour = TimerTextColours.timerDefaultColour
         taskTimerReady?.cancel()
     }
 }

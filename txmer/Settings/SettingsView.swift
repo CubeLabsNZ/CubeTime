@@ -124,7 +124,7 @@ struct SettingsCard: View {
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(Color.white)
+                    .fill(Color(uiColor: .systemBackground))
                     .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
                     .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
                     .shadow(color: .black.opacity(0.1), radius: 8, x: 3, y: 3)
