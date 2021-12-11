@@ -6,14 +6,23 @@
 //
 
 import SwiftUI
+import SwiftUICharts
 
 struct GeneralSettingsView: View {
     
     @State var inspectionTime: Bool = true
     @State var holdDownTime: Float = 0.5
     @State var timerIntervalMode: Int = 0
+    @State var reduceAnimations: Bool = false
+    @State var hapticFeedback: Bool = true
+    @State var hapticIntensity: Int = 0
+    @State var gestureActivationDistance: Double = 200
+    @State var displayTruncation: Int = 0
+    
     
     // im thinking of using these interval modes: seconds, 0.1s, 0.001, your refresh rate
+    // and for haptics just .light, .medium, .heavy, .rigid, .soft
+    // and we need to have a clear to defaults option or something
     
     var body: some View {
         VStack(spacing: 16) {
@@ -72,6 +81,138 @@ struct GeneralSettingsView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 10)
                 }
+            }
+            .modifier(settingsBlocks())
+            
+            
+            VStack {
+                HStack {
+                    Image(systemName: "eye")
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundColor(Color("AccentColor"))
+                    Text("Accessibility")
+                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                    
+                    Spacer()
+                }
+                .padding([.horizontal, .top], 10)
+                
+                VStack(alignment: .leading, spacing: 0) {
+                    HStack {
+                        Toggle(isOn: $reduceAnimations) {
+                            Text("Reduce Animations")
+                                .font(.system(size: 17, weight: .medium))
+                        }
+                            .toggleStyle(SwitchToggleStyle(tint: Color("AccentColor")))
+                        
+                    }
+                    .padding(.horizontal)
+                    
+                    Text("Turn off motion animations and other effects.")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundColor(Color(uiColor: .systemGray))
+                        .multilineTextAlignment(.leading)
+                        .padding(.leading)
+                        .padding(.top, 10)
+                }
+                
+                
+                Divider()
+                
+                HStack {
+                    Toggle(isOn: $hapticFeedback) {
+                        Text("Haptic Feedback")
+                            .font(.system(size: 17, weight: .medium))
+                    }
+                        .toggleStyle(SwitchToggleStyle(tint: Color("AccentColor")))
+                    
+                }
+                .padding(.horizontal)
+                
+                if hapticFeedback {
+                    HStack {
+                        Text("Haptic Mode")
+                            .font(.system(size: 17, weight: .medium))
+                        
+                        Spacer()
+                        
+                        Picker("", selection: $hapticIntensity) {
+                                ForEach(["light", "medium", "heavy", "rigid", "soft"], id: \.self) { mode in
+                                Text(mode)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .font(.system(size: 17, weight: .regular))
+                        
+                    }
+                    .padding(.horizontal)
+                }
+                
+                Divider()
+                
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Gesture Activation Distance")
+                        .font(.system(size: 17, weight: .medium))
+                        .padding(.bottom, 4)
+                    
+                    HStack {
+                        Text("MIN")
+                            .font(.system(size: 13, weight: .regular, design: .rounded))
+                            .foregroundColor(Color(uiColor: .systemGray2))
+                        
+                        Slider(value: $gestureActivationDistance, in: 100...500)
+                            .padding(.horizontal, 4)
+                        
+                        Text("MAX")
+                            .font(.system(size: 13, weight: .regular, design: .rounded))
+                            .foregroundColor(Color(uiColor: .systemGray2))
+                        
+                    }
+                    
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 10)
+                
+                
+                
+                
+                
+                
+            }
+            .modifier(settingsBlocks())
+            
+            
+            VStack {
+                HStack {
+                    Image(systemName: "eye")
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundColor(Color("AccentColor"))
+                    Text("Accessibility")
+                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                    
+                    Spacer()
+                }
+                .padding([.horizontal, .top], 10)
+                
+                HStack {
+                    Text("Times Displayed To: ")
+                        .font(.system(size: 17, weight: .medium))
+                    
+                    Spacer()
+                    
+                    Picker("", selection: $displayTruncation) {
+                            ForEach(["2 d.p", "3 d.p"], id: \.self) { mode in
+                            Text(mode)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .font(.system(size: 17, weight: .regular))
+                    
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 10)
+                
+                
             }
             .modifier(settingsBlocks())
             
