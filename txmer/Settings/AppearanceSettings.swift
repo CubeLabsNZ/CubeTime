@@ -20,7 +20,7 @@ struct settingsBlocks: ViewModifier {
 
 struct AppearanceSettingsView: View {
     @State private var accentColour: Color = .indigo
-    let accentColours: [Color] = [.green, .cyan, .blue, .indigo, .purple, .red]
+    let accentColours: [Color] = [.cyan, .blue, .indigo, .purple, .red]
     
     @State private var overrideSystemAppearance: Bool = true
     @State private var darkMode: Bool = true
@@ -86,7 +86,8 @@ struct AppearanceSettingsView: View {
                             ColorPicker("", selection: $accentColour, supportsOpacity: false)
                             
                         }
-                        .padding(.vertical, 4)
+                        .padding(.bottom, 4)
+                        .padding(.top, 8)
                     }
                     .padding(.horizontal)
                     
