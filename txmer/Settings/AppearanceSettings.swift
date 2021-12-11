@@ -81,7 +81,7 @@ struct AppearanceSettingsView: View {
                             
                             Spacer()
                             
-                            ColorPicker("", selection: $accentColour)
+                            ColorPicker("", selection: $accentColour, supportsOpacity: false)
                             
                         }
                         .padding(.vertical, 4)

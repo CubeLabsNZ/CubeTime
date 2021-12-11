@@ -25,7 +25,7 @@ struct TxmerLicense: View {
 struct ChaoTimerLicense: View {
     var body: some View {
         VStack {
-            Text("ChaoTimer's scrambler is used in txmer and is © 2014 Jichao Li.")
+            Text("ChaoTimer's scrambler is used in txmer and is © 2014 Jichao Li.\nNote: Most of ChaoTimer's scramblers are from DCTimer, which are kindly provided by Jaap Scherphuis (all puzzles), Syoji Takamatsu (Pyraminx), Lucas Garron (Pyraminx), Michael Gottlieb (Pyraminx, Square-1), Tom van der Zanden (2x2), Conrad Rider (2x2), Clément Gallet and Stefan Pochmann (Megaminx), Herbert Kociemba (3x3) and Shuang Chen (3x3, Square-1).\nThe 3x3 random state scrambler uses Kociemba's Two-Phase algorithm, and the code is an Objective-C port of Shuang Chen's Java min2phase. Please see https://github.com/cs0x7f/min2phase for the source code.\nTHe Square-1 random state scrambler is also an Objective-C port of Shuang Chen's Java sq12phase. Please see https://github.com/cs0x7f/sq12phase for the source code.\nThe The 4x4 random state scrambler is an Objective-C port of Shuang Chen's Java TPR-4x4x4-solver. Again, please see https://github.com/cs0x7f/TPR-4x4x4-Solver for the source code.")
             Divider()
             GPLLicense()
         }
