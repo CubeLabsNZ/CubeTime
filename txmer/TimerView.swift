@@ -34,6 +34,7 @@ struct AnimatingFontSize: AnimatableModifier {
 
 @available(iOS 15.0, *)
 struct TimerView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
     //@ObservedObject var currentSession: Sessions
     
     @ObservedObject var stopWatchManager: StopWatchManager
@@ -142,6 +143,16 @@ struct TimerView: View {
                 }
             }
             .ignoresSafeArea(edges: .top)
+        }
+        .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
+            Button("Confirm", role: .destructive) {
+                NSLog("deleting \(detail)")
+                managedObjectContext.delete(detail.wrappedValue!)
+                try! managedObjectContext.save()
+            }
+            Button("Cancel", role: .cancel) {
+                
+            }
         }
         .onReceive(stopWatchManager.$mode) { newMode in
             hideTabBar = (newMode == .running)

@@ -26,6 +26,8 @@ class StopWatchManager: ObservableObject {
     let managedObjectContext: NSManagedObjectContext
     @Published var mode: stopWatchMode = .stopped
     
+    @Published var showDeleteSolveConfirmation = false
+    
     let scrambler = CHTScrambler.init()
     
     var scrambleType: Int32
@@ -94,7 +96,7 @@ class StopWatchManager: ObservableObject {
     
     private var taskTimerReady: DispatchWorkItem?
     
-    var solveItem: Solves!
+    @Published var solveItem: Solves!
     
     
     private let feedbackStyle = UIImpactFeedbackGenerator(style: .rigid) /// TODO: add option to change heaviness/turn on off in settings
@@ -116,7 +118,7 @@ class StopWatchManager: ObservableObject {
                         self.feedbackStyle.impactOccurred()
                     } else {
                         NSLog("Left")
-                            if solveItem != nil {
+                        if solveItem != nil {
                             managedObjectContext.delete(solveItem)
                             solveItem = nil
                             secondsElapsed = 0
