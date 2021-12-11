@@ -119,6 +119,8 @@ class StopWatchManager: ObservableObject {
                     } else {
                         NSLog("Left")
                         if solveItem != nil {
+                            prevIsDown = false // Showing a dialog implies touch up
+                            timerColour = ((colourScheme == .light) ? Color.black : Color.white)
                             showDeleteSolveConfirmation = true
                             self.feedbackStyle.impactOccurred()
                         }
