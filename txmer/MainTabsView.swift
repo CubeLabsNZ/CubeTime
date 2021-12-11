@@ -111,7 +111,6 @@ struct MainTabsView: View {
             ZStack {
                 switch tabRouter.currentTab {
                 case .timer:
-                    let _ = NSLog("Here")
                     TimerView(stopWatchManager: StopWatchManager(currentSession: $currentSession, managedObjectContext: managedObjectContext), hideTabBar: $hideTabBar)
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .solves:
