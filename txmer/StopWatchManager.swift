@@ -107,7 +107,7 @@ class StopWatchManager: ObservableObject {
     let threshold = 50 as CGFloat
     
     func touchDown(value: DragGesture.Value) {
-        if prevIsDown
+        if prevIsDown {
             if allowGesture && !canStartTimer && !prevDownStoppedTheTimer {
                 if abs(value.translation.width) > threshold && abs(value.translation.height) < abs(value.translation.width) {
                     taskTimerReady?.cancel() // TODO maybe dont do this idk ask tim
