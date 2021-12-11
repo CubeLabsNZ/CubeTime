@@ -83,6 +83,7 @@
 
 /* Begin PBXFileReference section */
 		233FE7B5274F109600C6F1DF /* Values.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Values.swift; sourceTree = "<group>"; };
+		2354882127642B9C00FE8D7A /* recursive-static-OTFs.otc */ = {isa = PBXFileReference; lastKnownFileType = file; path = "recursive-static-OTFs.otc"; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
 		23D2FC4C274E12DE00D7071A /* TimeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeListView.swift; sourceTree = "<group>"; };
 		23DE3BD7274DDBE200254D29 /* txmer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = txmer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -196,6 +197,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2354882027642B5400FE8D7A /* project-fonts */ = {
+			isa = PBXGroup;
+			children = (
+				2354882127642B9C00FE8D7A /* recursive-static-OTFs.otc */,
+			);
+			path = "project-fonts";
+			sourceTree = "<group>";
+		};
 		23DE3BCE274DDBE200254D29 = {
 			isa = PBXGroup;
 			children = (
@@ -220,6 +229,7 @@
 		23DE3BD9274DDBE200254D29 /* txmer */ = {
 			isa = PBXGroup;
 			children = (
+				2354882027642B5400FE8D7A /* project-fonts */,
 				23DE3BDA274DDBE200254D29 /* txmerApp.swift */,
 				23DE3BE3274DDBE300254D29 /* Persistence.swift */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,

@@ -104,11 +104,19 @@ struct AboutSettingsView: View {
     @State var showLicenses = false
     
     var body: some View {
-        Text("txmer version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)\n")
-        Text("txmer is licensed under the GPL v3 license, and uses many open soruce projects. Click below for more info\n")
-        Button("Open source licenes") {
-            showLicenses = true
+        NavigationView {
+            VStack {
+                Text("txmer version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)\n")
+                Text("txmer is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\n\nClick below for more info.")
+                Button("Open source licenes") {
+                    showLicenses = true
+                }
+                
+                
+            }
         }
+        
+        
         .sheet(isPresented: $showLicenses) {
             LicensesPopUpView(showLicenses: $showLicenses)
             //NewSessionPopUpView()
