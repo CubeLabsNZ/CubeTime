@@ -107,28 +107,30 @@ class StopWatchManager: ObservableObject {
     let threshold = 50 as CGFloat
     
     func touchDown(value: DragGesture.Value) {
-        if prevIsDown && allowGesture && !canStartTimer && !prevDownStoppedTheTimer {
-            if abs(value.translation.width) > threshold && abs(value.translation.height) < abs(value.translation.width) {
-                taskTimerReady?.cancel() // TODO maybe dont do this idk ask tim
-                allowGesture = false
-                if value.translation.width > 0 {
-                    NSLog("Right")
-                    rescramble() // TODO customize
-                    self.feedbackStyle.impactOccurred()
-                } else {
-                    NSLog("Left")
-                    if solveItem != nil {
-                        showDeleteSolveConfirmation = true
+        if prevIsDown
+            if allowGesture && !canStartTimer && !prevDownStoppedTheTimer {
+                if abs(value.translation.width) > threshold && abs(value.translation.height) < abs(value.translation.width) {
+                    taskTimerReady?.cancel() // TODO maybe dont do this idk ask tim
+                    allowGesture = false
+                    if value.translation.width > 0 {
+                        NSLog("Right")
+                        rescramble() // TODO customize
                         self.feedbackStyle.impactOccurred()
+                    } else {
+                        NSLog("Left")
+                        if solveItem != nil {
+                            showDeleteSolveConfirmation = true
+                            self.feedbackStyle.impactOccurred()
+                        }
                     }
-                }
-            } else if abs(value.translation.height) > threshold && abs(value.translation.width) < abs(value.translation.height) {
-                taskTimerReady?.cancel() // TODO maybe dont do this idk ask tim
-                allowGesture = false
-                if value.translation.height > 0 {
-                    NSLog("Down")
-                } else {
-                    NSLog("Up")
+                } else if abs(value.translation.height) > threshold && abs(value.translation.width) < abs(value.translation.height) {
+                    taskTimerReady?.cancel() // TODO maybe dont do this idk ask tim
+                    allowGesture = false
+                    if value.translation.height > 0 {
+                        NSLog("Down")
+                    } else {
+                        NSLog("Up")
+                    }
                 }
             }
         } else { // touchDown is called on DragGesture's onChange, which calls every time finger is moved a substantial amount
