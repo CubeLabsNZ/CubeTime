@@ -167,13 +167,6 @@ struct SettingsDetail: View {
                         AppearanceSettingsView()
                     case "About":
                         AboutSettingsView()
-                            .safeAreaInset(edge: .bottom, spacing: 0) {
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color.clear)
-                                    .frame(height: 50 + (SetValues.hasBottomBar ? 0 : CGFloat(SetValues.marginBottom)))
-                                    .padding(.top)
-                            }
-                            .animation(.easeIn(duration: 2).delay(2))
                     default:
                         Text("unable to load view: please report this issue to us on github!")
                     }

@@ -88,7 +88,7 @@ struct AppearanceSettingsView: View {
                                 .font(.system(size: 24))
                                 .symbolRenderingMode(.hierarchical)
                                 .onTapGesture {
-                                    print("dfsdfdfsdf")
+                                    
                                 }
                             
                         }

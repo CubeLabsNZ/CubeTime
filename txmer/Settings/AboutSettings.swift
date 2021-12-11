@@ -49,52 +49,51 @@ struct LicensesPopUpView: View {
     
     var body: some View {
         NavigationView {
-            VStack{
-                HStack {
-                    Spacer()
+            ZStack {
+                NavigationLink("", destination: LicensePopUpView(projectLicense: $projectLicense), isActive: $showLicense)
+                
+                VStack {
+                    Button("txmer") {
+                        projectLicense = .txmer
+                        showLicense = true
+                    }
+                    Button("ChaoTimer") {
+                        projectLicense = .chaotimer
+                        showLicense = true
+                    }
+                    Button("ChartView") {
+                        projectLicense = .chartview
+                        showLicense = true
+                    }
+                    Button("WCA Icons (Cubing Icons and Fonts)") {
+                        projectLicense = .icons
+                        showLicense = true
+                    }
+                    Button("Recursive Font") {
+                        projectLicense = .recursivefont
+                        showLicense = true
+                    }
                     
+                    Spacer()
+                }
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Licenses")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        print("new session view closed")
                         dismiss()
                     } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 26, weight: .semibold))
-                            .symbolRenderingMode(.hierarchical)
-                            .foregroundStyle(.secondary)
-                            .foregroundStyle(.black)
-                            
-                            .padding(.top)
-                            .padding(.trailing)
+                        
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 17, weight: .medium))
+                            .padding(.leading, -8)
+                        Text("Back")
+//                            .padding(.leading, -8)
                     }
                 }
-                Button("txmer itself") {
-                    projectLicense = .txmer
-                    showLicense = true
-                }
-                Button("ChaoTimer") {
-                    projectLicense = .chaotimer
-                    showLicense = true
-                }
-                Button("ChartView") {
-                    projectLicense = .chartview
-                    showLicense = true
-                }
-                Button("Cubing Icons") {
-                    projectLicense = .icons
-                    showLicense = true
-                }
-                Button("Recursive Font") {
-                    projectLicense = .recursivefont
-                    showLicense = true
-                }
-                NavigationLink("", destination: LicensePopUpView(projectLicense: $projectLicense), isActive: $showLicense)
-                Spacer()
             }
-            
-            
         }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarHidden(true)
     }
 }
 
@@ -104,9 +103,13 @@ struct AboutSettingsView: View {
     @State var showLicenses = false
     
     var body: some View {
-        NavigationView {
-            VStack {
-                Text("txmer version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)\n")
+//        NavigationView {
+        VStack (alignment: .leading) {
+            Text("txmer.")
+                .font(Font.custom("recursive", fixedSize: 30))
+                Text("VERSION \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)\n")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundColor(Color(uiColor: .systemGray))
                 Text("txmer is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\n\nClick below for more info.")
                 Button("Open source licenes") {
                     showLicenses = true
@@ -114,12 +117,13 @@ struct AboutSettingsView: View {
                 
                 
             }
-        }
-        
-        
-        .sheet(isPresented: $showLicenses) {
-            LicensesPopUpView(showLicenses: $showLicenses)
-            //NewSessionPopUpView()
-        }
+        .padding(.horizontal)
+            
+            
+            .sheet(isPresented: $showLicenses) {
+                LicensesPopUpView(showLicenses: $showLicenses)
+                //NewSessionPopUpView()
+            }
+//        }
     }
 }
