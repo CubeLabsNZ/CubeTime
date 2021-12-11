@@ -184,6 +184,11 @@ struct SettingsDetail: View {
                         .frame(maxHeight: UIScreen.screenHeight / 7)
                         .padding(.bottom)
                 }
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.clear)
+                        .frame(height: 50 + (SetValues.hasBottomBar ? 0 : CGFloat(SetValues.marginBottom)))
+                }
 
                 
                 
