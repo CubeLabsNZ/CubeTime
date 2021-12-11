@@ -212,7 +212,7 @@ struct TimeListView: View {
                                 selectedSolves.removeAll()
                                 if managedObjectContext.hasChanges {
                                     try! managedObjectContext.save()
-                                    timeListManager.resort()
+                                    timeListManager.resort() // TODO optimize
                                 }
                             } label: {
                                 Text("Delete Solves")
@@ -235,6 +235,7 @@ struct TimeListView: View {
                         if isSelectMode {
                             Button {
                                 isSelectMode = false
+                                selectedSolves.removeAll()
                             } label: {
                                 
                                 Text("Cancel")
