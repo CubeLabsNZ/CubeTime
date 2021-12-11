@@ -31,7 +31,7 @@ struct LicensePopUpView: View {
             case .icons:
                 CuingIconsLicense()
             case .recursivefont:
-                Text("OFL TODO")
+                RecursiveLicense()
             default:
                 Text("Could not get license for project")
             }
