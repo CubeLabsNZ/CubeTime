@@ -512,6 +512,7 @@ struct StatsView: View {
                 }
             }
         }
+        .navigationViewStyle(.stack)
     }
 }
 

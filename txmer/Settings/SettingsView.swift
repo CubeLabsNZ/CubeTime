@@ -93,9 +93,8 @@ struct SettingsView: View {
                     }.animation(.spring(), value: showingCard)
                 }
                 .zIndex(showingCard ? 0 : 1)
-            }
-            
-            if showingCard {
+                .navigationViewStyle(.stack)
+            } else {
                 SettingsDetail(showingCard: $showingCard, currentCard: $currentCard, namespace: namespace, namespace1: namespace1, namespace2: namespace2)
                     .zIndex(showingCard ? 1 : 0)
             }
