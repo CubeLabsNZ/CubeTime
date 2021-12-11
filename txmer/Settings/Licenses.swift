@@ -24,25 +24,36 @@ struct TxmerLicense: View {
 
 struct ChaoTimerLicense: View {
     var body: some View {
-        Text("ChaoTimer's scrambler is used in txmer and is © 2014 Jichao Li.")
-        Divider()
-        GPLLicense()
+        VStack {
+            Text("ChaoTimer's scrambler is used in txmer and is © 2014 Jichao Li.")
+            Divider()
+            GPLLicense()
+        }
+        .padding(.horizontal)
+        
     }
 }
 
 struct ChartViewLicense: View {
     var body: some View {
-        Text("ChartView is used in the stats view of txmer.")
-        Divider()
-        MITLicense(year: "2019", holder: "Andras Samu")
+        VStack {
+            Text("ChartView is used in the stats view of txmer.")
+            Divider()
+            MITLicense(year: "2019", holder: "Andras Samu")
+        }
+        .padding(.horizontal)
     }
 }
 
 struct CuingIconsLicense: View {
     var body: some View {
-        Text("A derivative of \"Cubing's\" icons are used throughout txmer.")
-        Divider()
-        MITLicense(year: "2015", holder: "Devin Corr-Robinett")
+        VStack {
+            Text("A derivative of \"Cubing's\" icons are used throughout txmer.")
+            Divider()
+            MITLicense(year: "2015", holder: "Devin Corr-Robinett")
+        }
+        .padding(.horizontal)
+        
     }
 }
 
@@ -59,6 +70,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """)
+            .font(.system(size: 17, weight: .regular, design: .serif))
     }
 }
 
