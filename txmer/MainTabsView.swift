@@ -32,7 +32,7 @@ struct TabIconWithBar: View {
             VStack {
                 Spacer()
                 if currentTab == assignedTab {
-                    Color.black
+                    Color.primary
                         .frame(width: 32, height: 2)
                         .clipShape(Capsule())
                         .matchedGeometryEffect(id: "underline", in: namespace, properties: .frame)

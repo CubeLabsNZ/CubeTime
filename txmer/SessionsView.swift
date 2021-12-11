@@ -10,9 +10,10 @@ import CoreData
 
 
 struct NewStandardSessionViewBlocks: ViewModifier {
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     func body(content: Content) -> some View {
         content
-            .background(Color.white)
+            .background(colorScheme == .light ? Color.white : Color.black)
             .cornerRadius(10)
             
             .padding(.trailing)
@@ -658,21 +659,17 @@ struct ContextMenuButton: View {
     var action: () -> Void
     var title: String
     var systemImage: String? = nil
+    var disableButton: Bool? = nil
     
     var body: some View {
-        
-        
-            Button(role: title == "Delete Session" ? .destructive : nil, action: delayedAction) {
-                HStack {
-                    Text(title)
-                    if image != nil {
-                        Image(uiImage: image!)
-                    }
+        Button(role: title == "Delete Session" ? .destructive : nil, action: delayedAction) {
+            HStack {
+                Text(title)
+                if image != nil {
+                    Image(uiImage: image!)
                 }
             }
-        
-        
-        
+        }.disabled(disableButton ?? false)
     }
     
     private var image: UIImage? {
@@ -699,6 +696,7 @@ struct SessionCard: View {
     @Binding var currentSession: Sessions
     @State private var isShowingDeleteDialog = false
     var item: Sessions
+    var numSessions: Int
     
     @Namespace var namespace
     
@@ -848,10 +846,11 @@ struct SessionCard: View {
             Divider()
             
             ContextMenuButton(action: {
-                isShowingDeleteDialog.toggle()
+                isShowingDeleteDialog = true
             },
                               title: "Delete Session",
-                              systemImage: "trash")
+                              systemImage: "trash",
+                              disableButton: numSessions <= 1)
                 .foregroundColor(Color.red)
         })
         .padding(.trailing)
@@ -951,12 +950,12 @@ struct SessionsView: View {
                 ScrollView {
                     VStack (spacing: 10) {
                         ForEach(pinnedSessions) { item in
-                            SessionCard(currentSession: $currentSession, item: item)
+                            SessionCard(currentSession: $currentSession, item: item, numSessions: pinnedSessions.count + unPinnedSessions.count)
                                 .environment(\.managedObjectContext, managedObjectContext)
                                 
                         }
                         ForEach(unPinnedSessions) { item in
-                            SessionCard(currentSession: $currentSession, item: item)
+                            SessionCard(currentSession: $currentSession, item: item, numSessions: pinnedSessions.count + unPinnedSessions.count)
                                 .environment(\.managedObjectContext, managedObjectContext)
                                 
                         }
