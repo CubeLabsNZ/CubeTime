@@ -233,7 +233,7 @@ struct TimeCard: View {
     @Binding var currentSolve: Solves?
     @Binding var isSelectMode: Bool
     
-    @Binding var actionOnSelectedItems: ActionOnSelectedItems?
+    @Binding var selectedSolves: [Solves]
     
     @State var isSelected = false
     
@@ -246,7 +246,15 @@ struct TimeCard: View {
                 .onTapGesture {
                     if isSelectMode {
                         withAnimation {
-                            isSelected.toggle()
+                            if isSelected {
+                                isSelected = false
+                                if let index = selectedSolves.firstIndex(of: solve) {
+                                    selectedSolves.remove(at: index)
+                                }
+                            } else {
+                                isSelected = true
+                                selectedSolves.append(solve)
+                            }
                         }
                     } else {
                         currentSolve = solve
@@ -265,14 +273,7 @@ struct TimeCard: View {
             }
         }.onChange(of: isSelectMode) {newValue in
             if !newValue && isSelected {
-                NSLog("hello")
-                withAnimation {
-                    isSelected = false // TODO delete logic
-                    if actionOnSelectedItems == .delete {
-                        NSLog("action is delete and i deleted")
-                        managedObjectContext.delete(solve)
-                    }
-                }
+                isSelected = false
             }
         }
         

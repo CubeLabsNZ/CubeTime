@@ -21,14 +21,6 @@ enum SortBy {
     case time
 }
 
-
-enum ActionOnSelectedItems {
-    case nothing
-    case delete
-    case moveTo
-}
-
-
 class TimeListManager: ObservableObject {
     @Published var solves: [Solves]?
     private var allsolves: [Solves]?
@@ -81,13 +73,6 @@ class TimeListManager: ObservableObject {
             solves = allsolves?.filter{ formatSolveTime(secs: $0.time).hasPrefix(filter) }
         }
     }
-    
-    func remove(solve: Solves) {
-        let index = allsolves?.firstIndex(of: solve)
-        if let index = index {
-            allsolves?.remove(at: index)
-        }
-    }
 }
 
 @available(iOS 15.0, *)
@@ -101,9 +86,7 @@ struct TimeListView: View {
     @State var solve: Solves?
     
     @State var isSelectMode = false
-    @State var actionOnSelectedItems: ActionOnSelectedItems? = nil
-    
-    
+    @State var selectedSolves: [Solves] = []
      
     //let descendingButtonIcon: Image = Image(systemName: "chevron.down.circle")
     //var buttonIcon: String = userLastState
@@ -184,7 +167,7 @@ struct TimeListView: View {
                              
                         LazyVGrid(columns: columns, spacing: 12) {
                             ForEach(timeListManager.solves!, id: \.self) { item in
-                                TimeCard(solve: item, currentSolve: $solve, isSelectMode: $isSelectMode, actionOnSelectedItems: $actionOnSelectedItems)
+                                TimeCard(solve: item, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
                                     .environment(\.managedObjectContext, managedObjectContext)
                             }
                         }
@@ -210,6 +193,7 @@ struct TimeListView: View {
                         if isSelectMode {
                             Button {
                                 isSelectMode = false
+                                selectedSolves.removeAll()
                             } label: {
                                 
                                 Image(systemName: "chevron.left")
@@ -225,10 +209,15 @@ struct TimeListView: View {
                         if isSelectMode {
                             Button {
                                 isSelectMode = false
-                                actionOnSelectedItems = .delete
                                 NSLog("hi")
-                                try! managedObjectContext.save()
-                                timeListManager.resort()
+                                for object in selectedSolves {
+                                    managedObjectContext.delete(object)
+                                }
+                                selectedSolves.removeAll()
+                                if managedObjectContext.hasChanges {
+                                    try! managedObjectContext.save()
+                                    timeListManager.resort()
+                                }
                             } label: {
                                 Image(systemName: "trash.circle.fill")
                                     .font(.system(size: 17, weight: .medium))
