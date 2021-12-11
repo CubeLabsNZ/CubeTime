@@ -148,6 +148,8 @@ struct TimerView: View {
             Button("Confirm", role: .destructive) {
                 NSLog("deleting \(detail)")
                 managedObjectContext.delete(detail.wrappedValue!)
+                detail.wrappedValue = nil
+                stopWatchManager.secondsElapsed = 0
                 try! managedObjectContext.save()
             }
             Button("Cancel", role: .cancel) {
