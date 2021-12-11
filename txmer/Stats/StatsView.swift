@@ -9,7 +9,6 @@ import SwiftUI
 import CoreData
 
 import SwiftUICharts
-import Charts
 
 
 
