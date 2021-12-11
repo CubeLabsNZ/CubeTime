@@ -52,7 +52,7 @@ struct LicensesPopUpView: View {
             ZStack {
                 NavigationLink("", destination: LicensePopUpView(projectLicense: $projectLicense), isActive: $showLicense)
                 
-                VStack {
+                List {
                     Button("txmer") {
                         projectLicense = .txmer
                         showLicense = true
@@ -73,10 +73,9 @@ struct LicensesPopUpView: View {
                         projectLicense = .recursivefont
                         showLicense = true
                     }
-                    
-                    Spacer()
                 }
             }
+            .listStyle(.insetGrouped)
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Licenses")
             .toolbar {
