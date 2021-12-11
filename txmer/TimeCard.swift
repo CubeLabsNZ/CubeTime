@@ -91,7 +91,7 @@ struct SolvePopupView: View {
                                 
                             }
                             .padding(.leading, 12)
-                            .padding(.trailing, 16)
+                            .padding(.trailing)
                             .padding(.top, 12)
                             
                             Divider()
@@ -137,7 +137,7 @@ struct SolvePopupView: View {
                             //                            .padding(.trailing)
                             //                            .padding(.top)
                             .padding(.leading, 12)
-                            .padding(.trailing, 16)
+                            .padding(.trailing)
                             .padding(.top, 12)
                             
                             Divider()
@@ -146,9 +146,7 @@ struct SolvePopupView: View {
                             
                             TextField("Notes", text: $userComment)
                             
-                            //.font(.system(size: 17, weight: .regular, design: .monospaced))
-                                .padding(.leading)
-                                .padding(.trailing)
+                                .padding(.horizontal)
                                 .padding(.bottom, 12)
                                 .onChange(of: userComment) { newValue in
                                     solve.comment = newValue
@@ -162,26 +160,15 @@ struct SolvePopupView: View {
                         .padding(.trailing)
                         .padding(.leading)
                         
-                        VStack {
-                            HStack {
-                                Button {
-                                    print("Button tapped")
-                                    UIPasteboard.general.string = "\(time): \(scramble)"
-                                } label: {
-                                    Text("Copy Solve")
-                                }
-                                
-                                Spacer()
-                            }
-                            .padding()
-                            //                            .padding(.leading, 12)
-                            //                            .padding(.trailing, 16)
-                            //                            .padding(.top, 12)
-                            //                            .padding(.bottom, 12)
+                        HStack {
+                            Text("Copy Solve")
+                                .padding(12)
+                            Spacer()
                         }
-                        .background(Color(uiColor: .white).clipShape(RoundedRectangle(cornerRadius:10)))
-                        .padding(.trailing)
-                        .padding(.leading)
+                        .onTapGesture {UIPasteboard.general.string = "Exported by txmer.\n\(time): \(scramble)"}
+                        .background(Color.white.clipShape(RoundedRectangle(cornerRadius:10)))
+                        .padding(.horizontal)
+                        
                         
                         
                         
