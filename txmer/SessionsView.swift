@@ -106,7 +106,6 @@ struct NewStandardSessionView: View {
                             }
                             .pickerStyle(.menu)
                             .font(.system(size: 17, weight: .regular))
-                            .accentColor(Color(uiColor: .systemGray))
 
 
                             //Text("Square-1")

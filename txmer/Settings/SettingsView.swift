@@ -163,6 +163,8 @@ struct SettingsDetail: View {
                 
                 ScrollView {
                     switch currentCard.name {
+                    case "General":
+                        GeneralSettingsView()
                     case "Appearance":
                         AppearanceSettingsView()
                     case "About":
