@@ -8,6 +8,40 @@
 
 import SwiftUI
 
+
+extension Color {
+    init(_ hex: UInt) {
+        self.init(
+            .sRGB,
+            red: Double((hex >> 16) & 0xff) / 255,
+            green: Double((hex >> 08) & 0xff) / 255,
+            blue: Double((hex >> 00) & 0xff) / 255
+        )
+    }
+}
+
+func hi(gradientArray: [[Color]]) -> LinearGradient {
+    return LinearGradient(gradient: Gradient(colors: gradientArray[5]), startPoint: .bottomTrailing, endPoint: .topLeading)
+}
+
+class hi2 {
+    static let hi3: [[Color]] = [
+        [Color(0x0093c1), Color(0x05537a)], // light blue - dark blue
+        [Color(0x52c8cd), Color(0x007caa)], // aqua - light blue
+        [Color(0xe6e29a), Color(0x3ec4d0)], // pale yellow/white ish - aqua
+        [Color(0xffd325), Color(0x94d7be)], // yellow - green
+        [Color(0xff9e45), Color(0xffd63c)], // pale orange-yellow
+        
+        [Color(0xfc7018), Color(0xffc337)], // darker orange - yellow
+        [Color(0xfb5b5c), Color(0xff9528)], // pink-orange
+        [Color(0xd35082), Color(0xf77d4f)], // magenta-orange
+        [Color(0x8548ba), Color(0xd95378)], // purple-pink
+        [Color(0x3f248f), Color(0x702f86)] // dark blue-purple
+    ]
+}
+
+
+
 public struct Line: View {
     @ObservedObject var data: ChartData
     @Binding var frame: CGRect
@@ -118,7 +152,7 @@ extension View {
     func colouredGlow() -> some View {
         ForEach(0..<2) { i in
             Rectangle()
-                .fill(LinearGradient(gradient: Gradient(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 126/255, green: 94/255, blue: 191/255)]), startPoint: .bottomLeading, endPoint: .topTrailing))
+                .fill(hi(gradientArray: hi2.hi3))
                 //.frame(width: 400, height: 400)
                 .mask(self.blur(radius: 20))
                 .overlay(self.blur(radius: 5 - CGFloat(i * 5)))
