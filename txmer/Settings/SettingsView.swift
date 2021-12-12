@@ -186,7 +186,7 @@ struct SettingsDetail: View {
                     case "About":
                         AboutSettingsView()
                     default:
-                        Text("unable to load view: please report this issue to us on github!")
+                        Text("oh no unable to load view\nplease report this issue to us on github!")
                     }
                 }
                 .safeAreaInset(edge: .top, spacing: 0) {
