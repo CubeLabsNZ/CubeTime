@@ -97,12 +97,13 @@ struct SettingsView: View {
 }
 
 
-struct SettingsCard: View 
-    @Binding var currentCard: SettingsCardInfo?
+struct SettingsCard: View {
     @Binding var currentCard: SettingsCardInfo?
 //    @Binding var hideTabBar: Bool
     var info: SettingsCardInfo
     var namespace: Namespace.ID
+    
+    @Environment(\.colorScheme) var colourScheme
     
     var body: some View {
         Button {
@@ -148,9 +149,9 @@ struct SettingsCard: View
 }
 
 @available(iOS 15.0, *)
+struct SettingsDetail: View {
     @Binding var currentCard: SettingsCardInfo?
     @Environment(\.colorScheme) var colourScheme
-    @Binding var currentCard: SettingsCardInfo?
 //    @Binding var hideTabBar: Bool
     
     var namespace: Namespace.ID
@@ -190,7 +191,7 @@ struct SettingsCard: View
                 
                 VStack {
                     ZStack {
-                        RoundedRectangle(cornerRadius: 16){
+                        RoundedRectangle(cornerRadius: 16)
                             .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
                             .matchedGeometryEffect(id: "bg " + currentCard!.name, in: namespace)
                             .ignoresSafeArea()
