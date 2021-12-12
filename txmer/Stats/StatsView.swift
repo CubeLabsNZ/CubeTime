@@ -124,7 +124,7 @@ struct StatsView: View {
                                                         Text(String(formatSolveTime(secs: currentAo5!.0)))
 //                                                        Text("HI")
                                                             .font(.system(size: 24, weight: .bold, design: .default))
-                                                            .foregroundColor(.black)
+                                                            .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                             .padding(.leading, 12)
                                                             .onTapGesture {
                                                                 print(stats.solvesByDate)
@@ -151,7 +151,7 @@ struct StatsView: View {
                                                     if ao100 != nil {
                                                         Text(String(formatSolveTime(secs: ao100!.0)))
                                                             .font(.system(size: 24, weight: .bold, design: .default))
-                                                            .foregroundColor(.black)
+                                                            .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                             .padding(.leading, 12)
                                                     } else {
                                                         Text("N/A")

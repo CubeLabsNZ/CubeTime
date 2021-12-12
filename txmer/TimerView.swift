@@ -35,6 +35,7 @@ struct AnimatingFontSize: AnimatableModifier {
 @available(iOS 15.0, *)
 struct TimerView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.colorScheme) var colourScheme
     //@ObservedObject var currentSession: Sessions
     
     @ObservedObject var stopWatchManager: StopWatchManager
@@ -43,9 +44,6 @@ struct TimerView: View {
     
     @State var hideStatusBar = true
     
-    
-    
-    @Environment(\.colorScheme) var colourScheme
     
     
     init(stopWatchManager: StopWatchManager, hideTabBar: Binding<Bool>) {
@@ -57,13 +55,12 @@ struct TimerView: View {
     var body: some View {
         ZStack {
             
-            
             Color(uiColor: colourScheme == .light ? .systemGray6 : .black) /// ~~todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)~~
                 .ignoresSafeArea()
             
             
             
-            if stopWatchManager.mode == .stopped{
+            if stopWatchManager.mode == .stopped {
                 VStack {
                     Text(stopWatchManager.scrambleStr ?? "Loading scramble")
                         //.background(Color.red)
