@@ -62,12 +62,10 @@ class observed: ObservableObject {
 @available(iOS 15.0, *)
 struct SolvePopupView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    
+    @Environment(\.colorScheme) var colourScheme
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.dismiss) var dismiss
     @Environment(\.defaultMinListRowHeight) var minRowHeight
-    
-    @EnvironmentObject var obj: observed
     
     var timeListManager: TimeListManager
     
@@ -102,7 +100,7 @@ struct SolvePopupView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color(uiColor: .systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
+                Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                     .ignoresSafeArea()
                 
                 ScrollView() {
@@ -124,6 +122,7 @@ struct SolvePopupView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 32, height: 32)
+                                    
                                 //                                    .padding(.leading, 2)
                                 //                                    .padding(.top, 2)
                                 //                                    .padding(.bottom, 2)
@@ -151,6 +150,7 @@ struct SolvePopupView: View {
                             
                             Text(scramble)
                                 .font(.system(size: 17, weight: .regular, design: .monospaced))
+                                .foregroundColor(colourScheme == .light ? .black : .white)
                                 .padding(.leading)
                                 .padding(.trailing)
                             
@@ -168,7 +168,7 @@ struct SolvePopupView: View {
                         }
                         //.frame(minHeight: minRowHeight * 10)
                         //.frame(height: 300)
-                        .background(Color(uiColor: .white).clipShape(RoundedRectangle(cornerRadius:10)))
+                        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
                         //.listStyle(.insetGrouped)
                         .padding(.trailing)
                         .padding(.leading)
@@ -178,9 +178,11 @@ struct SolvePopupView: View {
                                 Image(systemName: "square.text.square.fill")
                                     .symbolRenderingMode(.hierarchical)
                                     .font(.system(size: 30, weight: .semibold))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
                                 //.padding(.trailing, 8)
                                 Text("Comment")
                                     .font(.system(size: 17, weight: .semibold, design: .default))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
                                 
                                 Spacer()
                                 
@@ -222,7 +224,7 @@ struct SolvePopupView: View {
                         }
                         //.frame(minHeight: minRowHeight * 10)
                         //.frame(height: 300)
-                        .background(Color(uiColor: .white).clipShape(RoundedRectangle(cornerRadius:10)))
+                        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
                         //.listStyle(.insetGrouped)
                         .padding(.trailing)
                         .padding(.leading)
@@ -233,7 +235,7 @@ struct SolvePopupView: View {
                             Spacer()
                         }
                         .onTapGesture {UIPasteboard.general.string = "Exported by txmer.\n\(time): \(scramble)"}
-                        .background(Color.white.clipShape(RoundedRectangle(cornerRadius:10)))
+                        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
                         .padding(.horizontal)
                         
                         
@@ -282,6 +284,7 @@ struct SolvePopupView: View {
 @available(iOS 15.0, *)
 struct TimeCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.colorScheme) var colourScheme
     let solve: Solves
     
     @Binding var currentSolve: Solves?
@@ -295,7 +298,7 @@ struct TimeCard: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
-                .fill(isSelected ? Color(uiColor: .systemGray4) : Color(uiColor: .systemBackground))
+                .fill(isSelected ? Color(uiColor: .systemGray4) : colourScheme == .dark ? Color(uiColor: .systemGray6) : Color(uiColor: .systemBackground))
                 .frame(maxWidth: 120, minHeight: 55, maxHeight: 55) /// todo check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectange
                 .onTapGesture {
                     if isSelectMode {
@@ -317,6 +320,8 @@ struct TimeCard: View {
                 .onLongPressGesture {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 }
+                
+                
             VStack {
                 Text(formatSolveTime(secs: solve.time))
                     .font(.system(size: 17, weight: .bold, design: .default))

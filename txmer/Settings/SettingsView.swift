@@ -28,6 +28,7 @@ struct SettingsView: View {
     @State var currentCard: SettingsCardInfo = settingsCards[0]
     @State var showingCard = false // TODO try make the above one optional
 //    @Binding var hideTabBar: Bool
+    @Environment(\.colorScheme) var colourScheme
     
     @Namespace var namespace
     @Namespace var namespace1
@@ -47,7 +48,7 @@ struct SettingsView: View {
             if !showingCard {
                 NavigationView {
                     ZStack {
-                        Color(uiColor: .systemGray6)
+                        Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                             .ignoresSafeArea()
                         
                         //NavigationLink("", destination: GeneralSettingsView(), isActive: $showingCard)
@@ -101,6 +102,7 @@ struct SettingsView: View {
 
 
 struct SettingsCard: View {
+    @Environment(\.colorScheme) var colourScheme
     @Binding var currentCard: SettingsCardInfo
     @Binding var showingCard: Bool
 //    @Binding var hideTabBar: Bool
@@ -119,7 +121,7 @@ struct SettingsCard: View {
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(uiColor: .systemBackground))
+                    .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
                     .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
                     .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
                     .shadow(color: .black.opacity(0.1), radius: 8, x: 3, y: 3)
@@ -156,6 +158,7 @@ struct SettingsCard: View {
 
 @available(iOS 15.0, *)
 struct SettingsDetail: View {
+    @Environment(\.colorScheme) var colourScheme
     @Binding var showingCard: Bool
     @Binding var currentCard: SettingsCardInfo
 //    @Binding var hideTabBar: Bool
@@ -169,7 +172,7 @@ struct SettingsDetail: View {
     var body: some View {
         if showingCard {
             ZStack {
-                Color(uiColor: .systemGray6)
+                Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                     .ignoresSafeArea()
                     .zIndex(0)
 
@@ -200,7 +203,7 @@ struct SettingsDetail: View {
                 VStack {
                     ZStack {
                         RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.white)
+                            .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
                             .matchedGeometryEffect(id: "bg " + currentCard.name, in: namespace)
                             .ignoresSafeArea()
                             .shadow(color: .black.opacity(0.16), radius: 8, x: 0, y: 3)
@@ -241,7 +244,7 @@ struct SettingsDetail: View {
                                 .font(.system(size: 26, weight: .semibold))
                                 .symbolRenderingMode(.hierarchical)
                                 .foregroundStyle(.secondary)
-                                .foregroundStyle(.black)
+                                .foregroundStyle(colourScheme == .light ? .black : .white)
                                 .padding([.horizontal, .bottom])
                                 .padding(.top, 8)
                                 .onTapGesture {

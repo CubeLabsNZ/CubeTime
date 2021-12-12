@@ -24,6 +24,7 @@ extension View {
 @available(iOS 15.0, *)
 struct StatsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.colorScheme) var colourScheme
     
     let columns = [
         // GridItem(.adaptive(minimum: 112), spacing: 11)
@@ -75,7 +76,7 @@ struct StatsView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color(uiColor: .systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
+                Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                     .ignoresSafeArea()
                 
                 ScrollView {
@@ -109,7 +110,7 @@ struct StatsView: View {
                                                 VStack (alignment: .leading, spacing: -4) {
                                                     Text("CURRENT AVERAGES")
                                                         .font(.system(size: 13, weight: .medium, design: .default))
-                                                        .foregroundColor(.black)
+                                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                         .padding(.leading, 12)
                                                     
                                                     Spacer()
@@ -201,6 +202,8 @@ struct StatsView: View {
                                             
                                         }
                                         .frame(height: 160)
+                                        
+                                        
                                         .background(Color(uiColor: .systemGray5).clipShape(RoundedRectangle(cornerRadius:16)))
                                     }
                                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -215,7 +218,7 @@ struct StatsView: View {
                                                 
                                                 Text(String(stats.getNumberOfSolves()))
                                                     .font(.system(size: 34, weight: .bold, design: .default))
-                                                    .foregroundColor(.black)
+                                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                             }
                                             .padding(.top)
                                             .padding(.bottom, 12)
@@ -224,7 +227,7 @@ struct StatsView: View {
                                             Spacer()
                                         }
                                         .frame(height: 75)
-                                        .background(Color.white                                        .clipShape(RoundedRectangle(cornerRadius:16)))
+                                        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                         
                                         HStack {
                                             VStack (alignment: .leading, spacing: 0) {
@@ -237,7 +240,7 @@ struct StatsView: View {
                                                 if sessionMean != nil {
                                                     Text(String(formatSolveTime(secs: sessionMean!)))
                                                         .font(.system(size: 34, weight: .bold, design: .default))
-                                                        .foregroundColor(.black)
+                                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                 } else {
                                                     Text("N/A")
                                                         .font(.system(size: 28, weight: .medium, design: .default))
@@ -253,7 +256,7 @@ struct StatsView: View {
                                             Spacer()
                                         }
                                         .frame(height: 75)
-                                        .background(Color.white                                        .clipShape(RoundedRectangle(cornerRadius:16)))
+                                        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                     }
                                     
                                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -278,7 +281,7 @@ struct StatsView: View {
                                                 if bestSingle != nil {
                                                     Text(String(formatSolveTime(secs: bestSingle!.time)))
                                                         .font(.system(size: 34, weight: .bold, design: .default))
-                                                        .foregroundColor(.white)
+                                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .white : .black))
                                                 } else {
                                                     Text("N/A")
                                                         .font(.system(size: 28, weight: .medium, design: .default))
@@ -309,7 +312,7 @@ struct StatsView: View {
                                                     if ao12 != nil {
                                                         Text(String(formatSolveTime(secs: ao12!.0)))
                                                             .font(.system(size: 34, weight: .bold, design: .default))
-                                                            .foregroundColor(.black)
+                                                            .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                             .padding(.leading, 12)
                                                     } else {
                                                         Text("N/A")
@@ -339,7 +342,7 @@ struct StatsView: View {
                                                     if ao100 != nil {
                                                         Text(String(formatSolveTime(secs: ao100!.0)))
                                                             .font(.system(size: 34, weight: .bold, design: .default))
-                                                            .foregroundColor(.black)
+                                                            .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                             .padding(.leading, 12)
                                                     } else {
                                                         Text("N/A")
@@ -362,7 +365,7 @@ struct StatsView: View {
                                             
                                         }
                                         .frame(height: 130)
-                                        .background(Color(uiColor: .white).clipShape(RoundedRectangle(cornerRadius:16)))
+                                        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                         
                                         
                                         
@@ -398,7 +401,7 @@ struct StatsView: View {
                                                     ForEach((0...4), id: \.self) {
                                                             Text(formatSolveTime(secs: ao5!.1[$0].time))
                                                                 .font(.system(size: 17, weight: .regular, design: .default))
-                                                                .foregroundColor(.black)
+                                                                .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                                 .multilineTextAlignment(.leading)
                                                                 .padding(.bottom, 2)
                                                         }
@@ -427,7 +430,7 @@ struct StatsView: View {
                                             Spacer()
                                         }
                                         .frame(height: 215)
-                                        .background(Color(uiColor: .white).clipShape(RoundedRectangle(cornerRadius:16)))
+                                        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                         .onTapGesture {
                                             print("best ao5 pressed")
                                         }
@@ -461,7 +464,7 @@ struct StatsView: View {
                                 }
                             }
                             .frame(height: 300)
-                            .background(Color(uiColor: .white).clipShape(RoundedRectangle(cornerRadius:16)))
+                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                             .padding(.horizontal)
                             .onTapGesture {
                                 print("time trend pressed")
@@ -484,7 +487,7 @@ struct StatsView: View {
                                 }
                             }
                             .frame(height: 300)
-                            .background(Color(uiColor: .white).clipShape(RoundedRectangle(cornerRadius:16)))
+                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                             .padding(.horizontal)
                             .onTapGesture {
                                 print("time distribution pressed")

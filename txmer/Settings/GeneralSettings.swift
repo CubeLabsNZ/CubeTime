@@ -19,6 +19,8 @@ struct GeneralSettingsView: View {
     @State var gestureActivationDistance: Double = 200
     @State var displayTruncation: Int = 0
     
+    @Environment(\.colorScheme) var colourScheme
+    
     
     // im thinking of using these interval modes: seconds, 0.1s, 0.001, your refresh rate
     // and for haptics just .light, .medium, .heavy, .rigid, .soft
@@ -84,7 +86,7 @@ struct GeneralSettingsView: View {
                 }
             }
 //            .modifier(settingsBlocks())
-            .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3))
+            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
             
             VStack {
                 HStack {
@@ -175,14 +177,8 @@ struct GeneralSettingsView: View {
                 .padding(.horizontal)
                 .padding(.bottom, 10)
                 
-                
-                
-                
-                
-                
             }
-//            .modifier(settingsBlocks())
-            .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3))
+            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
             
             VStack {
                 HStack {
@@ -217,7 +213,11 @@ struct GeneralSettingsView: View {
                 
             }
 //            .modifier(settingsBlocks())
-            .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3))
+            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            
+            
+            
+            
             
         }
         .padding(.horizontal)
