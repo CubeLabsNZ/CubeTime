@@ -25,13 +25,10 @@ struct AnimatingFontSizeV2: AnimatableModifier {
 
 @available(iOS 15.0, *)
 struct SettingsView: View {
-    @State var currentCard: SettingsCardInfo = settingsCards[0]
-    @State var showingCard = false // TODO try make the above one optional
+    @State var currentCard: SettingsCardInfo?
 //    @Binding var hideTabBar: Bool
     
     @Namespace var namespace
-    @Namespace var namespace1
-    @Namespace var namespace2
     
     
     let settingsColumns = [
@@ -41,10 +38,9 @@ struct SettingsView: View {
     
     
     var body: some View {
-        
         ZStack {
             
-            if !showingCard {
+            if currentCard == nil {
                 NavigationView {
                     ZStack {
                         Color(uiColor: .systemGray6)
@@ -63,13 +59,13 @@ struct SettingsView: View {
                             
                             
                             HStack (spacing: 16) {
-                                SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[0], namespace: namespace, namespace1: namespace1, namespace2: namespace2)
-                                SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[1], namespace: namespace, namespace1: namespace1, namespace2: namespace2)
+                                SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
+                                SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
                             }
                             
                             HStack (spacing: 16) {
-                                SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[2], namespace: namespace, namespace1: namespace1, namespace2: namespace2)
-                                SettingsCard(currentCard: $currentCard, showingCard: $showingCard, info: settingsCards[3], namespace: namespace, namespace1: namespace1, namespace2: namespace2)
+                                SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
+                                SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
                             }
                             
                             
@@ -86,35 +82,30 @@ struct SettingsView: View {
                         .padding(.vertical, 6)
                         .padding(.horizontal)
                     }
-                    .animation(.spring(), value: showingCard)
+//                    .animation(.spring(), value: showingCard)
                 }
-                .zIndex(showingCard ? 0 : 1)
+//                .zIndex(showingCard ? 0 : 1)
+                .zIndex(1)
             } else {
-                SettingsDetail(showingCard: $showingCard, currentCard: $currentCard, namespace: namespace, namespace1: namespace1, namespace2: namespace2)
-                    .zIndex(showingCard ? 1 : 0)
+                SettingsDetail(currentCard: $currentCard, namespace: namespace)
+                    .zIndex(2)
+//                    .zIndex(showingCard ? 1 : 0)
             }
-            
-            
         }
     }
 }
 
 
 struct SettingsCard: View {
-    @Binding var currentCard: SettingsCardInfo
-    @Binding var showingCard: Bool
+    @Binding var currentCard: SettingsCardInfo?
 //    @Binding var hideTabBar: Bool
     var info: SettingsCardInfo
     var namespace: Namespace.ID
-    var namespace1: Namespace.ID
-    var namespace2: Namespace.ID
     
     var body: some View {
         Button {
             withAnimation(.spring(response: 0.6)) {
                 currentCard = info
-                showingCard = true
-//                hideTabBar = true
             }
         } label: {
             ZStack {
@@ -127,7 +118,7 @@ struct SettingsCard: View {
                 VStack {
                     HStack {
                         Text(info.name)
-                            .matchedGeometryEffect(id: info.name, in: namespace1)
+                            .matchedGeometryEffect(id: info.name, in: namespace)
                             .font(.system(size: 22, weight: .bold))
                             .padding(.horizontal)
                             .padding(.top, 12)
@@ -140,7 +131,7 @@ struct SettingsCard: View {
                     HStack {
                                                            
                         Image(systemName: info.icon)
-                            .matchedGeometryEffect(id: info.icon, in: namespace2)
+                            .matchedGeometryEffect(id: info.icon, in: namespace)
                             .font(info.iconStyle)
                             .padding(12)
                         
@@ -156,18 +147,15 @@ struct SettingsCard: View {
 
 @available(iOS 15.0, *)
 struct SettingsDetail: View {
-    @Binding var showingCard: Bool
-    @Binding var currentCard: SettingsCardInfo
+    @Binding var currentCard: SettingsCardInfo?
 //    @Binding var hideTabBar: Bool
     
     var namespace: Namespace.ID
-    var namespace1: Namespace.ID
-    var namespace2: Namespace.ID
     
     
     
     var body: some View {
-        if showingCard {
+        if currentCard != nil {
             ZStack {
                 Color(uiColor: .systemGray6)
                     .ignoresSafeArea()
@@ -175,7 +163,7 @@ struct SettingsDetail: View {
 
                 
                 ScrollView {
-                    switch currentCard.name {
+                    switch currentCard!.name { // TODO use an enum for better i18n support
                     case "General":
                         GeneralSettingsView()
                     case "Appearance":
@@ -183,7 +171,7 @@ struct SettingsDetail: View {
                     case "About":
                         AboutSettingsView()
                     default:
-                        Text("unable to load view: please report this issue to us on github!")
+                        EmptyView()
                     }
                 }
                 .safeAreaInset(edge: .top, spacing: 0) {
@@ -201,7 +189,7 @@ struct SettingsDetail: View {
                     ZStack {
                         RoundedRectangle(cornerRadius: 16)
                             .fill(Color(uiColor: .systemBackground))
-                            .matchedGeometryEffect(id: "bg " + currentCard.name, in: namespace)
+                            .matchedGeometryEffect(id: "bg " + currentCard!.name, in: namespace)
                             .ignoresSafeArea()
                             .shadow(color: .black.opacity(0.16), radius: 8, x: 0, y: 3)
                             
@@ -212,16 +200,16 @@ struct SettingsDetail: View {
                             Spacer()
                             
                             HStack(alignment: .center) {
-                                Text(currentCard.name)
-                                    .matchedGeometryEffect(id: currentCard.name, in: namespace1)
+                                Text(currentCard!.name)
+                                    .matchedGeometryEffect(id: currentCard!.name, in: namespace)
                                     .font(.system(size: 22, weight: .bold))
                                 
 
                                 Spacer()
                                 
-                                Image(systemName: currentCard.icon)
-                                    .matchedGeometryEffect(id: currentCard.icon, in: namespace2)
-                                    .font(currentCard.iconStyle)
+                                Image(systemName: currentCard!.icon)
+                                    .matchedGeometryEffect(id: currentCard!.icon, in: namespace)
+                                    .font(currentCard!.iconStyle)
                             }
                             .padding()
                         }
@@ -246,9 +234,9 @@ struct SettingsDetail: View {
                                 .padding(.top, 8)
                                 .onTapGesture {
                                     withAnimation(.spring(response: 0.5)) {
-//                                        showingCard = false
-                                        showingCard.toggle()
-//                                        hideTabBar = false
+    //                                        showingCard = false
+    //                                        hideTabBar = false
+                                        currentCard = nil
                                     }
                                     
                                 }
