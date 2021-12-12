@@ -952,10 +952,6 @@ struct SessionsView: View {
                                 
                         }
                     }
-                    
-                    .animation(.spring())
-                    
-                    
                 }
                 .navigationTitle("Your Sessions")
                 .toolbar {
