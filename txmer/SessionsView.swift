@@ -733,7 +733,7 @@ struct SessionCard: View {
                 .fill(Color(uiColor: .systemGray5))
                 .frame(height: item.pinned ? 110 : 65)
             
-                .animation(.spring(response: 0.325))
+//                .animation(.spring(response: 0.325))
                 .zIndex(0)
         
             
@@ -744,7 +744,7 @@ struct SessionCard: View {
             
 //                .matchedGeometryEffect(id: "bar", in: namespace, properties: .frame)
             
-                .animation(.spring(response: 0.325))
+//                .animation(.spring(response: 0.325))
                 .offset(x: currentSession == item ? -((UIScreen.screenWidth - 16)/2) + 16 : 0)
             
                 .zIndex(1)
@@ -762,17 +762,14 @@ struct SessionCard: View {
                             Text(item.name ?? "Unkown session name")
                                 .font(.system(size: 22, weight: .bold, design: .default))
                                 .foregroundColor(Color.black)
-                                .animation(.spring())
                             Text(puzzle_types[Int(item.scramble_type)].name)
         //                        .font(.system(size: 15, weight: .medium, design: .default))
                                 .foregroundColor(Color.black)
-                                .animation(.spring())
                             Spacer()
                             Text("\(item.solves?.count ?? -1) Solves")
                                 .font(.system(size: 15, weight: .bold, design: .default))
                                 .foregroundColor(Color(uiColor: .systemGray))
                                 .padding(.bottom, 4)
-                                .animation(.spring())
                         } else {
                             Text(item.name ?? "Unkown session name")
                                 .font(.system(size: 22, weight: .bold, design: .default))
@@ -781,7 +778,6 @@ struct SessionCard: View {
                         }
                     }
                     .offset(x: currentSession == item ? 10 : 0)
-                    .animation(.spring())
                     
                     Spacer()
                     
@@ -812,22 +808,15 @@ struct SessionCard: View {
 //            .background(currentSession == item ? Color.clear : Color.white)
             .background(Color.clear)
             .clipShape(RoundedRectangle(cornerRadius: 16))
-            
-            
-            .animation(.spring())
-            
-            
             .zIndex(2)
-            
-            
-            
-            
         }
         .contentShape(RoundedRectangle(cornerRadius: 16))
         
 //        .animation(.spring())
         .onTapGesture {
-            currentSession = item
+            withAnimation(.spring()) {
+                currentSession = item
+            }
         }
         
         .contextMenu(menuItems: {
@@ -838,8 +827,10 @@ struct SessionCard: View {
                               title: "Customise",
                               systemImage: "pencil");
             ContextMenuButton(action: {
-                item.pinned.toggle()
-                try! managedObjectContext.save()
+                withAnimation(.spring()) {
+                    item.pinned.toggle()
+                    try! managedObjectContext.save()
+                }
             },
                               title: item.pinned ? "Unpin" : "Pin",
                               systemImage: item.pinned ? "pin.slash" : "pin");
@@ -856,12 +847,12 @@ struct SessionCard: View {
         .padding(.trailing)
         .padding(.leading)
         
-        .animation(.spring())
-                
         .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unknown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
-                managedObjectContext.delete(item)
-                try! managedObjectContext.save()
+                withAnimation(.spring()) {
+                    managedObjectContext.delete(item)
+                    try! managedObjectContext.save()
+                }
             }
             Button("Cancel", role: .cancel) {
                 
@@ -960,7 +951,6 @@ struct SessionsView: View {
                                 
                         }
                     }
-                    .animation(.spring())
                     
                     
                 }
