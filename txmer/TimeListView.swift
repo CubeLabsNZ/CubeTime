@@ -37,7 +37,7 @@ class TimeListManager: ObservableObject {
             self.refilter()
         }
     }
-    var ascending = true
+    var ascending = false
     
     private let fetchRequest = NSFetchRequest<Solves>(entityName: "Solves")
     

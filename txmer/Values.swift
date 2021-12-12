@@ -94,11 +94,11 @@ class TimerTextColours {
 }
 
 func getGradient(gradientArray: [[Color]]) -> LinearGradient {
-    return LinearGradient(gradient: Gradient(colors: gradientArray[9]), startPoint: .bottomTrailing, endPoint: .topLeading)
+    return LinearGradient(gradient: Gradient(colors: gradientArray[5]), startPoint: .bottomTrailing, endPoint: .topLeading)
 }
 
 func getGradientColours(gradientArray: [[Color]]) -> [Color] {
-    return gradientArray[9]
+    return gradientArray[5]
 }
 
 class CustomGradientColours {

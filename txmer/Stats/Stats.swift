@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 import SwiftUI
 
+
 class Stats {
     var solves: [Solves]
     //    private var top: [Solves]
@@ -78,25 +79,30 @@ class Stats {
         return solves.count
     }
     
+    
+    
     func getBestMovingAverageOf(_ period: Int) -> (Double, [Solves])? {
         precondition(period > 1)
         if solves.count < period {
             return nil
         }
+        
+        var trim: Int
+        
+        if period > 100 {
+            trim = 5
+        } else {
+            trim = 1
+        }
+        
+            
             
         
         var lowest_average: Double = solves[solves.count-1].time
         var lowest_values: [Solves]?
         
         for i in period..<solves.count+1 {
-            let range = i - period + 1..<i - 1
-            
-            
-//            print(range)
-            
-            //            range.removeLast()
-            //            range.removeFirst()
-            
+            let range = i - period + trim..<i - trim
             let sum = solves[range].reduce(0, {$0 + $1.time})
             
             let result = Double(sum) / Double(period-2)
@@ -112,7 +118,21 @@ class Stats {
 
     
     
-    
-   
+    func getCurrentAverageOf(_ period: Int) -> (Double, [Solves])? {
+        precondition(period > 1)
+        if solves.count < period {
+            return nil
+        }
+        
+        var current_average: Double
+        var values: [Solves]
+        
+        current_average = solvesByDate.suffix(5).sorted(by: {$0.time > $1.time}).dropFirst().dropLast().reduce(0, {$0 + $1.time}) / Double(period-2)
+        values = solvesByDate.suffix(5)
+        
+        return (current_average, values)
+        
+        
+    }
     
 }
