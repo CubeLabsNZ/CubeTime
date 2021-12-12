@@ -19,6 +19,8 @@ struct settingsBlocks: ViewModifier {
 
 
 struct AppearanceSettingsView: View {
+    @Environment(\.colorScheme) var colourScheme
+    
     @State private var accentColour: Color = .indigo
     let accentColours: [Color] = [.cyan, .blue, .indigo, .purple, .red]
     
@@ -125,8 +127,7 @@ struct AppearanceSettingsView: View {
                 }
                 
             }
-//            .modifier(settingsBlocks())
-            .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3))
+            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
             
             VStack {
                 HStack {
@@ -191,49 +192,7 @@ struct AppearanceSettingsView: View {
                 }
                 
             }
-//            .modifier(settingsBlocks())
-            .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3))
-            
-            
-//            VStack {
-//                HStack {
-//                    Image(systemName: "eye")
-//                        .font(.system(size: 15, weight: .bold, design: .rounded))
-//                        .foregroundColor(Color("AccentColor"))
-//                    Text("Accessibility")
-//                        .font(.system(size: 17, weight: .bold, design: .rounded))
-//
-//                    Spacer()
-//                }
-//                .padding([.horizontal, .top], 10)
-//                .padding(.bottom)
-//
-//
-//                VStack (alignment: .leading, spacing: 0) {
-//                    HStack(alignment: .center) {
-//                        Toggle(isOn: $reduceAnimations) {
-//                            Text("Reduce Animations")
-//                                .font(.system(size: 17, weight: .medium))
-//                        }
-//                            .toggleStyle(SwitchToggleStyle(tint: Color("AccentColor")))
-//                    }
-//                    .padding(.horizontal)
-//
-//
-//                    Text("Turn off motion animations and other effects.")
-//                        .font(.system(size: 13, weight: .medium))
-//                        .foregroundColor(Color(uiColor: .systemGray))
-//                        .multilineTextAlignment(.leading)
-//                        .padding(.leading)
-//                        .padding(.bottom, 12)
-//                        .padding(.trailing, 4)
-//                        .padding(.top, 10)
-//                }
-//
-//
-//            }
-//            .modifier(settingsBlocks())
-            
+            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
         }
         .padding(.horizontal)
     }

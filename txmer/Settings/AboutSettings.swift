@@ -102,27 +102,28 @@ struct AboutSettingsView: View {
     @State var showLicenses = false
     
     var body: some View {
-//        NavigationView {
-        VStack (alignment: .leading) {
-            Text("txmer.")
-                .font(Font.custom("recursive", fixedSize: 30))
+        ZStack {
+            VStack (alignment: .leading) {
+                Text("txmer.")
+                    .font(Font.custom("recursive", fixedSize: 30))
                 Text("VERSION \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)\n")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundColor(Color(uiColor: .systemGray))
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(Color(uiColor: .systemGray))
                 Text("txmer is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\n\nClick below for more info.")
-                Button("Open source licenes") {
+                Button {
                     showLicenses = true
+                } label: {
+                    Text("Open source licenes")
                 }
                 
                 
+                Text("Buy your cubes from\nhttps://www.speedcube.co.nz/ \n❤️")
+                    .offset(y: UIScreen.screenHeight/5)
             }
-        .padding(.horizontal)
-            
-            
+            .padding(.horizontal)
             .sheet(isPresented: $showLicenses) {
                 LicensesPopUpView(showLicenses: $showLicenses)
-                //NewSessionPopUpView()
             }
-//        }
+        }
     }
 }

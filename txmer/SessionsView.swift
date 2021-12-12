@@ -13,7 +13,7 @@ struct NewStandardSessionViewBlocks: ViewModifier {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     func body(content: Content) -> some View {
         content
-            .background(colorScheme == .light ? Color.white : Color.black)
+            .background(colorScheme == .light ? Color.white : Color(uiColor: .systemGray6))
             .cornerRadius(10)
             
             .padding(.trailing)
@@ -23,6 +23,7 @@ struct NewStandardSessionViewBlocks: ViewModifier {
 
 struct CustomiseSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.colorScheme) var colourScheme
     
     @State private var name: String = ""
     
@@ -36,7 +37,7 @@ struct CustomiseSessionView: View {
     
     var body: some View {
         ZStack {
-            Color(uiColor: .systemGray6)
+            Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                 .ignoresSafeArea()
             
             ScrollView {
@@ -168,6 +169,7 @@ struct CustomiseSessionView: View {
 @available(iOS 15.0, *)
 struct NewStandardSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.colorScheme) var colourScheme
     
     
     @Binding var showNewSessionPopUp: Bool
@@ -193,7 +195,7 @@ struct NewStandardSessionView: View {
     
     var body: some View {
         ZStack {
-            Color(uiColor: .systemGray6)
+            Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                 .ignoresSafeArea()
             
             ScrollView {
@@ -399,6 +401,7 @@ extension View {
 struct NewSessionPopUpView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colourScheme
     @State private var showNewStandardSessionView = false
     
     @State private var testBool = false
@@ -444,7 +447,7 @@ struct NewSessionPopUpView: View {
                         HStack {
                             Image(systemName: "timer.square")
                                 .font(.system(size: 30, weight: .regular))
-                                .foregroundColor(.black)
+                                .foregroundColor(colourScheme == .light ? .black : .white)
                                 .symbolRenderingMode(.hierarchical)
                                 .padding(.leading, 8)
                                 .padding(.trailing, 4)
@@ -452,12 +455,12 @@ struct NewSessionPopUpView: View {
                                 .padding(.bottom, 8)
                             Text("Standard Session")
                                 .font(.system(size: 17, weight: .regular, design: .default))
-                                .foregroundColor(.black)
+                                .foregroundColor(colourScheme == .light ? .black : .white)
                             //.padding(10)
                             Spacer()
                         }
                         
-                        .background(Color(uiColor: .systemGray6))
+                        .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
                         .onTapGesture {
                             showNewStandardSessionView = true
                         }
@@ -484,7 +487,7 @@ struct NewSessionPopUpView: View {
                         HStack {
                             Image(systemName: "command.square")
                                 .font(.system(size: 30, weight: .regular))
-                                .foregroundColor(.black)
+                                .foregroundColor(colourScheme == .light ? .black : .white)
                                 .symbolRenderingMode(.hierarchical)
                                 .padding(.leading, 8)
                                 .padding(.trailing, 4)
@@ -492,11 +495,11 @@ struct NewSessionPopUpView: View {
                                 .padding(.bottom, 8)
                             Text("Algorithm Trainer (WIP)")
                                 .font(.system(size: 17, weight: .regular, design: .default))
-                                .foregroundColor(.black)
+                                .foregroundColor(colourScheme == .light ? .black : .white)
                             
                             Spacer()
                         }
-                        .background(Color(uiColor: .systemGray6)
+                        .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                                         .clipShape(Rectangle()))
                         .onTapGesture {
                             print("alg trainer pressed")
@@ -529,7 +532,7 @@ struct NewSessionPopUpView: View {
                         HStack {
                             Image(systemName: "square.on.square")
                                 .font(.system(size: 26, weight: .medium))
-                                .foregroundColor(.black)
+                                .foregroundColor(colourScheme == .light ? .black : .white)
                                 .symbolRenderingMode(.hierarchical)
                                 .padding(.leading, 8)
                                 .padding(.trailing, 4)
@@ -537,11 +540,11 @@ struct NewSessionPopUpView: View {
                                 .padding(.bottom, 8)
                             Text("Playground (WIP)")
                                 .font(.system(size: 17, weight: .regular, design: .default))
-                                .foregroundColor(.black)
+                                .foregroundColor(colourScheme == .light ? .black : .white)
                             
                             Spacer()
                         }
-                        .background(Color(uiColor: .systemGray6))
+                        .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
                         .onTapGesture {
                             print("playground pressed")
                         }
@@ -565,7 +568,7 @@ struct NewSessionPopUpView: View {
                         HStack {
                             Image(systemName: "globe.asia.australia")
                                 .font(.system(size: 26, weight: .medium))
-                                .foregroundColor(.black)
+                                .foregroundColor(colourScheme == .light ? .black : .white)
                                 .symbolRenderingMode(.hierarchical)
                                 .padding(.leading, 8)
                                 .padding(.trailing, 4)
@@ -573,11 +576,11 @@ struct NewSessionPopUpView: View {
                                 .padding(.bottom, 8)
                             Text("Comp Sim Mode (WIP)")
                                 .font(.system(size: 17, weight: .regular, design: .default))
-                                .foregroundColor(.black)
+                                .foregroundColor(colourScheme == .light ? .black : .white)
                             
                             Spacer()
                         }
-                        .background(Color(UIColor.systemGray6)
+                        .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                                         .clipShape(RoundedRectangle(cornerRadius: 10)))
                         .onTapGesture {
                             print("comp sim pressed")
@@ -619,7 +622,7 @@ struct NewSessionPopUpView: View {
                                     .font(.system(size: 26, weight: .semibold))
                                     .symbolRenderingMode(.hierarchical)
                                     .foregroundStyle(.secondary)
-                                    .foregroundStyle(.black)
+                                    .foregroundStyle(colourScheme == .light ? .black : .white)
                                     .padding(.top)
                                     .padding(.trailing)
                             }
@@ -627,28 +630,6 @@ struct NewSessionPopUpView: View {
                         Spacer()
                     }
                 )
-                
-                /*
-                 .toolbar {
-                 ToolbarItem(placement: .navigationBarTrailing) {
-                 Button {
-                 print("new session view closed")
-                 dismiss()
-                 } label: {
-                 Image(systemName: "xmark.circle.fill")
-                 .font(.system(size: 22, weight: .semibold))
-                 .symbolRenderingMode(.hierarchical)
-                 .padding(.top)
-                 .padding(.trailing)
-                 
-                 }
-                 }
-                 
-                 }
-                 */
-                
-                
-                //Spacer()
             }
         }
     }
@@ -693,6 +674,7 @@ struct ContextMenuButton: View {
 @available(iOS 15.0, *)
 struct SessionCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.colorScheme) var colourScheme
     @Binding var currentSession: Sessions
     @State private var isShowingDeleteDialog = false
     var item: Sessions
@@ -738,7 +720,7 @@ struct SessionCard: View {
         
             
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color.white)
+                .fill(colourScheme == .dark ? Color(uiColor: .systemGray6) : Color.white)
                 .frame(width: currentSession == item ? 16 : UIScreen.screenWidth - 32, height: item.pinned ? 110 : 65)
             
             
@@ -761,10 +743,10 @@ struct SessionCard: View {
                         if item.pinned {
                             Text(item.name ?? "Unkown session name")
                                 .font(.system(size: 22, weight: .bold, design: .default))
-                                .foregroundColor(Color.black)
+                                .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                             Text(puzzle_types[Int(item.scramble_type)].name)
         //                        .font(.system(size: 15, weight: .medium, design: .default))
-                                .foregroundColor(Color.black)
+                                .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                             Spacer()
                             Text("\(item.solves?.count ?? -1) Solves")
                                 .font(.system(size: 15, weight: .bold, design: .default))
@@ -773,8 +755,10 @@ struct SessionCard: View {
                         } else {
                             Text(item.name ?? "Unkown session name")
                                 .font(.system(size: 22, weight: .bold, design: .default))
+                                .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                             Text(puzzle_types[Int(item.scramble_type)].name)
                                 .font(.system(size: 15, weight: .medium, design: .default))
+                                .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                         }
                     }
                     .offset(x: currentSession == item ? 10 : 0)
@@ -785,7 +769,7 @@ struct SessionCard: View {
                         Image(puzzle_types[Int(item.scramble_type)].name)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .foregroundColor(Color.black)
+                            .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                             .padding(.top, 4)
                             .padding(.bottom, 4)
                             .padding(.trailing, 12)
@@ -793,6 +777,7 @@ struct SessionCard: View {
                         Image(puzzle_types[Int(item.scramble_type)].name)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
+                            .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                             .padding(.trailing, 6)
                     }
                     
@@ -903,6 +888,7 @@ struct SessionCard: View {
 struct SessionsView: View {
     @Binding var currentSession: Sessions
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.colorScheme) var colourScheme
     
     
     @State var showNewSessionPopUp = false
@@ -936,7 +922,7 @@ struct SessionsView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color(uiColor: .systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
+                Color(uiColor: colourScheme == .light ? .systemGray6 : .black) 
                     .ignoresSafeArea()
                 
                 ScrollView {

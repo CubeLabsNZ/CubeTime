@@ -127,8 +127,8 @@ class Stats {
         var current_average: Double
         var values: [Solves]
         
-        current_average = solvesByDate.suffix(5).sorted(by: {$0.time > $1.time}).dropFirst().dropLast().reduce(0, {$0 + $1.time}) / Double(period-2)
-        values = solvesByDate.suffix(5)
+        current_average = solvesByDate.suffix(period).sorted(by: {$0.time > $1.time}).dropFirst().dropLast().reduce(0, {$0 + $1.time}) / Double(period-2)
+        values = solvesByDate.suffix(period)
         
         return (current_average, values)
         

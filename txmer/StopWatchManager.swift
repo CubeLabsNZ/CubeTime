@@ -51,8 +51,6 @@ class StopWatchManager: ObservableObject {
     var secondsElapsed = 0.0
     @Published var secondsStr = ""
     
-    @Environment(\.colorScheme) var colourScheme
-    
     var timer: Timer?
     
     /// todo set custom fps for battery purpose, promotion can set as low as 10 / 24hz ,others 60 fixed, no option for them >:C
@@ -148,7 +146,7 @@ class StopWatchManager: ObservableObject {
                         NSLog("Left")
                         if solveItem != nil {
                             prevIsDown = false // Showing a dialog implies touch up
-                            timerColour = ((colourScheme == .light) ? Color.black : Color.white)
+                            timerColour = .black
                             showDeleteSolveConfirmation = true
                             self.feedbackStyle.impactOccurred()
                         }

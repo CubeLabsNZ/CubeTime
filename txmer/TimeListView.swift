@@ -78,6 +78,7 @@ class TimeListManager: ObservableObject {
 @available(iOS 15.0, *)
 struct TimeListView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.colorScheme) var colourScheme
     
     @Binding var currentSession: Sessions
     
@@ -110,8 +111,7 @@ struct TimeListView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color(uiColor: .systemGray6) /// todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)
-                /// YES FULL BLACK FOR AMOLED DO YOU HATE YOUR BATTERY LIFE
+                Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                     .ignoresSafeArea()
                 
                 
