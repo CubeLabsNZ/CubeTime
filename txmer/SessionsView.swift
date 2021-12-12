@@ -847,6 +847,7 @@ struct SessionCard: View {
         .padding(.trailing)
         .padding(.leading)
         
+                
         .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unknown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
                 withAnimation(.spring()) {
@@ -951,6 +952,8 @@ struct SessionsView: View {
                                 
                         }
                     }
+                    
+                    .animation(.spring())
                     
                     
                 }

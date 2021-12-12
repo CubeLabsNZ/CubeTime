@@ -14,9 +14,7 @@ import SwiftUICharts
 
 extension View {
     public func gradientForeground(colors: [Color]) -> some View {
-        self.overlay(LinearGradient(gradient: .init(colors: colors),
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing))
+        self.overlay(getGradient(gradientArray: CustomGradientColours.gradientColours, type: 8))
             .mask(self)
     }
 }
@@ -25,23 +23,13 @@ extension View {
 
 @available(iOS 15.0, *)
 struct StatsView: View {
-    
     @Environment(\.managedObjectContext) var managedObjectContext
-    
-    let gradientColour: LinearGradient = LinearGradient(
-        gradient: Gradient(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 136/255, green: 94/255, blue: 191/255)]),
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing)
     
     let columns = [
         // GridItem(.adaptive(minimum: 112), spacing: 11)
         GridItem(spacing: 10),
         GridItem(spacing: 10)
     ]
-    
-    
-    
-    
     
     @Binding var currentSession: Sessions
     
@@ -169,7 +157,7 @@ struct StatsView: View {
                                         Spacer()
                                     }
                                     .frame(height: 75)
-                                    .background(gradientColour                                        .clipShape(RoundedRectangle(cornerRadius:16)))
+                                    .background(getGradient(gradientArray: CustomGradientColours.gradientColours, type: 8)                                        .clipShape(RoundedRectangle(cornerRadius:16)))
                                     .onTapGesture {
                                         print("best single pressed!")
                                     }
@@ -410,7 +398,7 @@ struct StatsView: View {
                                 }
                                 .padding([.vertical, .leading], 12)
                                 
-                                LineView(data: timesByDate, title: nil, style: ChartStyle(backgroundColor: .white, accentColor: CustomGradientColours.ccPink, secondGradientColor: CustomGradientColours.ccPrpl, textColor: .black, legendTextColor: .gray, dropShadowColor: Color.black.opacity(0.24)), legendSpecifier: "%.2g")
+                                LineView(data: timesByDate, title: nil, style: ChartStyle(backgroundColor: .white, accentColor: CustomGradientColours.gradientColours[8][1], secondGradientColor: CustomGradientColours.gradientColours[8][0], textColor: .black, legendTextColor: .gray, dropShadowColor: Color.black.opacity(0.24)), legendSpecifier: "%.2g")
                                     .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
                                     .padding(.horizontal, 12)
                             }
