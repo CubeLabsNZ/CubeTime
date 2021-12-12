@@ -65,7 +65,7 @@ struct TimerView: View {
             
             if stopWatchManager.mode == .stopped{
                 VStack {
-                    Text(stopWatchManager.scrambleStr ?? "Loading scramble")
+                    Text(stopWatchManager.scrambleStr ?? "Loading scramble...")
                         //.background(Color.red)
                         
 //                        .padding(.top, 48)
@@ -166,7 +166,7 @@ struct TimerView: View {
     }
 }
 
-struct MainTimerView_Previews: PreviewProvider {
+struct TimerView_Previews: PreviewProvider {
     static let context = PersistenceController.shared.container.viewContext
     @State static var session: Sessions = {
         let item = Sessions(context: context)

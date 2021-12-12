@@ -19,7 +19,7 @@ enum stopWatchMode {
 
 // TO left = discard
 // TO right = reload scramble
-// Double Tap = penalty menu
+// Double Tap = penalty menu TODO
 
 class StopWatchManager: ObservableObject {
     @Binding var currentSession: Sessions
@@ -33,16 +33,15 @@ class StopWatchManager: ObservableObject {
     var scrambleType: Int32
     var scrambleSubType: Int32 = 0
     
-    var prevScrambleStr: String? = nil
     @Published var scrambleStr: String? = nil
+    private var nextScrambleStr: String? = nil
     
     init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         _currentSession = currentSession
         self.managedObjectContext = managedObjectContext
         scrambler.initSq1()
         scrambleType = currentSession.wrappedValue.scramble_type
-        let scr = CHTScramble.getNewScramble(by: scrambler, type: scrambleType, subType: scrambleSubType)
-        scrambleStr = scr?.scramble
+        rescramble()
     }
     
     private var timerStartTime: Date?
@@ -57,10 +56,19 @@ class StopWatchManager: ObservableObject {
     var frameTime: Double = 1/60
     
     
-    func rescramble() {
-        prevScrambleStr = scrambleStr
+    func safeGetScramble() -> String {
         let scr = CHTScramble.getNewScramble(by: scrambler, type: scrambleType, subType: scrambleSubType)
-        scrambleStr = scr?.scramble
+        if let scr = scr {
+            return scr.scramble
+        } else {
+            return "Failed to load scramble"
+        }
+    }
+    
+    func rescramble() {
+        if nextScrambleStr == nil { nextScrambleStr = safeGetScramble() }
+        scrambleStr = nextScrambleStr
+        nextScrambleStr = safeGetScramble()
     }
     
     
@@ -75,14 +83,11 @@ class StopWatchManager: ObservableObject {
         secondsElapsed = 0
         timerStartTime = Date()
         
-        timer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) { [self] timer in
+        timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { [self] timer in
             self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
+            self.objectWillChange.send()
         }
         NSLog("started timer i think")
-        
-        rescramble()
-        
-        NSLog("scrambled")
     }
     
     func stop() {
@@ -104,6 +109,8 @@ class StopWatchManager: ObservableObject {
     private var prevIsDown = false
     private var prevDownStoppedTheTimer = false
     
+    private var asyncScrambleTask: DispatchWorkItem?
+    
     let threshold = 50 as CGFloat
     
     func touchDown(value: DragGesture.Value) {
@@ -113,7 +120,7 @@ class StopWatchManager: ObservableObject {
                     taskTimerReady?.cancel() // TODO maybe dont do this idk ask tim
                     allowGesture = false
                     if value.translation.width > 0 {
-                        NSLog("Right")
+                        NSLog("Right") // TODO buttosn optionsal
                         rescramble() // TODO customize
                         self.feedbackStyle.impactOccurred()
                     } else {
@@ -143,20 +150,22 @@ class StopWatchManager: ObservableObject {
             NSLog("Down")
             if mode == .running {
                 stop()
+                rescramble()
                 prevDownStoppedTheTimer = true
                 solveItem = Solves(context: managedObjectContext)
                 // .comment
                 solveItem.date = Date()
                 // .penalty
                 // .puzzle_id
-                solveItem.session = currentSession /// ???
+                solveItem.session = currentSession
                 // currentSession!.addToSolves(solveItem)
-                solveItem.scramble = prevScrambleStr
+                solveItem.scramble = scrambleStr
                 solveItem.scramble_type = scrambleType
                 solveItem.scramble_subtype = scrambleSubType
                 // .starred
                 solveItem.time = self.secondsElapsed
                 try! managedObjectContext.save()
+                rescramble()
             } else { // TODO on update gesture cancels the taskAfterHold once a drag started past a certain threshold
                 let newTaskTimerReady = DispatchWorkItem {
                     self.canStartTimer = true
