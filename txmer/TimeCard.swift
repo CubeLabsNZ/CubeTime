@@ -283,6 +283,7 @@ struct SolvePopupView: View {
 struct TimeCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     let solve: Solves
+    let formattedTime: String
     
     @Binding var currentSolve: Solves?
     @Binding var isSelectMode: Bool
@@ -291,6 +292,13 @@ struct TimeCard: View {
     
     @State var isSelected = false
     
+    init(solve: Solves, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<[Solves]>) {
+        self.solve = solve
+        self.formattedTime = formatSolveTime(secs: solve.time)
+        self._currentSolve = currentSolve
+        self._isSelectMode = isSelectMode
+        self._selectedSolves = selectedSolves
+    }
     
     var body: some View {
         ZStack {
@@ -318,7 +326,7 @@ struct TimeCard: View {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 }
             VStack {
-                Text(formatSolveTime(secs: solve.time))
+                Text(formattedTime)
                     .font(.system(size: 17, weight: .bold, design: .default))
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
@@ -327,7 +335,9 @@ struct TimeCard: View {
             }
         }.onChange(of: isSelectMode) {newValue in
             if !newValue && isSelected {
-                isSelected = false
+                withAnimation {
+                    isSelected = false
+                }
             }
         }
         
