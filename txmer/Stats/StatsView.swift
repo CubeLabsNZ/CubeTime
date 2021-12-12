@@ -502,3 +502,24 @@ struct StatsView: View {
         }
     }
 }
+
+/*
+struct StatsView_Previews: PreviewProvider {
+    static let context = PersistenceController.shared.container.viewContext
+    @State static var session: Sessions = {
+        let item = Sessions(context: context)
+        item.name = "Preview Session"
+//        for _ in 0..<999 {
+//            let solve = Solves(context: context)
+//            solve.time = Double.random(in: 10...600)
+//            solve.date = Date(timeIntervalSince1970: TimeInterval.random(in: 0...Date().timeIntervalSince1970))
+//            solve.session = item
+//        }
+        return item
+    }()
+    static var previews: some View {
+        StatsView(currentSession: $session, managedObjectContext: context)
+            .environment(\.managedObjectContext, context)
+    }
+}
+*/

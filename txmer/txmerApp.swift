@@ -22,7 +22,7 @@ struct txmerApp: App {
     var body: some Scene {
         WindowGroup {
             MainTabsView(managedObjectContext: moc)
-                .environment(\.managedObjectContext,moc )
+                .environment(\.managedObjectContext, moc)
         }
     }
 }
