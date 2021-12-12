@@ -10,13 +10,12 @@ import SwiftUI
 
 
 extension Color {
-    init(hex: UInt, alpha: Double = 1) {
+    init(_ hex: UInt) {
         self.init(
             .sRGB,
             red: Double((hex >> 16) & 0xff) / 255,
             green: Double((hex >> 08) & 0xff) / 255,
-            blue: Double((hex >> 00) & 0xff) / 255,
-            opacity: alpha
+            blue: Double((hex >> 00) & 0xff) / 255
         )
     }
 }
@@ -94,15 +93,22 @@ class TimerTextColours {
     static let timerCanStartColour: Color = Color.green
 }
 
-class CustomGradientColours {
-    static let ccPink: Color = Color(red: 236/255, green: 74/255, blue: 134/255)
-    static let ccPrpl: Color = Color(red: 126/255, green: 94/255, blue: 191/255)
-    
-    
-    static let gradientColour: LinearGradient = LinearGradient(
-        gradient: Gradient(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 136/255, green: 94/255, blue: 191/255)]),
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing)
+func getGradient(gradientArray: [[Color]], type: Int) -> LinearGradient {
+    return LinearGradient(gradient: Gradient(colors: gradientArray[type]), startPoint: .bottomTrailing, endPoint: .topLeading)
+}
 
-    
+class CustomGradientColours {
+    static let gradientColours: [[Color]] = [
+        [Color(0x218db6), Color(0x074a70)], // light blue - dark blue
+        [Color(0x68c1c3), Color(0x197aa2)], // aqua - light blue
+        [Color(0xebe9b9), Color(0x5abec7)], // pale yellow/white ish - aqua
+        [Color(0xf6d657), Color(0x9cd0bf)], // yellow - green
+        [Color(0xf7ae6b), Color(0xf6d968)], // pale orange-yellow
+        
+        [Color(0xf28947), Color(0xf7cc63)], // darker orange - yellow
+        [Color(0xee777b), Color(0xf6a757)], // pink-orange
+        [Color(0xca678d), Color(0xf68e6a)], // magenta-orange
+        [Color(0x5c3480), Color(0xcf6c87)], // purple-pink
+        [Color(0x372c75), Color(0x703f82)] // dark blue-purple
+    ]
 }

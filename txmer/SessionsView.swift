@@ -838,9 +838,11 @@ struct SessionCard: View {
                               title: "Customise",
                               systemImage: "pencil");
             ContextMenuButton(action: {
-                item.pinned.toggle()
-                try! managedObjectContext.save()
-            },
+                withAnimation {
+                    item.pinned.toggle()
+                    try! managedObjectContext.save()
+                }
+                           },
                               title: item.pinned ? "Unpin" : "Pin",
                               systemImage: item.pinned ? "pin.slash" : "pin");
             Divider()
@@ -856,7 +858,6 @@ struct SessionCard: View {
         .padding(.trailing)
         .padding(.leading)
         
-        .animation(.spring())
                 
         .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unknown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
@@ -960,6 +961,7 @@ struct SessionsView: View {
                                 
                         }
                     }
+                    
                     .animation(.spring())
                     
                     
