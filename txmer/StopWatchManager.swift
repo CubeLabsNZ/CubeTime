@@ -11,10 +11,12 @@ import SwiftUI
 
 var userHoldTime: Double = 0.5 /// todo make so user can set in setting
 let gestureKillTime: Double = 0.2
+let inspectionEnabled = true
 
 enum stopWatchMode {
     case running
     case stopped
+    case inspecting
 }
 
 // TO left = discard
@@ -46,11 +48,12 @@ class StopWatchManager: ObservableObject {
     
     private var timerStartTime: Date?
     
-    @Published var secondsElapsed = 0.0
+    var secondsElapsed = 0.0
+    @Published var secondsStr = ""
     
     @Environment(\.colorScheme) var colourScheme
     
-    var timer = Timer()
+    var timer: Timer?
     
     /// todo set custom fps for battery purpose, promotion can set as low as 10 / 24hz ,others 60 fixed, no option for them >:C
     var frameTime: Double = 1/60
@@ -75,23 +78,38 @@ class StopWatchManager: ObservableObject {
     private var canStartTimer = false
     private var allowGesture = true
     
+    
+    var inspectionSecs = 0
+    
+    func startInspection() {
+        timer?.invalidate()
+        secondsStr = "0"
+        inspectionSecs = 0
+        mode = .inspecting
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
+            inspectionSecs += 1
+            self.secondsStr = String(inspectionSecs)
+        }
+    }
+    
     func start() {
         NSLog("start called")
         canStartTimer = false
         mode = .running
         
         secondsElapsed = 0
+        secondsStr = formatSolveTime(secs: 0)
         timerStartTime = Date()
         
         timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { [self] timer in
             self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
-            self.objectWillChange.send()
+            self.secondsStr = formatSolveTime(secs: self.secondsElapsed)
         }
         NSLog("started timer i think")
     }
     
     func stop() {
-        timer.invalidate()
+        timer?.invalidate()
         mode = .stopped
 
     }
@@ -108,6 +126,7 @@ class StopWatchManager: ObservableObject {
     
     private var prevIsDown = false
     private var prevDownStoppedTheTimer = false
+    private var prevDownTriggeredGesture = false
     
     private var asyncScrambleTask: DispatchWorkItem?
     
@@ -115,10 +134,12 @@ class StopWatchManager: ObservableObject {
     
     func touchDown(value: DragGesture.Value) {
         if prevIsDown {
-            if allowGesture && !canStartTimer && !prevDownStoppedTheTimer {
+            NSLog("allowgesture: \(allowGesture) !canstarttimer: \(!canStartTimer) !prevdownstoppedthetimer: \(!prevDownStoppedTheTimer) mode != inspectiuong \(mode != .inspecting)")
+            if allowGesture && !canStartTimer && !prevDownStoppedTheTimer && mode != .inspecting {
                 if abs(value.translation.width) > threshold && abs(value.translation.height) < abs(value.translation.width) {
                     taskTimerReady?.cancel() // TODO maybe dont do this idk ask tim
                     allowGesture = false
+                    prevDownTriggeredGesture = true
                     if value.translation.width > 0 {
                         NSLog("Right") // TODO buttosn optionsal
                         rescramble() // TODO customize
@@ -135,6 +156,7 @@ class StopWatchManager: ObservableObject {
                 } else if abs(value.translation.height) > threshold && abs(value.translation.width) < abs(value.translation.height) {
                     taskTimerReady?.cancel() // TODO maybe dont do this idk ask tim
                     allowGesture = false
+                    prevDownTriggeredGesture = true
                     if value.translation.height > 0 {
                         NSLog("Down")
                     } else {
@@ -166,8 +188,9 @@ class StopWatchManager: ObservableObject {
                 solveItem.time = self.secondsElapsed
                 try! managedObjectContext.save()
                 rescramble()
-            } else { // TODO on update gesture cancels the taskAfterHold once a drag started past a certain threshold
+            } else if (mode == .inspecting && inspectionEnabled) || (mode == .stopped && !inspectionEnabled) {
                 let newTaskTimerReady = DispatchWorkItem {
+                    self.timer?.invalidate() // Invalidate possible running inspections
                     self.canStartTimer = true
                     self.timerColour = TimerTextColours.timerCanStartColour
                     self.feedbackStyle.impactOccurred()
@@ -182,11 +205,14 @@ class StopWatchManager: ObservableObject {
         prevIsDown = false
         allowGesture = true
         NSLog("up")
-        
-        if canStartTimer {
+        NSLog("\(mode == .stopped) \(inspectionEnabled) \(!prevDownStoppedTheTimer) \(!prevDownTriggeredGesture)")
+        if mode == .stopped && inspectionEnabled && !prevDownStoppedTheTimer && !prevDownTriggeredGesture {
+            startInspection()
+        } else if canStartTimer {
             NSLog("calling start")
             start()
         }
+        prevDownTriggeredGesture = false
         timerColour = TimerTextColours.timerDefaultColour
         taskTimerReady?.cancel()
     }

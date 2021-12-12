@@ -92,7 +92,7 @@ struct TimerView: View {
             VStack {
                 Spacer()
                 
-                Text(formatSolveTime(secs: stopWatchManager.secondsElapsed))
+                Text(stopWatchManager.secondsStr)
                     .foregroundColor(stopWatchManager.timerColour)
                     .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 64 : 48))
                     .animation(Animation.spring(), value: stopWatchManager.mode == .running)

@@ -18,6 +18,14 @@ extension Color {
             blue: Double((hex >> 00) & 0xff) / 255
         )
     }
+    
+    func toRGB() -> UInt {
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        UIColor(self).getRed(&r, green: &g, blue: &b, alpha: nil)
+        return (UInt(r * 255) << 16) + (UInt(r * 255) << 08) + (UInt(r * 255) << 00)
+    }
 }
 
 
