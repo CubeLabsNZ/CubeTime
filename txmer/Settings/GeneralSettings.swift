@@ -232,5 +232,6 @@ struct GeneralSettingsView: View {
             
         }
         .padding(.horizontal)
+        
     }
 }

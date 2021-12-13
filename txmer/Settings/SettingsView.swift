@@ -8,7 +8,6 @@
 import SwiftUI
 import SwiftUICharts
 
-
 struct AnimatingFontSizeV2: AnimatableModifier {
     var fontSize: CGFloat
 
@@ -173,7 +172,7 @@ struct SettingsDetail: View {
                     case "Appearance":
                         AppearanceSettingsView()
                     case "About":
-                        EmptyView()
+                        AboutSettingsView()
                     default:
                         EmptyView()
                     }

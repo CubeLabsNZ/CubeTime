@@ -93,6 +93,7 @@ struct LicensesPopUpView: View {
                 }
             }
         }
+        
     }
 }
 
