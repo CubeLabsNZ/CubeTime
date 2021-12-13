@@ -14,6 +14,7 @@ enum ProjectLicense {
     case chartview
     case icons
     case recursivefont
+    case privacypolicy
 }
 
 
@@ -29,9 +30,11 @@ struct LicensePopUpView: View {
             case .chartview:
                 ChartViewLicense()
             case .icons:
-                CuingIconsLicense()
+                CubingIconsLicense()
             case .recursivefont:
                 RecursiveLicense()
+            case .privacypolicy:
+                PrivacyPolicy()
             default:
                 Text("Could not get license for project")
             }
@@ -71,6 +74,10 @@ struct LicensesPopUpView: View {
                     }
                     Button("Recursive Font") {
                         projectLicense = .recursivefont
+                        showLicense = true
+                    }
+                    Button("Privacy Policy") {
+                        projectLicense = .privacypolicy
                         showLicense = true
                     }
                 }
@@ -114,9 +121,11 @@ struct AboutSettingsView: View {
                 Button {
                     showLicenses = true
                 } label: {
-                    Text("Open source licenes")
+                    Text("Open source licenes and privacy policy")
                 }
                 
+                Text("Our Github project: https://github.com/pdtcubing/txmer")
+                    .offset(y: UIScreen.screenHeight/7)
                 
                 Text("Buy your cubes from\nhttps://www.speedcube.co.nz/ \n❤️")
                     .offset(y: UIScreen.screenHeight/5)

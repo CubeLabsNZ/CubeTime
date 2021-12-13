@@ -46,7 +46,7 @@ class StopWatchManager: ObservableObject {
         _currentSession = currentSession
 //        _feedbackType = feedbackType
         self.managedObjectContext = managedObjectContext
-        self.feedbackStyle = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: 3)!)
+        self.feedbackStyle = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: 0)!)
         
         scrambler.initSq1()
         scrambleType = currentSession.wrappedValue.scramble_type

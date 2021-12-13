@@ -70,7 +70,7 @@ struct TimerView: View {
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: UIScreen.screenWidth, maxHeight: UIScreen.screenHeight/3)
     //                    .position(x: UIScreen.screenWidth / 2, y: 108)
-                        .font(.system(size: stopWatchManager.scrambleType == 7 ? 13 : 17, weight: .semibold, design: .monospaced))
+                        .font(.system(size: stopWatchManager.scrambleType == 7 ? 13 : 18, weight: .semibold, design: .monospaced))
 //                        .font(.system(size: 17, weight: .semibold, design: .monospaced))
                         .allowsTightening(true)
 
@@ -91,7 +91,7 @@ struct TimerView: View {
                 
                 Text(stopWatchManager.secondsStr)
                     .foregroundColor(stopWatchManager.timerColour)
-                    .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 64 : 48))
+                    .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 72 : 64))
                     .animation(Animation.spring(), value: stopWatchManager.mode == .running)
             
             
@@ -99,6 +99,9 @@ struct TimerView: View {
                 Spacer()
             }
                     .ignoresSafeArea(edges: .all)
+            
+            
+            
             
                        
             GeometryReader { geometry in
@@ -137,6 +140,86 @@ struct TimerView: View {
                 }
             }
             .ignoresSafeArea(edges: .top)
+            
+            
+            
+            
+            HStack(alignment: .center) {
+                Spacer()
+                
+                HStack(spacing: 0) {
+                    ZStack {
+                        Button {
+                            print("button pressed")
+                        } label: {
+                            Text("+2")
+                                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                                .fixedSize()
+                        }
+                        .frame(width: 35, height: 35)
+                        .buttonStyle(.bordered)
+                        .foregroundColor(colourScheme == .light ? .black : nil)
+                        .tint(colourScheme == .light ? nil : .yellow)
+                        .background(colourScheme == .light ? Color(uiColor: .systemGray4) : nil)
+                        .controlSize(.regular)
+                        .clipShape(Circle())
+//                        .background(Color(uiColor: .systemGray4).clipShape(Circle()))
+                    }
+                    .padding(5)
+                    
+                    
+                    ZStack {
+                        Button {
+                            print("button pressed")
+                        } label: {
+                            Text("DNF")
+                                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                                .fixedSize()
+                        }
+                        .frame(width: 50, height: 35)
+                        .buttonStyle(.bordered)
+                        .foregroundColor(colourScheme == .light ? .black : nil)
+                        .tint(colourScheme == .light ? nil : .red)
+                        .background(colourScheme == .light ? Color(uiColor: .systemGray4) : nil)
+                        .controlSize(.regular)
+                        .clipShape(Capsule())
+                    }
+                    .padding(.vertical, 5)
+                    .padding(.horizontal, 2)
+                    
+                    ZStack {
+                        Circle()
+                            .fill(Color(uiColor: .systemGray4))
+                            .frame(width: 35, height: 35)
+                        
+                        Button {
+                            print("button pressed")
+                        } label: {
+                            Text("OK")
+                                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                                .fixedSize()
+                        }
+                        .frame(width: 35, height: 35)
+                        .buttonStyle(.bordered)
+                        .foregroundColor(colourScheme == .light ? .black : nil)
+                        .tint(colourScheme == .light ? nil : .green)
+                        .background(colourScheme == .light ? Color(uiColor: .systemGray4) : nil)
+                        .controlSize(.regular)
+                        .clipShape(Circle())
+//                        .background(Color(uiColor: .systemGray4).clipShape(Circle()))
+                    }
+                    .padding(5)
+                }
+                .background(Color(uiColor: .systemGray5).clipShape(Capsule()))
+                
+                Spacer()
+            }
+            .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 2)
+            .ignoresSafeArea(edges: .top)
+            .offset(y: 52)
+            
+            
+            
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {
