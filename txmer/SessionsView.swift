@@ -183,7 +183,6 @@ struct NewStandardSessionView: View {
     
     @State var pinnedSession: Bool
 
-    @Binding var currentSession: Sessions
     
     let sessionColors: [Color] = [.indigo, .purple, .pink, .red, .orange, .yellow, .green, .mint, .teal, .cyan, .blue]
     
@@ -394,7 +393,6 @@ struct NewSessionPopUpView: View {
     
     @Binding var currentSession: Sessions
     @Binding var showNewSessionPopUp: Bool
-    @Binding var currentSession: Sessions
     
     /*
      init(showNewSessionPopUp: Binding<Bool>) {
@@ -577,7 +575,7 @@ struct NewSessionPopUpView: View {
                         .padding(.trailing)
                         
                         
-                        NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false, currentSession: $currentSession), isActive: $showNewStandardSessionView)
+                        NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession, pinnedSession: false), isActive: $showNewStandardSessionView)
                         
                         /// TODO: **ADD NAV LINKS FOR ALL THE OTHER PAGES** and include for the on tap
                         
@@ -959,7 +957,7 @@ struct SessionsView: View {
                         .controlSize(.small)
                         .background(.ultraThinMaterial, in: Capsule())
                         .sheet(isPresented: $showNewSessionPopUp) {
-                            NewSessionPopUpView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession)
+                            NewSessionPopUpView(currentSession: $currentSession, showNewSessionPopUp: $showNewSessionPopUp)
                                 .environment(\.managedObjectContext, managedObjectContext)
                         }
                         .padding(.leading)
