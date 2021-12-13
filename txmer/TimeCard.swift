@@ -82,13 +82,13 @@ struct SolvePopupView: View {
     
     @Binding var currentSolve: Solves?
     
-    @State private var userComment: String = "SDKLJHFSDKJLFHSDF"
+    @State private var userComment: String
     
     
     init(solve: Solves, currentSolve: Binding<Solves?>, timeListManager: TimeListManager){
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
-        self.time = formatSolveTime(secs: solve.time)
+        self.time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
         self.puzzle_type = puzzle_types[Int(solve.scramble_type)]
         self.puzzle_subtype = puzzle_type.subtypes[Int(solve.scramble_subtype)]!
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
@@ -285,8 +285,12 @@ struct SolvePopupView: View {
 struct TimeCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
+    
     let solve: Solves
-    let formattedTime: String
+    let timeListManager: TimeListManager
+    
+    @State var formattedTime: String
+    @State var pen: PenTypes
     
     @Binding var currentSolve: Solves?
     @Binding var isSelectMode: Bool
@@ -295,9 +299,12 @@ struct TimeCard: View {
     
     @State var isSelected = false
     
-    init(solve: Solves, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<[Solves]>) {
+    
+    init(solve: Solves, timeListManager: TimeListManager, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<[Solves]>) {
         self.solve = solve
-        self.formattedTime = formatSolveTime(secs: solve.time)
+        self.timeListManager = timeListManager
+        self._formattedTime = State(initialValue: formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!))
+        self._pen = State(initialValue: PenTypes(rawValue: solve.penalty)!)
         self._currentSolve = currentSolve
         self._isSelectMode = isSelectMode
         self._selectedSolves = selectedSolves
@@ -345,87 +352,55 @@ struct TimeCard: View {
                 }
             }
         }
-        
-        
-        
-        
-            //            .contextMenu {
-            //
-            //                Button {
-            //                    print("MOVE TO PRESSED")
-            //                } label: {
-            //                    Label("Move To", systemImage: "arrow.up.forward.circle")
-            //                }
-            //
-            //                Divider()
-            //
-            //                Button {
-            //                    print("OK PRESSED")
-            //                } label: {
-            //                    Label("No Penalty", systemImage: "checkmark.circle") /// TODO: add custom icons because no good icons
-            //                }
-            //
-            //                Button {
-            //                    print("+2 pressed")
-            //                } label: {
-            //                    Label("+2", systemImage: "plus.circle") /// TODO: add custom icons because no good icons
-            //                }
-            //
-            //                Button {
-            //                    print("DNF pressed")
-            //                } label: {
-            //                    Label("DNF", systemImage: "slash.circle") /// TODO: add custom icons because no good icons
-            //                }
-            //
-            //                Divider()
-            //
-            //                Button (role: .destructive) {
-            //                    /*
-            //                    managedObjectContext.delete(solve)
-            //                    do {
-            //                        try managedObjectContext.save()
-            //                    } catch {
-            //                        if let error = error as NSError? {
-            //                            // Replace this implementation with code to handle the error appropriately.
-            //                            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            //
-            //                            /*
-            //                             Typical reasons for an error here include:
-            //                             * The parent directory does not exist, cannot be created, or disallows writing.
-            //                             * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-            //                             * The device is out of space.
-            //                             * The store could not be migrated to the current model version.
-            //                             Check the error message to determine what the actual problem was.
-            //                             */
-            //                            fatalError("Unresolved error \(error), \(error.userInfo)")
-            //                        }
-            //                    }
-            //                     */
-            //                    print("Button tapped")
-            //                    //timeListManager.resort()
-            //                } label: {
-            //                    Label {
-            //                        Text("Delete Solve")
-            //                            .foregroundColor(Color.red)
-            //                    } icon: {
-            //                        Image(systemName: "trash")
-            //                            .foregroundColor(Color.green) /// FIX: colours not working
-            //                    }
-            //                }
-            //            }
+        .contextMenu {
+//            Button {
+//            } label: {
+//                Label("Move To", systemImage: "arrow.up.forward.circle")
+//            }
+//
+//            Divider()
             
+            Button {
+                pen = .none
+                self.solve.penalty = pen.rawValue
+                formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+            } label: {
+                Label("No Penalty", systemImage: "checkmark.circle") /// TODO: add custom icons because no good icons
+            }
             
-            //        Button(action: {
-            //            print(solve.time)
-            //
-            //        }) {
+            Button {
+                pen = .plustwo
+                self.solve.penalty = pen.rawValue
+                formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+            } label: {
+                Label("+2", systemImage: "plus.circle") /// TODO: add custom icons because no good icons
+            }
             
+            Button {
+                pen = .dnf
+                self.solve.penalty = pen.rawValue
+                formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+            } label: {
+                Label("DNF", systemImage: "slash.circle") /// TODO: add custom icons because no good icons
+            }
             
-            //        }
+            Divider()
             
-            //
-            
+            Button (role: .destructive) {
+                managedObjectContext.delete(solve)
+                try! managedObjectContext.save()
+                withAnimation {
+                    timeListManager.resort()
+                }
+            } label: {
+                Label {
+                    Text("Delete Solve")
+                        .foregroundColor(Color.red)
+                } icon: {
+                    Image(systemName: "trash")
+                        .foregroundColor(Color.green) /// FIX: colours not working
+                }
+            }
         }
     }
-    
-    
+}

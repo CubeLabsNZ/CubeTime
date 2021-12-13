@@ -88,24 +88,17 @@ struct TimeListView: View {
     
     @State var isSelectMode = false
     @State var selectedSolves: [Solves] = []
-     
-    //let descendingButtonIcon: Image = Image(systemName: "chevron.down.circle")
-    //var buttonIcon: String = userLastState
     
     private let columns = [
-        // GridItem(.adaptive(minimum: 112), spacing: 11)
         GridItem(spacing: 10),
         GridItem(spacing: 10),
         GridItem(spacing: 10)
     ]
     
-//    var columns: [GridItem] = Array(repeating: .init(.flexible()), count: 3)
-    
     init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
+        // TODO FIXME use a smarter way of this for more performance
         self._timeListManager = StateObject(wrappedValue: TimeListManager(currentSession: currentSession, managedObjectContext: managedObjectContext))
-        //fetchRequest = NSFetchRequest<Solves>(entity: Solves.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Solves.date, ascending: true)], predicate: NSPredicate(format: "session == %@", self.currentSession!))
-        
     }
     
     var body: some View {
@@ -167,7 +160,7 @@ struct TimeListView: View {
                              
                         LazyVGrid(columns: columns, spacing: 12) {
                             ForEach(timeListManager.solves!, id: \.self) { item in
-                                TimeCard(solve: item, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
+                                TimeCard(solve: item, timeListManager: timeListManager, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
                                     .environment(\.managedObjectContext, managedObjectContext)
                             }
                         }

@@ -34,16 +34,25 @@ extension Color: RawRepresentable {
     }
 }
 
+enum PenTypes: Int16 {
+    case none
+    case plustwo
+    case dnf
+}
 
 
-func formatSolveTime(secs: Double) -> String {
+func formatSolveTime(secs: Double, penType: PenTypes = .none) -> String {
+    if penType == PenTypes.dnf {
+        return "DNF"
+    }
+    let secsfmt = penType == .plustwo ? ".3f+" : ".3f"
     if secs < 60 {
-        return String(format: "%.3f", secs) // TODO set DP
+        return String(format: "%\(secsfmt)", secs) // TODO set DP
     } else {
         let mins: Int = Int((secs / 60).rounded(.down))
         let secs = secs.truncatingRemainder(dividingBy: 60)
         
-        return String(format: "%d:%06.3f", mins, secs)
+        return String(format: "%d:%06\(secsfmt)", mins, secs)
     }
 }
 
@@ -70,7 +79,7 @@ let puzzle_types: [PuzzleType] = [
     PuzzleType(name: "Clock", subtypes: [0: "WCA"]),
     PuzzleType(name: "Skewb", subtypes: [0: "Random State"]),
     
-    PuzzleType(name: "3x3 OH", subtypes: [0: "Random State"]),
+    PuzzleType(name: "3x3 OH", subtypes: [0: "Random State"]), // TODO map to actual scrambles
     PuzzleType(name: "3x3 Blindfolded", subtypes: [0: "Random State"]),
     PuzzleType(name: "4x4 Blindfolded", subtypes: [0: "Random State"]),
     PuzzleType(name: "5x5 Blindfolded", subtypes: [0: "Random State"]),

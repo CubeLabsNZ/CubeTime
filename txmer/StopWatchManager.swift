@@ -12,6 +12,8 @@ import SwiftUI
 var userHoldTime: Double = 0.5 /// todo make so user can set in setting
 let gestureKillTime: Double = 0.2
 let inspectionEnabled = true
+let plustwotime = 15
+let dnftime = 17
 
 enum stopWatchMode {
     case running
@@ -43,13 +45,15 @@ class StopWatchManager: ObservableObject {
         self.managedObjectContext = managedObjectContext
         scrambler.initSq1()
         scrambleType = currentSession.wrappedValue.scramble_type
-        secondsStr = inspectionEnabled ? "0" : formatSolveTime(secs: 0)
+        secondsStr = formatSolveTime(secs: 0)
         DispatchQueue.main.async {
             self.rescramble()
         }
     }
     
     private var timerStartTime: Date?
+    
+    var penType: PenTypes = .none
     
     var secondsElapsed = 0.0
     @Published var secondsStr = ""
@@ -90,6 +94,11 @@ class StopWatchManager: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
             inspectionSecs += 1
             self.secondsStr = String(inspectionSecs)
+            if inspectionSecs == plustwotime {
+                penType = .plustwo
+            } else if inspectionSecs == dnftime {
+                penType = .dnf
+            }
         }
     }
     
@@ -180,7 +189,7 @@ class StopWatchManager: ObservableObject {
                 solveItem = Solves(context: managedObjectContext)
                 // .comment
                 solveItem.date = Date()
-                // .penalty
+                solveItem.penalty = penType.rawValue
                 // .puzzle_id
                 solveItem.session = currentSession
                 // currentSession!.addToSolves(solveItem)
