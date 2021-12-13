@@ -12,6 +12,8 @@ import SwiftUI
 var userHoldTime: Double = 0.5 /// todo make so user can set in setting
 let gestureKillTime: Double = 0.2
 let inspectionEnabled = true
+let plustwotime = 15
+let dnftime = 17
 
 enum stopWatchMode {
     case running
@@ -31,6 +33,7 @@ class StopWatchManager: ObservableObject {
     
     @Published var showDeleteSolveConfirmation = false
     
+    @Published var showPenOptions = false
     
     private let feedbackStyle: UIImpactFeedbackGenerator
     
@@ -50,13 +53,15 @@ class StopWatchManager: ObservableObject {
         
         scrambler.initSq1()
         scrambleType = currentSession.wrappedValue.scramble_type
-        secondsStr = inspectionEnabled ? "0" : formatSolveTime(secs: 0)
+        secondsStr = formatSolveTime(secs: 0)
         DispatchQueue.main.async {
             self.rescramble()
         }
     }
     
     private var timerStartTime: Date?
+    
+    var penType: PenTypes = .none
     
     var secondsElapsed = 0.0
     @Published var secondsStr = ""
@@ -97,6 +102,11 @@ class StopWatchManager: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
             inspectionSecs += 1
             self.secondsStr = String(inspectionSecs)
+            if inspectionSecs == plustwotime {
+                penType = .plustwo
+            } else if inspectionSecs == dnftime {
+                penType = .dnf
+            }
         }
     }
     
@@ -160,7 +170,7 @@ class StopWatchManager: ObservableObject {
                             timerColour = .black
                             prevDownTriggeredGesture = false
                             showDeleteSolveConfirmation = true
-                            self.feedbackStyle
+                            self.feedbackStyle.impactOccurred()
                         }
                     }
                 } else if abs(value.translation.height) > threshold && abs(value.translation.width) < abs(value.translation.height) {
@@ -168,7 +178,12 @@ class StopWatchManager: ObservableObject {
                     allowGesture = false
                     prevDownTriggeredGesture = true
                     if value.translation.height > 0 {
-                        NSLog("Down")
+                        if solveItem != nil {
+                            self.feedbackStyle.impactOccurred()
+                            withAnimation {
+                                showPenOptions = true
+                            }
+                        }
                     } else {
                         NSLog("Up")
                     }
@@ -186,7 +201,7 @@ class StopWatchManager: ObservableObject {
                 solveItem = Solves(context: managedObjectContext)
                 // .comment
                 solveItem.date = Date()
-                // .penalty
+                solveItem.penalty = penType.rawValue
                 // .puzzle_id
                 solveItem.session = currentSession
                 // currentSession!.addToSolves(solveItem)
@@ -215,6 +230,11 @@ class StopWatchManager: ObservableObject {
         //timer?.invalidate() // Invalidate possible running inspections
         prevIsDown = false
         allowGesture = true
+        if !prevDownTriggeredGesture {
+            withAnimation {
+                showPenOptions = false
+            }
+        }
         NSLog("up")
         NSLog("\(mode == .stopped) \(inspectionEnabled) \(!prevDownStoppedTheTimer) \(!prevDownTriggeredGesture)")
         if mode == .stopped && inspectionEnabled && !prevDownStoppedTheTimer && !prevDownTriggeredGesture {
@@ -226,5 +246,11 @@ class StopWatchManager: ObservableObject {
         prevDownTriggeredGesture = false
         timerColour = TimerTextColours.timerDefaultColour
         taskTimerReady?.cancel()
+    }
+    
+    func changedPen() {
+        withAnimation {
+            secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
+        }
     }
 }
