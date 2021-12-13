@@ -21,7 +21,7 @@ struct settingsBlocks: ViewModifier {
 struct AppearanceSettingsView: View {
     @Environment(\.colorScheme) var colourScheme
     
-    @State private var accentColour: Color = .indigo
+    @AppStorage("accentColor") private var accentColour: Color = .indigo
     let accentColours: [Color] = [.cyan, .blue, .indigo, .purple, .red]
     
     @State private var overrideSystemAppearance: Bool = true

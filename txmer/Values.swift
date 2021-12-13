@@ -9,7 +9,8 @@ import Foundation
 import SwiftUI
 
 
-extension Color {
+extension Color: RawRepresentable {
+    public typealias RawValue = Int
     init(_ hex: UInt) {
         self.init(
             .sRGB,
@@ -19,12 +20,17 @@ extension Color {
         )
     }
     
-    func toRGB() -> UInt {
+    public init?(rawValue: RawValue) {
+        self.init(UInt(rawValue))
+    }
+    
+    public var rawValue: RawValue {
         var r: CGFloat = 0
         var g: CGFloat = 0
         var b: CGFloat = 0
-        UIColor(self).getRed(&r, green: &g, blue: &b, alpha: nil)
-        return (UInt(r * 255) << 16) + (UInt(r * 255) << 08) + (UInt(r * 255) << 00)
+        var a: CGFloat = 0
+        UIColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
+        return (Int(r * 255) << 16) + (Int(r * 255) << 08) + (Int(r * 255) << 00)
     }
 }
 

@@ -180,7 +180,9 @@ struct NewStandardSessionView: View {
     //@State private var sessionColour: Color?
     @State private var sessionColour: Color = .indigo
     
-    @State var pinnedSession: Bool /// TODO: link to database
+    @State var pinnedSession: Bool
+
+    @Binding var currentSession: Sessions
     
     let sessionColors: [Color] = [.indigo, .purple, .pink, .red, .orange, .yellow, .green, .mint, .teal, .cyan, .blue]
     
@@ -344,31 +346,12 @@ struct NewStandardSessionView: View {
                         sessionItem.pinned = pinnedSession
                         NSLog("sessioneventyype is \(sessionEventType)")
                         sessionItem.scramble_type = sessionEventType
-                        do {
-                            try managedObjectContext.save()
-                        } catch {
-                            if let error = error as NSError? {
-                                // Replace this implementation with code to handle the error appropriately.
-                                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                                
-                                /*
-                                 Typical reasons for an error here include:
-                                 * The parent directory does not exist, cannot be created, or disallows writing.
-                                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                                 * The device is out of space.
-                                 * The store could not be migrated to the current model version.
-                                 Check the error message to determine what the actual problem was.
-                                 */
-                                fatalError("Unresolved error \(error), \(error.userInfo)")
-                            }
-                        }
-                        
+                        try! managedObjectContext.save()
+                        currentSession = sessionItem
                         showNewSessionPopUp = false
                         
                     } label: {
-                        Text("Create") /// TODO: make so when there is no text in the textfield grey out the create button
-                        //.font(.system(size: 17, weight: .medium))
-                        //.foregroundColor(Color.red)
+                        Text("Create")
                     }
                     .disabled(self.name.isEmpty)
                 }
@@ -407,6 +390,7 @@ struct NewSessionPopUpView: View {
     @State private var testBool = false
     
     @Binding var showNewSessionPopUp: Bool
+    @Binding var currentSession: Sessions
     
     /*
      init(showNewSessionPopUp: Binding<Bool>) {
@@ -589,7 +573,7 @@ struct NewSessionPopUpView: View {
                         .padding(.trailing)
                         
                         
-                        NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false), isActive: $showNewStandardSessionView)
+                        NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false, currentSession: $currentSession), isActive: $showNewStandardSessionView)
                         
                         /// TODO: **ADD NAV LINKS FOR ALL THE OTHER PAGES** and include for the on tap
                         
@@ -956,7 +940,7 @@ struct SessionsView: View {
                     Spacer()
                     HStack {
                         Button {
-                            showNewSessionPopUp.toggle()
+                            showNewSessionPopUp = true
                         } label: {
                             Image(systemName: "plus.circle.fill")
                                 .font(.system(size: 24, weight: .semibold))
@@ -970,7 +954,7 @@ struct SessionsView: View {
                         .controlSize(.small)
                         .background(.ultraThinMaterial, in: Capsule())
                         .sheet(isPresented: $showNewSessionPopUp) {
-                            NewSessionPopUpView(showNewSessionPopUp: $showNewSessionPopUp)
+                            NewSessionPopUpView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession)
                                 .environment(\.managedObjectContext, managedObjectContext)
                         }
                         .padding(.leading)
