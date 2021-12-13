@@ -45,7 +45,7 @@ struct ChartViewLicense: View {
     }
 }
 
-struct CuingIconsLicense: View {
+struct CubingIconsLicense: View {
     var body: some View {
         VStack {
             Text("A derivative of \"Cubing's\" icons are used throughout txmer.")
@@ -82,6 +82,26 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """)
             .font(.system(size: 17, weight: .regular, design: .serif))
+    }
+}
+
+struct PrivacyPolicy: View {
+    var body: some View {
+        Text("txmer privacy policy")
+            .font(.title)
+            .padding(.horizontal)
+        Divider()
+            .padding(.horizontal)
+        Text("""
+            Your solves (data not comprising of personal information including but not limited to the "scramble" used, the date of the solve, the time taken to complete the solve) and your sessions (data including but not limited to named groups of solves, again with no personal data) are stored locally on your device or optionally on iCloud (see below).
+            There are, however two notable things to be aware of:
+
+            1.  Optionally, Txmer will use the WCA (World Cubing Assocciation)'s API to retrieve your publically available solves, for the sole purpose of stats calculation. Once retrieved, it is stored locally on device. It requires you to enter your WCA ID, which is used solely for the purpose of retrieving your solves, and can optionally be saved locally for use next time you want to sync solves. The WCA's privacy policy is available at https://www.worldcubeassociation.org/privacy
+            2. Optionally, Txmer will use Apple iCloud to store your sessions. The data stored on iCloud can be viewed and deleted in the Txmer app. The Apple iCloud privacy policy is available at https://www.apple.com/legal/privacy/
+
+            The source code of txmer is publically viewable at https://github.com/pdtcubing/txmer for independent verification.
+            """)
+            .padding(.horizontal)
     }
 }
 

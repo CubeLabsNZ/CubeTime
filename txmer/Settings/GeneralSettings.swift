@@ -8,16 +8,42 @@
 import SwiftUI
 import SwiftUICharts
 
+/*
+enum FeedbackStyles: UIImpactFeedbackGenerator.FeedbackStyle, CaseIterable {
+    init?(rawValue: UIImpactFeedbackGenerator.FeedbackStyle.RawValue) {
+        <#code#>
+    }
+    
+    var rawValue: UIImpactFeedbackGenerator.FeedbackStyle.RawValue
+    
+    typealias RawValue = UIImpactFeedbackGenerator.FeedbackStyle.RawValue
+    
+    case rigid = UIImpactFeedbackGenerator.FeedbackStyle.rigid
+    case heavy = 1
+    case medium = 2
+    case light = 3
+}
+ */
+
 struct GeneralSettingsView: View {
     
-    @State var inspectionTime: Bool = true
-    @State var holdDownTime: Float = 0.5
-    @State var timerIntervalMode: Int = 0
-    @State var reduceAnimations: Bool = false
-    @State var hapticFeedback: Bool = true
-    @State var hapticIntensity: Int = 0
-    @State var gestureActivationDistance: Double = 200
-    @State var displayTruncation: Int = 0
+    @AppStorage("inspection") var inspectionTime: Bool = true
+    @AppStorage("freeze") var holdDownTime: Double = 0.5
+    @AppStorage("interval") var timerIntervalMode: String = "0.01s"
+    @AppStorage("hapBool") var hapticFeedback: Bool = true
+//    @AppStorage("hapType") var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
+    @AppStorage("hapticType") var feedbackType: Int = 0
+    @AppStorage("gestureD") var gestureActivationDistance: Double = 200
+    @AppStorage("dT") var displayTruncation: String = "2 d.p"
+    
+    let intervalModes: [String] = ["0.01s", "0.1s", "seconds"]
+//    let hapticIntensityModes: [String] = ["rigid", "heavy", "medium", "light", "soft"]
+    
+    let hapticModes2: [String: UIImpactFeedbackGenerator.FeedbackStyle] = ["rigid": .rigid, "heavy": .heavy, "medium": .medium, "light": .light]
+    
+    let hapticModes: [UIImpactFeedbackGenerator.FeedbackStyle] = [.rigid, .heavy, .medium, .light]
+    
+    let displayModes: [String] = ["2 d.p", "3 d.p"]
     
     @Environment(\.colorScheme) var colourScheme
     
@@ -72,9 +98,9 @@ struct GeneralSettingsView: View {
                             .font(.system(size: 17, weight: .medium))
                         Spacer()
                         Picker("", selection: $timerIntervalMode) {
-                                ForEach(["seconds", "0.1s", "0.01s", "refresh rate"], id: \.self) { mode in
-                                Text(mode)
-
+                            ForEach(intervalModes, id: \.self) {
+                                Text($0)
+                                
                                 //.foregroundColor(Color(uiColor: .systemGray4))
                             }
                         }
@@ -100,24 +126,7 @@ struct GeneralSettingsView: View {
                 }
                 .padding([.horizontal, .top], 10)
                 
-                VStack(alignment: .leading, spacing: 0) {
-                    HStack {
-                        Toggle(isOn: $reduceAnimations) {
-                            Text("Reduce Animations")
-                                .font(.system(size: 17, weight: .medium))
-                        }
-                            .toggleStyle(SwitchToggleStyle(tint: Color("AccentColor")))
-                        
-                    }
-                    .padding(.horizontal)
-                    
-                    Text("Turn off motion animations and other effects.")
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(Color(uiColor: .systemGray))
-                        .multilineTextAlignment(.leading)
-                        .padding(.leading)
-                        .padding(.top, 10)
-                }
+                
                 
                 
                 Divider()
@@ -139,13 +148,15 @@ struct GeneralSettingsView: View {
                         
                         Spacer()
                         
+                        /*
                         Picker("", selection: $hapticIntensity) {
-                                ForEach(["light", "medium", "heavy", "rigid", "soft"], id: \.self) { mode in
-                                Text(mode)
+                            ForEach(0...5) { mode in
+                                Text(mode.rawValue.capitalized)
                             }
                         }
                         .pickerStyle(.menu)
                         .font(.system(size: 17, weight: .regular))
+                         */
                         
                     }
                     .padding(.horizontal)
@@ -199,8 +210,8 @@ struct GeneralSettingsView: View {
                     Spacer()
                     
                     Picker("", selection: $displayTruncation) {
-                            ForEach(["2 d.p", "3 d.p"], id: \.self) { mode in
-                            Text(mode)
+                        ForEach(displayModes, id: \.self) {
+                            Text($0)
                         }
                     }
                     .pickerStyle(.menu)
@@ -221,5 +232,6 @@ struct GeneralSettingsView: View {
             
         }
         .padding(.horizontal)
+        
     }
 }

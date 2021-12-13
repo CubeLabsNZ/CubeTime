@@ -12,8 +12,6 @@ struct settingsBlocks: ViewModifier {
     func body(content: Content) -> some View {
         content
             .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3))
-            
-//            .drawingGroup()
     }
 }
 
@@ -24,9 +22,9 @@ struct AppearanceSettingsView: View {
     @AppStorage("accentColor") private var accentColour: Color = .indigo
     let accentColours: [Color] = [.cyan, .blue, .indigo, .purple, .red]
     
-    @State private var overrideSystemAppearance: Bool = true
-    @State private var darkMode: Bool = true
-    @State private var reduceAnimations: Bool = true
+    @AppStorage("override") private var overrideSystemAppearance: Bool = true
+    @AppStorage("darkMode") private var darkMode: Bool = true
+    
     
     var body: some View {
         VStack(spacing: 16) {
@@ -195,5 +193,6 @@ struct AppearanceSettingsView: View {
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
         }
         .padding(.horizontal)
+        .preferredColorScheme(overrideSystemAppearance ? darkMode ? .dark : .light : nil)
     }
 }

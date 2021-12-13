@@ -27,10 +27,14 @@ enum stopWatchMode {
 
 class StopWatchManager: ObservableObject {
     @Binding var currentSession: Sessions
+//    @Binding var feedbackType: Int
     let managedObjectContext: NSManagedObjectContext
     @Published var mode: stopWatchMode = .stopped
     
     @Published var showDeleteSolveConfirmation = false
+    
+    
+    private let feedbackStyle: UIImpactFeedbackGenerator
     
     let scrambler = CHTScrambler.init()
     
@@ -40,9 +44,12 @@ class StopWatchManager: ObservableObject {
     @Published var scrambleStr: String? = nil
     private var nextScrambleStr: String? = nil
     
-    init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
+    init (currentSession: Binding<Sessions>, /*feedbackType: Binding<Int>, */managedObjectContext: NSManagedObjectContext) {
         _currentSession = currentSession
+//        _feedbackType = feedbackType
         self.managedObjectContext = managedObjectContext
+        self.feedbackStyle = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: 0)!)
+        
         scrambler.initSq1()
         scrambleType = currentSession.wrappedValue.scramble_type
         secondsStr = formatSolveTime(secs: 0)
@@ -134,7 +141,6 @@ class StopWatchManager: ObservableObject {
     @Published var solveItem: Solves!
     
     
-    private let feedbackStyle = UIImpactFeedbackGenerator(style: .rigid) /// TODO: add option to change heaviness/turn on off in settings
     
     private var prevIsDown = false
     private var prevDownStoppedTheTimer = false
@@ -163,7 +169,7 @@ class StopWatchManager: ObservableObject {
                             timerColour = .black
                             prevDownTriggeredGesture = false
                             showDeleteSolveConfirmation = true
-                            self.feedbackStyle.impactOccurred()
+                            self.feedbackStyle
                         }
                     }
                 } else if abs(value.translation.height) > threshold && abs(value.translation.width) < abs(value.translation.height) {
