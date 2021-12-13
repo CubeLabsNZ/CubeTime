@@ -32,6 +32,7 @@ struct StatsView: View {
         GridItem(spacing: 10)
     ]
     
+//    @State var isShowingStatsView: Bool
     @Binding var currentSession: Sessions
     
     
@@ -53,8 +54,9 @@ struct StatsView: View {
     
     
     let stats: Stats
-    init(currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
+    init(currentSession: Binding<Sessions>, /*isShowingStatsView: State<Bool>,*/ managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
+//        self._isShowingStatsView = isShowingStatsView
         
         
         stats = Stats(currentSession: currentSession.wrappedValue, managedObjectContext: managedObjectContext)
@@ -197,11 +199,20 @@ struct StatsView: View {
                                                     }
                                                     
                                                 }
-                                                .onTapGesture {
-                                                    print("current ao12")
-                                                }
-                                                .padding(.bottom, 6)
-                                                
+//                                                .onTapGesture {
+//                                                    print("current ao12")
+//                                                    isShowingStatsView = true
+//                                                }
+//                                                .padding(.bottom, 6)
+//                                                
+//                                                .sheet(isPresented: $isShowingStatsView) {
+//                                                    StatsDetail()
+//                                                }
+//                                                
+//                                                
+//                                                
+//                                                
+//                                                
                                                 
                                                 VStack (alignment: .leading, spacing: -4) {
                                                     Text("AO100")

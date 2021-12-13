@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2337E6882767619D00438F43 /* StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2337E6872767619D00438F43 /* StatsDetail.swift */; };
 		233FE7B6274F109600C6F1DF /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Values.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
@@ -82,6 +83,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2337E6872767619D00438F43 /* StatsDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsDetail.swift; sourceTree = "<group>"; };
 		233FE7B5274F109600C6F1DF /* Values.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Values.swift; sourceTree = "<group>"; };
 		2354882127642B9C00FE8D7A /* recursive.otc */ = {isa = PBXFileReference; lastKnownFileType = file; path = recursive.otc; sourceTree = "<group>"; };
 		2354882227642E2800FE8D7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 			children = (
 				7D7A9EBF274F38CD00C2E125 /* StatsView.swift */,
 				7D878BB0275D8DB3008AC443 /* Stats.swift */,
+				2337E6872767619D00438F43 /* StatsDetail.swift */,
 			);
 			path = Stats;
 			sourceTree = "<group>";
@@ -604,6 +607,7 @@
 				7D69E0BE2751FDEB007211CC /* CHTUpdater.m in Sources */,
 				7D69E0A92751FDEA007211CC /* SQ1.m in Sources */,
 				7D69E0B62751FDEA007211CC /* CHTSession.m in Sources */,
+				2337E6882767619D00438F43 /* StatsDetail.swift in Sources */,
 				7D69E0AE2751FDEA007211CC /* Util.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
