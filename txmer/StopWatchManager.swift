@@ -33,6 +33,7 @@ class StopWatchManager: ObservableObject {
     
     @Published var showDeleteSolveConfirmation = false
     
+    @Published var showPenOptions = false
     
     private let feedbackStyle: UIImpactFeedbackGenerator
     
@@ -169,7 +170,7 @@ class StopWatchManager: ObservableObject {
                             timerColour = .black
                             prevDownTriggeredGesture = false
                             showDeleteSolveConfirmation = true
-                            self.feedbackStyle
+                            self.feedbackStyle.impactOccurred()
                         }
                     }
                 } else if abs(value.translation.height) > threshold && abs(value.translation.width) < abs(value.translation.height) {
@@ -177,7 +178,12 @@ class StopWatchManager: ObservableObject {
                     allowGesture = false
                     prevDownTriggeredGesture = true
                     if value.translation.height > 0 {
-                        NSLog("Down")
+                        if solveItem != nil {
+                            self.feedbackStyle.impactOccurred()
+                            withAnimation {
+                                showPenOptions = true
+                            }
+                        }
                     } else {
                         NSLog("Up")
                     }
@@ -224,6 +230,11 @@ class StopWatchManager: ObservableObject {
         //timer?.invalidate() // Invalidate possible running inspections
         prevIsDown = false
         allowGesture = true
+        if !prevDownTriggeredGesture {
+            withAnimation {
+                showPenOptions = false
+            }
+        }
         NSLog("up")
         NSLog("\(mode == .stopped) \(inspectionEnabled) \(!prevDownStoppedTheTimer) \(!prevDownTriggeredGesture)")
         if mode == .stopped && inspectionEnabled && !prevDownStoppedTheTimer && !prevDownTriggeredGesture {
@@ -235,5 +246,11 @@ class StopWatchManager: ObservableObject {
         prevDownTriggeredGesture = false
         timerColour = TimerTextColours.timerDefaultColour
         taskTimerReady?.cancel()
+    }
+    
+    func changedPen() {
+        withAnimation {
+            secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
+        }
     }
 }
