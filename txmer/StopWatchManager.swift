@@ -51,7 +51,9 @@ class StopWatchManager: ObservableObject {
         scrambler.initSq1()
         scrambleType = currentSession.wrappedValue.scramble_type
         secondsStr = inspectionEnabled ? "0" : formatSolveTime(secs: 0)
-        rescramble()
+        DispatchQueue.main.async {
+            self.rescramble()
+        }
     }
     
     private var timerStartTime: Date?
@@ -180,7 +182,6 @@ class StopWatchManager: ObservableObject {
             NSLog("Down")
             if mode == .running {
                 stop()
-                rescramble()
                 prevDownStoppedTheTimer = true
                 solveItem = Solves(context: managedObjectContext)
                 // .comment
@@ -195,7 +196,9 @@ class StopWatchManager: ObservableObject {
                 // .starred
                 solveItem.time = self.secondsElapsed
                 try! managedObjectContext.save()
-                rescramble()
+                DispatchQueue.main.async {
+                    self.rescramble()
+                }
             } else if (mode == .inspecting && inspectionEnabled) || (mode == .stopped && !inspectionEnabled) {
                 let newTaskTimerReady = DispatchWorkItem {
                     self.canStartTimer = true
