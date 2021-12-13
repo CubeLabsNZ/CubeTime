@@ -96,6 +96,8 @@ class StopWatchManager: ObservableObject {
         canStartTimer = false
         mode = .running
         
+        timer?.invalidate() // Stop possibly running inspections
+        
         secondsElapsed = 0
         secondsStr = formatSolveTime(secs: 0)
         timerStartTime = Date()
@@ -201,7 +203,7 @@ class StopWatchManager: ObservableObject {
     }
     
     func touchUp(value: DragGesture.Value) {
-        timer?.invalidate() // Invalidate possible running inspections
+        //timer?.invalidate() // Invalidate possible running inspections
         prevIsDown = false
         allowGesture = true
         NSLog("up")
