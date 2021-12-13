@@ -50,6 +50,7 @@ class StopWatchManager: ObservableObject {
         
         scrambler.initSq1()
         scrambleType = currentSession.wrappedValue.scramble_type
+        secondsStr = inspectionEnabled ? "0" : formatSolveTime(secs: 0)
         rescramble()
     }
     
@@ -102,6 +103,8 @@ class StopWatchManager: ObservableObject {
         canStartTimer = false
         mode = .running
         
+        timer?.invalidate() // Stop possibly running inspections
+        
         secondsElapsed = 0
         secondsStr = formatSolveTime(secs: 0)
         timerStartTime = Date()
@@ -153,6 +156,7 @@ class StopWatchManager: ObservableObject {
                         if solveItem != nil {
                             prevIsDown = false // Showing a dialog implies touch up
                             timerColour = .black
+                            prevDownTriggeredGesture = false
                             showDeleteSolveConfirmation = true
                             self.feedbackStyle
                         }
@@ -194,7 +198,6 @@ class StopWatchManager: ObservableObject {
                 rescramble()
             } else if (mode == .inspecting && inspectionEnabled) || (mode == .stopped && !inspectionEnabled) {
                 let newTaskTimerReady = DispatchWorkItem {
-                    self.timer?.invalidate() // Invalidate possible running inspections
                     self.canStartTimer = true
                     self.timerColour = TimerTextColours.timerCanStartColour
                     self.feedbackStyle.impactOccurred()
@@ -206,6 +209,7 @@ class StopWatchManager: ObservableObject {
     }
     
     func touchUp(value: DragGesture.Value) {
+        //timer?.invalidate() // Invalidate possible running inspections
         prevIsDown = false
         allowGesture = true
         NSLog("up")
