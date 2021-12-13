@@ -174,7 +174,6 @@ class StopWatchManager: ObservableObject {
             NSLog("Down")
             if mode == .running {
                 stop()
-                rescramble()
                 prevDownStoppedTheTimer = true
                 solveItem = Solves(context: managedObjectContext)
                 // .comment
