@@ -435,12 +435,21 @@ struct StatsView: View {
                                                     
                                                     
                                                     ForEach((0...4), id: \.self) {
+                                                        let average = ao5!.1.map{$0.time}
+                                                        if ao5!.1[$0].time == average.min() || ao5!.1[$0].time == average.max() {
+                                                            Text("("+formatSolveTime(secs: ao5!.1[$0].time)+")")
+                                                                .font(.system(size: 17, weight: .regular, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                                .multilineTextAlignment(.leading)
+                                                                .padding(.bottom, 2)
+                                                        } else {
                                                             Text(formatSolveTime(secs: ao5!.1[$0].time))
                                                                 .font(.system(size: 17, weight: .regular, design: .default))
                                                                 .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                                 .multilineTextAlignment(.leading)
                                                                 .padding(.bottom, 2)
                                                         }
+                                                    }
                                                     .onTapGesture {
                                                         
                                                         for thing in ao5!.1 {
@@ -498,6 +507,7 @@ struct StatsView: View {
                                     LineView(data: timesByDate, title: nil, style: ChartStyle(backgroundColor: .white, accentColor: getGradientColours(gradientArray: CustomGradientColours.gradientColours)[1], secondGradientColor: getGradientColours(gradientArray: CustomGradientColours.gradientColours)[0], textColor: .black, legendTextColor: .gray, dropShadowColor: Color.black.opacity(0.24)), legendSpecifier: "%.2g")
                                         .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
                                         .padding(.horizontal, 12)
+                                        .drawingGroup()
                                 }
                             }
                             .frame(height: 300)

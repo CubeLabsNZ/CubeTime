@@ -119,7 +119,6 @@ class Stats {
     
     
     func getCurrentAverageOf(_ period: Int) -> (Double, [Solves])? {
-        precondition(period > 1)
         if solves.count < period {
             return nil
         }

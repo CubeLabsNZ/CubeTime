@@ -162,17 +162,3 @@ struct TimerView: View {
         .statusBar(hidden: hideStatusBar) /// TODO MAKE SO ANIMATION IS ASYMMETRIC WITH VALUES OF THE OTHER ANIMATIONS
     }
 }
-
-struct TimerView_Previews: PreviewProvider {
-    static let context = PersistenceController.shared.container.viewContext
-    @State static var session: Sessions = {
-        let item = Sessions(context: context)
-        item.name = "Preview Session"
-        return item
-    }()
-    static let swm = StopWatchManager(currentSession: $session, managedObjectContext: context)
-    static var previews: some View {
-        TimerView(stopWatchManager: Self.swm, hideTabBar: .constant(true))
-            .environment(\.managedObjectContext, context)
-    }
-}

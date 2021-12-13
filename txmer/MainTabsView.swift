@@ -90,9 +90,11 @@ struct MainTabsView: View {
     
     @State var hideTabBar = false
     @State var currentSession: Sessions
+    
         
     init(managedObjectContext: NSManagedObjectContext) {
         let lastUsedSessionURI = UserDefaults.standard.url(forKey: "last_used_session")
+                
         if lastUsedSessionURI == nil {
             NSLog("Saved ID is nil, creating default object")
             currentSession = Sessions(context: managedObjectContext) // TODO make it playground
