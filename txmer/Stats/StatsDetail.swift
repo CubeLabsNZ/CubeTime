@@ -93,7 +93,7 @@ struct StatsDetail: View {
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
-                                share()
+                                print("button pressed")
                             } label: {
                                 Image(systemName: "square.and.arrow.up")
                                     .font(.system(size: 17, weight: .medium))
@@ -106,12 +106,5 @@ struct StatsDetail: View {
         }
         
         
-    }
-    
-    func share() {
-        guard let url = URL(string: "https://www.apple.com") else { return }
-        let activityView = UIActivityViewController(activityItems: [url], applicationActivities: [])
-        activityView.isModalInPresentation = true
-        UIApplication.shared.windows.first?.rootViewController?.present(activityView, animated: true, completion: nil)
     }
 }
