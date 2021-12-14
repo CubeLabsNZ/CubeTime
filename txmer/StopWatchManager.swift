@@ -42,9 +42,9 @@ class StopWatchManager: ObservableObject {
     private let hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
     private let feedbackStyle: UIImpactFeedbackGenerator?
     
-    let inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
-    let userHoldTime: Double = UserDefaults.standard.double(forKey: gsKeys.freeze.rawValue)
-    let geatureThreshold: Double = UserDefaults.standard.double(forKey: gsKeys.gestureDistance.rawValue)
+    private let inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
+    private let userHoldTime: Double = UserDefaults.standard.double(forKey: gsKeys.freeze.rawValue)
+    private let geatureThreshold: Double = UserDefaults.standard.double(forKey: gsKeys.gestureDistance.rawValue)
     
     let scrambler = CHTScrambler.init()
     
