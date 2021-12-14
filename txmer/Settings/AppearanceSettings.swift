@@ -15,15 +15,31 @@ struct settingsBlocks: ViewModifier {
     }
 }
 
+enum asKeys: String {
+    case accentColour, overrideDM, dmBool, staticGradient, gradientSelected
+}
+
 
 struct AppearanceSettingsView: View {
     @Environment(\.colorScheme) var colourScheme
     
-    @AppStorage("accentColor") private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    
+//    @State private var accentColour: Color = .indigo
     let accentColours: [Color] = [.cyan, .blue, .indigo, .purple, .red]
     
-    @AppStorage("override") private var overrideSystemAppearance: Bool = true
-    @AppStorage("darkMode") private var darkMode: Bool = true
+    @State var showThemeOptions: Bool = false
+    
+    private let columns = [
+        GridItem(spacing: 16),
+        GridItem(spacing: 16)
+    ]
+    
+    @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
+    @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
+    
+    @AppStorage(asKeys.staticGradient.rawValue) private var staticGradient: Bool = true
+    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     
     
     var body: some View {
@@ -105,25 +121,83 @@ struct AppearanceSettingsView: View {
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 13, weight: .bold))
                                 .foregroundColor(Color(uiColor: .systemGray3))
+                                .rotationEffect(.radians(showThemeOptions ? .pi/2 : 0))
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            withAnimation(.spring()) {
+                                showThemeOptions.toggle()
+                            }
+                            
                         }
                         .padding(.horizontal)
                         
                         
-                        Text("Customise the app theme and gradients.\nYou can also add a custom background image if you wish.")
-                            .font(.system(size: 13, weight: .medium))
-                            .foregroundColor(Color(uiColor: .systemGray))
-                            .multilineTextAlignment(.leading)
-                            .padding(.leading)
-                            .padding(.bottom, 12)
-//                            .padding(.trailing, 4)
-                            .padding(.top, 10)
+                        if !showThemeOptions {
+                            Text("Customise the app theme and gradients.\nYou can also add a custom background image if you wish.")
+                                .font(.system(size: 13, weight: .medium))
+                                .foregroundColor(Color(uiColor: .systemGray))
+                                .multilineTextAlignment(.leading)
+                                .padding(.leading)
+                                .padding(.bottom, 12)
+                                .padding(.top, 10)
+                                .padding(.trailing)
+                        } else {
+                            VStack(alignment: .leading, spacing: 0) {
+                                
+                                
+                                
+                                
+                                HStack {
+                                    Toggle(isOn: $staticGradient) {
+                                        Text("Use Static Gradient")
+                                            .font(.system(size: 17, weight: .medium))
+                                    }
+                                        .toggleStyle(SwitchToggleStyle(tint: Color("AccentColor")))
+                                    
+                                }
+                                .padding(.horizontal)
+                                .padding(.bottom, 10)
+                                
+                                Text("By default, the gradient is dynamic and changes throughout the day. If turned off, the gradient will only be of static colours.")
+                                    .font(.system(size: 13, weight: .medium))
+                                    .foregroundColor(Color(uiColor: .systemGray))
+                                    .multilineTextAlignment(.leading)
+                                    .padding(.leading)
+                                    .padding(.bottom, 12)
+                                    .padding(.trailing)
+                                
+                                if staticGradient {
+                                    LazyVGrid(columns: columns, spacing: 16) {
+                                        ForEach(CustomGradientColours.gradientColours, id: \.self) { gradient in
+                                            ZStack {
+                                                RoundedRectangle(cornerRadius: 12)
+//                                                Rectangle()
+                                                    .fill(LinearGradient(gradient: Gradient(colors: gradient), startPoint: .topLeading, endPoint: .bottomTrailing))
+                                                    .frame(height: 50)
+                                                    .onTapGesture {
+                                                        gradientSelected = CustomGradientColours.gradientColours.firstIndex(of: gradient)!
+                                                        let _ = NSLog("\(gradient)")
+                                                    }
+                                                if CustomGradientColours.gradientColours[gradientSelected] == gradient {
+                                                    Image(systemName: "checkmark")
+                                                        .font(.system(size: 15, weight: .black))
+                                                        .foregroundColor(.white)
+                                                }
+                                                
+                                                    
+                                            }
+                                        }
+                                    }
+                                    .padding(.horizontal)
+                                    .padding(.bottom)
+
+                                }
+                            }
+                            .padding(.top, 8)
+                        }
                     }
-                    .onTapGesture {
-                        print("go to theme page")
-                    }
-                    
                 }
-                
             }
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
             

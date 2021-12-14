@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 import SwiftUI
 
-var userHoldTime: Double = 0.5 /// todo make so user can set in setting
+//var userHoldTime: Double = 0.5
 //let gestureKillTime: Double = 0.2
 //let inspectionEnabled = true
 //var inspectionEnabled = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)

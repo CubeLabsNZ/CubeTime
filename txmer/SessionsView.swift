@@ -812,7 +812,7 @@ struct SessionCard: View {
             },
                               title: "Delete Session",
                               systemImage: "trash",
-                              disableButton: numSessions <= 1)
+                              disableButton: numSessions <= 1 || item == currentSession)
                 .foregroundColor(Color.red)
         })
         .padding(.trailing)

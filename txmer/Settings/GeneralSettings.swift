@@ -20,7 +20,7 @@ extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
 
 struct GeneralSettingsView: View {
     
-    @AppStorage(gsKeys.inspection.rawValue) var inspectionTime: Bool = true
+    @AppStorage(gsKeys.inspection.rawValue) var inspectionTime: Bool = false
     @AppStorage(gsKeys.freeze.rawValue) var holdDownTime: Double = 0.5
     @AppStorage(gsKeys.interval.rawValue) var timerIntervalMode: String = "0.01s"
     @AppStorage(gsKeys.hapBool.rawValue) var hapticFeedback: Bool = true

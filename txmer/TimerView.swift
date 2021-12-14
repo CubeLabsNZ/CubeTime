@@ -37,7 +37,7 @@ struct TimerView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     //@ObservedObject var currentSession: Sessions
-    
+   
     @ObservedObject var stopWatchManager: StopWatchManager
     
     @Binding var hideTabBar: Bool

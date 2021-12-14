@@ -23,7 +23,7 @@ extension Color: RawRepresentable {
     public init?(rawValue: RawValue) {
         self.init(UInt(rawValue))
     }
-    
+
     public var rawValue: RawValue {
         var r: CGFloat = 0
         var g: CGFloat = 0
@@ -116,31 +116,24 @@ class TimerTextColours {
     static let timerCanStartColour: Color = Color.green
 }
 
-func getGradient(gradientArray: [[Color]]) -> LinearGradient {
-    return LinearGradient(gradient: Gradient(colors: gradientArray[5]), startPoint: .bottomTrailing, endPoint: .topLeading)
+func getGradient(gradientArray: [[Color]], gradientSelected: Int?) -> LinearGradient {
+    if let gradientSelected = gradientSelected {
+        return LinearGradient(gradient: Gradient(colors: gradientArray[gradientSelected]), startPoint: .bottomTrailing, endPoint: .topLeading)
+    } else {
+        return LinearGradient(gradient: Gradient(colors: gradientArray[6]), startPoint: .bottomTrailing, endPoint: .topLeading)
+    }
 }
 
-func getGradientColours(gradientArray: [[Color]]) -> [Color] {
-    return gradientArray[5]
+func getGradientColours(gradientArray: [[Color]], gradientSelected: Int?) -> [Color] {
+    if let gradientSelected = gradientSelected {
+        return gradientArray[gradientSelected]
+    } else {
+        return gradientArray[6]
+    }
 }
 
 class CustomGradientColours {
     static let gradientColours: [[Color]] = [
-        /* old colours
-        [Color(0x218db6), Color(0x074a70)], // light blue - dark blue
-        [Color(0x68c1c3), Color(0x197aa2)], // aqua - light blue
-        [Color(0xebe9b9), Color(0x5abec7)], // pale yellow/white ish - aqua
-        [Color(0xf6d657), Color(0x9cd0bf)], // yellow - green
-        [Color(0xf7ae6b), Color(0xf6d968)], // pale orange-yellow
-        
-        [Color(0xf28947), Color(0xf7cc63)], // darker orange - yellow
-        [Color(0xee777b), Color(0xf6a757)], // pink-orange
-        [Color(0xca678d), Color(0xf68e6a)], // magenta-orange
-        [Color(0x5c3480), Color(0xcf6c87)], // purple-pink
-        [Color(0x372c75), Color(0x703f82)] // dark blue-purple
-        */
-        
-        
         [Color(0x0093c1), Color(0x05537a)], // light blue - dark blue
         [Color(0x52c8cd), Color(0x007caa)], // aqua - light blue
         [Color(0xe6e29a), Color(0x3ec4d0)], // pale yellow/white ish - aqua
