@@ -3,6 +3,15 @@ import CoreData
 import SwiftUI
 
 
+struct CalculatedAverage: Identifiable {
+    let id: String
+    
+    let average: Double
+//    let discardedIndexes: [Int]
+    let accountedSolves: [Solves]
+}
+
+
 class Stats {
     var solves: [Solves]
     //    private var top: [Solves]
@@ -74,7 +83,7 @@ class Stats {
     
     
     
-    func getBestMovingAverageOf(_ period: Int) -> (Double, [Solves])? {
+    func getBestMovingAverageOf(_ period: Int) -> CalculatedAverage? {
         precondition(period > 1)
         if solves.count < period {
             return nil
@@ -87,8 +96,6 @@ class Stats {
         } else {
             trim = 1
         }
-        
-            
             
         
         var lowest_average: Double = solves[solves.count-1].time
@@ -104,27 +111,21 @@ class Stats {
                 lowest_average = result
             }
         }
-        
-        return (lowest_average, lowest_values!)
-        
+        return CalculatedAverage(id: "Best average of \(period)", average: lowest_average, accountedSolves: lowest_values!)
     }
 
     
     
-    func getCurrentAverageOf(_ period: Int) -> (Double, [Solves])? {
+    func getCurrentAverageOf(_ period: Int) -> CalculatedAverage? {
         if solves.count < period {
             return nil
         }
         
-        var current_average: Double
-        var values: [Solves]
-        
-        current_average = solvesByDate.suffix(period).sorted(by: {$0.time > $1.time}).dropFirst().dropLast().reduce(0, {$0 + $1.time}) / Double(period-2)
-        values = solvesByDate.suffix(period)
-        
-        return (current_average, values)
-        
-        
+        return CalculatedAverage(
+            id: "Current average of \(period)",
+            average: solvesByDate.suffix(period).sorted(by: {$0.time > $1.time}).dropFirst().dropLast().reduce(0, {$0 + $1.time}) / Double(period-2),
+            accountedSolves: solvesByDate.suffix(period)
+        )
     }
     
 }
