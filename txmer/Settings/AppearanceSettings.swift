@@ -41,7 +41,7 @@ struct AppearanceSettingsView: View {
                 HStack {
                     Image(systemName: "paintbrush.pointed.fill")
                         .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundColor(Color("AccentColor"))
+                        .foregroundColor(accentColour)
                     Text("Colours")
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                     
@@ -146,7 +146,7 @@ struct AppearanceSettingsView: View {
                                         Text("Use Static Gradient")
                                             .font(.system(size: 17, weight: .medium))
                                     }
-                                        .toggleStyle(SwitchToggleStyle(tint: Color("AccentColor")))
+                                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
                                     
                                 }
                                 .padding(.horizontal)
@@ -198,7 +198,7 @@ struct AppearanceSettingsView: View {
                 HStack {
                     Image(systemName: "command")
                         .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundColor(Color("AccentColor"))
+                        .foregroundColor(accentColour)
                     Text("System Settings")
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                     
@@ -213,7 +213,7 @@ struct AppearanceSettingsView: View {
                             Text("Override System Appearance")
                                 .font(.system(size: 17, weight: .medium))
                         }
-                            .toggleStyle(SwitchToggleStyle(tint: Color("AccentColor")))
+                            .toggleStyle(SwitchToggleStyle(tint: accentColour))
                         
                     }
                     .padding(.horizontal)
@@ -225,7 +225,7 @@ struct AppearanceSettingsView: View {
                                 Text("Dark Mode")
                                     .font(.system(size: 17, weight: .medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: Color("AccentColor")))
+                                .toggleStyle(SwitchToggleStyle(tint: accentColour))
                         }
                         .padding(.horizontal)
                     }

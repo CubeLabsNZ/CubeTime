@@ -20,6 +20,8 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.gestureDistance.rawValue) var gestureActivationDistance: Double = 50
     @AppStorage(gsKeys.displayTruncation.rawValue) var displayTruncation: String = "2 d.p"
     
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    
     let intervalModes: [String] = ["0.01s", "0.1s", "seconds"]
     
     let hapticNames: [UIImpactFeedbackGenerator.FeedbackStyle: String] = [
@@ -45,7 +47,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Image(systemName: "timer")
                         .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundColor(Color("AccentColor"))
+                        .foregroundColor(accentColour)
                     Text("Timer Settings")
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                     
@@ -58,7 +60,7 @@ struct GeneralSettingsView: View {
                         Text("Inspection Time")
                             .font(.system(size: 17, weight: .medium))
                     }
-                        .toggleStyle(SwitchToggleStyle(tint: Color("AccentColor")))
+                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
                     
                 }
                 .padding(.horizontal)
@@ -87,11 +89,10 @@ struct GeneralSettingsView: View {
                         Picker("", selection: $timerIntervalMode) {
                             ForEach(intervalModes, id: \.self) {
                                 Text($0)
-                                
-                                //.foregroundColor(Color(uiColor: .systemGray4))
                             }
                         }
                         .pickerStyle(.menu)
+                        .accentColor(accentColour)
                         .font(.system(size: 17, weight: .regular))
                     }
                     .padding(.horizontal)
@@ -105,7 +106,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Image(systemName: "eye")
                         .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundColor(Color("AccentColor"))
+                        .foregroundColor(accentColour)
                     Text("Accessibility")
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                     
@@ -123,7 +124,7 @@ struct GeneralSettingsView: View {
                         Text("Haptic Feedback")
                             .font(.system(size: 17, weight: .medium))
                     }
-                        .toggleStyle(SwitchToggleStyle(tint: Color("AccentColor")))
+//                        .toggleStyle(SwitchToggleStyle(tint: Color("AccentColor")))
                     
                 }
                 .padding(.horizontal)
@@ -141,6 +142,7 @@ struct GeneralSettingsView: View {
                             }
                         }
                         .pickerStyle(.menu)
+                        .accentColor(accentColour)
                         .font(.system(size: 17, weight: .regular))
                         
                     }
@@ -180,7 +182,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Image(systemName: "chart.bar.xaxis")
                         .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundColor(Color("AccentColor"))
+                        .foregroundColor(accentColour)
                     Text("Statistics")
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                     
@@ -201,6 +203,8 @@ struct GeneralSettingsView: View {
                     }
                     .pickerStyle(.menu)
                     .font(.system(size: 17, weight: .regular))
+                    .accentColor(accentColour)
+                    .foregroundColor(accentColour)
                     
                 }
                 .padding(.horizontal)
