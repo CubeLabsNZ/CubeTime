@@ -8,25 +8,14 @@
 import SwiftUI
 import SwiftUICharts
 
-/*
-enum FeedbackStyles: UIImpactFeedbackGenerator.FeedbackStyle, CaseIterable {
-    init?(rawValue: UIImpactFeedbackGenerator.FeedbackStyle.RawValue) {
-        <#code#>
-    }
-    
-    var rawValue: UIImpactFeedbackGenerator.FeedbackStyle.RawValue
-    
-    typealias RawValue = UIImpactFeedbackGenerator.FeedbackStyle.RawValue
-    
-    case rigid = UIImpactFeedbackGenerator.FeedbackStyle.rigid
-    case heavy = 1
-    case medium = 2
-    case light = 3
-}
- */
 
 enum gsKeys: String {
     case inspection, freeze, interval, hapBool, hapType, gestureDistance, displayTruncation
+}
+
+extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
+    public static var allCases: [UIImpactFeedbackGenerator.FeedbackStyle] = [.light, .medium, .heavy, .soft, .rigid]
+    var localizedName: String { "\(self)" }
 }
 
 struct GeneralSettingsView: View {
@@ -35,17 +24,19 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.freeze.rawValue) var holdDownTime: Double = 0.5
     @AppStorage(gsKeys.interval.rawValue) var timerIntervalMode: String = "0.01s"
     @AppStorage(gsKeys.hapBool.rawValue) var hapticFeedback: Bool = true
-//    @AppStorage("hapType") var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
-    @AppStorage(gsKeys.hapType.rawValue) var feedbackType: Int = 3
+    @AppStorage(gsKeys.hapType.rawValue) var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .heavy
     @AppStorage(gsKeys.gestureDistance.rawValue) var gestureActivationDistance: Double = 200
     @AppStorage(gsKeys.displayTruncation.rawValue) var displayTruncation: String = "2 d.p"
     
     let intervalModes: [String] = ["0.01s", "0.1s", "seconds"]
-//    let hapticIntensityModes: [String] = ["rigid", "heavy", "medium", "light", "soft"]
     
-    let hapticModes2: [String: UIImpactFeedbackGenerator.FeedbackStyle] = ["rigid": .rigid, "heavy": .heavy, "medium": .medium, "light": .light]
-    
-    let hapticModes: [UIImpactFeedbackGenerator.FeedbackStyle] = [.rigid, .heavy, .medium, .light]
+    let hapticNames: [UIImpactFeedbackGenerator.FeedbackStyle: String] = [
+        UIImpactFeedbackGenerator.FeedbackStyle.light: "Light",
+        UIImpactFeedbackGenerator.FeedbackStyle.medium: "Medium",
+        UIImpactFeedbackGenerator.FeedbackStyle.heavy: "Heavy",
+        UIImpactFeedbackGenerator.FeedbackStyle.soft: "Soft",
+        UIImpactFeedbackGenerator.FeedbackStyle.rigid: "Rigid"
+    ]
     
     let displayModes: [String] = ["2 d.p", "3 d.p"]
     
@@ -153,8 +144,8 @@ struct GeneralSettingsView: View {
                         Spacer()
                         
                         Picker("", selection: $feedbackType) {
-                            ForEach(Array(hapticModes2.keys), id: \.self) { mode in
-                                Text(mode)
+                            ForEach(Array(UIImpactFeedbackGenerator.FeedbackStyle.allCases), id: \.self) { mode in
+                                Text(hapticNames[mode]!)
                             }
                         }
                         .pickerStyle(.menu)

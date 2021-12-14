@@ -139,7 +139,9 @@ struct AboutSettingsView: View {
             
             Text("\n\nOur Github project:\nhttps://github.com/pdtcubing/txmer")
             
-            Text("\n\nBuy your cubes from\nhttps://www.speedcube.co.nz/ ❤️")
+            if Locale.current.regionCode == "NZ" {
+                Text("\n\nBuy your cubes from\nhttps://www.speedcube.co.nz/ ❤️")
+            }
         }
         .padding(.horizontal)
         .sheet(isPresented: $showLicenses) {
