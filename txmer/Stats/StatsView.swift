@@ -471,7 +471,7 @@ struct StatsView: View {
                                     }
                                     .padding([.vertical, .leading], 12)
                                     
-                                    LineView(data: timesByDate, title: nil, style: ChartStyle(backgroundColor: .white, accentColor: getGradientColours(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)[1], secondGradientColor: getGradientColours(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)[0], textColor: .black, legendTextColor: .gray, dropShadowColor: Color.black.opacity(0.24)))
+                                    LineView(data: timesByDate, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
                                         .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
                                         .padding(.horizontal, 12)
                                         .drawingGroup()

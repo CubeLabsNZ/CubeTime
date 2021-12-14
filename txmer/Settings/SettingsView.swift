@@ -1,5 +1,4 @@
 import SwiftUI
-import SwiftUICharts
 
 struct AnimatingFontSizeV2: AnimatableModifier {
     var fontSize: CGFloat

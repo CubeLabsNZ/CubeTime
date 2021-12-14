@@ -1,168 +1,6 @@
 import Foundation
 import SwiftUI
 
-public struct Colors {
-    public static let color1:Color = Color(hexString: "#E2FAE7")
-    public static let color1Accent:Color = Color(hexString: "#72BF82")
-    public static let color2:Color = Color(hexString: "#EEF1FF")
-    public static let color2Accent:Color = Color(hexString: "#4266E8")
-    public static let color3:Color = Color(hexString: "#FCECEA")
-    public static let color3Accent:Color = Color(hexString: "#E1614C")
-    public static let OrangeEnd:Color = Color(hexString: "#FF782C")
-    public static let OrangeStart:Color = Color(hexString: "#EC2301")
-    public static let LegendText:Color = Color(hexString: "#A7A6A8")
-    public static let LegendColor:Color = Color(hexString: "#E8E7EA")
-    public static let LegendDarkColor:Color = Color(hexString: "#545454")
-    //    public static let IndicatorKnob:Color = Color(hexString: "#FF57A6")
-    public static let IndicatorKnob:Color = Color.gray
-    public static let GradientUpperBlue:Color = Color(hexString: "#C2E8FF")
-    public static let GradinetUpperBlue1:Color = Color(hexString: "#A8E1FF")
-    public static let GradientPurple:Color = Color(hexString: "#7B75FF")
-    public static let GradientNeonBlue:Color = Color(hexString: "#6FEAFF")
-    public static let GradientLowerBlue:Color = Color(hexString: "#F1F9FF")
-    public static let DarkPurple:Color = Color(hexString: "#1B205E")
-    public static let BorderBlue:Color = Color(hexString: "#4EBCFF")
-}
-
-public struct GradientColor {
-    public let start: Color
-    public let end: Color
-    
-    public init(start: Color, end: Color) {
-        self.start = start
-        self.end = end
-    }
-    
-    public func getGradient() -> Gradient {
-        return Gradient(colors: [start, end])
-    }
-}
-
-public struct GradientColors {
-    public static let orange = GradientColor(start: Colors.OrangeStart, end: Colors.OrangeEnd)
-    public static let blue = GradientColor(start: Colors.GradientPurple, end: Colors.GradientNeonBlue)
-    public static let green = GradientColor(start: Color(hexString: "0BCDF7"), end: Color(hexString: "A2FEAE"))
-    public static let blu = GradientColor(start: Color(hexString: "0591FF"), end: Color(hexString: "29D9FE"))
-    public static let bluPurpl = GradientColor(start: Color(hexString: "4ABBFB"), end: Color(hexString: "8C00FF"))
-    public static let purple = GradientColor(start: Color(hexString: "741DF4"), end: Color(hexString: "C501B0"))
-    public static let prplPink = GradientColor(start: Color(hexString: "BC05AF"), end: Color(hexString: "FF1378"))
-    public static let prplNeon = GradientColor(start: Color(hexString: "FE019A"), end: Color(hexString: "FE0BF4"))
-    public static let orngPink = GradientColor(start: Color(hexString: "FF8E2D"), end: Color(hexString: "FF4E7A"))
-}
-
-public struct Styles {
-    public static let lineChartStyleOne = ChartStyle(
-        backgroundColor: Color.white,
-        accentColor: Colors.OrangeStart,
-        secondGradientColor: Colors.OrangeEnd,
-        textColor: Color.black,
-        legendTextColor: Color.gray,
-        dropShadowColor: Color.gray)
-        public static let lineViewDarkMode = ChartStyle(
-        backgroundColor: Color.black,
-        accentColor: Colors.OrangeStart,
-        secondGradientColor: Colors.OrangeEnd,
-        textColor: Color.white,
-        legendTextColor: Color.white,
-        dropShadowColor: Color.gray)
-}
-
-public class ChartStyle {
-    public var backgroundColor: Color
-    public var accentColor: Color
-    public var gradientColor: GradientColor
-    public var textColor: Color
-    public var legendTextColor: Color
-    public var dropShadowColor: Color
-    public weak var darkModeStyle: ChartStyle?
-    
-    public init(backgroundColor: Color, accentColor: Color, secondGradientColor: Color, textColor: Color, legendTextColor: Color, dropShadowColor: Color){
-        self.backgroundColor = backgroundColor
-        self.accentColor = accentColor
-        self.gradientColor = GradientColor(start: accentColor, end: secondGradientColor)
-        self.textColor = textColor
-        self.legendTextColor = legendTextColor
-        self.dropShadowColor = dropShadowColor
-    }
-    
-    public init(backgroundColor: Color, accentColor: Color, gradientColor: GradientColor, textColor: Color, legendTextColor: Color, dropShadowColor: Color){
-        self.backgroundColor = backgroundColor
-        self.accentColor = accentColor
-        self.gradientColor = gradientColor
-        self.textColor = textColor
-        self.legendTextColor = legendTextColor
-        self.dropShadowColor = dropShadowColor
-    }
-    
-    public init(formSize: CGSize){
-        self.backgroundColor = Color.white
-        self.accentColor = Colors.OrangeStart
-        self.gradientColor = GradientColors.orange
-        self.legendTextColor = Color.gray
-        self.textColor = Color.black
-        self.dropShadowColor = Color.gray
-    }
-}
-
-public class ChartData: ObservableObject, Identifiable {
-    @Published var points: [(String,Double)]
-    var valuesGiven: Bool = false
-    var ID = UUID()
-    
-    public init<N: BinaryFloatingPoint>(points:[N]) {
-        self.points = points.map{("", Double($0))}
-    }
-    public init<N: BinaryInteger>(values:[(String,N)]){
-        self.points = values.map{($0.0, Double($0.1))}
-        self.valuesGiven = true
-    }
-    public init<N: BinaryFloatingPoint>(values:[(String,N)]){
-        self.points = values.map{($0.0, Double($0.1))}
-        self.valuesGiven = true
-    }
-    public init<N: BinaryInteger>(numberValues:[(N,N)]){
-        self.points = numberValues.map{(String($0.0), Double($0.1))}
-        self.valuesGiven = true
-    }
-    public init<N: BinaryFloatingPoint & LosslessStringConvertible>(numberValues:[(N,N)]){
-        self.points = numberValues.map{(String($0.0), Double($0.1))}
-        self.valuesGiven = true
-    }
-    
-    public func onlyPoints() -> [Double] {
-        return self.points.map{ $0.1 }
-    }
-}
-
-public class MultiLineChartData: ChartData {
-    var gradient: GradientColor
-    
-    public init<N: BinaryFloatingPoint>(points:[N], gradient: GradientColor) {
-        self.gradient = gradient
-        super.init(points: points)
-    }
-    
-    public init<N: BinaryFloatingPoint>(points:[N], color: Color) {
-        self.gradient = GradientColor(start: color, end: color)
-        super.init(points: points)
-    }
-    
-    public func getGradient() -> GradientColor {
-        return self.gradient
-    }
-}
-
-public class TestData{
-    static public var data:ChartData = ChartData(points: [37,72,51,22,39,47,66,85,50])
-    static public var values:ChartData = ChartData(values: [("2017 Q3",220),
-                                                            ("2017 Q4",1550),
-                                                            ("2018 Q1",8180),
-                                                            ("2018 Q2",18440),
-                                                            ("2018 Q3",55840),
-                                                            ("2018 Q4",63150), ("2019 Q1",50900), ("2019 Q2",77550), ("2019 Q3",79600), ("2019 Q4",92550)])
-    
-}
-
 extension Color {
     init(hexString: String) {
         let hex = hexString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
@@ -182,35 +20,6 @@ extension Color {
         self.init(red: Double(r) / 255, green: Double(g) / 255, blue: Double(b) / 255)
     }
 }
-
-class HapticFeedback {
-#if os(watchOS)
-    //watchOS implementation
-    static func playSelection() -> Void {
-        WKInterfaceDevice.current().play(.click)
-    }
-#elseif os(iOS)
-    //iOS implementation
-    let selectionFeedbackGenerator = UISelectionFeedbackGenerator()
-    static func playSelection() -> Void {
-        UISelectionFeedbackGenerator().selectionChanged()
-    }
-#else
-    static func playSelection() -> Void {
-        //No-op
-    }
-#endif
-}
-
-
-
-
-
-
-
-
-
-
 extension Path {
     func trimmedPath(for percent: CGFloat) -> Path {
         // percent difference between points
@@ -394,7 +203,6 @@ extension Path {
     }
     
 }
-
 extension CGPoint {
     func point(to: CGPoint, x: CGFloat) -> CGPoint {
         let a = (to.y - self.y) / (to.x - self.x)
@@ -554,34 +362,62 @@ extension CGPoint {
         return controlPoint
     }
 }
+extension View {
+    func colouredGlow() -> some View {
+        ForEach(0..<2) { i in
+            Rectangle()
+                .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: 2))
+            //.frame(width: 400, height: 400)
+                .mask(self.blur(radius: 20))
+                .overlay(self.blur(radius: 5 - CGFloat(i * 5)))
+            
+        }
+    }
+}
 
 
+class ChartStyle {
+    var backgroundColor: Color
+    var textColor: Color
+    var dropShadowColor: Color
+    
+    init(_ backgroundColor: Color, _ textColor: Color, _ dropShadowColor: Color){
+        self.backgroundColor = backgroundColor
+        self.textColor = textColor
+        self.dropShadowColor = dropShadowColor
+    }
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+class ChartData: ObservableObject, Identifiable {
+    @Published var points: [(String,Double)]
+    var valuesGiven: Bool = false
+    var ID = UUID()
+    
+    init<N: BinaryFloatingPoint>(points:[N]) {
+        self.points = points.map{("", Double($0))}
+    }
+    init<N: BinaryInteger>(values:[(String,N)]){
+        self.points = values.map{($0.0, Double($0.1))}
+        self.valuesGiven = true
+    }
+    init<N: BinaryFloatingPoint>(values:[(String,N)]){
+        self.points = values.map{($0.0, Double($0.1))}
+        self.valuesGiven = true
+    }
+    init<N: BinaryInteger>(numberValues:[(N,N)]){
+        self.points = numberValues.map{(String($0.0), Double($0.1))}
+        self.valuesGiven = true
+    }
+    init<N: BinaryFloatingPoint & LosslessStringConvertible>(numberValues:[(N,N)]){
+        self.points = numberValues.map{(String($0.0), Double($0.1))}
+        self.valuesGiven = true
+    }
+    
+    func onlyPoints() -> [Double] {
+        return self.points.map{ $0.1 }
+    }
+}
 
 
 func formatLegendTime(secs: Double) -> String {
@@ -602,127 +438,16 @@ func formatLegendTime(secs: Double) -> String {
 
 
 
-
-
-
-
-public struct LineView: View {
-    @ObservedObject var data: ChartData
-    public var title: String?
-    public var legend: String?
-    public var style: ChartStyle
-    public var darkModeStyle: ChartStyle
-    public var valueSpecifier: String
-    public var legendSpecifier: String
-    
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
-    @State private var showLegend = false
-    @State private var dragLocation:CGPoint = .zero
-    @State private var indicatorLocation:CGPoint = .zero
-    @State private var closestPoint: CGPoint = .zero
-    @State private var opacity:Double = 0
-    @State private var currentDataNumber: Double = 0
-    @State private var hideHorizontalLines: Bool = false
-    
-    public init(data: [Double],
-                title: String? = nil,
-                legend: String? = nil,
-                style: ChartStyle = Styles.lineChartStyleOne,
-                valueSpecifier: String? = "%.1f",
-                legendSpecifier: String? = "%.2f") {
-        
-        self.data = ChartData(points: data)
-        self.title = title
-        self.legend = legend
-        self.style = style
-        self.valueSpecifier = valueSpecifier!
-        self.legendSpecifier = legendSpecifier!
-        self.darkModeStyle = style.darkModeStyle != nil ? style.darkModeStyle! : Styles.lineViewDarkMode
-    }
-    
-    public var body: some View {
-        GeometryReader{ geometry in
-            VStack(alignment: .leading, spacing: 8) {
-                ZStack{
-                    GeometryReader{ reader in
-                        //                        Rectangle()
-                        //                            .foregroundColor(self.colorScheme == .dark ? self.darkModeStyle.backgroundColor : self.style.backgroundColor)
-                        if(self.showLegend){
-                            Legend(data: self.data,
-                                   frame: .constant(reader.frame(in: .local)), hideHorizontalLines: self.$hideHorizontalLines, specifier: legendSpecifier)
-                                .transition(.opacity)
-                                .animation(Animation.easeOut(duration: 1.2))
-                        }
-                        Line(data: self.data,
-                             frame: .constant(CGRect(x: 0, y: 0, width: reader.frame(in: .local).width - 30, height: reader.frame(in: .local).height + 25)),
-                             touchLocation: self.$indicatorLocation,
-                             showIndicator: self.$hideHorizontalLines,
-                             minDataValue: .constant(nil),
-                             maxDataValue: .constant(nil),
-                             showBackground: false,
-                             gradient: self.style.gradientColor
-                        )
-                            .colouredGlow()
-                        //                            .padding(.leading, 30)
-                            .offset(x: 30, y: 0)
-                            .onAppear(){
-                                self.showLegend = true
-                            }
-                            .onDisappear(){
-                                self.showLegend = false
-                            }
-                    }
-                    .frame(width: geometry.frame(in: .local).size.width, height: 240)
-                    .offset(x: 0, y: 40 )
-                    
-                }
-                .frame(width: geometry.frame(in: .local).size.width, height: 240)
-                .gesture(DragGesture()
-                            .onChanged({ value in
-                    self.dragLocation = value.location
-                    self.indicatorLocation = CGPoint(x: max(value.location.x-30,0), y: 32)
-                    self.opacity = 1
-                    self.closestPoint = self.getClosestDataPoint(toPoint: value.location, width: geometry.frame(in: .local).size.width-30, height: 240)
-                    self.hideHorizontalLines = true
-                })
-                            .onEnded({ value in
-                    self.opacity = 0
-                    self.hideHorizontalLines = false
-                })
-                )
-            }
-        }
-    }
-    
-    func getClosestDataPoint(toPoint: CGPoint, width:CGFloat, height: CGFloat) -> CGPoint {
-        let points = self.data.onlyPoints()
-        let stepWidth: CGFloat = width / CGFloat(points.count-1)
-        let stepHeight: CGFloat = height / CGFloat(points.max()! + points.min()!)
-        
-        let index:Int = Int(floor((toPoint.x-15)/stepWidth))
-        if (index >= 0 && index < points.count){
-            self.currentDataNumber = points[index]
-            return CGPoint(x: CGFloat(index)*stepWidth, y: CGFloat(points[index])*stepHeight)
-        }
-        return .zero
-    }
-}
-
-
-
-
-
-
-public struct Line: View {
+struct Line: View {
+    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @ObservedObject var data: ChartData
     @Binding var frame: CGRect
-    @Binding var touchLocation: CGPoint
-    @Binding var showIndicator: Bool
     @Binding var minDataValue: Double?
     @Binding var maxDataValue: Double?
     @State private var showFull: Bool = false
     @State var showBackground: Bool = true
-    var gradient: GradientColor = GradientColor(start: Colors.GradientPurple, end: Colors.GradientNeonBlue)
+    
+    
     var index:Int = 0
     let padding:CGFloat = 30
     var curvedLines: Bool = true
@@ -763,18 +488,11 @@ public struct Line: View {
         return curvedLines ? Path.quadClosedCurvedPathWithPoints(points: points, step: CGPoint(x: stepWidth, y: stepHeight), globalOffset: minDataValue) : Path.closedLinePathWithPoints(points: points, step: CGPoint(x: stepWidth, y: stepHeight))
     }
     
-    public var body: some View {
+    var body: some View {
         ZStack {
-            
-            
-            
             self.path
                 .trim(from: 0, to: self.showFull ? 1:0)
-                .stroke(LinearGradient(gradient: gradient.getGradient(), startPoint: .leading, endPoint: .trailing) ,style: StrokeStyle(lineWidth: 3, lineJoin: .round))
-            //                .colouredGlow()
-            
-            
-            
+                .stroke(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected), style: StrokeStyle(lineWidth: 3, lineJoin: .round))
                 .rotationEffect(.degrees(180), anchor: .center)
                 .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
                 .animation(.easeInOut(duration: 1.2))
@@ -788,37 +506,12 @@ public struct Line: View {
         }
     }
     
-    func getClosestPointOnPath(touchLocation: CGPoint) -> CGPoint {
-        let closest = self.path.point(to: touchLocation.x)
-        return closest
-    }
-    
 }
-
-extension View {
-    func colouredGlow() -> some View {
-        ForEach(0..<2) { i in
-            Rectangle()
-                .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: 2))
-            //.frame(width: 400, height: 400)
-                .mask(self.blur(radius: 20))
-                .overlay(self.blur(radius: 5 - CGFloat(i * 5)))
-            
-        }
-    }
-}
-
-
-
-
-
-
 
 
 struct Legend: View {
     @ObservedObject var data: ChartData
     @Binding var frame: CGRect
-    @Binding var hideHorizontalLines: Bool
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     var specifier: String = "%.2f"
     let padding:CGFloat = 3
@@ -857,13 +550,13 @@ struct Legend: View {
                             .font(.system(size: 10, weight: .medium, design: .monospaced))
                             .offset(x: 2)
                     }
+                    .offset(y: 3)
                     
                     Spacer()
                     
                     
                     self.line(atHeight: self.getYLegendSafe(height: height), width: self.frame.width)
                         .stroke(Color(uiColor: .systemGray4), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5,height == 0 ? 0 : 10]))
-                        .opacity((self.hideHorizontalLines && height != 0) ? 0 : 1)
                         .rotationEffect(.degrees(180), anchor: .center)
                         .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
                         .animation(.easeOut(duration: 0.2))
@@ -907,5 +600,56 @@ struct Legend: View {
         guard let min = points.min() else { return nil }
         let step = Double(max - min)/4
         return [min+step * 0, min+step * 1, min+step * 2, min+step * 3, min+step * 4]
+    }
+}
+
+
+struct LineView: View {
+    @ObservedObject var data: ChartData
+    var title: String?
+    var legend: String?
+    var style: ChartStyle
+    
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @State private var opacity:Double = 0
+    @State private var currentDataNumber: Double = 0
+    @State private var hideHorizontalLines: Bool = false
+    
+    init(data: [Double], title: String? = nil, legend: String? = nil, style: ChartStyle) {
+        
+        self.data = ChartData(points: data)
+        self.title = title
+        self.legend = legend
+        self.style = style
+    }
+    
+    var body: some View {
+        GeometryReader{ geometry in
+            VStack(alignment: .leading, spacing: 8) {
+                ZStack{
+                    GeometryReader{ reader in
+                        Legend(data: self.data,
+                               frame: .constant(reader.frame(in: .local)))
+                            .transition(.opacity)
+                            .animation(Animation.easeOut(duration: 1.2))
+                        
+                        Line(data: self.data,
+                             frame: .constant(CGRect(x: 0, y: 0, width: reader.frame(in: .local).width - 30, height: reader.frame(in: .local).height + 25)),
+                             minDataValue: .constant(nil),
+                             maxDataValue: .constant(nil),
+                             showBackground: false
+                        )
+                            .colouredGlow()
+                            .offset(x: 30, y: 0)
+                        
+                    }
+                    .frame(width: geometry.frame(in: .local).size.width, height: 240)
+                    .offset(x: 0, y: 40 )
+                    
+                }
+                .frame(width: geometry.frame(in: .local).size.width, height: 240)
+                
+            }
+        }
     }
 }
