@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2319F8B6276766A500644EB3 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2319F8B5276766A500644EB3 /* SwiftUIView.swift */; };
+		2319F8B9276872F200644EB3 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2319F8B8276872F200644EB3 /* SwiftUIView.swift */; };
 		2337E6882767619D00438F43 /* StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2337E6872767619D00438F43 /* StatsDetail.swift */; };
 		233FE7B6274F109600C6F1DF /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Values.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
@@ -84,7 +84,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2319F8B5276766A500644EB3 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
+		2319F8B8276872F200644EB3 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		2337E6872767619D00438F43 /* StatsDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsDetail.swift; sourceTree = "<group>"; };
 		233FE7B5274F109600C6F1DF /* Values.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Values.swift; sourceTree = "<group>"; };
 		2354882127642B9C00FE8D7A /* recursive.otc */ = {isa = PBXFileReference; lastKnownFileType = file; path = recursive.otc; sourceTree = "<group>"; };
@@ -202,6 +202,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2319F8B7276872D600644EB3 /* LineChart */ = {
+			isa = PBXGroup;
+			children = (
+				2319F8B8276872F200644EB3 /* SwiftUIView.swift */,
+			);
+			path = LineChart;
+			sourceTree = "<group>";
+		};
 		2354882027642B5400FE8D7A /* project-fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -302,7 +310,7 @@
 				7D7A9EBF274F38CD00C2E125 /* StatsView.swift */,
 				7D878BB0275D8DB3008AC443 /* Stats.swift */,
 				2337E6872767619D00438F43 /* StatsDetail.swift */,
-				2319F8B5276766A500644EB3 /* SwiftUIView.swift */,
+				2319F8B7276872D600644EB3 /* LineChart */,
 			);
 			path = Stats;
 			sourceTree = "<group>";
@@ -600,7 +608,7 @@
 				7D69E0B12751FDEA007211CC /* Search.m in Sources */,
 				7D69E0AA2751FDEA007211CC /* Cube222.m in Sources */,
 				7D69E0A52751FDEA007211CC /* Megaminx.m in Sources */,
-				2319F8B6276766A500644EB3 /* SwiftUIView.swift in Sources */,
+				2319F8B9276872F200644EB3 /* SwiftUIView.swift in Sources */,
 				7D69E0BC2751FDEB007211CC /* RubiksTimerTimeObj.m in Sources */,
 				7D69E0BA2751FDEB007211CC /* CHTOneStat.m in Sources */,
 				7D69E0A42751FDEA007211CC /* Pyraminx.m in Sources */,

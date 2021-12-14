@@ -8,13 +8,15 @@
 import SwiftUI
 import CoreData
 
-import SwiftUICharts
+//import SwiftUICharts
 
 
+
+var gradientSelected: Int = UserDefaults.standard.integer(forKey: asKeys.gradientSelected.rawValue)
 
 extension View {
     public func gradientForeground(colors: [Color]) -> some View {
-        self.overlay(getGradient(gradientArray: CustomGradientColours.gradientColours))
+        self.overlay(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
             .mask(self)
     }
 }
@@ -103,37 +105,6 @@ struct StatsView: View {
                         .padding(.top, -6)
                         .padding(.horizontal)
                         .padding(.bottom, 8)
-                        
-                        
-                        
-                        
-                        .onTapGesture {
-                            for _ in 1..<100 {
-                                let solveItem: Solves!
-                                
-                                solveItem = Solves(context: managedObjectContext)
-                                solveItem.date = Date()
-                                solveItem.session = currentSession
-                                solveItem.scramble = "sdlfikj"
-                                solveItem.scramble_type = 0
-                                solveItem.scramble_subtype = 0
-                                solveItem.time = Double.random(in: 1..<100)
-                                
-                            }
-                            do {
-                                try managedObjectContext.save()
-                            } catch {
-                                if let error = error as NSError? {
-                                    fatalError("Unresolved error \(error), \(error.userInfo)")
-                                }
-                            }
-                        }
-                        
-                        
-                        
-                        
-                        
-                        
                         
                         /// everything
                         VStack(spacing: 10) {
@@ -342,7 +313,7 @@ struct StatsView: View {
                                             Spacer()
                                         }
                                         .frame(height: 75)
-                                        .background(getGradient(gradientArray: CustomGradientColours.gradientColours)                                        .clipShape(RoundedRectangle(cornerRadius:16)))
+                                        .background(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)                                        .clipShape(RoundedRectangle(cornerRadius:16)))
                                         .onTapGesture {
                                             print("best single pressed!")
                                         }
@@ -515,7 +486,7 @@ struct StatsView: View {
                                     }
                                     .padding([.vertical, .leading], 12)
                                     
-                                    LineView(data: timesByDate, title: nil, style: ChartStyle(backgroundColor: .white, accentColor: getGradientColours(gradientArray: CustomGradientColours.gradientColours)[1], secondGradientColor: getGradientColours(gradientArray: CustomGradientColours.gradientColours)[0], textColor: .black, legendTextColor: .gray, dropShadowColor: Color.black.opacity(0.24)), legendSpecifier: "%.2g")
+                                    LineView(data: timesByDate, title: nil, style: ChartStyle(backgroundColor: .white, accentColor: getGradientColours(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)[1], secondGradientColor: getGradientColours(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)[0], textColor: .black, legendTextColor: .gray, dropShadowColor: Color.black.opacity(0.24)))
                                         .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
                                         .padding(.horizontal, 12)
                                         .drawingGroup()

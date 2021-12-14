@@ -10,6 +10,8 @@ import SwiftUI
 struct StatsDetail: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
+   
+    var solves = [1.78, 1.56, 2.09, 0.98, 3.81]
     
     var body: some View {
         NavigationView {
@@ -19,22 +21,18 @@ struct StatsDetail: View {
                 
                 ScrollView {
                     
-                    VStack {
+                    
+                    
+                    VStack (spacing: 10) {
                         HStack {
-                            Text("1.")
-                                .font(.system(size: 15, weight: .bold, design: .rounded))
-                                .foregroundColor(Color("AccentColor"))
-                            Text("1.92")
-                                .font(.system(size: 17, weight: .bold, design: .rounded))
+                            Text("The value of the statistic")
+                                .font(.system(size: 34, weight: .bold))
                             
                             Spacer()
                         }
-                        .padding([.horizontal, .top], 10)
+                        .padding(.horizontal)
+                        .padding(.top)
                         
-                    }
-                    .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
-                    
-                    VStack (spacing: 10) {
                         HStack (alignment: .center) {
 //                            Text(currentSession.name!)
                             Text("Session Name")
@@ -48,6 +46,42 @@ struct StatsDetail: View {
                                 .foregroundColor(Color(uiColor: .systemGray))
                         }
                         .padding(.horizontal)
+                        
+                        
+                        ForEach(solves, id: \.self) {solve in
+                            VStack {
+                                HStack {
+                                    Text("1.")
+                                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                                        .foregroundColor(Color("AccentColor"))
+                                    Text(String(format: "%.2f", solve))
+                                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                                    
+                                    Spacer()
+                                    
+                                    Text("The date")
+                                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                                        .foregroundColor(Color(uiColor: .systemGray))
+                                }
+                                .padding([.horizontal, .top], 10)
+                                
+                                HStack {
+                                    Text("Scramble")
+                                        .font(.system(size: 17, weight: .medium))
+                                    
+                                    Spacer()
+                                }
+                                .padding([.horizontal, .bottom], 10)
+                                
+                            }
+                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12)))
+                            .padding(.horizontal)
+                        }
+                        
+                        
+                        
+                        Text("\nRemember to gray out the worst and best times along with addding brackets <3")
+                        
                         
                     }
                     .offset(y: -6)
@@ -67,9 +101,9 @@ struct StatsDetail: View {
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
-                                print("Share")
+                                share()
                             } label: {
-                                Image("square.and.arrow.up")
+                                Image(systemName: "square.and.arrow.up")
                                     .font(.system(size: 17, weight: .medium))
                                     .foregroundColor(Color("AccentColor"))
                             }
@@ -78,11 +112,14 @@ struct StatsDetail: View {
                 }
             }
         }
+        
+        
     }
-}
-
-struct statsdetailpreview: PreviewProvider {
-    static var previews: some View {
-        StatsDetail()
+    
+    func share() {
+        guard let url = URL(string: "https://www.apple.com") else { return }
+        let activityView = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        UIApplication.shared.windows.first?.rootViewController?.present(activityView, animated: true, completion: nil)
+        /// todo actually make the buttons work
     }
 }

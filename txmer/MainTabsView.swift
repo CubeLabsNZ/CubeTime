@@ -120,6 +120,7 @@ struct MainTabsView: View {
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .stats:
                     StatsView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
+//                    StatsDetail()
                 case .sessions:
                     SessionsView(currentSession: $currentSession)
                         .environment(\.managedObjectContext, managedObjectContext)

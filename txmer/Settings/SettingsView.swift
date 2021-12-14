@@ -98,7 +98,6 @@ struct SettingsView: View {
 
 struct SettingsCard: View {
     @Binding var currentCard: SettingsCardInfo?
-//    @Binding var hideTabBar: Bool
     var info: SettingsCardInfo
     var namespace: Namespace.ID
     
@@ -151,11 +150,8 @@ struct SettingsCard: View {
 struct SettingsDetail: View {
     @Binding var currentCard: SettingsCardInfo?
     @Environment(\.colorScheme) var colourScheme
-//    @Binding var hideTabBar: Bool
     
     var namespace: Namespace.ID
-    
-    
     
     var body: some View {
         if currentCard != nil {
@@ -163,7 +159,6 @@ struct SettingsDetail: View {
                 Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                     .ignoresSafeArea()
                     .zIndex(0)
-
                 
                 ScrollView {
                     switch currentCard!.name { // TODO use an enum for better i18n support
@@ -186,9 +181,6 @@ struct SettingsDetail: View {
                 }
                 .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
 
-                
-                
-                
                 VStack {
                     ZStack {
                         RoundedRectangle(cornerRadius: 16)
