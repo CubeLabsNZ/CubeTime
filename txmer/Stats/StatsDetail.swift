@@ -43,7 +43,7 @@ struct StatsDetail: View {
                         ForEach(Array(zip(solves.accountedSolves.indices, solves.accountedSolves)), id: \.0) {index, solve in
                             VStack {
                                 HStack {
-                                    Text("\(index).")
+                                    Text("\(index+1).")
                                         .font(.system(size: 15, weight: .bold, design: .rounded))
                                         .foregroundColor(Color("AccentColor"))
                                     Text(formatSolveTime(secs: solve.time, penType: PenTypes.init(rawValue: solve.penalty)!))
@@ -51,7 +51,7 @@ struct StatsDetail: View {
                                     
                                     Spacer()
                                     
-                                    Text(solve.date ?? Date(timeIntervalSince1970: 0), format: .dateTime.day().month().year())
+                                    Text(solve.date ?? Date(timeIntervalSince1970: 0), format: .dateTime.hour().minute().second().day().month().year())
                                         .font(.system(size: 13, weight: .bold, design: .rounded))
                                         .foregroundColor(Color(uiColor: .systemGray))
                                 }

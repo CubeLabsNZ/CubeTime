@@ -240,20 +240,20 @@ struct SolvePopupView: View {
                     .navigationTitle(time)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button {
-                                withAnimation {
-                                    currentSolve = nil
+                            if timeListManager != nil { // Only show delete if called from timelist and not stats
+                                Button {
+                                    withAnimation {
+                                        currentSolve = nil
+                                    }
+                                    managedObjectContext.delete(solve) // Todo read context from environment
+                                    timeListManager?.resort()
+                                } label: {
+                                    Text("Delete Solve")
+                                        .font(.system(size: 17, weight: .medium))
+                                        .foregroundColor(Color.red)
                                 }
-                                dismiss() // Dismiss in case called from StatsView
-                                managedObjectContext.delete(solve) // Todo read context from environment
-                                timeListManager?.resort()
-                            } label: {
-                                Text("Delete Solve")
-                                    .font(.system(size: 17, weight: .medium))
-                                    .foregroundColor(Color.red)
                             }
                         }
-                        
                         
                         
                         ToolbarItem(placement: .navigationBarLeading) {
@@ -265,7 +265,7 @@ struct SolvePopupView: View {
                                 Image(systemName: "chevron.left")
                                     .font(.system(size: 17, weight: .medium))
                                     .padding(.leading, -4)
-                                Text("Time List")
+                                Text(timeListManager == nil ? "Stats" : "Time List")
                                     .padding(.leading, -4)
                             }
                         }
