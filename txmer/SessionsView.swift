@@ -113,7 +113,6 @@ struct CustomiseSessionView: View {
                         }
                         .disabled(self.name.isEmpty)
                     }
-                    .disabled(self.name.isEmpty)
                 }
             }
         }

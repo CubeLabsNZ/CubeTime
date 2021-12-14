@@ -363,14 +363,12 @@ extension CGPoint {
     }
 }
 extension View {
-    func colouredGlow() -> some View {
+    func colouredGlow(gradientSelected: Int) -> some View {
         ForEach(0..<2) { i in
             Rectangle()
-                .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: 2))
-            //.frame(width: 400, height: 400)
+                .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
                 .mask(self.blur(radius: 20))
                 .overlay(self.blur(radius: 5 - CGFloat(i * 5)))
-            
         }
     }
 }
@@ -604,7 +602,8 @@ struct Legend: View {
 }
 
 
-struct LineView: View {
+struct TimeTrend: View {
+    @AppStorage(asKeys.gradientSelected.rawValue) var gradientSelected: Int = 6
     @ObservedObject var data: ChartData
     var title: String?
     var legend: String?
@@ -616,7 +615,6 @@ struct LineView: View {
     @State private var hideHorizontalLines: Bool = false
     
     init(data: [Double], title: String? = nil, legend: String? = nil, style: ChartStyle) {
-        
         self.data = ChartData(points: data)
         self.title = title
         self.legend = legend
@@ -639,9 +637,8 @@ struct LineView: View {
                              maxDataValue: .constant(nil),
                              showBackground: false
                         )
-                            .colouredGlow()
+                            .colouredGlow(gradientSelected: gradientSelected)
                             .offset(x: 30, y: 0)
-                        
                     }
                     .frame(width: geometry.frame(in: .local).size.width, height: 240)
                     .offset(x: 0, y: 40 )

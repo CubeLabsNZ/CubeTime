@@ -106,6 +106,28 @@ struct StatsView: View {
                                                         .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                         .padding(.leading, 12)
                                                     
+                                                        .onTapGesture {
+                                                            for _ in 1..<100 {
+                                                                let solveItem: Solves!
+                                                                
+                                                                solveItem = Solves(context: managedObjectContext)
+                                                                solveItem.date = Date()
+                                                                solveItem.session = currentSession
+                                                                solveItem.scramble = "sdlfikj"
+                                                                solveItem.scramble_type = 0
+                                                                solveItem.scramble_subtype = 0
+                                                                solveItem.time = Double.random(in: 1..<100)
+                                                                
+                                                            }
+                                                            do {
+                                                                try managedObjectContext.save()
+                                                            } catch {
+                                                                if let error = error as NSError? {
+                                                                    fatalError("Unresolved error \(error), \(error.userInfo)")
+                                                                }
+                                                            }
+                                                        }
+                                                    
                                                     Spacer()
                                                     
                                                     Text("AO5")
@@ -471,7 +493,7 @@ struct StatsView: View {
                                     }
                                     .padding([.vertical, .leading], 12)
                                     
-                                    LineView(data: timesByDate, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
+                                    TimeTrend(data: timesByDate, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
                                         .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
                                         .padding(.horizontal, 12)
                                         .drawingGroup()
