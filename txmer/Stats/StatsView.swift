@@ -1,21 +1,8 @@
-//
-//  SessionsView.swift
-//  txmer
-//
-//  Created by Reagan Bohan on 11/25/21.
-//
-
 import SwiftUI
 import CoreData
 
-//import SwiftUICharts
-
-
-
-var gradientSelected: Int = UserDefaults.standard.integer(forKey: asKeys.gradientSelected.rawValue)
-
 extension View {
-    public func gradientForeground(colors: [Color]) -> some View {
+    public func gradientForeground(gradientSelected: Int) -> some View {
         self.overlay(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
             .mask(self)
     }
@@ -37,9 +24,7 @@ struct StatsView: View {
 //    @State var isShowingStatsView: Bool
     @Binding var currentSession: Sessions
     
-    
-    //    let stats = Stats(currentSession: $currentSession, managedObjectContext: managedObjectContext)
-    //        .environment(\.managedObjectContext, managedObjectContext)
+    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     
     let ao5: (Double, [Solves])?
     let ao12: (Double, [Solves])?
@@ -411,7 +396,7 @@ struct StatsView: View {
                                                 if ao5 != nil {
                                                     Text(formatSolveTime(secs: ao5!.0))
                                                         .font(.system(size: 34, weight: .bold, design: .default))
-                                                        .gradientForeground(colors: [Color(red: 236/255, green: 74/255, blue: 134/255), Color(red: 136/255, green: 94/255, blue: 191/255)])
+                                                        .gradientForeground(gradientSelected: gradientSelected)
                                                     
                                                     Spacer()
                                                     

@@ -1,13 +1,4 @@
-//
-//  Licenses.swift
-//  txmer
-//
-//  Created by macos sucks balls on 12/6/21.
-//
-
 import SwiftUI
-
-
 
 struct TxmerLicense: View {
     var body: some View {

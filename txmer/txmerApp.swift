@@ -1,10 +1,3 @@
-//
-//  txmerApp.swift
-//  txmer
-//
-//  Created by Tim Xie on 21/11/21.
-//
-
 import SwiftUI
 import CoreData
 

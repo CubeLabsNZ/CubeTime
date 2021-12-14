@@ -1,10 +1,3 @@
-//
-//  Persistence.swift
-//  txmer
-//
-//  Created by Tim Xie on 24/11/21.
-//
-
 import CoreData
 
 struct PersistenceController {

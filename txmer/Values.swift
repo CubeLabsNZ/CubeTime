@@ -1,10 +1,3 @@
-//
-//  UserDefinedValues.swift
-//  txmer
-//
-//  Created by Tim Xie on 25/11/21.
-//
-
 import Foundation
 import SwiftUI
 

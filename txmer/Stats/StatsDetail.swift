@@ -1,10 +1,3 @@
-//
-//  StatsDetail.swift
-//  txmer
-//
-//  Created by Tim Xie on 14/12/21.
-//
-
 import SwiftUI
 
 struct StatsDetail: View {
