@@ -204,15 +204,15 @@ struct StatsView: View {
 //                                                    isShowingStatsView = true
 //                                                }
 //                                                .padding(.bottom, 6)
-//                                                
+//
 //                                                .sheet(isPresented: $isShowingStatsView) {
 //                                                    StatsDetail()
 //                                                }
-//                                                
-//                                                
-//                                                
-//                                                
-//                                                
+//
+//
+//
+//
+//
                                                 
                                                 VStack (alignment: .leading, spacing: -4) {
                                                     Text("AO100")

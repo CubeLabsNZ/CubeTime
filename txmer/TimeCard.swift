@@ -161,10 +161,11 @@ struct SolvePopupView: View {
                             Image("scramble-placeholder")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .padding(.leading, 32)
-                                .padding(.trailing, 32)
-                                .padding(.bottom, 12)
-                            
+                                .padding([.horizontal, .bottom])
+                                .padding(.top, 12)
+//                                .padding(.leading, 32)
+//                                .padding(.trailing, 32)
+//                                .padding(.bottom, 12)
                         }
                         //.frame(minHeight: minRowHeight * 10)
                         //.frame(height: 300)

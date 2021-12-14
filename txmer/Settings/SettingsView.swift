@@ -169,6 +169,7 @@ struct SettingsDetail: View {
                     switch currentCard!.name { // TODO use an enum for better i18n support
                     case "General":
                         GeneralSettingsView()
+//                        StatsDetail()
                     case "Appearance":
                         AppearanceSettingsView()
                     case "About":

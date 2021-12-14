@@ -110,30 +110,40 @@ struct AboutSettingsView: View {
     @State var showLicenses = false
     
     var body: some View {
-        ZStack {
-            VStack (alignment: .leading) {
-                Text("txmer.")
-                    .font(Font.custom("recursive", fixedSize: 30))
-                Text("VERSION \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)\n")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundColor(Color(uiColor: .systemGray))
-                Text("txmer is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\n\nClick below for more info.")
-                Button {
-                    showLicenses = true
-                } label: {
-                    Text("Open source licenes and privacy policy")
+        VStack (alignment: .leading) {
+            HStack(alignment: .center) {
+                Image("about-icon")
+                    .resizable()
+                    .frame(width: 60, height: 60)
+                    .aspectRatio(contentMode: .fit)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(.trailing, 6)
+                
+                VStack(alignment: .leading) {
+                    Spacer()
+                    Text("txmer.")
+                        .font(Font.custom("recursive", fixedSize: 30))
+                    Text("VERSION \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)\n")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundColor(Color(uiColor: .systemGray))
                 }
-                
-                Text("Our Github project: https://github.com/pdtcubing/txmer")
-                    .offset(y: UIScreen.screenHeight/7)
-                
-                Text("Buy your cubes from\nhttps://www.speedcube.co.nz/ \n❤️")
-                    .offset(y: UIScreen.screenHeight/5)
             }
-            .padding(.horizontal)
-            .sheet(isPresented: $showLicenses) {
-                LicensesPopUpView(showLicenses: $showLicenses)
+            
+            
+            Text("txmer is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\n\nClick below for more info.")
+            Button {
+                showLicenses = true
+            } label: {
+                Text("Open source licenes and privacy policy")
             }
+            
+            Text("\n\nOur Github project:\nhttps://github.com/pdtcubing/txmer")
+            
+            Text("\n\nBuy your cubes from\nhttps://www.speedcube.co.nz/ ❤️")
+        }
+        .padding(.horizontal)
+        .sheet(isPresented: $showLicenses) {
+            LicensesPopUpView(showLicenses: $showLicenses)
         }
     }
 }

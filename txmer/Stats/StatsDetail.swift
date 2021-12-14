@@ -80,3 +80,9 @@ struct StatsDetail: View {
         }
     }
 }
+
+struct statsdetailpreview: PreviewProvider {
+    static var previews: some View {
+        StatsDetail()
+    }
+}
