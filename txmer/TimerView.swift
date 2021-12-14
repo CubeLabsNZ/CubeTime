@@ -91,7 +91,7 @@ struct TimerView: View {
                 
                 Text(stopWatchManager.secondsStr)
                     .foregroundColor(stopWatchManager.timerColour)
-                    .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 72 : 64))
+                    .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 70 : 56))
                     .animation(Animation.spring(), value: stopWatchManager.mode == .running)
             
             

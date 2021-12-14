@@ -10,8 +10,9 @@ import CoreData
 import SwiftUI
 
 var userHoldTime: Double = 0.5 /// todo make so user can set in setting
-let gestureKillTime: Double = 0.2
-let inspectionEnabled = true
+//let gestureKillTime: Double = 0.2
+//let inspectionEnabled = true
+//var inspectionEnabled = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
 let plustwotime = 15
 let dnftime = 17
 
@@ -35,7 +36,15 @@ class StopWatchManager: ObservableObject {
     
     @Published var showPenOptions = false
     
-    private let feedbackStyle: UIImpactFeedbackGenerator
+
+    
+    private var hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
+    
+    private var feedbackStyle: UIImpactFeedbackGenerator
+    
+    var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
+    var userHoldTime: Double = UserDefaults.standard.double(forKey: gsKeys.freeze.rawValue)
+    var gestureKillTime: Double = UserDefaults.standard.double(forKey: gsKeys.gestureDistance.rawValue)
     
     let scrambler = CHTScrambler.init()
     
@@ -49,7 +58,7 @@ class StopWatchManager: ObservableObject {
         _currentSession = currentSession
 //        _feedbackType = feedbackType
         self.managedObjectContext = managedObjectContext
-        self.feedbackStyle = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: 0)!)
+        self.feedbackStyle = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!)
         
         scrambler.initSq1()
         scrambleType = currentSession.wrappedValue.scramble_type
@@ -57,6 +66,9 @@ class StopWatchManager: ObservableObject {
         DispatchQueue.main.async {
             self.rescramble()
         }
+        
+        NSLog(String(hapticType))
+        
     }
     
     private var timerStartTime: Date?

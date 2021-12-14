@@ -25,16 +25,20 @@ enum FeedbackStyles: UIImpactFeedbackGenerator.FeedbackStyle, CaseIterable {
 }
  */
 
+enum gsKeys: String {
+    case inspection, freeze, interval, hapBool, hapType, gestureDistance, displayTruncation
+}
+
 struct GeneralSettingsView: View {
     
-    @AppStorage("inspection") var inspectionTime: Bool = true
-    @AppStorage("freeze") var holdDownTime: Double = 0.5
-    @AppStorage("interval") var timerIntervalMode: String = "0.01s"
-    @AppStorage("hapBool") var hapticFeedback: Bool = true
+    @AppStorage(gsKeys.inspection.rawValue) var inspectionTime: Bool = true
+    @AppStorage(gsKeys.freeze.rawValue) var holdDownTime: Double = 0.5
+    @AppStorage(gsKeys.interval.rawValue) var timerIntervalMode: String = "0.01s"
+    @AppStorage(gsKeys.hapBool.rawValue) var hapticFeedback: Bool = true
 //    @AppStorage("hapType") var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
-    @AppStorage("hapticType") var feedbackType: Int = 0
-    @AppStorage("gestureD") var gestureActivationDistance: Double = 200
-    @AppStorage("dT") var displayTruncation: String = "2 d.p"
+    @AppStorage(gsKeys.hapType.rawValue) var feedbackType: Int = 3
+    @AppStorage(gsKeys.gestureDistance.rawValue) var gestureActivationDistance: Double = 200
+    @AppStorage(gsKeys.displayTruncation.rawValue) var displayTruncation: String = "2 d.p"
     
     let intervalModes: [String] = ["0.01s", "0.1s", "seconds"]
 //    let hapticIntensityModes: [String] = ["rigid", "heavy", "medium", "light", "soft"]
@@ -148,15 +152,13 @@ struct GeneralSettingsView: View {
                         
                         Spacer()
                         
-                        /*
-                        Picker("", selection: $hapticIntensity) {
-                            ForEach(0...5) { mode in
-                                Text(mode.rawValue.capitalized)
+                        Picker("", selection: $feedbackType) {
+                            ForEach(Array(hapticModes2.keys), id: \.self) { mode in
+                                Text(mode)
                             }
                         }
                         .pickerStyle(.menu)
                         .font(.system(size: 17, weight: .regular))
-                         */
                         
                     }
                     .padding(.horizontal)
