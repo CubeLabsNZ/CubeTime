@@ -25,7 +25,7 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.interval.rawValue) var timerIntervalMode: String = "0.01s"
     @AppStorage(gsKeys.hapBool.rawValue) var hapticFeedback: Bool = true
     @AppStorage(gsKeys.hapType.rawValue) var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .heavy
-    @AppStorage(gsKeys.gestureDistance.rawValue) var gestureActivationDistance: Double = 200
+    @AppStorage(gsKeys.gestureDistance.rawValue) var gestureActivationDistance: Double = 50
     @AppStorage(gsKeys.displayTruncation.rawValue) var displayTruncation: String = "2 d.p"
     
     let intervalModes: [String] = ["0.01s", "0.1s", "seconds"]
@@ -168,7 +168,7 @@ struct GeneralSettingsView: View {
                             .font(.system(size: 13, weight: .regular, design: .rounded))
                             .foregroundColor(Color(uiColor: .systemGray2))
                         
-                        Slider(value: $gestureActivationDistance, in: 100...500)
+                        Slider(value: $gestureActivationDistance, in: 20...300)
                             .padding(.horizontal, 4)
                         
                         Text("MAX")
