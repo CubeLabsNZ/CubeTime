@@ -38,13 +38,13 @@ class StopWatchManager: ObservableObject {
     
 
     
-    private var hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
+    private let hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
+    private let hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
+    private let feedbackStyle: UIImpactFeedbackGenerator?
     
-    private var feedbackStyle: UIImpactFeedbackGenerator
-    
-    var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
-    var userHoldTime: Double = UserDefaults.standard.double(forKey: gsKeys.freeze.rawValue)
-    var gestureKillTime: Double = UserDefaults.standard.double(forKey: gsKeys.gestureDistance.rawValue)
+    let inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
+    let userHoldTime: Double = UserDefaults.standard.double(forKey: gsKeys.freeze.rawValue)
+    let geatureThreshold: Double = UserDefaults.standard.double(forKey: gsKeys.gestureDistance.rawValue)
     
     let scrambler = CHTScrambler.init()
     
@@ -58,8 +58,7 @@ class StopWatchManager: ObservableObject {
         _currentSession = currentSession
 //        _feedbackType = feedbackType
         self.managedObjectContext = managedObjectContext
-        self.feedbackStyle = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!)
-        
+        self.feedbackStyle = hapticEnabled ? UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!) : nil
         scrambler.initSq1()
         scrambleType = currentSession.wrappedValue.scramble_type
         secondsStr = formatSolveTime(secs: 0)
@@ -161,20 +160,18 @@ class StopWatchManager: ObservableObject {
     
     private var asyncScrambleTask: DispatchWorkItem?
     
-    let threshold = 50 as CGFloat
-    
     func touchDown(value: DragGesture.Value) {
         if prevIsDown {
             NSLog("allowgesture: \(allowGesture) !canstarttimer: \(!canStartTimer) !prevdownstoppedthetimer: \(!prevDownStoppedTheTimer) mode != inspectiuong \(mode != .inspecting)")
             if allowGesture && !canStartTimer && !prevDownStoppedTheTimer && mode != .inspecting {
-                if abs(value.translation.width) > threshold && abs(value.translation.height) < abs(value.translation.width) {
+                if abs(value.translation.width) > geatureThreshold && abs(value.translation.height) < abs(value.translation.width) {
                     taskTimerReady?.cancel() // TODO maybe dont do this idk ask tim
                     allowGesture = false
                     prevDownTriggeredGesture = true
                     if value.translation.width > 0 {
                         NSLog("Right") // TODO buttosn optionsal
                         rescramble() // TODO customize
-                        self.feedbackStyle.impactOccurred()
+                        self.feedbackStyle?.impactOccurred()
                     } else {
                         NSLog("Left")
                         if solveItem != nil {
@@ -182,16 +179,16 @@ class StopWatchManager: ObservableObject {
                             timerColour = .black
                             prevDownTriggeredGesture = false
                             showDeleteSolveConfirmation = true
-                            self.feedbackStyle.impactOccurred()
+                            self.feedbackStyle?.impactOccurred()
                         }
                     }
-                } else if abs(value.translation.height) > threshold && abs(value.translation.width) < abs(value.translation.height) {
+                } else if abs(value.translation.height) > geatureThreshold && abs(value.translation.width) < abs(value.translation.height) {
                     taskTimerReady?.cancel() // TODO maybe dont do this idk ask tim
                     allowGesture = false
                     prevDownTriggeredGesture = true
                     if value.translation.height > 0 {
                         if solveItem != nil {
-                            self.feedbackStyle.impactOccurred()
+                            self.feedbackStyle?.impactOccurred()
                             withAnimation {
                                 showPenOptions = true
                             }
@@ -230,7 +227,7 @@ class StopWatchManager: ObservableObject {
                 let newTaskTimerReady = DispatchWorkItem {
                     self.canStartTimer = true
                     self.timerColour = TimerTextColours.timerCanStartColour
-                    self.feedbackStyle.impactOccurred()
+                    self.feedbackStyle?.impactOccurred()
                 }
                 taskTimerReady = newTaskTimerReady
                 DispatchQueue.main.asyncAfter(deadline: .now() + userHoldTime, execute: newTaskTimerReady)
