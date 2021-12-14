@@ -21,30 +21,32 @@ struct StatsView: View {
         GridItem(spacing: 10)
     ]
     
-//    @State var isShowingStatsView: Bool
+    @State var isShowingStatsView: Bool = false
     @Binding var currentSession: Sessions
     
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     
-    let ao5: (Double, [Solves])?
-    let ao12: (Double, [Solves])?
-    let ao100: (Double, [Solves])?
+    let ao5: CalculatedAverage?
+    let ao12: CalculatedAverage?
+    let ao100: CalculatedAverage?
     
-    let currentAo5: (Double, [Solves])?
-    let currentAo12: (Double, [Solves])?
-    let currentAo100: (Double, [Solves])?
+    let currentAo5: CalculatedAverage?
+    let currentAo12: CalculatedAverage?
+    let currentAo100: CalculatedAverage?
     
     let timesByDate: [Double]
     
     let bestSingle: Solves?
     let sessionMean: Double?
     
+    @State var presentedAvg: CalculatedAverage? = nil
+    
+    @State var showBestSinglePopup = false
+    
     
     let stats: Stats
-    init(currentSession: Binding<Sessions>, /*isShowingStatsView: State<Bool>,*/ managedObjectContext: NSManagedObjectContext) {
+    init(currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
-//        self._isShowingStatsView = isShowingStatsView
-        
         
         stats = Stats(currentSession: currentSession.wrappedValue, managedObjectContext: managedObjectContext)
         
@@ -99,7 +101,6 @@ struct StatsView: View {
                                     VStack {
                                         HStack {
                                             VStack (alignment: .leading, spacing: 0) {
-                                                
                                                 VStack (alignment: .leading, spacing: -4) {
                                                     Text("CURRENT STATS")
                                                         .font(.system(size: 13, weight: .medium, design: .default))
@@ -135,15 +136,11 @@ struct StatsView: View {
                                                         .foregroundColor(Color(uiColor: .systemGray))
                                                         .padding(.leading, 12)
                                                     
-                                                    if currentAo5 != nil {
-                                                        Text(String(formatSolveTime(secs: currentAo5!.0)))
-//                                                        Text("HI")
+                                                    if let currentAo5 = currentAo5 {
+                                                        Text(String(formatSolveTime(secs: currentAo5.average)))
                                                             .font(.system(size: 24, weight: .bold, design: .default))
                                                             .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                             .padding(.leading, 12)
-                                                            .onTapGesture {
-                                                                print(stats.solvesByDate)
-                                                            }
                                                     } else {
                                                         Text("N/A")
                                                             .font(.system(size: 20, weight: .medium, design: .default))
@@ -153,7 +150,9 @@ struct StatsView: View {
                                                     }
                                                 }
                                                 .onTapGesture {
-                                                    print("current ao5")
+                                                    if currentAo5 != nil {
+                                                        presentedAvg = currentAo5
+                                                    }
                                                 }
                                                 .padding(.bottom, 6)
                                                 
@@ -163,43 +162,8 @@ struct StatsView: View {
                                                         .foregroundColor(Color(uiColor: .systemGray))
                                                         .padding(.leading, 12)
                                                     
-                                                    if currentAo12 != nil {
-                                                        Text(String(formatSolveTime(secs: currentAo12!.0)))
-                                                            .font(.system(size: 24, weight: .bold, design: .default))
-                                                            .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                            .padding(.leading, 12)
-                                                    } else {
-                                                        Text("N/A")
-                                                            .font(.system(size: 20, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray2))
-                                                            .padding(.leading, 12)
-                                                        
-                                                    }
-                                                    
-                                                }
-//                                                .onTapGesture {
-//                                                    print("current ao12")
-//                                                    isShowingStatsView = true
-//                                                }
-//                                                .padding(.bottom, 6)
-//
-//                                                .sheet(isPresented: $isShowingStatsView) {
-//                                                    StatsDetail()
-//                                                }
-//
-//
-//
-//
-//
-                                                
-                                                VStack (alignment: .leading, spacing: -4) {
-                                                    Text("AO100")
-                                                        .font(.system(size: 13, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray))
-                                                        .padding(.leading, 12)
-                                                    
-                                                    if currentAo100 != nil {
-                                                        Text(String(formatSolveTime(secs: currentAo100!.0)))
+                                                    if let currentAo12 = currentAo12 {
+                                                        Text(String(formatSolveTime(secs: currentAo12.average)))
                                                             .font(.system(size: 24, weight: .bold, design: .default))
                                                             .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                             .padding(.leading, 12)
@@ -213,10 +177,38 @@ struct StatsView: View {
                                                     
                                                 }
                                                 .onTapGesture {
-                                                    print("current ao100")
+                                                    if currentAo12 != nil {
+                                                        presentedAvg = currentAo12
+                                                    }
+                                                }
+                                                .padding(.bottom, 6)
+                                                
+                                                VStack (alignment: .leading, spacing: -4) {
+                                                    Text("AO100")
+                                                        .font(.system(size: 13, weight: .medium, design: .default))
+                                                        .foregroundColor(Color(uiColor: .systemGray))
+                                                        .padding(.leading, 12)
+                                                    
+                                                    if let currentAo100 = currentAo100 {
+                                                        Text(String(formatSolveTime(secs: currentAo100.average)))
+                                                            .font(.system(size: 24, weight: .bold, design: .default))
+                                                            .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                                            .padding(.leading, 12)
+                                                    } else {
+                                                        Text("N/A")
+                                                            .font(.system(size: 20, weight: .medium, design: .default))
+                                                            .foregroundColor(Color(uiColor: .systemGray2))
+                                                            .padding(.leading, 12)
+                                                        
+                                                    }
+                                                    
+                                                }
+                                                .onTapGesture {
+                                                    if currentAo100 != nil {
+                                                        presentedAvg = currentAo100
+                                                    }
                                                 }
                                                 .padding(.bottom, 8)
-                                                
                                                 
                                             }
                                             .padding(.top, 10)
@@ -322,7 +314,9 @@ struct StatsView: View {
                                         .frame(height: 75)
                                         .background(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)                                        .clipShape(RoundedRectangle(cornerRadius:16)))
                                         .onTapGesture {
-                                            print("best single pressed!")
+                                            if bestSingle != nil {
+                                                showBestSinglePopup = true
+                                            }
                                         }
                                         
                                         HStack {
@@ -334,8 +328,8 @@ struct StatsView: View {
                                                         .foregroundColor(Color(uiColor: .systemGray))
                                                         .padding(.leading, 12)
                                                     
-                                                    if ao12 != nil {
-                                                        Text(String(formatSolveTime(secs: ao12!.0)))
+                                                    if let ao12 = ao12 {
+                                                        Text(String(formatSolveTime(secs: ao12.average)))
                                                             .font(.system(size: 34, weight: .bold, design: .default))
                                                             .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                             .padding(.leading, 12)
@@ -348,7 +342,9 @@ struct StatsView: View {
                                                     }
                                                 }
                                                 .onTapGesture {
-                                                    print("best ao12 pressed")
+                                                    if ao12 != nil {
+                                                        presentedAvg = ao12
+                                                    }
                                                 }
                                                 
                                                 
@@ -364,8 +360,8 @@ struct StatsView: View {
                                                         .foregroundColor(Color(uiColor: .systemGray))
                                                         .padding(.leading, 12)
                                                     
-                                                    if ao100 != nil {
-                                                        Text(String(formatSolveTime(secs: ao100!.0)))
+                                                    if let ao100 = ao100 {
+                                                        Text(String(formatSolveTime(secs: ao100.average)))
                                                             .font(.system(size: 34, weight: .bold, design: .default))
                                                             .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                             .padding(.leading, 12)
@@ -379,7 +375,9 @@ struct StatsView: View {
                                                     
                                                 }
                                                 .onTapGesture {
-                                                    print("best ao100 pressed")
+                                                    if ao100 != nil {
+                                                        presentedAvg = ao100
+                                                    }
                                                 }
                                                 
                                                 
@@ -415,36 +413,31 @@ struct StatsView: View {
                                                 //                                            Text("6.142")
                                                 
                                                 
-                                                if ao5 != nil {
-                                                    Text(formatSolveTime(secs: ao5!.0))
+                                                if let ao5 = ao5 {
+                                                    Text(formatSolveTime(secs: ao5.average))
                                                         .font(.system(size: 34, weight: .bold, design: .default))
                                                         .gradientForeground(gradientSelected: gradientSelected)
                                                     
                                                     Spacer()
                                                     
                                                     
-                                                    ForEach((0...4), id: \.self) {
-                                                        let average = ao5!.1.map{$0.time}
-                                                        if ao5!.1[$0].time == average.min() || ao5!.1[$0].time == average.max() {
-                                                            Text("("+formatSolveTime(secs: ao5!.1[$0].time)+")")
+                                                    ForEach((0...4), id: \.self) { index in
+                                                        let alltimes = ao5.accountedSolves.map{$0.time}
+                                                        if ao5.accountedSolves[index].time == alltimes.min() || ao5.accountedSolves[index].time == alltimes.max() {
+                                                            Text("("+formatSolveTime(secs: ao5.accountedSolves[index].time)+")")
                                                                 .font(.system(size: 17, weight: .regular, design: .default))
                                                                 .foregroundColor(Color(uiColor: .systemGray))
                                                                 .multilineTextAlignment(.leading)
                                                                 .padding(.bottom, 2)
                                                         } else {
-                                                            Text(formatSolveTime(secs: ao5!.1[$0].time))
+                                                            Text(formatSolveTime(secs: ao5.accountedSolves[index].time))
                                                                 .font(.system(size: 17, weight: .regular, design: .default))
                                                                 .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                                 .multilineTextAlignment(.leading)
                                                                 .padding(.bottom, 2)
                                                         }
                                                     }
-                                                    .onTapGesture {
-                                                        
-                                                        for thing in ao5!.1 {
-                                                            print(thing.time)
-                                                        }
-                                                    }
+                                                    
 
                                                     
                                                 } else {
@@ -453,6 +446,11 @@ struct StatsView: View {
                                                         .foregroundColor(Color(uiColor: .systemGray2))
                                                     
                                                     Spacer()
+                                                }
+                                            }
+                                            .onTapGesture {
+                                                if ao5 != nil {
+                                                    presentedAvg = ao5
                                                 }
                                             }
                                             .padding(.top, 10)
@@ -534,6 +532,12 @@ struct StatsView: View {
                 }
                 .navigationTitle("Your Solves")
                 .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                .sheet(item: $presentedAvg) {item in
+                    StatsDetail(solves: item, session: currentSession)
+                }
+                .sheet(isPresented: $showBestSinglePopup) {
+                    SolvePopupView(solve: bestSingle!, currentSolve: nil, timeListManager: nil) // TODO make delete work from here
+                }
             }
         }
     }

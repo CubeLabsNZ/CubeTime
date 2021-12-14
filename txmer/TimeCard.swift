@@ -60,7 +60,7 @@ struct SolvePopupView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.defaultMinListRowHeight) var minRowHeight
     
-    var timeListManager: TimeListManager
+    var timeListManager: TimeListManager?
     
     
     let solve: Solves
@@ -78,14 +78,14 @@ struct SolvePopupView: View {
     @State private var userComment: String
     
     
-    init(solve: Solves, currentSolve: Binding<Solves?>, timeListManager: TimeListManager){
+    init(solve: Solves, currentSolve: Binding<Solves?>?, timeListManager: TimeListManager?){
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
         self.time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
         self.puzzle_type = puzzle_types[Int(solve.scramble_type)]
         self.puzzle_subtype = puzzle_type.subtypes[Int(solve.scramble_subtype)]!
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
-        self._currentSolve = currentSolve
+        self._currentSolve = currentSolve ?? Binding.constant(nil)
         self.timeListManager = timeListManager
         _userComment = State(initialValue: solve.comment ?? "")
     }
@@ -244,8 +244,9 @@ struct SolvePopupView: View {
                                 withAnimation {
                                     currentSolve = nil
                                 }
+                                dismiss() // Dismiss in case called from StatsView
                                 managedObjectContext.delete(solve) // Todo read context from environment
-                                timeListManager.resort()
+                                timeListManager?.resort()
                             } label: {
                                 Text("Delete Solve")
                                     .font(.system(size: 17, weight: .medium))
@@ -258,6 +259,7 @@ struct SolvePopupView: View {
                         ToolbarItem(placement: .navigationBarLeading) {
                             Button {
                                 currentSolve = nil
+                                dismiss() // Dismiss in case called from StatsView
                             } label: {
                                 
                                 Image(systemName: "chevron.left")

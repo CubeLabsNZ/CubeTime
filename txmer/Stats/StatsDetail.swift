@@ -4,7 +4,8 @@ struct StatsDetail: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
    
-    var solves = [1.78, 1.56, 2.09, 0.98, 3.81]
+    let solves: CalculatedAverage
+    let session: Sessions
     
     var body: some View {
         NavigationView {
@@ -18,7 +19,7 @@ struct StatsDetail: View {
                     
                     VStack (spacing: 10) {
                         HStack {
-                            Text("The value of the statistic")
+                            Text(formatSolveTime(secs: solves.average))
                                 .font(.system(size: 34, weight: .bold))
                             
                             Spacer()
@@ -27,39 +28,37 @@ struct StatsDetail: View {
                         .padding(.top)
                         
                         HStack (alignment: .center) {
-//                            Text(currentSession.name!)
-                            Text("Session Name")
+                            Text(session.name ?? "Unknown session name")
                                 .font(.system(size: 20, weight: .semibold, design: .default))
                                 .foregroundColor(Color(uiColor: .systemGray))
                             Spacer()
                             
-//                            Text(puzzle_types[Int(currentSession.scramble_type)].name)
-                            Text("EVENT")
+                            Text(puzzle_types[Int(session.scramble_type)].name)
                                 .font(.system(size: 16, weight: .semibold, design: .default))
                                 .foregroundColor(Color(uiColor: .systemGray))
                         }
                         .padding(.horizontal)
                         
                         
-                        ForEach(solves, id: \.self) {solve in
+                        ForEach(Array(zip(solves.accountedSolves.indices, solves.accountedSolves)), id: \.0) {index, solve in
                             VStack {
                                 HStack {
-                                    Text("1.")
+                                    Text("\(index).")
                                         .font(.system(size: 15, weight: .bold, design: .rounded))
                                         .foregroundColor(Color("AccentColor"))
-                                    Text(String(format: "%.2f", solve))
+                                    Text(formatSolveTime(secs: solve.time, penType: PenTypes.init(rawValue: solve.penalty)!))
                                         .font(.system(size: 17, weight: .bold, design: .rounded))
                                     
                                     Spacer()
                                     
-                                    Text("The date")
+                                    Text(solve.date ?? Date(timeIntervalSince1970: 0), format: .dateTime.day().month().year())
                                         .font(.system(size: 13, weight: .bold, design: .rounded))
                                         .foregroundColor(Color(uiColor: .systemGray))
                                 }
                                 .padding([.horizontal, .top], 10)
                                 
                                 HStack {
-                                    Text("Scramble")
+                                    Text(solve.scramble ?? "Failed to load scramble")
                                         .font(.system(size: 17, weight: .medium))
                                     
                                     Spacer()
@@ -79,11 +78,11 @@ struct StatsDetail: View {
                     }
                     .offset(y: -6)
                     .navigationBarTitleDisplayMode(.inline)
-                    .navigationTitle("Statistic Type")
+                    .navigationTitle(solves.id)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarLeading) {
                             Button {
-                                print("go back")
+                                dismiss()
                             } label: {
                                 Image(systemName: "chevron.left")
                                     .font(.system(size: 17, weight: .medium))
@@ -111,8 +110,8 @@ struct StatsDetail: View {
     
     func share() {
         guard let url = URL(string: "https://www.apple.com") else { return }
-        let activityView = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        let activityView = UIActivityViewController(activityItems: [url], applicationActivities: [])
+        activityView.isModalInPresentation = true
         UIApplication.shared.windows.first?.rootViewController?.present(activityView, animated: true, completion: nil)
-        /// todo actually make the buttons work
     }
 }
