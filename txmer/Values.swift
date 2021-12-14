@@ -23,7 +23,7 @@ extension Color: RawRepresentable {
         var b: CGFloat = 0
         var a: CGFloat = 0
         UIColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
-        return (Int(r * 255) << 16) + (Int(r * 255) << 08) + (Int(r * 255) << 00)
+        return (Int(r * 255) << 16) + (Int(g * 255) << 08) + (Int(b * 255) << 00)
     }
 }
 
@@ -93,16 +93,6 @@ class SetValues {
 }
 
 class TimerTextColours {
-    @Environment(\.colorScheme) var colourScheme
-    
-//    static var timerDefaultColour: Color {
-//        if colourScheme == .light {
-//            return Color.black
-//        } else {
-//            return Color.white
-//        }
-//    } /// doesn't work wtf
-    
     static let timerDefaultColour: Color = Color.primary
     static let timerDefaultColourDarkMode: Color = Color.primary
     static let timerHeldDownColour: Color = Color.red

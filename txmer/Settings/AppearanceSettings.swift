@@ -114,7 +114,7 @@ struct AppearanceSettingsView: View {
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 13, weight: .bold))
                                 .foregroundColor(Color(uiColor: .systemGray3))
-                                .rotationEffect(.radians(showThemeOptions ? .pi/2 : 0))
+                                .rotationEffect(.degrees(showThemeOptions ? 90 : 0))
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
