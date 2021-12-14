@@ -126,6 +126,7 @@ struct NewStandardSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     @Binding var showNewSessionPopUp: Bool
     @Binding var currentSession: Sessions
@@ -203,6 +204,7 @@ struct NewStandardSessionView: View {
                                 }
                             }
                             .pickerStyle(.menu)
+                            .accentColor(accentColour)
                             .font(.system(size: 17, weight: .regular))
 
 

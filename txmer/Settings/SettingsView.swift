@@ -2,12 +2,12 @@ import SwiftUI
 
 struct AnimatingFontSizeV2: AnimatableModifier {
     var fontSize: CGFloat
-
+    
     var animatableData: CGFloat {
         get { fontSize }
         set { fontSize = newValue }
     }
-
+    
     func body(content: Self.Content) -> some View {
         content
             .font(.system(size: self.fontSize, weight: .bold))
@@ -17,7 +17,7 @@ struct AnimatingFontSizeV2: AnimatableModifier {
 @available(iOS 15.0, *)
 struct SettingsView: View {
     @State var currentCard: SettingsCardInfo?
-//    @Binding var hideTabBar: Bool
+    //    @Binding var hideTabBar: Bool
     @Environment(\.colorScheme) var colourScheme
     
     @Namespace var namespace
@@ -32,57 +32,53 @@ struct SettingsView: View {
     var body: some View {
         ZStack {
             
+            /*
             if currentCard == nil {
-                NavigationView {
-                    ZStack {
-                        Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
-                            .ignoresSafeArea()
-                        
-                        //NavigationLink("", destination: GeneralSettingsView(), isActive: $showingCard)
-                        
-                        VStack (spacing: 16) {
-//                            HStack {
-//                                Text("Settings")
-//                                    .font(.largeTitle.bold())
-//                                    .multilineTextAlignment(.leading)
-//                                    .padding(.top, UIScreen.screenHeight/20)
-//                                Spacer()
-//                            }
-                            
-                            
-                            HStack (spacing: 16) {
-                                SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
-                                SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
-                            }
-                            
-                            HStack (spacing: 16) {
-                                SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
-                                SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
-                            }
-                            
-                            
-                            Spacer()
-                            
-                            
-                            
-                        }
-                        .navigationBarTitle("Settings")
-//                        .navigationBarHidden(true)
-//                        .navigationBarBackButtonHidden(true)
-                        
-                        .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
-                        .padding(.vertical, 6)
-                        .padding(.horizontal)
-                    }
-//                    .animation(.spring(), value: showingCard)
-                }
-//                .zIndex(showingCard ? 0 : 1)
-                .zIndex(1)
+                
             } else {
                 SettingsDetail(currentCard: $currentCard, namespace: namespace)
                     .zIndex(2)
-//                    .zIndex(showingCard ? 1 : 0)
             }
+             */
+            
+            NavigationView {
+                ZStack {
+                    Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+                        .ignoresSafeArea()
+                    
+                    VStack (spacing: 16) {
+                        //                            HStack {
+                        //                                Text("Settings")
+                        //                                    .font(.largeTitle.bold())
+                        //                                    .multilineTextAlignment(.leading)
+                        //                                    .padding(.top, UIScreen.screenHeight/20)
+                        //                                Spacer()
+                        //                            }
+                        
+                        
+                        HStack (spacing: 16) {
+                            SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
+                            SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
+                        }
+                        
+                        HStack (spacing: 16) {
+                            SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
+                            SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
+                        }
+                        
+                        Spacer()
+                    }
+                    .navigationBarTitle("Settings")
+                    
+                    .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                    .padding(.vertical, 6)
+                    .padding(.horizontal)
+                }
+            }
+            .zIndex(1)
+            .overlay(
+                SettingsDetail(currentCard: $currentCard, namespace: namespace)
+            )
         }
     }
 }
@@ -156,7 +152,6 @@ struct SettingsDetail: View {
                     switch currentCard!.name { // TODO use an enum for better i18n support
                     case "General":
                         GeneralSettingsView()
-//                        StatsDetail()
                     case "Appearance":
                         AppearanceSettingsView()
                     case "About":
@@ -180,10 +175,6 @@ struct SettingsDetail: View {
                             .matchedGeometryEffect(id: "bg " + currentCard!.name, in: namespace)
                             .ignoresSafeArea()
                             .shadow(color: .black.opacity(0.16), radius: 8, x: 0, y: 3)
-                            
-                            
-                            
-                        
                         VStack {
                             Spacer()
                             
@@ -222,8 +213,6 @@ struct SettingsDetail: View {
                                 .padding(.top, 8)
                                 .onTapGesture {
                                     withAnimation(.spring(response: 0.5)) {
-    //                                        showingCard = false
-    //                                        hideTabBar = false
                                         currentCard = nil
                                     }
                                     

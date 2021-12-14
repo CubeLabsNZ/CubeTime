@@ -12,6 +12,7 @@ enum ProjectLicense {
 
 
 struct LicensePopUpView: View {
+    @Environment(\.dismiss) var dismiss
     @Binding var projectLicense: ProjectLicense?
     var body: some View {
         ScrollView {
@@ -86,9 +87,9 @@ struct LicensesPopUpView: View {
                         
                         Image(systemName: "chevron.left")
                             .font(.system(size: 17, weight: .medium))
-                            .padding(.leading, -8)
+                            .padding(.leading, -4)
                         Text("Back")
-//                            .padding(.leading, -8)
+                            .padding(.leading, -4)
                     }
                 }
             }
