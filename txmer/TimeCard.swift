@@ -1,10 +1,3 @@
-//
-//  TimeCard.swift
-//  txmer
-//
-//  Created by macos sucks balls on 11/27/21.
-//
-
 import SwiftUI
 
 struct MultiTextField: UIViewRepresentable {

@@ -1,10 +1,3 @@
-//
-//  StopWatchManager.swift
-//  txmer
-//
-//  Created by macos sucks balls on 12/8/21.
-//
-
 import Foundation
 import CoreData
 import SwiftUI

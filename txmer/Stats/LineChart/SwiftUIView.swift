@@ -1,10 +1,3 @@
-//
-//  SwiftUIView.swift
-//  txmer
-//
-//  Created by Tim Xie on 14/12/21.
-//
-
 import Foundation
 import SwiftUI
 

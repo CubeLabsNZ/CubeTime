@@ -1,10 +1,3 @@
-//
-//  SettingsCard.swift
-//  txmer
-//
-//  Created by Tim Xie on 9/12/21.
-//
-
 import SwiftUI
 
 let defaultIconStyle: Font = .system(size: 44, weight: .light)

@@ -1,10 +1,3 @@
-//
-//  SettingsView.swift
-//  txmer
-//
-//  Created by Reagan Bohan on 11/25/21.
-//
-
 import SwiftUI
 import SwiftUICharts
 
