@@ -58,52 +58,7 @@ struct CustomiseSessionView: View {
                     .frame(height: 220)
                     .modifier(NewStandardSessionViewBlocks())
                     
-                    VStack (spacing: 0) {
-                        HStack {
-                            Text("Session Event")
-                                .font(.system(size: 17, weight: .medium))
-                            
-                            
-                            Spacer()
-
-                            Picker("", selection: $sessionEventType) {
-                                    ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
-                                    Text(element.name).tag(Int32(index))
-                                }
-                            }
-                            .pickerStyle(.menu)
-                            .font(.system(size: 17, weight: .regular))
-                        }
-                        .padding()
-                    }
-                    .frame(height: 45)
-                    .modifier(NewStandardSessionViewBlocks())
                     
-                    
-                    
-                    VStack (spacing: 0) {
-                        LazyVGrid(columns: sessionEventTypeColumns, spacing: 0) {
-                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                                Button {
-                                    sessionEventType = Int32(index)
-                                    
-                                } label: {
-                                    ZStack {
-                                        Image("circular-" + element.name)
-                                        
-                                        Circle()
-                                            .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
-                                            .frame(width: 54, height: 54)
-                                            .offset(x: -0.2)
-                                    }
-                                }
-                            }
-                        }
-                        .padding()
-                    }
-                    .frame(height: 180)
-                    .modifier(NewStandardSessionViewBlocks())
-
                     VStack (spacing: 0) {
                         HStack {
                             Toggle(isOn: $pinnedSession) {

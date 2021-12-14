@@ -13,7 +13,7 @@ public struct Colors {
     public static let LegendText:Color = Color(hexString: "#A7A6A8")
     public static let LegendColor:Color = Color(hexString: "#E8E7EA")
     public static let LegendDarkColor:Color = Color(hexString: "#545454")
-//    public static let IndicatorKnob:Color = Color(hexString: "#FF57A6")
+    //    public static let IndicatorKnob:Color = Color(hexString: "#FF57A6")
     public static let IndicatorKnob:Color = Color.gray
     public static let GradientUpperBlue:Color = Color(hexString: "#C2E8FF")
     public static let GradinetUpperBlue1:Color = Color(hexString: "#A8E1FF")
@@ -58,86 +58,13 @@ public struct Styles {
         textColor: Color.black,
         legendTextColor: Color.gray,
         dropShadowColor: Color.gray)
-    
-    public static let barChartStyleOrangeLight = ChartStyle(
-        backgroundColor: Color.white,
-        accentColor: Colors.OrangeStart,
-        secondGradientColor: Colors.OrangeEnd,
-        textColor: Color.black,
-        legendTextColor: Color.gray,
-        dropShadowColor: Color.gray)
-    
-    public static let barChartStyleOrangeDark = ChartStyle(
-        backgroundColor: Color.black,
-        accentColor: Colors.OrangeStart,
-        secondGradientColor: Colors.OrangeEnd,
-        textColor: Color.white,
-        legendTextColor: Color.gray,
-        dropShadowColor: Color.gray)
-    
-    public static let barChartStyleNeonBlueLight = ChartStyle(
-        backgroundColor: Color.white,
-        accentColor: Colors.GradientNeonBlue,
-        secondGradientColor: Colors.GradientPurple,
-        textColor: Color.black,
-        legendTextColor: Color.gray,
-        dropShadowColor: Color.gray)
-    
-    public static let barChartStyleNeonBlueDark = ChartStyle(
-        backgroundColor: Color.black,
-        accentColor: Colors.GradientNeonBlue,
-        secondGradientColor: Colors.GradientPurple,
-        textColor: Color.white,
-        legendTextColor: Color.gray,
-        dropShadowColor: Color.gray)
-    
-    public static let barChartMidnightGreenDark = ChartStyle(
-        backgroundColor: Color(hexString: "#36534D"), //3B5147, 313D34
-        accentColor: Color(hexString: "#FFD603"),
-        secondGradientColor: Color(hexString: "#FFCA04"),
-        textColor: Color.white,
-        legendTextColor: Color(hexString: "#D2E5E1"),
-        dropShadowColor: Color.gray)
-    
-    public static let barChartMidnightGreenLight = ChartStyle(
-        backgroundColor: Color.white,
-        accentColor: Color(hexString: "#84A094"), //84A094 , 698378
-        secondGradientColor: Color(hexString: "#50675D"),
-        textColor: Color.black,
-        legendTextColor:Color.gray,
-        dropShadowColor: Color.gray)
-    
-    public static let pieChartStyleOne = ChartStyle(
-        backgroundColor: Color.white,
-        accentColor: Colors.OrangeEnd,
-        secondGradientColor: Colors.OrangeStart,
-        textColor: Color.black,
-        legendTextColor: Color.gray,
-        dropShadowColor: Color.gray)
-    
-    public static let lineViewDarkMode = ChartStyle(
+        public static let lineViewDarkMode = ChartStyle(
         backgroundColor: Color.black,
         accentColor: Colors.OrangeStart,
         secondGradientColor: Colors.OrangeEnd,
         textColor: Color.white,
         legendTextColor: Color.white,
         dropShadowColor: Color.gray)
-}
-
-public struct ChartForm {
-    #if os(watchOS)
-    public static let small = CGSize(width:120, height:90)
-    public static let medium = CGSize(width:120, height:160)
-    public static let large = CGSize(width:180, height:90)
-    public static let extraLarge = CGSize(width:180, height:90)
-    public static let detail = CGSize(width:180, height:160)
-    #else
-    public static let small = CGSize(width:180, height:120)
-    public static let medium = CGSize(width:180, height:240)
-    public static let large = CGSize(width:360, height:120)
-    public static let extraLarge = CGSize(width:360, height:240)
-    public static let detail = CGSize(width:180, height:120)
-    #endif
 }
 
 public class ChartStyle {
@@ -257,22 +184,22 @@ extension Color {
 }
 
 class HapticFeedback {
-    #if os(watchOS)
+#if os(watchOS)
     //watchOS implementation
     static func playSelection() -> Void {
         WKInterfaceDevice.current().play(.click)
     }
-    #elseif os(iOS)
+#elseif os(iOS)
     //iOS implementation
     let selectionFeedbackGenerator = UISelectionFeedbackGenerator()
     static func playSelection() -> Void {
         UISelectionFeedbackGenerator().selectionChanged()
     }
-    #else
+#else
     static func playSelection() -> Void {
         //No-op
     }
-    #endif
+#endif
 }
 
 
@@ -398,7 +325,7 @@ extension Path {
             return path
         }
         let offset = globalOffset ?? points.min()!
-//        guard let offset = points.min() else { return path }
+        //        guard let offset = points.min() else { return path }
         var p1 = CGPoint(x: 0, y: CGFloat(points[0]-offset)*step.y)
         path.move(to: p1)
         for pointIndex in 1..<points.count {
@@ -417,8 +344,8 @@ extension Path {
             return path
         }
         let offset = globalOffset ?? points.min()!
-
-//        guard let offset = points.min() else { return path }
+        
+        //        guard let offset = points.min() else { return path }
         path.move(to: .zero)
         var p1 = CGPoint(x: 0, y: CGFloat(points[0]-offset)*step.y)
         path.addLine(to: p1)
@@ -786,147 +713,6 @@ public struct LineView: View {
 
 
 
-
-
-public struct LineChartView: View {
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
-    @ObservedObject var data:ChartData
-    public var title: String
-    public var legend: String?
-    public var style: ChartStyle
-    public var darkModeStyle: ChartStyle
-    
-    public var formSize:CGSize
-    public var dropShadow: Bool
-    public var valueSpecifier:String
-    
-    @State private var touchLocation:CGPoint = .zero
-    @State private var showIndicatorDot: Bool = false
-    @State private var currentValue: Double = 2 {
-        didSet{
-            if (oldValue != self.currentValue && showIndicatorDot) {
-                HapticFeedback.playSelection()
-            }
-            
-        }
-    }
-    var frame = CGSize(width: 180, height: 120)
-    private var rateValue: Int?
-    
-    public init(data: [Double],
-                title: String,
-                legend: String? = nil,
-                style: ChartStyle = Styles.lineChartStyleOne,
-                form: CGSize? = ChartForm.medium,
-                rateValue: Int? = 14,
-                dropShadow: Bool? = true,
-                valueSpecifier: String? = "%.1f") {
-        
-        self.data = ChartData(points: data)
-        self.title = title
-        self.legend = legend
-        self.style = style
-        self.darkModeStyle = style.darkModeStyle != nil ? style.darkModeStyle! : Styles.lineViewDarkMode
-        self.formSize = form!
-        frame = CGSize(width: self.formSize.width, height: self.formSize.height/2)
-        self.dropShadow = dropShadow!
-        self.valueSpecifier = valueSpecifier!
-        self.rateValue = rateValue
-    }
-    
-    public var body: some View {
-        ZStack(alignment: .center){
-            RoundedRectangle(cornerRadius: 20)
-                .fill(self.colorScheme == .dark ? self.darkModeStyle.backgroundColor : self.style.backgroundColor)
-                .frame(width: frame.width, height: 240, alignment: .center)
-                .shadow(color: self.style.dropShadowColor, radius: self.dropShadow ? 8 : 0)
-            VStack(alignment: .leading){
-                if(!self.showIndicatorDot){
-                    VStack(alignment: .leading, spacing: 8){
-                        Text(self.title)
-                            .font(.title)
-                            .bold()
-                            .foregroundColor(self.colorScheme == .dark ? self.darkModeStyle.textColor : self.style.textColor)
-                        if (self.legend != nil){
-                            Text(self.legend!)
-                                .font(.callout)
-                                .foregroundColor(self.colorScheme == .dark ? self.darkModeStyle.legendTextColor :self.style.legendTextColor)
-                        }
-                        HStack {
-                            
-                            if (self.rateValue ?? 0 != 0)
-                            {
-                                if (self.rateValue ?? 0 >= 0){
-                                    Image(systemName: "arrow.up")
-                                }else{
-                                    Image(systemName: "arrow.down")
-                                }
-                                Text("\(self.rateValue!)%")
-                            }
-                        }
-                    }
-                    .transition(.opacity)
-                    .animation(.easeIn(duration: 0.1))
-                    .padding([.leading, .top])
-                }else{
-                    HStack{
-                        Spacer()
-                        Text("\(self.currentValue, specifier: self.valueSpecifier)")
-                            .font(.system(size: 41, weight: .bold, design: .default))
-                            .offset(x: 0, y: 30)
-                        Spacer()
-                    }
-                    .transition(.scale)
-                }
-                Spacer()
-                GeometryReader{ geometry in
-                    Line(data: self.data,
-                         frame: .constant(geometry.frame(in: .local)),
-                         touchLocation: self.$touchLocation,
-                         showIndicator: self.$showIndicatorDot,
-                         minDataValue: .constant(nil),
-                         maxDataValue: .constant(nil)
-                    )
-                }
-                .frame(width: frame.width, height: frame.height)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-                .offset(x: 0, y: 0)
-            }.frame(width: self.formSize.width, height: self.formSize.height)
-        }
-        .gesture(DragGesture()
-        .onChanged({ value in
-            self.touchLocation = value.location
-            self.showIndicatorDot = true
-            self.getClosestDataPoint(toPoint: value.location, width:self.frame.width, height: self.frame.height)
-        })
-            .onEnded({ value in
-                self.showIndicatorDot = false
-            })
-        )
-    }
-    
-    @discardableResult func getClosestDataPoint(toPoint: CGPoint, width:CGFloat, height: CGFloat) -> CGPoint {
-        let points = self.data.onlyPoints()
-        let stepWidth: CGFloat = width / CGFloat(points.count-1)
-        let stepHeight: CGFloat = height / CGFloat(points.max()! + points.min()!)
-        
-        let index:Int = Int(round((toPoint.x)/stepWidth))
-        if (index >= 0 && index < points.count){
-            self.currentValue = points[index]
-            return CGPoint(x: CGFloat(index)*stepWidth, y: CGFloat(points[index])*stepHeight)
-        }
-        return .zero
-    }
-}
-
-
-
-
-
-
-
-
-
 public struct Line: View {
     @ObservedObject var data: ChartData
     @Binding var frame: CGRect
@@ -979,34 +765,20 @@ public struct Line: View {
     
     public var body: some View {
         ZStack {
-            if(self.showFull && self.showBackground){
-                
-                
-                self.closedPath
-                    .fill(LinearGradient(gradient: Gradient(colors: [Colors.GradientUpperBlue, .white]), startPoint: .bottom, endPoint: .top))
-                //                    .shadow(color: .green, radius: 12, x: 0, y: 3)
-                    .rotationEffect(.degrees(180), anchor: .center)
-                    .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
-                    .transition(.opacity)
-                    .animation(.easeIn(duration: 1.6))
-            }
             
             
-                
+            
             self.path
                 .trim(from: 0, to: self.showFull ? 1:0)
                 .stroke(LinearGradient(gradient: gradient.getGradient(), startPoint: .leading, endPoint: .trailing) ,style: StrokeStyle(lineWidth: 3, lineJoin: .round))
-//                .colouredGlow()
-            
-            //                .shadow(color: .green, radius: 12, x: 0, y: 6)
             //                .colouredGlow()
+            
             
             
                 .rotationEffect(.degrees(180), anchor: .center)
                 .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
-//                .animation(Animation.easeInOut(duration: 1.2).delay(Double(self.index)*0.4))
                 .animation(.easeInOut(duration: 1.2))
-                
+            
                 .onAppear {
                     self.showFull = true
                 }
@@ -1028,10 +800,10 @@ extension View {
         ForEach(0..<2) { i in
             Rectangle()
                 .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: 2))
-                //.frame(width: 400, height: 400)
+            //.frame(width: 400, height: 400)
                 .mask(self.blur(radius: 20))
                 .overlay(self.blur(radius: 5 - CGFloat(i * 5)))
-                
+            
         }
     }
 }
@@ -1050,7 +822,7 @@ struct Legend: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     var specifier: String = "%.2f"
     let padding:CGFloat = 3
-
+    
     var stepWidth: CGFloat {
         if data.points.count < 2 {
             return 0
@@ -1075,45 +847,35 @@ struct Legend: View {
     }
     
     var body: some View {
-        ZStack(alignment: .topLeading){
-            
-            HStack {
-                Divider()
-                    .offset(x: 30)
-            }
-            
-            
+        ZStack (alignment: .leading) {
             ForEach((0...4), id: \.self) { height in
-                HStack(alignment: .center){
+                HStack(alignment: .center) {
                     VStack (alignment: .center) {
-//                        Text("\(self.getYLegendSafe(height: height), specifier: specifier)").offset(x: 0, y: self.getYposition(height: height) )
-                        
-                        
                         Text(formatLegendTime(secs: self.getYLegendSafe(height: height)))
-                        
-                        
-                        
-//                        Text(String(format: specifier, self.getYLegendSafe(height: height)))
                             .offset(x: 0, y: self.getYposition(height: height))
-                            .foregroundColor(Colors.LegendText)
+                            .foregroundColor(Color(uiColor: .systemGray2))
                             .font(.system(size: 10, weight: .medium, design: .monospaced))
                             .offset(x: 2)
-                        
-                        
                     }
+                    
+                    Spacer()
                     
                     
                     self.line(atHeight: self.getYLegendSafe(height: height), width: self.frame.width)
-                        .stroke(self.colorScheme == .dark ? Colors.LegendDarkColor : Colors.LegendColor, style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5,height == 0 ? 0 : 10]))
+                        .stroke(Color(uiColor: .systemGray4), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5,height == 0 ? 0 : 10]))
                         .opacity((self.hideHorizontalLines && height != 0) ? 0 : 1)
                         .rotationEffect(.degrees(180), anchor: .center)
                         .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
                         .animation(.easeOut(duration: 0.2))
                         .clipped()
                 }
-               
+                
             }
             
+            Rectangle()
+                .fill(Color(uiColor: .systemGray3))
+                .frame(width: 1, height: self.frame.height + 6)
+                .offset(x: 30, y: 3)
         }
     }
     
@@ -1129,7 +891,7 @@ struct Legend: View {
             return (self.frame.height-((CGFloat(legend[height]) - min)*self.stepHeight))-(self.frame.height/2)
         }
         return 0
-       
+        
     }
     
     func line(atHeight: CGFloat, width: CGFloat) -> Path {
