@@ -17,43 +17,69 @@ struct NewStandardSessionViewBlocks: ViewModifier {
 struct CustomiseSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
+    @Environment(\.dismiss) var dismiss
     
-    @State private var name: String = ""
+    let sessionItem: Sessions
     
-    @State private var sessionEventType: Int32 = 0
+    @State private var name: String
     
+    @State var pinnedSession: Bool
     
-    @State var pinnedSession: Bool /// TODO: link to database
+    let sessionEventType: Int32
+    
+    init(sessionItem: Sessions) {
+        self.sessionItem = sessionItem
+        self._name = State(initialValue: sessionItem.name ?? "")
+        self._pinnedSession = State(initialValue: sessionItem.pinned)
+        self.sessionEventType = sessionItem.scramble_type
+    }
     
     let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
     
     
     var body: some View {
-        ZStack {
-            Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
-                .ignoresSafeArea()
-            
-            ScrollView {
-                VStack (spacing: 16) {
-                    VStack (alignment: .center, spacing: 0) {
-                        Image(puzzle_types[Int(sessionEventType)].name)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .padding(.top)
-                            .padding(.bottom)
-                            .shadow(color: .black.opacity(0.24), radius: 12, x: 0, y: 4)
+        NavigationView {
+            ZStack {
+                Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+                    .ignoresSafeArea()
+                
+                ScrollView {
+                    VStack (spacing: 16) {
+                        VStack (alignment: .center, spacing: 0) {
+                            Image(puzzle_types[Int(sessionEventType)].name)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding(.top)
+                                .padding(.bottom)
+                                .shadow(color: .black.opacity(0.24), radius: 12, x: 0, y: 4)
+                                
                             
+                            TextField("Session Name", text: $name)
+                                .padding()
+                                .font(.system(size: 22, weight: .bold))
+                                .multilineTextAlignment(TextAlignment.center)
+                                .background(Color(uiColor: .systemGray5))
+                                .cornerRadius(10)
+                                .padding(.leading)
+                                .padding(.trailing)
+                                .padding(.bottom)
+                                
+                        }
+                        .frame(height: 220)
+                        .modifier(NewStandardSessionViewBlocks())
                         
-                        TextField("Session Name", text: $name)
+                        VStack (spacing: 0) {
+                            HStack {
+                                Toggle(isOn: $pinnedSession) {
+                                    Text("Pin Session?")
+                                        .font(.system(size: 17, weight: .medium))
+                                }
+                                .tint(.yellow)
+                            }
                             .padding()
-                            .font(.system(size: 22, weight: .bold))
-                            .multilineTextAlignment(TextAlignment.center)
-                            .background(Color(uiColor: .systemGray5))
-                            .cornerRadius(10)
-                            .padding(.leading)
-                            .padding(.trailing)
-                            .padding(.bottom)
-                            
+                        }
+                        .frame(height: 45)
+                        .modifier(NewStandardSessionViewBlocks())
                     }
                     .frame(height: 220)
                     .modifier(NewStandardSessionViewBlocks())
@@ -72,38 +98,20 @@ struct CustomiseSessionView: View {
                     .frame(height: 45)
                     .modifier(NewStandardSessionViewBlocks())
                 }
-            }
-            .ignoresSafeArea(.keyboard)
-            .navigationBarTitle("Customise Session", displayMode: .inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        let sessionItem = Sessions(context: managedObjectContext)
-                        sessionItem.name = name
-                        sessionItem.pinned = pinnedSession
-                        NSLog("sessioneventyype is \(sessionEventType)")
-                        sessionItem.scramble_type = sessionEventType
-                        do {
-                            try managedObjectContext.save()
-                        } catch {
-                            if let error = error as NSError? {
-                                // Replace this implementation with code to handle the error appropriately.
-                                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                                
-                                /*
-                                 Typical reasons for an error here include:
-                                 * The parent directory does not exist, cannot be created, or disallows writing.
-                                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                                 * The device is out of space.
-                                 * The store could not be migrated to the current model version.
-                                 Check the error message to determine what the actual problem was.
-                                 */
-                                fatalError("Unresolved error \(error), \(error.userInfo)")
-                            }
+                .ignoresSafeArea(.keyboard)
+                .navigationBarTitle("Customise Session", displayMode: .inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            sessionItem.name = name
+                            sessionItem.pinned = pinnedSession
+                            try! managedObjectContext.save()
+                            
+                            dismiss()
+                        } label: {
+                            Text("Done")
                         }
-                        
-                    } label: {
-                        Text("Done")
+                        .disabled(self.name.isEmpty)
                     }
                     .disabled(self.name.isEmpty)
                 }
@@ -126,13 +134,7 @@ struct NewStandardSessionView: View {
     
     @State private var sessionEventType: Int32 = 0
     
-    //@State private var sessionColour: Color?
-    @State private var sessionColour: Color = .indigo
-    
     @State var pinnedSession: Bool
-
-    
-    let sessionColors: [Color] = [.indigo, .purple, .pink, .red, .orange, .yellow, .green, .mint, .teal, .cyan, .blue]
     
     
     let sessionColorColumns = [
@@ -611,45 +613,19 @@ struct SessionCard: View {
     @Environment(\.colorScheme) var colourScheme
     @Binding var currentSession: Sessions
     @State private var isShowingDeleteDialog = false
+    @State var customizing = false
     var item: Sessions
     var numSessions: Int
     
     @Namespace var namespace
     
     var body: some View {
-//        ZStack {
-//            RoundedRectangle(cornerRadius: 16)
-//                .fill(Color(UIColor.systemGray5))
-//                .frame(height: item.pinned ? 110 : 65)
-//                .padding(.leading)
-//                .padding(.trailing)
-//
-//            HStack {
-//                RoundedRectangle(cornerRadius: 16)
-//                    .fill(Color.white)
-//                    .frame(width: currentSession == item ? 16 : UIScreen.screenWidth - 32, height: item.pinned ? 110 : 65)
-//
-//
-//                    .matchedGeometryEffect(id: "bar", in: namespace, properties: .frame)
-//                    .animation(.spring())
-//
-//
-//                Spacer()
-//            }
-//            .padding(.leading)
-//            .padding(.trailing)
-//
-//
-//        }
-        
         
         ZStack {
             
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color(uiColor: .systemGray5))
                 .frame(height: item.pinned ? 110 : 65)
-            
-//                .animation(.spring(response: 0.325))
                 .zIndex(0)
         
             
@@ -657,18 +633,9 @@ struct SessionCard: View {
                 .fill(colourScheme == .dark ? Color(uiColor: .systemGray6) : Color.white)
                 .frame(width: currentSession == item ? 16 : UIScreen.screenWidth - 32, height: item.pinned ? 110 : 65)
             
-            
-//                .matchedGeometryEffect(id: "bar", in: namespace, properties: .frame)
-            
-//                .animation(.spring(response: 0.325))
                 .offset(x: currentSession == item ? -((UIScreen.screenWidth - 16)/2) + 16 : 0)
             
                 .zIndex(1)
-            
-            
-            
-//                .offset(x: -((UIScreen.screenWidth-16)/2))
-        
             
             
             VStack {
@@ -679,7 +646,6 @@ struct SessionCard: View {
                                 .font(.system(size: 22, weight: .bold, design: .default))
                                 .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                             Text(puzzle_types[Int(item.scramble_type)].name)
-        //                        .font(.system(size: 15, weight: .medium, design: .default))
                                 .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                             Spacer()
                             Text("\(item.solves?.count ?? -1) Solves")
@@ -724,24 +690,25 @@ struct SessionCard: View {
             
             .frame(height: item.pinned ? 110 : 65)
         
-//            .background(currentSession == item ? Color.clear : Color.white)
             .background(Color.clear)
             .clipShape(RoundedRectangle(cornerRadius: 16))
             .zIndex(2)
         }
         .contentShape(RoundedRectangle(cornerRadius: 16))
         
-//        .animation(.spring())
         .onTapGesture {
             withAnimation(.spring(response: 0.325)) {
                 currentSession = item
             }
         }
         
+        .sheet(isPresented: $customizing) {
+            CustomiseSessionView(sessionItem: item)
+        }
+        
         .contextMenu(menuItems: {
             ContextMenuButton(action: {
-                print("customise pressed")
-                
+                customizing = true
             },
                               title: "Customise",
                               systemImage: "pencil");
@@ -778,42 +745,6 @@ struct SessionCard: View {
                 
             }
         }
-
-        
-        
-        
-        
-//        .contextMenu {
-//            Button {
-//                print("Customise pressed")
-//            } label: {
-//                Label("Customise", systemImage: "pencil")
-//            }
-//
-//            Button {
-//                item.pinned.toggle()
-//                try! managedObjectContext.save()
-//            } label: {
-//                Label(item.pinned ? "Unpin" : "Pin", systemImage: item.pinned ? "pin.slash" : "pin") /// TODO: add custom icons because no good icons
-//            }
-//
-//            Divider()
-//
-//            Button (role: .destructive) {
-//                print("session delete pressed")
-
-//            } label: {
-//                Label {
-//                    Text("Delete Session")
-//                        .foregroundColor(Color.red)
-//                } icon: {
-//                    Image(systemName: "trash")
-//                        .foregroundColor(Color.green) /// FIX: colours not working
-//                }
-//            }
-//        }
-        
-        
     }
 }
 

@@ -84,6 +84,9 @@ struct MainTabsView: View {
     @State var hideTabBar = false
     @State var currentSession: Sessions
     
+    @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
+    @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
         
     init(managedObjectContext: NSManagedObjectContext) {
         let lastUsedSessionURI = UserDefaults.standard.url(forKey: "last_used_session")
@@ -122,12 +125,13 @@ struct MainTabsView: View {
                         }
                 case .settings:
                     SettingsView()
-                    
                 }
 
                 BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
                     .zIndex(1)
             }
         }
+        .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
+        .tint(accentColour)
     }
 }
