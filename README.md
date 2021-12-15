@@ -83,7 +83,7 @@
    
 ### Upcoming Features
 
-You can check the [Todo list](projects/1) in this repo, for a list of all the planned features, but here's an outline:
+You can check the [Todo list](https://github.com/CubeStuffs/CubeTime/projects/1) in this repo, for a list of all the planned features, but here's an outline:
 - iPadOS support, including:
   * Keyboard shortcuts
   * Trackpad support
