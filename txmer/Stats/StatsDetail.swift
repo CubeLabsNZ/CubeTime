@@ -38,6 +38,7 @@ struct StatsDetail: View {
                                 .foregroundColor(Color(uiColor: .systemGray))
                         }
                         .padding(.horizontal)
+                        .padding(.top, -6)
                         
                         
                         ForEach(Array(zip(solves.accountedSolves.indices, solves.accountedSolves)), id: \.0) {index, solve in
@@ -72,7 +73,7 @@ struct StatsDetail: View {
                         
                         
                         
-                        Text("\nRemember to gray out the worst and best times along with addding brackets <3")
+//                        Text("\nRemember to gray out the worst and best times along with addding brackets <3")
                         
                         
                     }

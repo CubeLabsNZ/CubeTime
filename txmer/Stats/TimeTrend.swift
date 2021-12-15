@@ -638,7 +638,7 @@ struct TimeTrend: View {
                              showBackground: false
                         )
                             .colouredGlow(gradientSelected: gradientSelected)
-                            .offset(x: 30, y: 0)
+                            .offset(x: 30, y: 6)
                     }
                     .frame(width: geometry.frame(in: .local).size.width, height: 240)
                     .offset(x: 0, y: 40 )

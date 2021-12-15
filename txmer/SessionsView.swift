@@ -44,45 +44,29 @@ struct CustomiseSessionView: View {
                     .ignoresSafeArea()
                 
                 ScrollView {
-                    VStack (spacing: 16) {
-                        VStack (alignment: .center, spacing: 0) {
-                            Image(puzzle_types[Int(sessionEventType)].name)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .padding(.top)
-                                .padding(.bottom)
-                                .shadow(color: .black.opacity(0.24), radius: 12, x: 0, y: 4)
-                                
+                    VStack (alignment: .center, spacing: 0) {
+                        Image(puzzle_types[Int(sessionEventType)].name)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .padding(.top)
+                            .padding(.bottom)
+                            .shadow(color: .black.opacity(0.24), radius: 12, x: 0, y: 4)
                             
-                            TextField("Session Name", text: $name)
-                                .padding()
-                                .font(.system(size: 22, weight: .bold))
-                                .multilineTextAlignment(TextAlignment.center)
-                                .background(Color(uiColor: .systemGray5))
-                                .cornerRadius(10)
-                                .padding(.leading)
-                                .padding(.trailing)
-                                .padding(.bottom)
-                                
-                        }
-                        .frame(height: 220)
-                        .modifier(NewStandardSessionViewBlocks())
                         
-                        VStack (spacing: 0) {
-                            HStack {
-                                Toggle(isOn: $pinnedSession) {
-                                    Text("Pin Session?")
-                                        .font(.system(size: 17, weight: .medium))
-                                }
-                                .tint(.yellow)
-                            }
+                        TextField("Session Name", text: $name)
                             .padding()
-                        }
-                        .frame(height: 45)
-                        .modifier(NewStandardSessionViewBlocks())
+                            .font(.system(size: 22, weight: .bold))
+                            .multilineTextAlignment(TextAlignment.center)
+                            .background(Color(uiColor: .systemGray5))
+                            .cornerRadius(10)
+                            .padding(.leading)
+                            .padding(.trailing)
+                            .padding(.bottom)
+                            
                     }
                     .frame(height: 220)
                     .modifier(NewStandardSessionViewBlocks())
+                        
                     
                     
                     VStack (spacing: 0) {

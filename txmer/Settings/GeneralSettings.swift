@@ -16,7 +16,7 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.freeze.rawValue) var holdDownTime: Double = 0.5
     @AppStorage(gsKeys.interval.rawValue) var timerIntervalMode: String = "0.01s"
     @AppStorage(gsKeys.hapBool.rawValue) var hapticFeedback: Bool = true
-    @AppStorage(gsKeys.hapType.rawValue) var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .heavy
+    @AppStorage(gsKeys.hapType.rawValue) var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
     @AppStorage(gsKeys.gestureDistance.rawValue) var gestureActivationDistance: Double = 50
     @AppStorage(gsKeys.displayTruncation.rawValue) var displayTruncation: String = "2 d.p"
     

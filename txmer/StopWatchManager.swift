@@ -29,7 +29,7 @@ class StopWatchManager: ObservableObject {
     
     @Published var showPenOptions = false
     
-
+    
     
     private let hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
     private let hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
