@@ -29,8 +29,11 @@
    * Clean tab bar for effortless navigation
 
 ## Screenshots
-![### Dark Mode](https://user-images.githubusercontent.com/65262710/146156010-a8aa9bae-d336-4751-94e8-4f328d8d90e3.png)
-![### Light Mode](https://user-images.githubusercontent.com/65262710/146156036-47dc4b12-a069-4e13-b3e8-9cb212419530.png)
+### Dark Mode
+![dark mode screenshot](https://user-images.githubusercontent.com/65262710/146157963-54d03464-625d-4dfe-a411-d36af00e3484.png)
+
+### Light Mode
+![light mode screenshot](https://user-images.githubusercontent.com/65262710/146157994-ee501ac8-1c26-424b-9826-34cb8f1727f9.png)
 
 ## Features
 ### App Features
