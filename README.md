@@ -6,7 +6,7 @@
        height="300">
 </p>
 
-<h4 align="center">SPEEDCUBING TIMER & TOOLKIT</h4>
+<h4 align="center">SPEEDCUBING TIMER & UTILITIES</h4>
 
 ---
 
