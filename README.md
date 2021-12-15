@@ -10,7 +10,16 @@
 
 ---
 
-## Features
+# Contents
+1. [Overview](#Overview)
+2. [Screenshots](#Screenshots)
+3. [Features](#Features)
+4. [User Guide](#User Guide)
+5. [Building it yourself]
+6. [Contributing]
+7. [Some final stuff]
+
+## Overview
 
 ### Information
  - Completely ad-free, free to download and is fully open source, copylefted software (GPLv3)
@@ -19,10 +28,15 @@
    * Beautiful dark mode that saves battery on OLED phones
    * Clean tab bar for effortless navigation
 
+## Screenshots
+![### Dark Mode](https://user-images.githubusercontent.com/65262710/146156010-a8aa9bae-d336-4751-94e8-4f328d8d90e3.png)
+![### Light Mode](https://user-images.githubusercontent.com/65262710/146156036-47dc4b12-a069-4e13-b3e8-9cb212419530.png)
 
-
+## Features
 ### App Features
 - Built-in system haptics, and able to be changed to your liking
+
+
 - All the basic timing functionalities, and fully customisable:
    * Customisable hold down time
    * Inspection time
@@ -30,6 +44,7 @@
    * Intuitive gestures for quick and easy access to actions
      * Customisable gestures
      * Customisable gesture activation distance
+
 
 - Easy to use session support
   * featuring many modes, including:
@@ -40,10 +55,12 @@
     * Comp Sim
   * pinnable sessions for easy access
 
+
 - Simple card design for viewing your times
   * Searchable times, along with quick and easy to use sort functionality - to sort your times by date or by speed
   * Batch select times for deletion, adding penalties, or to export or move to a different session
   * Adding comments for special solves
+
 
 - Extensive statistics and solve analysis:
   * Visual graphs for your sessions
@@ -53,13 +70,14 @@
   * Inspection time tracking and analysis
   * Total time spent solving
 
+
 - Other tools, including special ones for Comp Sim, such as:
   * calculating your bpa and wpa
   * calculating time needed to secure certain averages
-  * 
+
+  
    
-   
-## Upcoming Features
+### Upcoming Features
 
 You can check the [Todo list](projects/1) in this repo, for a list of all the planned features, but here's an outline:
 - iPadOS support, including:
@@ -74,3 +92,7 @@ You can check the [Todo list](projects/1) in this repo, for a list of all the pl
 - Draw scramble functionality, along with a native implementation of a scrambler built from scatch
 - Importing sessions and solves from common timers, such as ChaoTimer and csTimer
 - Easy to use export to save your sessions
+
+
+## User Guide
+
