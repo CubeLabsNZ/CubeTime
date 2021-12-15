@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "23DE3BD6274DDBE200254D29"
                BuildableName = "txmer.app"
-               BlueprintName = "txmer"
-               ReferencedContainer = "container:txmer.xcodeproj">
+               BlueprintName = "CubeTime"
+               ReferencedContainer = "container:CubeTime.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -34,8 +34,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "23DE3BEB274DDBE400254D29"
                BuildableName = "txmerTests.xctest"
-               BlueprintName = "txmerTests"
-               ReferencedContainer = "container:txmer.xcodeproj">
+               BlueprintName = "CubeTimeTests"
+               ReferencedContainer = "container:CubeTime.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -44,8 +44,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "23DE3BF5274DDBE400254D29"
                BuildableName = "txmerUITests.xctest"
-               BlueprintName = "txmerUITests"
-               ReferencedContainer = "container:txmer.xcodeproj">
+               BlueprintName = "CubeTimeUITests"
+               ReferencedContainer = "container:CubeTime.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -66,8 +66,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "23DE3BD6274DDBE200254D29"
             BuildableName = "txmer.app"
-            BlueprintName = "txmer"
-            ReferencedContainer = "container:txmer.xcodeproj">
+            BlueprintName = "CubeTime"
+            ReferencedContainer = "container:CubeTime.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -93,8 +93,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "23DE3BD6274DDBE200254D29"
             BuildableName = "txmer.app"
-            BlueprintName = "txmer"
-            ReferencedContainer = "container:txmer.xcodeproj">
+            BlueprintName = "CubeTime"
+            ReferencedContainer = "container:CubeTime.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

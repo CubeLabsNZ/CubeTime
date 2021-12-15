@@ -6,7 +6,7 @@ extension Color: RawRepresentable {
     public typealias RawValue = Int
     init(_ hex: UInt) {
         self.init(
-            .sRGB,
+            
             red: Double((hex >> 16) & 0xff) / 255,
             green: Double((hex >> 08) & 0xff) / 255,
             blue: Double((hex >> 00) & 0xff) / 255
@@ -21,8 +21,7 @@ extension Color: RawRepresentable {
         var r: CGFloat = 0
         var g: CGFloat = 0
         var b: CGFloat = 0
-        var a: CGFloat = 0
-        UIColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
+        UIColor(self).getRed(&r, green: &g, blue: &b, alpha: nil)
         return (Int(r * 255) << 16) + (Int(g * 255) << 08) + (Int(b * 255) << 00)
     }
 }

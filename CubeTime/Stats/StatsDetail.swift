@@ -38,7 +38,7 @@ struct StatsDetail: View {
                                 .foregroundColor(Color(uiColor: .systemGray))
                         }
                         .padding(.horizontal)
-                        .padding(.top, -6)
+                        .padding(.top, -8)
                         
                         
                         ForEach(Array(zip(solves.accountedSolves.indices, solves.accountedSolves)), id: \.0) {index, solve in

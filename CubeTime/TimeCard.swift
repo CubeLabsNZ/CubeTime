@@ -224,11 +224,15 @@ struct SolvePopupView: View {
                         .padding(.leading)
                         
                         HStack {
-                            Text("Copy Solve")
-                                .padding(12)
+                            Button {
+                                UIPasteboard.general.string = "Exported by CubeTime.\n\(time): \(scramble)"
+                            } label: {
+                                Text("Copy Solve")
+                                    .padding(12)
+                            }
+                            
                             Spacer()
                         }
-                        .onTapGesture {UIPasteboard.general.string = "Exported by txmer.\n\(time): \(scramble)"}
                         .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
                         .padding(.horizontal)
                         

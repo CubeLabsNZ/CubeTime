@@ -2,7 +2,7 @@ import SwiftUI
 
 
 enum ProjectLicense {
-    case txmer
+    case cubetime
     case chaotimer
     case chartview
     case icons
@@ -17,8 +17,8 @@ struct LicensePopUpView: View {
     var body: some View {
         ScrollView {
             switch projectLicense {
-            case .txmer:
-                TxmerLicense()
+            case .cubetime:
+                CubeTimeLicense()
             case .chaotimer:
                 ChaoTimerLicense()
             case .chartview:
@@ -50,8 +50,8 @@ struct LicensesPopUpView: View {
                 NavigationLink("", destination: LicensePopUpView(projectLicense: $projectLicense), isActive: $showLicense)
                 
                 List {
-                    Button("txmer") {
-                        projectLicense = .txmer
+                    Button("CubeTime") {
+                        projectLicense = .cubetime
                         showLicense = true
                     }
                     Button("ChaoTimer") {
@@ -115,23 +115,24 @@ struct AboutSettingsView: View {
                 
                 VStack(alignment: .leading) {
                     Spacer()
-                    Text("txmer.")
+                    Text("CubeTime.")
                         .font(Font.custom("recursive", fixedSize: 30))
                     Text("VERSION \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)\n")
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(Color(uiColor: .systemGray))
                 }
+                .padding(.bottom, 2)
             }
             
             
-            Text("txmer is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\n\nClick below for more info.")
+            Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\n\nClick below for more info.")
             Button {
                 showLicenses = true
             } label: {
                 Text("Open source licenes and privacy policy")
             }
             
-            Text("\n\nOur Github project:\nhttps://github.com/pdtcubing/txmer")
+            Text("\n\nOur Github project:\nhttps://github.com/pdtcubing/CubeTime")
             
             if Locale.current.regionCode == "NZ" {
                 Text("\n\nBuy your cubes from\nhttps://www.speedcube.co.nz/ ❤️")

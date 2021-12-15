@@ -360,61 +360,108 @@ struct NewSessionPopUpView: View {
                     
                     
                     VStack(alignment: .leading, spacing: 0) {
-                        Text("Normal Sessions")
-                            .font(.system(size: 22, weight: .bold, design: .default))
-                            .padding(.leading, 20)
-                            .padding(.bottom, 8)
-                        
-                        HStack {
-                            Image(systemName: "timer.square")
-                                .font(.system(size: 30, weight: .regular))
-                                .foregroundColor(colourScheme == .light ? .black : .white)
-                                .symbolRenderingMode(.hierarchical)
-                                .padding(.leading, 8)
-                                .padding(.trailing, 4)
-                                .padding(.top, 8)
+                        Group {
+                            Text("Normal Sessions")
+                                .font(.system(size: 22, weight: .bold, design: .default))
+                                .padding(.leading, 20)
                                 .padding(.bottom, 8)
-                            Text("Standard Session")
-                                .font(.system(size: 17, weight: .regular, design: .default))
-                                .foregroundColor(colourScheme == .light ? .black : .white)
-                            //.padding(10)
-                            Spacer()
-                        }
-                        
-                        .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
-                        .onTapGesture {
-                            showNewStandardSessionView = true
-                        }
-                        .cornerRadius(10, corners: .topRight)
-                        .cornerRadius(10, corners: .topLeft)
-                        .padding(.leading)
-                        .padding(.trailing)
-                        
-                        
-                        ZStack {
-                            Rectangle()
-                                .fill(Color(uiColor: .systemGray6))
-                                .frame(height: 1)
-                                .padding(.leading)
-                                .padding(.trailing)
                             
-                            Divider()
-                                .padding(.leading, 64)
-                                .padding(.trailing)
+                            HStack {
+                                Image(systemName: "timer.square")
+                                    .font(.system(size: 30, weight: .regular))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
+                                    .symbolRenderingMode(.hierarchical)
+                                    .padding(.leading, 8)
+                                    .padding(.trailing, 4)
+                                    .padding(.top, 8)
+                                    .padding(.bottom, 8)
+                                Text("Standard Session")
+                                    .font(.system(size: 17, weight: .regular, design: .default))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
+                                //.padding(10)
+                                Spacer()
+                            }
+                            
+                            .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
+                            .onTapGesture {
+                                showNewStandardSessionView = true
+                            }
+                            .cornerRadius(10, corners: .topRight)
+                            .cornerRadius(10, corners: .topLeft)
+                            .padding(.leading)
+                            .padding(.trailing)
+                            
+                            
+                            ZStack {
+                                Rectangle()
+                                    .fill(Color(uiColor: .systemGray6))
+                                    .frame(height: 1)
+                                    .padding(.leading)
+                                    .padding(.trailing)
+                                
+                                Divider()
+                                    .padding(.leading, 64)
+                                    .padding(.trailing)
+                            }
+                            
+                            
+                            
+                            HStack {
+                                Image(systemName: "command.square")
+                                    .font(.system(size: 30, weight: .regular))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
+                                    .symbolRenderingMode(.hierarchical)
+                                    .padding(.leading, 8)
+                                    .padding(.trailing, 4)
+                                    .padding(.top, 8)
+                                    .padding(.bottom, 8)
+                                Text("Algorithm Trainer") // wip
+                                    .font(.system(size: 17, weight: .regular, design: .default))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
+                                
+                                Spacer()
+                            }
+                            .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+                                            .clipShape(Rectangle()))
+                            .onTapGesture {
+                                print("alg trainer pressed")
+                            }
+                            .padding(.leading)
+                            .padding(.trailing)
+                            
+                            
+                            ZStack {
+                                Rectangle()
+                                    .fill(Color(uiColor: .systemGray6))
+                                    .frame(height: 1)
+                                    .padding(.leading)
+                                    .padding(.trailing)
+                                //                            Divider()
+                                ////                                .background(Color(UIColor.systemGray6))
+                                //                                .background(Color.red)
+                                //                                .padding(.leading)
+                                //                                .padding(.trailing)
+                                
+                                
+                                Divider()
+                                    .padding(.leading, 64)
+                                    .padding(.trailing)
+                            }
+                            
                         }
                         
                         
                         
                         HStack {
-                            Image(systemName: "command.square")
-                                .font(.system(size: 30, weight: .regular))
+                            Image(systemName: "square.on.square")
+                                .font(.system(size: 26, weight: .medium))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
                                 .symbolRenderingMode(.hierarchical)
                                 .padding(.leading, 8)
                                 .padding(.trailing, 4)
                                 .padding(.top, 8)
                                 .padding(.bottom, 8)
-                            Text("Algorithm Trainer (WIP)")
+                            Text("Multiphase") // wip
                                 .font(.system(size: 17, weight: .regular, design: .default))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
                             
@@ -450,16 +497,17 @@ struct NewSessionPopUpView: View {
                         
                         
                         
+                        
                         HStack {
-                            Image(systemName: "square.on.square")
-                                .font(.system(size: 26, weight: .medium))
+                            Image(systemName: "play.square")
+                                .font(.system(size: 30, weight: .regular))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
                                 .symbolRenderingMode(.hierarchical)
                                 .padding(.leading, 8)
                                 .padding(.trailing, 4)
                                 .padding(.top, 8)
                                 .padding(.bottom, 8)
-                            Text("Playground (WIP)")
+                            Text("Playground") // wip
                                 .font(.system(size: 17, weight: .regular, design: .default))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
                             
@@ -495,7 +543,7 @@ struct NewSessionPopUpView: View {
                                 .padding(.trailing, 4)
                                 .padding(.top, 8)
                                 .padding(.bottom, 8)
-                            Text("Comp Sim Mode (WIP)")
+                            Text("Comp Sim Mode") // wip
                                 .font(.system(size: 17, weight: .regular, design: .default))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
                             
@@ -791,6 +839,7 @@ struct SessionsView: View {
                     }
                 }
                 .navigationTitle("Your Sessions")
+                /*
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button {
@@ -801,7 +850,7 @@ struct SessionsView: View {
                     }
                 }
                 .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
-                
+                */
                 
                 VStack {
                     Spacer()

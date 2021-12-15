@@ -12,14 +12,14 @@
 		233FE7B6274F109600C6F1DF /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Values.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
-		23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* txmerApp.swift */; };
+		23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */; };
 		23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDC274DDBE200254D29 /* TimerView.swift */; };
 		23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23DE3BDE274DDBE300254D29 /* Assets.xcassets */; };
 		23DE3BE2274DDBE300254D29 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23DE3BE1274DDBE300254D29 /* Preview Assets.xcassets */; };
 		23DE3BE4274DDBE300254D29 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BE3274DDBE300254D29 /* Persistence.swift */; };
-		23DE3BF1274DDBE400254D29 /* txmerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BF0274DDBE400254D29 /* txmerTests.swift */; };
-		23DE3BFB274DDBE400254D29 /* txmerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BFA274DDBE400254D29 /* txmerUITests.swift */; };
-		23DE3BFD274DDBE400254D29 /* txmerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BFC274DDBE400254D29 /* txmerUITestsLaunchTests.swift */; };
+		23DE3BF1274DDBE400254D29 /* CubeTimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BF0274DDBE400254D29 /* CubeTimeTests.swift */; };
+		23DE3BFB274DDBE400254D29 /* CubeTimeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BFA274DDBE400254D29 /* CubeTimeUITests.swift */; };
+		23DE3BFD274DDBE400254D29 /* CubeTimeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BFC274DDBE400254D29 /* CubeTimeUITestsLaunchTests.swift */; };
 		23E81E6C275D8DAE00B741E3 /* GeneralSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E6B275D8DAE00B741E3 /* GeneralSettings.swift */; };
 		23E81E6F275D8DCA00B741E3 /* AppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */; };
 		23E81E71275D8DDA00B741E3 /* IESettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E70275D8DDA00B741E3 /* IESettings.swift */; };
@@ -90,17 +90,17 @@
 		2354882227642E2800FE8D7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
 		23D2FC4C274E12DE00D7071A /* TimeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeListView.swift; sourceTree = "<group>"; };
-		23DE3BD7274DDBE200254D29 /* txmer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = txmer.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		23DE3BDA274DDBE200254D29 /* txmerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerApp.swift; sourceTree = "<group>"; };
+		23DE3BD7274DDBE200254D29 /* CubeTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeTimeApp.swift; sourceTree = "<group>"; };
 		23DE3BDC274DDBE200254D29 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		23DE3BDE274DDBE300254D29 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		23DE3BE1274DDBE300254D29 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		23DE3BE3274DDBE300254D29 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
-		23DE3BEC274DDBE400254D29 /* txmerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = txmerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		23DE3BF0274DDBE400254D29 /* txmerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerTests.swift; sourceTree = "<group>"; };
-		23DE3BF6274DDBE400254D29 /* txmerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = txmerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		23DE3BFA274DDBE400254D29 /* txmerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerUITests.swift; sourceTree = "<group>"; };
-		23DE3BFC274DDBE400254D29 /* txmerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txmerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		23DE3BEC274DDBE400254D29 /* CubeTimeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CubeTimeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		23DE3BF0274DDBE400254D29 /* CubeTimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeTimeTests.swift; sourceTree = "<group>"; };
+		23DE3BF6274DDBE400254D29 /* CubeTimeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CubeTimeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		23DE3BFA274DDBE400254D29 /* CubeTimeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeTimeUITests.swift; sourceTree = "<group>"; };
+		23DE3BFC274DDBE400254D29 /* CubeTimeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeTimeUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		23E81E6B275D8DAE00B741E3 /* GeneralSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettings.swift; sourceTree = "<group>"; };
 		23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettings.swift; sourceTree = "<group>"; };
 		23E81E70275D8DDA00B741E3 /* IESettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IESettings.swift; sourceTree = "<group>"; };
@@ -217,9 +217,9 @@
 		23DE3BCE274DDBE200254D29 = {
 			isa = PBXGroup;
 			children = (
-				23DE3BD9274DDBE200254D29 /* txmer */,
-				23DE3BEF274DDBE400254D29 /* txmerTests */,
-				23DE3BF9274DDBE400254D29 /* txmerUITests */,
+				23DE3BD9274DDBE200254D29 /* CubeTime */,
+				23DE3BEF274DDBE400254D29 /* CubeTimeTests */,
+				23DE3BF9274DDBE400254D29 /* CubeTimeUITests */,
 				23DE3BD8274DDBE200254D29 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -227,19 +227,19 @@
 		23DE3BD8274DDBE200254D29 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				23DE3BD7274DDBE200254D29 /* txmer.app */,
-				23DE3BEC274DDBE400254D29 /* txmerTests.xctest */,
-				23DE3BF6274DDBE400254D29 /* txmerUITests.xctest */,
+				23DE3BD7274DDBE200254D29 /* CubeTime.app */,
+				23DE3BEC274DDBE400254D29 /* CubeTimeTests.xctest */,
+				23DE3BF6274DDBE400254D29 /* CubeTimeUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		23DE3BD9274DDBE200254D29 /* txmer */ = {
+		23DE3BD9274DDBE200254D29 /* CubeTime */ = {
 			isa = PBXGroup;
 			children = (
 				2354882227642E2800FE8D7A /* Info.plist */,
 				2354882027642B5400FE8D7A /* project-fonts */,
-				23DE3BDA274DDBE200254D29 /* txmerApp.swift */,
+				23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */,
 				23DE3BE3274DDBE300254D29 /* Persistence.swift */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */,
@@ -257,7 +257,7 @@
 				23E81E6D275D8DB500B741E3 /* Settings */,
 				23DE3BE0274DDBE300254D29 /* Preview Content */,
 			);
-			path = txmer;
+			path = CubeTime;
 			sourceTree = "<group>";
 		};
 		23DE3BE0274DDBE300254D29 /* Preview Content */ = {
@@ -268,21 +268,21 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		23DE3BEF274DDBE400254D29 /* txmerTests */ = {
+		23DE3BEF274DDBE400254D29 /* CubeTimeTests */ = {
 			isa = PBXGroup;
 			children = (
-				23DE3BF0274DDBE400254D29 /* txmerTests.swift */,
+				23DE3BF0274DDBE400254D29 /* CubeTimeTests.swift */,
 			);
-			path = txmerTests;
+			path = CubeTimeTests;
 			sourceTree = "<group>";
 		};
-		23DE3BF9274DDBE400254D29 /* txmerUITests */ = {
+		23DE3BF9274DDBE400254D29 /* CubeTimeUITests */ = {
 			isa = PBXGroup;
 			children = (
-				23DE3BFA274DDBE400254D29 /* txmerUITests.swift */,
-				23DE3BFC274DDBE400254D29 /* txmerUITestsLaunchTests.swift */,
+				23DE3BFA274DDBE400254D29 /* CubeTimeUITests.swift */,
+				23DE3BFC274DDBE400254D29 /* CubeTimeUITestsLaunchTests.swift */,
 			);
-			path = txmerUITests;
+			path = CubeTimeUITests;
 			sourceTree = "<group>";
 		};
 		23E81E6D275D8DB500B741E3 /* Settings */ = {
@@ -425,9 +425,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		23DE3BD6274DDBE200254D29 /* txmer */ = {
+		23DE3BD6274DDBE200254D29 /* CubeTime */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 23DE3C00274DDBE400254D29 /* Build configuration list for PBXNativeTarget "txmer" */;
+			buildConfigurationList = 23DE3C00274DDBE400254D29 /* Build configuration list for PBXNativeTarget "CubeTime" */;
 			buildPhases = (
 				23DE3BD3274DDBE200254D29 /* Sources */,
 				23DE3BD4274DDBE200254D29 /* Frameworks */,
@@ -437,16 +437,16 @@
 			);
 			dependencies = (
 			);
-			name = txmer;
+			name = CubeTime;
 			packageProductDependencies = (
 			);
 			productName = txmer;
-			productReference = 23DE3BD7274DDBE200254D29 /* txmer.app */;
+			productReference = 23DE3BD7274DDBE200254D29 /* CubeTime.app */;
 			productType = "com.apple.product-type.application";
 		};
-		23DE3BEB274DDBE400254D29 /* txmerTests */ = {
+		23DE3BEB274DDBE400254D29 /* CubeTimeTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 23DE3C03274DDBE400254D29 /* Build configuration list for PBXNativeTarget "txmerTests" */;
+			buildConfigurationList = 23DE3C03274DDBE400254D29 /* Build configuration list for PBXNativeTarget "CubeTimeTests" */;
 			buildPhases = (
 				23DE3BE8274DDBE400254D29 /* Sources */,
 				23DE3BE9274DDBE400254D29 /* Frameworks */,
@@ -457,14 +457,14 @@
 			dependencies = (
 				23DE3BEE274DDBE400254D29 /* PBXTargetDependency */,
 			);
-			name = txmerTests;
+			name = CubeTimeTests;
 			productName = txmerTests;
-			productReference = 23DE3BEC274DDBE400254D29 /* txmerTests.xctest */;
+			productReference = 23DE3BEC274DDBE400254D29 /* CubeTimeTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		23DE3BF5274DDBE400254D29 /* txmerUITests */ = {
+		23DE3BF5274DDBE400254D29 /* CubeTimeUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 23DE3C06274DDBE400254D29 /* Build configuration list for PBXNativeTarget "txmerUITests" */;
+			buildConfigurationList = 23DE3C06274DDBE400254D29 /* Build configuration list for PBXNativeTarget "CubeTimeUITests" */;
 			buildPhases = (
 				23DE3BF2274DDBE400254D29 /* Sources */,
 				23DE3BF3274DDBE400254D29 /* Frameworks */,
@@ -475,9 +475,9 @@
 			dependencies = (
 				23DE3BF8274DDBE400254D29 /* PBXTargetDependency */,
 			);
-			name = txmerUITests;
+			name = CubeTimeUITests;
 			productName = txmerUITests;
-			productReference = 23DE3BF6274DDBE400254D29 /* txmerUITests.xctest */;
+			productReference = 23DE3BF6274DDBE400254D29 /* CubeTimeUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -503,7 +503,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 23DE3BD2274DDBE200254D29 /* Build configuration list for PBXProject "txmer" */;
+			buildConfigurationList = 23DE3BD2274DDBE200254D29 /* Build configuration list for PBXProject "CubeTime" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -518,9 +518,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				23DE3BD6274DDBE200254D29 /* txmer */,
-				23DE3BEB274DDBE400254D29 /* txmerTests */,
-				23DE3BF5274DDBE400254D29 /* txmerUITests */,
+				23DE3BD6274DDBE200254D29 /* CubeTime */,
+				23DE3BEB274DDBE400254D29 /* CubeTimeTests */,
+				23DE3BF5274DDBE400254D29 /* CubeTimeUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -589,7 +589,7 @@
 				7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */,
 				237B35502761995F00CC39BF /* SettingsCard.swift in Sources */,
 				7D78FF8E276087AF008BB82E /* BottomTabsView.swift in Sources */,
-				23DE3BDB274DDBE200254D29 /* txmerApp.swift in Sources */,
+				23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */,
 				7D69E0B82751FDEA007211CC /* CHTTheme.m in Sources */,
 				7D69E0B12751FDEA007211CC /* Search.m in Sources */,
 				7D69E0AA2751FDEA007211CC /* Cube222.m in Sources */,
@@ -614,7 +614,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				23DE3BF1274DDBE400254D29 /* txmerTests.swift in Sources */,
+				23DE3BF1274DDBE400254D29 /* CubeTimeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -622,8 +622,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				23DE3BFB274DDBE400254D29 /* txmerUITests.swift in Sources */,
-				23DE3BFD274DDBE400254D29 /* txmerUITestsLaunchTests.swift in Sources */,
+				23DE3BFB274DDBE400254D29 /* CubeTimeUITests.swift in Sources */,
+				23DE3BFD274DDBE400254D29 /* CubeTimeUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -632,12 +632,12 @@
 /* Begin PBXTargetDependency section */
 		23DE3BEE274DDBE400254D29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 23DE3BD6274DDBE200254D29 /* txmer */;
+			target = 23DE3BD6274DDBE200254D29 /* CubeTime */;
 			targetProxy = 23DE3BED274DDBE400254D29 /* PBXContainerItemProxy */;
 		};
 		23DE3BF8274DDBE400254D29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 23DE3BD6274DDBE200254D29 /* txmer */;
+			target = 23DE3BD6274DDBE200254D29 /* CubeTime */;
 			targetProxy = 23DE3BF7274DDBE400254D29 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -763,14 +763,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"txmer/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"CubeTime/Preview Content\"";
 				DEVELOPMENT_TEAM = 52VS5QG4YD;
 				ENABLE_PREVIEWS = YES;
 				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = txmer/Info.plist;
+				INFOPLIST_FILE = CubeTime/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CubeTime;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -787,7 +787,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.cubetime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "txmer/3rdparty-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "CubeTime/3rdparty-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -800,14 +800,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"txmer/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"CubeTime/Preview Content\"";
 				DEVELOPMENT_TEAM = 52VS5QG4YD;
 				ENABLE_PREVIEWS = YES;
 				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = txmer/Info.plist;
+				INFOPLIST_FILE = CubeTime/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CubeTime;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -824,7 +824,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.cubetime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "txmer/3rdparty-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "CubeTime/3rdparty-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -846,12 +846,12 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = pdtc.txmerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.CubeTimeTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/txmer.app/txmer";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CubeTime.app/CubeTime";
 			};
 			name = Debug;
 		};
@@ -871,12 +871,12 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = pdtc.txmerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.CubeTimeTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/txmer.app/txmer";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CubeTime.app/CubeTime";
 			};
 			name = Release;
 		};
@@ -894,12 +894,12 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = pdtc.txmerUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.CubeTimeUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = txmer;
+				TEST_TARGET_NAME = CubeTime;
 			};
 			name = Debug;
 		};
@@ -917,19 +917,19 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = pdtc.txmerUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.CubeTimeUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = txmer;
+				TEST_TARGET_NAME = CubeTime;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		23DE3BD2274DDBE200254D29 /* Build configuration list for PBXProject "txmer" */ = {
+		23DE3BD2274DDBE200254D29 /* Build configuration list for PBXProject "CubeTime" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				23DE3BFE274DDBE400254D29 /* Debug */,
@@ -938,7 +938,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		23DE3C00274DDBE400254D29 /* Build configuration list for PBXNativeTarget "txmer" */ = {
+		23DE3C00274DDBE400254D29 /* Build configuration list for PBXNativeTarget "CubeTime" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				23DE3C01274DDBE400254D29 /* Debug */,
@@ -947,7 +947,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		23DE3C03274DDBE400254D29 /* Build configuration list for PBXNativeTarget "txmerTests" */ = {
+		23DE3C03274DDBE400254D29 /* Build configuration list for PBXNativeTarget "CubeTimeTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				23DE3C04274DDBE400254D29 /* Debug */,
@@ -956,7 +956,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		23DE3C06274DDBE400254D29 /* Build configuration list for PBXNativeTarget "txmerUITests" */ = {
+		23DE3C06274DDBE400254D29 /* Build configuration list for PBXNativeTarget "CubeTimeUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				23DE3C07274DDBE400254D29 /* Debug */,

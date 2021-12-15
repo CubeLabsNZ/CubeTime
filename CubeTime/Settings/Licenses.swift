@@ -1,9 +1,9 @@
 import SwiftUI
 
-struct TxmerLicense: View {
+struct CubeTimeLicense: View {
     var body: some View {
         VStack {
-            Text("© 2021 Tim Xie and Reagan Bohan\ntxmer is licensed under the GNU GPL v3 license, which is shown below.")
+            Text("© 2021 Tim Xie and Reagan Bohan\nCubeTime is licensed under the GNU GPL v3 license, which is shown below.")
             Divider()
             GPLLicense()
                 
@@ -16,7 +16,7 @@ struct TxmerLicense: View {
 struct ChaoTimerLicense: View {
     var body: some View {
         VStack {
-            Text("ChaoTimer's scrambler is used in txmer and is © 2014 Jichao Li.\nNote: Most of ChaoTimer's scramblers are from DCTimer, which are kindly provided by Jaap Scherphuis (all puzzles), Syoji Takamatsu (Pyraminx), Lucas Garron (Pyraminx), Michael Gottlieb (Pyraminx, Square-1), Tom van der Zanden (2x2), Conrad Rider (2x2), Clément Gallet and Stefan Pochmann (Megaminx), Herbert Kociemba (3x3) and Shuang Chen (3x3, Square-1).\nThe 3x3 random state scrambler uses Kociemba's Two-Phase algorithm, and the code is an Objective-C port of Shuang Chen's Java min2phase. Please see https://github.com/cs0x7f/min2phase for the source code.\nTHe Square-1 random state scrambler is also an Objective-C port of Shuang Chen's Java sq12phase. Please see https://github.com/cs0x7f/sq12phase for the source code.\nThe The 4x4 random state scrambler is an Objective-C port of Shuang Chen's Java TPR-4x4x4-solver. Again, please see https://github.com/cs0x7f/TPR-4x4x4-Solver for the source code.")
+            Text("ChaoTimer's scrambler is used in CubeTime and is © 2014 Jichao Li.\nNote: Most of ChaoTimer's scramblers are from DCTimer, which are kindly provided by Jaap Scherphuis (all puzzles), Syoji Takamatsu (Pyraminx), Lucas Garron (Pyraminx), Michael Gottlieb (Pyraminx, Square-1), Tom van der Zanden (2x2), Conrad Rider (2x2), Clément Gallet and Stefan Pochmann (Megaminx), Herbert Kociemba (3x3) and Shuang Chen (3x3, Square-1).\nThe 3x3 random state scrambler uses Kociemba's Two-Phase algorithm, and the code is an Objective-C port of Shuang Chen's Java min2phase. Please see https://github.com/cs0x7f/min2phase for the source code.\nTHe Square-1 random state scrambler is also an Objective-C port of Shuang Chen's Java sq12phase. Please see https://github.com/cs0x7f/sq12phase for the source code.\nThe The 4x4 random state scrambler is an Objective-C port of Shuang Chen's Java TPR-4x4x4-solver. Again, please see https://github.com/cs0x7f/TPR-4x4x4-Solver for the source code.")
             Divider()
             GPLLicense()
         }
@@ -28,7 +28,7 @@ struct ChaoTimerLicense: View {
 struct ChartViewLicense: View {
     var body: some View {
         VStack {
-            Text("ChartView is used in the stats view of txmer.")
+            Text("ChartView is used in the stats view of CubeTime.")
             Divider()
             MITLicense(year: "2019", holder: "Andras Samu")
         }
@@ -39,7 +39,7 @@ struct ChartViewLicense: View {
 struct CubingIconsLicense: View {
     var body: some View {
         VStack {
-            Text("A derivative of \"Cubing's\" icons are used throughout txmer.")
+            Text("A derivative of \"Cubing's\" icons are used throughout CubeTime.")
             Divider()
             MITLicense(year: "2015", holder: "Devin Corr-Robinett")
         }
@@ -51,7 +51,7 @@ struct CubingIconsLicense: View {
 struct RecursiveLicense: View {
     var body: some View {
         VStack {
-            Text("The recursive font is used in logos of txmer.")
+            Text("The recursive font is used in logos of CubeTime.")
             Divider()
             OpenFontLicense(prefix: "Copyright 2020 The Recursive Project Authors (https://github.com/arrowtype/recursive)")
         }
@@ -78,7 +78,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 struct PrivacyPolicy: View {
     var body: some View {
-        Text("txmer privacy policy")
+        Text("CubeTime privacy policy")
             .font(.title)
             .padding(.horizontal)
         Divider()
@@ -87,10 +87,10 @@ struct PrivacyPolicy: View {
             Your solves (data not comprising of personal information including but not limited to the "scramble" used, the date of the solve, the time taken to complete the solve) and your sessions (data including but not limited to named groups of solves, again with no personal data) are stored locally on your device or optionally on iCloud (see below).
             There are, however two notable things to be aware of:
 
-            1.  Optionally, Txmer will use the WCA (World Cubing Assocciation)'s API to retrieve your publically available solves, for the sole purpose of stats calculation. Once retrieved, it is stored locally on device. It requires you to enter your WCA ID, which is used solely for the purpose of retrieving your solves, and can optionally be saved locally for use next time you want to sync solves. The WCA's privacy policy is available at https://www.worldcubeassociation.org/privacy
-            2. Optionally, Txmer will use Apple iCloud to store your sessions. Txmer's data that is stored on iCloud can be viewed and deleted in the Txmer app. The Apple iCloud privacy policy is available at https://www.apple.com/legal/privacy/
+            1.  Optionally, CubeTime will use the WCA (World Cubing Assocciation)'s API to retrieve your publically available solves, for the sole purpose of stats calculation. Once retrieved, it is stored locally on device. It requires you to enter your WCA ID, which is used solely for the purpose of retrieving your solves, and can optionally be saved locally for use next time you want to sync solves. The WCA's privacy policy is available at https://www.worldcubeassociation.org/privacy
+            2. Optionally, CubeTime will use Apple iCloud to store your sessions. CubeTime's data that is stored on iCloud can be viewed and deleted in the CubeTime app. The Apple iCloud privacy policy is available at https://www.apple.com/legal/privacy/
 
-            The source code of txmer is publically viewable at https://github.com/pdtcubing/txmer for independent verification.
+            The source code of CubeTime is publically viewable at https://github.com/pdtcubing/CubeTime for independent verification.
             """)
             .padding(.horizontal)
     }

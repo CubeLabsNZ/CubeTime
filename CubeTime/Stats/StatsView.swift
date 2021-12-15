@@ -107,27 +107,27 @@ struct StatsView: View {
                                                         .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                         .padding(.leading, 12)
                                                     
-//                                                        .onTapGesture {
-//                                                            for _ in 1..<100 {
-//                                                                let solveItem: Solves!
-//                                                                
-//                                                                solveItem = Solves(context: managedObjectContext)
-//                                                                solveItem.date = Date()
-//                                                                solveItem.session = currentSession
-//                                                                solveItem.scramble = "sdlfikj"
-//                                                                solveItem.scramble_type = 0
-//                                                                solveItem.scramble_subtype = 0
-//                                                                solveItem.time = Double.random(in: 1..<100)
-//                                                                
-//                                                            }
-//                                                            do {
-//                                                                try managedObjectContext.save()
-//                                                            } catch {
-//                                                                if let error = error as NSError? {
-//                                                                    fatalError("Unresolved error \(error), \(error.userInfo)")
-//                                                                }
-//                                                            }
-//                                                        }
+                                                        .onTapGesture {
+                                                            for _ in 1..<100 {
+                                                                let solveItem: Solves!
+                                                                
+                                                                solveItem = Solves(context: managedObjectContext)
+                                                                solveItem.date = Date()
+                                                                solveItem.session = currentSession
+                                                                solveItem.scramble = "sdlfikj"
+                                                                solveItem.scramble_type = 0
+                                                                solveItem.scramble_subtype = 0
+                                                                solveItem.time = Double.random(in: 6..<11)
+                                                                
+                                                            }
+                                                            do {
+                                                                try managedObjectContext.save()
+                                                            } catch {
+                                                                if let error = error as NSError? {
+                                                                    fatalError("Unresolved error \(error), \(error.userInfo)")
+                                                                }
+                                                            }
+                                                        }
                                                     
                                                     Spacer()
                                                     

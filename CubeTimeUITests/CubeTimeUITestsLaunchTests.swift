@@ -1,13 +1,13 @@
 //
-//  txmerUITestsLaunchTests.swift
-//  txmerUITests
+//  CubeTimeUITestsLaunchTests.swift
+//  CubeTimeUITests
 //
 //  Created by Tim Xie on 24/11/21.
 //
 
 import XCTest
 
-class txmerUITestsLaunchTests: XCTestCase {
+class CubeTimeUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

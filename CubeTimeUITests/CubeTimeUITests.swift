@@ -1,13 +1,13 @@
 //
-//  txmerUITests.swift
-//  txmerUITests
+//  CubeTimeUITests.swift
+//  CubeTimeUITests
 //
 //  Created by Tim Xie on 24/11/21.
 //
 
 import XCTest
 
-class txmerUITests: XCTestCase {
+class CubeTimeUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
