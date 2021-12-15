@@ -1,2 +1,2 @@
-# txmer
-rubiks cube timer
+# CubeTime
+speedcube timer
