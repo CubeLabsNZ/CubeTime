@@ -30,10 +30,11 @@
 
 ## Screenshots
 ### Dark Mode
-![dark mode screenshot](https://user-images.githubusercontent.com/65262710/146157963-54d03464-625d-4dfe-a411-d36af00e3484.png)
+![dark mode screenshot](https://user-images.githubusercontent.com/65262710/146157994-ee501ac8-1c26-424b-9826-34cb8f1727f9.png)
 
 ### Light Mode
-![light mode screenshot](https://user-images.githubusercontent.com/65262710/146157994-ee501ac8-1c26-424b-9826-34cb8f1727f9.png)
+![light mode screenshot](https://user-images.githubusercontent.com/65262710/146157963-54d03464-625d-4dfe-a411-d36af00e3484.png)
+
 
 ## Features
 ### App Features
