@@ -14,7 +14,7 @@
 1. [Overview](#Overview)
 2. [Screenshots](#Screenshots)
 3. [Features](#Features)
-4. 
+4. [User Guide](#User Guide)
 5. [Building it yourself]
 6. [Contributing]
 7. [Some final stuff]
