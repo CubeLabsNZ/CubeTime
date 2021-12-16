@@ -74,7 +74,6 @@ struct TabIcon: View {
 
 
 
-@available(iOS 15.0, *) /// TODO: remove all `@available(iOS 15.0, *)` in the project and change the button role BECAUSE iOS 15 + ONLY :sob:
 struct MainTabsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Namespace private var namespace
@@ -109,7 +108,7 @@ struct MainTabsView: View {
             ZStack {
                 switch tabRouter.currentTab {
                 case .timer:
-                    TimerView(stopWatchManager: StopWatchManager(currentSession: $currentSession, managedObjectContext: managedObjectContext), hideTabBar: $hideTabBar)
+                    TimerView(currentSession: $currentSession, stopWatchManager: StopWatchManager(currentSession: $currentSession, managedObjectContext: managedObjectContext), hideTabBar: $hideTabBar)
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .solves:
                     TimeListView(currentSession: $currentSession, managedObjectContext: managedObjectContext)

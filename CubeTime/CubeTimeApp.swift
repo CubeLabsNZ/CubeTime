@@ -2,7 +2,6 @@ import SwiftUI
 import CoreData
 
 @main
-@available(iOS 15.0, *) /// TODO: remove all `@available(iOS 15.0, *)` in the project and change the button role BECAUSE iOS 15 + ONLY :sob:
 struct CubeTime: App {
     let persistenceController: PersistenceController
     private let moc: NSManagedObjectContext

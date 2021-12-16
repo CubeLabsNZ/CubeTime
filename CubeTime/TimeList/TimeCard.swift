@@ -52,7 +52,6 @@ class observed: ObservableObject {
     @Published var size: CGFloat = 0
 }
 
-@available(iOS 15.0, *)
 struct SolvePopupView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
@@ -281,7 +280,6 @@ struct SolvePopupView: View {
 }
 
 
-@available(iOS 15.0, *)
 struct TimeCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme

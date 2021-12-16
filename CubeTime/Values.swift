@@ -32,6 +32,14 @@ enum PenTypes: Int16 {
     case dnf
 }
 
+enum SessionTypes: Int16 {
+    case standard
+    case algtrainer
+    case multiphase
+    case playground
+    case compsim
+}
+
 
 func formatSolveTime(secs: Double, penType: PenTypes = .none) -> String {
     if penType == PenTypes.dnf {

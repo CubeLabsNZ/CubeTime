@@ -14,7 +14,6 @@ struct AnimatingFontSizeV2: AnimatableModifier {
     }
 }
 
-@available(iOS 15.0, *)
 struct SettingsView: View {
     @State var currentCard: SettingsCardInfo?
     //    @Binding var hideTabBar: Bool
@@ -134,7 +133,6 @@ struct SettingsCard: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct SettingsDetail: View {
     @Binding var currentCard: SettingsCardInfo?
     @Environment(\.colorScheme) var colourScheme

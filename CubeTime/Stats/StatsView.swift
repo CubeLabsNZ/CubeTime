@@ -10,7 +10,6 @@ extension View {
 
 
 
-@available(iOS 15.0, *)
 struct StatsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme

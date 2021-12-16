@@ -2,6 +2,23 @@ import SwiftUI
 import CoreData
 
 
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners))
+    }
+}
+
+struct RoundedCorner: Shape {
+
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}
+
 struct NewStandardSessionViewBlocks: ViewModifier {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     func body(content: Content) -> some View {
@@ -11,6 +28,39 @@ struct NewStandardSessionViewBlocks: ViewModifier {
             
             .padding(.trailing)
             .padding(.leading)
+    }
+}
+
+struct ContextMenuButton: View {
+    var action: () -> Void
+    var title: String
+    var systemImage: String? = nil
+    var disableButton: Bool? = nil
+    
+    var body: some View {
+        Button(role: title == "Delete Session" ? .destructive : nil, action: delayedAction) {
+            HStack {
+                Text(title)
+                if image != nil {
+                    Image(uiImage: image!)
+                }
+            }
+        }.disabled(disableButton ?? false)
+    }
+    
+    private var image: UIImage? {
+        if let systemName = systemImage {
+            let config = UIImage.SymbolConfiguration(font: .preferredFont(forTextStyle: .body), scale: .medium)
+            
+            return UIImage(systemName: systemName, withConfiguration: config)
+        } else {
+            return nil
+        }
+    }
+    private func delayedAction() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+            self.action()
+        }
     }
 }
 
@@ -54,8 +104,8 @@ struct CustomiseSessionView: View {
                             
                         
                         TextField("Session Name", text: $name)
-                            .padding()
-                            .font(.system(size: 22, weight: .bold))
+                            .padding(12)
+                            .font(.system(size: 22, weight: .semibold))
                             .multilineTextAlignment(TextAlignment.center)
                             .background(Color(uiColor: .systemGray5))
                             .cornerRadius(10)
@@ -104,8 +154,6 @@ struct CustomiseSessionView: View {
     }
 }
 
-
-@available(iOS 15.0, *)
 struct NewStandardSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
@@ -115,19 +163,10 @@ struct NewStandardSessionView: View {
     @Binding var showNewSessionPopUp: Bool
     @Binding var currentSession: Sessions
     @State private var name: String = ""
-    
     @State private var sessionEventType: Int32 = 0
-    
     @State var pinnedSession: Bool
-    
-    
-    let sessionColorColumns = [
-        //GridItem(.fixed(40))
-        GridItem(.adaptive(minimum: 40)) /// TODO FIX ~~AND ALSO USE IN THE TIMES VIEW BECAUSE IT SHOULD DYNAMICALLY ADJUST FOR SMALLER SCREENS (FIXED 3 COLUMNS!)~~
-    ]
-    
+        
     let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
-    
     
     var body: some View {
         ZStack {
@@ -138,9 +177,7 @@ struct NewStandardSessionView: View {
                 VStack (spacing: 16) {
                     
                     VStack (alignment: .center, spacing: 0) {
-//                        Image(systemName: "square.fill")
                         Image(puzzle_types[Int(sessionEventType)].name)
-//                            .font(.system(size: 120))
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .padding(.top)
@@ -149,8 +186,8 @@ struct NewStandardSessionView: View {
                             
                         
                         TextField("Session Name", text: $name)
-                            .padding()
-                            .font(.system(size: 22, weight: .bold))
+                            .padding(12)
+                            .font(.system(size: 22, weight: .semibold))
                             .multilineTextAlignment(TextAlignment.center)
                             .background(Color(uiColor: .systemGray5))
                             .cornerRadius(10)
@@ -159,18 +196,8 @@ struct NewStandardSessionView: View {
                             .padding(.bottom)
                             
                     }
-                    .frame(height: 220)
+                    .frame(height: 212)
                     .modifier(NewStandardSessionViewBlocks())
-                    /*
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .frame(height: 220)
-                    
-                    .padding(.trailing)
-                    .padding(.leading)
-                    */
-                    
-                    
                     
                     VStack (spacing: 0) {
                         HStack {
@@ -183,16 +210,11 @@ struct NewStandardSessionView: View {
                             Picker("", selection: $sessionEventType) {
                                     ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
                                     Text(element.name).tag(Int32(index))
-
-                                    //.foregroundColor(Color(uiColor: .systemGray4))
                                 }
                             }
                             .pickerStyle(.menu)
                             .accentColor(accentColour)
                             .font(.system(size: 17, weight: .regular))
-
-
-                            //Text("Square-1")
                         }
                         .padding()
                     }
@@ -200,14 +222,11 @@ struct NewStandardSessionView: View {
                     .modifier(NewStandardSessionViewBlocks())
                     
                     
-                    
                     VStack (spacing: 0) {
                         LazyVGrid(columns: sessionEventTypeColumns, spacing: 0) {
                             ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
                                 Button {
                                     sessionEventType = Int32(index)
-
-
                                 } label: {
                                     ZStack {
                                         Image("circular-" + element.name)
@@ -216,18 +235,9 @@ struct NewStandardSessionView: View {
                                             .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
                                             .frame(width: 54, height: 54)
                                             .offset(x: -0.2)
-                                            
-                                        
                                     }
-                                    
-//                                    Image("circular-Square-1")
-//                                    Image("circular-Square-1-alt")
                                 }
-
-
                             }
-                            
-                            
                         }
                         .padding()
                     }
@@ -236,43 +246,24 @@ struct NewStandardSessionView: View {
                     
                     
                     
-                    
-                    
-
-                    
                     VStack (spacing: 0) {
                         HStack {
-                            //Text("Pin Session?")
-                              //  .font(.system(size: 17, weight: .medium))
-                            
-                            
-                            //Spacer()
-                            
-                            
                             Toggle(isOn: $pinnedSession) {
                                 Text("Pin Session?")
                                     .font(.system(size: 17, weight: .medium))
                             }
                             .tint(.yellow)
-                            
-                            
-                            //Text("Square-1")
                         }
                         .padding()
                     }
                     .frame(height: 45)
                     .modifier(NewStandardSessionViewBlocks())
                     
-                    
-                    
                     Spacer()
-                    
                 }
             }
             .ignoresSafeArea(.keyboard)
             .navigationBarTitle("New Standard Session", displayMode: .inline)
-//            .ignoresSafeArea(.keyboard)
-            //.navigationTitle("")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -285,39 +276,19 @@ struct NewStandardSessionView: View {
                         currentSession = sessionItem
                         showNewSessionPopUp = false
                         currentSession = sessionItem
-                        
-                        
                     } label: {
                         Text("Create")
                     }
                     .disabled(self.name.isEmpty)
                 }
             }
-            
-            
         }
         .ignoresSafeArea(.keyboard)
     }
 }
 
-struct RoundedCorner: Shape {
 
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
 
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        return Path(path.cgPath)
-    }
-}
-
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(RoundedCorner(radius: radius, corners: corners))
-    }
-}
-
-@available(iOS 15.0, *)
 struct NewSessionPopUpView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.dismiss) var dismiss
@@ -368,9 +339,9 @@ struct NewSessionPopUpView: View {
                             
                             HStack {
                                 Image(systemName: "timer.square")
-                                    .font(.system(size: 30, weight: .regular))
+                                    .font(.system(size: 26, weight: .regular))
                                     .foregroundColor(colourScheme == .light ? .black : .white)
-                                    .symbolRenderingMode(.hierarchical)
+//                                    .symbolRenderingMode(.hierarchical)
                                     .padding(.leading, 8)
                                     .padding(.trailing, 4)
                                     .padding(.top, 8)
@@ -408,9 +379,9 @@ struct NewSessionPopUpView: View {
                             
                             HStack {
                                 Image(systemName: "command.square")
-                                    .font(.system(size: 30, weight: .regular))
+                                    .font(.system(size: 26, weight: .regular))
                                     .foregroundColor(colourScheme == .light ? .black : .white)
-                                    .symbolRenderingMode(.hierarchical)
+//                                    .symbolRenderingMode(.hierarchical)
                                     .padding(.leading, 8)
                                     .padding(.trailing, 4)
                                     .padding(.top, 8)
@@ -454,9 +425,9 @@ struct NewSessionPopUpView: View {
                         
                         HStack {
                             Image(systemName: "square.on.square")
-                                .font(.system(size: 26, weight: .medium))
+                                .font(.system(size: 24, weight: .regular))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
-                                .symbolRenderingMode(.hierarchical)
+//                                .symbolRenderingMode(.hierarchical)
                                 .padding(.leading, 8)
                                 .padding(.trailing, 4)
                                 .padding(.top, 8)
@@ -499,12 +470,12 @@ struct NewSessionPopUpView: View {
                         
                         
                         HStack {
-                            Image(systemName: "play.square")
-                                .font(.system(size: 30, weight: .regular))
+                            Image(systemName: "square.stack")
+                                .font(.system(size: 24, weight: .regular))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
-                                .symbolRenderingMode(.hierarchical)
-                                .padding(.leading, 8)
-                                .padding(.trailing, 4)
+//                                .symbolRenderingMode(.hierarchical)
+                                .padding(.leading, 10)
+                                .padding(.trailing, 6)
                                 .padding(.top, 8)
                                 .padding(.bottom, 8)
                             Text("Playground") // wip
@@ -519,9 +490,7 @@ struct NewSessionPopUpView: View {
                         }
                         .cornerRadius(10, corners: .bottomRight)
                         .cornerRadius(10, corners: .bottomLeft)
-                        .padding(.leading)
-                        .padding(.trailing)
-                        
+                        .padding(.horizontal)
                         
                         
                         
@@ -538,12 +507,12 @@ struct NewSessionPopUpView: View {
                             Image(systemName: "globe.asia.australia")
                                 .font(.system(size: 26, weight: .medium))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
-                                .symbolRenderingMode(.hierarchical)
+//                                .symbolRenderingMode(.hierarchical)
                                 .padding(.leading, 8)
                                 .padding(.trailing, 4)
                                 .padding(.top, 8)
                                 .padding(.bottom, 8)
-                            Text("Comp Sim Mode") // wip
+                            Text("Comp Sim") // wip
                                 .font(.system(size: 17, weight: .regular, design: .default))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
                             
@@ -604,43 +573,8 @@ struct NewSessionPopUpView: View {
     }
 }
 
-@available(iOS 15.0, *)
-struct ContextMenuButton: View {
-    var action: () -> Void
-    var title: String
-    var systemImage: String? = nil
-    var disableButton: Bool? = nil
-    
-    var body: some View {
-        Button(role: title == "Delete Session" ? .destructive : nil, action: delayedAction) {
-            HStack {
-                Text(title)
-                if image != nil {
-                    Image(uiImage: image!)
-                }
-            }
-        }.disabled(disableButton ?? false)
-    }
-    
-    private var image: UIImage? {
-        if let systemName = systemImage {
-            let config = UIImage.SymbolConfiguration(font: .preferredFont(forTextStyle: .body), scale: .medium)
-            
-            return UIImage(systemName: systemName, withConfiguration: config)
-        } else {
-            return nil
-        }
-    }
-    private func delayedAction() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
-            self.action()
-        }
-    }
-}
 
 
-
-@available(iOS 15.0, *)
 struct SessionCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
@@ -781,8 +715,6 @@ struct SessionCard: View {
     }
 }
 
-
-@available(iOS 15.0, *)
 struct SessionsView: View {
     @Binding var currentSession: Sessions
     @Environment(\.managedObjectContext) var managedObjectContext

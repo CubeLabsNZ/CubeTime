@@ -1,7 +1,6 @@
 import SwiftUI
 
 
-@available(iOS 15.0, *)
 struct BottomTabsView: View {
     @Binding var hide: Bool
     @Binding var currentTab: Tab

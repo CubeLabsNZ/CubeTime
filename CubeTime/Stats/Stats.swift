@@ -55,6 +55,7 @@ class Stats {
         // calculate top and bottom n percent using my alg, maybe add a global length var
         
         solvesByDate = solves.sorted(by: {$0.date! < $1.date!})
+//        solvesByDate = solves
     }
     
     
@@ -85,7 +86,7 @@ class Stats {
     
     func getBestMovingAverageOf(_ period: Int) -> CalculatedAverage? {
         precondition(period > 1)
-        if solves.count < period {
+        if solvesByDate.count < period {
             return nil
         }
         
@@ -103,15 +104,15 @@ class Stats {
         
         for i in period..<solves.count+1 {
             let range = i - period + trim..<i - trim
-            let sum = solves[range].reduce(0, {$0 + $1.time})
+            let sum = solvesByDate[range].reduce(0, {$0 + $1.time})
             
             let result = Double(sum) / Double(period-2)
             if result < lowest_average {
-                lowest_values = solves[i - period ..< i].sorted(by: {$0.date! > $1.date!})
+                lowest_values = solvesByDate[i - period ..< i].sorted(by: {$0.date! > $1.date!})
                 lowest_average = result
             }
         }
-        return CalculatedAverage(id: "Best average of \(period)", average: lowest_average, accountedSolves: lowest_values!)
+        return CalculatedAverage(id: "Best AO\(period)", average: lowest_average, accountedSolves: lowest_values!)
     }
 
     
@@ -122,7 +123,7 @@ class Stats {
         }
         
         return CalculatedAverage(
-            id: "Current average of \(period)",
+            id: "Current AO\(period)",
             average: solvesByDate.suffix(period).sorted(by: {$0.time > $1.time}).dropFirst().dropLast().reduce(0, {$0 + $1.time}) / Double(period-2),
             accountedSolves: solvesByDate.suffix(period)
         )

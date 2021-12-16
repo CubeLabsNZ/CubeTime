@@ -37,7 +37,6 @@ struct LicensePopUpView: View {
 }
 
 
-@available(iOS 15.0, *)
 struct LicensesPopUpView: View {
     @Environment(\.dismiss) var dismiss
     @State var showLicense = false
@@ -98,7 +97,6 @@ struct LicensesPopUpView: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct AboutSettingsView: View {
     
     @State var showLicenses = false

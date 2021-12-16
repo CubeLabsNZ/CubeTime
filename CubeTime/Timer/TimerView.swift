@@ -2,7 +2,7 @@ import CoreData
 import SwiftUI
 import CoreGraphics
 
-extension UIScreen{
+extension UIScreen {
    static let screenWidth = UIScreen.main.bounds.size.width
    static let screenHeight = UIScreen.main.bounds.size.height
    static let screenSize = UIScreen.main.bounds.size
@@ -24,8 +24,6 @@ struct AnimatingFontSize: AnimatableModifier {
 
 
 
-
-@available(iOS 15.0, *)
 struct TimerView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
@@ -35,12 +33,15 @@ struct TimerView: View {
     
     @Binding var hideTabBar: Bool
     
+    @Binding var currentSession: Sessions
+    
     @State var hideStatusBar = true
     
+    @State var algTrainerSubset = 0
     
     
-    init(stopWatchManager: StopWatchManager, hideTabBar: Binding<Bool>) {
-        //_currentSession = currentSession
+    init(currentSession: Binding<Sessions>, stopWatchManager: StopWatchManager, hideTabBar: Binding<Bool>) {
+        self._currentSession = currentSession
         self.stopWatchManager = stopWatchManager
         self._hideTabBar = hideTabBar
     }
@@ -56,27 +57,19 @@ struct TimerView: View {
             if stopWatchManager.mode == .stopped {
                 VStack {
                     Text(stopWatchManager.scrambleStr ?? "Loading scramble...")
-                        //.background(Color.red)
-                        
-//                        .padding(.top, 48)
-                        .padding(.horizontal)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: UIScreen.screenWidth, maxHeight: UIScreen.screenHeight/3)
-    //                    .position(x: UIScreen.screenWidth / 2, y: 108)
                         .font(.system(size: stopWatchManager.scrambleType == 7 ? 13 : 18, weight: .semibold, design: .monospaced))
-//                        .font(.system(size: 17, weight: .semibold, design: .monospaced))
                         .allowsTightening(true)
-
-//                        .background(Color.red)
-                    
-                    
                         .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+                        .padding(.horizontal)
+                
+                        
                     /// TODO: **FIX MEGA SCRAMBLES GOES OFF SCREEN AND MAKE [U, D] GO ON LAST**
-                    
                     
                     Spacer()
                 }
-                .ignoresSafeArea(edges: .top)
+                .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
             }
             
             VStack {
@@ -94,6 +87,8 @@ struct TimerView: View {
                     .ignoresSafeArea(edges: .all)
             
             
+            
+        
             
             
                        
@@ -133,6 +128,93 @@ struct TimerView: View {
                 }
             }
             .ignoresSafeArea(edges: .top)
+            
+            VStack {
+                HStack {
+                    HStack {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color(uiColor: .systemGray4))
+                                .frame(width: 35, height: 35)
+                                .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+                            switch SessionTypes(rawValue: currentSession.session_type)! {
+                            case .standard:
+                                Image(systemName: "timer.square")
+                                    .font(.system(size: 26, weight: .regular))
+                            case .algtrainer:
+                                Image(systemName: "command.square")
+                                    .font(.system(size: 26, weight: .regular))
+                            case .multiphase:
+                                Image(systemName: "square.on.square")
+                                    .font(.system(size: 22, weight: .regular))
+                            case .playground:
+                                Image(systemName: "square.stack")
+                                    .font(.system(size: 22, weight: .regular))
+                            case .compsim:
+                                Image(systemName: "globe.asia.australia")
+                                    .font(.system(size: 22, weight: .medium))
+                            }
+                            
+                        }
+                        
+                        switch SessionTypes(rawValue: currentSession.session_type)! {
+                        case .standard:
+                            Text("STANDARD SESSION")
+                                .font(.system(size: 17, weight: .medium))
+                                .padding(.trailing)
+                        case .algtrainer:
+                            Text("ALG TRAINER")
+                                .font(.system(size: 17, weight: .medium))
+                            Picker("", selection: $algTrainerSubset) {
+                                Text("EG-1")
+                                    .font(.system(size: 15, weight: .regular))
+                            }
+                            .pickerStyle(.menu)
+                            .padding(.leading, 8)
+                            .padding(.trailing)
+                        case .multiphase:
+                            Text("MULTIPHASE")
+                                .font(.system(size: 17, weight: .medium))
+                            Picker("", selection: $algTrainerSubset) {
+                                Text("3 PHASES")
+                                    .font(.system(size: 15, weight: .regular))
+                            }
+                            .pickerStyle(.menu)
+                            .padding(.leading, 8)
+                            .padding(.trailing)
+                        case .playground:
+                            Text("PLAYGROUND")
+                                .font(.system(size: 17, weight: .medium))
+                            Picker("", selection: $algTrainerSubset) {
+                                Text("SQUARE-1")
+                                    .font(.system(size: 15, weight: .regular))
+                            }
+                            .pickerStyle(.menu)
+                            .padding(.leading, 8)
+                            .padding(.trailing)
+                        case .compsim:
+                            Text("COMP SIM")
+                                .font(.system(size: 17, weight: .medium))
+                            Text("SOLVE 2/5")
+                                .font(.system(size: 15, weight: .regular))
+                            
+                            .pickerStyle(.menu)
+                            .padding(.leading, 8)
+                            .padding(.trailing)
+                        }
+                    }
+                    .background(Color(uiColor: .systemGray5))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+                    .padding(.horizontal)
+                    .padding(.top, SetValues.hasBottomBar ? 0 : 8)
+                    
+                    Spacer()
+                }
+                
+                
+                Spacer()
+            }
             
             
             if stopWatchManager.showPenOptions {

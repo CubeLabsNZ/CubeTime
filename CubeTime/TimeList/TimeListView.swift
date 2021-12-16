@@ -68,7 +68,6 @@ class TimeListManager: ObservableObject {
     }
 }
 
-@available(iOS 15.0, *)
 struct TimeListView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
