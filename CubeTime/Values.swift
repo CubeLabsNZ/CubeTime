@@ -3,10 +3,9 @@ import SwiftUI
 
 
 extension Color: RawRepresentable {
-    public typealias RawValue = Int
+    public typealias RawValue = String
     init(_ hex: UInt) {
         self.init(
-            
             red: Double((hex >> 16) & 0xff) / 255,
             green: Double((hex >> 08) & 0xff) / 255,
             blue: Double((hex >> 00) & 0xff) / 255
@@ -14,7 +13,12 @@ extension Color: RawRepresentable {
     }
     
     public init?(rawValue: RawValue) {
-        self.init(UInt(rawValue))
+        let colors = rawValue.components(separatedBy: ",")
+        self.init(
+            red: Double(colors[0]) ?? 88/255,
+            green: Double(colors[1]) ?? 86/255,
+            blue: Double(colors[2]) ?? 124/255
+        )
     }
 
     public var rawValue: RawValue {
@@ -22,7 +26,7 @@ extension Color: RawRepresentable {
         var g: CGFloat = 0
         var b: CGFloat = 0
         UIColor(self).getRed(&r, green: &g, blue: &b, alpha: nil)
-        return (Int(r * 255) << 16) + (Int(g * 255) << 08) + (Int(b * 255) << 00)
+        return "\(r),\(g),\(b)"
     }
 }
 

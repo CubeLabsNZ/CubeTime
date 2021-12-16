@@ -311,9 +311,17 @@
 			path = Stats;
 			sourceTree = "<group>";
 		};
+		7D34EAD6276AE8A000CD296A /* DCTimer */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = DCTimer;
+			sourceTree = "<group>";
+		};
 		7D69E0632751FDBB007211CC /* 3rdparty */ = {
 			isa = PBXGroup;
 			children = (
+				7D34EAD6276AE8A000CD296A /* DCTimer */,
 				7D69E0642751FDCB007211CC /* ChaoTimer */,
 			);
 			path = 3rdparty;
