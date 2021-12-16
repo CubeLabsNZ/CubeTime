@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "23DE3BD6274DDBE200254D29"
-               BuildableName = "txmer.app"
+               BuildableName = "CubeTime.app"
                BlueprintName = "CubeTime"
                ReferencedContainer = "container:CubeTime.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "23DE3BEB274DDBE400254D29"
-               BuildableName = "txmerTests.xctest"
+               BuildableName = "CubeTimeTests.xctest"
                BlueprintName = "CubeTimeTests"
                ReferencedContainer = "container:CubeTime.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "23DE3BF5274DDBE400254D29"
-               BuildableName = "txmerUITests.xctest"
+               BuildableName = "CubeTimeUITests.xctest"
                BlueprintName = "CubeTimeUITests"
                ReferencedContainer = "container:CubeTime.xcodeproj">
             </BuildableReference>
@@ -65,7 +65,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "23DE3BD6274DDBE200254D29"
-            BuildableName = "txmer.app"
+            BuildableName = "CubeTime.app"
             BlueprintName = "CubeTime"
             ReferencedContainer = "container:CubeTime.xcodeproj">
          </BuildableReference>
@@ -92,7 +92,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "23DE3BD6274DDBE200254D29"
-            BuildableName = "txmer.app"
+            BuildableName = "CubeTime.app"
             BlueprintName = "CubeTime"
             ReferencedContainer = "container:CubeTime.xcodeproj">
          </BuildableReference>
