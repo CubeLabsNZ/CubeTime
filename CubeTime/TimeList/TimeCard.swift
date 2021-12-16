@@ -245,6 +245,7 @@ struct SolvePopupView: View {
                                     }
                                     managedObjectContext.delete(solve) // Todo read context from environment
                                     timeListManager?.resort()
+                                    try! managedObjectContext.save()
                                 } label: {
                                     Text("Delete Solve")
                                         .font(.system(size: 17, weight: .medium))
@@ -258,6 +259,10 @@ struct SolvePopupView: View {
                             Button {
                                 currentSolve = nil
                                 dismiss() // Dismiss in case called from StatsView
+                                    
+                                if managedObjectContext.hasChanges {
+                                    try! managedObjectContext.save()
+                                }
                             } label: {
                                 
                                 Image(systemName: "chevron.left")

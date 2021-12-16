@@ -165,12 +165,7 @@ struct TimeListView: View {
                 .navigationTitle(isSelectMode ? "Select Solves" : "Session Times")
 //                .navigationBarTitleDisplayMode(isSelectMode ? .inline : .large)
                 
-                .sheet(item: $solve /*isPresented: $showingPopupSlideover*/, onDismiss: {
-                    if managedObjectContext.hasChanges {
-                        try! managedObjectContext.save()
-                    }
-                }) { item in
-                    
+                .sheet(item: $solve) { item in
                     SolvePopupView(solve: item, currentSolve: $solve, timeListManager: timeListManager)
                         .environment(\.managedObjectContext, managedObjectContext)
                 }
