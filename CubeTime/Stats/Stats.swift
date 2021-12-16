@@ -122,7 +122,7 @@ class Stats {
         }
         
         return CalculatedAverage(
-            id: "Current average of \(period)",
+            id: "Current AO\(period)",
             average: solvesByDate.suffix(period).sorted(
                 by: {timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve($1)}).dropFirst().dropLast()
                     .reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(period-2),

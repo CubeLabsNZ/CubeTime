@@ -146,7 +146,7 @@ struct SolvePopupView: View {
                                 .padding(.leading)
                                 .padding(.trailing)
                             
-                            
+                            /*
                             Divider()
                                 .padding(.leading)
                             
@@ -155,14 +155,9 @@ struct SolvePopupView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .padding([.horizontal, .bottom])
                                 .padding(.top, 12)
-//                                .padding(.leading, 32)
-//                                .padding(.trailing, 32)
-//                                .padding(.bottom, 12)
+                            */
                         }
-                        //.frame(minHeight: minRowHeight * 10)
-                        //.frame(height: 300)
                         .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
-                        //.listStyle(.insetGrouped)
                         .padding(.trailing)
                         .padding(.leading)
                         

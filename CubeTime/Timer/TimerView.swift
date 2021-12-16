@@ -38,12 +38,14 @@ struct TimerView: View {
     @State var hideStatusBar = true
     
     @State var algTrainerSubset = 0
+    @State var playgroundScrambleType = 0
     
     
     init(currentSession: Binding<Sessions>, stopWatchManager: StopWatchManager, hideTabBar: Binding<Bool>) {
         self._currentSession = currentSession
         self.stopWatchManager = stopWatchManager
         self._hideTabBar = hideTabBar
+//        self._playgroundScrambleType = State(initialValue: currentSession.wrappedValue.scramble_type)
     }
 
     var body: some View {
@@ -59,7 +61,7 @@ struct TimerView: View {
                     Text(stopWatchManager.scrambleStr ?? "Loading scramble...")
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: UIScreen.screenWidth, maxHeight: UIScreen.screenHeight/3)
-                        .font(.system(size: stopWatchManager.scrambleType == 7 ? 13 : 18, weight: .semibold, design: .monospaced))
+                        .font(.system(size: currentSession.scramble_type == 7 ? 13 : 18, weight: .semibold, design: .monospaced))
                         .allowsTightening(true)
                         .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
                         .padding(.horizontal)
@@ -145,10 +147,10 @@ struct TimerView: View {
                                 Image(systemName: "command.square")
                                     .font(.system(size: 26, weight: .regular))
                             case .multiphase:
-                                Image(systemName: "square.on.square")
+                                Image(systemName: "square.stack")
                                     .font(.system(size: 22, weight: .regular))
                             case .playground:
-                                Image(systemName: "square.stack")
+                                Image(systemName: "square.on.square")
                                     .font(.system(size: 22, weight: .regular))
                             case .compsim:
                                 Image(systemName: "globe.asia.australia")
@@ -185,13 +187,26 @@ struct TimerView: View {
                         case .playground:
                             Text("PLAYGROUND")
                                 .font(.system(size: 17, weight: .medium))
-                            Picker("", selection: $algTrainerSubset) {
-                                Text("SQUARE-1")
-                                    .font(.system(size: 15, weight: .regular))
+                                .onTapGesture() {
+                                    NSLog("\(playgroundScrambleType), currentsession: \(currentSession.scramble_type)")
+                                }
+                            Picker("", selection: $playgroundScrambleType) {
+                                ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                                    Text(element.name).tag(index)
+                                        .font(.system(size: 15, weight: .regular))
+                                }
+                                
+                                    
                             }
                             .pickerStyle(.menu)
+                            .onChange(of: playgroundScrambleType) { newValue in
+                                currentSession.scramble_type = Int32(newValue)
+                                stopWatchManager.rescramble()
+                                NSLog("changed")
+                            }
                             .padding(.leading, 8)
                             .padding(.trailing)
+                            
                         case .compsim:
                             Text("COMP SIM")
                                 .font(.system(size: 17, weight: .medium))

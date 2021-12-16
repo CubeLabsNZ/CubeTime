@@ -21,6 +21,7 @@ enum stopWatchMode {
 
 class StopWatchManager: ObservableObject {
     @Binding var currentSession: Sessions
+//    var currentSession: Sessions
 //    @Binding var feedbackType: Int
     let managedObjectContext: NSManagedObjectContext
     @Published var mode: stopWatchMode = .stopped
@@ -41,19 +42,18 @@ class StopWatchManager: ObservableObject {
     
     let scrambler = CHTScrambler.init()
     
-    var scrambleType: Int32
-    var scrambleSubType: Int32 = 0
-    
+        
     @Published var scrambleStr: String? = nil
     private var nextScrambleStr: String? = nil
     
     init (currentSession: Binding<Sessions>, /*feedbackType: Binding<Int>, */managedObjectContext: NSManagedObjectContext) {
         _currentSession = currentSession
+//        currentSession = currentSession.wrappedValue
 //        _feedbackType = feedbackType
         self.managedObjectContext = managedObjectContext
         self.feedbackStyle = hapticEnabled ? UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!) : nil
         scrambler.initSq1()
-        scrambleType = currentSession.wrappedValue.scramble_type
+//        scrambleType = currentSession.wrappedValue.scramble_type
         secondsStr = formatSolveTime(secs: 0)
         DispatchQueue.main.async {
             self.rescramble()
@@ -77,7 +77,7 @@ class StopWatchManager: ObservableObject {
     
     
     func safeGetScramble() -> String {
-        let scr = CHTScramble.getNewScramble(by: scrambler, type: scrambleType, subType: scrambleSubType)
+        let scr = CHTScramble.getNewScramble(by: scrambler, type: currentSession.scramble_type, subType: 0)
         if let scr = scr {
             return scr.scramble
         } else {
@@ -208,8 +208,8 @@ class StopWatchManager: ObservableObject {
                 solveItem.session = currentSession
                 // currentSession!.addToSolves(solveItem)
                 solveItem.scramble = scrambleStr
-                solveItem.scramble_type = scrambleType
-                solveItem.scramble_subtype = scrambleSubType
+                solveItem.scramble_type = currentSession.scramble_type
+                solveItem.scramble_subtype = 0
                 // .starred
                 solveItem.time = self.secondsElapsed
                 try! managedObjectContext.save()

@@ -335,17 +335,9 @@
 			path = Stats;
 			sourceTree = "<group>";
 		};
-		7D34EAD6276AE8A000CD296A /* DCTimer */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = DCTimer;
-			sourceTree = "<group>";
-		};
 		7D69E0632751FDBB007211CC /* 3rdparty */ = {
 			isa = PBXGroup;
 			children = (
-				7D34EAD6276AE8A000CD296A /* DCTimer */,
 				7D69E0642751FDCB007211CC /* ChaoTimer */,
 			);
 			path = 3rdparty;
@@ -794,7 +786,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"CubeTime/Preview Content\"";
 				DEVELOPMENT_TEAM = 52VS5QG4YD;
 				ENABLE_PREVIEWS = YES;
@@ -831,7 +823,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"CubeTime/Preview Content\"";
 				DEVELOPMENT_TEAM = 52VS5QG4YD;
 				ENABLE_PREVIEWS = YES;
