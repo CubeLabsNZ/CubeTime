@@ -9,13 +9,16 @@ struct CalculatedAverage: Identifiable {
     let average: Double
 //    let discardedIndexes: [Int]
     let accountedSolves: [Solves]
+    let totalPen: PenTypes
 }
 
 
+func timeWithPlusTwoForSolve(_ solve: Solves) -> Double {
+    return solve.time + (solve.penalty == PenTypes.plustwo.rawValue ? 2 : 0)
+}
+
 class Stats {
     var solves: [Solves]
-    //    private var top: [Solves]
-    //    private var bottom: [Solves]
     
     var solvesByDate: [Solves]
     
@@ -32,8 +35,9 @@ class Stats {
         
         /// Uncomment below if you want coredata to sort for you but this is inflexible and may be `O(n log n)` vs `O(n)`
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Solves.time, ascending: true)]
+        let solvesNoPen: [Solves]?
         do {
-            try solves = managedObjectContext.fetch(fetchRequest)
+            solvesNoPen = try managedObjectContext.fetch(fetchRequest)
             
             
         } catch {
@@ -42,6 +46,7 @@ class Stats {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
+        solves = solvesNoPen!.sorted(by: {timeWithPlusTwoForSolve($0) < timeWithPlusTwoForSolve($1)})
         
         //        print(solves)
         
@@ -71,8 +76,8 @@ class Stats {
             return nil
         } 
         var noDNFs = solves
-        noDNFs.removeAll(where: { $0.penalty == 3 })
-        let sum = noDNFs.reduce(0, {$0 + $1.time})
+        noDNFs.removeAll(where: { $0.penalty == PenTypes.dnf.rawValue })
+        let sum = noDNFs.reduce(0, {$0 + timeWithPlusTwoForSolve($1) })
         return sum / Double(noDNFs.count)
     }
     
@@ -89,29 +94,23 @@ class Stats {
             return nil
         }
         
-        var trim: Int
+        let trim = period > 100 ? 5 : 1
         
-        if period > 100 {
-            trim = 5
-        } else {
-            trim = 1
-        }
-            
         
-        var lowest_average: Double = solves[solves.count-1].time
-        var lowest_values: [Solves]?
+        var lowestAverage: Double = timeWithPlusTwoForSolve(solves[solves.count-1])
+        var lowestValues: [Solves]?
         
         for i in period..<solves.count+1 {
             let range = i - period + trim..<i - trim
-            let sum = solves[range].reduce(0, {$0 + $1.time})
+            let sum = solves[range].reduce(0, {$0 + timeWithPlusTwoForSolve($1)})
             
             let result = Double(sum) / Double(period-2)
-            if result < lowest_average {
-                lowest_values = solves[i - period ..< i].sorted(by: {$0.date! > $1.date!})
-                lowest_average = result
+            if result < lowestAverage {
+                lowestValues = solves[i - period ..< i].sorted(by: {$0.date! > $1.date!})
+                lowestAverage = result
             }
         }
-        return CalculatedAverage(id: "Best average of \(period)", average: lowest_average, accountedSolves: lowest_values!)
+        return CalculatedAverage(id: "Best average of \(period)", average: lowestAverage, accountedSolves: lowestValues!, totalPen: .none)
     }
 
     
@@ -123,8 +122,11 @@ class Stats {
         
         return CalculatedAverage(
             id: "Current average of \(period)",
-            average: solvesByDate.suffix(period).sorted(by: {$0.time > $1.time}).dropFirst().dropLast().reduce(0, {$0 + $1.time}) / Double(period-2),
-            accountedSolves: solvesByDate.suffix(period)
+            average: solvesByDate.suffix(period).sorted(
+                by: {timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve($1)}).dropFirst().dropLast()
+                    .reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(period-2),
+            accountedSolves: solvesByDate.suffix(period),
+            totalPen: solvesByDate.suffix(period).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= 2 ? .dnf : .none
         )
     }
     

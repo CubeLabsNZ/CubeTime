@@ -37,7 +37,7 @@ enum PenTypes: Int16 {
 }
 
 
-func formatSolveTime(secs: Double, penType: PenTypes = .none) -> String {
+func formatSolveTime(secs: Double, penType: PenTypes? = PenTypes.none) -> String {
     if penType == PenTypes.dnf {
         return "DNF"
     }
