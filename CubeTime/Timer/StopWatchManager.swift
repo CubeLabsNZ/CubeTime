@@ -44,7 +44,7 @@ class StopWatchManager: ObservableObject {
     
         
     @Published var scrambleStr: String? = nil
-    private var nextScrambleStr: String? = nil
+    var nextScrambleStr: String? = nil
     
     init (currentSession: Binding<Sessions>, /*feedbackType: Binding<Int>, */managedObjectContext: NSManagedObjectContext) {
         _currentSession = currentSession
@@ -77,7 +77,7 @@ class StopWatchManager: ObservableObject {
     
     
     func safeGetScramble() -> String {
-        let scr = CHTScramble.getNewScramble(by: scrambler, type: currentSession.scramble_type, subType: 0)
+        let scr = CHTScramble.getNewScramble(by: scrambler, type: puzzle_types[Int(currentSession.scramble_type)].scrID, subType: 0)
         if let scr = scr {
             return scr.scramble
         } else {
@@ -169,7 +169,7 @@ class StopWatchManager: ObservableObject {
                         NSLog("Left")
                         if solveItem != nil {
                             prevIsDown = false // Showing a dialog implies touch up
-                            timerColour = .black
+                            timerColour = TimerTextColours.timerDefaultColour
                             prevDownTriggeredGesture = false
                             showDeleteSolveConfirmation = true
                             self.feedbackStyle?.impactOccurred()

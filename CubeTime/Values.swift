@@ -65,28 +65,30 @@ struct PuzzleType {
     let name: String
     let subtypes: [Int: String]
     
+    let scrID: Int32
+    var blind = false
 }
 
 
 // TODO 3BLD
 
 let puzzle_types: [PuzzleType] = [
-    PuzzleType(name: "2x2", subtypes: [0: "Random State"]),
-    PuzzleType(name: "3x3", subtypes: [0: "Random State", 2: "Cross Solved"]),
-    PuzzleType(name: "4x4", subtypes: [0: "WCA"]),
-    PuzzleType(name: "5x5", subtypes: [0: "WCA"]),
-    PuzzleType(name: "6x6", subtypes: [0: "prefix", 1: "SiGN (OLD)"]), // TODO remove prefix only here because 0 hardcoded
-    PuzzleType(name: "7x7", subtypes: [0: "prefix", 1: "SiGN (OLD)"]), // TODO remove prefix
-    PuzzleType(name: "Square-1", subtypes: [0: "Random State"]),
-    PuzzleType(name: "Megaminx", subtypes:  [0: "Pochmann"]),
-    PuzzleType(name: "Pyraminx", subtypes: [0: "Random State", 1: "Random Moves"]),
-    PuzzleType(name: "Clock", subtypes: [0: "WCA"]),
-    PuzzleType(name: "Skewb", subtypes: [0: "Random State"]),
+    PuzzleType(name: "2x2", subtypes: [0: "Random State"], scrID: 0),
+    PuzzleType(name: "3x3", subtypes: [0: "Random State", 2: "Cross Solved"], scrID: 1),
+    PuzzleType(name: "4x4", subtypes: [0: "WCA"], scrID: 2),
+    PuzzleType(name: "5x5", subtypes: [0: "WCA"], scrID: 3),
+    PuzzleType(name: "6x6", subtypes: [0: "prefix", 1: "SiGN (OLD)"], scrID: 4), // TODO remove prefix only here because 0 hardcoded
+    PuzzleType(name: "7x7", subtypes: [0: "prefix", 1: "SiGN (OLD)"], scrID: 5), // TODO remove prefix
+    PuzzleType(name: "Square-1", subtypes: [0: "Random State"], scrID: 6),
+    PuzzleType(name: "Megaminx", subtypes:  [0: "Pochmann"], scrID: 7),
+    PuzzleType(name: "Pyraminx", subtypes: [0: "Random State", 1: "Random Moves"], scrID: 8),
+    PuzzleType(name: "Clock", subtypes: [0: "WCA"], scrID: 9),
+    PuzzleType(name: "Skewb", subtypes: [0: "Random State"], scrID: 10),
     
-    PuzzleType(name: "3x3 OH", subtypes: [0: "Random State"]), // TODO map to actual scrambles
-    PuzzleType(name: "3x3 Blindfolded", subtypes: [0: "Random State"]),
-    PuzzleType(name: "4x4 Blindfolded", subtypes: [0: "Random State"]),
-    PuzzleType(name: "5x5 Blindfolded", subtypes: [0: "Random State"]),
+    PuzzleType(name: "3x3 OH", subtypes: [0: "Random State"], scrID: 1), // TODO map to actual scrambles
+    PuzzleType(name: "3x3 Blindfolded", subtypes: [0: "Random State"], scrID: 1, blind: true),
+    PuzzleType(name: "4x4 Blindfolded", subtypes: [0: "Random State"], scrID: 2, blind: true),
+    PuzzleType(name: "5x5 Blindfolded", subtypes: [0: "Random State"], scrID: 3, blind: true),
     
 ]
 

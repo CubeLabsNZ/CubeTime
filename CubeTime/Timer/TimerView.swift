@@ -201,6 +201,7 @@ struct TimerView: View {
                             .pickerStyle(.menu)
                             .onChange(of: playgroundScrambleType) { newValue in
                                 currentSession.scramble_type = Int32(newValue)
+                                stopWatchManager.nextScrambleStr = nil
                                 stopWatchManager.rescramble()
                                 NSLog("changed")
                             }
