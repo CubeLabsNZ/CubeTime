@@ -93,9 +93,10 @@ struct MainTabsView: View {
         if lastUsedSessionURI == nil {
             NSLog("Saved ID is nil, creating default object")
             currentSession = Sessions(context: managedObjectContext) // TODO make it playground
-            currentSession.scramble_type = 0
+            currentSession.scramble_type = 1
+            currentSession.session_type = SessionTypes.playground.rawValue
             currentSession.name = "Default Session"
-            try! managedObjectContext.save() // TODO Fix for some reason save is not ok !!! still present
+            try! managedObjectContext.save()
             UserDefaults.standard.set(currentSession.objectID.uriRepresentation(), forKey: "last_used_session")
         } else {
             let objID = managedObjectContext.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI!)!
