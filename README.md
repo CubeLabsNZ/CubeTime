@@ -4,9 +4,14 @@
   <img src="https://user-images.githubusercontent.com/65262710/146141635-06fff458-003e-45af-b7ee-6860d7b4ea72.png"
        width="300"
        height="300">
-</p>
-
+<p align="center">
 <h4 align="center">SPEEDCUBING TIMER & UTILITIES</h4>
+<p align="center">
+  <a href="https://apps.apple.com/us/app/cubetime/id1600392245">
+    <img src="https://user-images.githubusercontent.com/24711088/146530953-94bc8542-8a1a-49a5-9faf-75c63281f2fc.png"
+         height="48">
+  </a>
+</p>
 
 ---
 
@@ -17,11 +22,12 @@
 4. [User Guide](#user-guide)
 5. [Building it yourself]
 6. [Contributing]
-7. [Some final stuff]
+7. [Some final stuff](#some-final-stuff)
 
 ## Overview
 
-### Information
+### Information!
+
  - Completely ad-free, free to download and is fully open source, copylefted software (GPLv3)
  - Fully built with SwiftUI, lightweight and modern app architecture
  - Simple and modern user interface
@@ -84,7 +90,7 @@
 ### Upcoming Features
 
 You can check the [Todo list](https://github.com/CubeStuffs/CubeTime/projects/1) in this repo, for a list of all the planned features, but here's an outline:
-- iPadOS support, including:
+- iPad® support, including:
   * Keyboard shortcuts
   * Trackpad support
   * Multitasking window support
@@ -139,3 +145,5 @@ Deleting a session will delete *all* your solves in that session, so be careful!
 ### Settings
 You can customise almost all settings in the app and the appearance and themes.
 
+## Some final stuff
+iPad and App Store are trademarks of Apple Inc., registered in the U.S. and other countries.
