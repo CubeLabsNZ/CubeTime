@@ -2,7 +2,7 @@ import SwiftUI
 
 
 enum gsKeys: String {
-    case inspection, freeze, timeDpWhenRunning, hapBool, hapType, gestureDistance, displayTruncation
+    case inspection, freeze, timeDpWhenRunning, hapBool, hapType, gestureDistance, displayDP
 }
 
 extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
@@ -18,7 +18,7 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.hapBool.rawValue) var hapticFeedback: Bool = true
     @AppStorage(gsKeys.hapType.rawValue) var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
     @AppStorage(gsKeys.gestureDistance.rawValue) var gestureActivationDistance: Double = 50
-    @AppStorage(gsKeys.displayTruncation.rawValue) var displayTruncation: String = "2 d.p"
+    @AppStorage(gsKeys.displayDP.rawValue) var displayDP: Int = 3
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
@@ -29,8 +29,6 @@ struct GeneralSettingsView: View {
         UIImpactFeedbackGenerator.FeedbackStyle.soft: "Soft",
         UIImpactFeedbackGenerator.FeedbackStyle.rigid: "Rigid"
     ]
-    
-    let displayModes: [String] = ["2 d.p", "3 d.p"]
     
     @Environment(\.colorScheme) var colourScheme
     
@@ -196,9 +194,10 @@ struct GeneralSettingsView: View {
                     
                     Spacer()
                     
-                    Picker("", selection: $displayTruncation) {
-                        ForEach(displayModes, id: \.self) {
-                            Text($0)
+                    Picker("", selection: $displayDP) {
+                        ForEach(2...3, id: \.self) {
+                            Text("\($0) d.p.")
+                                .tag($0)
                         }
                     }
                     .pickerStyle(.menu)

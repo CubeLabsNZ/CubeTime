@@ -59,7 +59,8 @@ func formatSolveTime(secs: Double, penType: PenTypes? = PenTypes.none) -> String
     if penType == PenTypes.dnf {
         return "DNF"
     }
-    let secsfmt = penType == .plustwo ? ".3f+" : ".3f"
+    let dp = UserDefaults.standard.integer(forKey: gsKeys.displayDP.rawValue)
+    let secsfmt = penType == .plustwo ? ".\(dp)f+" : ".\(dp)f"
     if secs < 60 {
         return String(format: "%\(secsfmt)", secs) // TODO set DP
     } else {

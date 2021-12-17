@@ -17,7 +17,9 @@ struct CubeTime: App {
                 gsKeys.freeze.rawValue: 0.5,
                 gsKeys.gestureDistance.rawValue: 50,
                 gsKeys.hapBool.rawValue: true,
-                gsKeys.hapType.rawValue: UIImpactFeedbackGenerator.FeedbackStyle.rigid.rawValue
+                gsKeys.hapType.rawValue: UIImpactFeedbackGenerator.FeedbackStyle.rigid.rawValue,
+                gsKeys.timeDpWhenRunning.rawValue: 3,
+                gsKeys.displayDP.rawValue: 3
             ]
         )
         
