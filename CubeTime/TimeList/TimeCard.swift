@@ -143,7 +143,6 @@ struct SolvePopupView: View {
                             Text(scramble)
                                 .font(.system(size: 17, weight: .regular, design: .monospaced))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
-                                .padding(.leading)
                                 .padding(.trailing)
                             
                             /*

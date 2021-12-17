@@ -2,7 +2,7 @@ import SwiftUI
 
 
 enum gsKeys: String {
-    case inspection, freeze, interval, hapBool, hapType, gestureDistance, displayTruncation
+    case inspection, freeze, interval, hapBool, hapType, gestureDistance, displayTruncation, exportTruncation
 }
 
 extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
@@ -19,6 +19,7 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.hapType.rawValue) var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
     @AppStorage(gsKeys.gestureDistance.rawValue) var gestureActivationDistance: Double = 50
     @AppStorage(gsKeys.displayTruncation.rawValue) var displayTruncation: String = "2 d.p"
+    @AppStorage(gsKeys.exportTruncation.rawValue) var exportTruncation: String = "3 d.p"
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
@@ -197,6 +198,28 @@ struct GeneralSettingsView: View {
                     Spacer()
                     
                     Picker("", selection: $displayTruncation) {
+                        ForEach(displayModes, id: \.self) {
+                            Text($0)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .font(.system(size: 17, weight: .regular))
+                    .accentColor(accentColour)
+                    .foregroundColor(accentColour)
+                    
+                }
+                .padding(.horizontal)
+                
+                
+                Divider()
+                
+                HStack {
+                    Text("Times Exported To: ")
+                        .font(.system(size: 17, weight: .medium))
+                    
+                    Spacer()
+                    
+                    Picker("", selection: $exportTruncation) {
                         ForEach(displayModes, id: \.self) {
                             Text($0)
                         }

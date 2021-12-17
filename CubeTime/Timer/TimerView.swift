@@ -38,14 +38,14 @@ struct TimerView: View {
     @State var hideStatusBar = true
     
     @State var algTrainerSubset = 0
-    @State var playgroundScrambleType = 0
+    @State var playgroundScrambleType: Int
     
     
     init(currentSession: Binding<Sessions>, stopWatchManager: StopWatchManager, hideTabBar: Binding<Bool>) {
         self._currentSession = currentSession
         self.stopWatchManager = stopWatchManager
         self._hideTabBar = hideTabBar
-//        self._playgroundScrambleType = State(initialValue: currentSession.wrappedValue.scramble_type)
+        self._playgroundScrambleType = State(initialValue: Int(currentSession.wrappedValue.scramble_type))
     }
 
     var body: some View {
@@ -201,8 +201,8 @@ struct TimerView: View {
                             .pickerStyle(.menu)
                             .onChange(of: playgroundScrambleType) { newValue in
                                 currentSession.scramble_type = Int32(newValue)
+                                stopWatchManager.nextScrambleStr = nil
                                 stopWatchManager.rescramble()
-                                NSLog("changed")
                             }
                             .padding(.leading, 8)
                             .padding(.trailing)

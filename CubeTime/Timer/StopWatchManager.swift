@@ -44,7 +44,7 @@ class StopWatchManager: ObservableObject {
     
         
     @Published var scrambleStr: String? = nil
-    private var nextScrambleStr: String? = nil
+    var nextScrambleStr: String? = nil
     
     init (currentSession: Binding<Sessions>, /*feedbackType: Binding<Int>, */managedObjectContext: NSManagedObjectContext) {
         _currentSession = currentSession
