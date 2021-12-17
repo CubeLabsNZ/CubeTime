@@ -2,7 +2,7 @@ import SwiftUI
 
 
 enum gsKeys: String {
-    case inspection, freeze, interval, hapBool, hapType, gestureDistance, displayTruncation
+    case inspection, freeze, timeDpWhenRunning, hapBool, hapType, gestureDistance, displayTruncation
 }
 
 extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
@@ -14,15 +14,13 @@ struct GeneralSettingsView: View {
     
     @AppStorage(gsKeys.inspection.rawValue) var inspectionTime: Bool = false
     @AppStorage(gsKeys.freeze.rawValue) var holdDownTime: Double = 0.5
-    @AppStorage(gsKeys.interval.rawValue) var timerIntervalMode: String = "0.01s"
+    @AppStorage(gsKeys.timeDpWhenRunning.rawValue) var timerDP: Int = 3
     @AppStorage(gsKeys.hapBool.rawValue) var hapticFeedback: Bool = true
     @AppStorage(gsKeys.hapType.rawValue) var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
     @AppStorage(gsKeys.gestureDistance.rawValue) var gestureActivationDistance: Double = 50
     @AppStorage(gsKeys.displayTruncation.rawValue) var displayTruncation: String = "2 d.p"
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
-    
-    let intervalModes: [String] = ["0.01s", "0.1s", "seconds"]
     
     let hapticNames: [UIImpactFeedbackGenerator.FeedbackStyle: String] = [
         UIImpactFeedbackGenerator.FeedbackStyle.light: "Light",
@@ -83,12 +81,14 @@ struct GeneralSettingsView: View {
                 
                 VStack (alignment: .leading) {
                     HStack {
-                        Text("Timer Update Interval")
+                        Text("Timer precision when timing")
                             .font(.system(size: 17, weight: .medium))
                         Spacer()
-                        Picker("", selection: $timerIntervalMode) {
-                            ForEach(intervalModes, id: \.self) {
-                                Text($0)
+                        Picker("", selection: $timerDP) {
+                            Text("Do not show time when timing")
+                                .tag(-1)
+                            ForEach(0...3, id: \.self) {
+                                Text("\($0) d.p.")
                             }
                         }
                         .pickerStyle(.menu)

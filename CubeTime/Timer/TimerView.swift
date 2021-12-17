@@ -195,15 +195,13 @@ struct TimerView: View {
                                     Text(element.name).tag(index)
                                         .font(.system(size: 15, weight: .regular))
                                 }
-                                
-                                    
                             }
                             .pickerStyle(.menu)
                             .onChange(of: playgroundScrambleType) { newValue in
                                 currentSession.scramble_type = Int32(newValue)
                                 stopWatchManager.nextScrambleStr = nil
                                 stopWatchManager.rescramble()
-                                NSLog("changed")
+                                // TODO do not rescramble when setting to same scramble eg 3blnd -> 3oh
                             }
                             .padding(.leading, 8)
                             .padding(.trailing)

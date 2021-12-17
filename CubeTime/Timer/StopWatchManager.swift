@@ -2,10 +2,6 @@ import Foundation
 import CoreData
 import SwiftUI
 
-//var userHoldTime: Double = 0.5
-//let gestureKillTime: Double = 0.2
-//let inspectionEnabled = true
-//var inspectionEnabled = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
 let plustwotime = 15
 let dnftime = 17
 
@@ -14,10 +10,6 @@ enum stopWatchMode {
     case stopped
     case inspecting
 }
-
-// TO left = discard
-// TO right = reload scramble
-// Double Tap = penalty menu TODO
 
 class StopWatchManager: ObservableObject {
     @Binding var currentSession: Sessions
@@ -39,6 +31,9 @@ class StopWatchManager: ObservableObject {
     private let inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
     private let userHoldTime: Double = UserDefaults.standard.double(forKey: gsKeys.freeze.rawValue)
     private let geatureThreshold: Double = UserDefaults.standard.double(forKey: gsKeys.gestureDistance.rawValue)
+    
+//    private let timeUpdInterval: Time
+    private let timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
     
     let scrambler = CHTScrambler.init()
     
@@ -125,15 +120,21 @@ class StopWatchManager: ObservableObject {
         secondsStr = formatSolveTime(secs: 0)
         timerStartTime = Date()
         
-        timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { [self] timer in
-            self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
-            self.secondsStr = formatSolveTime(secs: self.secondsElapsed)
+        if timeDP != -1 {
+            timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { [self] timer in
+                self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
+                self.secondsStr = formatSolveTimeForTimer(secs: self.secondsElapsed, dp: timeDP)
+            }
+        } else {
+            self.secondsStr = "..."
         }
         NSLog("started timer i think")
     }
     
     func stop() {
         timer?.invalidate()
+        self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
+        self.secondsStr = formatSolveTime(secs: self.secondsElapsed)
         mode = .stopped
 
     }
@@ -232,7 +233,7 @@ class StopWatchManager: ObservableObject {
         //timer?.invalidate() // Invalidate possible running inspections
         prevIsDown = false
         allowGesture = true
-        if !prevDownTriggeredGesture {
+        if !prevDownTriggeredGesture && showPenOptions {
             withAnimation {
                 showPenOptions = false
             }

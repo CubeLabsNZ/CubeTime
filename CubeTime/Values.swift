@@ -44,6 +44,16 @@ enum SessionTypes: Int16 {
     case compsim
 }
 
+func formatSolveTimeForTimer(secs: Double, dp: Int) -> String {
+    if secs < 60 {
+        return String(format: "%.\(dp)f", secs) // TODO set DP
+    } else {
+        let mins: Int = Int((secs / 60).rounded(.down))
+        let secs = secs.truncatingRemainder(dividingBy: 60)
+        
+        return String(format: "%d:%06.\(dp)f", mins, secs)
+    }
+}
 
 func formatSolveTime(secs: Double, penType: PenTypes? = PenTypes.none) -> String {
     if penType == PenTypes.dnf {
