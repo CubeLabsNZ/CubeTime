@@ -95,10 +95,10 @@ class Stats {
             return nil
         }
         
-        let trim = period > 100 ? 5 : 1
+        let trim = period >= 100 ? 5 : 1
         
         
-        var lowestAverage: Double = timeWithPlusTwoForSolve(solves[solves.count-1])
+        var lowestAverage: Double?
         var lowestValues: [Solves]?
         
         for i in period..<solves.count+1 {
@@ -106,12 +106,12 @@ class Stats {
             let sum = solvesByDate[range].reduce(0, {$0 + timeWithPlusTwoForSolve($1)})
             
             let result = Double(sum) / Double(period-2)
-            if result < lowestAverage {
+            if lowestAverage == nil || result < lowestAverage! {
                 lowestValues = solvesByDate[i - period ..< i].sorted(by: {$0.date! > $1.date!})
                 lowestAverage = result
             }
         }
-        return CalculatedAverage(id: "Best AO\(period)", average: lowestAverage, accountedSolves: lowestValues!, totalPen: .none)
+        return CalculatedAverage(id: "Best AO\(period)", average: lowestAverage!, accountedSolves: lowestValues!, totalPen: .none)
     }
 
     
