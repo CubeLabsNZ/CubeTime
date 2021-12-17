@@ -30,31 +30,12 @@ struct SettingsView: View {
     
     var body: some View {
         ZStack {
-            
-            /*
-            if currentCard == nil {
-                
-            } else {
-                SettingsDetail(currentCard: $currentCard, namespace: namespace)
-                    .zIndex(2)
-            }
-             */
-            
             NavigationView {
                 ZStack {
                     Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                         .ignoresSafeArea()
                     
                     VStack (spacing: 16) {
-                        //                            HStack {
-                        //                                Text("Settings")
-                        //                                    .font(.largeTitle.bold())
-                        //                                    .multilineTextAlignment(.leading)
-                        //                                    .padding(.top, UIScreen.screenHeight/20)
-                        //                                Spacer()
-                        //                            }
-                        
-                        
                         HStack (spacing: 16) {
                             SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
                             SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)

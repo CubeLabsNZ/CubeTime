@@ -105,7 +105,7 @@ class Stats {
             let range = i - period + trim..<i - trim
             let sum = solvesByDate[range].reduce(0, {$0 + timeWithPlusTwoForSolve($1)})
             
-            let result = Double(sum) / Double(period-2)
+            let result = Double(sum) / Double(period-(trim*2))
             if lowestAverage == nil || result < lowestAverage! {
                 lowestValues = solvesByDate[i - period ..< i].sorted(by: {$0.date! > $1.date!})
                 lowestAverage = result
@@ -117,6 +117,9 @@ class Stats {
     
     
     func getCurrentAverageOf(_ period: Int) -> CalculatedAverage? {
+        
+        let trim = period >= 100 ? 5 : 1
+        
         if solves.count < period {
             return nil
         }
@@ -125,7 +128,7 @@ class Stats {
             id: "Current AO\(period)",
             average: solvesByDate.suffix(period).sorted(
                 by: {timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve($1)}).dropFirst().dropLast()
-                    .reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(period-2),
+                    .reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(period-(trim * 2)),
             accountedSolves: solvesByDate.suffix(period),
             totalPen: solvesByDate.suffix(period).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= 2 ? .dnf : .none
         )

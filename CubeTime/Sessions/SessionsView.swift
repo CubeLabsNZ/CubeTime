@@ -229,7 +229,7 @@ struct NewSessionPopUpView: View {
                             
                             ZStack {
                                 Rectangle()
-                                    .fill(Color(uiColor: .systemGray6))
+                                    .fill(Color(uiColor: colourScheme == .dark ? .black : .systemGray6))
                                     .frame(height: 1)
                                     .padding(.leading)
                                     .padding(.trailing)
@@ -267,7 +267,7 @@ struct NewSessionPopUpView: View {
                             
                             ZStack {
                                 Rectangle()
-                                    .fill(Color(uiColor: .systemGray6))
+                                    .fill(Color(uiColor: colourScheme == .dark ? .black : .systemGray6))
                                     .frame(height: 1)
                                     .padding(.leading)
                                     .padding(.trailing)
@@ -305,7 +305,7 @@ struct NewSessionPopUpView: View {
                         
                         ZStack {
                             Rectangle()
-                                .fill(Color(uiColor: .systemGray6))
+                                .fill(Color(uiColor: colourScheme == .dark ? .black : .systemGray6))
                                 .frame(height: 1)
                                 .padding(.leading)
                                 .padding(.trailing)
@@ -968,7 +968,7 @@ struct SessionCard: View {
                                     Text(item.name ?? "Unkown session name")
                                         .font(.system(size: 22, weight: .bold, design: .default))
                                         .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
-                                    Text(puzzle_types[Int(item.scramble_type)].name)
+                                    Text(SessionTypes(rawValue: item.session_type)! != .playground ? puzzle_types[Int(item.scramble_type)].name : "Playground")
                                         .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                                 }
                             } else {
@@ -976,7 +976,7 @@ struct SessionCard: View {
                                     Text(item.name ?? "Unkown session name")
                                         .font(.system(size: 22, weight: .bold, design: .default))
                                         .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
-                                    Text(puzzle_types[Int(item.scramble_type)].name)
+                                    Text(SessionTypes(rawValue: item.session_type)! != .playground ? puzzle_types[Int(item.scramble_type)].name : "Playground")
                                         .font(.system(size: 15, weight: .medium, design: .default))
                                         .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                                 }

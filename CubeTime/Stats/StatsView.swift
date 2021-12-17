@@ -106,6 +106,7 @@ struct StatsView: View {
                                                         .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                         .padding(.leading, 12)
                                                     
+                                                        /*
                                                         .onTapGesture {
                                                             for _ in 1..<100 {
                                                                 let solveItem: Solves!
@@ -127,6 +128,7 @@ struct StatsView: View {
                                                                 }
                                                             }
                                                         }
+                                                         */
                                                     
                                                     Spacer()
                                                     
