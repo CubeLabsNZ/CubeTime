@@ -95,7 +95,7 @@ class StopWatchManager: ObservableObject {
     
     
     
-    var inspectionSecs = 0
+    @Published var inspectionSecs = 0
     
     
     func startInspection() {

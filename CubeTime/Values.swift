@@ -124,13 +124,13 @@ class TimerTextColours {
 }
 
 class InspectionColours {
-//    static let eightColour: Color = Color(red: 234/255, green: 224/255, blue: 182/255)
-//    static let twelveColour: Color = Color(red: 234/255, green: 212/255, blue: 182/255)
-//    static let penaltyColour: Color = Color(red: 234/255, green: 194/255, blue: 192/255)
+    static let eightColour: Color = Color(red: 234/255, green: 224/255, blue: 182/255)
+    static let twelveColour: Color = Color(red: 234/255, green: 212/255, blue: 182/255)
+    static let penaltyColour: Color = Color(red: 234/255, green: 194/255, blue: 192/255)
     
-    static let eightColour = 0xeae0b6
-    static let twelveColour = 0xead4b6
-    static let penaltyColour = 0xeac2c0
+//    static let eightColour = 0xeae0b6
+//    static let twelveColour = 0xead4b6
+//    static let penaltyColour = 0xeac2c0
     
 //    static let eightColour = Color(0xeae0b6)
 //    static let twelveColour = Color(0xead4b6)
