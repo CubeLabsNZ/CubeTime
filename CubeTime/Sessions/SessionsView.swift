@@ -1,5 +1,6 @@
 import SwiftUI
 import CoreData
+import Combine
 
 
 /// **Extensions and other views/viewmodifiers**
@@ -917,6 +918,7 @@ struct NewCompsimView: View {
     @Binding var showNewSessionPopUp: Bool
     @Binding var currentSession: Sessions
     @State private var name: String = ""
+    @State private var targetStr: String = ""
     @State private var sessionEventType: Int32 = 0
     @State var pinnedSession: Bool
     
@@ -967,6 +969,24 @@ struct NewCompsimView: View {
                                 .font(.system(size: 17, weight: .medium))
                             
                             Spacer()
+                            
+                            TextField("0.000", text: $targetStr)
+                                .keyboardType(.numberPad)
+                                .multilineTextAlignment(.trailing)
+                                .onReceive(Just(targetStr)) { newValue in
+                                    var filtered: String = newValue.filter { $0.isNumber }.replacingOccurrences(of: "^0+", with: "", options: .regularExpression)
+                                    if filtered.count > 3 {
+                                        filtered.insert(".", at: filtered.index(filtered.endIndex, offsetBy: -3))
+                                    } else if filtered.count > 0 {
+                                        filtered = "0." + repeatElement("0", count: 3 - filtered.count) + filtered
+                                    }
+                                    if filtered.count > 6 {
+                                        filtered.insert(":", at: filtered.index(filtered.endIndex, offsetBy: -6))
+                                    }
+                                    if filtered != newValue {
+                                        self.targetStr = filtered
+                                    }
+                                }
                         }
                         .padding()
                     }
