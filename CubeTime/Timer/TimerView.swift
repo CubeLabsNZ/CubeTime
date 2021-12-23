@@ -52,35 +52,36 @@ struct TimerView: View {
     var body: some View {
         ZStack {
             
-            if inspectionRange == 0 {
-                Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
-                    .ignoresSafeArea()
-            } else if inspectionRange == 1 {
-                Color(colourScheme == .light ? InspectionColours.eightColour : .black)
-                    .ignoresSafeArea()
-            } else if inspectionRange == 2 {
-                Color(colourScheme == .light ? InspectionColours.twelveColour : .black)
-                    .ignoresSafeArea()
-            } else {
-                Color(colourScheme == .light ? InspectionColours.penaltyColour : .black)
-                    .ignoresSafeArea()
-                if inspectionRange == 3 {
-                    Text("+2")
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
-                    .foregroundColor(colourScheme == .light ? .black : nil)
-                    .offset(y: 45)
-                } else {
+            if stopWatchManager.mode == .inspecting {
+                if colourScheme == .light {
+                    
+                    switch stopWatchManager.inspectionSecs {
+                    case ..<8:
+                        Color(uiColor: .systemGray6)
+                            .ignoresSafeArea()
+                    case 8..<12:
+                        InspectionColours.eightColour
+                            .ignoresSafeArea()
+                    case 12..<15:
+                        InspectionColours.twelveColour
+                            .ignoresSafeArea()
+                    default: InspectionColours.penaltyColour
+                            .ignoresSafeArea()
+                    }
+                }
+                
+                if stopWatchManager.inspectionSecs >= 17 {
                     Text("DNF")
                     .font(.system(size: 22, weight: .semibold, design: .rounded))
                     .foregroundColor(colourScheme == .light ? .black : nil)
                     .offset(y: 45)
+                } else if stopWatchManager.inspectionSecs >= 15 {
+                    Text("+2")
+                    .font(.system(size: 22, weight: .semibold, design: .rounded))
+                    .foregroundColor(colourScheme == .light ? .black : nil)
+                    .offset(y: 45)
                 }
-            }
-            
-            
-            
-            
-            if stopWatchManager.mode == .stopped {
+            } else if  stopWatchManager.mode == .stopped {
                 VStack {
                     Text(stopWatchManager.scrambleStr ?? "Loading scramble...")
                         .multilineTextAlignment(.center)
@@ -102,7 +103,20 @@ struct TimerView: View {
                 Spacer()
                 
                 Text(stopWatchManager.secondsStr)
-                    .foregroundColor(stopWatchManager.timerColour)
+                    .foregroundColor(
+                        {
+                            if stopWatchManager.mode == .inspecting && colourScheme == .dark {
+                                switch stopWatchManager.inspectionSecs {
+                                case ..<8: return TimerTextColours.timerDefaultColour
+                                case 8..<12: return Color(uiColor: .systemYellow)
+                                case 12..<15: return Color(uiColor: .systemOrange)
+                                default: return Color(uiColor: .systemRed)
+                                }
+                            } else {
+                                return stopWatchManager.timerColour
+                            }
+                        }()
+                    )
                     .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 70 : 56))
                     .animation(Animation.spring(), value: stopWatchManager.mode == .running)
                 
@@ -349,11 +363,11 @@ struct TimerView: View {
             }
         }
         .onReceive(stopWatchManager.$mode) { newMode in
-            hideTabBar = (newMode == .running)
+            hideTabBar = newMode == .inspecting || newMode == .running
             
             
             withAnimation(.easeIn(duration: 0.1)) {
-                hideStatusBar = (newMode == .running)
+                hideStatusBar = newMode == .inspecting || newMode == .running
                 
             }
         }
