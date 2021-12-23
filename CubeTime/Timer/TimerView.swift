@@ -55,7 +55,10 @@ struct TimerView: View {
     var body: some View {
         ZStack {
             
+            
+            
             if stopWatchManager.mode == .inspecting {
+                
                 if colourScheme == .light {
                     
                     switch stopWatchManager.inspectionSecs {
@@ -85,6 +88,7 @@ struct TimerView: View {
                     .offset(y: 45)
                 }
             } else if  stopWatchManager.mode == .stopped {
+                
                 VStack {
                     Text(stopWatchManager.scrambleStr ?? "Loading scramble...")
                         .multilineTextAlignment(.center)

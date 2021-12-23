@@ -79,14 +79,14 @@ struct GeneralSettingsView: View {
                 
                 VStack (alignment: .leading) {
                     HStack {
-                        Text("Timer precision when timing")
+                        Text("Timer Update")
                             .font(.system(size: 17, weight: .medium))
                         Spacer()
                         Picker("", selection: $timerDP) {
-                            Text("Do not show time when timing")
+                            Text("Nothing")
                                 .tag(-1)
                             ForEach(0...3, id: \.self) {
-                                Text("\($0) d.p.")
+                                Text("\($0) d.p")
                             }
                         }
                         .pickerStyle(.menu)
@@ -196,7 +196,7 @@ struct GeneralSettingsView: View {
                     
                     Picker("", selection: $displayDP) {
                         ForEach(2...3, id: \.self) {
-                            Text("\($0) d.p.")
+                            Text("\($0) d.p")
                                 .tag($0)
                         }
                     }
