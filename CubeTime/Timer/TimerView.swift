@@ -105,7 +105,7 @@ struct TimerView: View {
                 Text(stopWatchManager.secondsStr)
                     .foregroundColor(
                         {
-                            if stopWatchManager.mode == .inspecting && colourScheme == .dark {
+                            if stopWatchManager.mode == .inspecting && colourScheme == .dark && stopWatchManager.timerColour == TimerTextColours.timerDefaultColour {
                                 switch stopWatchManager.inspectionSecs {
                                 case ..<8: return TimerTextColours.timerDefaultColour
                                 case 8..<12: return Color(uiColor: .systemYellow)
