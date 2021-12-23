@@ -48,11 +48,35 @@ struct TimerView: View {
         self._playgroundScrambleType = State(initialValue: Int(currentSession.wrappedValue.scramble_type))
     }
 
+    
     var body: some View {
         ZStack {
             
-            Color(uiColor: colourScheme == .light ? .systemGray6 : .black) /// ~~todo make so user can change colour/changes dynamically with system theme - but when dark mode, change systemgray6 -> black (or not full black >:C)~~
-                .ignoresSafeArea()
+            if inspectionRange == 0 {
+                Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+                    .ignoresSafeArea()
+            } else if inspectionRange == 1 {
+                Color(colourScheme == .light ? InspectionColours.eightColour : .black)
+                    .ignoresSafeArea()
+            } else if inspectionRange == 2 {
+                Color(colourScheme == .light ? InspectionColours.twelveColour : .black)
+                    .ignoresSafeArea()
+            } else {
+                Color(colourScheme == .light ? InspectionColours.penaltyColour : .black)
+                    .ignoresSafeArea()
+                if inspectionRange == 3 {
+                    Text("+2")
+                    .font(.system(size: 22, weight: .semibold, design: .rounded))
+                    .foregroundColor(colourScheme == .light ? .black : nil)
+                    .offset(y: 45)
+                } else {
+                    Text("DNF")
+                    .font(.system(size: 22, weight: .semibold, design: .rounded))
+                    .foregroundColor(colourScheme == .light ? .black : nil)
+                    .offset(y: 45)
+                }
+            }
+            
             
             
             
@@ -81,8 +105,6 @@ struct TimerView: View {
                     .foregroundColor(stopWatchManager.timerColour)
                     .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 70 : 56))
                     .animation(Animation.spring(), value: stopWatchManager.mode == .running)
-            
-            
                 
                 Spacer()
             }

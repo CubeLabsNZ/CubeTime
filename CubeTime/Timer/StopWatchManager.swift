@@ -5,6 +5,8 @@ import SwiftUI
 let plustwotime = 15
 let dnftime = 17
 
+var inspectionRange: Int = 0
+
 enum stopWatchMode {
     case running
     case stopped
@@ -91,19 +93,29 @@ class StopWatchManager: ObservableObject {
     private var allowGesture = true
     
     
+    
+    
     var inspectionSecs = 0
+    
     
     func startInspection() {
         timer?.invalidate()
         secondsStr = "0"
         inspectionSecs = 0
+        inspectionRange = 0
         mode = .inspecting
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
             inspectionSecs += 1
             self.secondsStr = String(inspectionSecs)
-            if inspectionSecs == plustwotime {
+            if inspectionSecs == 8 {
+                inspectionRange = 1
+            } else if inspectionSecs == 12 {
+                inspectionRange = 2
+            } else if inspectionSecs == plustwotime {
+                inspectionRange = 3
                 penType = .plustwo
-            } else if inspectionSecs == dnftime {
+            } else if inspectionSecs >= dnftime {
+                inspectionRange = 4
                 penType = .dnf
             }
         }
