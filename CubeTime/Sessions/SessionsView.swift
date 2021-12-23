@@ -167,6 +167,7 @@ struct NewSessionPopUpView: View {
     @State private var showNewAlgTrainerView = false
     @State private var showNewMultiphaseView = false
     @State private var showNewPlaygroundView = false
+    @State private var showNewCompsimView = false
     
     //    @State private var showNewCompSimView = false
     
@@ -278,104 +279,106 @@ struct NewSessionPopUpView: View {
                         }
                         
                         
-                        
-                        HStack {
-                            Image(systemName: "square.stack")
-                                .font(.system(size: 24, weight: .regular))
-                                .foregroundColor(colourScheme == .light ? .black : .white)
-                            //                                .symbolRenderingMode(.hierarchical)
-                                .padding(.leading, 10)
-                                .padding(.trailing, 6)
-                                .padding(.top, 8)
+                        Group {
+                            HStack {
+                                Image(systemName: "square.stack")
+                                    .font(.system(size: 24, weight: .regular))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
+                                //                                .symbolRenderingMode(.hierarchical)
+                                    .padding(.leading, 10)
+                                    .padding(.trailing, 6)
+                                    .padding(.top, 8)
+                                    .padding(.bottom, 8)
+                                Text("Multiphase") // wip
+                                    .font(.system(size: 17, weight: .regular, design: .default))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
+                                
+                                Spacer()
+                            }
+                            .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+                                            .clipShape(Rectangle()))
+                            .onTapGesture {
+                                showNewMultiphaseView = true
+                            }
+                            .padding(.leading)
+                            .padding(.trailing)
+                            
+                            
+                            ZStack {
+                                Rectangle()
+                                    .fill(Color(uiColor: colourScheme == .dark ? .black : .systemGray6))
+                                    .frame(height: 1)
+                                    .padding(.leading)
+                                    .padding(.trailing)
+                                
+                                Divider()
+                                    .padding(.leading, 64)
+                                    .padding(.trailing)
+                            }
+                            
+                            
+                            
+                            
+                            
+                            HStack {
+                                Image(systemName: "square.on.square")
+                                    .font(.system(size: 24, weight: .regular))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
+                                //                                .symbolRenderingMode(.hierarchical)
+                                    .padding(.leading, 8)
+                                    .padding(.trailing, 4)
+                                    .padding(.top, 8)
+                                    .padding(.bottom, 8)
+                                Text("Playground") // wip
+                                    .font(.system(size: 17, weight: .regular, design: .default))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
+                                
+                                Spacer()
+                            }
+                            .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
+                            .onTapGesture {
+                                showNewPlaygroundView = true
+                            }
+                            .cornerRadius(10, corners: .bottomRight)
+                            .cornerRadius(10, corners: .bottomLeft)
+                            .padding(.horizontal)
+                            
+                            
+                            
+                            
+                            Text("Other Sessions")
+                                .font(.system(size: 22, weight: .bold, design: .default))
+                                .padding(.top, 48)
+                                .padding(.leading, 20)
                                 .padding(.bottom, 8)
-                            Text("Multiphase") // wip
-                                .font(.system(size: 17, weight: .regular, design: .default))
-                                .foregroundColor(colourScheme == .light ? .black : .white)
-                            
-                            Spacer()
+                             
+                             
+                             
+                            HStack {
+                                Image(systemName: "globe.asia.australia")
+                                    .font(.system(size: 26, weight: .medium))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
+                                //                                .symbolRenderingMode(.hierarchical)
+                                    .padding(.leading, 8)
+                                    .padding(.trailing, 4)
+                                    .padding(.top, 8)
+                                    .padding(.bottom, 8)
+                                Text("Comp Sim") // wip
+                                    .font(.system(size: 17, weight: .regular, design: .default))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
+                                
+                                Spacer()
+                            }
+                            .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+                                            .clipShape(RoundedRectangle(cornerRadius: 10)))
+                            .onTapGesture {
+                                showNewCompsimView = true
+                            }
+                            .padding(.leading)
+                            .padding(.trailing)
                         }
-                        .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
-                                        .clipShape(Rectangle()))
-                        .onTapGesture {
-                            showNewMultiphaseView = true
-                        }
-                        .padding(.leading)
-                        .padding(.trailing)
                         
                         
-                        ZStack {
-                            Rectangle()
-                                .fill(Color(uiColor: colourScheme == .dark ? .black : .systemGray6))
-                                .frame(height: 1)
-                                .padding(.leading)
-                                .padding(.trailing)
-                            
-                            Divider()
-                                .padding(.leading, 64)
-                                .padding(.trailing)
-                        }
-                        
-                        
-                        
-                        
-                        
-                        HStack {
-                            Image(systemName: "square.on.square")
-                                .font(.system(size: 24, weight: .regular))
-                                .foregroundColor(colourScheme == .light ? .black : .white)
-                            //                                .symbolRenderingMode(.hierarchical)
-                                .padding(.leading, 8)
-                                .padding(.trailing, 4)
-                                .padding(.top, 8)
-                                .padding(.bottom, 8)
-                            Text("Playground") // wip
-                                .font(.system(size: 17, weight: .regular, design: .default))
-                                .foregroundColor(colourScheme == .light ? .black : .white)
-                            
-                            Spacer()
-                        }
-                        .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
-                        .onTapGesture {
-                            showNewPlaygroundView = true
-                        }
-                        .cornerRadius(10, corners: .bottomRight)
-                        .cornerRadius(10, corners: .bottomLeft)
-                        .padding(.horizontal)
-                        
-                        
-                        
-                        /*
-                         Text("Other Sessions")
-                         .font(.system(size: 22, weight: .bold, design: .default))
-                         .padding(.top, 48)
-                         .padding(.leading, 20)
-                         .padding(.bottom, 8)
-                         
-                         
-                         
-                         HStack {
-                         Image(systemName: "globe.asia.australia")
-                         .font(.system(size: 26, weight: .medium))
-                         .foregroundColor(colourScheme == .light ? .black : .white)
-                         //                                .symbolRenderingMode(.hierarchical)
-                         .padding(.leading, 8)
-                         .padding(.trailing, 4)
-                         .padding(.top, 8)
-                         .padding(.bottom, 8)
-                         Text("Comp Sim") // wip
-                         .font(.system(size: 17, weight: .regular, design: .default))
-                         .foregroundColor(colourScheme == .light ? .black : .white)
-                         
-                         Spacer()
-                         }
-                         .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
-                         .clipShape(RoundedRectangle(cornerRadius: 10)))
-                         .onTapGesture {
-                         print("comp sim pressed")
-                         }
-                         .padding(.leading)
-                         .padding(.trailing)
-                         */
                         
                         NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession, pinnedSession: false), isActive: $showNewStandardSessionView)
                         
@@ -385,7 +388,7 @@ struct NewSessionPopUpView: View {
                         
                         NavigationLink("", destination: NewPlaygroundView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession, pinnedSession: false), isActive: $showNewPlaygroundView)
                         
-                        
+                        NavigationLink("", destination: NewCompsimView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession, pinnedSession: false), isActive: $showNewCompsimView)
                         
                         Spacer()
                         
@@ -719,6 +722,22 @@ struct NewMultiphaseView: View {
                     
                     VStack (spacing: 0) {
                         HStack {
+                            Text("Phases")
+                                .font(.system(size: 17, weight: .medium))
+                            
+                            Spacer()
+                            
+                            Text("Stepper")
+                            
+                        }
+                        .padding()
+                    }
+                    .frame(height: 45)
+                    .modifier(NewStandardSessionViewBlocks())
+                    
+                    
+                    VStack (spacing: 0) {
+                        HStack {
                             Text("Session Event")
                                 .font(.system(size: 17, weight: .medium))
                             
@@ -889,6 +908,161 @@ struct NewPlaygroundView: View {
     }
 }
 
+struct NewCompsimView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.colorScheme) var colourScheme
+    
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    
+    @Binding var showNewSessionPopUp: Bool
+    @Binding var currentSession: Sessions
+    @State private var name: String = ""
+    @State private var sessionEventType: Int32 = 0
+    @State var pinnedSession: Bool
+    
+    let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
+    
+    var body: some View {
+        ZStack {
+            Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+                .ignoresSafeArea()
+            
+            ScrollView {
+                VStack (spacing: 16) {
+                    
+                    VStack (alignment: .center, spacing: 0) {
+                        Image(puzzle_types[Int(sessionEventType)].name)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 100, height: 100)
+                            .padding(.top)
+                            .padding(.bottom)
+                            .shadow(color: .black.opacity(0.24), radius: 12, x: 0, y: 4)
+                        
+                        
+                        TextField("Session Name", text: $name)
+                            .padding(12)
+                            .font(.system(size: 22, weight: .semibold))
+                            .multilineTextAlignment(TextAlignment.center)
+                            .background(Color(uiColor: .systemGray5))
+                            .cornerRadius(10)
+                            .padding(.leading)
+                            .padding(.trailing)
+                            .padding(.bottom)
+                        
+                        Text("A comp sim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach.")
+                        /// todo: add ability to target your wca pb/some ranking/some official record
+                            .multilineTextAlignment(.leading)
+                            .foregroundColor(Color(uiColor: .systemGray))
+                            .padding(.horizontal)
+                            .padding(.bottom)
+                        
+                    }
+                    .frame(minHeight: 80)
+                    .modifier(NewStandardSessionViewBlocks())
+                    
+                    VStack (spacing: 0) {
+                        HStack {
+                            Text("Target")
+                                .font(.system(size: 17, weight: .medium))
+                            
+                            Spacer()
+                        }
+                        .padding()
+                    }
+                    .frame(height: 45)
+                    .modifier(NewStandardSessionViewBlocks())
+                    
+                    VStack (spacing: 0) {
+                        HStack {
+                            Text("Session Event")
+                                .font(.system(size: 17, weight: .medium))
+                            
+                            
+                            Spacer()
+                            
+                            Picker("", selection: $sessionEventType) {
+                                ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
+                                    Text(element.name).tag(Int32(index))
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .accentColor(accentColour)
+                            .font(.system(size: 17, weight: .regular))
+                        }
+                        .padding()
+                    }
+                    .frame(height: 45)
+                    .modifier(NewStandardSessionViewBlocks())
+                    
+                    
+                    VStack (spacing: 0) {
+                        LazyVGrid(columns: sessionEventTypeColumns, spacing: 0) {
+                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                                Button {
+                                    sessionEventType = Int32(index)
+                                } label: {
+                                    ZStack {
+                                        Image("circular-" + element.name)
+                                        
+                                        Circle()
+                                            .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
+                                            .frame(width: 54, height: 54)
+                                            .offset(x: -0.2)
+                                    }
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                    .frame(height: 180)
+                    .modifier(NewStandardSessionViewBlocks())
+                    
+                    
+                    
+                    VStack (spacing: 0) {
+                        HStack {
+                            Toggle(isOn: $pinnedSession) {
+                                Text("Pin Session?")
+                                    .font(.system(size: 17, weight: .medium))
+                            }
+                            .tint(.yellow)
+                        }
+                        .padding()
+                    }
+                    .frame(height: 45)
+                    .modifier(NewStandardSessionViewBlocks())
+                    
+                    Spacer()
+                }
+            }
+            .ignoresSafeArea(.keyboard)
+            .navigationBarTitle("New Comp Sim Session", displayMode: .inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        let sessionItem = Sessions(context: managedObjectContext)
+                        sessionItem.name = name
+                        sessionItem.pinned = pinnedSession
+                        
+                        sessionItem.session_type = 4
+                        
+                        NSLog("sessioneventyype is \(sessionEventType)")
+                        sessionItem.scramble_type = sessionEventType
+                        try! managedObjectContext.save()
+                        currentSession = sessionItem
+                        showNewSessionPopUp = false
+                        currentSession = sessionItem
+                    } label: {
+                        Text("Create")
+                    }
+                    .disabled(self.name.isEmpty)
+                }
+            }
+        }
+        .ignoresSafeArea(.keyboard)
+    }
+}
 
 
 
@@ -955,6 +1129,11 @@ struct SessionCard: View {
                                 case .multiphase:
                                     Image(systemName: "square.stack")
                                         .font(.system(size: 22, weight: .semibold))
+                                        .foregroundColor(accentColour)
+                                        .padding(.trailing, 12)
+                                case .compsim:
+                                    Image(systemName: "globe.asia.australia")
+                                        .font(.system(size: 28, weight: .semibold))
                                         .foregroundColor(accentColour)
                                         .padding(.trailing, 12)
                                 default:

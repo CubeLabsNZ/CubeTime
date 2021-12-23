@@ -29,6 +29,7 @@ struct TimerView: View {
     @Environment(\.colorScheme) var colourScheme
     //@ObservedObject var currentSession: Sessions
    
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @ObservedObject var stopWatchManager: StopWatchManager
     
     @Binding var hideTabBar: Bool
@@ -39,6 +40,8 @@ struct TimerView: View {
     
     @State var algTrainerSubset = 0
     @State var playgroundScrambleType: Int
+    
+//    @State var compSimTarget: String
     
     
     init(currentSession: Binding<Sessions>, stopWatchManager: StopWatchManager, hideTabBar: Binding<Bool>) {
@@ -52,33 +55,9 @@ struct TimerView: View {
     var body: some View {
         ZStack {
             
-            if inspectionRange == 0 {
                 Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                     .ignoresSafeArea()
-            } else if inspectionRange == 1 {
-                Color(colourScheme == .light ? InspectionColours.eightColour : .black)
-                    .ignoresSafeArea()
-            } else if inspectionRange == 2 {
-                Color(colourScheme == .light ? InspectionColours.twelveColour : .black)
-                    .ignoresSafeArea()
-            } else {
-                Color(colourScheme == .light ? InspectionColours.penaltyColour : .black)
-                    .ignoresSafeArea()
-                if inspectionRange == 3 {
-                    Text("+2")
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
-                    .foregroundColor(colourScheme == .light ? .black : nil)
-                    .offset(y: 45)
-                } else {
-                    Text("DNF")
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
-                    .foregroundColor(colourScheme == .light ? .black : nil)
-                    .offset(y: 45)
-                }
-            }
-            
-            
-            
+                        
             
             if stopWatchManager.mode == .stopped {
                 VStack {
@@ -234,14 +213,27 @@ struct TimerView: View {
                             Text("SOLVE 2/5")
                                 .font(.system(size: 15, weight: .regular))
                             
-                            .pickerStyle(.menu)
-                            .padding(.leading, 8)
+                            Divider()
+                                .padding(.vertical, 4)
+                            
+                            HStack (spacing: 10) {
+                                Image(systemName: "target")
+                                    .font(.system(size: 15))
+                                
+                                Text("picker")
+                            }
                             .padding(.trailing)
+                            .foregroundColor(accentColour)
+                            
+                            
+//                            TextField(compSimTarget, text: $compSimTarget)
+//                                .keyboardType(.decimalPad)
                         }
                     }
                     .background(Color(uiColor: .systemGray5))
+                    .frame(height: 35)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+//                    .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
                     .padding(.horizontal)
                     .padding(.top, SetValues.hasBottomBar ? 0 : 8)
                     
