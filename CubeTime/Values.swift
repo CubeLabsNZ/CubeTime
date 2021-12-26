@@ -72,6 +72,23 @@ func formatSolveTime(secs: Double, penType: PenTypes? = PenTypes.none) -> String
 }
 
 
+func formatLegendTime(secs: Double, dp: Int) -> String {
+    
+    if secs < 10 {
+        return String(format: "%.\(dp)f", secs) // dp = 1
+    } else if secs < 60 {
+        return String(format: "%.\(dp-1)f", secs) // TODO set DP
+    } else if secs < 600 {
+        let mins: Int = Int((secs / 60).rounded(.down))
+        let secs = Int(secs.truncatingRemainder(dividingBy: 60))
+        return String(format: "%d:%02d", mins, secs)
+    } else {
+        let mins: Int = Int((secs / 60).rounded(.down))
+        return String(format: "%dm", mins)
+    }
+}
+
+
 struct PuzzleType {
     let name: String
     let subtypes: [Int: String]

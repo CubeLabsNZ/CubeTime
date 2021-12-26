@@ -1,6 +1,7 @@
 import SwiftUI
 import CoreData
 
+
 extension View {
     public func gradientForeground(gradientSelected: Int) -> some View {
         self.overlay(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
@@ -34,9 +35,14 @@ struct StatsView: View {
     let currentAo100: CalculatedAverage?
     
     let timesByDate: [Double]
+    let timesBySpeed: [Double]
     
     let bestSingle: Solves?
     let sessionMean: Double?
+    
+    let compSimCount: Int
+    
+    
     
     @State var presentedAvg: CalculatedAverage? = nil
     
@@ -60,7 +66,11 @@ struct StatsView: View {
         self.bestSingle = stats.getMin()
         self.sessionMean = stats.getSessionMean()
         
-        self.timesByDate = stats.solvesByDate.map{$0.time}
+        self.timesByDate = stats.solvesByDate.map { $0.time }
+        self.timesBySpeed = stats.solves.map { $0.time }
+        
+        
+        self.compSimCount = stats.getNumberOfAverages()
         
     }
     
@@ -550,6 +560,7 @@ struct StatsView: View {
                     ScrollView {
                         VStack (spacing: 0) {
                             /// the title
+                            
                             VStack(spacing: 0) {
                                 HStack (alignment: .center) {
                                     Text(currentSession.name!)
@@ -642,16 +653,11 @@ struct StatsView: View {
                                                         .foregroundColor(Color(uiColor: .systemGray))
                                                         .padding(.bottom, 4)
 
-                                                    if bestSingle != nil {
-//                                                        Text(String(formatSolveTime(secs: bestSingle!.time)))
-                                                        Text("number")
-                                                            .font(.system(size: 34, weight: .bold, design: .default))
-                                                            .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                    } else {
-                                                        Text("N/A")
-                                                            .font(.system(size: 28, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray5))
-                                                    }
+                                                    
+                                                    Text("\(compSimCount)")
+                                                        .font(.system(size: 34, weight: .bold, design: .default))
+                                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                                    
                                                 }
                                                 .padding(.top)
                                                 .padding(.bottom, 12)
@@ -666,9 +672,6 @@ struct StatsView: View {
                                                     showBestSinglePopup = true
                                                 }
                                             }
-                                            
-                                            
-                                             
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
@@ -779,6 +782,108 @@ struct StatsView: View {
                                     .frame(width: UIScreen.screenWidth/2)
                                     .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
                                 
+                                HStack(spacing: 10) {
+                                    HStack {
+                                        VStack (alignment: .leading, spacing: 0) {
+                                            Text("TARGET")
+                                                .font(.system(size: 13, weight: .medium, design: .default))
+                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                .padding(.bottom, 4)
+
+                                            if bestSingle != nil {
+                                                Text("target")
+                                                    .font(.system(size: 34, weight: .bold, design: .default))
+                                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                            } else {
+                                                Text("N/A")
+                                                    .font(.system(size: 28, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(uiColor: .systemGray5))
+                                            }
+                                        }
+                                        .padding(.top)
+                                        .padding(.bottom, 12)
+                                        .padding(.leading, 12)
+                                        
+                                        Spacer()
+                                    }
+                                    .frame(height: 75)
+                                    .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                    .onTapGesture {
+                                        if bestSingle != nil {
+                                            showBestSinglePopup = true
+                                        }
+                                    }
+                                    
+                                    HStack {
+                                        VStack (alignment: .leading, spacing: 0) {
+                                            Text("REACHED")
+                                                .font(.system(size: 13, weight: .medium, design: .default))
+                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                .padding(.bottom, 4)
+
+                                            if bestSingle != nil {
+                                                Text("x/y")
+                                                    .font(.system(size: 34, weight: .bold, design: .default))
+                                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                            } else {
+                                                Text("N/A")
+                                                    .font(.system(size: 28, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(uiColor: .systemGray5))
+                                            }
+                                        }
+                                        .padding(.top)
+                                        .padding(.bottom, 12)
+                                        .padding(.leading, 12)
+                                        
+                                        Spacer()
+                                    }
+                                    .frame(height: 75)
+                                    .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                    .onTapGesture {
+                                        if bestSingle != nil {
+                                            showBestSinglePopup = true
+                                        }
+                                    }
+                                }
+                                .padding(.horizontal)
+                                
+                                HStack {
+                                    VStack (alignment: .leading, spacing: 0) {
+                                        Text("REACHED TARGETS")
+                                            .font(.system(size: 13, weight: .medium, design: .default))
+                                            .foregroundColor(Color(uiColor: .systemGray))
+                                            .padding(.bottom, 4)
+                                        
+                                        Spacer()
+                                        
+                                        Capsule()
+                                            .frame(height: 5)
+                                            .offset(y: -4)
+                                            
+                                    }
+                                    .padding(.top)
+                                    .padding(.bottom, 12)
+                                    .padding(.leading, 12)
+                                    
+                                    Spacer()
+                                }
+                                .frame(height: 55)
+                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                .onTapGesture {
+                                    if bestSingle != nil {
+                                        showBestSinglePopup = true
+                                    }
+                                }
+                                .padding(.horizontal)
+                                
+                                
+                                Divider()
+                                    .frame(width: UIScreen.screenWidth/2)
+                                    .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
+                                
+                                
+                                
+                                
                                 /// time trend graph
                                 VStack {
                                     ZStack {
@@ -820,6 +925,9 @@ struct StatsView: View {
                                             Spacer()
                                         }
                                         .padding([.vertical, .leading], 12)
+                                        
+                                        TimeDistribution(solves: timesBySpeed)
+                                            .offset(y: 40)
                                     }
                                 }
                                 .frame(height: 300)

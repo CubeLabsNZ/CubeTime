@@ -418,21 +418,7 @@ class ChartData: ObservableObject, Identifiable {
 }
 
 
-func formatLegendTime(secs: Double) -> String {
-    
-    if secs < 10 {
-        return String(format: "%.1f", secs)
-    } else if secs < 60 {
-        return String(format: "%.0f", secs) // TODO set DP
-    } else if secs < 600 {
-        let mins: Int = Int((secs / 60).rounded(.down))
-        let secs = Int(secs.truncatingRemainder(dividingBy: 60))
-        return String(format: "%d:%02d", mins, secs)
-    } else {
-        let mins: Int = Int((secs / 60).rounded(.down))
-        return String(format: "%dm", mins)
-    }
-}
+
 
 
 
@@ -542,7 +528,7 @@ struct Legend: View {
             ForEach((0...4), id: \.self) { height in
                 HStack(alignment: .center) {
                     VStack (alignment: .center) {
-                        Text(formatLegendTime(secs: self.getYLegendSafe(height: height)))
+                        Text(formatLegendTime(secs: self.getYLegendSafe(height: height), dp: 1))
                             .offset(x: 0, y: self.getYposition(height: height))
                             .foregroundColor(Color(uiColor: .systemGray2))
                             .font(.system(size: 10, weight: .medium, design: .monospaced))

@@ -134,4 +134,11 @@ class Stats {
         )
     }
     
+    
+    func getNumberOfAverages() -> Int {
+        return (solves.count / 5)
+    }
+    
+    
+    
 }
