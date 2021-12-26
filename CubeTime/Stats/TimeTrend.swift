@@ -367,7 +367,7 @@ extension View {
         ForEach(0..<2) { i in
             Rectangle()
                 .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
-                .mask(self.blur(radius: 20))
+                .mask(self.blur(radius: 16))
                 .overlay(self.blur(radius: 5 - CGFloat(i * 5)))
         }
     }
@@ -608,31 +608,37 @@ struct TimeTrend: View {
     }
     
     var body: some View {
-        GeometryReader{ geometry in
-            VStack(alignment: .leading, spacing: 8) {
-                ZStack{
-                    GeometryReader{ reader in
-                        Legend(data: self.data,
-                               frame: .constant(reader.frame(in: .local)))
-                            .transition(.opacity)
-                            .animation(Animation.easeOut(duration: 1.2))
+        if data.points.map { $0.1 }.count > 1 {
+            GeometryReader{ geometry in
+                VStack(alignment: .leading, spacing: 8) {
+                    ZStack{
+                        GeometryReader{ reader in
+                            Legend(data: self.data,
+                                   frame: .constant(reader.frame(in: .local)))
+                                .transition(.opacity)
+                                .animation(Animation.easeOut(duration: 1.2))
+                            
+                            Line(data: self.data,
+                                 frame: .constant(CGRect(x: 0, y: 0, width: reader.frame(in: .local).width - 30, height: reader.frame(in: .local).height + 25)),
+                                 minDataValue: .constant(nil),
+                                 maxDataValue: .constant(nil),
+                                 showBackground: false
+                            )
+                                .colouredGlow(gradientSelected: gradientSelected)
+                                .offset(x: 30, y: 6)
+                        }
+                        .frame(width: geometry.frame(in: .local).size.width, height: 240)
+                        .offset(x: 0, y: 40 )
                         
-                        Line(data: self.data,
-                             frame: .constant(CGRect(x: 0, y: 0, width: reader.frame(in: .local).width - 30, height: reader.frame(in: .local).height + 25)),
-                             minDataValue: .constant(nil),
-                             maxDataValue: .constant(nil),
-                             showBackground: false
-                        )
-                            .colouredGlow(gradientSelected: gradientSelected)
-                            .offset(x: 30, y: 6)
                     }
                     .frame(width: geometry.frame(in: .local).size.width, height: 240)
-                    .offset(x: 0, y: 40 )
-                    
                 }
-                .frame(width: geometry.frame(in: .local).size.width, height: 240)
-                
             }
+        } else {
+            Text("not enough data to\ndisplay graph")
+                .font(.system(size: 17, weight: .medium, design: .monospaced))
+                .multilineTextAlignment(.center)
+                .foregroundColor(Color(uiColor: .systemGray))
         }
     }
 }

@@ -530,7 +530,8 @@ struct StatsView: View {
                                         .padding([.vertical, .leading], 12)
                                     }
                                 }
-                                .frame(height: 300)
+                                
+                                .frame(height: timesBySpeed.count < 4 ? 150 : 300)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                 .padding(.horizontal)
                                 .onTapGesture {
@@ -901,10 +902,11 @@ struct StatsView: View {
                                         TimeTrend(data: timesByDate, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
                                             .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
                                             .padding(.horizontal, 12)
+                                            .offset(y: -5)
                                             .drawingGroup()
                                     }
                                 }
-                                .frame(height: 300)
+                                .frame(height: timesBySpeed.count < 2 ? 150 : 300)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                 .padding(.horizontal)
                                 .onTapGesture {
@@ -927,10 +929,10 @@ struct StatsView: View {
                                         .padding([.vertical, .leading], 12)
                                         
                                         TimeDistribution(solves: timesBySpeed)
-                                            .offset(y: 40)
+                                            .drawingGroup()
                                     }
                                 }
-                                .frame(height: 300)
+                                .frame(height: timesBySpeed.count < 4 ? 150 : 300)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                 .padding(.horizontal)
                                 .onTapGesture {
