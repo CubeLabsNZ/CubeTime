@@ -55,24 +55,24 @@ struct TimerView: View {
     var body: some View {
         ZStack {
             
-            
-            
+            Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+                .ignoresSafeArea()
+    
+    
             if stopWatchManager.mode == .inspecting {
                 
                 if colourScheme == .light {
-                    
                     switch stopWatchManager.inspectionSecs {
-                    case ..<8:
-                        Color(uiColor: .systemGray6)
-                            .ignoresSafeArea()
                     case 8..<12:
                         InspectionColours.eightColour
                             .ignoresSafeArea()
                     case 12..<15:
                         InspectionColours.twelveColour
                             .ignoresSafeArea()
-                    default: InspectionColours.penaltyColour
+                    case let x where x > 15: InspectionColours.penaltyColour
                             .ignoresSafeArea()
+                    default:
+                        EmptyView()
                     }
                 }
                 
