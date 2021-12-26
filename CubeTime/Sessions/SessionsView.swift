@@ -970,18 +970,19 @@ struct NewCompsimView: View {
                             
                             Spacer()
                             
-                            TextField("0.000", text: $targetStr)
+                            TextField("0.00", text: $targetStr)
                                 .keyboardType(.numberPad)
                                 .multilineTextAlignment(.trailing)
                                 .onReceive(Just(targetStr)) { newValue in
+                                    // TODO make this accept dots from the user
                                     var filtered: String = newValue.filter { $0.isNumber }.replacingOccurrences(of: "^0+", with: "", options: .regularExpression)
-                                    if filtered.count > 3 {
-                                        filtered.insert(".", at: filtered.index(filtered.endIndex, offsetBy: -3))
+                                    if filtered.count > 2 {
+                                        filtered.insert(".", at: filtered.index(filtered.endIndex, offsetBy: -2))
                                     } else if filtered.count > 0 {
                                         filtered = "0." + repeatElement("0", count: 3 - filtered.count) + filtered
                                     }
-                                    if filtered.count > 6 {
-                                        filtered.insert(":", at: filtered.index(filtered.endIndex, offsetBy: -6))
+                                    if filtered.count > 5 {
+                                        filtered.insert(":", at: filtered.index(filtered.endIndex, offsetBy: -5))
                                     }
                                     if filtered != newValue {
                                         self.targetStr = filtered
