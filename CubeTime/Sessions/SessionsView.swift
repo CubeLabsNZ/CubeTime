@@ -1154,7 +1154,7 @@ struct SessionCard: View {
                                         .padding(.trailing, 12)
                                 case .compsim:
                                     Image(systemName: "globe.asia.australia")
-                                        .font(.system(size: 28, weight: .semibold))
+                                        .font(.system(size: 26, weight: .bold))
                                         .foregroundColor(accentColour)
                                         .padding(.trailing, 12)
                                 default:

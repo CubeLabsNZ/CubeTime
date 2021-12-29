@@ -143,7 +143,7 @@ struct SolvePopupView: View {
                             Text(scramble)
                                 .font(.system(size: 17, weight: .regular, design: .monospaced))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
-                                .padding(.trailing)
+                                .padding([.bottom, .horizontal], 12)
                             
                             /*
                             Divider()
@@ -221,7 +221,7 @@ struct SolvePopupView: View {
                                 UIPasteboard.general.string = "Exported by CubeTime.\n\(time): \(scramble)"
                             } label: {
                                 Text("Copy Solve")
-                                    .padding(12)
+                                    .padding(14)
                             }
                             
                             Spacer()

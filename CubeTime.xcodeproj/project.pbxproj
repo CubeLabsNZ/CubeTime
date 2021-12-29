@@ -25,6 +25,7 @@
 		23E81E6F275D8DCA00B741E3 /* AppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */; };
 		23E81E71275D8DDA00B741E3 /* IESettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E70275D8DDA00B741E3 /* IESettings.swift */; };
 		23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E72275D8DEA00B741E3 /* AboutSettings.swift */; };
+		23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB8A1D2779B6D3000F6663 /* TimeBar.swift */; };
 		7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */; };
 		7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6159F82751B53E00DC9A4C /* TimeCard.swift */; };
 		7D69E0A22751FDEA007211CC /* Sq12phase.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0662751FDEA007211CC /* Sq12phase.m */; settings = {COMPILER_FLAGS = "-w"; }; };
@@ -107,6 +108,7 @@
 		23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettings.swift; sourceTree = "<group>"; };
 		23E81E70275D8DDA00B741E3 /* IESettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IESettings.swift; sourceTree = "<group>"; };
 		23E81E72275D8DEA00B741E3 /* AboutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettings.swift; sourceTree = "<group>"; };
+		23EB8A1D2779B6D3000F6663 /* TimeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBar.swift; sourceTree = "<group>"; };
 		7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabsView.swift; sourceTree = "<group>"; };
 		7D6159F82751B53E00DC9A4C /* TimeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCard.swift; sourceTree = "<group>"; };
 		7D69E0662751FDEA007211CC /* Sq12phase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sq12phase.m; sourceTree = "<group>"; };
@@ -232,6 +234,7 @@
 			children = (
 				23D2FC4C274E12DE00D7071A /* TimeListView.swift */,
 				7D6159F82751B53E00DC9A4C /* TimeCard.swift */,
+				23EB8A1D2779B6D3000F6663 /* TimeBar.swift */,
 			);
 			path = TimeList;
 			sourceTree = "<group>";
@@ -611,6 +614,7 @@
 				23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */,
 				7D78FF8C276084C2008BB82E /* StopWatchManager.swift in Sources */,
 				7D69E0B72751FDEA007211CC /* CHTSessionManager.m in Sources */,
+				23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */,
 				7D69E0A72751FDEA007211CC /* Skewb.m in Sources */,
 				23E81E6C275D8DAE00B741E3 /* GeneralSettings.swift in Sources */,
 				7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */,

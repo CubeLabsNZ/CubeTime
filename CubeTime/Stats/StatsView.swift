@@ -77,7 +77,7 @@ struct StatsView: View {
     
     
     var body: some View {
-        if currentSession.session_type != 4 {
+        if currentSession.session_type != 4 { /// **OTHER SESSIONS**
             NavigationView {
                 ZStack {
                     Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
@@ -504,10 +504,11 @@ struct StatsView: View {
                                         TimeTrend(data: timesByDate, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
                                             .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
                                             .padding(.horizontal, 12)
+                                            .offset(y: -5)
                                             .drawingGroup()
                                     }
                                 }
-                                .frame(height: 300)
+                                .frame(height: timesBySpeed.count < 2 ? 150 : 300)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                 .padding(.horizontal)
                                 .onTapGesture {
@@ -528,9 +529,11 @@ struct StatsView: View {
                                             Spacer()
                                         }
                                         .padding([.vertical, .leading], 12)
+                                        
+                                        TimeDistribution(solves: timesBySpeed)
+                                            .drawingGroup()
                                     }
                                 }
-                                
                                 .frame(height: timesBySpeed.count < 4 ? 150 : 300)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                 .padding(.horizontal)
@@ -552,7 +555,7 @@ struct StatsView: View {
                     }
                 }
             }
-        } else {
+        } else { /// **COMP SIM SESSION (HAS DIFFERENT STATISTICS)**
             NavigationView {
                 ZStack {
                     Color(uiColor: colourScheme == .light ? .systemGray6 : .black)

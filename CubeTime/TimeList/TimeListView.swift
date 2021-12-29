@@ -149,16 +149,25 @@ struct TimeListView: View {
                                 .padding(.bottom, 4)
                             }
                         }
-                             
-                        LazyVGrid(columns: columns, spacing: 12) {
-                            ForEach(timeListManager.solves!, id: \.self) { item in
-                                TimeCard(solve: item, timeListManager: timeListManager, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
-                                    .environment(\.managedObjectContext, managedObjectContext)
-                            }
-                        }
-                        .padding(.horizontal)
                         
-//                        Spacer()
+                        if currentSession.session_type != 4 {
+                            LazyVGrid(columns: columns, spacing: 12) {
+                                ForEach(timeListManager.solves!, id: \.self) { item in
+                                    TimeCard(solve: item, timeListManager: timeListManager, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
+                                        .environment(\.managedObjectContext, managedObjectContext)
+                                }
+                            }
+                            .padding(.horizontal)
+                        } else {
+                            VStack(spacing: 12) {
+                                ForEach(timeListManager.solves!, id: \.self) { item in
+                                    TimeBar(solve: item, timeListManager: timeListManager, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
+                                        .environment(\.managedObjectContext, managedObjectContext)
+                                }
+
+                            }
+                            .padding(.horizontal)
+                        }
                     }
                     .padding(.vertical, -6)
                 }
