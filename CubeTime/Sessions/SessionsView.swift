@@ -979,7 +979,7 @@ struct NewCompsimView: View {
                                     if filtered.count > 2 {
                                         filtered.insert(".", at: filtered.index(filtered.endIndex, offsetBy: -2))
                                     } else if filtered.count > 0 {
-                                        filtered = "0." + repeatElement("0", count: 3 - filtered.count) + filtered
+                                        filtered = "0." + repeatElement("0", count: 2 - filtered.count) + filtered
                                     }
                                     if filtered.count > 5 {
                                         filtered.insert(":", at: filtered.index(filtered.endIndex, offsetBy: -5))
