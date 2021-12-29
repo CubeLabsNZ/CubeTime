@@ -438,11 +438,6 @@ struct StatsView: View {
                                                 .padding(.top, 10)
                                                 .padding(.bottom, 10)
                                                 .padding(.leading, 12)
-                                                .onTapGesture {
-                                                    if ao5 != nil {
-                                                        presentedAvg = ao5
-                                                    }
-                                                }
                                                 
                                                 
                                                 
@@ -450,6 +445,11 @@ struct StatsView: View {
                                             }
                                             .frame(height: 215)
                                             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                            .onTapGesture {
+                                                if ao5 != nil {
+                                                    presentedAvg = ao5
+                                                }
+                                            }
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     }
@@ -866,11 +866,6 @@ struct StatsView: View {
                                                         Spacer()
                                                     }
                                                 }
-                                                .onTapGesture {
-                                                    if ao5 != nil {
-                                                        presentedAvg = ao5
-                                                    }
-                                                }
                                                 .padding(.top, 10)
                                                 .padding(.bottom, 10)
                                                 .padding(.leading, 12)
@@ -881,6 +876,11 @@ struct StatsView: View {
                                             }
                                             .frame(height: 215)
                                             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                            .onTapGesture {
+                                                if ao5 != nil {
+                                                    presentedAvg = ao5
+                                                }
+                                            }
                                             
                                             
                                         }
