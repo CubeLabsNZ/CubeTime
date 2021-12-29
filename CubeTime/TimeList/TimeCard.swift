@@ -72,12 +72,17 @@ struct SolvePopupView: View {
     let puzzle_subtype: String
     let scramble: String
     
+//    @Binding var currentSession: Sessions
+    
     @Binding var currentSolve: Solves?
     
     @State private var userComment: String
     
     
-    init(solve: Solves, currentSolve: Binding<Solves?>?, timeListManager: TimeListManager?){
+    init(/*currentSession: Binding<Sessions>*/solve: Solves, currentSolve: Binding<Solves?>?, timeListManager: TimeListManager?){
+        
+//        self._currentSession = currentSession
+        
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
         self.time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
@@ -87,6 +92,7 @@ struct SolvePopupView: View {
         self._currentSolve = currentSolve ?? Binding.constant(nil)
         self.timeListManager = timeListManager
         _userComment = State(initialValue: solve.comment ?? "")
+        
     }
     
     var body: some View {

@@ -175,7 +175,7 @@ struct TimeListView: View {
 //                .navigationBarTitleDisplayMode(isSelectMode ? .inline : .large)
                 
                 .sheet(item: $solve) { item in
-                    SolvePopupView(solve: item, currentSolve: $solve, timeListManager: timeListManager)
+                    SolvePopupView(/*currentSession: $currentSession, */solve: item, currentSolve: $solve, timeListManager: timeListManager)
                         .environment(\.managedObjectContext, managedObjectContext)
                 }
                 .toolbar {
