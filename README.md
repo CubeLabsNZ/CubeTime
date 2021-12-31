@@ -28,7 +28,7 @@
 
 ### Information!
 
- - Completely ad-free, free to download and is fully open source, copylefted software (GPLv3)
+ - Free (both as in libre and gratis), copylefted software (GPLv3)
  - Fully built with SwiftUI, lightweight and modern app architecture
  - Simple and modern user interface
    * Beautiful dark mode that saves battery on OLED phones

@@ -7,6 +7,9 @@ struct StatsDetail: View {
     let solves: CalculatedAverage
     let session: Sessions
     
+//    let dateFormatter = DateFormatter()
+//    dateFormatter.dateFormat = "h:mm a, MM/dd/yyyy"
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -14,9 +17,6 @@ struct StatsDetail: View {
                     .ignoresSafeArea()
                 
                 ScrollView {
-                    
-                    
-                    
                     VStack (spacing: 10) {
                         HStack {
                             Text(formatSolveTime(secs: solves.average))
@@ -41,41 +41,70 @@ struct StatsDetail: View {
                         .padding(.top, -8)
                         
                         
-                        ForEach(Array(zip(solves.accountedSolves.indices, solves.accountedSolves)), id: \.0) {index, solve in
-                            VStack {
-                                HStack {
-                                    Text("\(index+1).")
-                                        .font(.system(size: 15, weight: .bold, design: .rounded))
-                                        .foregroundColor(Color("AccentColor"))
-                                    Text(formatSolveTime(secs: solve.time, penType: PenTypes.init(rawValue: solve.penalty)!))
-                                        .font(.system(size: 17, weight: .bold, design: .rounded))
-                                    
-                                    Spacer()
-                                    
-                                    Text(solve.date ?? Date(timeIntervalSince1970: 0), format: .dateTime.hour().minute().second().day().month().year())
-                                        .font(.system(size: 13, weight: .bold, design: .rounded))
-                                        .foregroundColor(Color(uiColor: .systemGray))
-                                }
-                                .padding([.horizontal, .top], 10)
+                        VStack {
+                            HStack {
+                                Image(puzzle_types[Int(session.scramble_type)].name)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 32, height: 32)
+                                    .padding(.leading, 2)
+                                    .padding(.trailing, 4)
                                 
-                                HStack {
-                                    Text(solve.scramble ?? "Failed to load scramble")
-                                        .font(.system(size: 17, weight: .medium))
-                                    
-                                    Spacer()
-                                }
-                                .padding([.horizontal, .bottom], 10)
+                                Text(puzzle_types[Int(session.scramble_type)].name)
+                                    .font(.system(size: 17, weight: .semibold, design: .default))
+                                
+                                Spacer()
+                                
+                                Text("RANDOM STATE")
+                                    .font(.system(size: 13, weight: .semibold, design: .default))
+                                    .offset(y: 2)
                                 
                             }
-                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12)))
-                            .padding(.horizontal)
+                            .padding(.leading, 12)
+                            .padding(.trailing)
+                            .padding(.top, 12)
+                            
+                            VStack(spacing: 0) {
+                                ForEach(Array(zip(solves.accountedSolves.indices, solves.accountedSolves)), id: \.0) {index, solve in
+                                    VStack(spacing: 0) {
+                                        Divider()
+                                            .padding(.leading)
+                                            
+                                        
+                                        HStack {
+                                            Text("\(index+1).")
+                                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                                .foregroundColor(Color("AccentColor"))
+                                            Text(formatSolveTime(secs: solve.time, penType: PenTypes.init(rawValue: solve.penalty)!))
+                                                .font(.system(size: 17, weight: .bold))
+                                            
+                                            Spacer()
+                                            
+                                            
+                                            
+//                                            Text(dateFormatter.string(from: solve.date!))
+                                            Text(solve.date ?? Date(timeIntervalSince1970: 0), format: .dateTime.hour().minute().second().day().month().year())
+                                                .font(.system(size: 13, weight: .bold, design: .rounded))
+                                                .foregroundColor(Color(uiColor: .systemGray))
+                                        }
+                                        .padding(.top, 8)
+                                        .padding(.horizontal)
+                                        
+                                        HStack {
+                                            Text(solve.scramble ?? "Failed to load scramble")
+                                                .font(.system(size: 17, weight: .medium))
+                                            
+                                            Spacer()
+                                        }
+                                        .padding(.horizontal)
+                                        .padding(.bottom, (index != solves.accountedSolves.indices.last!) ? 8 : 0)
+                                    }
+                                }
+                            }
+                            .padding(.bottom)
                         }
-                        
-                        
-                        
-//                        Text("\nRemember to gray out the worst and best times along with addding brackets <3")
-                        
-                        
+                        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
+                        .padding(.horizontal)
                     }
                     .offset(y: -6)
                     .navigationBarTitleDisplayMode(.inline)
