@@ -135,7 +135,7 @@ class StopWatchManager: ObservableObject {
         if timeDP != -1 {
             timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { [self] timer in
                 self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
-                self.secondsStr = formatSolveTimeForTimer(secs: self.secondsElapsed, dp: timeDP)
+                self.secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: timeDP)
             }
         } else {
             self.secondsStr = "..."

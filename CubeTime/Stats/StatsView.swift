@@ -1244,16 +1244,11 @@ struct StatsView: View {
                                                 .font(.system(size: 13, weight: .medium, design: .default))
                                                 .foregroundColor(Color(uiColor: .systemGray))
                                                 .padding(.bottom, 4)
-                                            
-                                            if bestSingle != nil {
-                                                Text("target")
-                                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                    .font(.system(size: 34, weight: .bold, design: .default))
-                                            } else {
-                                                Text("N/A")
-                                                    .font(.system(size: 28, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(uiColor: .systemGray5))
-                                            }
+
+                                            Text(formatSolveTime(secs: (currentSession as! CompSimSession).target, dp: 2))
+                                                .font(.system(size: 34, weight: .bold, design: .default))
+                                                .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+
                                         }
                                         .padding(.top)
                                         .padding(.bottom, 12)

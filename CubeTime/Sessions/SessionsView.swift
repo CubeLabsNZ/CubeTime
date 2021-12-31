@@ -75,7 +75,7 @@ struct CustomiseStandardSessionView: View {
     let sessionItem: Sessions
     
     @State private var name: String
-    
+    @State private var targetStr: String
     @State var pinnedSession: Bool
     
     let sessionEventType: Int32
@@ -84,6 +84,7 @@ struct CustomiseStandardSessionView: View {
         self.sessionItem = sessionItem
         self._name = State(initialValue: sessionItem.name ?? "")
         self._pinnedSession = State(initialValue: sessionItem.pinned)
+        self._targetStr = State(initialValue: filteredStrFromTime((sessionItem as? CompSimSession)?.target))
         self.sessionEventType = sessionItem.scramble_type
     }
     
@@ -120,7 +121,28 @@ struct CustomiseStandardSessionView: View {
                     .frame(height: 220)
                     .modifier(NewStandardSessionViewBlocks())
                     
-                    
+                    if sessionItem.session_type == SessionTypes.compsim.rawValue {
+                        VStack (spacing: 0) {
+                            HStack {
+                                Text("Target")
+                                    .font(.system(size: 17, weight: .medium))
+                                
+                                Spacer()
+                                
+                                TextField("0.00", text: $targetStr)
+                                    .keyboardType(.numberPad)
+                                    .multilineTextAlignment(.trailing)
+                                    .onReceive(Just(targetStr)) { newValue in
+                                        // TODO make this accept dots from the user
+                                        let filtered = filteredTimeInput(newValue)
+                                        if filtered != newValue {
+                                            self.targetStr = filtered
+                                        }
+                                    }
+                            }
+                            .padding()
+                        }
+                    }
                     
                     VStack (spacing: 0) {
                         HStack {
@@ -138,17 +160,29 @@ struct CustomiseStandardSessionView: View {
                 .ignoresSafeArea(.keyboard)
                 .navigationBarTitle("Customise Session", displayMode: .inline)
                 .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Text("Cancel")
+                        }
+                    }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button {
                             sessionItem.name = name
                             sessionItem.pinned = pinnedSession
+                            
+                            if sessionItem.session_type == SessionTypes.compsim.rawValue {
+                                (sessionItem as! CompSimSession).target = timeFromStr(targetStr)!
+                            }
+                            
                             try! managedObjectContext.save()
                             
                             dismiss()
                         } label: {
                             Text("Done")
                         }
-                        .disabled(self.name.isEmpty)
+                        .disabled(self.name.isEmpty || (sessionItem.session_type == SessionTypes.compsim.rawValue && targetStr.isEmpty))
                     }
                 }
             }
@@ -974,16 +1008,7 @@ struct NewCompsimView: View {
                                 .keyboardType(.numberPad)
                                 .multilineTextAlignment(.trailing)
                                 .onReceive(Just(targetStr)) { newValue in
-                                    // TODO make this accept dots from the user
-                                    var filtered: String = newValue.filter { $0.isNumber }.replacingOccurrences(of: "^0+", with: "", options: .regularExpression)
-                                    if filtered.count > 2 {
-                                        filtered.insert(".", at: filtered.index(filtered.endIndex, offsetBy: -2))
-                                    } else if filtered.count > 0 {
-                                        filtered = "0." + repeatElement("0", count: 3 - filtered.count) + filtered
-                                    }
-                                    if filtered.count > 5 {
-                                        filtered.insert(":", at: filtered.index(filtered.endIndex, offsetBy: -5))
-                                    }
+                                    let filtered = filteredTimeInput(newValue)
                                     if filtered != newValue {
                                         self.targetStr = filtered
                                     }
@@ -1062,11 +1087,15 @@ struct NewCompsimView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        let sessionItem = Sessions(context: managedObjectContext)
+                        let sessionItem = CompSimSession(context: managedObjectContext)
                         sessionItem.name = name
                         sessionItem.pinned = pinnedSession
                         
                         sessionItem.session_type = 4
+                        
+                        sessionItem.target = timeFromStr(targetStr)!
+                        
+                        NSLog("target time is \(sessionItem.target)")
                         
                         NSLog("sessioneventyype is \(sessionEventType)")
                         sessionItem.scramble_type = sessionEventType
@@ -1077,7 +1106,7 @@ struct NewCompsimView: View {
                     } label: {
                         Text("Create")
                     }
-                    .disabled(self.name.isEmpty)
+                    .disabled(self.name.isEmpty || self.targetStr.isEmpty)
                 }
             }
         }

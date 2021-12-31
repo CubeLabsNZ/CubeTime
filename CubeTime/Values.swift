@@ -44,23 +44,14 @@ enum SessionTypes: Int16 {
     case compsim
 }
 
-struct resisableText: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .minimumScaleFactor(0.5)
-            .lineLimit(1)
-            .allowsTightening(true)
-    }
-}
-
-func formatSolveTimeForTimer(secs: Double, dp: Int) -> String {
+func formatSolveTime(secs: Double, dp: Int) -> String {
     if secs < 60 {
         return String(format: "%.\(dp)f", secs) // TODO set DP
     } else {
         let mins: Int = Int((secs / 60).rounded(.down))
         let secs = secs.truncatingRemainder(dividingBy: 60)
         
-        return String(format: "%d:%06.\(dp)f", mins, secs)
+        return String(format: "%d:%0\(dp + 3).\(dp)f", mins, secs)
     }
 }
 
@@ -76,7 +67,7 @@ func formatSolveTime(secs: Double, penType: PenTypes? = PenTypes.none) -> String
         let mins: Int = Int((secs / 60).rounded(.down))
         let secs = secs.truncatingRemainder(dividingBy: 60)
         
-        return String(format: "%d:%06\(secsfmt)", mins, secs)
+        return String(format: "%d:%0\(dp + 3)\(secsfmt)", mins, secs)
     }
 }
 
@@ -129,6 +120,35 @@ let puzzle_types: [PuzzleType] = [
     
 ]
 
+func filteredTimeInput(_ input: String) -> String {
+    // TODO make this accept dots from the user
+
+    var filtered: String = String(input.filter { $0.isNumber }.replacingOccurrences(of: "^0+", with: "", options: .regularExpression).suffix(6))
+    if filtered.count > 2 {
+        filtered.insert(".", at: filtered.index(filtered.endIndex, offsetBy: -2))
+    } else if filtered.count > 0 {
+        filtered = "0." + repeatElement("0", count: 2 - filtered.count) + filtered
+    }
+    if filtered.count > 5 {
+        filtered.insert(":", at: filtered.index(filtered.endIndex, offsetBy: -5))
+    }
+    return filtered
+}
+
+@inline(__always) func filteredStrFromTime(_ time: Double?) -> String {
+    return time == nil ? "" : formatSolveTime(secs: time!, dp: 2)
+}
+
+func timeFromStr(_ formattedTime: String) -> Double? {
+    if formattedTime.isEmpty {
+        return nil
+    }
+    let separated = formattedTime.components(separatedBy: ":")
+    let mins: UInt = separated.count > 1 ? UInt(separated[0])! : 0
+    let secs: Double = Double(separated.last!)!
+    
+    return Double(mins) * 60 + secs
+}
 
 class SetValues {
     
