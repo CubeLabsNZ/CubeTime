@@ -125,6 +125,7 @@ struct TimerView: View {
                         }()
                     )
                     .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 70 : 56))
+                    .modifier(resisableText())
                     .animation(Animation.spring(), value: stopWatchManager.mode == .running)
                 
                 Spacer()
@@ -277,7 +278,7 @@ struct TimerView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 8))
 //                    .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
                     .padding(.horizontal)
-                    .padding(.top, SetValues.hasBottomBar ? 0 : 8)
+                    .padding(.top, SetValues.hasBottomBar ? 0 : hideTabBar ? nil : 8)
                     
                     Spacer()
                 }
