@@ -108,16 +108,18 @@ struct StatsView: View {
                                 /// current averages, number of solves and session mean
                                 VStack(spacing: 10) {
                                     HStack (spacing: 10) {
-                                        VStack {
-                                            HStack {
-                                                VStack (alignment: .leading, spacing: 0) {
+                                        VStack (alignment: .leading, spacing: 0) {
+                                            Text("CURRENT STATS")
+                                                .font(.system(size: 13, weight: .medium, design: .default))
+                                                .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                                .padding(.leading, 12)
+                                                .padding(.top, 10)
+                                            
+                                            VStack (alignment: .leading, spacing: 6) {
+                                                
+                                                
+                                                HStack {
                                                     VStack (alignment: .leading, spacing: -4) {
-                                                        Text("CURRENT STATS")
-                                                            .font(.system(size: 13, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                            .padding(.leading, 12)
-                                                        
-                                                        Spacer()
                                                         
                                                         Text("AO5")
                                                             .font(.system(size: 13, weight: .medium, design: .default))
@@ -137,13 +139,17 @@ struct StatsView: View {
                                                             
                                                         }
                                                     }
-                                                    .onTapGesture {
-                                                        if currentAo5 != nil {
-                                                            presentedAvg = currentAo5
-                                                        }
-                                                    }
-                                                    .padding(.bottom, 6)
                                                     
+                                                    Spacer()
+                                                }
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    if currentAo5 != nil {
+                                                        presentedAvg = currentAo5
+                                                    }
+                                                }
+                                                
+                                                HStack {
                                                     VStack (alignment: .leading, spacing: -4) {
                                                         Text("AO12")
                                                             .font(.system(size: 13, weight: .medium, design: .default))
@@ -164,13 +170,18 @@ struct StatsView: View {
                                                         }
                                                         
                                                     }
-                                                    .onTapGesture {
-                                                        if currentAo12 != nil {
-                                                            presentedAvg = currentAo12
-                                                        }
-                                                    }
-                                                    .padding(.bottom, 6)
                                                     
+                                                    
+                                                    Spacer()
+                                                }
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    if currentAo12 != nil {
+                                                        presentedAvg = currentAo12
+                                                    }
+                                                }
+                                                
+                                                HStack {
                                                     VStack (alignment: .leading, spacing: -4) {
                                                         Text("AO100")
                                                             .font(.system(size: 13, weight: .medium, design: .default))
@@ -191,26 +202,23 @@ struct StatsView: View {
                                                         }
                                                         
                                                     }
-                                                    .onTapGesture {
-                                                        if currentAo100 != nil {
-                                                            presentedAvg = currentAo100
-                                                        }
-                                                    }
-                                                    .padding(.bottom, 8)
+                                                    
+                                                    
+                                                    Spacer()
                                                     
                                                 }
-                                                .padding(.top, 10)
-                                                
-                                                
-                                                Spacer()
-                                                
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    if currentAo100 != nil {
+                                                        presentedAvg = currentAo100
+                                                    }
+                                                }
                                             }
-                                            .frame(height: 160)
-                                            
-                                            
-                                            .background(Color(uiColor: .systemGray5).clipShape(RoundedRectangle(cornerRadius:16)))
+                                            .padding(.bottom, 8)
                                         }
+                                        .frame(height: 160)
                                         .frame(minWidth: 0, maxWidth: .infinity)
+                                        .background(Color(uiColor: .systemGray5).clipShape(RoundedRectangle(cornerRadius:16)))
                                         
                                         VStack {
                                             HStack {
@@ -307,9 +315,8 @@ struct StatsView: View {
                                                 }
                                             }
                                             
-                                            HStack {
-                                                VStack (alignment: .leading, spacing: 0) {
-                                                    
+                                            VStack (alignment: .leading, spacing: 0) {
+                                                HStack {
                                                     VStack (alignment: .leading, spacing: 0) {
                                                         Text("BEST AO12")
                                                             .font(.system(size: 13, weight: .medium, design: .default))
@@ -329,19 +336,21 @@ struct StatsView: View {
                                                             
                                                         }
                                                     }
-                                                    .onTapGesture {
-                                                        if ao12 != nil {
-                                                            presentedAvg = ao12
-                                                        }
+                                                    
+                                                    Spacer()
+                                                }
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    if ao12 != nil {
+                                                        presentedAvg = ao12
                                                     }
-                                                    
-                                                    
-                                                    Divider()
-                                                        .padding(.leading, 12)
-                                                        .padding(.vertical, 4)
-                                                    
-                                                    
-                                                    
+                                                }
+                                                
+                                                Divider()
+                                                    .padding(.leading, 12)
+                                                    .padding(.vertical, 4)
+                                                
+                                                HStack {
                                                     VStack (alignment: .leading, spacing: 0) {
                                                         Text("BEST AO100")
                                                             .font(.system(size: 13, weight: .medium, design: .default))
@@ -362,31 +371,19 @@ struct StatsView: View {
                                                         }
                                                         
                                                     }
-                                                    .onTapGesture {
-                                                        if ao100 != nil {
-                                                            presentedAvg = ao100
-                                                        }
-                                                    }
                                                     
-                                                    
+                                                    Spacer()
                                                 }
-                                                
-                                                
-                                                Spacer()
-                                                
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    if ao100 != nil {
+                                                        presentedAvg = ao100
+                                                    }
+                                                }
                                             }
                                             .frame(height: 130)
                                             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
+
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
@@ -539,16 +536,18 @@ struct StatsView: View {
                                 /// current averages, number of solves and session mean
                                 VStack(spacing: 10) {
                                     HStack (spacing: 10) {
-                                        VStack {
-                                            HStack {
-                                                VStack (alignment: .leading, spacing: 0) {
+                                        VStack (alignment: .leading, spacing: 0) {
+                                            Text("CURRENT STATS")
+                                                .font(.system(size: 13, weight: .medium, design: .default))
+                                                .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                                .padding(.leading, 12)
+                                                .padding(.top, 10)
+                                            
+                                            VStack (alignment: .leading, spacing: 6) {
+                                                
+                                                
+                                                HStack {
                                                     VStack (alignment: .leading, spacing: -4) {
-                                                        Text("CURRENT STATS")
-                                                            .font(.system(size: 13, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                            .padding(.leading, 12)
-                                                        
-                                                        Spacer()
                                                         
                                                         Text("AO5")
                                                             .font(.system(size: 13, weight: .medium, design: .default))
@@ -568,13 +567,17 @@ struct StatsView: View {
                                                             
                                                         }
                                                     }
-                                                    .onTapGesture {
-                                                        if currentAo5 != nil {
-                                                            presentedAvg = currentAo5
-                                                        }
-                                                    }
-                                                    .padding(.bottom, 6)
                                                     
+                                                    Spacer()
+                                                }
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    if currentAo5 != nil {
+                                                        presentedAvg = currentAo5
+                                                    }
+                                                }
+                                                
+                                                HStack {
                                                     VStack (alignment: .leading, spacing: -4) {
                                                         Text("AO12")
                                                             .font(.system(size: 13, weight: .medium, design: .default))
@@ -595,13 +598,18 @@ struct StatsView: View {
                                                         }
                                                         
                                                     }
-                                                    .onTapGesture {
-                                                        if currentAo12 != nil {
-                                                            presentedAvg = currentAo12
-                                                        }
-                                                    }
-                                                    .padding(.bottom, 6)
                                                     
+                                                    
+                                                    Spacer()
+                                                }
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    if currentAo12 != nil {
+                                                        presentedAvg = currentAo12
+                                                    }
+                                                }
+                                                
+                                                HStack {
                                                     VStack (alignment: .leading, spacing: -4) {
                                                         Text("AO100")
                                                             .font(.system(size: 13, weight: .medium, design: .default))
@@ -622,26 +630,23 @@ struct StatsView: View {
                                                         }
                                                         
                                                     }
-                                                    .onTapGesture {
-                                                        if currentAo100 != nil {
-                                                            presentedAvg = currentAo100
-                                                        }
-                                                    }
-                                                    .padding(.bottom, 8)
+                                                    
+                                                    
+                                                    Spacer()
                                                     
                                                 }
-                                                .padding(.top, 10)
-                                                
-                                                
-                                                Spacer()
-                                                
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    if currentAo100 != nil {
+                                                        presentedAvg = currentAo100
+                                                    }
+                                                }
                                             }
-                                            .frame(height: 160)
-                                            
-                                            
-                                            .background(Color(uiColor: .systemGray5).clipShape(RoundedRectangle(cornerRadius:16)))
+                                            .padding(.bottom, 8)
                                         }
+                                        .frame(height: 160)
                                         .frame(minWidth: 0, maxWidth: .infinity)
+                                        .background(Color(uiColor: .systemGray5).clipShape(RoundedRectangle(cornerRadius:16)))
                                         
                                         VStack {
                                             HStack {
@@ -738,9 +743,8 @@ struct StatsView: View {
                                                 }
                                             }
                                             
-                                            HStack {
-                                                VStack (alignment: .leading, spacing: 0) {
-                                                    
+                                            VStack (alignment: .leading, spacing: 0) {
+                                                HStack {
                                                     VStack (alignment: .leading, spacing: 0) {
                                                         Text("BEST AO12")
                                                             .font(.system(size: 13, weight: .medium, design: .default))
@@ -760,19 +764,21 @@ struct StatsView: View {
                                                             
                                                         }
                                                     }
-                                                    .onTapGesture {
-                                                        if ao12 != nil {
-                                                            presentedAvg = ao12
-                                                        }
+                                                    
+                                                    Spacer()
+                                                }
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    if ao12 != nil {
+                                                        presentedAvg = ao12
                                                     }
-                                                    
-                                                    
-                                                    Divider()
-                                                        .padding(.leading, 12)
-                                                        .padding(.vertical, 4)
-                                                    
-                                                    
-                                                    
+                                                }
+                                                
+                                                Divider()
+                                                    .padding(.leading, 12)
+                                                    .padding(.vertical, 4)
+                                                
+                                                HStack {
                                                     VStack (alignment: .leading, spacing: 0) {
                                                         Text("BEST AO100")
                                                             .font(.system(size: 13, weight: .medium, design: .default))
@@ -793,18 +799,15 @@ struct StatsView: View {
                                                         }
                                                         
                                                     }
-                                                    .onTapGesture {
-                                                        if ao100 != nil {
-                                                            presentedAvg = ao100
-                                                        }
-                                                    }
                                                     
-                                                    
+                                                    Spacer()
                                                 }
-                                                
-                                                
-                                                Spacer()
-                                                
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    if ao100 != nil {
+                                                        presentedAvg = ao100
+                                                    }
+                                                }
                                             }
                                             .frame(height: 130)
                                             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
@@ -1172,8 +1175,8 @@ struct StatsView: View {
                                                     
                                                     if let ao5 = ao5 {
                                                         Text(formatSolveTime(secs: ao5.average))
-                                                            .font(.system(size: 34, weight: .bold, design: .default))
                                                             .foregroundColor(colourScheme == .light ? .black : .white)
+                                                            .font(.system(size: 34, weight: .bold, design: .default))
                                                         
                                                         Spacer()
                                                         

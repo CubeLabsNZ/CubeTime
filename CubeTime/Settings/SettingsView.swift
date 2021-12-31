@@ -63,7 +63,6 @@ struct SettingsView: View {
     }
 }
 
-
 struct SettingsCard: View {
     @Binding var currentCard: SettingsCardInfo?
     var info: SettingsCardInfo
@@ -88,9 +87,13 @@ struct SettingsCard: View {
                     HStack {
                         Text(info.name)
                             .matchedGeometryEffect(id: info.name, in: namespace)
+                            .minimumScaleFactor(0.75)
+                            .lineLimit(info.name == "Appearance" ? 1 : 2)
+                            .allowsTightening(true)
                             .font(.system(size: 22, weight: .bold))
-                            .padding(.horizontal)
-                            .padding(.top, 12)
+                            .padding(.horizontal, info.name == "Appearance" ? 14 : nil)
+                            .padding(.top, info.name == "Appearance" ? 15 : 12)
+                        
                         
                         Spacer()
                     }
@@ -160,6 +163,10 @@ struct SettingsDetail: View {
                             HStack(alignment: .center) {
                                 Text(currentCard!.name)
                                     .matchedGeometryEffect(id: currentCard!.name, in: namespace)
+                                    .minimumScaleFactor(0.75)
+//                                    .lineLimit(1)
+                                    .lineLimit(currentCard!.name == "Appearance" ? 1 : 2)
+                                    .allowsTightening(true)
                                     .font(.system(size: 22, weight: .bold))
                                 
 
