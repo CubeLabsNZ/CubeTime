@@ -11,28 +11,27 @@ struct TimeBar: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
-    let solve: Solves
+    let solvegroup: CompSimSolveGroup
     let timeListManager: TimeListManager
     
-    @State var formattedTime: String
-    @State var pen: PenTypes
+    let formattedTime: String
     
     @Binding var currentSolve: Solves?
     @Binding var isSelectMode: Bool
     
-    @Binding var selectedSolves: [Solves]
+//    @Binding var selectedSolvegroups: [CompSimSolveGroup]
     
     @State var isSelected = false
     
     
-    init(solve: Solves, timeListManager: TimeListManager, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<[Solves]>) {
-        self.solve = solve
+    init(solvegroup: CompSimSolveGroup, timeListManager: TimeListManager, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>/*, selectedSolves: Binding<[Solves]>*/) {
+        self.solvegroup = solvegroup
         self.timeListManager = timeListManager
-        self._formattedTime = State(initialValue: formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!))
-        self._pen = State(initialValue: PenTypes(rawValue: solve.penalty)!)
+        // TODO bracket and gray min and max
+        self.formattedTime = formatSolveTime(secs: (solvegroup.solves!.array as! [Solves]).map {$0.time}.sorted().dropFirst().dropLast().reduce(0, +))
         self._currentSolve = currentSolve
         self._isSelectMode = isSelectMode
-        self._selectedSolves = selectedSolves
+//        self._selectedSolvegroups = selectedSolves
     }
     
     var body: some View {
@@ -41,21 +40,21 @@ struct TimeBar: View {
                 .fill(isSelected ? Color(uiColor: .systemGray4) : colourScheme == .dark ? Color(uiColor: .systemGray6) : Color(uiColor: .systemBackground))
                 .frame(minHeight: 70, maxHeight: 70) /// todo check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectange
                 .onTapGesture {
-                    if isSelectMode {
-                        withAnimation {
-                            if isSelected {
-                                isSelected = false
-                                if let index = selectedSolves.firstIndex(of: solve) {
-                                    selectedSolves.remove(at: index)
-                                }
-                            } else {
-                                isSelected = true
-                                selectedSolves.append(solve)
-                            }
-                        }
-                    } else {
-                        currentSolve = solve
-                    }
+//                    if isSelectMode {
+//                        withAnimation {
+//                            if isSelected {
+//                                isSelected = false
+//                                if let index = selectedSolves.firstIndex(of: solve) {
+//                                    selectedSolves.remove(at: index)
+//                                }
+//                            } else {
+//                                isSelected = true
+//                                selectedSolves.append(solve)
+//                            }
+//                        }
+//                    } else {
+//                        currentSolve = solve
+//                    }
                 }
                 .onLongPressGesture {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
@@ -72,8 +71,8 @@ struct TimeBar: View {
                     }
                     
                     HStack(spacing: 0) {
-                        ForEach(0...4, id: \.self) { placeholder in
-                            Text("1.69, ")
+                        ForEach(solvegroup.solves!.array as! [Solves], id: \.self) { solve in
+                            Text(formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)))
                                 .font(.system(size: 17, weight: .medium))
                         }
                         
@@ -99,14 +98,14 @@ struct TimeBar: View {
         }
         .contextMenu {
             Button (role: .destructive) {
-                managedObjectContext.delete(solve)
+                managedObjectContext.delete(solvegroup)
                 try! managedObjectContext.save()
                 withAnimation {
                     timeListManager.resort()
                 }
             } label: {
                 Label {
-                    Text("Delete Solve")
+                    Text("Delete Solve Group")
                         .foregroundColor(Color.red)
                 } icon: {
                     Image(systemName: "trash")

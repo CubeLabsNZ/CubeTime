@@ -1,52 +1,5 @@
 import SwiftUI
 
-struct MultiTextField: UIViewRepresentable {
-    
-    func makeCoordinator() -> MultiTextField.Coordinator {
-        return MultiTextField.Coordinator(parent1: self)
-    }
-    
-    @EnvironmentObject var obj: observed
-    
-    
-    func makeUIView(context: UIViewRepresentableContext<MultiTextField>) -> UITextView {
-        let view = UITextView()
-        view.font = .systemFont(ofSize: 19, weight: .light)
-        view.text = "sdfsdf"
-        view.textColor = UIColor.black
-        view.backgroundColor = .clear
-        
-        view.delegate = context.coordinator
-        self.obj.size = view.contentSize.height
-        view.isEditable = true
-        view.isUserInteractionEnabled = true
-        view.isScrollEnabled = true
-        
-        
-        
-        return view
-    }
-    
-    func updateUIView(_ uiView: UITextView, context: UIViewRepresentableContext<MultiTextField>) {
-
-    }
-    
-    class Coordinator: NSObject, UITextViewDelegate {
-        var parent: MultiTextField
-        init(parent1: MultiTextField) {
-            parent = parent1
-        }
-        func textViewDidBeginEditing(_ textView: UITextView) {
-            textView.text = ""
-            textView.textColor = .black
-        }
-        
-        func textViewDidChange(_ textView: UITextView) {
-            self.parent.obj.size = textView.contentSize.height
-        }
-    }
-    
-}
 
 class observed: ObservableObject {
     @Published var size: CGFloat = 0

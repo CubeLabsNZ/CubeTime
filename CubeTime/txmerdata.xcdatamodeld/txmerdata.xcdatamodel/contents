@@ -2,6 +2,14 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19461" systemVersion="20G224" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="CompSimSession" representedClassName="CompSimSession" parentEntity="Sessions" syncable="YES" codeGenerationType="class">
         <attribute name="target" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="solvegroups" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="CompSimSolveGroup" inverseName="session" inverseEntity="CompSimSolveGroup"/>
+    </entity>
+    <entity name="CompSimSolve" representedClassName="CompSimSolve" parentEntity="Solves" syncable="YES" codeGenerationType="class">
+        <relationship name="solvegroup" maxCount="1" deletionRule="Nullify" destinationEntity="CompSimSolveGroup" inverseName="solves" inverseEntity="CompSimSolveGroup"/>
+    </entity>
+    <entity name="CompSimSolveGroup" representedClassName="CompSimSolveGroup" syncable="YES" codeGenerationType="class">
+        <relationship name="session" maxCount="1" deletionRule="Nullify" destinationEntity="CompSimSession" inverseName="solvegroups" inverseEntity="CompSimSession"/>
+        <relationship name="solves" toMany="YES" maxCount="5" deletionRule="Cascade" ordered="YES" destinationEntity="CompSimSolve" inverseName="solvegroup" inverseEntity="CompSimSolve"/>
     </entity>
     <entity name="Sessions" representedClassName="Sessions" syncable="YES" codeGenerationType="class">
         <attribute name="color" optional="YES" attributeType="Binary"/>
@@ -22,8 +30,10 @@
         <relationship name="session" maxCount="1" deletionRule="Nullify" destinationEntity="Sessions" inverseName="solves" inverseEntity="Sessions"/>
     </entity>
     <elements>
+        <element name="CompSimSession" positionX="-414" positionY="126" width="128" height="59"/>
         <element name="Sessions" positionX="-298.021484375" positionY="72.0087890625" width="128" height="119"/>
         <element name="Solves" positionX="-525.0341796875" positionY="55.00390625" width="128" height="149"/>
-        <element name="CompSimSession" positionX="-414" positionY="126" width="128" height="58"/>
+        <element name="CompSimSolveGroup" positionX="-414" positionY="126" width="128" height="59"/>
+        <element name="CompSimSolve" positionX="-405" positionY="135" width="128" height="44"/>
     </elements>
 </model>
