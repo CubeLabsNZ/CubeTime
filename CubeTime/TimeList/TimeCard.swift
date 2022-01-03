@@ -348,6 +348,7 @@ struct TimeCard: View {
                 pen = .none
                 self.solve.penalty = pen.rawValue
                 formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+                try! managedObjectContext.save()
             } label: {
                 Label("No Penalty", systemImage: "checkmark.circle") /// TODO: add custom icons because no good icons
             }
@@ -356,6 +357,7 @@ struct TimeCard: View {
                 pen = .plustwo
                 self.solve.penalty = pen.rawValue
                 formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+                try! managedObjectContext.save()
             } label: {
                 Label("+2", systemImage: "plus.circle") /// TODO: add custom icons because no good icons
             }
@@ -364,6 +366,7 @@ struct TimeCard: View {
                 pen = .dnf
                 self.solve.penalty = pen.rawValue
                 formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+                try! managedObjectContext.save()
             } label: {
                 Label("DNF", systemImage: "slash.circle") /// TODO: add custom icons because no good icons
             }
