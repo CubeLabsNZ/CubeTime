@@ -5,7 +5,6 @@ import SwiftUI
 let plustwotime = 15
 let dnftime = 17
 
-var inspectionRange: Int = 0
 
 enum stopWatchMode {
     case running
@@ -102,20 +101,13 @@ class StopWatchManager: ObservableObject {
         timer?.invalidate()
         secondsStr = "0"
         inspectionSecs = 0
-        inspectionRange = 0
         mode = .inspecting
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
             inspectionSecs += 1
             self.secondsStr = String(inspectionSecs)
-            if inspectionSecs == 8 {
-                inspectionRange = 1
-            } else if inspectionSecs == 12 {
-                inspectionRange = 2
-            } else if inspectionSecs == plustwotime {
-                inspectionRange = 3
+            if inspectionSecs == plustwotime {
                 penType = .plustwo
-            } else if inspectionSecs >= dnftime {
-                inspectionRange = 4
+            } else if inspectionSecs == dnftime {
                 penType = .dnf
             }
         }
@@ -213,7 +205,19 @@ class StopWatchManager: ObservableObject {
             if mode == .running {
                 stop()
                 prevDownStoppedTheTimer = true
-                solveItem = Solves(context: managedObjectContext)
+                if let currentSession = currentSession as? CompSimSession {
+                    solveItem = CompSimSolve(context: managedObjectContext)
+                    if currentSession.solvegroups == nil {
+                        currentSession.solvegroups = NSOrderedSet()
+                    }
+                    if currentSession.solvegroups!.count == 0 || (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup).solves!.count == 5 {
+                        let solvegroup = CompSimSolveGroup(context: managedObjectContext)
+                        solvegroup.session = currentSession
+                    }
+                    (solveItem as! CompSimSolve).solvegroup = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup)
+                } else {
+                    solveItem = Solves(context: managedObjectContext)
+                }
                 // .comment
                 solveItem.date = Date()
                 solveItem.penalty = penType.rawValue

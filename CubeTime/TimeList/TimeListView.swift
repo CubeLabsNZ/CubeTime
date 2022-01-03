@@ -150,7 +150,7 @@ struct TimeListView: View {
                             }
                         }
                         
-                        if currentSession.session_type != 4 {
+                        if currentSession.session_type != SessionTypes.compsim.rawValue {
                             LazyVGrid(columns: columns, spacing: 12) {
                                 ForEach(timeListManager.solves!, id: \.self) { item in
                                     TimeCard(solve: item, timeListManager: timeListManager, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
@@ -160,8 +160,9 @@ struct TimeListView: View {
                             .padding(.horizontal)
                         } else {
                             VStack(spacing: 12) {
-                                ForEach(timeListManager.solves!, id: \.self) { item in
-                                    TimeBar(solve: item, timeListManager: timeListManager, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
+                                // TODO sorting
+                                ForEach((currentSession as! CompSimSession).solvegroups!.array as! [CompSimSolveGroup], id: \.self) { item in
+                                    TimeBar(solvegroup: item, timeListManager: timeListManager, currentSolve: $solve, isSelectMode: $isSelectMode)
                                         .environment(\.managedObjectContext, managedObjectContext)
                                 }
 
