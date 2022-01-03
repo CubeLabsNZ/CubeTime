@@ -12,7 +12,6 @@
 		233FE7B6274F109600C6F1DF /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Values.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
 		239C7E702781511300943AF2 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239C7E6F2781511300943AF2 /* Onboarding.swift */; };
-		23CF3745277F03630079C724 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CF3744277F03630079C724 /* SwiftUIView.swift */; };
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
 		23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */; };
 		23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDC274DDBE200254D29 /* TimerView.swift */; };
@@ -94,7 +93,6 @@
 		2354882227642E2800FE8D7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
 		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
-		23CF3744277F03630079C724 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		23D2FC4C274E12DE00D7071A /* TimeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeListView.swift; sourceTree = "<group>"; };
 		23DE3BD7274DDBE200254D29 /* CubeTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeTimeApp.swift; sourceTree = "<group>"; };
@@ -350,7 +348,6 @@
 				2337E6872767619D00438F43 /* StatsDetail.swift */,
 				2319F8B8276872F200644EB3 /* TimeTrend.swift */,
 				23E647C52775B2AC00561780 /* TimeDistribution.swift */,
-				23CF3744277F03630079C724 /* SwiftUIView.swift */,
 			);
 			path = Stats;
 			sourceTree = "<group>";
@@ -628,7 +625,6 @@
 				7D7A9EC0274F38CD00C2E125 /* StatsView.swift in Sources */,
 				23E81E6F275D8DCA00B741E3 /* AppearanceSettings.swift in Sources */,
 				23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */,
-				23CF3745277F03630079C724 /* SwiftUIView.swift in Sources */,
 				7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */,
 				23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */,
 				7D69E0A22751FDEA007211CC /* Sq12phase.m in Sources */,

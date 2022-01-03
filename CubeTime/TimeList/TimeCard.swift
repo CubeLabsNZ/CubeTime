@@ -16,9 +16,11 @@ class observed: ObservableObject {
 //}
 
 struct SolvePopupView: View {
+    @Environment(\.presentationMode) var presentation
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
-    @Environment(\.presentationMode) var presentationMode
+    
+    
     @Environment(\.dismiss) var dismiss
     @Environment(\.defaultMinListRowHeight) var minRowHeight
     
@@ -238,7 +240,11 @@ struct SolvePopupView: View {
                         ToolbarItem(placement: .navigationBarLeading) {
                             Button {
                                 currentSolve = nil
-                                dismiss() // Dismiss in case called from StatsView
+                                
+                                self.presentation.wrappedValue.dismiss()
+                                
+                                
+//                                dismiss() // Dismiss in case called from StatsView
                                     
                                 if managedObjectContext.hasChanges {
                                     try! managedObjectContext.save()

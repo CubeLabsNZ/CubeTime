@@ -71,9 +71,12 @@ struct TimeBar: View {
                     }
                     
                     HStack(spacing: 0) {
-                        ForEach(solvegroup.solves!.array as! [Solves], id: \.self) { solve in
+                        ForEach(Array((solvegroup.solves!.array as! [Solves]).enumerated()), id: \.offset) { index, solve in
                             Text(formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)))
                                 .font(.system(size: 17, weight: .medium))
+                            if index < solvegroup.solves!.count-1 {
+                                Text(", ")
+                            }
                         }
                         
                         Spacer()

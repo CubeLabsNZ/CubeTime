@@ -69,6 +69,7 @@ class TimeListManager: ObservableObject {
 }
 
 struct TimeListView: View {
+    @Environment(\.presentationMode) var presentation
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
@@ -182,17 +183,6 @@ struct TimeListView: View {
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {
                         if isSelectMode {
-//                            Button {
-//                                isSelectMode = false
-//                                actionOnSelectedItems = .delete
-//                                NSLog("hi")
-//                                try! managedObjectContext.save()
-//                                timeListManager.resort()
-//                            } label: {
-//                                Image(systemName: "trash.circle.fill")
-//                                    .font(.system(size: 17, weight: .medium))
-//                                    .foregroundColor(Color.red)
-//                            }
                             Button {
                                 isSelectMode = false
                                 NSLog("hi")
@@ -215,11 +205,6 @@ struct TimeListView: View {
                             .buttonStyle(.bordered)
                             .clipShape(Capsule())
                             .controlSize(.small)
-//                            .background(.red.opacity(0.25), in: Capsule())
-                            
-                            
-                            
-                            
                         }
                     }
                     
@@ -229,11 +214,9 @@ struct TimeListView: View {
                                 isSelectMode = false
                                 selectedSolves.removeAll()
                             } label: {
-                                
                                 Text("Cancel")
-                                    .padding(.leading, -4)
                             }
-                        
+                            .background(Color.blue)
                         } else {
                             Button {
                                 isSelectMode = true

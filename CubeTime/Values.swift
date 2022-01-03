@@ -44,14 +44,15 @@ enum SessionTypes: Int16 {
     case compsim
 }
 
-struct resisableText: ViewModifier {
+struct DynamicText: ViewModifier {
     func body(content: Content) -> some View {
         content
+            .scaledToFill()
             .minimumScaleFactor(0.5)
             .lineLimit(1)
-            .allowsTightening(true)
     }
 }
+
 
 func formatSolveTime(secs: Double, dp: Int) -> String {
     if secs < 60 {

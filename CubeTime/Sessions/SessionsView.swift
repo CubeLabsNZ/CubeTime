@@ -60,7 +60,7 @@ struct ContextMenuButton: View {
         }
     }
     private func delayedAction() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+        DispatchQueue.main.asyncAfter(deadline: .now() /*+ 0.9*/) {
             self.action()
         }
     }
@@ -223,11 +223,6 @@ struct NewSessionPopUpView: View {
                             .font(.system(size: 34, weight: .bold, design: .default))
                             .padding(.bottom, 8)
                             .padding(.top, UIScreen.screenHeight/12)
-                        Text("You can choose from four different types of sessions, out of the following: ")
-                            .font(.system(size: 17, weight: .regular, design: .default))
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                            .padding(.bottom)
                     }
                     
                     
