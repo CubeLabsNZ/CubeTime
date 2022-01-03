@@ -101,6 +101,8 @@ struct AboutSettingsView: View {
     
     @State var showLicenses = false
     
+    @AppStorage("onboarding") var showOnboarding = false
+    
     var body: some View {
         VStack (alignment: .leading) {
             HStack(alignment: .center) {
@@ -119,22 +121,31 @@ struct AboutSettingsView: View {
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(Color(uiColor: .systemGray))
                 }
-                .padding(.bottom, 2)
+                .padding(.bottom, 4)
             }
             
             
-            Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\n\nClick below for more info.")
+            Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.")
+            
+            Text("\nClick below for more info.")
+            
             Button {
                 showLicenses = true
             } label: {
                 Text("Open source licenes and privacy policy")
             }
-            
-            Text("\n\nOur Github project:\nhttps://github.com/pdtcubing/CubeTime")
-            
+                        
             if Locale.current.regionCode == "NZ" {
-                Text("\n\nBuy your cubes from\nhttps://www.speedcube.co.nz/ ❤️")
+                Text("\n\nThis project is kindly sponsored by speedcube.co.nz! Buy your cubes from \nhttps://www.speedcube.co.nz/")
             }
+            
+            Text("\n\nIf you need help, you can view the tutorial again:")
+            
+            Button("Help") {
+                showOnboarding = true
+            }
+            
+            Text("\nor view our github page!\nhttps://github.com/pdtcubing/CubeTime")
         }
         .padding(.horizontal)
         .sheet(isPresented: $showLicenses) {

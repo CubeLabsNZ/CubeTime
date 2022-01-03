@@ -18,7 +18,7 @@ struct SettingsView: View {
     @State var currentCard: SettingsCardInfo?
     //    @Binding var hideTabBar: Bool
     @Environment(\.colorScheme) var colourScheme
-    
+    @Binding var showOnboarding: Bool
     @Namespace var namespace
     
     
@@ -57,7 +57,7 @@ struct SettingsView: View {
             }
             .zIndex(1)
             .overlay(
-                SettingsDetail(currentCard: $currentCard, namespace: namespace)
+                SettingsDetail(currentCard: $currentCard, showOnboarding: $showOnboarding, namespace: namespace)
             )
         }
     }
@@ -119,6 +119,7 @@ struct SettingsCard: View {
 
 struct SettingsDetail: View {
     @Binding var currentCard: SettingsCardInfo?
+    @Binding var showOnboarding: Bool
     @Environment(\.colorScheme) var colourScheme
     
     var namespace: Namespace.ID
@@ -136,8 +137,8 @@ struct SettingsDetail: View {
                         GeneralSettingsView()
                     case "Appearance":
                         AppearanceSettingsView()
-                    case "About":
-                        AboutSettingsView()
+                    case "Help &\nAbout Us":
+                        AboutSettingsView(showOnboarding: showOnboarding)
                     default:
                         EmptyView()
                     }

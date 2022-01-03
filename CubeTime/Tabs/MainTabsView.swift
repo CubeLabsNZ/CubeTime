@@ -80,9 +80,11 @@ struct MainTabsView: View {
     
     @StateObject var tabRouter: TabRouter = TabRouter()
     
+    @State var pageIndex: Int = 0
     @State var hideTabBar = false
     @State var currentSession: Sessions
     
+    @AppStorage("onboarding") var showOnboarding: Bool = true
     @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
     @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
@@ -109,7 +111,7 @@ struct MainTabsView: View {
             ZStack {
                 switch tabRouter.currentTab {
                 case .timer:
-                    TimerView(currentSession: $currentSession, stopWatchManager: StopWatchManager(currentSession: $currentSession, managedObjectContext: managedObjectContext), hideTabBar: $hideTabBar)
+                    TimerView(pageIndex: $pageIndex, currentSession: $currentSession, stopWatchManager: StopWatchManager(currentSession: $currentSession, managedObjectContext: managedObjectContext), hideTabBar: $hideTabBar)
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .solves:
                     TimeListView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
@@ -124,11 +126,14 @@ struct MainTabsView: View {
                             UserDefaults.standard.set(newSession.objectID.uriRepresentation(), forKey: "last_used_session") // TODO what was i thinking move this logic into SessionsView
                         }
                 case .settings:
-                    SettingsView()
+                    SettingsView(showOnboarding: $showOnboarding)
                 }
 
                 BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
                     .zIndex(1)
+            }
+            .sheet(isPresented: $showOnboarding) {
+                OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
             }
         }
         .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)

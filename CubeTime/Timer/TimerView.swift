@@ -30,11 +30,15 @@ struct TimerView: View {
     //@ObservedObject var currentSession: Sessions
    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage("onboarding") private var showOnboarding: Bool = true
+    
     @ObservedObject var stopWatchManager: StopWatchManager
     
     @Binding var hideTabBar: Bool
     
     @Binding var currentSession: Sessions
+    
+    @Binding var pageIndex: Int
     
     @State var hideStatusBar = true
     
@@ -44,7 +48,8 @@ struct TimerView: View {
 //    @State var compSimTarget: String
     
     
-    init(currentSession: Binding<Sessions>, stopWatchManager: StopWatchManager, hideTabBar: Binding<Bool>) {
+    init(pageIndex: Binding<Int>, currentSession: Binding<Sessions>, stopWatchManager: StopWatchManager, hideTabBar: Binding<Bool>) {
+        self._pageIndex = pageIndex
         self._currentSession = currentSession
         self.stopWatchManager = stopWatchManager
         self._hideTabBar = hideTabBar

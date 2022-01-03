@@ -11,6 +11,7 @@
 		2337E6882767619D00438F43 /* StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2337E6872767619D00438F43 /* StatsDetail.swift */; };
 		233FE7B6274F109600C6F1DF /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Values.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
+		239C7E702781511300943AF2 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239C7E6F2781511300943AF2 /* Onboarding.swift */; };
 		23CF3745277F03630079C724 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CF3744277F03630079C724 /* SwiftUIView.swift */; };
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
 		23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */; };
@@ -92,6 +93,7 @@
 		2354882127642B9C00FE8D7A /* recursive.otc */ = {isa = PBXFileReference; lastKnownFileType = file; path = recursive.otc; sourceTree = "<group>"; };
 		2354882227642E2800FE8D7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
+		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		23CF3744277F03630079C724 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		23D2FC4C274E12DE00D7071A /* TimeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeListView.swift; sourceTree = "<group>"; };
 		23DE3BD7274DDBE200254D29 /* CubeTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -216,8 +218,8 @@
 		23A73F5C276B0AA100153748 /* Timer */ = {
 			isa = PBXGroup;
 			children = (
-				7D78FF8B276084C2008BB82E /* StopWatchManager.swift */,
 				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
+				7D78FF8B276084C2008BB82E /* StopWatchManager.swift */,
 			);
 			path = Timer;
 			sourceTree = "<group>";
@@ -277,6 +279,7 @@
 				2354882027642B5400FE8D7A /* project-fonts */,
 				23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */,
 				23DE3BE3274DDBE300254D29 /* Persistence.swift */,
+				239C7E6F2781511300943AF2 /* Onboarding.swift */,
 				233FE7B5274F109600C6F1DF /* Values.swift */,
 				7D7C45C42751DE2C0073885C /* 3rdparty-Bridging-Header.h */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
@@ -649,6 +652,7 @@
 				7D69E0BE2751FDEB007211CC /* CHTUpdater.m in Sources */,
 				7D69E0A92751FDEA007211CC /* SQ1.m in Sources */,
 				7D69E0B62751FDEA007211CC /* CHTSession.m in Sources */,
+				239C7E702781511300943AF2 /* Onboarding.swift in Sources */,
 				2337E6882767619D00438F43 /* StatsDetail.swift in Sources */,
 				7D69E0AE2751FDEA007211CC /* Util.m in Sources */,
 			);

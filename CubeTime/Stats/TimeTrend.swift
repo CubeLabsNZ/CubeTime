@@ -635,7 +635,7 @@ struct TimeTrend: View {
                 }
             }
         } else {
-            Text("not enough data to\ndisplay graph")
+            Text("not enough solves to\ndisplay graph")
                 .font(.system(size: 17, weight: .medium, design: .monospaced))
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color(uiColor: .systemGray))
