@@ -39,6 +39,7 @@ struct LicensePopUpView: View {
 
 struct LicensesPopUpView: View {
     @Environment(\.dismiss) var dismiss
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @State var showLicense = false
     @Binding var showLicenses: Bool
     @State var projectLicense: ProjectLicense?
@@ -93,18 +94,16 @@ struct LicensesPopUpView: View {
                 }
             }
         }
-        
+        .accentColor(accentColour)
     }
 }
 
 struct AboutSettingsView: View {
-    
+    @AppStorage("onboarding") var showOnboarding = false
     @State var showLicenses = false
     
-    @AppStorage("onboarding") var showOnboarding = false
-    
     var body: some View {
-        VStack (alignment: .leading) {
+        VStack (alignment: .leading, spacing: 0) {
             HStack(alignment: .center) {
                 Image("about-icon")
                     .resizable()
@@ -114,9 +113,9 @@ struct AboutSettingsView: View {
                     .padding(.trailing, 6)
                 
                 VStack(alignment: .leading) {
-                    Spacer()
                     Text("CubeTime.")
                         .font(Font.custom("recursive", fixedSize: 30))
+                        .padding(.top, 20)
                     Text("VERSION \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)\n")
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(Color(uiColor: .systemGray))
@@ -124,28 +123,27 @@ struct AboutSettingsView: View {
                 .padding(.bottom, 4)
             }
             
-            
-            Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.")
-            
-            Text("\nClick below for more info.")
-            
-            Button {
-                showLicenses = true
-            } label: {
-                Text("Open source licenes and privacy policy")
+            VStack (alignment: .leading, spacing: 0) {
+                Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\nClick below for more info on source licenses and our privacy policy:")
+                    .multilineTextAlignment(.leading)
+                                
+                Button("Open licenses") {
+                    showLicenses = true
+                }
+                            
+                Text("\nThis project is kindly sponsored by speedcube.co.nz!\nGo support our local businesses and Buy your cubes from https://www.speedcube.co.nz/   \n")
+                
+                
+                Text("If you need help, you can view the tutorial again:")
+                Button("Tutorial") { showOnboarding = true }
+                    
+                    
+                
+                
+
+                
+                Text("or view our github page!\nhttps://github.com/CubeStuffs/CubeTime")
             }
-                        
-            if Locale.current.regionCode == "NZ" {
-                Text("\n\nThis project is kindly sponsored by speedcube.co.nz! Buy your cubes from \nhttps://www.speedcube.co.nz/")
-            }
-            
-            Text("\n\nIf you need help, you can view the tutorial again:")
-            
-            Button("Help") {
-                showOnboarding = true
-            }
-            
-            Text("\nor view our github page!\nhttps://github.com/pdtcubing/CubeTime")
         }
         .padding(.horizontal)
         .sheet(isPresented: $showLicenses) {

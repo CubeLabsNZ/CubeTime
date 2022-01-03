@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct StatsDetail: View {
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
    
@@ -76,7 +77,7 @@ struct StatsDetail: View {
                                         HStack {
                                             Text("\(index+1).")
                                                 .font(.system(size: 15, weight: .bold, design: .rounded))
-                                                .foregroundColor(Color("AccentColor"))
+                                                .foregroundColor(accentColour)
                                             Text(formatSolveTime(secs: solve.time, penType: PenTypes.init(rawValue: solve.penalty)!))
                                                 .font(.system(size: 17, weight: .bold))
                                             
@@ -138,7 +139,7 @@ struct StatsDetail: View {
                                     
                                     Text("Copy Solve")
                                         .font(.system(size: 17, weight: .medium))
-                                        .foregroundColor(Color("AccentColor"))
+                                        .foregroundColor(accentColour)
                                 }
                             }
                         }

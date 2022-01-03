@@ -194,6 +194,7 @@ struct CustomiseStandardSessionView: View {
 
 /// **New sessions**
 struct NewSessionPopUpView: View {
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colourScheme
@@ -456,6 +457,7 @@ struct NewSessionPopUpView: View {
                     }
                 )
             }
+            .accentColor(accentColour)
         }
     }
 }

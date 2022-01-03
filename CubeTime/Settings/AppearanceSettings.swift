@@ -127,7 +127,7 @@ struct AppearanceSettingsView: View {
                         
                         
                         if !showThemeOptions {
-                            Text("Customise the app theme and gradients.\nYou can also add a custom background image if you wish.")
+                            Text("Customise the app theme and gradients.\nNote: this is separate from the accent colour.")
                                 .font(.system(size: 13, weight: .medium))
                                 .foregroundColor(Color(uiColor: .systemGray))
                                 .multilineTextAlignment(.leading)
@@ -137,10 +137,6 @@ struct AppearanceSettingsView: View {
                                 .padding(.trailing)
                         } else {
                             VStack(alignment: .leading, spacing: 0) {
-                                
-                                
-                                
-                                
                                 HStack {
                                     Toggle(isOn: $staticGradient) {
                                         Text("Use Static Gradient")
@@ -152,7 +148,8 @@ struct AppearanceSettingsView: View {
                                 .padding(.horizontal)
                                 .padding(.bottom, 10)
                                 
-                                Text("By default, the gradient is dynamic and changes throughout the day. If turned off, the gradient will only be of static colours.")
+                                Text("By default, the gradient is static. Dynamic gradient coming soon!")
+//                                Text("By default, the gradient is dynamic and changes throughout the day. If turned off, the gradient will only be of static colours.")
                                     .font(.system(size: 13, weight: .medium))
                                     .foregroundColor(Color(uiColor: .systemGray))
                                     .multilineTextAlignment(.leading)
@@ -217,7 +214,7 @@ struct AppearanceSettingsView: View {
                         
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, 10)
+                    .padding(.bottom, overrideSystemAppearance ? 10 : 12)
                     
                     if overrideSystemAppearance {
                         HStack {
@@ -228,10 +225,11 @@ struct AppearanceSettingsView: View {
                                 .toggleStyle(SwitchToggleStyle(tint: accentColour))
                         }
                         .padding(.horizontal)
+                        .padding(.bottom, 12)
                     }
                         
                         
-                    
+                    /*
                     Divider()
                         .padding(.vertical, 10)
                     
@@ -251,6 +249,7 @@ struct AppearanceSettingsView: View {
                     .onTapGesture {
                         print("go to app icon selection page")
                     }
+                     */
                     
                     
                     

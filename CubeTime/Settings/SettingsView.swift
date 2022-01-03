@@ -40,11 +40,15 @@ struct SettingsView: View {
                             SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
                             SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
                         }
-                        
+                        /* bring this back (the 4 grid) once importexport added
                         HStack (spacing: 16) {
                             SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
                             SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
                         }
+                         */
+                        
+                        SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
+                        
                         
                         Spacer()
                     }
@@ -71,49 +75,93 @@ struct SettingsCard: View {
     @Environment(\.colorScheme) var colourScheme
     
     var body: some View {
-        Button {
-            withAnimation(.spring(response: 0.6)) {
-                currentCard = info
-            }
-        } label: {
-            ZStack {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
-                    .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
-                    .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
-                    .shadow(color: .black.opacity(0.1), radius: 8, x: 3, y: 3)
-                
-                VStack {
-                    HStack {
-                        Text(info.name)
-                            .matchedGeometryEffect(id: info.name, in: namespace)
-                            .minimumScaleFactor(0.75)
-                            .lineLimit(info.name == "Appearance" ? 1 : 2)
-                            .allowsTightening(true)
-                            .font(.system(size: 22, weight: .bold))
-                            .padding(.horizontal, info.name == "Appearance" ? 14 : nil)
-                            .padding(.top, info.name == "Appearance" ? 15 : 12)
-                        
-                        
-                        Spacer()
-                    }
-                    
-                    Spacer()
-                    
-                    HStack {
-                                                           
-                        Image(systemName: info.icon)
-                            .matchedGeometryEffect(id: info.icon, in: namespace)
-                            .font(info.iconStyle)
-                            .padding(12)
-                        
-                        Spacer()
-                    }
+        // this if statement is temporary for when there are only 3 blocks
+        // keep ONLY the top statement (for general and appearance) to apply to all
+        // once import and export is added
+        if info.name == "General" || info.name == "Appearance" {
+            Button {
+                withAnimation(.spring(response: 0.6)) {
+                    currentCard = info
                 }
-                .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+            } label: {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
+                        .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
+                        .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+                        .shadow(color: .black.opacity(0.1), radius: 8, x: 3, y: 3)
+                    
+                    VStack {
+                        HStack {
+                            Text(info.name)
+                                .matchedGeometryEffect(id: info.name, in: namespace)
+                                .minimumScaleFactor(0.75)
+                                .lineLimit(info.name == "Appearance" ? 1 : 2)
+                                .allowsTightening(true)
+                                .font(.system(size: 22, weight: .bold))
+                                .padding(.horizontal, info.name == "Appearance" ? 14 : nil)
+                                .padding(.top, info.name == "Appearance" ? 15 : 12)
+                            
+                            
+                            Spacer()
+                        }
+                        
+                        Spacer()
+                        
+                        HStack {
+                                                               
+                            Image(systemName: info.icon)
+                                .matchedGeometryEffect(id: info.icon, in: namespace)
+                                .font(info.iconStyle)
+                                .padding(12)
+                            
+                            Spacer()
+                        }
+                    }
+                    .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+                }
             }
+            .buttonStyle(CardButtonStyle())
+        } else {
+            Button {
+                withAnimation(.spring(response: 0.6)) {
+                    currentCard = info
+                }
+            } label: {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
+                        .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
+                        .frame(height: UIScreen.screenHeight/7, alignment: .center)
+                        .shadow(color: .black.opacity(0.1), radius: 8, x: 3, y: 3)
+                    
+                    VStack {
+                        HStack {
+                            Text(info.name)
+                                .matchedGeometryEffect(id: info.name, in: namespace)
+                                .minimumScaleFactor(0.75)
+                                .lineLimit(info.name == "Appearance" ? 1 : 2)
+                                .allowsTightening(true)
+                                .font(.system(size: 22, weight: .bold))
+                                .padding(.horizontal, info.name == "Appearance" ? 14 : nil)
+                                .padding(.top, info.name == "Appearance" ? 15 : 12)
+                            
+                            Spacer()
+                            
+                            Image(systemName: info.icon)
+                                .matchedGeometryEffect(id: info.icon, in: namespace)
+                                .font(info.iconStyle)
+                                .padding(.trailing, 12)
+                                .padding(.top, 14)
+                        }
+                        
+                        Spacer()
+                    }
+                    .frame(height: UIScreen.screenHeight/7, alignment: .center)
+                }
+            }
+            .buttonStyle(CardButtonStyle())
         }
-        .buttonStyle(CardButtonStyle())
     }
 }
 
