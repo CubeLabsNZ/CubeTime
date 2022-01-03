@@ -4,6 +4,16 @@ import SwiftUI
 class observed: ObservableObject {
     @Published var size: CGFloat = 0
 }
+//
+//struct AnimatedCheckmark: View {
+//
+//
+//    @State var offsetValue: CGFloat = -25
+//
+//    var body: some View {
+//
+//    }
+//}
 
 struct SolvePopupView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -13,6 +23,8 @@ struct SolvePopupView: View {
     @Environment(\.defaultMinListRowHeight) var minRowHeight
     
     var timeListManager: TimeListManager?
+    
+    @State var offsetValue: CGFloat = -25
     
     
     let solve: Solves
@@ -175,18 +187,28 @@ struct SolvePopupView: View {
                         .padding(.trailing)
                         .padding(.leading)
                         
-                        HStack {
-                            Button {
-                                UIPasteboard.general.string = "Exported by CubeTime.\n\(time): \(scramble)"
-                            } label: {
-                                Text("Copy Solve")
-                                    .padding(14)
+                        Button {
+                            UIPasteboard.general.string = "Exported by CubeTime.\n\(time): \(scramble)"
+                            withAnimation(Animation.interpolatingSpring(stiffness: 140, damping: 20).delay(0.25)) {
+                                self.offsetValue = 0
                             }
-                            
-                            Spacer()
+                        } label: {
+                            HStack {
+                                Text("Copy Solve")
+                                    .padding([.leading, .vertical], 14)
+                                
+                                
+                                Image(systemName: "checkmark")
+                                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                                    .clipShape(Rectangle().offset(x: self.offsetValue))
+                                
+                                Spacer()
+                            }
                         }
                         .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
                         .padding(.horizontal)
+                            
+                        
                         
                         
                         

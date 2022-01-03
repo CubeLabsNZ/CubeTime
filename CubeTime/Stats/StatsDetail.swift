@@ -4,6 +4,8 @@ struct StatsDetail: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
    
+    @State var offsetValue: CGFloat = -25
+    
     let solves: CalculatedAverage
     let session: Sessions
     
@@ -123,18 +125,26 @@ struct StatsDetail: View {
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
-                                print("button pressed")
+                                UIPasteboard.general.string = "Exported by CubeTime"
+                                withAnimation(Animation.interpolatingSpring(stiffness: 140, damping: 20).delay(0.25)) {
+                                    self.offsetValue = 0
+                                }
+
                             } label: {
-                                Image(systemName: "square.and.arrow.up")
-                                    .font(.system(size: 17, weight: .medium))
-                                    .foregroundColor(Color("AccentColor"))
+                                HStack {
+                                    Image(systemName: "checkmark")
+                                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                                        .clipShape(Rectangle().offset(x: self.offsetValue))
+                                    
+                                    Text("Copy Solve")
+                                        .font(.system(size: 17, weight: .medium))
+                                        .foregroundColor(Color("AccentColor"))
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        
-        
     }
 }
