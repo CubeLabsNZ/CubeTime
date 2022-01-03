@@ -76,6 +76,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-_UIConstraintBasedLayoutLogUnsatisfiable NO"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-com.apple.CoreData.Logging.stderr 1"
             isEnabled = "NO">
          </CommandLineArgument>
