@@ -42,6 +42,7 @@ struct StatsView: View {
     
     let compSimCount: Int
     
+    let reachedTargets: Int
     
     
     @State var presentedAvg: CalculatedAverage? = nil
@@ -71,6 +72,7 @@ struct StatsView: View {
         
         
         self.compSimCount = stats.getNumberOfAverages()
+        self.reachedTargets = stats.getReachedTargets()
         
     }
     
@@ -725,12 +727,10 @@ struct StatsView: View {
                                                 .padding(.bottom, 4)
                                             
                                             if bestSingle != nil {
-                                                Text("x/y")
+                                                Text("\(reachedTargets)/\(compSimCount)")
                                                     .font(.system(size: 34, weight: .bold, design: .default))
                                                     .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                     .modifier(DynamicText())
-                                                
-                                                
                                             } else {
                                                 Text("N/A")
                                                     .font(.system(size: 28, weight: .medium, design: .default))
@@ -745,33 +745,28 @@ struct StatsView: View {
                                     }
                                     .frame(height: 75)
                                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                    .onTapGesture {
-                                        if bestSingle != nil {
-                                            showBestSinglePopup = true
-                                        }
-                                    }
                                 }
                                 .padding(.horizontal)
                                 
                                 HStack {
-                                    VStack (alignment: .leading, spacing: 0) {
-                                        Text("REACHED TARGETS")
-                                            .font(.system(size: 13, weight: .medium, design: .default))
-                                            .foregroundColor(Color(uiColor: .systemGray))
-                                            .padding(.bottom, 4)
+                                    VStack {
+                                        HStack {
+                                            Text("REACHED TARGETS")
+                                                .font(.system(size: 13, weight: .medium, design: .default))
+                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                .padding(.leading, 12)
+                                                .padding(.top, 8)
+                                            
+                                            Spacer()
+                                        }
+                                        
+                                        
+                                        ReachedTargets(Float(reachedTargets)/Float(compSimCount))
+                                            .padding(.bottom, 8)
+                                            .padding(.horizontal, 12)
                                         
                                         Spacer()
-                                        
-                                        Capsule()
-                                            .frame(height: 5)
-                                            .offset(y: -4)
-                                        
                                     }
-                                    .padding(.top)
-                                    .padding(.bottom, 12)
-                                    .padding(.leading, 12)
-                                    
-                                    Spacer()
                                 }
                                 .frame(height: 55)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))

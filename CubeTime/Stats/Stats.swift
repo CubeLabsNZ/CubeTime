@@ -22,6 +22,8 @@ class Stats {
     
     var solvesByDate: [Solves]
     
+    var compsimSession: CompSimSession?
+    
     private let currentSession: Sessions
     
     private let managedObjectContext: NSManagedObjectContext
@@ -38,8 +40,6 @@ class Stats {
         let solvesNoPen: [Solves]?
         do {
             solvesNoPen = try managedObjectContext.fetch(fetchRequest)
-            
-            
         } catch {
             // Replace this implementation with code to handle the error appropriately.
             // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
@@ -47,20 +47,10 @@ class Stats {
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
         solves = solvesNoPen!.sorted(by: {timeWithPlusTwoForSolve($0) < timeWithPlusTwoForSolve($1)})
-        
-        //        print(solves)
-        
-        
-        /// 1. GET MIN
-        //        for solve in solves {
-        //
-        //        }
-        
-        // your code here
-        // calculate top and bottom n percent using my alg, maybe add a global length var
-        
         solvesByDate = solves.sorted(by: {$0.date! < $1.date!})
-//        solvesByDate = solves
+        
+        compsimSession = self.currentSession as? CompSimSession
+        
     }
     
     
@@ -153,10 +143,24 @@ class Stats {
         )
     }
     
-    
+    /// comp sim
     func getNumberOfAverages() -> Int {
         return (solves.count / 5)
     }
+        
+    func getReachedTargets() -> Int {
+        var reached = 0
+        if let compsimSession = compsimSession {
+            for solvegroup in compsimSession.solvegroups!.array {
+                if ((solvegroup as AnyObject).solves!.array as! [Solves]).map {$0.time}.sorted().dropFirst().dropLast().reduce(0, +) <= compsimSession.target {
+                    reached += 1
+                }
+            }
+        }
+        
+        return reached
+    }
+    
     
     
     
