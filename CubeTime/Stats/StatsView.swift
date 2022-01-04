@@ -53,7 +53,7 @@ struct StatsView: View {
     init(currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
         
-        stats = Stats(currentSession: currentSession.wrappedValue, managedObjectContext: managedObjectContext)
+        stats = Stats(currentSession: currentSession.wrappedValue)
         
         self.ao5 = stats.getBestMovingAverageOf(5)
         self.ao12 = stats.getBestMovingAverageOf(12)
@@ -66,8 +66,8 @@ struct StatsView: View {
         self.bestSingle = stats.getMin()
         self.sessionMean = stats.getSessionMean()
         
-        self.timesByDate = stats.solvesByDate.map { $0.time }
-        self.timesBySpeed = stats.solves.map { $0.time }
+        self.timesByDate = stats.solvesByDate.map(timeWithPlusTwoForSolve)
+        self.timesBySpeed = stats.solves.map(timeWithPlusTwoForSolve)
         
         
         self.compSimCount = stats.getNumberOfAverages()

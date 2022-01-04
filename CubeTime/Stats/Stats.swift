@@ -24,46 +24,14 @@ class Stats {
     
     private let currentSession: Sessions
     
-    private let managedObjectContext: NSManagedObjectContext
-    
-    private let fetchRequest = NSFetchRequest<Solves>(entityName: "Solves")
-    
-    init (currentSession: Sessions, managedObjectContext: NSManagedObjectContext) {
+    init (currentSession: Sessions) {
         self.currentSession = currentSession
-        self.managedObjectContext = managedObjectContext
-        fetchRequest.predicate = NSPredicate(format: "session == %@", currentSession)
         
-        /// Uncomment below if you want coredata to sort for you but this is inflexible and may be `O(n log n)` vs `O(n)`
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Solves.time, ascending: true)]
-        let solvesNoPen: [Solves]?
-        do {
-            solvesNoPen = try managedObjectContext.fetch(fetchRequest)
-            
-            
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-        solves = solvesNoPen!.sorted(by: {timeWithPlusTwoForSolve($0) < timeWithPlusTwoForSolve($1)})
-        
-        //        print(solves)
-        
-        
-        /// 1. GET MIN
-        //        for solve in solves {
-        //
-        //        }
-        
-        // your code here
-        // calculate top and bottom n percent using my alg, maybe add a global length var
-        
-        solvesByDate = solves.sorted(by: {$0.date! < $1.date!})
-//        solvesByDate = solves
+        let sessionSolves = currentSession.solves!.allObjects as! [Solves]
+
+        solves = sessionSolves.sorted(by: {timeWithPlusTwoForSolve($0) < timeWithPlusTwoForSolve($1)})
+        solvesByDate = sessionSolves.sorted(by: {$0.date! < $1.date!})
     }
-    
-    
     
     func getMin() -> Solves? {
         if solves.count == 0 {
@@ -117,7 +85,6 @@ class Stats {
                     return false
                 }
             }.dropFirst(trim).dropLast(trim)
-            NSLog("\(trimmed)")
             if trimmed.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) {
                 continue
             }
