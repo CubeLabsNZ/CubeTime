@@ -6,9 +6,9 @@ import SwiftUI
 struct CalculatedAverage: Identifiable {
     let id: String
     
-    let average: Double
+    let average: Double?
 //    let discardedIndexes: [Int]
-    let accountedSolves: [Solves]
+    let accountedSolves: [Solves]?
     let totalPen: PenTypes
 }
 
@@ -102,8 +102,26 @@ class Stats {
         var lowestValues: [Solves]?
         
         for i in period..<solves.count+1 {
-            let range = i - period + trim..<i - trim
-            let sum = solvesByDate[range].reduce(0, {$0 + timeWithPlusTwoForSolve($1)})
+            let solves = solvesByDate[i - period..<i]
+            let trimmed = solves.sorted {
+                let pen0 = PenTypes(rawValue: $0.penalty)!
+                let pen1 = PenTypes(rawValue: $1.penalty)!
+                
+                // Sort non DNFs by time
+                if pen0 != .dnf && pen1 != .dnf {
+                    return timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve($1)
+                // Order non DNFs before DNFs
+                } else if pen0 == .dnf && pen1 != . dnf {
+                    return true
+                } else {
+                    return false
+                }
+            }.dropFirst(trim).dropLast(trim)
+            NSLog("\(trimmed)")
+            if trimmed.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) {
+                continue
+            }
+            let sum = trimmed.reduce(0, {$0 + timeWithPlusTwoForSolve($1)})
             
             let result = Double(sum) / Double(period-(trim*2))
             if lowestAverage == nil || result < lowestAverage! {
@@ -111,7 +129,7 @@ class Stats {
                 lowestAverage = result
             }
         }
-        return CalculatedAverage(id: "Best AO\(period)", average: lowestAverage!, accountedSolves: lowestValues!, totalPen: .none)
+        return CalculatedAverage(id: "Best AO\(period)", average: lowestAverage, accountedSolves: lowestValues, totalPen: lowestValues == nil ? .dnf : .none)
     }
 
     
@@ -126,11 +144,12 @@ class Stats {
         
         return CalculatedAverage(
             id: "Current AO\(period)",
-            average: solvesByDate.suffix(period).sorted(
-                by: {timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve($1)}).dropFirst().dropLast()
+            average: solvesByDate.suffix(period).sorted {
+                $0.penalty == PenTypes.dnf.rawValue || timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve($1)
+            }.dropFirst().dropLast()
                     .reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(period-(trim * 2)),
             accountedSolves: solvesByDate.suffix(period),
-            totalPen: solvesByDate.suffix(period).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= 2 ? .dnf : .none
+            totalPen: solvesByDate.suffix(period).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none
         )
     }
     

@@ -127,7 +127,7 @@ struct StatsView: View {
                                                             .padding(.leading, 12)
                                                         
                                                         if let currentAo5 = currentAo5 {
-                                                            Text(String(formatSolveTime(secs: currentAo5.average, penType: currentAo5.totalPen)))
+                                                            Text(String(formatSolveTime(secs: currentAo5.average ?? 0, penType: currentAo5.totalPen)))
                                                                 .font(.system(size: 24, weight: .bold, design: .default))
                                                                 .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                                 .padding(.leading, 12)
@@ -159,7 +159,7 @@ struct StatsView: View {
                                                             .padding(.leading, 12)
                                                         
                                                         if let currentAo12 = currentAo12 {
-                                                            Text(String(formatSolveTime(secs: currentAo12.average, penType: currentAo12.totalPen)))
+                                                            Text(String(formatSolveTime(secs: currentAo12.average ?? 0, penType: currentAo12.totalPen)))
                                                                 .font(.system(size: 24, weight: .bold, design: .default))
                                                                 .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                                 .padding(.leading, 12)
@@ -194,7 +194,7 @@ struct StatsView: View {
                                                             .padding(.leading, 12)
                                                         
                                                         if let currentAo100 = currentAo100 {
-                                                            Text(String(formatSolveTime(secs: currentAo100.average, penType: currentAo100.totalPen)))
+                                                            Text(String(formatSolveTime(secs: currentAo100.average ?? 0, penType: currentAo100.totalPen)))
                                                                 .font(.system(size: 24, weight: .bold, design: .default))
                                                                 .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                                 .padding(.leading, 12)
@@ -333,7 +333,7 @@ struct StatsView: View {
                                                             .padding(.leading, 12)
                                                         
                                                         if let ao12 = ao12 {
-                                                            Text(String(formatSolveTime(secs: ao12.average)))
+                                                            Text(String(formatSolveTime(secs: ao12.average ?? 0, penType: ao12.totalPen)))
                                                                 .font(.system(size: 34, weight: .bold, design: .default))
                                                                 .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                                 .padding(.leading, 12)
@@ -367,7 +367,7 @@ struct StatsView: View {
                                                             .padding(.leading, 12)
                                                         
                                                         if let ao100 = ao100 {
-                                                            Text(String(formatSolveTime(secs: ao100.average)))
+                                                            Text(String(formatSolveTime(secs: ao100.average ?? 0, penType: ao100.totalPen)))
                                                                 .font(.system(size: 34, weight: .bold, design: .default))
                                                                 .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                                 .padding(.leading, 12)
@@ -405,30 +405,38 @@ struct StatsView: View {
                                                         .padding(.bottom, 4)
                                                     
                                                     if let ao5 = ao5 {
-                                                        Text(formatSolveTime(secs: ao5.average))
+                                                        Text(formatSolveTime(secs: ao5.average ?? 0, penType: ao5.totalPen))
                                                             .font(.system(size: 34, weight: .bold, design: .default))
                                                             .gradientForeground(gradientSelected: gradientSelected)
                                                         
                                                         Spacer()
                                                         
+                                                        if let accountedSolves = ao5.accountedSolves {
                                                         
-                                                        let alltimes = ao5.accountedSolves.map{timeWithPlusTwoForSolve($0)}
-                                                        ForEach((0...4), id: \.self) { index in
-                                                            if timeWithPlusTwoForSolve(ao5.accountedSolves[index]) == alltimes.min() || timeWithPlusTwoForSolve(ao5.accountedSolves[index]) == alltimes.max() {
-                                                                Text("("+formatSolveTime(secs: ao5.accountedSolves[index].time,
-                                                                                         penType: PenTypes(rawValue: ao5.accountedSolves[index].penalty))+")")
-                                                                    .font(.system(size: 17, weight: .regular, design: .default))
-                                                                    .foregroundColor(Color(uiColor: .systemGray))
-                                                                    .multilineTextAlignment(.leading)
-                                                                    .padding(.bottom, 2)
-                                                            } else {
-                                                                Text(formatSolveTime(secs: ao5.accountedSolves[index].time,
-                                                                                     penType: PenTypes(rawValue: ao5.accountedSolves[index].penalty)))
-                                                                    .font(.system(size: 17, weight: .regular, design: .default))
-                                                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                                    .multilineTextAlignment(.leading)
-                                                                    .padding(.bottom, 2)
+                                                            let alltimes = accountedSolves.map{timeWithPlusTwoForSolve($0)}
+                                                            ForEach((0...4), id: \.self) { index in
+                                                                if timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.min() || timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.max() {
+                                                                    Text("("+formatSolveTime(secs: accountedSolves[index].time,
+                                                                                             penType: PenTypes(rawValue: accountedSolves[index].penalty))+")")
+                                                                        .font(.system(size: 17, weight: .regular, design: .default))
+                                                                        .foregroundColor(Color(uiColor: .systemGray))
+                                                                        .multilineTextAlignment(.leading)
+                                                                        .padding(.bottom, 2)
+                                                                } else {
+                                                                    Text(formatSolveTime(secs: accountedSolves[index].time,
+                                                                                         penType: PenTypes(rawValue: accountedSolves[index].penalty)))
+                                                                        .font(.system(size: 17, weight: .regular, design: .default))
+                                                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                                                        .multilineTextAlignment(.leading)
+                                                                        .padding(.bottom, 2)
+                                                                }
                                                             }
+                                                        } else {
+                                                            Text("N/A")
+                                                                .font(.system(size: 28, weight: .medium, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray2))
+                                                            
+                                                            Spacer()
                                                         }
                                                         
                                                         
@@ -476,32 +484,40 @@ struct StatsView: View {
                                                         .foregroundColor(Color(uiColor: .systemGray))
                                                         .padding(.bottom, 4)
                                                     
-                                                    if let ao5 = ao5 {
-                                                        Text(formatSolveTime(secs: ao5.average))
+                                                    if let ao5 = currentAo5 {
+                                                        Text(formatSolveTime(secs: ao5.average ?? 0, penType: ao5.totalPen))
                                                             .font(.system(size: 34, weight: .bold, design: .default))
                                                             .foregroundColor(colourScheme == .light ? .black : .white)
                                                             .modifier(DynamicText())
                                                         
                                                         Spacer()
                                                         
+                                                        if let accountedSolves = ao5.accountedSolves {
                                                         
-                                                        let alltimes = ao5.accountedSolves.map{timeWithPlusTwoForSolve($0)}
-                                                        ForEach((0...4), id: \.self) { index in
-                                                            if timeWithPlusTwoForSolve(ao5.accountedSolves[index]) == alltimes.min() || timeWithPlusTwoForSolve(ao5.accountedSolves[index]) == alltimes.max() {
-                                                                Text("("+formatSolveTime(secs: ao5.accountedSolves[index].time,
-                                                                                         penType: PenTypes(rawValue: ao5.accountedSolves[index].penalty))+")")
-                                                                    .font(.system(size: 17, weight: .regular, design: .default))
-                                                                    .foregroundColor(Color(uiColor: .systemGray))
-                                                                    .multilineTextAlignment(.leading)
-                                                                    .padding(.bottom, 2)
-                                                            } else {
-                                                                Text(formatSolveTime(secs: ao5.accountedSolves[index].time,
-                                                                                     penType: PenTypes(rawValue: ao5.accountedSolves[index].penalty)))
-                                                                    .font(.system(size: 17, weight: .regular, design: .default))
-                                                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                                    .multilineTextAlignment(.leading)
-                                                                    .padding(.bottom, 2)
+                                                            let alltimes = accountedSolves.map{timeWithPlusTwoForSolve($0)}
+                                                            ForEach((0...4), id: \.self) { index in
+                                                                if timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.min() || timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.max() {
+                                                                    Text("("+formatSolveTime(secs: accountedSolves[index].time,
+                                                                                             penType: PenTypes(rawValue: accountedSolves[index].penalty))+")")
+                                                                        .font(.system(size: 17, weight: .regular, design: .default))
+                                                                        .foregroundColor(Color(uiColor: .systemGray))
+                                                                        .multilineTextAlignment(.leading)
+                                                                        .padding(.bottom, 2)
+                                                                } else {
+                                                                    Text(formatSolveTime(secs: accountedSolves[index].time,
+                                                                                         penType: PenTypes(rawValue: accountedSolves[index].penalty)))
+                                                                        .font(.system(size: 17, weight: .regular, design: .default))
+                                                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                                                        .multilineTextAlignment(.leading)
+                                                                        .padding(.bottom, 2)
+                                                                }
                                                             }
+                                                        } else {
+                                                            Text("N/A")
+                                                                .font(.system(size: 28, weight: .medium, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray2))
+                                                            
+                                                            Spacer()
                                                         }
                                                         
                                                         
@@ -605,7 +621,7 @@ struct StatsView: View {
                                                         .padding(.bottom, 4)
                                                     
                                                     if let ao5 = ao5 {
-                                                        Text(formatSolveTime(secs: ao5.average))
+                                                        Text(formatSolveTime(secs: ao5.average ?? 0, penType: ao5.totalPen))
                                                             .foregroundColor(colourScheme == .light ? .black : .white)
                                                             .font(.system(size: 34, weight: .bold, design: .default))
                                                             .modifier(DynamicText())
@@ -613,23 +629,26 @@ struct StatsView: View {
                                                         Spacer()
                                                         
                                                         
-                                                        let alltimes = ao5.accountedSolves.map{timeWithPlusTwoForSolve($0)}
-                                                        ForEach((0...4), id: \.self) { index in
-                                                            if timeWithPlusTwoForSolve(ao5.accountedSolves[index]) == alltimes.min() || timeWithPlusTwoForSolve(ao5.accountedSolves[index]) == alltimes.max() {
-                                                                Text("("+formatSolveTime(secs: ao5.accountedSolves[index].time,
-                                                                                         penType: PenTypes(rawValue: ao5.accountedSolves[index].penalty))+")")
-                                                                    .font(.system(size: 17, weight: .regular, design: .default))
-                                                                    .foregroundColor(Color(uiColor: .systemGray))
-                                                                    .multilineTextAlignment(.leading)
-                                                                    .padding(.bottom, 2)
-                                                            } else {
-                                                                Text(formatSolveTime(secs: ao5.accountedSolves[index].time,
-                                                                                     penType: PenTypes(rawValue: ao5.accountedSolves[index].penalty)))
-                                                                    .font(.system(size: 17, weight: .regular, design: .default))
-                                                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                                    .multilineTextAlignment(.leading)
-                                                                    .padding(.bottom, 2)
+                                                        if let accountedSolves = ao5.accountedSolves {
+                                                            let alltimes = accountedSolves.map{timeWithPlusTwoForSolve($0)}
+                                                            ForEach((0...4), id: \.self) { index in
+                                                                if timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.min() || timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.max() {
+                                                                    Text("("+formatSolveTime(secs: accountedSolves[index].time,
+                                                                                             penType: PenTypes(rawValue: accountedSolves[index].penalty))+")")
+                                                                        .font(.system(size: 17, weight: .regular, design: .default))
+                                                                        .foregroundColor(Color(uiColor: .systemGray))
+                                                                        .multilineTextAlignment(.leading)
+                                                                        .padding(.bottom, 2)
+                                                                } else {
+                                                                    Text(formatSolveTime(secs: accountedSolves[index].time,
+                                                                                         penType: PenTypes(rawValue: accountedSolves[index].penalty)))
+                                                                        .font(.system(size: 17, weight: .regular, design: .default))
+                                                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                                                        .multilineTextAlignment(.leading)
+                                                                        .padding(.bottom, 2)
+                                                                }
                                                             }
+                                                            
                                                         }
                                                         
                                                         
