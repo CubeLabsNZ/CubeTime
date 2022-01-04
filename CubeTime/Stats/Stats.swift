@@ -22,6 +22,8 @@ class Stats {
     
     var solvesByDate: [Solves]
     
+    var compsimSession: CompSimSession?
+    
     private let currentSession: Sessions
     
     init (currentSession: Sessions) {
@@ -120,10 +122,24 @@ class Stats {
         )
     }
     
-    
+    /// comp sim
     func getNumberOfAverages() -> Int {
         return (solves.count / 5)
     }
+        
+    func getReachedTargets() -> Int {
+        var reached = 0
+        if let compsimSession = compsimSession {
+            for solvegroup in compsimSession.solvegroups!.array {
+                if ((solvegroup as AnyObject).solves!.array as! [Solves]).map {$0.time}.sorted().dropFirst().dropLast().reduce(0, +) <= compsimSession.target {
+                    reached += 1
+                }
+            }
+        }
+        
+        return reached
+    }
+    
     
     
     
