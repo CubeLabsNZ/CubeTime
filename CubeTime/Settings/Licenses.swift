@@ -3,7 +3,7 @@ import SwiftUI
 struct CubeTimeLicense: View {
     var body: some View {
         VStack {
-            Text("© 2021 Tim Xie and Reagan Bohan\nCubeTime is licensed under the GNU GPL v3 license, which is shown below.")
+            Text("© 2021-2022 Tim Xie and Reagan Bohan\nCubeTime is licensed under the GNU GPL v3 license, which is shown below.")
             Divider()
             GPLLicense()
                 
