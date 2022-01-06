@@ -302,8 +302,8 @@ struct StatsView: View {
                                                         .foregroundColor(Color(uiColor: .systemGray6))
                                                         .padding(.bottom, 4)
                                                     
-                                                    if bestSingle != nil {
-                                                        Text(String(formatSolveTime(secs: bestSingle!.time)))
+                                                    if let bestSingle = bestSingle {
+                                                        Text(String(formatSolveTime(secs: bestSingle.time, penType: PenTypes(rawValue: bestSingle.penalty)!)))
                                                             .font(.system(size: 34, weight: .bold, design: .default))
                                                             .foregroundColor(Color(uiColor: colourScheme == .light ? .white : .black))
                                                     } else {
