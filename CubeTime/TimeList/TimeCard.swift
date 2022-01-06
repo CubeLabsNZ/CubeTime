@@ -377,7 +377,7 @@ struct TimeCard: View {
                 managedObjectContext.delete(solve)
                 try! managedObjectContext.save()
                 withAnimation {
-                    timeListManager.resort()
+                    timeListManager.delete(solve)
                 }
             } label: {
                 Label {

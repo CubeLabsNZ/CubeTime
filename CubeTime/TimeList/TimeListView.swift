@@ -37,6 +37,13 @@ class TimeListManager: ObservableObject {
         resort()
     }
     
+    func delete(_ solve: Solves) {
+        guard let index = allsolves.firstIndex(of: solve) else {return}
+        allsolves.remove(at: index)
+        guard let index = solves.firstIndex(of: solve) else {return}
+        solves.remove(at: index)
+    }
+    
     func resort() {
         allsolves = allsolves.sorted{
             if sortBy == 0 {
