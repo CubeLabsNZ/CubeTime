@@ -19,8 +19,8 @@ func timeWithPlusTwoForSolve(_ solve: Solves) -> Double {
 
 class Stats {
     var solves: [Solves]
-    
     var solvesByDate: [Solves]
+    var solvesNoDNFs: [Solves]
     
     var compsimSession: CompSimSession?
     
@@ -33,23 +33,23 @@ class Stats {
 
         solves = sessionSolves.sorted(by: {timeWithPlusTwoForSolve($0) < timeWithPlusTwoForSolve($1)})
         solvesByDate = sessionSolves.sorted(by: {$0.date! < $1.date!})
+        solvesNoDNFs = solves
+        solvesNoDNFs.removeAll(where: { $0.penalty == PenTypes.dnf.rawValue })
     }
     
     func getMin() -> Solves? {
-        if solves.count == 0 {
+        if solvesNoDNFs.count == 0 {
             return nil
         }
-        return solves[0]
+        return solvesNoDNFs[0]
     }
     
     func getSessionMean() -> Double? {
         if solves.count == 0 {
             return nil
         } 
-        var noDNFs = solves
-        noDNFs.removeAll(where: { $0.penalty == PenTypes.dnf.rawValue })
-        let sum = noDNFs.reduce(0, {$0 + timeWithPlusTwoForSolve($1) })
-        return sum / Double(noDNFs.count)
+        let sum = solvesNoDNFs.reduce(0, {$0 + timeWithPlusTwoForSolve($1) })
+        return sum / Double(solvesNoDNFs.count)
     }
     
     func getNumberOfSolves() -> Int {
