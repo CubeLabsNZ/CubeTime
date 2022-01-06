@@ -81,6 +81,7 @@ struct StatsDetail: View {
                                                     .foregroundColor(accentColour)
                                                 Text(formatSolveTime(secs: solve.time, penType: PenTypes.init(rawValue: solve.penalty)!))
                                                     .font(.system(size: 17, weight: .bold))
+                                                    .foregroundColor((solves.totalPen == .dnf && solve.penalty == PenTypes.dnf.rawValue) ? Color(uiColor: .systemRed) : nil)
                                                 
                                                 Spacer()
                                                 
@@ -147,11 +148,7 @@ struct StatsDetail: View {
                         }
                     }
                 } else {
-                    if solves.totalPen == .dnf {
-                        Text("DNF")
-                    } else {
-                        Text("N/A")
-                    }
+                    Text("N/A")
                 }
             }
         }

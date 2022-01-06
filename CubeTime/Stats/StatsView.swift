@@ -352,7 +352,7 @@ struct StatsView: View {
                                                 }
                                                 .contentShape(Rectangle())
                                                 .onTapGesture {
-                                                    if ao12 != nil {
+                                                    if ao12 != nil && ao12?.totalPen != .dnf  {
                                                         presentedAvg = ao12
                                                     }
                                                 }
@@ -387,7 +387,7 @@ struct StatsView: View {
                                                 }
                                                 .contentShape(Rectangle())
                                                 .onTapGesture {
-                                                    if ao100 != nil {
+                                                    if ao100 != nil && ao100?.totalPen != .dnf {
                                                         presentedAvg = ao100
                                                     }
                                                 }
@@ -462,7 +462,7 @@ struct StatsView: View {
                                             .frame(height: 215)
                                             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                             .onTapGesture {
-                                                if ao5 != nil {
+                                                if ao5 != nil && ao5?.totalPen != .dnf {
                                                     presentedAvg = ao5
                                                 }
                                             }
@@ -533,7 +533,7 @@ struct StatsView: View {
                                                     }
                                                 }
                                                 .onTapGesture {
-                                                    if ao5 != nil {
+                                                    if ao5 != nil && ao5?.totalPen != .dnf  {
                                                         presentedAvg = ao5
                                                     }
                                                 }
