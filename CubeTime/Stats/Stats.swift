@@ -77,8 +77,8 @@ class Stats {
                 let pen0 = PenTypes(rawValue: $0.penalty)!
                 let pen1 = PenTypes(rawValue: $1.penalty)!
                 
-                // Sort non DNFs by time
-                if pen0 != .dnf && pen1 != .dnf {
+                // Sort non DNFs or both DNFs by time
+                if (pen0 != .dnf && pen1 != .dnf) || (pen0 == .dnf && pen1 == .dnf) {
                     return timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve($1)
                 // Order non DNFs before DNFs
                 } else if pen0 == .dnf && pen1 != . dnf {
