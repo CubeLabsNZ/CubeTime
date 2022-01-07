@@ -415,18 +415,17 @@ struct StatsView: View {
                                                         
                                                         if let accountedSolves = ao5.accountedSolves {
                                                         
-                                                            let alltimes = accountedSolves.map{timeWithPlusTwoForSolve($0)}
-                                                            ForEach((0...4), id: \.self) { index in
-                                                                if timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.min() || timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.max() {
-                                                                    Text("("+formatSolveTime(secs: accountedSolves[index].time,
-                                                                                             penType: PenTypes(rawValue: accountedSolves[index].penalty))+")")
+                                                            ForEach(accountedSolves, id: \.self) { solve in
+                                                                if ao5.trimmedSolves!.contains(solve) {
+                                                                    Text("("+formatSolveTime(secs: solve.time,
+                                                                                             penType: PenTypes(rawValue: solve.penalty))+")")
                                                                         .font(.system(size: 17, weight: .regular, design: .default))
                                                                         .foregroundColor(Color(uiColor: .systemGray))
                                                                         .multilineTextAlignment(.leading)
                                                                         .padding(.bottom, 2)
                                                                 } else {
-                                                                    Text(formatSolveTime(secs: accountedSolves[index].time,
-                                                                                         penType: PenTypes(rawValue: accountedSolves[index].penalty)))
+                                                                    Text(formatSolveTime(secs: solve.time,
+                                                                                         penType: PenTypes(rawValue: solve.penalty)))
                                                                         .font(.system(size: 17, weight: .regular, design: .default))
                                                                         .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                                         .multilineTextAlignment(.leading)
@@ -547,9 +546,6 @@ struct StatsView: View {
                                             }
                                             .frame(height: 215)
                                             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                            .onTapGesture {
-                                                print("best ao5 pressed")
-                                            }
                                             
                                             HStack {
                                                 VStack (alignment: .leading, spacing: 0) {

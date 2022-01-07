@@ -79,9 +79,14 @@ struct StatsDetail: View {
                                                 Text("\(index+1).")
                                                     .font(.system(size: 15, weight: .bold, design: .rounded))
                                                     .foregroundColor(accentColour)
-                                                Text(formatSolveTime(secs: solve.time, penType: PenTypes.init(rawValue: solve.penalty)!))
-                                                    .font(.system(size: 17, weight: .bold))
-                                                    .foregroundColor((solves.totalPen == .dnf && solve.penalty == PenTypes.dnf.rawValue) ? Color(uiColor: .systemRed) : nil)
+                                                if solves.trimmedSolves!.contains(solve) {
+                                                    Text("(" + formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!) + ")")
+                                                        .font(.system(size: 17, weight: .bold))
+                                                        .foregroundColor(Color(uiColor: .systemGray))
+                                                } else {
+                                                    Text(formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!))
+                                                        .font(.system(size: 17, weight: .bold))
+                                                }
                                                 
                                                 Spacer()
                                                 

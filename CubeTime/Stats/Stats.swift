@@ -10,6 +10,8 @@ struct CalculatedAverage: Identifiable {
 //    let discardedIndexes: [Int]
     let accountedSolves: [Solves]?
     let totalPen: PenTypes
+    
+    let trimmedSolves: [Solves]?
 }
 
 
@@ -58,6 +60,21 @@ class Stats {
     }
     
     
+    static func sortWithDNFsLast(_ solve0: Solves, _ solve1: Solves) -> Bool {
+        let pen0 = PenTypes(rawValue: solve0.penalty)!
+        let pen1 = PenTypes(rawValue: solve1.penalty)!
+        
+        // Sort non DNFs or both DNFs by time
+        if (pen0 != .dnf && pen1 != .dnf) || (pen0 == .dnf && pen1 == .dnf) {
+            return timeWithPlusTwoForSolve(solve0) > timeWithPlusTwoForSolve(solve1)
+        // Order non DNFs before DNFs
+        } else if pen0 == .dnf && pen1 != . dnf {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     
     func getBestMovingAverageOf(_ period: Int) -> CalculatedAverage? {
         precondition(period > 1)
@@ -70,23 +87,16 @@ class Stats {
         
         var lowestAverage: Double?
         var lowestValues: [Solves]?
+        var trimmedSolves: [Solves]?
         
         for i in period..<solves.count+1 {
-            let solves = solvesByDate[i - period..<i]
-            let trimmed = solves.sorted {
-                let pen0 = PenTypes(rawValue: $0.penalty)!
-                let pen1 = PenTypes(rawValue: $1.penalty)!
-                
-                // Sort non DNFs or both DNFs by time
-                if (pen0 != .dnf && pen1 != .dnf) || (pen0 == .dnf && pen1 == .dnf) {
-                    return timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve($1)
-                // Order non DNFs before DNFs
-                } else if pen0 == .dnf && pen1 != . dnf {
-                    return true
-                } else {
-                    return false
-                }
-            }.dropFirst(trim).dropLast(trim)
+            var solves = solvesByDate[i - period..<i]
+            solves.sort(by: Stats.sortWithDNFsLast)
+            
+            trimmedSolves = solves.suffix(trim) + solves.prefix(trim)
+            
+            let trimmed = solves.dropFirst(trim).dropLast(trim)
+            
             if trimmed.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) {
                 continue
             }
@@ -98,7 +108,7 @@ class Stats {
                 lowestAverage = result
             }
         }
-        return CalculatedAverage(id: "Best AO\(period)", average: lowestAverage, accountedSolves: lowestValues, totalPen: lowestValues == nil ? .dnf : .none)
+        return CalculatedAverage(id: "Best AO\(period)", average: lowestAverage, accountedSolves: lowestValues, totalPen: lowestValues == nil ? .dnf : .none, trimmedSolves: trimmedSolves)
     }
 
     
@@ -111,14 +121,16 @@ class Stats {
             return nil
         }
         
+        let sorted = solvesByDate.suffix(period).sorted(by: Stats.sortWithDNFsLast)
+        let trimmedSolves: [Solves] = sorted.prefix(trim) + sorted.suffix(trim)
+        
         return CalculatedAverage(
             id: "Current AO\(period)",
-            average: solvesByDate.suffix(period).sorted {
-                $0.penalty == PenTypes.dnf.rawValue || timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve($1)
-            }.dropFirst().dropLast()
+            average: sorted.dropFirst(trim).dropLast(trim)
                     .reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(period-(trim * 2)),
             accountedSolves: solvesByDate.suffix(period),
-            totalPen: solvesByDate.suffix(period).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none
+            totalPen: solvesByDate.suffix(period).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
+            trimmedSolves: trimmedSolves
         )
     }
     
