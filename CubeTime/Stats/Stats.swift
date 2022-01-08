@@ -161,7 +161,22 @@ class Stats {
         return reached
     }
     
+    /*
     
-    
-    
+    func getBestAverage() -> Array<Double, Array<Double>> {
+        
+        var averages = []
+        
+        if let compsimSession = compsimSession {
+            for solvegroup in compsimSession.solvegroups!.array {
+                averages.append((solvegroup as AnyObject).solves!.array as! [Solves]).map {$0.time}.sorted().dropFirst().dropLast().reduce(0, +))
+            }
+        }
+        
+        print(averages)
+        
+        return [2.234987234, [2.2348902734, 1.32489]]
+    }
+     
+     */
 }

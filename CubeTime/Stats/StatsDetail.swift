@@ -150,7 +150,7 @@ struct StatsDetail: View {
                     if solves.totalPen == .dnf {
                         Text("DNF")
                     } else {
-                        Text("N/A")
+                        Text("-")
                     }
                 }
             }

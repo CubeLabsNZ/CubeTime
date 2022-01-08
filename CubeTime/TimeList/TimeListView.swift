@@ -216,7 +216,6 @@ struct TimeListView: View {
                             } label: {
                                 Text("Cancel")
                             }
-                            .background(Color.blue)
                         } else {
                             Button {
                                 isSelectMode = true

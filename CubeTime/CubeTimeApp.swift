@@ -6,9 +6,13 @@ struct CubeTime: App {
     let persistenceController: PersistenceController
     private let moc: NSManagedObjectContext
     
+    
     init() {
         persistenceController = PersistenceController.shared
         moc = persistenceController.container.viewContext
+        
+        UIView.appearance().isMultipleTouchEnabled = false
+        UIView.appearance().isExclusiveTouch = true
         
         let userDefaults = UserDefaults.standard
         userDefaults.register(

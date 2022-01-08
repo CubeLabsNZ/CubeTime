@@ -105,6 +105,29 @@ struct StatsView: View {
                         .padding(.bottom, 8)
                         
                         
+                        Text("generate")
+                            .onTapGesture {
+                                for _ in 1..<14294 {
+                                    let solveItem: Solves!
+                                    
+                                    solveItem = Solves(context: managedObjectContext)
+                                    solveItem.date = Date()
+                                    solveItem.session = currentSession
+                                    solveItem.scramble = "sdlfikj"
+                                    solveItem.scramble_type = 0
+                                    solveItem.scramble_subtype = 0
+                                    solveItem.time = Double.random(in: 6..<11)
+                                    
+                                }
+                                do {
+                                    try managedObjectContext.save()
+                                } catch {
+                                    if let error = error as NSError? {
+                                        fatalError("Unresolved error \(error), \(error.userInfo)")
+                                    }
+                                }
+                            }
+                        
                         
                         /// everything
                         VStack(spacing: 10) {
@@ -136,7 +159,7 @@ struct StatsView: View {
                                                                 .modifier(DynamicText())
                                                             
                                                         } else {
-                                                            Text("N/A")
+                                                            Text("-")
                                                                 .font(.system(size: 20, weight: .medium, design: .default))
                                                                 .foregroundColor(Color(uiColor:.systemGray2))
                                                                 .padding(.leading, 12)
@@ -169,7 +192,7 @@ struct StatsView: View {
                                                             
                                                             
                                                         } else {
-                                                            Text("N/A")
+                                                            Text("-")
                                                                 .font(.system(size: 20, weight: .medium, design: .default))
                                                                 .foregroundColor(Color(uiColor: .systemGray2))
                                                                 .padding(.leading, 12)
@@ -201,7 +224,7 @@ struct StatsView: View {
                                                                 .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                                 .padding(.leading, 12)
                                                         } else {
-                                                            Text("N/A")
+                                                            Text("-")
                                                                 .font(.system(size: 20, weight: .medium, design: .default))
                                                                 .foregroundColor(Color(uiColor: .systemGray2))
                                                                 .padding(.leading, 12)
@@ -265,7 +288,7 @@ struct StatsView: View {
                                                         
                                                         
                                                     } else {
-                                                        Text("N/A")
+                                                        Text("-")
                                                             .font(.system(size: 28, weight: .medium, design: .default))
                                                             .foregroundColor(Color(uiColor: .systemGray2))
                                                     }
@@ -307,7 +330,7 @@ struct StatsView: View {
                                                             .font(.system(size: 34, weight: .bold, design: .default))
                                                             .foregroundColor(Color(uiColor: colourScheme == .light ? .white : .black))
                                                     } else {
-                                                        Text("N/A")
+                                                        Text("-")
                                                             .font(.system(size: 28, weight: .medium, design: .default))
                                                             .foregroundColor(Color(uiColor: .systemGray5))
                                                     }
@@ -340,7 +363,7 @@ struct StatsView: View {
                                                                 .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                                 .padding(.leading, 12)
                                                         } else {
-                                                            Text("N/A")
+                                                            Text("-")
                                                                 .font(.system(size: 28, weight: .medium, design: .default))
                                                                 .foregroundColor(Color(uiColor:.systemGray2))
                                                                 .padding(.leading, 12)
@@ -374,7 +397,7 @@ struct StatsView: View {
                                                                 .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                                 .padding(.leading, 12)
                                                         } else {
-                                                            Text("N/A")
+                                                            Text("-")
                                                                 .font(.system(size: 28, weight: .medium, design: .default))
                                                                 .foregroundColor(Color(uiColor: .systemGray2))
                                                                 .padding(.leading, 12)
@@ -434,7 +457,7 @@ struct StatsView: View {
                                                                 }
                                                             }
                                                         } else {
-                                                            Text("N/A")
+                                                            Text("-")
                                                                 .font(.system(size: 28, weight: .medium, design: .default))
                                                                 .foregroundColor(Color(uiColor: .systemGray2))
                                                             
@@ -444,7 +467,7 @@ struct StatsView: View {
                                                         
                                                         
                                                     } else {
-                                                        Text("N/A")
+                                                        Text("-")
                                                             .font(.system(size: 28, weight: .medium, design: .default))
                                                             .foregroundColor(Color(uiColor: .systemGray2))
                                                         
@@ -515,7 +538,7 @@ struct StatsView: View {
                                                                 }
                                                             }
                                                         } else {
-                                                            Text("N/A")
+                                                            Text("-")
                                                                 .font(.system(size: 28, weight: .medium, design: .default))
                                                                 .foregroundColor(Color(uiColor: .systemGray2))
                                                             
@@ -525,7 +548,7 @@ struct StatsView: View {
                                                         
                                                         
                                                     } else {
-                                                        Text("N/A")
+                                                        Text("-")
                                                             .font(.system(size: 28, weight: .medium, design: .default))
                                                             .foregroundColor(Color(uiColor: .systemGray2))
                                                         
@@ -596,7 +619,7 @@ struct StatsView: View {
                                                             .modifier(DynamicText())
                                                         
                                                     } else {
-                                                        Text("N/A")
+                                                        Text("-")
                                                             .font(.system(size: 28, weight: .medium, design: .default))
                                                             .foregroundColor(Color(uiColor: .systemGray5))
                                                     }
@@ -656,7 +679,7 @@ struct StatsView: View {
                                                         
                                                         
                                                     } else {
-                                                        Text("N/A")
+                                                        Text("-")
                                                             .font(.system(size: 28, weight: .medium, design: .default))
                                                             .foregroundColor(Color(uiColor: .systemGray2))
                                                         
@@ -732,7 +755,7 @@ struct StatsView: View {
                                                     .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                     .modifier(DynamicText())
                                             } else {
-                                                Text("N/A")
+                                                Text("-")
                                                     .font(.system(size: 28, weight: .medium, design: .default))
                                                     .foregroundColor(Color(uiColor: .systemGray5))
                                             }
