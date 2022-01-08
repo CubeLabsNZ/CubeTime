@@ -79,8 +79,14 @@ struct StatsDetail: View {
                                                 Text("\(index+1).")
                                                     .font(.system(size: 15, weight: .bold, design: .rounded))
                                                     .foregroundColor(accentColour)
-                                                Text(formatSolveTime(secs: solve.time, penType: PenTypes.init(rawValue: solve.penalty)!))
-                                                    .font(.system(size: 17, weight: .bold))
+                                                if solves.trimmedSolves!.contains(solve) {
+                                                    Text("(" + formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!) + ")")
+                                                        .font(.system(size: 17, weight: .bold))
+                                                        .foregroundColor(Color(uiColor: .systemGray))
+                                                } else {
+                                                    Text(formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!))
+                                                        .font(.system(size: 17, weight: .bold))
+                                                }
                                                 
                                                 Spacer()
                                                 
@@ -147,11 +153,7 @@ struct StatsDetail: View {
                         }
                     }
                 } else {
-                    if solves.totalPen == .dnf {
-                        Text("DNF")
-                    } else {
-                        Text("-")
-                    }
+                    Text("N/A")
                 }
             }
         }

@@ -54,7 +54,7 @@ struct StatsView: View {
     init(currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
         
-        stats = Stats(currentSession: currentSession.wrappedValue, managedObjectContext: managedObjectContext)
+        stats = Stats(currentSession: currentSession.wrappedValue)
         
         self.ao5 = stats.getBestMovingAverageOf(5)
         self.ao12 = stats.getBestMovingAverageOf(12)
@@ -67,8 +67,8 @@ struct StatsView: View {
         self.bestSingle = stats.getMin()
         self.sessionMean = stats.getSessionMean()
         
-        self.timesByDate = stats.solvesByDate.map { $0.time }
-        self.timesBySpeed = stats.solves.map { $0.time }
+        self.timesByDate = stats.solvesByDate.map(timeWithPlusTwoForSolve)
+        self.timesBySpeed = stats.solves.map(timeWithPlusTwoForSolve)
         
         
         self.compSimCount = stats.getNumberOfAverages()
@@ -325,8 +325,8 @@ struct StatsView: View {
                                                         .foregroundColor(Color(uiColor: .systemGray6))
                                                         .padding(.bottom, 4)
                                                     
-                                                    if bestSingle != nil {
-                                                        Text(String(formatSolveTime(secs: bestSingle!.time)))
+                                                    if let bestSingle = bestSingle {
+                                                        Text(String(formatSolveTime(secs: bestSingle.time, penType: PenTypes(rawValue: bestSingle.penalty)!)))
                                                             .font(.system(size: 34, weight: .bold, design: .default))
                                                             .foregroundColor(Color(uiColor: colourScheme == .light ? .white : .black))
                                                     } else {
@@ -375,7 +375,7 @@ struct StatsView: View {
                                                 }
                                                 .contentShape(Rectangle())
                                                 .onTapGesture {
-                                                    if ao12 != nil {
+                                                    if ao12 != nil && ao12?.totalPen != .dnf  {
                                                         presentedAvg = ao12
                                                     }
                                                 }
@@ -410,7 +410,7 @@ struct StatsView: View {
                                                 }
                                                 .contentShape(Rectangle())
                                                 .onTapGesture {
-                                                    if ao100 != nil {
+                                                    if ao100 != nil && ao100?.totalPen != .dnf {
                                                         presentedAvg = ao100
                                                     }
                                                 }
@@ -438,18 +438,17 @@ struct StatsView: View {
                                                         
                                                         if let accountedSolves = ao5.accountedSolves {
                                                         
-                                                            let alltimes = accountedSolves.map{timeWithPlusTwoForSolve($0)}
-                                                            ForEach((0...4), id: \.self) { index in
-                                                                if timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.min() || timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.max() {
-                                                                    Text("("+formatSolveTime(secs: accountedSolves[index].time,
-                                                                                             penType: PenTypes(rawValue: accountedSolves[index].penalty))+")")
+                                                            ForEach(accountedSolves, id: \.self) { solve in
+                                                                if ao5.trimmedSolves!.contains(solve) {
+                                                                    Text("("+formatSolveTime(secs: solve.time,
+                                                                                             penType: PenTypes(rawValue: solve.penalty))+")")
                                                                         .font(.system(size: 17, weight: .regular, design: .default))
                                                                         .foregroundColor(Color(uiColor: .systemGray))
                                                                         .multilineTextAlignment(.leading)
                                                                         .padding(.bottom, 2)
                                                                 } else {
-                                                                    Text(formatSolveTime(secs: accountedSolves[index].time,
-                                                                                         penType: PenTypes(rawValue: accountedSolves[index].penalty)))
+                                                                    Text(formatSolveTime(secs: solve.time,
+                                                                                         penType: PenTypes(rawValue: solve.penalty)))
                                                                         .font(.system(size: 17, weight: .regular, design: .default))
                                                                         .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                                                         .multilineTextAlignment(.leading)
@@ -485,7 +484,7 @@ struct StatsView: View {
                                             .frame(height: 215)
                                             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                             .onTapGesture {
-                                                if ao5 != nil {
+                                                if ao5 != nil && ao5?.totalPen != .dnf {
                                                     presentedAvg = ao5
                                                 }
                                             }
@@ -556,7 +555,7 @@ struct StatsView: View {
                                                     }
                                                 }
                                                 .onTapGesture {
-                                                    if ao5 != nil {
+                                                    if ao5 != nil && ao5?.totalPen != .dnf  {
                                                         presentedAvg = ao5
                                                     }
                                                 }
@@ -570,9 +569,6 @@ struct StatsView: View {
                                             }
                                             .frame(height: 215)
                                             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                            .onTapGesture {
-                                                print("best ao5 pressed")
-                                            }
                                             
                                             HStack {
                                                 VStack (alignment: .leading, spacing: 0) {

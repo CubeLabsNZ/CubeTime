@@ -15,11 +15,9 @@ enum SortBy {
 }
 
 class TimeListManager: ObservableObject {
-    @Published var solves: [Solves]?
-    private var allsolves: [Solves]?
-    @Published var fetchError: NSError?
+    @Published var solves: [Solves]
+    private var allsolves: [Solves]
     @Binding var currentSession: Sessions
-    let managedObjectContext: NSManagedObjectContext
     @Published var sortBy: Int = 0 {
         didSet {
             self.resort()
@@ -32,38 +30,44 @@ class TimeListManager: ObservableObject {
     }
     var ascending = false
     
-    private let fetchRequest = NSFetchRequest<Solves>(entityName: "Solves")
-    
-    init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
+    init (currentSession: Binding<Sessions>) {
         self._currentSession = currentSession
-        self.managedObjectContext = managedObjectContext
-        fetchRequest.predicate = NSPredicate(format: "session == %@", currentSession.wrappedValue)
+        self.allsolves = currentSession.wrappedValue.solves!.allObjects as! [Solves]
+        self.solves = allsolves
         resort()
     }
     
+    func delete(_ solve: Solves) {
+        guard let index = allsolves.firstIndex(of: solve) else {return}
+        allsolves.remove(at: index)
+        guard let index = solves.firstIndex(of: solve) else {return}
+        solves.remove(at: index)
+    }
+    
     func resort() {
-        NSLog("resort")
-        if sortBy == 0 {
-            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Solves.date, ascending: ascending)]
-        } else {
-            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Solves.time, ascending: ascending)]
+        allsolves = allsolves.sorted{
+            if sortBy == 0 {
+                if ascending {
+                    return $0.date! < $1.date!
+                } else {
+                    return $0.date! > $1.date!
+                }
+            } else {
+                if ascending {
+                    return timeWithPlusTwoForSolve($0) < timeWithPlusTwoForSolve($1)
+                } else {
+                    return timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve($1)
+                }
+            }
         }
-        do {
-            try allsolves = managedObjectContext.fetch(fetchRequest)
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-        solves = allsolves!
+        solves = allsolves
         refilter()
     }
     func refilter() {
         if filter == "" {
             solves = allsolves
         } else {
-            solves = allsolves?.filter{ formatSolveTime(secs: $0.time).hasPrefix(filter) }
+            solves = allsolves.filter{ formatSolveTime(secs: $0.time).hasPrefix(filter) }
         }
     }
 }
@@ -91,7 +95,7 @@ struct TimeListView: View {
     init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
         // TODO FIXME use a smarter way of this for more performance
-        self._timeListManager = StateObject(wrappedValue: TimeListManager(currentSession: currentSession, managedObjectContext: managedObjectContext))
+        self._timeListManager = StateObject(wrappedValue: TimeListManager(currentSession: currentSession))
     }
     
     var body: some View {
@@ -153,7 +157,7 @@ struct TimeListView: View {
                         
                         if currentSession.session_type != SessionTypes.compsim.rawValue {
                             LazyVGrid(columns: columns, spacing: 12) {
-                                ForEach(timeListManager.solves!, id: \.self) { item in
+                                ForEach(timeListManager.solves, id: \.self) { item in
                                     TimeCard(solve: item, timeListManager: timeListManager, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
                                         .environment(\.managedObjectContext, managedObjectContext)
                                 }
