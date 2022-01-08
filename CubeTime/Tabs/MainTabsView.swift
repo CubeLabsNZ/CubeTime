@@ -84,6 +84,7 @@ struct MainTabsView: View {
     @State var hideTabBar = false
     @State var currentSession: Sessions
     
+    
     @AppStorage("onboarding") var showOnboarding: Bool = true
     @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
     @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
@@ -104,6 +105,7 @@ struct MainTabsView: View {
             let objID = managedObjectContext.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI!)!
             currentSession = try! managedObjectContext.existingObject(with: objID) as! Sessions // TODO better error handling
         }
+        
     }
     
     var body: some View {

@@ -26,8 +26,8 @@ struct ReachedTargets: View {
                 Rectangle()
                     .fill(.green)
                     .frame(width: geometry.size.width * CGFloat(reachedPercentage), height: 6)
-                    .cornerRadius(10, corners: .topLeft)
-                    .cornerRadius(10, corners: .bottomLeft)
+                    .cornerRadius(10, corners: [.topLeft, .bottomLeft])
+                    .cornerRadius(reachedPercentage == 1 ? 10 : 0, corners: [.topRight, .bottomRight])
             }
         }
     }

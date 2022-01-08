@@ -45,6 +45,9 @@ struct StatsView: View {
     let reachedTargets: Int
     
     
+    let currentSolveth: Int?
+    
+        
     @State var presentedAvg: CalculatedAverage? = nil
     
     @State var showBestSinglePopup = false
@@ -73,6 +76,8 @@ struct StatsView: View {
         
         self.compSimCount = stats.getNumberOfAverages()
         self.reachedTargets = stats.getReachedTargets()
+        
+        self.currentSolveth = stats.getCurrentSolveth()
         
     }
     
@@ -128,6 +133,10 @@ struct StatsView: View {
                                 }
                             }
                         
+                        Text("test")
+                            .onTapGesture {
+                                NSLog("\(currentSolveth!)")
+                            }
                         
                         /// everything
                         VStack(spacing: 10) {
@@ -638,12 +647,12 @@ struct StatsView: View {
                                                 VStack (alignment: .leading, spacing: 0) {
                                                     Text("BEST AVG")
                                                         .font(.system(size: 13, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray6))
+                                                        .foregroundColor(Color(uiColor: .systemGray2))
                                                         .padding(.bottom, 4)
                                                     
                                                     if let ao5 = ao5 {
                                                         Text(formatSolveTime(secs: ao5.average ?? 0, penType: ao5.totalPen))
-                                                            .foregroundColor(colourScheme == .light ? .black : .white)
+                                                            .foregroundColor(.white)
                                                             .font(.system(size: 34, weight: .bold, design: .default))
                                                             .modifier(DynamicText())
                                                         
@@ -657,14 +666,14 @@ struct StatsView: View {
                                                                     Text("("+formatSolveTime(secs: accountedSolves[index].time,
                                                                                              penType: PenTypes(rawValue: accountedSolves[index].penalty))+")")
                                                                         .font(.system(size: 17, weight: .regular, design: .default))
-                                                                        .foregroundColor(Color(uiColor: .systemGray))
+                                                                        .foregroundColor(Color(uiColor: .systemGray2))
                                                                         .multilineTextAlignment(.leading)
                                                                         .padding(.bottom, 2)
                                                                 } else {
                                                                     Text(formatSolveTime(secs: accountedSolves[index].time,
                                                                                          penType: PenTypes(rawValue: accountedSolves[index].penalty)))
                                                                         .font(.system(size: 17, weight: .regular, design: .default))
-                                                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                                                        .foregroundColor(.white)
                                                                         .multilineTextAlignment(.leading)
                                                                         .padding(.bottom, 2)
                                                                 }
@@ -779,15 +788,24 @@ struct StatsView: View {
                                             Spacer()
                                         }
                                         
+                                        if compSimCount == 0 {
+                                            Text("not enough solves to\ndisplay graph")
+                                                .font(.system(size: 17, weight: .medium, design: .monospaced))
+                                                .multilineTextAlignment(.center)
+                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                .offset(y: 30)
+                                        } else {
+                                            ReachedTargets(Float(reachedTargets)/Float(compSimCount))
+                                                .padding(.bottom, 8)
+                                                .padding(.horizontal, 12)
+                                        }
                                         
-                                        ReachedTargets(Float(reachedTargets)/Float(compSimCount))
-                                            .padding(.bottom, 8)
-                                            .padding(.horizontal, 12)
+                                        
                                         
                                         Spacer()
                                     }
                                 }
-                                .frame(height: 55)
+                                .frame(height: compSimCount == 0 ? 150 : 55)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                 .onTapGesture {
                                     if bestSingle != nil {

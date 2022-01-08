@@ -11,9 +11,6 @@ struct CubeTime: App {
         persistenceController = PersistenceController.shared
         moc = persistenceController.container.viewContext
         
-        UIView.appearance().isMultipleTouchEnabled = false
-        UIView.appearance().isExclusiveTouch = true
-        
         let userDefaults = UserDefaults.standard
         userDefaults.register(
             defaults: [
