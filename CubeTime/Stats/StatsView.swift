@@ -112,17 +112,26 @@ struct StatsView: View {
                         
                         Text("generate")
                             .onTapGesture {
-                                for _ in 0..<20000 {
-                                    let solveItem: Solves!
+                                for _ in 0..<4000 {
+                                    let compSimSolveGroup = CompSimSolveGroup(context: managedObjectContext)
+                                    compSimSolveGroup.session = currentSession as! CompSimSession
                                     
-                                    solveItem = Solves(context: managedObjectContext)
-                                    solveItem.date = Date()
-                                    solveItem.session = currentSession
-                                    solveItem.scramble = "sdlfikj"
-                                    solveItem.scramble_type = 0
-                                    solveItem.scramble_subtype = 0
-                                    solveItem.time = Double.random(in: 6..<11)
-                                    
+                                    for _ in 0..<5 {
+                                        let solveItem: CompSimSolve!
+                                        
+                                        
+                                        
+                                        solveItem = CompSimSolve(context: managedObjectContext)
+                                        
+                                        solveItem.solvegroup = compSimSolveGroup
+                                        
+                                        solveItem.date = Date()
+                                        solveItem.session = currentSession
+                                        solveItem.scramble = "sdlfikj"
+                                        solveItem.scramble_type = 0
+                                        solveItem.scramble_subtype = 0
+                                        solveItem.time = Double.random(in: 6..<11)
+                                    }
                                 }
                                 do {
                                     try managedObjectContext.save()

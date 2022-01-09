@@ -194,11 +194,12 @@ class Stats {
         
     func getReachedTargets() -> Int {
         var reached = 0
+        
         if let compsimSession = compsimSession {
             for solvegroup in compsimSession.solvegroups!.array {
                 let x = ((solvegroup as AnyObject).solves!.array as! [Solves]).map {$0.time}.sorted().dropFirst().dropLast()
                 if x.count == 3 {
-                    if x.reduce(0, +) <= compsimSession.target {
+                    if x.reduce(0, +) <= compsimSession.target * 3 {
                         reached += 1
                     }
                 }
