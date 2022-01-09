@@ -45,6 +45,10 @@ struct StatsView: View {
     let reachedTargets: Int
     
     
+    
+    let bestCompsimAverage: CalculatedAverage?
+    
+    
 //    let currentSolveth: Int?
     
         
@@ -78,6 +82,10 @@ struct StatsView: View {
         self.reachedTargets = stats.getReachedTargets()
         
 //        self.currentSolveth = stats.getCurrentSolveth()
+        
+        
+        self.bestCompsimAverage = stats.getBestCompsimAverage()
+        
         
     }
     
@@ -340,7 +348,7 @@ struct StatsView: View {
                                                 VStack (alignment: .leading, spacing: 0) {
                                                     Text("BEST SINGLE")
                                                         .font(.system(size: 13, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray6))
+                                                        .foregroundColor(Color(uiColor: .systemGray5))
                                                         .padding(.bottom, 4)
                                                     
                                                     if let bestSingle = bestSingle {
@@ -635,7 +643,7 @@ struct StatsView: View {
                                                     } else {
                                                         Text("-")
                                                             .font(.system(size: 28, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray5))
+                                                            .foregroundColor(Color(uiColor: .systemGray2))
                                                     }
                                                 }
                                                 .padding(.top)
@@ -656,11 +664,11 @@ struct StatsView: View {
                                                 VStack (alignment: .leading, spacing: 0) {
                                                     Text("BEST AVG")
                                                         .font(.system(size: 13, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray2))
+                                                        .foregroundColor(Color(uiColor: .systemGray5))
                                                         .padding(.bottom, 4)
                                                     
-                                                    if let ao5 = ao5 {
-                                                        Text(formatSolveTime(secs: ao5.average ?? 0, penType: ao5.totalPen))
+                                                    if let bestCompsimAverage = bestCompsimAverage {
+                                                        Text(formatSolveTime(secs: bestCompsimAverage.average ?? 0, penType: bestCompsimAverage.totalPen))
                                                             .foregroundColor(.white)
                                                             .font(.system(size: 34, weight: .bold, design: .default))
                                                             .modifier(DynamicText())
@@ -668,14 +676,14 @@ struct StatsView: View {
                                                         Spacer()
                                                         
                                                         
-                                                        if let accountedSolves = ao5.accountedSolves {
+                                                        if let accountedSolves = bestCompsimAverage.accountedSolves {
                                                             let alltimes = accountedSolves.map{timeWithPlusTwoForSolve($0)}
                                                             ForEach((0...4), id: \.self) { index in
                                                                 if timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.min() || timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.max() {
                                                                     Text("("+formatSolveTime(secs: accountedSolves[index].time,
                                                                                              penType: PenTypes(rawValue: accountedSolves[index].penalty))+")")
                                                                         .font(.system(size: 17, weight: .regular, design: .default))
-                                                                        .foregroundColor(Color(uiColor: .systemGray2))
+                                                                        .foregroundColor(Color(uiColor: .systemGray5))
                                                                         .multilineTextAlignment(.leading)
                                                                         .padding(.bottom, 2)
                                                                 } else {
@@ -695,7 +703,7 @@ struct StatsView: View {
                                                     } else {
                                                         Text("-")
                                                             .font(.system(size: 28, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray2))
+                                                            .foregroundColor(Color(uiColor: .systemGray5))
                                                         
                                                         Spacer()
                                                     }

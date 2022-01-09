@@ -65,7 +65,7 @@ struct TimeBar: View {
                 
                 
             HStack {
-                VStack(spacing: 0){
+                VStack(spacing: 0) {
                     if let calculatedAverage = calculatedAverage {
                         HStack {
                             Text(formatSolveTime(secs: calculatedAverage.average!, penType: calculatedAverage.totalPen))
@@ -92,9 +92,12 @@ struct TimeBar: View {
                             Spacer()
                         }
                     } else {
-                        Text("Loading...")
-                            .font(.system(size: 26, weight: .bold, design: .default))
-                        
+                        HStack {
+                            Text("Current Average")
+                                .font(.system(size: 26, weight: .bold, design: .default))
+
+                            Spacer()
+                        }
                     }
                 }
                 .padding(.leading, 12)
@@ -123,9 +126,14 @@ struct TimeBar: View {
             Button (role: .destructive) {
                 managedObjectContext.delete(solvegroup)
                 try! managedObjectContext.save()
+                
+                timeListManager.refilter() /// and delete this im using this temporarily to update
+                
+                /* enable when sort works
                 withAnimation {
                     timeListManager.resort()
                 }
+                 */
             } label: {
                 Label {
                     Text("Delete Solve Group")

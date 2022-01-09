@@ -38,9 +38,9 @@ class TimeListManager: ObservableObject {
     }
     
     func delete(_ solve: Solves) {
-        guard let index = allsolves.firstIndex(of: solve) else {return}
+        guard let index = allsolves.firstIndex(of: solve) else { return }
         allsolves.remove(at: index)
-        guard let index = solves.firstIndex(of: solve) else {return}
+        guard let index = solves.firstIndex(of: solve) else { return }
         solves.remove(at: index)
     }
     
@@ -107,7 +107,7 @@ struct TimeListView: View {
                 
                 
                 ScrollView() {
-                    VStack {
+                    LazyVStack {
                         HStack (alignment: .center) {
                             Text(currentSession.name!)
                                 .font(.system(size: 20, weight: .semibold, design: .default))
@@ -156,6 +156,7 @@ struct TimeListView: View {
                             }
                         }
                         
+                        
                         if currentSession.session_type != SessionTypes.compsim.rawValue {
                             LazyVGrid(columns: columns, spacing: 12) {
                                 ForEach(timeListManager.solves, id: \.self) { item in
@@ -164,14 +165,41 @@ struct TimeListView: View {
                             }
                             .padding(.horizontal)
                         } else {
-                            VStack(spacing: 12) {
-                                // TODO sorting
-                                ForEach((currentSession as! CompSimSession).solvegroups!.array as! [CompSimSolveGroup], id: \.self) { item in
-                                    TimeBar(solvegroup: item, timeListManager: timeListManager, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode)
+                            LazyVStack(spacing: 12) {
+                                let groups = ((currentSession as! CompSimSession).solvegroups!.array as! [CompSimSolveGroup])
+                                
+                                if groups.count > 0 {
+                                    TimeBar(solvegroup: groups.last!, timeListManager: timeListManager, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode)
+                                    
+                                    if groups.count > 1 {
+                                        Divider()
+                                            .padding(.horizontal)
+                                    }
+                                    
+                                } else {
+                                    Text("display the empty message")
                                 }
+                                
+                                
+                                
+                                // TODO sorting
+                                
+                                
+                                
+                                ForEach((currentSession as! CompSimSession).solvegroups!.array as! [CompSimSolveGroup], id: \.self) { item in
+                                    if item.solves!.count == 5 {
+                                        TimeBar(solvegroup: item, timeListManager: timeListManager, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode)
+                                    }
+                                }
+                                 
+                                 
+                                 
                             }
                             .padding(.horizontal)
+                         
+                         
                         }
+                         
                     }
                     .padding(.vertical, -6)
                 }

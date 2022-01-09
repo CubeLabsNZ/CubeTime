@@ -210,25 +210,29 @@ class Stats {
         return reached
     }
     
-    /*
     func getBestCompsimAverage() -> CalculatedAverage? {
         if let compsimSession = compsimSession {
-            if compsimSession.solvegroups!.count == 0 {
+            if compsimSession.solvegroups!.count < 2 {
                 return nil
             }
             
-            var bestAverage: CalculatedAverage
+            var bestAverage: CalculatedAverage = calculateAverage(((compsimSession.solvegroups![0] as AnyObject).solves!.array as! [Solves]))!
             
             for solvegroup in compsimSession.solvegroups!.array {
-                let currentAvg = calculateAverage((solvegroup as AnyObject).solves!.array as! [Solves])
-                if currentAvg! < bestAverage {
-                    bestAverage = currentAvg!
+                if (solvegroup as AnyObject).solves!.array.count == 5 {
+                    let currentAvg = calculateAverage((solvegroup as AnyObject).solves!.array as! [Solves])
+                    if (currentAvg?.average)! < bestAverage.average! {
+                        bestAverage = currentAvg!
+                    }
                 }
             }
             
+            return bestAverage
+            
+        } else {
+            return nil
         }
     }
-     */
     
     /*
     func getCurrentSolveth() -> Int? {
