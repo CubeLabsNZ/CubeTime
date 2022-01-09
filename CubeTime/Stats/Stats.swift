@@ -3,23 +3,24 @@ import CoreData
 import SwiftUI
 
 
-infix operator <? : ComparisonPrecedence
+// infix operator <? : ComparisonPrecedence
 
-struct CalculatedAverage: Identifiable, Equatable, Comparable {
+struct CalculatedAverage: Identifiable/*, Equatable, Comparable*/ {
     let id: String
-    
+
+    //    let discardedIndexes: [Int]
     let average: Double?
-//    let discardedIndexes: [Int]
     let accountedSolves: [Solves]?
     let totalPen: PenTypes
-    
     let trimmedSolves: [Solves]?
     
-    
+    /*
     static func == (lhs: CalculatedAverage, rhs: CalculatedAverage) -> Bool {
         return lhs.average == rhs.average
     }
+     */
     
+    /*
     static func < (lhs: CalculatedAverage, rhs: CalculatedAverage) -> Bool {
         if let lhs.average = lhs.average, let rhs.average = rhs.average {
             return lhs.average < rhs.average
@@ -28,6 +29,7 @@ struct CalculatedAverage: Identifiable, Equatable, Comparable {
         }
         
     }
+     */
 }
 
 
@@ -207,6 +209,7 @@ class Stats {
         return reached
     }
     
+    /*
     func getBestCompsimAverage() -> CalculatedAverage? {
         if let compsimSession = compsimSession {
             if compsimSession.solvegroups!.count == 0 {
@@ -224,7 +227,9 @@ class Stats {
             
         }
     }
+     */
     
+    /*
     func getCurrentSolveth() -> Int? {
         if let compsimSession = compsimSession {
             return (compsimSession.solvegroups?.lastObject! as! CompSimSolveGroup).solves!.count
@@ -232,6 +237,9 @@ class Stats {
         
         return nil
     }
+     */
+    
+    
     
     /*
     

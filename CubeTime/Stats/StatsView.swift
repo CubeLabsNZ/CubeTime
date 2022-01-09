@@ -45,7 +45,7 @@ struct StatsView: View {
     let reachedTargets: Int
     
     
-    let currentSolveth: Int?
+//    let currentSolveth: Int?
     
         
     @State var presentedAvg: CalculatedAverage? = nil
@@ -77,7 +77,7 @@ struct StatsView: View {
         self.compSimCount = stats.getNumberOfAverages()
         self.reachedTargets = stats.getReachedTargets()
         
-        self.currentSolveth = stats.getCurrentSolveth()
+//        self.currentSolveth = stats.getCurrentSolveth()
         
     }
     
@@ -112,7 +112,7 @@ struct StatsView: View {
                         
                         Text("generate")
                             .onTapGesture {
-                                for _ in 1..<14294 {
+                                for _ in 0..<20000 {
                                     let solveItem: Solves!
                                     
                                     solveItem = Solves(context: managedObjectContext)
@@ -135,7 +135,7 @@ struct StatsView: View {
                         
                         Text("test")
                             .onTapGesture {
-                                NSLog("\(currentSolveth!)")
+//                                NSLog("\(currentSolveth!)")
                             }
                         
                         /// everything
