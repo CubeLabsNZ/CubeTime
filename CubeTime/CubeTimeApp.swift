@@ -6,6 +6,7 @@ struct CubeTime: App {
     let persistenceController: PersistenceController
     private let moc: NSManagedObjectContext
     
+    
     init() {
         persistenceController = PersistenceController.shared
         moc = persistenceController.container.viewContext

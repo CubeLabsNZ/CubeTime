@@ -28,6 +28,8 @@ struct TimerView: View {
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @AppStorage("onboarding") private var showOnboarding: Bool = true
     
+    
+    
     @ObservedObject var stopWatchManager: StopWatchManager
     
     @Binding var hideTabBar: Bool
@@ -153,24 +155,9 @@ struct TimerView: View {
                         .fill(Color.white.opacity(0.0000000001)) /// TODO: fix this don't just use this workaround: https://stackoverflow.com/questions/56819847/tap-action-not-working-when-color-is-clear-swiftui
                         .frame(
                             width: geometry.size.width,
-                            height: geometry.size.height - CGFloat(SetValues.tabBarHeight) /* - CGFloat(safeAreaBottomHeight) */,
+                            height: geometry.size.height - CGFloat(SetValues.tabBarHeight),
                             alignment: .center
-                            //height: geometry.safeAreaInsets.top,
-                            //height:  - safeAreaInset(edge: .bottom) - CGFloat(tabBarHeight),
                         )
-                        /*
-                        .modifier(Touch(changeState: { (buttonState) in
-                            
-                            
-                            if buttonState == .pressed { /// ON TOUCH DOWN EVENT
-                                self.stopWatchManager.touchDown()
-                            } else { /// ON TOUCH UP (FINGER RELEASE) EVENT
-                                self.stopWatchManager.touchUp()
-                            }
-                        }))
-                        //.safeAreaInset(edge: .bottom)
-                         //.aspectRatio(contentMode: ContentMode.fit)
-                         */
                         .gesture(
                             DragGesture(minimumDistance: 0, coordinateSpace: .local)
                                 .onChanged({value in
