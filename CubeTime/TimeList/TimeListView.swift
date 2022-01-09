@@ -82,6 +82,7 @@ struct TimeListView: View {
     @StateObject var timeListManager: TimeListManager
     
     @State var solve: Solves?
+    @State var calculatedAverage: CalculatedAverage?
     
     @State var isSelectMode = false
     @State var selectedSolves: [Solves] = []
@@ -159,7 +160,6 @@ struct TimeListView: View {
                             LazyVGrid(columns: columns, spacing: 12) {
                                 ForEach(timeListManager.solves, id: \.self) { item in
                                     TimeCard(solve: item, timeListManager: timeListManager, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
-                                        .environment(\.managedObjectContext, managedObjectContext)
                                 }
                             }
                             .padding(.horizontal)
@@ -167,10 +167,8 @@ struct TimeListView: View {
                             VStack(spacing: 12) {
                                 // TODO sorting
                                 ForEach((currentSession as! CompSimSession).solvegroups!.array as! [CompSimSolveGroup], id: \.self) { item in
-                                    TimeBar(solvegroup: item, timeListManager: timeListManager, currentSolve: $solve, isSelectMode: $isSelectMode)
-                                        .environment(\.managedObjectContext, managedObjectContext)
+                                    TimeBar(solvegroup: item, timeListManager: timeListManager, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode)
                                 }
-
                             }
                             .padding(.horizontal)
                         }
@@ -183,6 +181,9 @@ struct TimeListView: View {
                 .sheet(item: $solve) { item in
                     SolvePopupView(/*currentSession: $currentSession, */solve: item, currentSolve: $solve, timeListManager: timeListManager)
                         .environment(\.managedObjectContext, managedObjectContext)
+                }
+                .sheet(item: $calculatedAverage) { item in
+                    StatsDetail(solves: item, session: currentSession)
                 }
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {

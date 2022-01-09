@@ -16,7 +16,7 @@ struct TimeBar: View {
     
     @State var calculatedAverage: CalculatedAverage?
     
-    @Binding var currentSolve: Solves?
+    @Binding var currentCalculatedAverage: CalculatedAverage?
     @Binding var isSelectMode: Bool
     
 //    @Binding var selectedSolvegroups: [CompSimSolveGroup]
@@ -24,10 +24,10 @@ struct TimeBar: View {
     @State var isSelected = false
     
     
-    init(solvegroup: CompSimSolveGroup, timeListManager: TimeListManager, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>/*, selectedSolves: Binding<[Solves]>*/) {
+    init(solvegroup: CompSimSolveGroup, timeListManager: TimeListManager, currentCalculatedAverage: Binding<CalculatedAverage?>, isSelectMode: Binding<Bool>/*, selectedSolves: Binding<[Solves]>*/) {
         self.solvegroup = solvegroup
         self.timeListManager = timeListManager
-        self._currentSolve = currentSolve
+        self._currentCalculatedAverage = currentCalculatedAverage
         self._isSelectMode = isSelectMode
 //        self._selectedSolvegroups = selectedSolves
     }
@@ -53,6 +53,11 @@ struct TimeBar: View {
 //                    } else {
 //                        currentSolve = solve
 //                    }
+                    if isSelectMode {
+                        
+                    } else {
+                        currentCalculatedAverage = calculatedAverage
+                    }
                 }
                 .onLongPressGesture {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
