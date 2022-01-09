@@ -1,7 +1,7 @@
 import CoreData
 import SwiftUI
 import CoreGraphics
-
+import Combine
 
 
 struct AnimatingFontSize: AnimatableModifier {
@@ -38,6 +38,8 @@ struct TimerView: View {
     
     @Binding var pageIndex: Int
     
+    @State private var targetStr: String
+    
     @State var hideStatusBar = true
     
     @State var algTrainerSubset = 0
@@ -52,6 +54,8 @@ struct TimerView: View {
         self.stopWatchManager = stopWatchManager
         self._hideTabBar = hideTabBar
         self._playgroundScrambleType = State(initialValue: Int(currentSession.wrappedValue.scramble_type))
+        
+        self._targetStr = State(initialValue: filteredStrFromTime((currentSession.wrappedValue as? CompSimSession)?.target))
     }
 
     
@@ -259,7 +263,23 @@ struct TimerView: View {
                                 Image(systemName: "target")
                                     .font(.system(size: 15))
                                 
-                                Text("picker")
+                                TextField("0.00", text: $targetStr)
+                                    .keyboardType(.numberPad)
+                                    .multilineTextAlignment(.trailing)
+                                    .onReceive(Just(targetStr)) { newValue in
+                                        let filtered = filteredTimeInput(newValue)
+                                        if filtered != newValue {
+                                            self.targetStr = filtered
+                                        }
+                                        
+                                        if let time = timeFromStr(targetStr) {
+                                            (currentSession as! CompSimSession).target = time
+                                            
+                                            try! managedObjectContext.save()
+                                            
+                                        }
+                                        
+                                    }
                             }
                             .padding(.trailing)
                             .foregroundColor(accentColour)

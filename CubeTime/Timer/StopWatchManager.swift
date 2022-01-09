@@ -226,7 +226,7 @@ class StopWatchManager: ObservableObject {
                     }
                     
                     
-                    if currentSolveth == 4 {
+                    if currentSolveth == 5 {
                         let solvegroup = CompSimSolveGroup(context: managedObjectContext)
                         solvegroup.session = currentSession
                         

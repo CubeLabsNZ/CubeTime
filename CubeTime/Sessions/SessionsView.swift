@@ -142,7 +142,10 @@ struct CustomiseStandardSessionView: View {
                             }
                             .padding()
                         }
+                        .frame(height: 45)
+                        .modifier(NewStandardSessionViewBlocks())
                     }
+                    
                     
                     VStack (spacing: 0) {
                         HStack {
