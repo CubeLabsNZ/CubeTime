@@ -105,6 +105,30 @@ func formatLegendTime(secs: Double, dp: Int) -> String {
 }
 
 
+func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAverage? {
+    
+    let trim = 1
+    
+    guard let solves = compsimsolvegroup.solves!.array as? [Solves] else {return nil}
+    
+    if solves.count < 5 {
+        return nil
+    }
+    
+    let sorted = solves.sorted(by: Stats.sortWithDNFsLast)
+    let trimmedSolves: [Solves] = sorted.prefix(trim) + sorted.suffix(trim)
+    
+    return CalculatedAverage(
+        id: "Comp sim solve",
+        average: sorted.dropFirst(trim).dropLast(trim)
+                .reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(3),
+        accountedSolves: sorted,
+        totalPen: sorted.filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
+        trimmedSolves: trimmedSolves
+    )
+}
+
+
 struct PuzzleType {
     let name: String
     let subtypes: [Int: String]
