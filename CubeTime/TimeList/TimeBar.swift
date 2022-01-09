@@ -14,7 +14,7 @@ struct TimeBar: View {
     let solvegroup: CompSimSolveGroup
     let timeListManager: TimeListManager
     
-    let formattedTime: String
+    @State var calculatedAverage: CalculatedAverage?
     
     @Binding var currentSolve: Solves?
     @Binding var isSelectMode: Bool
@@ -27,8 +27,6 @@ struct TimeBar: View {
     init(solvegroup: CompSimSolveGroup, timeListManager: TimeListManager, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>/*, selectedSolves: Binding<[Solves]>*/) {
         self.solvegroup = solvegroup
         self.timeListManager = timeListManager
-        // TODO bracket and gray min and max
-        self.formattedTime = formatSolveTime(secs: (solvegroup.solves!.array as! [Solves]).map {$0.time}.sorted().dropFirst().dropLast().reduce(0, +))
         self._currentSolve = currentSolve
         self._isSelectMode = isSelectMode
 //        self._selectedSolvegroups = selectedSolves
@@ -63,26 +61,43 @@ struct TimeBar: View {
                 
             HStack {
                 VStack(spacing: 0){
-                    HStack {
-                        Text(formattedTime)
-                            .font(.system(size: 26, weight: .bold, design: .default))
+                    if let calculatedAverage = calculatedAverage {
+                        HStack {
+                            Text(formatSolveTime(secs: calculatedAverage.average!, penType: calculatedAverage.totalPen))
+                                .font(.system(size: 26, weight: .bold, design: .default))
 
-                        Spacer()
-                    }
-                    
-                    HStack(spacing: 0) {
-                        ForEach(Array((solvegroup.solves!.array as! [Solves]).enumerated()), id: \.offset) { index, solve in
-                            Text(formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)))
-                                .font(.system(size: 17, weight: .medium))
-                            if index < solvegroup.solves!.count-1 {
-                                Text(", ")
-                            }
+                            Spacer()
                         }
                         
-                        Spacer()
+                        HStack(spacing: 0) {
+                            ForEach(Array((solvegroup.solves!.array as! [Solves]).enumerated()), id: \.offset) { index, solve in
+                                if calculatedAverage.trimmedSolves!.contains(solve) {
+                                    Text("(" + formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)) + ")")
+                                        .font(.system(size: 17, weight: .medium))
+                                        .foregroundColor(Color(uiColor: .systemGray))
+                                } else {
+                                    Text(formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)))
+                                        .font(.system(size: 17, weight: .medium))
+                                }
+                                if index < solvegroup.solves!.count-1 {
+                                    Text(", ")
+                                }
+                            }
+                            
+                            Spacer()
+                        }
+                    } else {
+                        Text("Loading...")
+                            .font(.system(size: 26, weight: .bold, design: .default))
+                        
                     }
                 }
                 .padding(.leading, 12)
+                .task {
+                    await MainActor.run {
+                        self.calculatedAverage = getAvgOfSolveGroup(solvegroup)
+                    }
+                }
                 
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
