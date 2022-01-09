@@ -234,15 +234,10 @@ class Stats {
         }
     }
     
-    /*
-    func getCurrentSolveth() -> Int? {
-        if let compsimSession = compsimSession {
-            return (compsimSession.solvegroups?.lastObject! as! CompSimSolveGroup).solves!.count
-        }
-        
-        return nil
+    static func getCurrentSolveth(compsimSession: CompSimSession) -> Int? {
+        let count: Int = (compsimSession.solvegroups!.array as! [CompSimSolveGroup]).last!.solves!.count
+        return count == 0 ? 5 : count
     }
-     */
     
     
     

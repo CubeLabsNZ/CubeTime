@@ -249,7 +249,7 @@ struct TimerView: View {
                         case .compsim:
                             Text("COMP SIM")
                                 .font(.system(size: 17, weight: .medium))
-                            Text("SOLVE 2/5")
+                            Text("Solve \(stopWatchManager.currentSolveth!+1)")
                                 .font(.system(size: 15, weight: .regular))
                             
                             Divider()

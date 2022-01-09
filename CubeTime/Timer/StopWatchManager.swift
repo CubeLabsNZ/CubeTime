@@ -23,6 +23,7 @@ class StopWatchManager: ObservableObject {
     
     @Published var showPenOptions = false
     
+    @Published var currentSolveth: Int?
     
     
     private let hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
@@ -57,6 +58,13 @@ class StopWatchManager: ObservableObject {
         
         NSLog(String(hapticType))
         
+        if let currentSession = currentSession.wrappedValue as? CompSimSession {
+            if currentSession.solvegroups!.count > 0 {
+                currentSolveth = (currentSession.solvegroups!.lastObject! as? CompSimSolveGroup)!.solves!.count
+            } else {
+                currentSolveth = 0
+            }
+        }
     }
     
     private var timerStartTime: Date?
@@ -210,11 +218,28 @@ class StopWatchManager: ObservableObject {
                     if currentSession.solvegroups == nil {
                         currentSession.solvegroups = NSOrderedSet()
                     }
-                    if currentSession.solvegroups!.count == 0 || (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup).solves!.count == 5 {
+                                        
+                    
+                    if currentSession.solvegroups!.count == 0 {
                         let solvegroup = CompSimSolveGroup(context: managedObjectContext)
                         solvegroup.session = currentSession
                     }
+                    
+                    
+                    if currentSolveth == 4 {
+                        let solvegroup = CompSimSolveGroup(context: managedObjectContext)
+                        solvegroup.session = currentSession
+                        
+                    }
+                    
                     (solveItem as! CompSimSolve).solvegroup = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup)
+                    
+                    
+                    currentSolveth = (currentSession.solvegroups!.lastObject! as? CompSimSolveGroup)!.solves!.count
+                    
+                    
+                    
+                    
                 } else {
                     solveItem = Solves(context: managedObjectContext)
                 }
