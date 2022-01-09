@@ -99,7 +99,7 @@ struct StatsView: View {
                 
                 ScrollView {
                     
-                    VStack (spacing: 0) {
+                    VStack (spacing: 0) { /// make this lazy???
                         /// the title
                         VStack(spacing: 0) {
                             HStack (alignment: .center) {

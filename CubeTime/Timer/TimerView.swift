@@ -45,6 +45,9 @@ struct TimerView: View {
     @State var algTrainerSubset = 0
     @State var playgroundScrambleType: Int
     
+    
+    @State private var textRect = CGRect()
+    
 //    @State var compSimTarget: String
     
     
@@ -253,8 +256,9 @@ struct TimerView: View {
                         case .compsim:
                             Text("COMP SIM")
                                 .font(.system(size: 17, weight: .medium))
-                            Text("Solve \(stopWatchManager.currentSolveth!+1)")
+                            Text("SOLVE \(stopWatchManager.currentSolveth!+1)")
                                 .font(.system(size: 15, weight: .regular))
+                                .padding(.horizontal, 2)
                             
                             Divider()
                                 .padding(.vertical, 4)
@@ -263,9 +267,13 @@ struct TimerView: View {
                                 Image(systemName: "target")
                                     .font(.system(size: 15))
                                 
+                                /*
                                 TextField("0.00", text: $targetStr)
+//                                    .frame(maxWidth: 83)
+                                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                
                                     .keyboardType(.numberPad)
-                                    .multilineTextAlignment(.trailing)
+                                    .multilineTextAlignment(.leading)
                                     .onReceive(Just(targetStr)) { newValue in
                                         let filtered = filteredTimeInput(newValue)
                                         if filtered != newValue {
@@ -276,12 +284,38 @@ struct TimerView: View {
                                             (currentSession as! CompSimSession).target = time
                                             
                                             try! managedObjectContext.save()
-                                            
                                         }
-                                        
                                     }
+                                 */
+                                ZStack {
+                                    Text(targetStr == "" ? "0.00" : targetStr)
+                                        .background(GlobalGeometryGetter(rect: $textRect))
+                                        .layoutPriority(1)
+                                        .opacity(0)
+                                    
+                                    
+                                    TextField("0.00", text: $targetStr)
+                                        .frame(width: textRect.width + CGFloat(targetStr.count > 6 ? 12 : 6))
+//                                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                        .keyboardType(.numberPad)
+                                        .multilineTextAlignment(.leading)
+                                        .onReceive(Just(targetStr)) { newValue in
+                                            let filtered = filteredTimeInput(newValue)
+                                            if filtered != newValue {
+                                                self.targetStr = filtered
+                                            }
+                                            
+                                            if let time = timeFromStr(targetStr) {
+                                                (currentSession as! CompSimSession).target = time
+                                                
+                                                try! managedObjectContext.save()
+                                            }
+                                        }
+                                        .padding(.trailing, 4)
+                                }
+                                    
                             }
-                            .padding(.trailing)
+                            .padding(.trailing, 12)
                             .foregroundColor(accentColour)
                             
                             
