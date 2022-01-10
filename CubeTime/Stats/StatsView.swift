@@ -34,8 +34,8 @@ struct StatsView: View {
     let currentAo12: CalculatedAverage?
     let currentAo100: CalculatedAverage?
     
-    let timesByDate: [Double]
-    let timesBySpeed: [Double]
+//    let timesByDate: [Double]
+//    let timesBySpeed: [Double]
     
     let bestSingle: Solves?
     let sessionMean: Double?
@@ -45,11 +45,15 @@ struct StatsView: View {
     let reachedTargets: Int
     
     
+    let timesByDateNoDNFs: [Double]
+    let timesBySpeedNoDNFs: [Double]
+    
     
     let bestCompsimAverage: CalculatedAverage?
+    let currentCompsimAverage: CalculatedAverage?
     
-    
-//    let currentSolveth: Int?
+    let allCompsimAveragesByDate: [Double] // has no dnfs!!
+    let allCompsimAveragesByTime: [Double]
     
         
     @State var presentedAvg: CalculatedAverage? = nil
@@ -74,17 +78,22 @@ struct StatsView: View {
         self.bestSingle = stats.getMin()
         self.sessionMean = stats.getSessionMean()
         
-        self.timesByDate = stats.solvesByDate.map(timeWithPlusTwoForSolve)
-        self.timesBySpeed = stats.solves.map(timeWithPlusTwoForSolve)
-        
-        
+//        self.timesByDate = stats.solvesByDate.map(timeWithPlusTwoForSolve)
+//        self.timesBySpeed = stats.solves.map(timeWithPlusTwoForSolve)
+            
         self.compSimCount = stats.getNumberOfAverages()
         self.reachedTargets = stats.getReachedTargets()
+       
+        self.timesByDateNoDNFs = stats.solvesNoDNFsbyDate.map { timeWithPlusTwoForSolve($0) }
+        self.timesBySpeedNoDNFs = stats.solvesNoDNFs.map { timeWithPlusTwoForSolve($0) }
         
-//        self.currentSolveth = stats.getCurrentSolveth()
+        self.bestCompsimAverage = stats.getBestCompsimAverageAndArrayOfCompsimAverages().0
         
+        self.allCompsimAveragesByDate = stats.getBestCompsimAverageAndArrayOfCompsimAverages().1.map { $0.average! }
         
-        self.bestCompsimAverage = stats.getBestCompsimAverage()
+        self.allCompsimAveragesByTime = self.allCompsimAveragesByDate.sorted(by: <)
+        
+        self.currentCompsimAverage = stats.getCurrentCompsimAverage()
         
         
     }
@@ -534,15 +543,15 @@ struct StatsView: View {
                                                         .foregroundColor(Color(uiColor: .systemGray))
                                                         .padding(.bottom, 4)
                                                     
-                                                    if let ao5 = currentAo5 {
-                                                        Text(formatSolveTime(secs: ao5.average ?? 0, penType: ao5.totalPen))
+                                                    if let currentCompsimAverage = currentCompsimAverage {
+                                                        Text(formatSolveTime(secs: currentCompsimAverage.average ?? 0, penType: currentCompsimAverage.totalPen))
                                                             .font(.system(size: 34, weight: .bold, design: .default))
                                                             .foregroundColor(colourScheme == .light ? .black : .white)
                                                             .modifier(DynamicText())
                                                         
                                                         Spacer()
                                                         
-                                                        if let accountedSolves = ao5.accountedSolves {
+                                                        if let accountedSolves = currentCompsimAverage.accountedSolves {
                                                         
                                                             let alltimes = accountedSolves.map{timeWithPlusTwoForSolve($0)}
                                                             ForEach((0...4), id: \.self) { index in
@@ -581,8 +590,8 @@ struct StatsView: View {
                                                     }
                                                 }
                                                 .onTapGesture {
-                                                    if ao5 != nil && ao5?.totalPen != .dnf  {
-                                                        presentedAvg = ao5
+                                                    if currentCompsimAverage != nil && currentCompsimAverage?.totalPen != .dnf  {
+                                                        presentedAvg = currentCompsimAverage
                                                     }
                                                 }
                                                 .padding(.top, 10)
@@ -617,11 +626,6 @@ struct StatsView: View {
                                             }
                                             .frame(height: 75)
                                             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                            .onTapGesture {
-                                                if bestSingle != nil {
-                                                    showBestSinglePopup = true
-                                                }
-                                            }
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
@@ -719,8 +723,8 @@ struct StatsView: View {
                                             .frame(height: 215)
                                             .background(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)                                        .clipShape(RoundedRectangle(cornerRadius:16)))
                                             .onTapGesture {
-                                                if ao5 != nil {
-                                                    presentedAvg = ao5
+                                                if bestCompsimAverage != nil && bestCompsimAverage?.totalPen != .dnf {
+                                                    presentedAvg = bestCompsimAverage
                                                 }
                                             }
                                         }
@@ -758,12 +762,7 @@ struct StatsView: View {
                                     }
                                     .frame(height: 75)
                                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                    .onTapGesture {
-                                        if bestSingle != nil {
-                                            showBestSinglePopup = true
-                                        }
-                                    }
-                                    
+                                   
                                     HStack {
                                         VStack (alignment: .leading, spacing: 0) {
                                             Text("REACHED")
@@ -824,11 +823,7 @@ struct StatsView: View {
                                 }
                                 .frame(height: compSimCount == 0 ? 150 : 55)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                .onTapGesture {
-                                    if bestSingle != nil {
-                                        showBestSinglePopup = true
-                                    }
-                                }
+                                
                                 .padding(.horizontal)
                                 
                                 
@@ -850,7 +845,7 @@ struct StatsView: View {
                                                 Spacer()
                                             }
                                             
-                                            if timesBySpeed.count >= 1 {
+                                            if timesBySpeedNoDNFs.count >= 1 {
                                                 VStack (spacing: 8) {
                                                     Capsule()
                                                         .frame(height: 10)
@@ -884,7 +879,7 @@ struct StatsView: View {
                                         }
                                         .padding(12)
                                         
-                                        if timesBySpeed.count == 0 {
+                                        if timesBySpeedNoDNFs.count == 0 {
                                             Text("not enough solves to\ndisplay graph")
                                                 .font(.system(size: 17, weight: .medium, design: .monospaced))
                                                 .multilineTextAlignment(.center)
@@ -892,7 +887,7 @@ struct StatsView: View {
                                         }
                                     }
                                 }
-                                .frame(height: timesBySpeed.count == 0 ? 150 : 200)
+                                .frame(height: timesBySpeedNoDNFs.count == 0 ? 150 : 200)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                 .padding(.horizontal)
                                 .onTapGesture {
@@ -905,61 +900,117 @@ struct StatsView: View {
                             }
                             
                             
-                            
-                            
-                            /// time trend graph
-                            VStack {
-                                ZStack {
-                                    VStack {
-                                        HStack {
-                                            Text("TIME TREND")
-                                                .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(uiColor: .systemGray))
+                            if SessionTypes(rawValue: currentSession.session_type)! == .compsim {
+                                /// time trend graph
+                                VStack {
+                                    ZStack {
+                                        VStack {
+                                            HStack {
+                                                Text("TIME TREND")
+                                                    .font(.system(size: 13, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(uiColor: .systemGray))
+                                                Spacer()
+                                            }
                                             Spacer()
                                         }
-                                        Spacer()
+                                        .padding([.vertical, .leading], 12)
+                                        
+                                        TimeTrend(data: allCompsimAveragesByDate, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
+                                            .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
+                                            .padding(.horizontal, 12)
+                                            .offset(y: -5)
+                                            .drawingGroup()
                                     }
-                                    .padding([.vertical, .leading], 12)
-                                    
-                                    TimeTrend(data: timesByDate, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
-                                        .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
-                                        .padding(.horizontal, 12)
-                                        .offset(y: -5)
-                                        .drawingGroup()
                                 }
-                            }
-                            .frame(height: timesBySpeed.count < 2 ? 150 : 300)
-                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                            .padding(.horizontal)
-                            .onTapGesture {
-                                print("time trend pressed")
-                            }
-                            
-                            
-                            /// time distrbution graph
-                            VStack {
-                                ZStack {
-                                    VStack {
-                                        HStack {
-                                            Text("TIME DISTRIBUTION")
-                                                .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(uiColor: .systemGray))
+                                .frame(height: allCompsimAveragesByDate.count < 2 ? 150 : 300)
+                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                .padding(.horizontal)
+                                .onTapGesture {
+                                    print("time trend pressed")
+                                }
+                                
+                                
+                                /// time distrbution graph
+                                VStack {
+                                    ZStack {
+                                        VStack {
+                                            HStack {
+                                                Text("TIME DISTRIBUTION")
+                                                    .font(.system(size: 13, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(uiColor: .systemGray))
+                                                Spacer()
+                                            }
                                             Spacer()
                                         }
-                                        Spacer()
+                                        .padding([.vertical, .leading], 12)
+                                        
+                                        TimeDistribution(solves: allCompsimAveragesByTime)
+                                            .drawingGroup()
                                     }
-                                    .padding([.vertical, .leading], 12)
-                                    
-                                    TimeDistribution(solves: timesBySpeed)
-                                        .drawingGroup()
+                                }
+                                .frame(height: allCompsimAveragesByTime.count < 4 ? 150 : 300)
+                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                .padding(.horizontal)
+                                .onTapGesture {
+                                    print("time distribution pressed")
+                                }
+                            } else {
+                                /// time trend graph
+                                VStack {
+                                    ZStack {
+                                        VStack {
+                                            HStack {
+                                                Text("TIME TREND")
+                                                    .font(.system(size: 13, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(uiColor: .systemGray))
+                                                Spacer()
+                                            }
+                                            Spacer()
+                                        }
+                                        .padding([.vertical, .leading], 12)
+                                        
+                                        TimeTrend(data: timesByDateNoDNFs, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
+                                            .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
+                                            .padding(.horizontal, 12)
+                                            .offset(y: -5)
+                                            .drawingGroup()
+                                    }
+                                }
+                                .frame(height: timesByDateNoDNFs.count < 2 ? 150 : 300)
+                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                .padding(.horizontal)
+                                .onTapGesture {
+                                    print("time trend pressed")
+                                }
+                                
+                                
+                                /// time distrbution graph
+                                VStack {
+                                    ZStack {
+                                        VStack {
+                                            HStack {
+                                                Text("TIME DISTRIBUTION")
+                                                    .font(.system(size: 13, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(uiColor: .systemGray))
+                                                Spacer()
+                                            }
+                                            Spacer()
+                                        }
+                                        .padding([.vertical, .leading], 12)
+                                        
+                                        TimeDistribution(solves: timesBySpeedNoDNFs)
+                                            .drawingGroup()
+                                    }
+                                }
+                                .frame(height: timesBySpeedNoDNFs.count < 4 ? 150 : 300)
+                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                .padding(.horizontal)
+                                .onTapGesture {
+                                    print("time distribution pressed")
                                 }
                             }
-                            .frame(height: timesBySpeed.count < 4 ? 150 : 300)
-                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                            .padding(.horizontal)
-                            .onTapGesture {
-                                print("time distribution pressed")
-                            }
+                            
+                            
                         }
                     }
                 }

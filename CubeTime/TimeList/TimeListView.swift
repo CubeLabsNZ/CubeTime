@@ -63,6 +63,8 @@ class TimeListManager: ObservableObject {
         solves = allsolves
         refilter()
     }
+    
+    
     func refilter() {
         if filter == "" {
             solves = allsolves
@@ -168,7 +170,7 @@ struct TimeListView: View {
                             LazyVStack(spacing: 12) {
                                 let groups = ((currentSession as! CompSimSession).solvegroups!.array as! [CompSimSolveGroup])
                                 
-                                if groups.count > 0 {
+                                if groups.count != 0 {
                                     TimeBar(solvegroup: groups.last!, timeListManager: timeListManager, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode)
                                     
                                     if groups.count > 1 {
@@ -186,8 +188,9 @@ struct TimeListView: View {
                                 
                                 
                                 
-                                ForEach((currentSession as! CompSimSession).solvegroups!.array as! [CompSimSolveGroup], id: \.self) { item in
-                                    if item.solves!.count == 5 {
+                                
+                                ForEach(groups, id: \.self) { item in
+                                    if item != groups.last! {
                                         TimeBar(solvegroup: item, timeListManager: timeListManager, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode)
                                     }
                                 }

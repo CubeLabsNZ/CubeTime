@@ -68,7 +68,7 @@ struct TimeDetail: View {
                 Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                     .ignoresSafeArea()
                 
-                ScrollView() {
+                ScrollView {
                     VStack (spacing: 12) {
                         HStack {
                             Text(time)
@@ -265,8 +265,6 @@ struct TimeDetail: View {
                                         .font(.system(size: 17, weight: .medium))
                                         .foregroundColor(Color.red)
                                 }
-                            } else {
-                                Text("CALLED FROM STATS")
                             }
                         }
                         
@@ -274,8 +272,9 @@ struct TimeDetail: View {
                             Button {
                                 currentSolve = nil
                                 
-                                self.presentation.wrappedValue.dismiss()
+//                                self.presentation.wrappedValue.dismiss()
                                 
+                                dismiss()
                                 
 //                                dismiss() // Dismiss in case called from StatsView
                                     
@@ -356,14 +355,24 @@ struct TimeDetailViewOnly: View {
             ScrollView() {
                 VStack (spacing: 12) {
                     HStack {
+                        Text(time)
+                            .font(.system(size: 34, weight: .bold))
+                        
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                    .padding(.top)
+                    
+                    HStack {
 //                            Text(date, format: .dateTime.day().month().year())
                         Text(date, formatter: titleDateFormat)
-                            .padding(.leading)
                             .font(.system(size: 22, weight: .semibold, design: .default))
                             .foregroundColor(Color(uiColor: .systemGray))
                         
                         Spacer()
                     }
+                    .padding(.horizontal)
+                    .padding(.top, -10)
                     
                     VStack {
                         HStack {
@@ -523,7 +532,8 @@ struct TimeDetailViewOnly: View {
                     
                 }
                 .offset(y: -6)
-                .navigationTitle(time)
+                .navigationBarTitle("", displayMode: .inline)
+                
             }
         }
         
