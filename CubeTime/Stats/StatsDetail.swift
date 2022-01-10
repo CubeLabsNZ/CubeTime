@@ -31,7 +31,7 @@ struct StatsDetail: View {
         detailDateFormat.timeZone = TimeZone(secondsFromGMT: 0)
         detailDateFormat.dateFormat = "h:mm a, MM/dd/yy"
         
-        isCurrentCompSimAverage = solves.id == "Current average"
+        isCurrentCompSimAverage = solves.id == "Current Average"
     }
     
     var body: some View {
@@ -45,7 +45,7 @@ struct StatsDetail: View {
                         NavigationLink("", destination: TimeDetailViewOnly(solve: solveToShow, currentSolve: nil, timeListManager: nil), isActive: $showSolve)
                     }
                     ScrollView {
-                        VStack (spacing: 10) {
+                        VStack (spacing: 12) {
                             if !isCurrentCompSimAverage {
                                 HStack {
                                     Text(formatSolveTime(secs: solves.average!, penType: solves.totalPen))
@@ -68,7 +68,7 @@ struct StatsDetail: View {
                                     .foregroundColor(Color(uiColor: .systemGray))
                             }
                             .padding(.horizontal)
-                            .padding(.top, -8)
+                            .padding(.top, isCurrentCompSimAverage ? 10 : -10)
                             
                             
                             VStack {
@@ -146,6 +146,7 @@ struct StatsDetail: View {
                                 .padding(.bottom)
                             }
                             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
+                            .padding(.top, -10)
                             .padding(.horizontal)
                         }
                         .offset(y: -6)

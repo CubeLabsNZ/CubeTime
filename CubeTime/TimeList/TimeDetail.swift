@@ -92,8 +92,6 @@ struct TimeDetail: View {
                         
                         VStack {
                             HStack {
-                                //Image("sq-1")
-                                //  .padding(.trailing, 8)
                                 Image(puzzle_type.name)
                                     .resizable()
                                     .scaledToFit()
@@ -101,7 +99,6 @@ struct TimeDetail: View {
                                     
                                     .padding(.leading, 2)
                                     .padding(.trailing, 4)
-                                //.padding(.leading)
                                 
                                 Text(puzzle_type.name)
                                     .font(.system(size: 17, weight: .semibold, design: .default))
@@ -161,8 +158,8 @@ struct TimeDetail: View {
 //                        .frame(maxHeight: puzzle_type.name == "Megaminx" ? 220 : nil)
                         .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
                         
-                        .padding(.trailing)
-                        .padding(.leading)
+                        .padding(.top, -10)
+                        .padding(.horizontal)
                         
                         VStack {
                             HStack {

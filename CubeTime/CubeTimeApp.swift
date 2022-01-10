@@ -2,6 +2,9 @@ import SwiftUI
 import CoreData
 
 @main
+
+
+
 struct CubeTime: App {
     let persistenceController: PersistenceController
     private let moc: NSManagedObjectContext
