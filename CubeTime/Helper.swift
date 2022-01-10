@@ -141,6 +141,7 @@ struct PuzzleType {
 
 
 
+
 /// as the default textfield does not dynamically adjust its width according to the text
 /// and instead is always set to the maximum width, this globalgeometrygetter is used
 /// for the target input field on the timer view to change its width dynamically.
@@ -181,6 +182,24 @@ extension View {
         }
     }
 }
+
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners))
+    }
+}
+
+struct RoundedCorner: Shape {
+    
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}
+
 
 
 // TODO 3BLD

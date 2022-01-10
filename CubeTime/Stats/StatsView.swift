@@ -969,7 +969,7 @@ struct StatsView: View {
                     StatsDetail(solves: item, session: currentSession)
                 }
                 .sheet(isPresented: $showBestSinglePopup) {
-                    SolvePopupView(solve: bestSingle!, currentSolve: nil, timeListManager: nil) // TODO make delete work from here
+                    TimeDetail(solve: bestSingle!, currentSolve: nil, timeListManager: nil) // TODO make delete work from here
                     // maybe pass stats object and make it remove min
                 }
             }

@@ -3,24 +3,7 @@ import CoreData
 import Combine
 
 
-/// **Extensions and other views/viewmodifiers**
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(RoundedCorner(radius: radius, corners: corners))
-    }
-}
-
-struct RoundedCorner: Shape {
-    
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
-    
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        return Path(path.cgPath)
-    }
-}
-
+/// **viewmodifiers**
 struct NewStandardSessionViewBlocks: ViewModifier {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     func body(content: Content) -> some View {
@@ -1378,9 +1361,10 @@ struct SessionsView: View {
                         } label: {
                             Image(systemName: "plus.circle.fill")
                                 .font(.system(size: 24, weight: .semibold))
-                                .padding(.leading, -4)
+                                .padding(.leading, -5)
                             Text("New Session")
                                 .font(.system(size: 18, weight: .medium))
+                                .padding(.leading, -2)
                         }
                         .shadow(color: .black.opacity(0.12), radius: 10, x: 0, y: 3)
                         .overlay(Capsule().stroke(Color.black.opacity(0.05), lineWidth: 0.5))

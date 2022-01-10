@@ -207,7 +207,7 @@ struct TimeListView: View {
 //                .navigationBarTitleDisplayMode(isSelectMode ? .inline : .large)
                 
                 .sheet(item: $solve) { item in
-                    SolvePopupView(/*currentSession: $currentSession, */solve: item, currentSolve: $solve, timeListManager: timeListManager)
+                    TimeDetail(/*currentSession: $currentSession, */solve: item, currentSolve: $solve, timeListManager: timeListManager)
                         .environment(\.managedObjectContext, managedObjectContext)
                 }
                 .sheet(item: $calculatedAverage) { item in

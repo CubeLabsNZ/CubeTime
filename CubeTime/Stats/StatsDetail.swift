@@ -1,5 +1,5 @@
 import SwiftUI
-
+ 
 struct StatsDetail: View {
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @Environment(\.colorScheme) var colourScheme
@@ -13,8 +13,22 @@ struct StatsDetail: View {
     let solves: CalculatedAverage
     let session: Sessions
     
+    private let detailDateFormat: DateFormatter
+    
 //    let dateFormatter = DateFormatter()
 //    dateFormatter.dateFormat = "h:mm a, MM/dd/yyyy"
+    
+    init(solves: CalculatedAverage , session: Sessions) {
+        self.solves = solves
+        self.session = session
+        
+        
+        self.detailDateFormat = DateFormatter()
+        
+        detailDateFormat.locale = Locale(identifier: "en_US_POSIX")
+        detailDateFormat.timeZone = TimeZone(secondsFromGMT: 0)
+        detailDateFormat.dateFormat = "h:mm a, MM/dd/yy"
+    }
     
     var body: some View {
         NavigationView {
@@ -24,7 +38,7 @@ struct StatsDetail: View {
                 
                 if let avg = solves.average {
                     if let solveToShow = solveToShow {
-                        NavigationLink("", destination: SolvePopupView(solve: solveToShow, currentSolve: nil, timeListManager: nil), isActive: $showSolve)
+                        NavigationLink("", destination: TimeDetailViewOnly(solve: solveToShow, currentSolve: nil, timeListManager: nil), isActive: $showSolve)
                     }
                     ScrollView {
                         VStack (spacing: 10) {
@@ -81,7 +95,7 @@ struct StatsDetail: View {
                                                 .padding(.leading)
                                                 
                                             
-                                            HStack {
+                                            HStack(alignment: .bottom) {
                                                 Text("\(index+1).")
                                                     .font(.system(size: 15, weight: .bold, design: .rounded))
                                                     .foregroundColor(accentColour)
@@ -98,8 +112,8 @@ struct StatsDetail: View {
                                                 
                                                 
                                                 
-    //                                            Text(dateFormatter.string(from: solve.date!))
-                                                Text(solve.date ?? Date(timeIntervalSince1970: 0), format: .dateTime.hour().minute().second().day().month().year())
+//                                                Text(solve.date ?? Date(timeIntervalSince1970: 0), format: .dateTime.hour().minute().second().day().month().year())
+                                                Text(solve.date ?? Date(timeIntervalSince1970: 0), formatter: detailDateFormat)
                                                     .font(.system(size: 13, weight: .bold, design: .rounded))
                                                     .foregroundColor(Color(uiColor: .systemGray))
                                             }
@@ -128,17 +142,18 @@ struct StatsDetail: View {
                         }
                         .offset(y: -6)
                         .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle(solves.id == "Comp sim solve" ? "" : solves.id)
+                        .navigationTitle(solves.id == "Comp sim solve" ? "Comp Sim" : solves.id)
                         .toolbar {
                             ToolbarItem(placement: .navigationBarLeading) {
                                 Button {
                                     dismiss()
                                 } label: {
-                                    Image(systemName: "chevron.left")
-                                        .font(.system(size: 17, weight: .medium))
-                                        .padding(.leading, -4)
-                                    Text(solves.id == "Comp sim solve" ? "Time list" : "Stats")
-                                        .padding(.leading, -4)
+//                                    Image(systemName: "chevron.left")
+//                                        .font(.system(size: 17, weight: .medium))
+//                                        .padding(.leading, -4)
+//                                    Text(solves.id == "Comp sim solve" ? "Time list" : "Stats")
+                                    Text("Done")
+//                                        .padding(.leading, -4)
                                 }
                             }
                             ToolbarItem(placement: .navigationBarTrailing) {
@@ -151,10 +166,10 @@ struct StatsDetail: View {
                                 } label: {
                                     HStack {
                                         Image(systemName: "checkmark")
-                                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                                            .font(.system(size: 13, weight: .bold, design: .rounded))
                                             .clipShape(Rectangle().offset(x: self.offsetValue))
                                         
-                                        Text("Copy Solve")
+                                        Text("Copy Average")
                                             .font(.system(size: 17, weight: .medium))
                                             .foregroundColor(accentColour)
                                     }
