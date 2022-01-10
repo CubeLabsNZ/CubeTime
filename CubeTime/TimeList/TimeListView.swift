@@ -75,7 +75,6 @@ class TimeListManager: ObservableObject {
 }
 
 struct TimeListView: View {
-    @Environment(\.presentationMode) var presentation
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
