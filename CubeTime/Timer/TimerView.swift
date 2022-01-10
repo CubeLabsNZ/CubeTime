@@ -48,6 +48,9 @@ struct TimerView: View {
     
     @State private var textRect = CGRect()
     
+    
+    @FocusState private var targetFocused: Bool
+    
 //    @State var compSimTarget: String
     
     
@@ -157,6 +160,9 @@ struct TimerView: View {
             
                        
             GeometryReader { geometry in
+                /* OLD METHOD WITH HACKY OPACITY WORKAROUND
+                 
+                 
                 VStack {
                     Rectangle()
                         .fill(Color.white.opacity(0.0000000001)) /// TODO: fix this don't just use this workaround: https://stackoverflow.com/questions/56819847/tap-action-not-working-when-color-is-clear-swiftui
@@ -174,9 +180,47 @@ struct TimerView: View {
                                     stopWatchManager.touchUp(value: value)
                                 })
                         )
+                    
+                    
+                    
+                        
                 }
+                */
+                
+                
+                Color.clear.contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
+                    .if(!targetFocused) { view in
+                        view
+                            .gesture(
+                                DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                                    .onChanged({value in
+                                        stopWatchManager.touchDown(value: value)
+                                    })
+                                    .onEnded({ value in
+                                        stopWatchManager.touchUp(value: value)
+                                    })
+                            )
+                    }
+                    .if(targetFocused) { view in
+                        view
+                            .onTapGesture {
+                                targetFocused = false
+                            }
+                    }
             }
             .ignoresSafeArea(edges: .top)
+            /*
+            .overlay {
+                if targetFocused {
+                    Color.clear.contentShape(Path(CGRect(origin: .zero, width: UIScreen.screenWidth, height: UIScreen.screenHeight)))
+                        
+                } else {
+                    EmptyView()
+                }
+            }
+             */
+            
+            
             
             VStack {
                 HStack {
@@ -256,7 +300,10 @@ struct TimerView: View {
                         case .compsim:
                             Text("COMP SIM")
                                 .font(.system(size: 17, weight: .medium))
-                            Text("SOLVE \(stopWatchManager.currentSolveth!+1)")
+                            
+                            let solveth: Int = stopWatchManager.currentSolveth!+1
+                            
+                            Text("SOLVE \(solveth == 6 ? 1 : solveth)")
                                 .font(.system(size: 15, weight: .regular))
                                 .padding(.horizontal, 2)
                             
@@ -298,6 +345,8 @@ struct TimerView: View {
                                         .frame(width: textRect.width + CGFloat(targetStr.count > 6 ? 12 : 6))
 //                                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                         .keyboardType(.numberPad)
+                                        .submitLabel(.done)
+                                        .focused($targetFocused)
                                         .multilineTextAlignment(.leading)
                                         .onReceive(Just(targetStr)) { newValue in
                                             let filtered = filteredTimeInput(newValue)
