@@ -4,49 +4,44 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-		<string>recursive.otc</string>
+		<string>RecursiveSansLnrSt-Regular.ttf</string>
 	</array>
-    
-    <key>UIApplicationShortcutItems</key>
-    <array>
-        <dict>
-            <key>UIApplicationShortcutItemType</key>
-            <string>SearchAction</string>
-            <key>UIApplicationShortcutItemIconFile</key>
-            <string>qa-1-timer</string>
-            <key>UIApplicationShortcutItemTitle</key>
-            <string>Timer</string>
-            <key>UIApplicationShortcutItemSubtitle</key>
-            <string>Main timer view</string>
-        </dict>
-        
-        <dict>
-            <key>UIApplicationShortcutItemType</key>
-            <string>SearchAction</string>
-            <key>UIApplicationShortcutItemIconFile</key>
-            <string>qa-2-times</string>
-            <key>UIApplicationShortcutItemTitle</key>
-            <string>Time List</string>
-        </dict>
-        
-        <dict>
-            <key>UIApplicationShortcutItemType</key>
-            <string>SearchAction</string>
-            <key>UIApplicationShortcutItemIconFile</key>
-            <string>qa-3-stats</string>
-            <key>UIApplicationShortcutItemTitle</key>
-            <string>Stats</string>
-        </dict>
-        
-        <dict>
-            <key>UIApplicationShortcutItemType</key>
-            <string>SearchAction</string>
-            <key>UIApplicationShortcutItemIconFile</key>
-            <string>qa-4-sessions</string>
-            <key>UIApplicationShortcutItemTitle</key>
-            <string>Sessions</string>
-        </dict>
-    </array>
-
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>SearchAction</string>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>qa-1-timer</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Timer</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>Main timer view</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>SearchAction</string>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>qa-2-times</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Time List</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>SearchAction</string>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>qa-3-stats</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Stats</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>SearchAction</string>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>qa-4-sessions</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Sessions</string>
+		</dict>
+	</array>
 </dict>
 </plist>

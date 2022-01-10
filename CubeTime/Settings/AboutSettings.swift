@@ -109,7 +109,7 @@ struct AboutSettingsView: View {
                 
                 VStack(alignment: .leading) {
                     Text("CubeTime.")
-                        .font(Font.custom("recursive", fixedSize: 30))
+                        .font(.custom("RecursiveSansLnrSt-Regular", size: 30))
                         .padding(.top, 20)
                     Text("VERSION \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)\n")
                         .font(.system(size: 15, weight: .semibold))

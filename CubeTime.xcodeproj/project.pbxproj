@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		23034725278BD22600553A7D /* TimeDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23034724278BD22600553A7D /* TimeDetail.swift */; };
+		23034729278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
+		2303472A278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
+		2303472B278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2319F8B8276872F200644EB3 /* TimeTrend.swift */; };
 		2337E6882767619D00438F43 /* StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2337E6872767619D00438F43 /* StatsDetail.swift */; };
 		233FE7B6274F109600C6F1DF /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Helper.swift */; };
@@ -89,10 +92,10 @@
 
 /* Begin PBXFileReference section */
 		23034724278BD22600553A7D /* TimeDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDetail.swift; sourceTree = "<group>"; };
+		23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RecursiveSansLnrSt-Regular.ttf"; sourceTree = "<group>"; };
 		2319F8B8276872F200644EB3 /* TimeTrend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrend.swift; sourceTree = "<group>"; };
 		2337E6872767619D00438F43 /* StatsDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsDetail.swift; sourceTree = "<group>"; };
 		233FE7B5274F109600C6F1DF /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
-		2354882127642B9C00FE8D7A /* recursive.otc */ = {isa = PBXFileReference; lastKnownFileType = file; path = recursive.otc; sourceTree = "<group>"; };
 		2354882227642E2800FE8D7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
 		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
@@ -209,12 +212,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2354882027642B5400FE8D7A /* project-fonts */ = {
+		23034727278C31AE00553A7D /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				2354882127642B9C00FE8D7A /* recursive.otc */,
+				23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */,
 			);
-			path = "project-fonts";
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		23A73F5C276B0AA100153748 /* Timer */ = {
@@ -279,7 +282,7 @@
 			isa = PBXGroup;
 			children = (
 				2354882227642E2800FE8D7A /* Info.plist */,
-				2354882027642B5400FE8D7A /* project-fonts */,
+				23034727278C31AE00553A7D /* Fonts */,
 				23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */,
 				23DE3BE3274DDBE300254D29 /* Persistence.swift */,
 				239C7E6F2781511300943AF2 /* Onboarding.swift */,
@@ -578,6 +581,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				23DE3BE2274DDBE300254D29 /* Preview Assets.xcassets in Resources */,
+				23034729278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */,
 				23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */,
 				7D69E0B22751FDEA007211CC /* README.md in Resources */,
 				7D69E0A82751FDEA007211CC /* scrambleTypes.plist in Resources */,
@@ -588,6 +592,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2303472A278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -595,6 +600,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2303472B278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

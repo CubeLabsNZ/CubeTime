@@ -10,6 +10,8 @@ struct CubeTime: App {
     private let moc: NSManagedObjectContext
     
     
+    
+    
     init() {
         persistenceController = PersistenceController.shared
         moc = persistenceController.container.viewContext
@@ -26,6 +28,15 @@ struct CubeTime: App {
                 gsKeys.displayDP.rawValue: 3
             ]
         )
+        
+        
+        for family in UIFont.familyNames {
+             print(family)
+
+             for names in UIFont.fontNames(forFamilyName: family){
+             print("== \(names)")
+             }
+        }
         
     }
     
