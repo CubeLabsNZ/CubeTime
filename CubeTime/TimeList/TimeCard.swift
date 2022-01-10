@@ -72,7 +72,7 @@ struct SolvePopupView: View {
                     VStack (spacing: 12) {
                         HStack {
                             Text(date, format: .dateTime.day().month().year())
-                                .padding(.leading, 16)
+                                .padding(.leading)
                                 .font(.system(size: 22, weight: .semibold, design: .default))
                                 .foregroundColor(Color(uiColor: .systemGray))
                             
@@ -88,10 +88,6 @@ struct SolvePopupView: View {
                                     .scaledToFit()
                                     .frame(width: 32, height: 32)
                                     
-                                //                                    .padding(.leading, 2)
-                                //                                    .padding(.top, 2)
-                                //                                    .padding(.bottom, 2)
-                                //                                    .padding([.bottom, .leading], 1)
                                     .padding(.leading, 2)
                                     .padding(.trailing, 4)
                                 //.padding(.leading)
@@ -113,10 +109,32 @@ struct SolvePopupView: View {
                             Divider()
                                 .padding(.leading)
                             
-                            Text(scramble)
-                                .font(.system(size: 17, weight: .regular, design: .monospaced))
-                                .foregroundColor(colourScheme == .light ? .black : .white)
-                                .padding([.bottom, .horizontal], 12)
+                            if puzzle_type.name == "Megaminx" {
+                                Text(scramble.dropLast())
+                                
+                                
+                                
+                                    .font(.system(size: (UIScreen.screenWidth-32) / (42.00) * 1.44, weight: .regular, design: .monospaced))
+                                
+//                                    .frame(maxWidth: UIScreen.screenWidth - 40)
+                                
+//                                    .minimumScaleFactor(0.5)
+//                                    .fixedSize(horizontal: true, vertical: false)
+                                
+//                                    .offset(x: 4)
+                                
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
+                                
+                                    .padding([.bottom, .horizontal], 12)
+
+                                
+                            } else {
+                                Text(scramble)
+                                    .font(.system(size: 16, weight: .regular, design: .monospaced))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
+                                    .padding([.bottom, .horizontal], 12)
+                            }
+                            
                             
                             /*
                             Divider()
@@ -129,7 +147,9 @@ struct SolvePopupView: View {
                                 .padding(.top, 12)
                             */
                         }
-                        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
+//                        .frame(maxHeight: puzzle_type.name == "Megaminx" ? 220 : nil)
+                        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
+                        
                         .padding(.trailing)
                         .padding(.leading)
                         

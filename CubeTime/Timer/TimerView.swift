@@ -104,11 +104,10 @@ struct TimerView: View {
                 
                 VStack {
                     Text(stopWatchManager.scrambleStr ?? "Loading scramble...")
-                        .multilineTextAlignment(.center)
+                        .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : 18, weight: .semibold, design: .monospaced))
                         .frame(maxHeight: UIScreen.screenHeight/3)
-                        .font(.system(size: currentSession.scramble_type == 7 ? 12 : 18, weight: .semibold, design: .monospaced))
+                        .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
                     
-                        .minimumScaleFactor(0.4)
                     
                         .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
                     
@@ -119,7 +118,7 @@ struct TimerView: View {
                         
                 
                         
-                    /// TODO: **FIX MEGA SCRAMBLES GOES OFF SCREEN AND MAKE [U, D] GO ON LAST**
+                    /// TODO: **FIX MEGA SCRAMBLES GOES OFF SCREEN AND MAKE [U, U'] GO ON LAST**
                     
                     Spacer()
                 }
