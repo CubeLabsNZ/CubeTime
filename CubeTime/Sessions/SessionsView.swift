@@ -17,10 +17,19 @@ struct NewStandardSessionViewBlocks: ViewModifier {
 }
 
 struct ContextMenuButton: View {
+    var delay: Bool
     var action: () -> Void
     var title: String
     var systemImage: String? = nil
     var disableButton: Bool? = nil
+    
+    init(delay: Bool, action: @escaping () -> Void, title: String, systemImage: String?, disableButton: Bool?) {
+        self.delay = delay
+        self.action = action
+        self.title = title
+        self.systemImage = systemImage
+        self.disableButton = disableButton
+    }
     
     var body: some View {
         Button(role: title == "Delete Session" ? .destructive : nil, action: delayedAction) {
@@ -43,7 +52,8 @@ struct ContextMenuButton: View {
         }
     }
     private func delayedAction() {
-        DispatchQueue.main.asyncAfter(deadline: .now() /*+ 0.9*/) {
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + (delay ? 0.9 : 0)) {
             self.action()
         }
     }
@@ -1252,22 +1262,23 @@ struct SessionCard: View {
         }
         
         .contextMenu(menuItems: {
-            ContextMenuButton(action: {
-                customizing = true
-            },
+            ContextMenuButton(delay: false,
+                              action: { customizing = true },
                               title: "Customise",
-                              systemImage: "pencil");
-            ContextMenuButton(action: {
+                              systemImage: "pencil", disableButton: false);
+            
+            ContextMenuButton(delay: true,
+                              action: {
                 withAnimation(.spring()) {
                     item.pinned.toggle()
                     try! managedObjectContext.save()
                 }
             },
                               title: item.pinned ? "Unpin" : "Pin",
-                              systemImage: item.pinned ? "pin.slash" : "pin");
+                              systemImage: item.pinned ? "pin.slash" : "pin", disableButton: false);
             Divider()
             
-            ContextMenuButton(action: {
+            ContextMenuButton(delay: true, action: {
                 isShowingDeleteDialog = true
             },
                               title: "Delete Session",
@@ -1275,8 +1286,7 @@ struct SessionCard: View {
                               disableButton: numSessions <= 1 || item == currentSession)
                 .foregroundColor(Color.red)
         })
-        .padding(.trailing)
-        .padding(.leading)
+        .padding(.horizontal)
         
         
         .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unknown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
