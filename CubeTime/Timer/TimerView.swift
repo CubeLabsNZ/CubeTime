@@ -160,34 +160,6 @@ struct TimerView: View {
             
                        
             GeometryReader { geometry in
-                /* OLD METHOD WITH HACKY OPACITY WORKAROUND
-                 
-                 
-                VStack {
-                    Rectangle()
-                        .fill(Color.white.opacity(0.0000000001)) /// TODO: fix this don't just use this workaround: https://stackoverflow.com/questions/56819847/tap-action-not-working-when-color-is-clear-swiftui
-                        .frame(
-                            width: geometry.size.width,
-                            height: geometry.size.height - CGFloat(SetValues.tabBarHeight),
-                            alignment: .center
-                        )
-                        .gesture(
-                            DragGesture(minimumDistance: 0, coordinateSpace: .local)
-                                .onChanged({value in
-                                    stopWatchManager.touchDown(value: value)
-                                })
-                                .onEnded({ value in
-                                    stopWatchManager.touchUp(value: value)
-                                })
-                        )
-                    
-                    
-                    
-                        
-                }
-                */
-                
-                
                 Color.clear.contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
                     .if(!targetFocused) { view in
                         view
@@ -209,144 +181,105 @@ struct TimerView: View {
                     }
             }
             .ignoresSafeArea(edges: .top)
-            /*
-            .overlay {
-                if targetFocused {
-                    Color.clear.contentShape(Path(CGRect(origin: .zero, width: UIScreen.screenWidth, height: UIScreen.screenHeight)))
-                        
-                } else {
-                    EmptyView()
-                }
-            }
-             */
             
-            
-            
-            VStack {
-                HStack {
+            if !hideTabBar {
+                VStack {
                     HStack {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(Color(uiColor: .systemGray4))
-                                .frame(width: 35, height: 35)
-                                .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+                        HStack {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(Color(uiColor: .systemGray4))
+                                    .frame(width: 35, height: 35)
+                                    .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+                                switch SessionTypes(rawValue: currentSession.session_type)! {
+                                case .standard:
+                                    Image(systemName: "timer.square")
+                                        .font(.system(size: 26, weight: .regular))
+                                case .algtrainer:
+                                    Image(systemName: "command.square")
+                                        .font(.system(size: 26, weight: .regular))
+                                case .multiphase:
+                                    Image(systemName: "square.stack")
+                                        .font(.system(size: 22, weight: .regular))
+                                case .playground:
+                                    Image(systemName: "square.on.square")
+                                        .font(.system(size: 22, weight: .regular))
+                                case .compsim:
+                                    Image(systemName: "globe.asia.australia")
+                                        .font(.system(size: 22, weight: .medium))
+                                }
+                            }
+                            
                             switch SessionTypes(rawValue: currentSession.session_type)! {
                             case .standard:
-                                Image(systemName: "timer.square")
-                                    .font(.system(size: 26, weight: .regular))
+                                Text("STANDARD SESSION")
+                                    .font(.system(size: 17, weight: .medium))
+                                    .padding(.trailing)
                             case .algtrainer:
-                                Image(systemName: "command.square")
-                                    .font(.system(size: 26, weight: .regular))
-                            case .multiphase:
-                                Image(systemName: "square.stack")
-                                    .font(.system(size: 22, weight: .regular))
-                            case .playground:
-                                Image(systemName: "square.on.square")
-                                    .font(.system(size: 22, weight: .regular))
-                            case .compsim:
-                                Image(systemName: "globe.asia.australia")
-                                    .font(.system(size: 22, weight: .medium))
-                            }
-                            
-                        }
-                        
-                        switch SessionTypes(rawValue: currentSession.session_type)! {
-                        case .standard:
-                            Text("STANDARD SESSION")
-                                .font(.system(size: 17, weight: .medium))
-                                .padding(.trailing)
-                        case .algtrainer:
-                            Text("ALG TRAINER")
-                                .font(.system(size: 17, weight: .medium))
-                            Picker("", selection: $algTrainerSubset) {
-                                Text("EG-1")
-                                    .font(.system(size: 15, weight: .regular))
-                            }
-                            .pickerStyle(.menu)
-                            .padding(.leading, 8)
-                            .padding(.trailing)
-                        case .multiphase:
-                            Text("MULTIPHASE")
-                                .font(.system(size: 17, weight: .medium))
-                            Picker("", selection: $algTrainerSubset) {
-                                Text("3 PHASES")
-                                    .font(.system(size: 15, weight: .regular))
-                            }
-                            .pickerStyle(.menu)
-                            .padding(.leading, 8)
-                            .padding(.trailing)
-                        case .playground:
-                            Text("PLAYGROUND")
-                                .font(.system(size: 17, weight: .medium))
-                                .onTapGesture() {
-                                    NSLog("\(playgroundScrambleType), currentsession: \(currentSession.scramble_type)")
-                                }
-                            Picker("", selection: $playgroundScrambleType) {
-                                ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                                    Text(element.name).tag(index)
+                                Text("ALG TRAINER")
+                                    .font(.system(size: 17, weight: .medium))
+                                Picker("", selection: $algTrainerSubset) {
+                                    Text("EG-1")
                                         .font(.system(size: 15, weight: .regular))
                                 }
-                            }
-                            .pickerStyle(.menu)
-                            .onChange(of: playgroundScrambleType) { newValue in
-                                currentSession.scramble_type = Int32(newValue)
-                                stopWatchManager.nextScrambleStr = nil
-                                stopWatchManager.rescramble()
-                                // TODO do not rescramble when setting to same scramble eg 3blnd -> 3oh
-                            }
-                            .padding(.leading, 8)
-                            .padding(.trailing)
-                            
-                        case .compsim:
-                            Text("COMP SIM")
-                                .font(.system(size: 17, weight: .medium))
-                            
-                            let solveth: Int = stopWatchManager.currentSolveth!+1
-                            
-                            Text("SOLVE \(solveth == 6 ? 1 : solveth)")
-                                .font(.system(size: 15, weight: .regular))
-                                .padding(.horizontal, 2)
-                            
-                            Divider()
-                                .padding(.vertical, 4)
-                            
-                            HStack (spacing: 10) {
-                                Image(systemName: "target")
-                                    .font(.system(size: 15))
-                                
-                                /*
-                                TextField("0.00", text: $targetStr)
-//                                    .frame(maxWidth: 83)
-                                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                
-                                    .keyboardType(.numberPad)
-                                    .multilineTextAlignment(.leading)
-                                    .onReceive(Just(targetStr)) { newValue in
-                                        let filtered = filteredTimeInput(newValue)
-                                        if filtered != newValue {
-                                            self.targetStr = filtered
-                                        }
-                                        
-                                        if let time = timeFromStr(targetStr) {
-                                            (currentSession as! CompSimSession).target = time
-                                            
-                                            try! managedObjectContext.save()
-                                        }
+                                .pickerStyle(.menu)
+                                .padding(.leading, 8)
+                                .padding(.trailing)
+                            case .multiphase:
+                                Text("MULTIPHASE")
+                                    .font(.system(size: 17, weight: .medium))
+                                Picker("", selection: $algTrainerSubset) {
+                                    Text("3 PHASES")
+                                        .font(.system(size: 15, weight: .regular))
+                                }
+                                .pickerStyle(.menu)
+                                .padding(.leading, 8)
+                                .padding(.trailing)
+                            case .playground:
+                                Text("PLAYGROUND")
+                                    .font(.system(size: 17, weight: .medium))
+                                    .onTapGesture() {
+                                        NSLog("\(playgroundScrambleType), currentsession: \(currentSession.scramble_type)")
                                     }
-                                 */
-                                ZStack {
-                                    Text(targetStr == "" ? "0.00" : targetStr)
-                                        .background(GlobalGeometryGetter(rect: $textRect))
-                                        .layoutPriority(1)
-                                        .opacity(0)
+                                Picker("", selection: $playgroundScrambleType) {
+                                    ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                                        Text(element.name).tag(index)
+                                            .font(.system(size: 15, weight: .regular))
+                                    }
+                                }
+                                .pickerStyle(.menu)
+                                .onChange(of: playgroundScrambleType) { newValue in
+                                    currentSession.scramble_type = Int32(newValue)
+                                    stopWatchManager.nextScrambleStr = nil
+                                    stopWatchManager.rescramble()
+                                    // TODO do not rescramble when setting to same scramble eg 3blnd -> 3oh
+                                }
+                                .padding(.leading, 8)
+                                .padding(.trailing)
+                                
+                            case .compsim:
+                                Text("COMP SIM")
+                                    .font(.system(size: 17, weight: .medium))
+                                
+                                let solveth: Int = stopWatchManager.currentSolveth!+1
+                                
+                                Text("SOLVE \(solveth == 6 ? 1 : solveth)")
+                                    .font(.system(size: 15, weight: .regular))
+                                    .padding(.horizontal, 2)
+                                
+                                Divider()
+                                    .padding(.vertical, 4)
+                                
+                                HStack (spacing: 10) {
+                                    Image(systemName: "target")
+                                        .font(.system(size: 15))
                                     
-                                    
+                                    /*
                                     TextField("0.00", text: $targetStr)
-                                        .frame(width: textRect.width + CGFloat(targetStr.count > 6 ? 12 : 6))
-//                                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+    //                                    .frame(maxWidth: 83)
+                                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                    
                                         .keyboardType(.numberPad)
-                                        .submitLabel(.done)
-                                        .focused($targetFocused)
                                         .multilineTextAlignment(.leading)
                                         .onReceive(Just(targetStr)) { newValue in
                                             let filtered = filteredTimeInput(newValue)
@@ -360,32 +293,59 @@ struct TimerView: View {
                                                 try! managedObjectContext.save()
                                             }
                                         }
-                                        .padding(.trailing, 4)
+                                     */
+                                    ZStack {
+                                        Text(targetStr == "" ? "0.00" : targetStr)
+                                            .background(GlobalGeometryGetter(rect: $textRect))
+                                            .layoutPriority(1)
+                                            .opacity(0)
+                                        
+                                        
+                                        TextField("0.00", text: $targetStr)
+                                            .frame(width: textRect.width + CGFloat(targetStr.count > 6 ? 12 : 6))
+    //                                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                            .keyboardType(.numberPad)
+                                            .submitLabel(.done)
+                                            .focused($targetFocused)
+                                            .multilineTextAlignment(.leading)
+                                            .onReceive(Just(targetStr)) { newValue in
+                                                let filtered = filteredTimeInput(newValue)
+                                                if filtered != newValue {
+                                                    self.targetStr = filtered
+                                                }
+                                                
+                                                if let time = timeFromStr(targetStr) {
+                                                    (currentSession as! CompSimSession).target = time
+                                                    
+                                                    try! managedObjectContext.save()
+                                                }
+                                            }
+                                            .padding(.trailing, 4)
+                                    }
+                                        
                                 }
-                                    
+                                .padding(.trailing, 12)
+                                .foregroundColor(accentColour)
+                                
+                                
+    //                            TextField(compSimTarget, text: $compSimTarget)
+    //                                .keyboardType(.decimalPad)
                             }
-                            .padding(.trailing, 12)
-                            .foregroundColor(accentColour)
-                            
-                            
-//                            TextField(compSimTarget, text: $compSimTarget)
-//                                .keyboardType(.decimalPad)
                         }
+                        .background(Color(uiColor: .systemGray5))
+                        .frame(height: 35)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+    //                    .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+                        .padding(.horizontal)
+                        .padding(.top, SetValues.hasBottomBar ? 0 : hideTabBar ? nil : 8)
+                        
+                        Spacer()
                     }
-                    .background(Color(uiColor: .systemGray5))
-                    .frame(height: 35)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-//                    .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
-                    .padding(.horizontal)
-                    .padding(.top, SetValues.hasBottomBar ? 0 : hideTabBar ? nil : 8)
+                    
                     
                     Spacer()
                 }
-                
-                
-                Spacer()
             }
-            
             
             if stopWatchManager.showPenOptions {
                 HStack(alignment: .center) {
@@ -484,12 +444,7 @@ struct TimerView: View {
         }
         .onReceive(stopWatchManager.$mode) { newMode in
             hideTabBar = newMode == .inspecting || newMode == .running
-            
-            
-            withAnimation(.easeIn(duration: 0.1)) {
-                hideStatusBar = newMode == .inspecting || newMode == .running
-                
-            }
+            hideStatusBar = newMode == .inspecting || newMode == .running
         }
         .statusBar(hidden: hideStatusBar) /// TODO MAKE SO ANIMATION IS ASYMMETRIC WITH VALUES OF THE OTHER ANIMATIONS
     }
