@@ -14,7 +14,7 @@ struct BottomTabsView: View {
                         HStack {
                             
                             
-                            RoundedRectangle(cornerRadius: 12)
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
                                 .fill(Color(uiColor: .systemGray5))
                             
                                 .frame(
@@ -120,7 +120,7 @@ struct BottomTabsView: View {
                         VStack {
                             Spacer()
                             
-                            RoundedRectangle(cornerRadius: 12)
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
                                 .fill(Color(uiColor: .systemGray5))
                             
                                 .frame(

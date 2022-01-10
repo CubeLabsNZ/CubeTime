@@ -187,7 +187,7 @@ struct TimerView: View {
                     HStack {
                         HStack {
                             ZStack {
-                                RoundedRectangle(cornerRadius: 8)
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
                                     .fill(Color(uiColor: .systemGray4))
                                     .frame(width: 35, height: 35)
                                     .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
@@ -334,7 +334,7 @@ struct TimerView: View {
                         }
                         .background(Color(uiColor: .systemGray5))
                         .frame(height: 35)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
     //                    .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
                         .padding(.horizontal)
                         .padding(.top, SetValues.hasBottomBar ? 0 : hideTabBar ? nil : 8)

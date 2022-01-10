@@ -296,9 +296,9 @@ struct TimeCard: View {
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(isSelected ? Color(uiColor: .systemGray4) : colourScheme == .dark ? Color(uiColor: .systemGray6) : Color(uiColor: .systemBackground))
-                .contentShape(RoundedRectangle(cornerRadius: 10))
+                .contentShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                 .frame(maxWidth: 120, minHeight: 55, maxHeight: 55) /// todo check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectange
                 .onTapGesture {
                     if isSelectMode {
@@ -324,17 +324,17 @@ struct TimeCard: View {
                 
             VStack {
                 Text(formattedTime)
-                    .contentShape(RoundedRectangle(cornerRadius: 10))
+                    .contentShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                     .font(.system(size: 17, weight: .bold, design: .default))
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
-                        .contentShape(RoundedRectangle(cornerRadius: 10))
+                        .contentShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                         .foregroundColor(Color("AccentColor"))
                 }
             }
-            .contentShape(RoundedRectangle(cornerRadius: 10))
+            .contentShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         }
-        .contentShape(RoundedRectangle(cornerRadius: 10))
+        .contentShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
 
         
         .onChange(of: isSelectMode) {newValue in

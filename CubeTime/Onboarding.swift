@@ -59,7 +59,7 @@ struct OnboardingView: View {
                     Spacer()
                     
                     ZStack {
-                        RoundedRectangle(cornerRadius: 16)
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
                             .fill(Color.indigo)
                             .frame(height: 55)
                             .matchedGeometryEffect(id: "button-background", in: namespaceOB)
@@ -81,7 +81,7 @@ struct OnboardingView: View {
                     Spacer()
                     
                     ZStack {
-                        RoundedRectangle(cornerRadius: 16)
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
                             .fill(Color.indigo)
                             .frame(height: 55)
                             .matchedGeometryEffect(id: "button-background", in: namespaceOB)
@@ -115,7 +115,7 @@ struct OnboardingView: View {
                         Spacer()
                         
                         ZStack {
-                            RoundedRectangle(cornerRadius: 16)
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
                                 .fill(Color.indigo)
                                 .frame(width: 55, height: 55)
                                 .matchedGeometryEffect(id: "button-background", in: namespaceOB)

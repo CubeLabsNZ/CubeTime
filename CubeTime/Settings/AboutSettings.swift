@@ -109,7 +109,7 @@ struct AboutSettingsView: View {
                     .resizable()
                     .frame(width: 60, height: 60)
                     .aspectRatio(contentMode: .fit)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     .padding(.trailing, 6)
                 
                 VStack(alignment: .leading) {

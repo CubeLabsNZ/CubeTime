@@ -964,7 +964,7 @@ struct StatsView: View {
                     }
                 }
                 .navigationTitle("Your Solves")
-                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
                 .sheet(item: $presentedAvg) { item in
                     StatsDetail(solves: item, session: currentSession)
                 }
