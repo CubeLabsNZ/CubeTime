@@ -52,6 +52,8 @@ struct StatsView: View {
     let bestCompsimAverage: CalculatedAverage?
     let currentCompsimAverage: CalculatedAverage?
     
+    let allCompsimAveragesByDate: [Double] // has no dnfs!!
+    let allCompsimAveragesByTime: [Double]
     
         
     @State var presentedAvg: CalculatedAverage? = nil
@@ -85,7 +87,12 @@ struct StatsView: View {
         self.timesByDateNoDNFs = stats.solvesNoDNFsbyDate.map { timeWithPlusTwoForSolve($0) }
         self.timesBySpeedNoDNFs = stats.solvesNoDNFs.map { timeWithPlusTwoForSolve($0) }
         
-        self.bestCompsimAverage = stats.getBestCompsimAverage()
+        self.bestCompsimAverage = stats.getBestCompsimAverageAndArrayOfCompsimAverages().0
+        
+        self.allCompsimAveragesByDate = stats.getBestCompsimAverageAndArrayOfCompsimAverages().1.map { $0.average! }
+        
+        self.allCompsimAveragesByTime = self.allCompsimAveragesByDate.sorted(by: <)
+        
         self.currentCompsimAverage = stats.getCurrentCompsimAverage()
         
         
@@ -907,61 +914,117 @@ struct StatsView: View {
                             }
                             
                             
-                            
-                            
-                            /// time trend graph
-                            VStack {
-                                ZStack {
-                                    VStack {
-                                        HStack {
-                                            Text("TIME TREND")
-                                                .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(uiColor: .systemGray))
+                            if SessionTypes(rawValue: currentSession.session_type)! == .compsim {
+                                /// time trend graph
+                                VStack {
+                                    ZStack {
+                                        VStack {
+                                            HStack {
+                                                Text("TIME TREND")
+                                                    .font(.system(size: 13, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(uiColor: .systemGray))
+                                                Spacer()
+                                            }
                                             Spacer()
                                         }
-                                        Spacer()
+                                        .padding([.vertical, .leading], 12)
+                                        
+                                        TimeTrend(data: allCompsimAveragesByDate, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
+                                            .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
+                                            .padding(.horizontal, 12)
+                                            .offset(y: -5)
+                                            .drawingGroup()
                                     }
-                                    .padding([.vertical, .leading], 12)
-                                    
-                                    TimeTrend(data: timesByDateNoDNFs, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
-                                        .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
-                                        .padding(.horizontal, 12)
-                                        .offset(y: -5)
-                                        .drawingGroup()
                                 }
-                            }
-                            .frame(height: timesByDateNoDNFs.count < 2 ? 150 : 300)
-                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                            .padding(.horizontal)
-                            .onTapGesture {
-                                print("time trend pressed")
-                            }
-                            
-                            
-                            /// time distrbution graph
-                            VStack {
-                                ZStack {
-                                    VStack {
-                                        HStack {
-                                            Text("TIME DISTRIBUTION")
-                                                .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(uiColor: .systemGray))
+                                .frame(height: allCompsimAveragesByDate.count < 2 ? 150 : 300)
+                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                .padding(.horizontal)
+                                .onTapGesture {
+                                    print("time trend pressed")
+                                }
+                                
+                                
+                                /// time distrbution graph
+                                VStack {
+                                    ZStack {
+                                        VStack {
+                                            HStack {
+                                                Text("TIME DISTRIBUTION")
+                                                    .font(.system(size: 13, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(uiColor: .systemGray))
+                                                Spacer()
+                                            }
                                             Spacer()
                                         }
-                                        Spacer()
+                                        .padding([.vertical, .leading], 12)
+                                        
+                                        TimeDistribution(solves: allCompsimAveragesByTime)
+                                            .drawingGroup()
                                     }
-                                    .padding([.vertical, .leading], 12)
-                                    
-                                    TimeDistribution(solves: timesBySpeedNoDNFs)
-                                        .drawingGroup()
+                                }
+                                .frame(height: allCompsimAveragesByTime.count < 4 ? 150 : 300)
+                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                .padding(.horizontal)
+                                .onTapGesture {
+                                    print("time distribution pressed")
+                                }
+                            } else {
+                                /// time trend graph
+                                VStack {
+                                    ZStack {
+                                        VStack {
+                                            HStack {
+                                                Text("TIME TREND")
+                                                    .font(.system(size: 13, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(uiColor: .systemGray))
+                                                Spacer()
+                                            }
+                                            Spacer()
+                                        }
+                                        .padding([.vertical, .leading], 12)
+                                        
+                                        TimeTrend(data: timesByDateNoDNFs, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
+                                            .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
+                                            .padding(.horizontal, 12)
+                                            .offset(y: -5)
+                                            .drawingGroup()
+                                    }
+                                }
+                                .frame(height: timesByDateNoDNFs.count < 2 ? 150 : 300)
+                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                .padding(.horizontal)
+                                .onTapGesture {
+                                    print("time trend pressed")
+                                }
+                                
+                                
+                                /// time distrbution graph
+                                VStack {
+                                    ZStack {
+                                        VStack {
+                                            HStack {
+                                                Text("TIME DISTRIBUTION")
+                                                    .font(.system(size: 13, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(uiColor: .systemGray))
+                                                Spacer()
+                                            }
+                                            Spacer()
+                                        }
+                                        .padding([.vertical, .leading], 12)
+                                        
+                                        TimeDistribution(solves: timesBySpeedNoDNFs)
+                                            .drawingGroup()
+                                    }
+                                }
+                                .frame(height: timesBySpeedNoDNFs.count < 4 ? 150 : 300)
+                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                .padding(.horizontal)
+                                .onTapGesture {
+                                    print("time distribution pressed")
                                 }
                             }
-                            .frame(height: timesBySpeedNoDNFs.count < 4 ? 150 : 300)
-                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                            .padding(.horizontal)
-                            .onTapGesture {
-                                print("time distribution pressed")
-                            }
+                            
+                            
                         }
                     }
                 }

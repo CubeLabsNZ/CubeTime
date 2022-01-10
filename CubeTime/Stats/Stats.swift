@@ -215,32 +215,41 @@ class Stats {
         return reached
     }
     
-    func getBestCompsimAverage() -> CalculatedAverage? {
+    func getBestCompsimAverageAndArrayOfCompsimAverages() -> (CalculatedAverage?, [CalculatedAverage]) {
+        var allCompsimAverages: [CalculatedAverage] = []
+        
         if let compsimSession = compsimSession {
             if compsimSession.solvegroups!.count == 0 {
-                print("here1")
-                return nil
+                return (nil, [])
             } else if compsimSession.solvegroups!.count == 1 && (((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]).count != 5)  {
                 /// && ((compsimSession.solvegroups!.first as AnyObject).solves!.array as! [Solves]).count != 5
-                print("here2")
-                return nil
+                return (nil, [])
             } else {
-                print("here3")
                 var bestAverage: CalculatedAverage = calculateAverage(((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]))!
                 
                 for solvegroup in compsimSession.solvegroups!.array {
                     if (solvegroup as AnyObject).solves!.array.count == 5 {
+                        
+                        
                         let currentAvg = calculateAverage((solvegroup as AnyObject).solves!.array as! [Solves])
+                        
+                        // this will only append the non-dnfed times into the array
+                        if let currentAvg = currentAvg {
+                            allCompsimAverages.append(currentAvg)
+                        }
+                        
+                        
+                        
                         if (currentAvg?.average)! < bestAverage.average! {
                             bestAverage = currentAvg!
                         }
                     }
                 }
                 
-                return bestAverage
+                return (bestAverage, allCompsimAverages)
             }
         } else {
-            return nil
+            return (nil, [])
         }
     }
     
