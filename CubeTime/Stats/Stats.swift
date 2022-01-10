@@ -41,6 +41,7 @@ class Stats {
     var solves: [Solves]
     var solvesByDate: [Solves]
     var solvesNoDNFs: [Solves]
+    var solvesNoDNFsbyDate: [Solves]
     
     var compsimSession: CompSimSession?
     
@@ -53,6 +54,10 @@ class Stats {
 
         solves = sessionSolves.sorted(by: {timeWithPlusTwoForSolve($0) < timeWithPlusTwoForSolve($1)})
         solvesByDate = sessionSolves.sorted(by: {$0.date! < $1.date!})
+        
+        solvesNoDNFsbyDate = solvesByDate
+        solvesNoDNFsbyDate.removeAll(where: { $0.penalty == PenTypes.dnf.rawValue })
+        
         solvesNoDNFs = solves
         solvesNoDNFs.removeAll(where: { $0.penalty == PenTypes.dnf.rawValue })
         
@@ -212,33 +217,67 @@ class Stats {
     
     func getBestCompsimAverage() -> CalculatedAverage? {
         if let compsimSession = compsimSession {
-            if compsimSession.solvegroups!.count < 2 {
+            if compsimSession.solvegroups!.count == 0 {
+                print("here1")
                 return nil
-            }
-            
-            var bestAverage: CalculatedAverage = calculateAverage(((compsimSession.solvegroups![0] as AnyObject).solves!.array as! [Solves]))!
-            
-            for solvegroup in compsimSession.solvegroups!.array {
-                if (solvegroup as AnyObject).solves!.array.count == 5 {
-                    let currentAvg = calculateAverage((solvegroup as AnyObject).solves!.array as! [Solves])
-                    if (currentAvg?.average)! < bestAverage.average! {
-                        bestAverage = currentAvg!
+            } else if compsimSession.solvegroups!.count == 1 && (((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]).count != 5)  {
+                /// && ((compsimSession.solvegroups!.first as AnyObject).solves!.array as! [Solves]).count != 5
+                print("here2")
+                return nil
+            } else {
+                print("here3")
+                var bestAverage: CalculatedAverage = calculateAverage(((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]))!
+                
+                for solvegroup in compsimSession.solvegroups!.array {
+                    if (solvegroup as AnyObject).solves!.array.count == 5 {
+                        let currentAvg = calculateAverage((solvegroup as AnyObject).solves!.array as! [Solves])
+                        if (currentAvg?.average)! < bestAverage.average! {
+                            bestAverage = currentAvg!
+                        }
                     }
                 }
+                
+                return bestAverage
             }
-            
-            return bestAverage
-            
         } else {
             return nil
         }
     }
     
-    static func getCurrentSolveth(compsimSession: CompSimSession) -> Int? {
-        let count: Int = (compsimSession.solvegroups!.array as! [CompSimSolveGroup]).last!.solves!.count
-        return count == 0 ? 5 : count
+    func getCurrentCompsimAverage() -> CalculatedAverage? {
+        if let compsimSession = compsimSession {
+            
+            let groupCount = compsimSession.solvegroups!.count
+            
+            if groupCount == 0 {
+                return nil
+            } else if groupCount == 1 {
+                let groupLastSolve = ((compsimSession.solvegroups!.lastObject as! CompSimSolveGroup).solves!.array as! [Solves])
+                
+                if groupLastSolve.count != 5 {
+                    return nil
+                } else {
+                    return calculateAverage(groupLastSolve)
+                }
+                
+                
+            } else {
+                let groupLastTwoSolves = (compsimSession.solvegroups!.array as! [CompSimSolveGroup]).suffix(2)
+                
+                let lastInGroup = groupLastTwoSolves.last!.solves!.array as! [Solves]
+                
+                if lastInGroup.count == 5 {
+                    
+                    return calculateAverage(lastInGroup)
+                } else {
+                    
+                    return calculateAverage((groupLastTwoSolves.first!.solves!.array as! [Solves]))
+                }
+            }
+        } else {
+            return nil
+        }
     }
-    
     
     
     /*
