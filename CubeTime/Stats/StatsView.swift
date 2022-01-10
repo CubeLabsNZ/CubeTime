@@ -590,8 +590,8 @@ struct StatsView: View {
                                                     }
                                                 }
                                                 .onTapGesture {
-                                                    if ao5 != nil && ao5?.totalPen != .dnf  {
-                                                        presentedAvg = ao5
+                                                    if currentCompsimAverage != nil && currentCompsimAverage?.totalPen != .dnf  {
+                                                        presentedAvg = currentCompsimAverage
                                                     }
                                                 }
                                                 .padding(.top, 10)
@@ -626,11 +626,6 @@ struct StatsView: View {
                                             }
                                             .frame(height: 75)
                                             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                            .onTapGesture {
-                                                if bestSingle != nil {
-                                                    showBestSinglePopup = true
-                                                }
-                                            }
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
@@ -728,8 +723,8 @@ struct StatsView: View {
                                             .frame(height: 215)
                                             .background(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)                                        .clipShape(RoundedRectangle(cornerRadius:16)))
                                             .onTapGesture {
-                                                if ao5 != nil {
-                                                    presentedAvg = ao5
+                                                if bestCompsimAverage != nil && bestCompsimAverage?.totalPen != .dnf {
+                                                    presentedAvg = bestCompsimAverage
                                                 }
                                             }
                                         }
@@ -767,12 +762,7 @@ struct StatsView: View {
                                     }
                                     .frame(height: 75)
                                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                    .onTapGesture {
-                                        if bestSingle != nil {
-                                            showBestSinglePopup = true
-                                        }
-                                    }
-                                    
+                                   
                                     HStack {
                                         VStack (alignment: .leading, spacing: 0) {
                                             Text("REACHED")
@@ -833,11 +823,7 @@ struct StatsView: View {
                                 }
                                 .frame(height: compSimCount == 0 ? 150 : 55)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                .onTapGesture {
-                                    if bestSingle != nil {
-                                        showBestSinglePopup = true
-                                    }
-                                }
+                                
                                 .padding(.horizontal)
                                 
                                 

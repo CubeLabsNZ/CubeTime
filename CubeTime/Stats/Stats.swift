@@ -133,11 +133,11 @@ class Stats {
                 lowestAverage = result
             }
         }
-        return CalculatedAverage(id: "Best AO\(period)", average: lowestAverage, accountedSolves: lowestValues, totalPen: lowestValues == nil ? .dnf : .none, trimmedSolves: trimmedSolves)
+        return CalculatedAverage(id: "Best ao\(period)", average: lowestAverage, accountedSolves: lowestValues, totalPen: lowestValues == nil ? .dnf : .none, trimmedSolves: trimmedSolves)
     }
 
     
-    func calculateAverage(_ solves: [Solves]) -> CalculatedAverage? {
+    func calculateAverage(_ solves: [Solves], _ id: String, _ compsim: Bool) -> CalculatedAverage? {
         let cnt = solves.count
         
         if cnt < 5 {
@@ -155,13 +155,23 @@ class Stats {
         let solvesSorted: [Solves] = solves.sorted(by: Stats.sortWithDNFsLast)
         let solvesTrimmed: [Solves] = solvesSorted.prefix(trim) + solvesSorted.suffix(trim)
         
-        return CalculatedAverage(
-            id: "Current AO\(cnt)",
-            average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
-            accountedSolves: solvesSorted.suffix(cnt),
-            totalPen: solvesSorted.suffix(cnt).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
-            trimmedSolves: solvesTrimmed
-        )
+        if compsim {
+            return CalculatedAverage(
+                id: "\(id)",
+                average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
+                accountedSolves: solvesSorted.suffix(cnt),
+                totalPen: solvesSorted.suffix(cnt).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
+                trimmedSolves: solvesTrimmed
+            )
+        } else {
+            return CalculatedAverage(
+                id: "\(id)\(cnt)",
+                average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
+                accountedSolves: solvesSorted.suffix(cnt),
+                totalPen: solvesSorted.suffix(cnt).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
+                trimmedSolves: solvesTrimmed
+            )
+        }
     }
     
     
@@ -170,7 +180,7 @@ class Stats {
             return nil
         }
         
-        return calculateAverage(solvesByDate.suffix(period))
+        return calculateAverage(solvesByDate.suffix(period), "Current ao", false)
         
         
 //        let trim = period >= 100 ? 5 : 1
@@ -225,13 +235,13 @@ class Stats {
                 /// && ((compsimSession.solvegroups!.first as AnyObject).solves!.array as! [Solves]).count != 5
                 return (nil, [])
             } else {
-                var bestAverage: CalculatedAverage = calculateAverage(((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]))!
+                var bestAverage: CalculatedAverage = calculateAverage(((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]), "Best Comp Sim", true)!
                 
                 for solvegroup in compsimSession.solvegroups!.array {
                     if (solvegroup as AnyObject).solves!.array.count == 5 {
                         
                         
-                        let currentAvg = calculateAverage((solvegroup as AnyObject).solves!.array as! [Solves])
+                        let currentAvg = calculateAverage((solvegroup as AnyObject).solves!.array as! [Solves], "Best Comp Sim", true)
                         
                         // this will only append the non-dnfed times into the array
                         if let currentAvg = currentAvg {
@@ -266,7 +276,7 @@ class Stats {
                 if groupLastSolve.count != 5 {
                     return nil
                 } else {
-                    return calculateAverage(groupLastSolve)
+                    return calculateAverage(groupLastSolve, "Current Comp Sim", true)
                 }
                 
                 
@@ -277,10 +287,10 @@ class Stats {
                 
                 if lastInGroup.count == 5 {
                     
-                    return calculateAverage(lastInGroup)
+                    return calculateAverage(lastInGroup, "Current Comp Sim", true)
                 } else {
                     
-                    return calculateAverage((groupLastTwoSolves.first!.solves!.array as! [Solves]))
+                    return calculateAverage((groupLastTwoSolves.first!.solves!.array as! [Solves]), "Current Comp Sim", true)
                 }
             }
         } else {

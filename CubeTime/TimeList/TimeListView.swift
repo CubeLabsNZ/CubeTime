@@ -63,6 +63,8 @@ class TimeListManager: ObservableObject {
         solves = allsolves
         refilter()
     }
+    
+    
     func refilter() {
         if filter == "" {
             solves = allsolves

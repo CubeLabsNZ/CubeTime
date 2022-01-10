@@ -164,17 +164,30 @@ struct StatsDetail: View {
                                     withAnimation(Animation.interpolatingSpring(stiffness: 140, damping: 20).delay(0.25)) {
                                         self.offsetValue = 0
                                     }
+                                    
+                                    withAnimation(Animation.easeOut.delay(2.25)) {
+                                        self.offsetValue = -25
+                                    }
+                                    
+                                    
+                                    
 
                                 } label: {
-                                    HStack {
+                                    ZStack {
+                                        if self.offsetValue != 0 {
+                                            Image(systemName: "doc.on.doc")
+    //                                        Text("Copy Average")
+                                                .font(.system(size: 15, weight: .medium))
+                                                .foregroundColor(accentColour)
+                                               
+                                        }
+                                        
+                                        
                                         Image(systemName: "checkmark")
                                             .font(.system(size: 13, weight: .bold, design: .rounded))
                                             .clipShape(Rectangle().offset(x: self.offsetValue))
-                                        
-                                        Text("Copy Average")
-                                            .font(.system(size: 17, weight: .medium))
-                                            .foregroundColor(accentColour)
                                     }
+                                    .frame(width: 20)
                                 }
                             }
                         }

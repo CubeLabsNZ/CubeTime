@@ -84,12 +84,7 @@ struct LicensesPopUpView: View {
                     Button {
                         dismiss()
                     } label: {
-                        
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 17, weight: .medium))
-                            .padding(.leading, -4)
-                        Text("Back")
-                            .padding(.leading, -4)
+                        Text("Done")
                     }
                 }
             }

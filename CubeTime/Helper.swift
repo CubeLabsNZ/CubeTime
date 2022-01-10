@@ -119,7 +119,7 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
     let trimmedSolves: [Solves] = sorted.prefix(trim) + sorted.suffix(trim)
     
     return CalculatedAverage(
-        id: "Comp sim solve",
+        id: "Comp Sim",
         average: sorted.dropFirst(trim).dropLast(trim)
                 .reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(3),
         accountedSolves: sorted,
