@@ -1,5 +1,5 @@
 import SwiftUI
-
+ 
 struct StatsDetail: View {
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @Environment(\.colorScheme) var colourScheme
@@ -38,7 +38,7 @@ struct StatsDetail: View {
                 
                 if let avg = solves.average {
                     if let solveToShow = solveToShow {
-                        NavigationLink("", destination: SolvePopupView(solve: solveToShow, currentSolve: nil, timeListManager: nil), isActive: $showSolve)
+                        NavigationLink("", destination: TimeDetail(solve: solveToShow, currentSolve: nil, timeListManager: nil), isActive: $showSolve)
                     }
                     ScrollView {
                         VStack (spacing: 10) {
