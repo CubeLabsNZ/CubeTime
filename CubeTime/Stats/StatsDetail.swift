@@ -7,6 +7,9 @@ struct StatsDetail: View {
    
     @State var offsetValue: CGFloat = -25
     
+    @State var showSolve = false
+    @State var solveToShow: Solves?
+    
     let solves: CalculatedAverage
     let session: Sessions
     
@@ -34,6 +37,9 @@ struct StatsDetail: View {
                     .ignoresSafeArea()
                 
                 if let avg = solves.average {
+                    if let solveToShow = solveToShow {
+                        NavigationLink("", destination: SolvePopupView(solve: solveToShow, currentSolve: nil, timeListManager: nil), isActive: $showSolve)
+                    }
                     ScrollView {
                         VStack (spacing: 10) {
                             HStack {
@@ -123,6 +129,10 @@ struct StatsDetail: View {
                                             .padding(.horizontal)
                                             .padding(.bottom, (index != solves.accountedSolves!.indices.last!) ? 8 : 0)
                                         }
+                                        .onTapGesture {
+                                            solveToShow = solve
+                                            showSolve = true
+                                        }
                                     }
                                 }
                                 .padding(.bottom)
@@ -132,7 +142,7 @@ struct StatsDetail: View {
                         }
                         .offset(y: -6)
                         .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle(solves.id)
+                        .navigationTitle(solves.id == "Comp sim solve" ? "" : solves.id)
                         .toolbar {
                             ToolbarItem(placement: .navigationBarLeading) {
                                 Button {
@@ -141,7 +151,7 @@ struct StatsDetail: View {
                                     Image(systemName: "chevron.left")
                                         .font(.system(size: 17, weight: .medium))
                                         .padding(.leading, -4)
-                                    Text("Stats")
+                                    Text(solves.id == "Comp sim solve" ? "Time list" : "Stats")
                                         .padding(.leading, -4)
                                 }
                             }
