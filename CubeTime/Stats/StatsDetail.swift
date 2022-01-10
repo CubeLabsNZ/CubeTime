@@ -121,8 +121,10 @@ struct StatsDetail: View {
                                             .padding(.horizontal)
                                             
                                             HStack {
+                                                
+                                                
                                                 Text(solve.scramble ?? "Failed to load scramble")
-                                                    .font(.system(size: 17, weight: .medium))
+                                                    .font(.system(size: session.scramble_type == 7 ? ((UIScreen.screenWidth-32) / (42.00) * 2) : 17, weight: .medium))
                                                 
                                                 Spacer()
                                             }
