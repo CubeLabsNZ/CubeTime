@@ -141,6 +141,7 @@ struct PuzzleType {
 
 
 
+
 /// as the default textfield does not dynamically adjust its width according to the text
 /// and instead is always set to the maximum width, this globalgeometrygetter is used
 /// for the target input field on the timer view to change its width dynamically.

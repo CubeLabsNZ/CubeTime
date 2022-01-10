@@ -10,8 +10,22 @@ struct StatsDetail: View {
     let solves: CalculatedAverage
     let session: Sessions
     
+    private let detailDateFormat: DateFormatter
+    
 //    let dateFormatter = DateFormatter()
 //    dateFormatter.dateFormat = "h:mm a, MM/dd/yyyy"
+    
+    init(solves: CalculatedAverage , session: Sessions) {
+        self.solves = solves
+        self.session = session
+        
+        
+        self.detailDateFormat = DateFormatter()
+        
+        detailDateFormat.locale = Locale(identifier: "en_US_POSIX")
+        detailDateFormat.timeZone = TimeZone(secondsFromGMT: 0)
+        detailDateFormat.dateFormat = "h:mm a, MM/dd/yy"
+    }
     
     var body: some View {
         NavigationView {
@@ -75,7 +89,7 @@ struct StatsDetail: View {
                                                 .padding(.leading)
                                                 
                                             
-                                            HStack {
+                                            HStack(alignment: .bottom) {
                                                 Text("\(index+1).")
                                                     .font(.system(size: 15, weight: .bold, design: .rounded))
                                                     .foregroundColor(accentColour)
@@ -92,8 +106,8 @@ struct StatsDetail: View {
                                                 
                                                 
                                                 
-    //                                            Text(dateFormatter.string(from: solve.date!))
-                                                Text(solve.date ?? Date(timeIntervalSince1970: 0), format: .dateTime.hour().minute().second().day().month().year())
+//                                                Text(solve.date ?? Date(timeIntervalSince1970: 0), format: .dateTime.hour().minute().second().day().month().year())
+                                                Text(solve.date ?? Date(timeIntervalSince1970: 0), formatter: detailDateFormat)
                                                     .font(.system(size: 13, weight: .bold, design: .rounded))
                                                     .foregroundColor(Color(uiColor: .systemGray))
                                             }

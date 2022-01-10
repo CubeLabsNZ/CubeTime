@@ -19,10 +19,11 @@ struct SolvePopupView: View {
     @Environment(\.presentationMode) var presentation
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
-    
-    
     @Environment(\.dismiss) var dismiss
     @Environment(\.defaultMinListRowHeight) var minRowHeight
+    
+    
+    private let titleDateFormat: DateFormatter
     
     var timeListManager: TimeListManager?
     
@@ -60,6 +61,13 @@ struct SolvePopupView: View {
         self.timeListManager = timeListManager
         _userComment = State(initialValue: solve.comment ?? "")
         
+        
+        self.titleDateFormat = DateFormatter()
+        
+        titleDateFormat.locale = Locale(identifier: "en_US_POSIX")
+        titleDateFormat.timeZone = TimeZone(secondsFromGMT: 0)
+        titleDateFormat.dateFormat = "h:mm a, MMM d, yyyy"
+        
     }
     
     var body: some View {
@@ -71,7 +79,8 @@ struct SolvePopupView: View {
                 ScrollView() {
                     VStack (spacing: 12) {
                         HStack {
-                            Text(date, format: .dateTime.day().month().year())
+//                            Text(date, format: .dateTime.day().month().year())
+                            Text(date, formatter: titleDateFormat)
                                 .padding(.leading)
                                 .font(.system(size: 22, weight: .semibold, design: .default))
                                 .foregroundColor(Color(uiColor: .systemGray))
