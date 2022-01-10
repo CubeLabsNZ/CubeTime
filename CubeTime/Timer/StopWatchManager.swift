@@ -167,6 +167,7 @@ class StopWatchManager: ObservableObject {
     private var asyncScrambleTask: DispatchWorkItem?
     
     func touchDown(value: DragGesture.Value) {
+        NSLog("changed")
         if prevIsDown {
             NSLog("allowgesture: \(allowGesture) !canstarttimer: \(!canStartTimer) !prevdownstoppedthetimer: \(!prevDownStoppedTheTimer) mode != inspectiuong \(mode != .inspecting)")
             if allowGesture && !canStartTimer && !prevDownStoppedTheTimer && mode != .inspecting {
