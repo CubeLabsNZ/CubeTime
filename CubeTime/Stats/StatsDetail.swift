@@ -38,7 +38,7 @@ struct StatsDetail: View {
                 
                 if let avg = solves.average {
                     if let solveToShow = solveToShow {
-                        NavigationLink("", destination: TimeDetail(solve: solveToShow, currentSolve: nil, timeListManager: nil), isActive: $showSolve)
+                        NavigationLink("", destination: TimeDetailViewOnly(solve: solveToShow, currentSolve: nil, timeListManager: nil), isActive: $showSolve)
                     }
                     ScrollView {
                         VStack (spacing: 10) {
@@ -142,17 +142,18 @@ struct StatsDetail: View {
                         }
                         .offset(y: -6)
                         .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle(solves.id == "Comp sim solve" ? "" : solves.id)
+                        .navigationTitle(solves.id == "Comp sim solve" ? "Comp Sim" : solves.id)
                         .toolbar {
                             ToolbarItem(placement: .navigationBarLeading) {
                                 Button {
                                     dismiss()
                                 } label: {
-                                    Image(systemName: "chevron.left")
-                                        .font(.system(size: 17, weight: .medium))
-                                        .padding(.leading, -4)
-                                    Text(solves.id == "Comp sim solve" ? "Time list" : "Stats")
-                                        .padding(.leading, -4)
+//                                    Image(systemName: "chevron.left")
+//                                        .font(.system(size: 17, weight: .medium))
+//                                        .padding(.leading, -4)
+//                                    Text(solves.id == "Comp sim solve" ? "Time list" : "Stats")
+                                    Text("Done")
+//                                        .padding(.leading, -4)
                                 }
                             }
                             ToolbarItem(placement: .navigationBarTrailing) {
@@ -165,10 +166,10 @@ struct StatsDetail: View {
                                 } label: {
                                     HStack {
                                         Image(systemName: "checkmark")
-                                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                                            .font(.system(size: 13, weight: .bold, design: .rounded))
                                             .clipShape(Rectangle().offset(x: self.offsetValue))
                                         
-                                        Text("Copy Solve")
+                                        Text("Copy Average")
                                             .font(.system(size: 17, weight: .medium))
                                             .foregroundColor(accentColour)
                                     }
