@@ -254,9 +254,12 @@ struct TimeDetail: View {
                                     withAnimation {
                                         currentSolve = nil
                                     }
-                                    managedObjectContext.delete(solve) // Todo read context from environment
-                                    timeListManager?.resort()
+                                    
+                                    managedObjectContext.delete(solve)
                                     try! managedObjectContext.save()
+                                    withAnimation {
+                                        timeListManager?.delete(solve)
+                                    }
                                 } label: {
                                     Text("Delete Solve")
                                         .font(.system(size: 17, weight: .medium))
