@@ -224,12 +224,14 @@ struct TimeListView: View {
                                 NSLog("hi")
                                 for object in selectedSolves {
                                     managedObjectContext.delete(object)
+                                    withAnimation {
+                                        timeListManager.delete(object)
+                                    }
                                 }
                                 selectedSolves.removeAll()
                                 withAnimation {
                                     if managedObjectContext.hasChanges {
                                         try! managedObjectContext.save()
-                                        timeListManager.resort() // TODO optimize
                                     }
                                 }
                             } label: {

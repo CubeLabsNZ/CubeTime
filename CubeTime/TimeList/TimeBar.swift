@@ -56,6 +56,9 @@ struct TimeBar: View {
 //                    }
                     if isSelectMode {
                         
+                    } else if solvegroup.solves!.count < 5 {
+                        // Current average
+                        currentCalculatedAverage = CalculatedAverage(id: "Current average", average: nil, accountedSolves: (solvegroup.solves!.array as! [Solves]), totalPen: .none, trimmedSolves: [])
                     } else {
                         currentCalculatedAverage = calculatedAverage
                     }
@@ -93,11 +96,33 @@ struct TimeBar: View {
                             Spacer()
                         }
                     } else {
-                        HStack {
-                            Text("Current Average")
-                                .font(.system(size: 26, weight: .bold, design: .default))
+                        if solvegroup.solves!.count < 5 {
+                            HStack {
+                                Text("Current average")
+                                    .font(.system(size: 26, weight: .bold, design: .default))
 
-                            Spacer()
+                                Spacer()
+                            }
+                            
+                            HStack(spacing: 0) {
+                                ForEach(Array((solvegroup.solves!.array as! [Solves]).enumerated()), id: \.offset) { index, solve in
+                                    Text(formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)))
+                                        .font(.system(size: 17, weight: .medium))
+                                    
+                                    if index < solvegroup.solves!.count-1 {
+                                        Text(", ")
+                                    }
+                                }
+                                
+                                Spacer()
+                            }
+                        } else {
+                            HStack {
+                                Text("Loading...")
+                                    .font(.system(size: 26, weight: .bold, design: .default))
+
+                                Spacer()
+                            }
                         }
                     }
                 }

@@ -15,6 +15,8 @@ struct StatsDetail: View {
     
     private let detailDateFormat: DateFormatter
     
+    private let isCurrentCompSimAverage: Bool
+    
 //    let dateFormatter = DateFormatter()
 //    dateFormatter.dateFormat = "h:mm a, MM/dd/yyyy"
     
@@ -28,6 +30,8 @@ struct StatsDetail: View {
         detailDateFormat.locale = Locale(identifier: "en_US_POSIX")
         detailDateFormat.timeZone = TimeZone(secondsFromGMT: 0)
         detailDateFormat.dateFormat = "h:mm a, MM/dd/yy"
+        
+        isCurrentCompSimAverage = solves.id == "Current average"
     }
     
     var body: some View {
@@ -36,20 +40,22 @@ struct StatsDetail: View {
                 Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                     .ignoresSafeArea()
                 
-                if let avg = solves.average {
+                if solves.average != nil || isCurrentCompSimAverage {
                     if let solveToShow = solveToShow {
                         NavigationLink("", destination: TimeDetailViewOnly(solve: solveToShow, currentSolve: nil, timeListManager: nil), isActive: $showSolve)
                     }
                     ScrollView {
                         VStack (spacing: 10) {
-                            HStack {
-                                Text(formatSolveTime(secs: avg, penType: solves.totalPen))
-                                    .font(.system(size: 34, weight: .bold))
-                                
-                                Spacer()
+                            if !isCurrentCompSimAverage {
+                                HStack {
+                                    Text(formatSolveTime(secs: solves.average!, penType: solves.totalPen))
+                                        .font(.system(size: 34, weight: .bold))
+                                    
+                                    Spacer()
+                                }
+                                .padding(.horizontal)
+                                .padding(.top)
                             }
-                            .padding(.horizontal)
-                            .padding(.top)
                             
                             HStack (alignment: .center) {
                                 Text(session.name ?? "Unknown session name")
