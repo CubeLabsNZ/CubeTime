@@ -58,7 +58,7 @@ struct TimeBar: View {
                         
                     } else if solvegroup.solves!.count < 5 {
                         // Current average
-                        currentCalculatedAverage = CalculatedAverage(id: "Current average", average: nil, accountedSolves: (solvegroup.solves!.array as! [Solves]), totalPen: .none, trimmedSolves: [])
+                        currentCalculatedAverage = CalculatedAverage(id: "Current Average", average: nil, accountedSolves: (solvegroup.solves!.array as! [Solves]), totalPen: .none, trimmedSolves: [])
                     } else {
                         currentCalculatedAverage = calculatedAverage
                     }
@@ -98,7 +98,7 @@ struct TimeBar: View {
                     } else {
                         if solvegroup.solves!.count < 5 {
                             HStack {
-                                Text("Current average")
+                                Text("Current Average")
                                     .font(.system(size: 26, weight: .bold, design: .default))
 
                                 Spacer()

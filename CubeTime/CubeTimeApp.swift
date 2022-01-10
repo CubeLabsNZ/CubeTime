@@ -2,9 +2,14 @@ import SwiftUI
 import CoreData
 
 @main
+
+
+
 struct CubeTime: App {
     let persistenceController: PersistenceController
     private let moc: NSManagedObjectContext
+    
+    
     
     
     init() {
@@ -23,6 +28,15 @@ struct CubeTime: App {
                 gsKeys.displayDP.rawValue: 3
             ]
         )
+        
+        
+        for family in UIFont.familyNames {
+             print(family)
+
+             for names in UIFont.fontNames(forFamilyName: family){
+             print("== \(names)")
+             }
+        }
         
     }
     

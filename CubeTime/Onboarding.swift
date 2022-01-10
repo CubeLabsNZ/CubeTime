@@ -138,9 +138,6 @@ struct OnboardingView: View {
     }
 }
 
-// .font(.system(size: <#T##CGFloat#>, weight: <#T##Font.Weight#>))
-// .multilineTextAlignment(.center)
-
 struct PageOne: View {
     @Binding var pageIndex: Int
     var body: some View {
@@ -155,6 +152,7 @@ struct PageOne: View {
                 HStack {
                     Text("to")
                     Text("CubeTime.")
+                        .font(.custom("RecursiveSansLnrSt-Regular", size: 36))
                         .foregroundColor(Color.indigo)
                 }
                 .font(.system(size: 36, weight: .bold))

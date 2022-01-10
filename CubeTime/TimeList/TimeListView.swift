@@ -122,40 +122,44 @@ struct TimeListView: View {
                         }
                         .padding(.horizontal)
                         
-                        ZStack {
-                            HStack {
-                                Spacer()
-                                
-                                Picker("Sort Method", selection: $timeListManager.sortBy) {
-                                    Text("Sort by Date").tag(0)
-                                    Text("Sort by Time").tag(1)
+                        // REMOVE THIS IF WHEN SORT IMPELEMNTED FOR COMP SIM SESSIONS
+                        if currentSession.session_type != SessionTypes.compsim.rawValue {
+                            ZStack {
+                                HStack {
+                                    Spacer()
+                                    
+                                    Picker("Sort Method", selection: $timeListManager.sortBy) {
+                                        Text("Sort by Date").tag(0)
+                                        Text("Sort by Time").tag(1)
+                                    }
+                                    .pickerStyle(SegmentedPickerStyle())
+                                    .frame(maxWidth: 200, alignment: .center)
+                                    .padding(.top, -6)
+                                    .padding(.bottom, 4)
+                                    
+                                   
+                                    Spacer()
                                 }
-                                .pickerStyle(SegmentedPickerStyle())
-                                .frame(maxWidth: 200, alignment: .center)
-                                .padding(.top, -6)
-                                .padding(.bottom, 4)
                                 
-                               
-                                Spacer()
+                                HStack {
+                                    Spacer()
+                                    
+                                    Button {
+                                        timeListManager.ascending.toggle()
+                                        timeListManager.resort()
+                                        // let sortDesc: NSSortDescriptor = NSSortDescriptor(key: "date", ascending: sortAscending)
+                                        //solves.sortDescriptors = [sortDesc]
+                                    } label: {
+                                        Image(systemName: timeListManager.ascending ? "chevron.up.circle" : "chevron.down.circle")
+                                            .font(.system(size: 20, weight: .medium))
+                                    }
+    //                                        .padding(.trailing, 16.5)
+                                    .padding(.trailing)
+                                    .padding(.top, -6)
+                                    .padding(.bottom, 4)
+                                }
                             }
                             
-                            HStack {
-                                Spacer()
-                                
-                                Button {
-                                    timeListManager.ascending.toggle()
-                                    timeListManager.resort()
-                                    // let sortDesc: NSSortDescriptor = NSSortDescriptor(key: "date", ascending: sortAscending)
-                                    //solves.sortDescriptors = [sortDesc]
-                                } label: {
-                                    Image(systemName: timeListManager.ascending ? "chevron.up.circle" : "chevron.down.circle")
-                                        .font(.system(size: 20, weight: .medium))
-                                }
-//                                        .padding(.trailing, 16.5)
-                                .padding(.trailing)
-                                .padding(.top, -6)
-                                .padding(.bottom, 4)
-                            }
                         }
                         
                         
@@ -247,26 +251,31 @@ struct TimeListView: View {
                     }
                     
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        if isSelectMode {
-                            Button {
-                                isSelectMode = false
-                                selectedSolves.removeAll()
-                            } label: {
-                                Text("Cancel")
-                            }
-                        } else {
-                            Button {
-                                isSelectMode = true
-                            } label: {
-                                Image(systemName: "ellipsis.circle")
-                                    .font(.system(size: 17, weight: .medium))
+                        if currentSession.session_type != SessionTypes.compsim.rawValue {
+                            if isSelectMode {
+                                Button {
+                                    isSelectMode = false
+                                    selectedSolves.removeAll()
+                                } label: {
+                                    Text("Cancel")
+                                }
+                            } else {
+                                Button {
+                                    isSelectMode = true
+                                } label: {
+                                    Image(systemName: "ellipsis.circle")
+                                        .font(.system(size: 17, weight: .medium))
+                                }
                             }
                         }
                     }
                 }
                 .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
             }
-            .searchable(text: $timeListManager.filter, placement: .navigationBarDrawer)
+            .if (currentSession.session_type != SessionTypes.compsim.rawValue) { view in
+                view
+                    .searchable(text: $timeListManager.filter, placement: .navigationBarDrawer)
+            }
             
         }
 //        .searchable(text: $timeListManager.filter, placement: .navigationBarDrawer)
