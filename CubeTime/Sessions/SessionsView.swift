@@ -404,7 +404,7 @@ struct NewSessionPopUpView: View {
                                 Spacer()
                             }
                             .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
-                                            .clipShape(RoundedRectangle(cornerRadius: 10)))
+                                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
                             .onTapGesture {
                                 showNewCompsimView = true
                             }
@@ -1135,13 +1135,13 @@ struct SessionCard: View {
         
         ZStack {
             
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color(uiColor: .systemGray5))
                 .frame(height: item.pinned ? 110 : 65)
                 .zIndex(0)
             
             
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(colourScheme == .dark ? Color(uiColor: .systemGray6) : Color.white)
                 .frame(width: currentSession == item ? 16 : UIScreen.screenWidth - 32, height: item.pinned ? 110 : 65)
             
@@ -1160,7 +1160,7 @@ struct SessionCard: View {
                         HStack(alignment: .center, spacing: 0) {
                             ZStack {
                                 if SessionTypes(rawValue: item.session_type)! != .standard {
-                                    RoundedRectangle(cornerRadius: 10)
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
                                         .fill(accentColour.opacity(0.33))
                                         .frame(width: 40, height: 40)
                                         .padding(.trailing, 12)
@@ -1253,10 +1253,10 @@ struct SessionCard: View {
             .frame(height: item.pinned ? 110 : 65)
             
             .background(Color.clear)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .zIndex(2)
         }
-        .contentShape(RoundedRectangle(cornerRadius: 16))
+        .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         
         .onTapGesture {
             withAnimation(.spring(response: 0.325)) {
@@ -1368,7 +1368,7 @@ struct SessionsView: View {
                     }
                 }
                 .navigationTitle("Your Sessions")
-                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.top, 64).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top, 64).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
                 
                 VStack {
                     Spacer()
@@ -1397,7 +1397,7 @@ struct SessionsView: View {
                         Spacer()
                     }
                 }
-                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
             }
         }
     }

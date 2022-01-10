@@ -54,7 +54,7 @@ struct SettingsView: View {
                     }
                     .navigationBarTitle("Settings")
                     
-                    .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                    .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
                     .padding(.vertical, 6)
                     .padding(.horizontal)
                 }
@@ -85,7 +85,7 @@ struct SettingsCard: View {
                 }
             } label: {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
                         .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
                         .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
                         .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
@@ -129,7 +129,7 @@ struct SettingsCard: View {
                 }
             } label: {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
                         .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
                         .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
                         .frame(height: UIScreen.screenHeight/7, alignment: .center)
@@ -192,16 +192,16 @@ struct SettingsDetail: View {
                     }
                 }
                 .safeAreaInset(edge: .top, spacing: 0) {
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
                         .fill(Color.clear)
                         .frame(maxHeight: UIScreen.screenHeight / 7)
                         .padding(.bottom)
                 }
-                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
 
                 VStack {
                     ZStack {
-                        RoundedRectangle(cornerRadius: 16)
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
                             .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
                             .matchedGeometryEffect(id: "bg " + currentCard!.name, in: namespace)
                             .ignoresSafeArea()

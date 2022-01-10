@@ -259,11 +259,12 @@ struct TimeListView: View {
                         }
                     }
                 }
-                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
             }
+            .searchable(text: $timeListManager.filter, placement: .navigationBarDrawer)
             
         }
-        .searchable(text: $timeListManager.filter, placement: .navigationBarDrawer)
+//        .searchable(text: $timeListManager.filter, placement: .navigationBarDrawer)
         .navigationViewStyle(StackNavigationViewStyle())
     }
 }

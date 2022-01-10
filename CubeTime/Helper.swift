@@ -138,6 +138,51 @@ struct PuzzleType {
 }
 
 
+
+
+
+/// as the default textfield does not dynamically adjust its width according to the text
+/// and instead is always set to the maximum width, this globalgeometrygetter is used
+/// for the target input field on the timer view to change its width dynamically.
+
+// source: https://stackoverflow.com/a/56729880/3902590
+struct GlobalGeometryGetter: View {
+    @Binding var rect: CGRect
+
+    var body: some View {
+        return GeometryReader { geometry in
+            self.makeView(geometry: geometry)
+        }
+    }
+
+    func makeView(geometry: GeometryProxy) -> some View {
+        DispatchQueue.main.async {
+            self.rect = geometry.frame(in: .global)
+        }
+
+        return Rectangle().fill(Color.clear)
+    }
+}
+
+
+
+// source: https://www.avanderlee.com/swiftui/conditional-view-modifier/
+extension View {
+    /// Applies the given transform if the given condition evaluates to `true`.
+    /// - Parameters:
+    ///   - condition: The condition to evaluate.
+    ///   - transform: The transform to apply to the source `View`.
+    /// - Returns: Either the original `View` or the modified `View` if the condition is `true`.
+    @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
+    }
+}
+
+
 // TODO 3BLD
 
 let puzzle_types: [PuzzleType] = [

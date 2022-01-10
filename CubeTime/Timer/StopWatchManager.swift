@@ -237,7 +237,7 @@ class StopWatchManager: ObservableObject {
                     
                     currentSolveth = (currentSession.solvegroups!.lastObject! as? CompSimSolveGroup)!.solves!.count
                     
-                    
+                    NSLog("\(currentSolveth)")
                     
                     
                 } else {
