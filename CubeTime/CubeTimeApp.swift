@@ -1,18 +1,16 @@
 import SwiftUI
-//import UIKit
+import UIKit
 import CoreData
 
-/*
-let menuActions = MenuActions()
+
 var shortcutItemToProcess: UIApplicationShortcutItem?
- */
 
 @main
 struct CubeTime: App {
-    /*
     @Environment(\.scenePhase) var phase
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    */
+    
+    
     
     let persistenceController: PersistenceController
     private let moc: NSManagedObjectContext
@@ -39,30 +37,37 @@ struct CubeTime: App {
         WindowGroup {
             MainTabsView(managedObjectContext: moc)
                 .environment(\.managedObjectContext, moc)
-//                .environmentObject(menuActions)
+            //                .environmentObject(menuActions)
         }
         /*
-        .onChange(of: phase) { newphase in
-            switch newphase {
-            case .active:
-                print("app active")
-                guard let name = shortcutItemToProcess?.userInfo?["name"] as? String else { return }
-            case .background:
-                print("background")
-            case .inactive:
-                print("inactive")
-            @unknown default:
-                print("default")
-            }
-        }
+         .onChange(of: phase) { newphase in
+         switch newphase {
+         case .active:
+         print("app active")
+         guard let name = shortcutItemToProcess?.userInfo?["name"] as? String else { return }
+         case .background:
+         print("background")
+         case .inactive:
+         print("inactive")
+         @unknown default:
+         print("default")
+         }
+         }
          */
         
     }
 }
 
 
-/*
 class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        if let shortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
+            return false
+            
+        }
+        return true
+    }
+    
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         let sceneConfiguration = UISceneConfiguration(name: "Custom Configuration", sessionRole: connectingSceneSession.role)
         sceneConfiguration.delegateClass = CustomSceneDelegate.self
@@ -71,6 +76,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
 }
 
+
 class CustomSceneDelegate: UIResponder, UIWindowSceneDelegate {
     @Environment(\.openURL) var openURL
     
@@ -78,24 +84,8 @@ class CustomSceneDelegate: UIResponder, UIWindowSceneDelegate {
         handleShortcutItem(shortcutItem)
     }
     
-    func handleShortcutItem(_ shortcutItem: UIApplicationShortcutItem) {
-        NSLog("\(shortcutItem)")
-        
-        /*
-        if shortcutItem.t == "Timer" {
-            print("timer pressed")
-            
-            print("Quick launch to Offers")
-            
-            if let url = URL(string:"cardpointers://open/offer/0") {
-                openURL(url)
-            }
-        } else {
-            print("run but not right")
-            print("\(shortcutItem)")
-        }
-         */
-        
+    func handleShortcutItem(_ shortcutItem: UIApplicationShortcutItem) -> UIApplicationShortcutItem {
+        return shortcutItem
     }
 }
-*/
+

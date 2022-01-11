@@ -1249,7 +1249,7 @@ struct SessionCard: View {
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .zIndex(2)
         }
-        .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+//        .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         
         .onTapGesture {
             withAnimation(.spring(response: 0.325)) {

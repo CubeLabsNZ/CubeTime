@@ -64,6 +64,62 @@ class Stats {
         compsimSession = currentSession as? CompSimSession
     }
     
+    /// **HELPER FUNCTIONS**
+    
+    func calculateAverage(_ solves: [Solves], _ id: String, _ compsim: Bool) -> CalculatedAverage? {
+        let cnt = solves.count
+        
+        if cnt < 5 {
+            return nil
+        }
+        
+        var trim: Int {
+            if cnt <= 12 {
+                return 1
+            } else {
+                return Int(Double(cnt) * 0.05)
+            }
+        }
+        
+        let solvesSorted: [Solves] = solves.sorted(by: Stats.sortWithDNFsLast)
+        let solvesTrimmed: [Solves] = solvesSorted.prefix(trim) + solvesSorted.suffix(trim)
+        
+        if compsim {
+            return CalculatedAverage(
+                id: "\(id)",
+                average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
+                accountedSolves: solvesSorted.suffix(cnt),
+                totalPen: solvesSorted.suffix(cnt).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
+                trimmedSolves: solvesTrimmed
+            )
+        } else {
+            return CalculatedAverage(
+                id: "\(id)\(cnt)",
+                average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
+                accountedSolves: solvesSorted.suffix(cnt),
+                totalPen: solvesSorted.suffix(cnt).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
+                trimmedSolves: solvesTrimmed
+            )
+        }
+    }
+    
+    static func sortWithDNFsLast(_ solve0: Solves, _ solve1: Solves) -> Bool {
+        let pen0 = PenTypes(rawValue: solve0.penalty)!
+        let pen1 = PenTypes(rawValue: solve1.penalty)!
+        
+        // Sort non DNFs or both DNFs by time
+        if (pen0 != .dnf && pen1 != .dnf) || (pen0 == .dnf && pen1 == .dnf) {
+            return timeWithPlusTwoForSolve(solve0) > timeWithPlusTwoForSolve(solve1)
+        // Order non DNFs before DNFs
+        } else if pen0 == .dnf && pen1 != .dnf {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    
+    /// NORMAL SESSION FUNCTIONS
     func getMin() -> Solves? {
         if solvesNoDNFs.count == 0 {
             return nil
@@ -85,19 +141,15 @@ class Stats {
     }
     
     
-    static func sortWithDNFsLast(_ solve0: Solves, _ solve1: Solves) -> Bool {
-        let pen0 = PenTypes(rawValue: solve0.penalty)!
-        let pen1 = PenTypes(rawValue: solve1.penalty)!
-        
-        // Sort non DNFs or both DNFs by time
-        if (pen0 != .dnf && pen1 != .dnf) || (pen0 == .dnf && pen1 == .dnf) {
-            return timeWithPlusTwoForSolve(solve0) > timeWithPlusTwoForSolve(solve1)
-        // Order non DNFs before DNFs
-        } else if pen0 == .dnf && pen1 != .dnf {
-            return true
-        } else {
-            return false
+    
+    /// AVERAGE FUNCTIONS
+    
+    func getCurrentAverageOf(_ period: Int) -> CalculatedAverage? {
+        if solvesByDate.count < period {
+            return nil
         }
+        
+        return calculateAverage(solvesByDate.suffix(period), "Current ao", false)
     }
     
     
@@ -137,72 +189,10 @@ class Stats {
     }
 
     
-    func calculateAverage(_ solves: [Solves], _ id: String, _ compsim: Bool) -> CalculatedAverage? {
-        let cnt = solves.count
-        
-        if cnt < 5 {
-            return nil
-        }
-        
-        var trim: Int {
-            if cnt <= 12 {
-                return 1
-            } else {
-                return Int(Double(cnt) * 0.05)
-            }
-        }
-        
-        let solvesSorted: [Solves] = solves.sorted(by: Stats.sortWithDNFsLast)
-        let solvesTrimmed: [Solves] = solvesSorted.prefix(trim) + solvesSorted.suffix(trim)
-        
-        if compsim {
-            return CalculatedAverage(
-                id: "\(id)",
-                average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
-                accountedSolves: solvesSorted.suffix(cnt),
-                totalPen: solvesSorted.suffix(cnt).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
-                trimmedSolves: solvesTrimmed
-            )
-        } else {
-            return CalculatedAverage(
-                id: "\(id)\(cnt)",
-                average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
-                accountedSolves: solvesSorted.suffix(cnt),
-                totalPen: solvesSorted.suffix(cnt).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
-                trimmedSolves: solvesTrimmed
-            )
-        }
-    }
     
     
-    func getCurrentAverageOf(_ period: Int) -> CalculatedAverage? {
-        if solvesByDate.count < period {
-            return nil
-        }
-        
-        return calculateAverage(solvesByDate.suffix(period), "Current ao", false)
-        
-        
-//        let trim = period >= 100 ? 5 : 1
-//
-//        if solves.count < period {
-//            return nil
-//        }
-//
-//        let sorted = solvesByDate.suffix(period).sorted(by: Stats.sortWithDNFsLast)
-//        let trimmedSolves: [Solves] = sorted.prefix(trim) + sorted.suffix(trim)
-//
-//        return CalculatedAverage(
-//            id: "Current AO\(period)",
-//            average: sorted.dropFirst(trim).dropLast(trim)
-//                    .reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(period-(trim * 2)),
-//            accountedSolves: solvesByDate.suffix(period),
-//            totalPen: solvesByDate.suffix(period).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
-//            trimmedSolves: trimmedSolves
-//        )
-    }
+    /// COMP SIM STUFF
     
-    /// comp sim
     func getNumberOfAverages() -> Int {
         return (solves.count / 5)
     }
@@ -225,43 +215,6 @@ class Stats {
         return reached
     }
     
-    func getBestCompsimAverageAndArrayOfCompsimAverages() -> (CalculatedAverage?, [CalculatedAverage]) {
-        var allCompsimAverages: [CalculatedAverage] = []
-        
-        if let compsimSession = compsimSession {
-            if compsimSession.solvegroups!.count == 0 {
-                return (nil, [])
-            } else if compsimSession.solvegroups!.count == 1 && (((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]).count != 5)  {
-                /// && ((compsimSession.solvegroups!.first as AnyObject).solves!.array as! [Solves]).count != 5
-                return (nil, [])
-            } else {
-                var bestAverage: CalculatedAverage = calculateAverage(((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]), "Best Comp Sim", true)!
-                
-                for solvegroup in compsimSession.solvegroups!.array {
-                    if (solvegroup as AnyObject).solves!.array.count == 5 {
-                        
-                        
-                        let currentAvg = calculateAverage((solvegroup as AnyObject).solves!.array as! [Solves], "Best Comp Sim", true)
-                        
-                        // this will only append the non-dnfed times into the array
-                        if let currentAvg = currentAvg {
-                            allCompsimAverages.append(currentAvg)
-                        }
-                        
-                        
-                        
-                        if (currentAvg?.average)! < bestAverage.average! {
-                            bestAverage = currentAvg!
-                        }
-                    }
-                }
-                
-                return (bestAverage, allCompsimAverages)
-            }
-        } else {
-            return (nil, [])
-        }
-    }
     
     func getCurrentCompsimAverage() -> CalculatedAverage? {
         if let compsimSession = compsimSession {
@@ -278,7 +231,6 @@ class Stats {
                 } else {
                     return calculateAverage(groupLastSolve, "Current Comp Sim", true)
                 }
-                
                 
             } else {
                 let groupLastTwoSolves = (compsimSession.solvegroups!.array as! [CompSimSolveGroup]).suffix(2)
@@ -299,22 +251,102 @@ class Stats {
     }
     
     
-    /*
-    
-    func getBestAverage() -> Array<Double, Array<Double>> {
-        
-        var averages = []
+    func getBestCompsimAverageAndArrayOfCompsimAverages() -> (CalculatedAverage?, [CalculatedAverage]) {
+        var allCompsimAverages: [CalculatedAverage] = []
         
         if let compsimSession = compsimSession {
-            for solvegroup in compsimSession.solvegroups!.array {
-                averages.append((solvegroup as AnyObject).solves!.array as! [Solves]).map {$0.time}.sorted().dropFirst().dropLast().reduce(0, +))
+            if compsimSession.solvegroups!.count == 0 {
+                return (nil, [])
+            } else if compsimSession.solvegroups!.count == 1 && (((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]).count != 5)  {
+                /// && ((compsimSession.solvegroups!.first as AnyObject).solves!.array as! [Solves]).count != 5
+                return (nil, [])
+            } else {
+                var bestAverage: CalculatedAverage?
+//                var bestAverage: CalculatedAverage = calculateAverage(((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]), "Best Comp Sim", true)!
+                
+                for solvegroup in compsimSession.solvegroups!.array {
+                    if (solvegroup as AnyObject).solves!.array.count == 5 {
+                        
+                        
+                        let currentAvg = calculateAverage((solvegroup as AnyObject).solves!.array as! [Solves], "Best Comp Sim", true)
+                        
+                        if currentAvg?.totalPen == .dnf {
+                            continue
+                        }
+                        
+                        // this will only append the non-dnfed times into the array
+                        if let currentAvg = currentAvg {
+                            allCompsimAverages.append(currentAvg)
+                        }
+                        
+                        if bestAverage == nil || (currentAvg?.average)! < (bestAverage?.average!)! {
+                            bestAverage = currentAvg!
+                        }
+                    }
+                }
+                
+                if bestAverage == nil {
+                    return (getCurrentCompsimAverage(), allCompsimAverages)
+                } else {
+                    return (bestAverage, allCompsimAverages)
+                }
+            }
+        } else {
+            return (nil, [])
+        }
+    }
+    
+    
+    
+    func getCurrentMeanOfTen() -> Double? { // returned calculated average has averages as solves
+        if compsimSession != nil {
+            let averages = getBestCompsimAverageAndArrayOfCompsimAverages().1
+            
+            if averages.count >= 10 {
+                if averages.suffix(10).contains(where: { $0.totalPen == .dnf }) {
+                    return -1
+                } else {
+                    return (averages.suffix(10).map({ $0.average! }).reduce(0, +) / 10.0)
+                }
+                
+            } else {
+                return nil
             }
         }
         
-        print(averages)
-        
-        return [2.234987234, [2.2348902734, 1.32489]]
+        return nil
     }
-     
-     */
+    
+    func getBestMeanOfTen() -> Double? {
+        if compsimSession != nil {
+            let averages = getBestCompsimAverageAndArrayOfCompsimAverages().1
+            let cnt = averages.count
+            
+            var bestMean: Double?
+            
+            if cnt == 10 {
+                return getCurrentMeanOfTen()
+            } else if cnt > 10 {
+                for i in 0..<cnt-9 {
+                    print((averages[i..<i+10]).map({ $0.average ?? 0 }))
+                    
+                    let tempArr = (averages[i..<i+10])
+                    
+                    if !(tempArr.contains(where: { $0.totalPen == .dnf})) {
+                        let tempMean = (tempArr.map({ $0.average! }).reduce(0, +)) / 10.0
+                        
+                        if bestMean == nil || tempMean < bestMean! {
+                            bestMean = tempMean
+                        }
+                    }
+                }
+                
+                return bestMean
+            } else {
+                return nil
+            }
+        }
+        
+        return nil
+    }
 }
