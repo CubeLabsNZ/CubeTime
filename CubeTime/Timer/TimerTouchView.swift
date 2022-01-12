@@ -29,15 +29,16 @@ struct TimerTouchView: UIViewRepresentable {
     
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
-    let threshold: CGFloat = 50
-    let tapDuration: Double = 1
+    @AppStorage(gsKeys.freeze.rawValue) var userHoldTime: Double = 0.5
+    @AppStorage(gsKeys.gestureDistance.rawValue) var geatureThreshold: Double = 50
+    
     
     func makeUIView(context: Context) -> some UIView {
         let v = TimerUIView(frame: .zero, stopWatchManager: stopWatchManager)
         
         let longPressGesture = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.longPress))
-        longPressGesture.allowableMovement = threshold
-        longPressGesture.minimumPressDuration = tapDuration
+        longPressGesture.allowableMovement = geatureThreshold
+        longPressGesture.minimumPressDuration = userHoldTime
 //        longPressGesture.requiresExclusiveTouchType = ?
 
         v.addGestureRecognizer(longPressGesture)

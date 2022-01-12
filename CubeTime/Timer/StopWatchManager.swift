@@ -20,8 +20,6 @@ class StopWatchManager: ObservableObject {
     private let hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
     private let hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
     private let inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
-    private let userHoldTime: Double = UserDefaults.standard.double(forKey: gsKeys.freeze.rawValue)
-    private let geatureThreshold: Double = UserDefaults.standard.double(forKey: gsKeys.gestureDistance.rawValue)
     private let timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
 
     
@@ -125,6 +123,33 @@ class StopWatchManager: ObservableObject {
         self.secondsStr = formatSolveTime(secs: self.secondsElapsed)
         mode = .stopped
 
+        if let currentSession = currentSession as? CompSimSession {
+            solveItem = CompSimSolve(context: managedObjectContext)
+            if currentSession.solvegroups == nil {
+                currentSession.solvegroups = NSOrderedSet()
+            }
+                                
+            if currentSession.solvegroups!.count == 0 || currentSolveth == 5 {
+                let solvegroup = CompSimSolveGroup(context: managedObjectContext)
+                solvegroup.session = currentSession
+                
+            }
+            
+            (solveItem as! CompSimSolve).solvegroup = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup)
+            currentSolveth = (currentSession.solvegroups!.lastObject! as? CompSimSolveGroup)!.solves!.count
+
+        } else {
+            solveItem = Solves(context: managedObjectContext)
+        }
+        solveItem.date = Date()
+        solveItem.penalty = penType.rawValue
+        // .puzzle_id
+        solveItem.session = currentSession
+        solveItem.scramble = scrambleStr
+        solveItem.scramble_type = currentSession.scramble_type
+        solveItem.scramble_subtype = 0
+        solveItem.time = self.secondsElapsed
+        try! managedObjectContext.save()
     }
     
     
@@ -137,33 +162,6 @@ class StopWatchManager: ObservableObject {
         if mode == .running {
             prevDownStoppedTimer = true
             stop()
-            if let currentSession = currentSession as? CompSimSession {
-                solveItem = CompSimSolve(context: managedObjectContext)
-                if currentSession.solvegroups == nil {
-                    currentSession.solvegroups = NSOrderedSet()
-                }
-                                    
-                if currentSession.solvegroups!.count == 0 || currentSolveth == 5 {
-                    let solvegroup = CompSimSolveGroup(context: managedObjectContext)
-                    solvegroup.session = currentSession
-                    
-                }
-                
-                (solveItem as! CompSimSolve).solvegroup = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup)
-                currentSolveth = (currentSession.solvegroups!.lastObject! as? CompSimSolveGroup)!.solves!.count
-
-            } else {
-                solveItem = Solves(context: managedObjectContext)
-            }
-            solveItem.date = Date()
-            solveItem.penalty = penType.rawValue
-            // .puzzle_id
-            solveItem.session = currentSession
-            solveItem.scramble = scrambleStr
-            solveItem.scramble_type = currentSession.scramble_type
-            solveItem.scramble_subtype = 0
-            solveItem.time = self.secondsElapsed
-            try! managedObjectContext.save()
             DispatchQueue.main.async {
                 self.rescramble()
             }
