@@ -15,57 +15,70 @@ struct StatsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
+    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    
+    
+    @Binding var currentSession: Sessions
+    
+    @State var isShowingStatsView: Bool = false
+    @State var presentedAvg: CalculatedAverage? = nil
+    @State var showBestSinglePopup = false
+    
+    
+    
     let columns = [
         // GridItem(.adaptive(minimum: 112), spacing: 11)
         GridItem(spacing: 10),
         GridItem(spacing: 10)
     ]
     
-    @State var isShowingStatsView: Bool = false
-    @Binding var currentSession: Sessions
     
-    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
-    
+    // best averages
     let ao5: CalculatedAverage?
     let ao12: CalculatedAverage?
     let ao100: CalculatedAverage?
     
+    // current averages
     let currentAo5: CalculatedAverage?
     let currentAo12: CalculatedAverage?
     let currentAo100: CalculatedAverage?
     
-//    let timesByDate: [Double]
-//    let timesBySpeed: [Double]
-    
+    // other block calculations
     let bestSingle: Solves?
     let sessionMean: Double?
     
-    let compSimCount: Int
     
-    let reachedTargets: Int
-    
-    
+    // raw values for graphs
     let timesByDateNoDNFs: [Double]
     let timesBySpeedNoDNFs: [Double]
     
     
-    let bestCompsimAverage: CalculatedAverage?
-    let currentCompsimAverage: CalculatedAverage?
+    // comp sim stats
+    let compSimCount: Int
+    let reachedTargets: Int
     
     let allCompsimAveragesByDate: [Double] // has no dnfs!!
     let allCompsimAveragesByTime: [Double]
     
+    let bestCompsimAverage: CalculatedAverage?
+    let currentCompsimAverage: CalculatedAverage?
+    
+    let currentMeanOfTen: Double?
+    let bestMeanOfTen: Double?
+    
+    
         
-    @State var presentedAvg: CalculatedAverage? = nil
     
-    @State var showBestSinglePopup = false
-    
-    
+    // get stats
     let stats: Stats
+    
+    
+    
     init(currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
         
         stats = Stats(currentSession: currentSession.wrappedValue)
+        
         
         self.ao5 = stats.getBestMovingAverageOf(5)
         self.ao12 = stats.getBestMovingAverageOf(12)
@@ -75,27 +88,28 @@ struct StatsView: View {
         self.currentAo12 = stats.getCurrentAverageOf(12)
         self.currentAo100 = stats.getCurrentAverageOf(100)
         
+        
         self.bestSingle = stats.getMin()
         self.sessionMean = stats.getSessionMean()
         
-//        self.timesByDate = stats.solvesByDate.map(timeWithPlusTwoForSolve)
-//        self.timesBySpeed = stats.solves.map(timeWithPlusTwoForSolve)
-            
-        self.compSimCount = stats.getNumberOfAverages()
-        self.reachedTargets = stats.getReachedTargets()
-       
+        
+        // raw values
         self.timesByDateNoDNFs = stats.solvesNoDNFsbyDate.map { timeWithPlusTwoForSolve($0) }
         self.timesBySpeedNoDNFs = stats.solvesNoDNFs.map { timeWithPlusTwoForSolve($0) }
         
-        self.bestCompsimAverage = stats.getBestCompsimAverageAndArrayOfCompsimAverages().0
         
+        // comp sim
+        self.compSimCount = stats.getNumberOfAverages()
+        self.reachedTargets = stats.getReachedTargets()
+       
         self.allCompsimAveragesByDate = stats.getBestCompsimAverageAndArrayOfCompsimAverages().1.map { $0.average! }
-        
         self.allCompsimAveragesByTime = self.allCompsimAveragesByDate.sorted(by: <)
         
         self.currentCompsimAverage = stats.getCurrentCompsimAverage()
+        self.bestCompsimAverage = stats.getBestCompsimAverageAndArrayOfCompsimAverages().0
         
-        
+        self.currentMeanOfTen = stats.getCurrentMeanOfTen()
+        self.bestMeanOfTen = stats.getBestMeanOfTen()
     }
     
     
@@ -129,7 +143,7 @@ struct StatsView: View {
                         
                         Text("generate")
                             .onTapGesture {
-                                for _ in 0..<4000 {
+                                for _ in 0..<2 {
                                     let compSimSolveGroup = CompSimSolveGroup(context: managedObjectContext)
                                     compSimSolveGroup.session = currentSession as! CompSimSession
                                     
@@ -901,6 +915,81 @@ struct StatsView: View {
                             
                             
                             if SessionTypes(rawValue: currentSession.session_type)! == .compsim {
+                                
+                                Divider()
+                                    .frame(width: UIScreen.screenWidth/2)
+                                    .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
+                                
+                                // mean of 10 calculations
+                                
+                                HStack (spacing: 10) {
+                                    HStack {
+                                        VStack (alignment: .leading, spacing: 0) {
+                                            Text("CURRENT MO10 AO5")
+                                                .font(.system(size: 13, weight: .medium, design: .default))
+                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                .padding(.bottom, 4)
+                                            
+                                            if let currentMeanOfTen = currentMeanOfTen {
+                                                Text(formatSolveTime(secs: currentMeanOfTen, penType: ((currentMeanOfTen == -1) ? .dnf : .none)))
+                                                    .font(.system(size: 34, weight: .bold, design: .default))
+                                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                                    
+                                            } else {
+                                                Text("-")
+                                                    .font(.system(size: 28, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(uiColor: .systemGray5))
+
+                                            }
+                                            
+                                        }
+                                        .padding(.top)
+                                        .padding(.bottom, 12)
+                                        .padding(.leading, 12)
+                                        
+                                        Spacer()
+                                    }
+                                    .frame(height: 75)
+                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                    .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                    
+                                    HStack {
+                                        VStack (alignment: .leading, spacing: 0) {
+                                            Text("BEST MO10 AO5")
+                                                .font(.system(size: 13, weight: .medium, design: .default))
+                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                .padding(.bottom, 4)
+                                            
+                                            if let bestMeanOfTen = bestMeanOfTen {
+                                                Text(formatSolveTime(secs: bestMeanOfTen, penType: ((bestMeanOfTen == -1) ? .dnf : .none)))
+                                                    .font(.system(size: 34, weight: .bold, design: .default))
+                                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                            } else {
+                                                Text("-")
+                                                    .font(.system(size: 28, weight: .medium, design: .default))
+                                                    .foregroundColor(Color(uiColor: .systemGray5))
+                                            }
+                                            
+                                        }
+                                        .padding(.top)
+                                        .padding(.bottom, 12)
+                                        .padding(.leading, 12)
+                                        
+                                        Spacer()
+                                    }
+                                    .frame(height: 75)
+                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                    .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                    
+                                }
+                                
+                                
+                                
+                                Divider()
+                                    .frame(width: UIScreen.screenWidth/2)
+                                    .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
+                                
+                                
                                 /// time trend graph
                                 VStack {
                                     ZStack {

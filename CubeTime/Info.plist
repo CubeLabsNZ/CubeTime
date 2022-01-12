@@ -2,6 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>cubetime</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>RecursiveSansLnrSt-Regular.ttf</string>
@@ -9,38 +20,38 @@
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>
-			<key>UIApplicationShortcutItemType</key>
-			<string>SearchAction</string>
 			<key>UIApplicationShortcutItemIconFile</key>
 			<string>qa-1-timer</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>Timer</string>
 			<key>UIApplicationShortcutItemSubtitle</key>
 			<string>Main timer view</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Timer</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>timer</string>
 		</dict>
 		<dict>
-			<key>UIApplicationShortcutItemType</key>
-			<string>SearchAction</string>
 			<key>UIApplicationShortcutItemIconFile</key>
 			<string>qa-2-times</string>
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Time List</string>
-		</dict>
-		<dict>
 			<key>UIApplicationShortcutItemType</key>
 			<string>SearchAction</string>
+		</dict>
+		<dict>
 			<key>UIApplicationShortcutItemIconFile</key>
 			<string>qa-3-stats</string>
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Stats</string>
-		</dict>
-		<dict>
 			<key>UIApplicationShortcutItemType</key>
 			<string>SearchAction</string>
+		</dict>
+		<dict>
 			<key>UIApplicationShortcutItemIconFile</key>
 			<string>qa-4-sessions</string>
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Sessions</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>SearchAction</string>
 		</dict>
 	</array>
 </dict>
