@@ -20,8 +20,6 @@ class StopWatchManager: ObservableObject {
     private let hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
     private let hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
     private let inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
-    private let userHoldTime: Double = UserDefaults.standard.double(forKey: gsKeys.freeze.rawValue)
-    private let geatureThreshold: Double = UserDefaults.standard.double(forKey: gsKeys.gestureDistance.rawValue)
     private let timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
 
     
