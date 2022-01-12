@@ -1,0 +1,71 @@
+import Foundation
+import SwiftUI
+
+
+class TimerUIView: UIView {
+    let stopWatchManager: StopWatchManager!
+    
+    required init(frame: CGRect, stopWatchManager: StopWatchManager) {
+        self.stopWatchManager = stopWatchManager
+        super.init(frame: frame)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // TODO make this a subclass of UIGestureRecognizer instead to use the same coordinator
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        stopWatchManager.touchDown()
+    }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        stopWatchManager.touchUp()
+    }
+}
+
+struct TimerTouchView: UIViewRepresentable {
+    
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
+    let threshold: CGFloat = 50
+    let tapDuration: Double = 1
+    
+    func makeUIView(context: Context) -> some UIView {
+        let v = TimerUIView(frame: .zero, stopWatchManager: stopWatchManager)
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.longPress))
+        longPressGesture.allowableMovement = threshold
+        longPressGesture.minimumPressDuration = tapDuration
+//        longPressGesture.requiresExclusiveTouchType = ?
+
+        v.addGestureRecognizer(longPressGesture)
+        
+        return v
+    }
+    
+    class Coordinator: NSObject {
+        let stopWatchManager: StopWatchManager
+        
+        init(stopWatchManager: StopWatchManager) {
+            self.stopWatchManager = stopWatchManager
+        }
+        
+        @objc func longPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+            if gestureRecognizer.state == .began {
+                stopWatchManager.longPressStart()
+            } else if gestureRecognizer.state == .ended {
+                stopWatchManager.longPressEnd()
+            }
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(stopWatchManager: stopWatchManager)
+    }
+    
+    func updateUIView(_ uiView: UIViewType, context: Context) {
+        
+    }
+}

@@ -159,25 +159,9 @@ struct TimerView: View {
             
                        
             GeometryReader { geometry in
-                Color.clear.contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
-                    .if(!targetFocused) { view in
-                        view
-                            .gesture(
-                                DragGesture(minimumDistance: 0, coordinateSpace: .local)
-                                    .onChanged({value in
-                                        stopWatchManager.touchDown(value: value)
-                                    })
-                                    .onEnded({ value in
-                                        stopWatchManager.touchUp(value: value)
-                                    })
-                            )
-                    }
-                    .if(targetFocused) { view in
-                        view
-                            .onTapGesture {
-                                targetFocused = false
-                            }
-                    }
+                TimerTouchView()
+                    .contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
+                    .environmentObject(stopWatchManager)
             }
             .ignoresSafeArea(edges: .top)
             

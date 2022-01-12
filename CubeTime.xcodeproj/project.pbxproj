@@ -32,6 +32,7 @@
 		23E81E71275D8DDA00B741E3 /* IESettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E70275D8DDA00B741E3 /* IESettings.swift */; };
 		23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E72275D8DEA00B741E3 /* AboutSettings.swift */; };
 		23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB8A1D2779B6D3000F6663 /* TimeBar.swift */; };
+		7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */; };
 		7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */; };
 		7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6159F82751B53E00DC9A4C /* TimeCard.swift */; };
 		7D69E0A22751FDEA007211CC /* Sq12phase.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0662751FDEA007211CC /* Sq12phase.m */; settings = {COMPILER_FLAGS = "-w"; }; };
@@ -118,6 +119,7 @@
 		23E81E70275D8DDA00B741E3 /* IESettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IESettings.swift; sourceTree = "<group>"; };
 		23E81E72275D8DEA00B741E3 /* AboutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettings.swift; sourceTree = "<group>"; };
 		23EB8A1D2779B6D3000F6663 /* TimeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBar.swift; sourceTree = "<group>"; };
+		7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTouchView.swift; sourceTree = "<group>"; };
 		7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabsView.swift; sourceTree = "<group>"; };
 		7D6159F82751B53E00DC9A4C /* TimeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCard.swift; sourceTree = "<group>"; };
 		7D69E0662751FDEA007211CC /* Sq12phase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sq12phase.m; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 			children = (
 				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
 				7D78FF8B276084C2008BB82E /* StopWatchManager.swift */,
+				7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */,
 			);
 			path = Timer;
 			sourceTree = "<group>";
@@ -623,6 +626,7 @@
 				7D69E0AC2751FDEA007211CC /* CHTScrambler.m in Sources */,
 				7D69E0B92751FDEA007211CC /* CHTSettings.m in Sources */,
 				7D69E0BD2751FDEB007211CC /* RubiksTimerDataProcessing.m in Sources */,
+				7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */,
 				7D69E0AB2751FDEA007211CC /* Im.m in Sources */,
 				7D69E0A32751FDEA007211CC /* Gear.m in Sources */,
 				7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */,
