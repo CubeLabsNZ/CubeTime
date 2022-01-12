@@ -54,6 +54,9 @@ func getDivisions(data: [Double]) -> Array<(Double, Int)> {
         sorted.insert((ifd,trim), at: 0)
         sorted.append((ild,trim))
         
+        
+        print(sorted)
+        
         return sorted
 
     } else {
@@ -82,6 +85,14 @@ extension View {
                 .fill(Color.clear)
             self
         }
+    }
+}
+
+func getMedianPercentage(numbers: Array<(Double, Int)>) -> Double {
+    if numbers.count >= 6 {
+        let truncated = numbers.dropFirst().dropLast()
+        
+        return (stats.getNormalMedian - truncated.first) / (truncated.last - truncated.first)
     }
 }
 
@@ -141,9 +152,6 @@ struct TimeDistribution: View {
                             }
                             .stroke(Color(uiColor: .systemGray5), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5, height == 4 ? 0 : 10]))
                         }
-                        
-                            
-                              
                     }
                 }
                 .padding()
@@ -151,38 +159,40 @@ struct TimeDistribution: View {
                 
                 
                 GeometryReader { geometry in
-                    ForEach(0..<data.count, id: \.self) { datum in
-                        let xloc: CGFloat = (geometry.size.width / (count < 8 ? CGFloat(count+2) : 10)) * CGFloat(datum)
-                        ZStack {
-                            Rectangle()
-                                .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
-                                .frame(width: geometry.size.width, height: 260)
-                                .mask {
-                                    Path { path in
-                                        path.move(to: CGPoint(x: xloc, y: 220))
-                                        path.addLine(to: CGPoint(x: xloc, y: 220 - max_height * CGFloat(data[datum].1)))
+                    ZStack {
+                        ForEach(0..<data.count, id: \.self) { datum in
+                            let xloc: CGFloat = (geometry.size.width / (count < 8 ? CGFloat(count+2) : 10)) * CGFloat(datum)
+                            ZStack {
+                                Rectangle()
+                                    .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
+                                    .frame(width: geometry.size.width, height: 260)
+                                    .mask {
+                                        Path { path in
+                                            path.move(to: CGPoint(x: xloc, y: 220))
+                                            path.addLine(to: CGPoint(x: xloc, y: 220 - max_height * CGFloat(data[datum].1)))
+                                        }
+                                        .stroke(.blue, style: StrokeStyle(lineWidth: 6, lineCap: .round))
                                     }
-                                    .stroke(.blue, style: StrokeStyle(lineWidth: 6, lineCap: .round))
-                                }
-                            
-                            Rectangle()
-                                .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
-                                .frame(width: geometry.size.width, height: 260)
-                                .offset(x: -20, y: -20)
-                                .mask {
-                                    Text("\(data[datum].1)")
-                                        .position(x: xloc, y: (220 - max_height * CGFloat(data[datum].1)) - 10)
-                                        .multilineTextAlignment(.center)
-                                        .font(.system(size: 10, weight: .bold, design: .monospaced))
-                                }
-                                .colouredGlow(gradientSelected: gradientSelected)
-                            
-                            Text((datum == 0 ? "<" : (datum == data.count-1 ? ">" : ""))+formatLegendTime(secs: data[datum].0, dp: 1)+(datum != 0 && datum != data.count-1 ? "+" : ""))
-                                .foregroundColor(Color(uiColor: .systemGray2))
-                                .font(.system(size: 10, weight: .medium, design: .monospaced))
-                                .position(x: xloc, y: 240)
+                                
+                                Rectangle()
+                                    .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
+                                    .frame(width: geometry.size.width, height: 260)
+                                    .offset(x: -20, y: -20)
+                                    .mask {
+                                        Text("\(data[datum].1)")
+                                            .position(x: xloc, y: (220 - max_height * CGFloat(data[datum].1)) - 10)
+                                            .multilineTextAlignment(.center)
+                                            .font(.system(size: 10, weight: .bold, design: .monospaced))
+                                    }
+                                    .colouredGlow(gradientSelected: gradientSelected)
+                                
+                                Text((datum == 0 ? "<" : (datum == data.count-1 ? ">" : ""))+formatLegendTime(secs: data[datum].0, dp: 1)+(datum != 0 && datum != data.count-1 ? "+" : ""))
+                                    .foregroundColor(Color(uiColor: .systemGray2))
+                                    .font(.system(size: 10, weight: .medium, design: .monospaced))
+                                    .position(x: xloc, y: 240)
+                            }
+                            .padding(.horizontal)
                         }
-                        .padding(.horizontal)
                     }
                 }
                 .padding()

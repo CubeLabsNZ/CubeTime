@@ -141,6 +141,21 @@ class Stats {
     }
     
     
+    func getNormalMedian() -> Double? {
+        let cnt = solvesNoDNFs.count
+        
+        if cnt == 0 {
+            return nil
+        }
+        
+        if cnt % 2 == 0 {
+            return Double((solvesNoDNFs[cnt/2].time + solvesNoDNFs[(cnt/2)-1].time)/2)
+        } else {
+            return Double(solvesNoDNFs[(cnt/2)-1].time)
+        }
+    }
+    
+    
     
     /// AVERAGE FUNCTIONS
     
