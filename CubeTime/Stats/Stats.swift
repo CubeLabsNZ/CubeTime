@@ -141,17 +141,45 @@ class Stats {
     }
     
     
-    func getNormalMedian() -> Double? {
+    func getNormalMedian() -> (Double?, Double?) {
         let cnt = solvesNoDNFs.count
         
         if cnt == 0 {
-            return nil
+            return (nil, nil)
         }
         
+        let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solvesNoDNFs.map({ $0.time })))
+        
+        print(truncatedValues)
+        print(cnt)
+            
+        
+        
         if cnt % 2 == 0 {
-            return Double((solvesNoDNFs[cnt/2].time + solvesNoDNFs[(cnt/2)-1].time)/2)
+            let median = Double((solvesNoDNFs[cnt/2].time + solvesNoDNFs[(cnt/2)-1].time)/2)
+            
+            if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
+                print(truncatedMin)
+                print(truncatedMax)
+                
+                
+                return (median, ((median-truncatedMin)/(truncatedMax-truncatedMin)))
+            }
+            
+            return (median, nil)
+            
+            
         } else {
-            return Double(solvesNoDNFs[(cnt/2)-1].time)
+            let median = Double(solvesNoDNFs[(cnt/2)].time)
+            
+            if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
+                print(truncatedMin)
+                print(truncatedMax)
+                
+                return (median, ((median-truncatedMin)/(truncatedMax-truncatedMin)))
+            }
+            
+            return (median, nil)
         }
     }
     

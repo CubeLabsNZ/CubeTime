@@ -1,9 +1,11 @@
 import Foundation
 import SwiftUI
+import UIKit
 
 
 class TimerUIView: UIView {    
-    let stopWatchManager: StopWatchManager!
+    let stopWatchManager: StopWatchManager
+
         
     required init(frame: CGRect, stopWatchManager: StopWatchManager) {
         self.stopWatchManager = stopWatchManager
@@ -26,28 +28,11 @@ class TimerUIView: UIView {
 }
 
 struct TimerTouchView: UIViewRepresentable {
-    
     @EnvironmentObject var stopWatchManager: StopWatchManager
-    
-    
-    
     @AppStorage(gsKeys.freeze.rawValue) var userHoldTime: Double = 0.5
     @AppStorage(gsKeys.gestureDistance.rawValue) var geatureThreshold: Double = 50
     
-    
-    func makeUIView(context: Context) -> some UIView {
-        let view = TimerUIView(frame: .zero, stopWatchManager: stopWatchManager)
-        
-        let longPressGestureRecogniser = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.longPress))
-        longPressGestureRecogniser.allowableMovement = geatureThreshold
-        longPressGestureRecogniser.minimumPressDuration = userHoldTime
-        
-//        longPressGesture.requiresExclusiveTouchType = ?
-
-        view.addGestureRecognizer(longPressGestureRecogniser)
-        
-        return view
-    }
+    @State var update: Bool = false
     
     class Coordinator: NSObject {
         let stopWatchManager: StopWatchManager
@@ -65,11 +50,29 @@ struct TimerTouchView: UIViewRepresentable {
         }
     }
     
+    func makeUIView(context: Context) -> some UIView {
+        let view = TimerUIView(frame: .zero, stopWatchManager: stopWatchManager)
+        
+        let longPressGestureRecogniser = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.longPress))
+        longPressGestureRecogniser.allowableMovement = geatureThreshold
+        longPressGestureRecogniser.minimumPressDuration = userHoldTime
+        
+//        longPressGesture.requiresExclusiveTouchType = ?
+
+        view.isUserInteractionEnabled = true
+        view.addGestureRecognizer(longPressGestureRecogniser)
+        
+        NSLog("view created")
+        
+        return view
+    }
+    
+    func updateUIView(_ uiView: UIViewType, context: Context) {
+    }
+    
     func makeCoordinator() -> Coordinator {
         return Coordinator(stopWatchManager: stopWatchManager)
     }
     
-    func updateUIView(_ uiView: UIViewType, context: Context) {
-        
-    }
+    
 }

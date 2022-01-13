@@ -115,10 +115,7 @@ struct StatsView: View {
     
     let currentMeanOfTen: Double?
     let bestMeanOfTen: Double?
-    
-    
-        
-    
+   
     // get stats
     let stats: Stats
     
@@ -126,7 +123,6 @@ struct StatsView: View {
     
     init(currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
-        
         stats = Stats(currentSession: currentSession.wrappedValue)
         
         
@@ -1188,7 +1184,7 @@ struct StatsView: View {
                                         }
                                         .padding([.vertical, .leading], 12)
                                         
-                                        TimeDistribution(solves: allCompsimAveragesByTime)
+                                        TimeDistribution(currentSession: $currentSession, solves: allCompsimAveragesByTime)
                                             .drawingGroup()
                                     }
                                 }
@@ -1236,9 +1232,10 @@ struct StatsView: View {
                                             }
                                             Spacer()
                                         }
-                                        .padding([.vertical, .leading], 12)
+                                        .padding(.top, 9)
+                                        .padding(.leading, 12)
                                         
-                                        TimeDistribution(solves: timesBySpeedNoDNFs)
+                                        TimeDistribution(currentSession: $currentSession, solves: timesBySpeedNoDNFs)
                                             .drawingGroup()
                                     }
                                 }
