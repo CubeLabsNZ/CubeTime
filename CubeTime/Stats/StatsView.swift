@@ -11,53 +11,62 @@ extension View {
 
 
 
-/*
-struct StatsStandardBlock: View {
+struct StatsBlock<Content: View>: View {
+    @Environment(\.colorScheme) var colourScheme
+    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    
+    let dataView: Content
     let title: String
-    let data: AnyObject?
-    let type: Int
+    let blockHeight: CGFloat?
+    let coloured: Bool
     
     
-    
-    
+    init(_ title: String, _ blockHeight: CGFloat?, _ coloured: Bool, @ViewBuilder _ dataView: () -> Content) {
+        self.dataView = dataView()
+        self.title = title
+        self.coloured = coloured
+        self.blockHeight = blockHeight
+    }
     
     var body: some View {
-        ZStack {
-            HStack {
+        VStack {
+            ZStack {
                 VStack {
-                    Text(title) // eg: Text("SESSION MEAN") note: is capitalised
-                        .font(.system(size: 13, weight: .medium, design: .default))
-                        .foregroundColor(Color(uiColor: .systemGray))
-                        .padding(.bottom, 4)
-                    
+                    HStack {
+                        Text(title)
+                            .font(.system(size: 13, weight: .medium, design: .default))
+                            .foregroundColor(Color(uiColor: coloured ? .systemGray5 : .systemGray))
+                        Spacer()
+                    }
                     Spacer()
                 }
-                Spacer()
-            }
-            .padding(.top)
-            .padding(.leading, 12)
-            
-            if data != nil {
-                Text(String(formatSolveTime(secs: data!)))
-                    .font(.system(size: 34, weight: .bold, design: .default))
-                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                    .modifier(DynamicText())
-                    .padding(.leading, 12)
-                    .padding(.bottom, 12)
+                .padding(.top, 9)
+                .padding(.leading, 12)
                 
-            } else {
-                Text("-")
-                    .font(.system(size: 28, weight: .medium, design: .default))
-                    .foregroundColor(Color(uiColor: .systemGray2))
-                    .padding(.leading, 12)
-                    .padding(.bottom, 12)
+                dataView
             }
         }
-        .frame(height: 75)
-        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+        .frame(height: blockHeight)
+        .if(coloured) { view in
+            view.background(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)                                        .clipShape(RoundedRectangle(cornerRadius:16)))
+        }
+        .if(!coloured) { view in
+            view.background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+        }
+        .padding(.horizontal)
     }
 }
- */
+
+
+struct StatsDivider: View {
+    @Environment(\.colorScheme) var colourScheme
+
+    var body: some View {
+        Divider()
+            .frame(width: UIScreen.screenWidth/2)
+            .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
+    }
+}
 
 
 
@@ -185,157 +194,7 @@ struct StatsView: View {
                         .padding(.top, -6)
                         .padding(.horizontal)
                         .padding(.bottom, 8)
-                        
-                        
-                        Text("generate cs")
-                            .onTapGesture {
-                                for _ in 0..<100 {
-                                    let compSimSolveGroup = CompSimSolveGroup(context: managedObjectContext)
-                                    compSimSolveGroup.session = currentSession as! CompSimSession
-                                    
-                                    for _ in 0..<5 {
-                                        let solveItem: CompSimSolve!
-                                        
-                                        
-                                        
-                                        solveItem = CompSimSolve(context: managedObjectContext)
-                                        
-                                        solveItem.solvegroup = compSimSolveGroup
-                                        
-                                        solveItem.date = Date()
-                                        solveItem.session = currentSession
-                                        solveItem.scramble = "sdlfikj"
-                                        solveItem.scramble_type = 0
-                                        solveItem.scramble_subtype = 0
-                                        solveItem.time = Double.random(in: 6..<11)
-                                    }
-                                }
-                                do {
-                                    try managedObjectContext.save()
-                                } catch {
-                                    if let error = error as NSError? {
-                                        fatalError("Unresolved error \(error), \(error.userInfo)")
-                                    }
-                                }
-                            }
-                        
-                        
-                        Text("generate normal")
-                            .onTapGesture(perform: {
-                                for _ in 0..<1900 {
-                                    let solveItem: Solves!
-                                    
-                                    solveItem = Solves(context: managedObjectContext)
-                                    solveItem.date = Date()
-                                    solveItem.session = currentSession
-                                    solveItem.scramble = "sdlfikj"
-                                    solveItem.scramble_type = 0
-                                    solveItem.scramble_subtype = 0
-                                    solveItem.time = Double.random(in: 6..<11)
-                                    
-                                }
-                                do {
-                                    try managedObjectContext.save()
-                                } catch {
-                                    if let error = error as NSError? {
-                                        fatalError("Unresolved error \(error), \(error.userInfo)")
-                                    }
-                                }
-                            })
-                        
-                        
-                        Text("generate 100")
-                            .onTapGesture(perform: {
-                                for _ in 0..<100 {
-                                    let solveItem: Solves!
-                                    
-                                    solveItem = Solves(context: managedObjectContext)
-                                    solveItem.date = Date()
-                                    solveItem.session = currentSession
-                                    solveItem.scramble = "sdlfikj"
-                                    solveItem.scramble_type = 0
-                                    solveItem.scramble_subtype = 0
-                                    solveItem.time = Double.random(in: 6..<11)
-                                    
-                                }
-                                do {
-                                    try managedObjectContext.save()
-                                } catch {
-                                    if let error = error as NSError? {
-                                        fatalError("Unresolved error \(error), \(error.userInfo)")
-                                    }
-                                }
-                            })
-                        
-                        Text("generate 50")
-                            .onTapGesture(perform: {
-                                for _ in 0..<50 {
-                                    let solveItem: Solves!
-                                    
-                                    solveItem = Solves(context: managedObjectContext)
-                                    solveItem.date = Date()
-                                    solveItem.session = currentSession
-                                    solveItem.scramble = "sdlfikj"
-                                    solveItem.scramble_type = 0
-                                    solveItem.scramble_subtype = 0
-                                    solveItem.time = Double.random(in: 6..<11)
-                                    
-                                }
-                                do {
-                                    try managedObjectContext.save()
-                                } catch {
-                                    if let error = error as NSError? {
-                                        fatalError("Unresolved error \(error), \(error.userInfo)")
-                                    }
-                                }
-                            })
-                        
-                        Text("generate 10")
-                            .onTapGesture(perform: {
-                                for _ in 0..<10 {
-                                    let solveItem: Solves!
-                                    
-                                    solveItem = Solves(context: managedObjectContext)
-                                    solveItem.date = Date()
-                                    solveItem.session = currentSession
-                                    solveItem.scramble = "sdlfikj"
-                                    solveItem.scramble_type = 0
-                                    solveItem.scramble_subtype = 0
-                                    solveItem.time = Double.random(in: 6..<11)
-                                    
-                                }
-                                do {
-                                    try managedObjectContext.save()
-                                } catch {
-                                    if let error = error as NSError? {
-                                        fatalError("Unresolved error \(error), \(error.userInfo)")
-                                    }
-                                }
-                            })
-                        
-                        Text("generate 2")
-                            .onTapGesture(perform: {
-                                for _ in 0..<2 {
-                                    let solveItem: Solves!
-                                    
-                                    solveItem = Solves(context: managedObjectContext)
-                                    solveItem.date = Date()
-                                    solveItem.session = currentSession
-                                    solveItem.scramble = "sdlfikj"
-                                    solveItem.scramble_type = 0
-                                    solveItem.scramble_subtype = 0
-                                    solveItem.time = Double.random(in: 6..<11)
-                                    
-                                }
-                                do {
-                                    try managedObjectContext.save()
-                                } catch {
-                                    if let error = error as NSError? {
-                                        fatalError("Unresolved error \(error), \(error.userInfo)")
-                                    }
-                                }
-                            })
-                        
+
                         /// everything
                         VStack(spacing: 10) {
                             /// first bunch of blocks
@@ -1073,7 +932,6 @@ struct StatsView: View {
                             if SessionTypes(rawValue: currentSession.session_type)! == .compsim {
                                 
                                 // mean of 10 calculations
-                                
                                 HStack (spacing: 10) {
                                     HStack {
                                         VStack (alignment: .leading, spacing: 0) {
@@ -1136,116 +994,34 @@ struct StatsView: View {
                                 }
                                 .padding(.horizontal)
                                 
+                                StatsDivider()
                                 
-                                
-                                Divider()
-                                    .frame(width: UIScreen.screenWidth/2)
-                                    .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
-                                
-                                
-                                /// time trend graph
-                                VStack {
-                                    ZStack {
-                                        VStack {
-                                            HStack {
-                                                Text("TIME TREND")
-                                                    .font(.system(size: 13, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(uiColor: .systemGray))
-                                                Spacer()
-                                            }
-                                            Spacer()
-                                        }
-                                        .padding([.vertical, .leading], 12)
-                                        
-                                        TimeTrend(data: allCompsimAveragesByDate, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
-                                            .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
-                                            .padding(.horizontal, 12)
-                                            .offset(y: -5)
-                                            .drawingGroup()
-                                    }
+                                StatsBlock("TIME TREND", (allCompsimAveragesByDate.count < 2 ? 150 : 300), false) {
+                                    TimeTrend(data: allCompsimAveragesByDate, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
+                                        .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
+                                        .padding(.horizontal, 12)
+                                        .offset(y: -5)
+                                        .drawingGroup()
                                 }
-                                .frame(height: allCompsimAveragesByDate.count < 2 ? 150 : 300)
-                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                .padding(.horizontal)
-                                
-                                
-                                
-                                /// time distrbution graph
-                                VStack {
-                                    ZStack {
-                                        VStack {
-                                            HStack {
-                                                Text("TIME DISTRIBUTION")
-                                                    .font(.system(size: 13, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(uiColor: .systemGray))
-                                                Spacer()
-                                            }
-                                            Spacer()
-                                        }
-                                        .padding([.vertical, .leading], 12)
-                                        
-                                        TimeDistribution(currentSession: $currentSession, solves: allCompsimAveragesByTime)
-                                            .drawingGroup()
-                                    }
+                            
+                                StatsBlock("TIME DISTRIBUTION", (allCompsimAveragesByTime.count < 4 ? 150 : 300), false) {
+                                    TimeDistribution(currentSession: $currentSession, solves: allCompsimAveragesByTime)
+                                        .drawingGroup()
                                 }
-                                .frame(height: allCompsimAveragesByTime.count < 4 ? 150 : 300)
-                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                .padding(.horizontal)
-                               
                             } else {
-                                /// time trend graph
-                                VStack {
-                                    ZStack {
-                                        VStack {
-                                            HStack {
-                                                Text("TIME TREND")
-                                                    .font(.system(size: 13, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(uiColor: .systemGray))
-                                                Spacer()
-                                            }
-                                            Spacer()
-                                        }
-                                        .padding([.vertical, .leading], 12)
-                                        
-                                        TimeTrend(data: timesByDateNoDNFs, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
-                                            .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
-                                            .padding(.horizontal, 12)
-                                            .offset(y: -5)
-                                            .drawingGroup()
-                                    }
+                                StatsBlock("TIME TREND", (timesByDateNoDNFs.count < 2 ? 150 : 300), false) {
+                                    TimeTrend(data: timesByDateNoDNFs, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
+                                        .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
+                                        .padding(.horizontal, 12)
+                                        .offset(y: -5)
+                                        .drawingGroup()
                                 }
-                                .frame(height: timesByDateNoDNFs.count < 2 ? 150 : 300)
-                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                .padding(.horizontal)
-                               
                                 
-                                
-                                /// time distrbution graph
-                                VStack {
-                                    ZStack {
-                                        VStack {
-                                            HStack {
-                                                Text("TIME DISTRIBUTION")
-                                                    .font(.system(size: 13, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(uiColor: .systemGray))
-                                                Spacer()
-                                            }
-                                            Spacer()
-                                        }
-                                        .padding(.top, 9)
-                                        .padding(.leading, 12)
-                                        
-                                        TimeDistribution(currentSession: $currentSession, solves: timesBySpeedNoDNFs)
-                                            .drawingGroup()
-                                    }
+                                StatsBlock("TIME DISTRIBUTION", (allCompsimAveragesByTime.count < 4 ? 150 : 300), false) {
+                                    TimeDistribution(currentSession: $currentSession, solves: timesBySpeedNoDNFs)
+                                        .drawingGroup()
                                 }
-                                .frame(height: timesBySpeedNoDNFs.count < 4 ? 150 : 300)
-                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                .padding(.horizontal)
-                                
                             }
-                            
-                            
                         }
                     }
                 }
