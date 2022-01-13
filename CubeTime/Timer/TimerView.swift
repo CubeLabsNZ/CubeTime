@@ -159,11 +159,25 @@ struct TimerView: View {
             
                        
             GeometryReader { geometry in
-                TimerTouchView()
-                    .contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
-                    .environmentObject(stopWatchManager)
+                ZStack {
+                    TimerTouchView()
+//                        .contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .environmentObject(stopWatchManager)
+                    
+                    if targetFocused {
+//                        Color.clear.contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
+                        /// ^ this receives tap gesture but gesture is transferred to timertouchview below...
+                        Color.white.opacity(0.000001) // workaround for now
+                            .onTapGesture {
+                                targetFocused = false
+                            }
+                    }
+                }
+                
             }
             .ignoresSafeArea(edges: .top)
+            
             
             if !hideTabBar {
                 VStack {

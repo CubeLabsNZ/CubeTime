@@ -167,7 +167,6 @@ struct AppearanceSettingsView: View {
                                                     .frame(height: 50)
                                                     .onTapGesture {
                                                         gradientSelected = CustomGradientColours.gradientColours.firstIndex(of: gradient)!
-                                                        let _ = NSLog("\(gradient)")
                                                     }
                                                 if CustomGradientColours.gradientColours[gradientSelected] == gradient {
                                                     Image(systemName: "checkmark")

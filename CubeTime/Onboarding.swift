@@ -171,9 +171,6 @@ struct PageOne: View {
                     .padding(.vertical, smallPhone ? 36 : 50)
                     .shadow(color: .black.opacity(0.32), radius: 12, x: 0, y: 2)
                 
-                    .onTapGesture {
-                        print(UIDevice.modelName)
-                    }
                 
                 Text("This app brings your cubing\nutilities together - all in one place.")
                     .font(.system(size: 22, weight: .medium))

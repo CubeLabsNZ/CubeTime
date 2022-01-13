@@ -37,23 +37,7 @@ struct CubeTime: App {
         WindowGroup {
             MainTabsView(managedObjectContext: moc)
                 .environment(\.managedObjectContext, moc)
-            //                .environmentObject(menuActions)
         }
-        /*
-         .onChange(of: phase) { newphase in
-         switch newphase {
-         case .active:
-         print("app active")
-         guard let name = shortcutItemToProcess?.userInfo?["name"] as? String else { return }
-         case .background:
-         print("background")
-         case .inactive:
-         print("inactive")
-         @unknown default:
-         print("default")
-         }
-         }
-         */
         
     }
 }

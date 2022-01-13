@@ -343,8 +343,6 @@ class Stats {
                 return getCurrentMeanOfTen()
             } else if cnt > 10 {
                 for i in 0..<cnt-9 {
-                    print((averages[i..<i+10]).map({ $0.average ?? 0 }))
-                    
                     let tempArr = (averages[i..<i+10])
                     
                     if !(tempArr.contains(where: { $0.totalPen == .dnf})) {

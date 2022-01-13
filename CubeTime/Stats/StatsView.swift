@@ -11,6 +11,56 @@ extension View {
 
 
 
+/*
+struct StatsStandardBlock: View {
+    let title: String
+    let data: AnyObject?
+    let type: Int
+    
+    
+    
+    
+    
+    var body: some View {
+        ZStack {
+            HStack {
+                VStack {
+                    Text(title) // eg: Text("SESSION MEAN") note: is capitalised
+                        .font(.system(size: 13, weight: .medium, design: .default))
+                        .foregroundColor(Color(uiColor: .systemGray))
+                        .padding(.bottom, 4)
+                    
+                    Spacer()
+                }
+                Spacer()
+            }
+            .padding(.top)
+            .padding(.leading, 12)
+            
+            if data != nil {
+                Text(String(formatSolveTime(secs: data!)))
+                    .font(.system(size: 34, weight: .bold, design: .default))
+                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                    .modifier(DynamicText())
+                    .padding(.leading, 12)
+                    .padding(.bottom, 12)
+                
+            } else {
+                Text("-")
+                    .font(.system(size: 28, weight: .medium, design: .default))
+                    .foregroundColor(Color(uiColor: .systemGray2))
+                    .padding(.leading, 12)
+                    .padding(.bottom, 12)
+            }
+        }
+        .frame(height: 75)
+        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+    }
+}
+ */
+
+
+
 struct StatsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
@@ -141,9 +191,9 @@ struct StatsView: View {
                         .padding(.bottom, 8)
                         
                         
-                        Text("generate")
+                        Text("generate cs")
                             .onTapGesture {
-                                for _ in 0..<2 {
+                                for _ in 0..<100 {
                                     let compSimSolveGroup = CompSimSolveGroup(context: managedObjectContext)
                                     compSimSolveGroup.session = currentSession as! CompSimSession
                                     
@@ -173,10 +223,122 @@ struct StatsView: View {
                                 }
                             }
                         
-                        Text("test")
-                            .onTapGesture {
-//                                NSLog("\(currentSolveth!)")
-                            }
+                        
+                        Text("generate normal")
+                            .onTapGesture(perform: {
+                                for _ in 0..<1900 {
+                                    let solveItem: Solves!
+                                    
+                                    solveItem = Solves(context: managedObjectContext)
+                                    solveItem.date = Date()
+                                    solveItem.session = currentSession
+                                    solveItem.scramble = "sdlfikj"
+                                    solveItem.scramble_type = 0
+                                    solveItem.scramble_subtype = 0
+                                    solveItem.time = Double.random(in: 6..<11)
+                                    
+                                }
+                                do {
+                                    try managedObjectContext.save()
+                                } catch {
+                                    if let error = error as NSError? {
+                                        fatalError("Unresolved error \(error), \(error.userInfo)")
+                                    }
+                                }
+                            })
+                        
+                        
+                        Text("generate 100")
+                            .onTapGesture(perform: {
+                                for _ in 0..<100 {
+                                    let solveItem: Solves!
+                                    
+                                    solveItem = Solves(context: managedObjectContext)
+                                    solveItem.date = Date()
+                                    solveItem.session = currentSession
+                                    solveItem.scramble = "sdlfikj"
+                                    solveItem.scramble_type = 0
+                                    solveItem.scramble_subtype = 0
+                                    solveItem.time = Double.random(in: 6..<11)
+                                    
+                                }
+                                do {
+                                    try managedObjectContext.save()
+                                } catch {
+                                    if let error = error as NSError? {
+                                        fatalError("Unresolved error \(error), \(error.userInfo)")
+                                    }
+                                }
+                            })
+                        
+                        Text("generate 50")
+                            .onTapGesture(perform: {
+                                for _ in 0..<50 {
+                                    let solveItem: Solves!
+                                    
+                                    solveItem = Solves(context: managedObjectContext)
+                                    solveItem.date = Date()
+                                    solveItem.session = currentSession
+                                    solveItem.scramble = "sdlfikj"
+                                    solveItem.scramble_type = 0
+                                    solveItem.scramble_subtype = 0
+                                    solveItem.time = Double.random(in: 6..<11)
+                                    
+                                }
+                                do {
+                                    try managedObjectContext.save()
+                                } catch {
+                                    if let error = error as NSError? {
+                                        fatalError("Unresolved error \(error), \(error.userInfo)")
+                                    }
+                                }
+                            })
+                        
+                        Text("generate 10")
+                            .onTapGesture(perform: {
+                                for _ in 0..<10 {
+                                    let solveItem: Solves!
+                                    
+                                    solveItem = Solves(context: managedObjectContext)
+                                    solveItem.date = Date()
+                                    solveItem.session = currentSession
+                                    solveItem.scramble = "sdlfikj"
+                                    solveItem.scramble_type = 0
+                                    solveItem.scramble_subtype = 0
+                                    solveItem.time = Double.random(in: 6..<11)
+                                    
+                                }
+                                do {
+                                    try managedObjectContext.save()
+                                } catch {
+                                    if let error = error as NSError? {
+                                        fatalError("Unresolved error \(error), \(error.userInfo)")
+                                    }
+                                }
+                            })
+                        
+                        Text("generate 2")
+                            .onTapGesture(perform: {
+                                for _ in 0..<2 {
+                                    let solveItem: Solves!
+                                    
+                                    solveItem = Solves(context: managedObjectContext)
+                                    solveItem.date = Date()
+                                    solveItem.session = currentSession
+                                    solveItem.scramble = "sdlfikj"
+                                    solveItem.scramble_type = 0
+                                    solveItem.scramble_subtype = 0
+                                    solveItem.time = Double.random(in: 6..<11)
+                                    
+                                }
+                                do {
+                                    try managedObjectContext.save()
+                                } catch {
+                                    if let error = error as NSError? {
+                                        fatalError("Unresolved error \(error), \(error.userInfo)")
+                                    }
+                                }
+                            })
                         
                         /// everything
                         VStack(spacing: 10) {
@@ -904,9 +1066,7 @@ struct StatsView: View {
                                 .frame(height: timesBySpeedNoDNFs.count == 0 ? 150 : 200)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                 .padding(.horizontal)
-                                .onTapGesture {
-                                    print("average phases pressed")
-                                }
+                                
                                 
                                 Divider()
                                     .frame(width: UIScreen.screenWidth/2)
@@ -915,10 +1075,6 @@ struct StatsView: View {
                             
                             
                             if SessionTypes(rawValue: currentSession.session_type)! == .compsim {
-                                
-                                Divider()
-                                    .frame(width: UIScreen.screenWidth/2)
-                                    .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
                                 
                                 // mean of 10 calculations
                                 
@@ -982,6 +1138,7 @@ struct StatsView: View {
                                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                     
                                 }
+                                .padding(.horizontal)
                                 
                                 
                                 
@@ -1014,9 +1171,7 @@ struct StatsView: View {
                                 .frame(height: allCompsimAveragesByDate.count < 2 ? 150 : 300)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                 .padding(.horizontal)
-                                .onTapGesture {
-                                    print("time trend pressed")
-                                }
+                                
                                 
                                 
                                 /// time distrbution graph
@@ -1040,9 +1195,7 @@ struct StatsView: View {
                                 .frame(height: allCompsimAveragesByTime.count < 4 ? 150 : 300)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                 .padding(.horizontal)
-                                .onTapGesture {
-                                    print("time distribution pressed")
-                                }
+                               
                             } else {
                                 /// time trend graph
                                 VStack {
@@ -1068,9 +1221,7 @@ struct StatsView: View {
                                 .frame(height: timesByDateNoDNFs.count < 2 ? 150 : 300)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                 .padding(.horizontal)
-                                .onTapGesture {
-                                    print("time trend pressed")
-                                }
+                               
                                 
                                 
                                 /// time distrbution graph
@@ -1094,9 +1245,7 @@ struct StatsView: View {
                                 .frame(height: timesBySpeedNoDNFs.count < 4 ? 150 : 300)
                                 .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                 .padding(.horizontal)
-                                .onTapGesture {
-                                    print("time distribution pressed")
-                                }
+                                
                             }
                             
                             

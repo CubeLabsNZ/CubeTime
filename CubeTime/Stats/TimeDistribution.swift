@@ -55,8 +55,6 @@ func getDivisions(data: [Double]) -> Array<(Double, Int)> {
         sorted.append((ild,trim))
         
         
-        print(sorted)
-        
         return sorted
 
     } else {
@@ -88,6 +86,7 @@ extension View {
     }
 }
 
+/*
 func getMedianPercentage(numbers: Array<(Double, Int)>) -> Double {
     if numbers.count >= 6 {
         let truncated = numbers.dropFirst().dropLast()
@@ -95,6 +94,7 @@ func getMedianPercentage(numbers: Array<(Double, Int)>) -> Double {
         return (stats.getNormalMedian - truncated.first) / (truncated.last - truncated.first)
     }
 }
+ */
 
 
 struct TimeDistribution: View {
@@ -107,7 +107,7 @@ struct TimeDistribution: View {
     init(solves: [Double]) {
         self.count = solves.count
         self.data = getDivisions(data: solves)
-        self.max_height = CGFloat(220 / getMaxHeight(occurences: data.map { $0.1 })!)
+        self.max_height = CGFloat(220 / Float(getMaxHeight(occurences: data.map { $0.1 })!))
     }
     
     var body: some View {
