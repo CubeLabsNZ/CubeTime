@@ -18,12 +18,15 @@ struct StatsBlock<Content: View>: View {
     let dataView: Content
     let title: String
     let blockHeight: CGFloat?
+    let bigBlock: Bool
     let coloured: Bool
     
     
-    init(_ title: String, _ blockHeight: CGFloat?, _ coloured: Bool, @ViewBuilder _ dataView: () -> Content) {
+    
+    init(_ title: String, _ blockHeight: CGFloat?, _ bigBlock: Bool, _ coloured: Bool, @ViewBuilder _ dataView: () -> Content) {
         self.dataView = dataView()
         self.title = title
+        self.bigBlock = bigBlock
         self.coloured = coloured
         self.blockHeight = blockHeight
     }
@@ -53,10 +56,63 @@ struct StatsBlock<Content: View>: View {
         .if(!coloured) { view in
             view.background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
         }
-        .padding(.horizontal)
+        .if(bigBlock) { view in
+            view.padding(.horizontal)
+        }
     }
 }
 
+struct StatsBlockText: View {
+    @Environment(\.colorScheme) var colourScheme
+    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    
+    let displayText: String
+    let colouredText: Bool
+    let colouredBlock: Bool
+    let displayDetail: Bool
+    let nilCondition: Optional<Any>
+    
+    init(_ displayText: String, _ colouredText: Bool, _ colouredBlock: Bool, _ displayDetail: Bool, _ nilCondition: Bool) {
+        self.displayText = displayText
+        self.colouredText = colouredText
+        self.colouredBlock = colouredBlock
+        self.displayDetail = displayDetail
+        self.nilCondition = nilCondition
+    }
+    
+    var body: some View {
+        if !displayDetail {
+            VStack {
+                Spacer()
+                
+                HStack {
+                    if nilCondition != nil {
+                        Text(displayText)
+                            .font(.system(size: 34, weight: .bold, design: .default))
+                            .modifier(DynamicText())
+                        
+                            .if(!colouredText) { view in
+                                view.foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                            }
+                            .if(colouredText) { view in
+                                view.gradientForeground(gradientSelected: gradientSelected)
+                            }
+                    } else {
+                        Text("-")
+                            .font(.system(size: 28, weight: .medium, design: .default))
+                            .foregroundColor(Color(uiColor: .systemGray5))
+                    }
+                    
+                    Spacer()
+                }
+            }
+            .padding(.bottom, 9)
+            .padding(.leading, 12)
+        } else {
+            EmptyView()
+        }
+    }
+}
 
 struct StatsDivider: View {
     @Environment(\.colorScheme) var colourScheme
@@ -83,14 +139,7 @@ struct StatsView: View {
     @State var presentedAvg: CalculatedAverage? = nil
     @State var showBestSinglePopup = false
     
-    
-    
-    let columns = [
-        // GridItem(.adaptive(minimum: 112), spacing: 11)
-        GridItem(spacing: 10),
-        GridItem(spacing: 10)
-    ]
-    
+    let columns = [GridItem(spacing: 10), GridItem(spacing: 10)]
     
     // best averages
     let ao5: CalculatedAverage?
@@ -766,101 +815,36 @@ struct StatsView: View {
                                     .padding(.horizontal)
                                 }
                                 
-                                Divider()
-                                    .frame(width: UIScreen.screenWidth/2)
-                                    .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
+                                StatsDivider()
                                 
                                 HStack(spacing: 10) {
-                                    HStack {
-                                        VStack (alignment: .leading, spacing: 0) {
-                                            Text("TARGET")
-                                                .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(uiColor: .systemGray))
-                                                .padding(.bottom, 4)
-                                            
-                                            Text(formatSolveTime(secs: (currentSession as! CompSimSession).target, dp: 2))
-                                                .font(.system(size: 34, weight: .bold, design: .default))
-                                                .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                            
-                                                .modifier(DynamicText())
-                                            
-                                        }
-                                        .padding(.top)
-                                        .padding(.bottom, 12)
-                                        .padding(.leading, 12)
-                                        
-                                        Spacer()
+                                    StatsBlock("TARGET", 75, false, false) {
+                                        StatsBlockText(formatSolveTime(secs: (currentSession as! CompSimSession).target, dp: 2), false, false, false, true)
                                     }
-                                    .frame(height: 75)
-                                    .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                   
-                                    HStack {
-                                        VStack (alignment: .leading, spacing: 0) {
-                                            Text("REACHED")
-                                                .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(uiColor: .systemGray))
-                                                .padding(.bottom, 4)
-                                            
-                                            if bestSingle != nil {
-                                                Text("\(reachedTargets)/\(compSimCount)")
-                                                    .font(.system(size: 34, weight: .bold, design: .default))
-                                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                    .modifier(DynamicText())
-                                            } else {
-                                                Text("-")
-                                                    .font(.system(size: 28, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(uiColor: .systemGray5))
-                                            }
-                                        }
-                                        .padding(.top)
-                                        .padding(.bottom, 12)
-                                        .padding(.leading, 12)
-                                        
-                                        Spacer()
+                                        .frame(minWidth: 0, maxWidth: .infinity)
+                                    
+                                    StatsBlock("REACHED", 75, false, false) {
+                                        StatsBlockText("\(reachedTargets)/\(compSimCount)", false, false, false, (bestSingle != nil))
                                     }
-                                    .frame(height: 75)
-                                    .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                        .frame(minWidth: 0, maxWidth: .infinity)
                                 }
                                 .padding(.horizontal)
                                 
-                                HStack {
-                                    VStack {
-                                        HStack {
-                                            Text("REACHED TARGETS")
-                                                .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(uiColor: .systemGray))
-                                                .padding(.leading, 12)
-                                                .padding(.top, 8)
-                                            
-                                            Spacer()
-                                        }
-                                        
-                                        if compSimCount == 0 {
-                                            Text("not enough solves to\ndisplay graph")
-                                                .font(.system(size: 17, weight: .medium, design: .monospaced))
-                                                .multilineTextAlignment(.center)
-                                                .foregroundColor(Color(uiColor: .systemGray))
-                                                .offset(y: 30)
-                                        } else {
-                                            ReachedTargets(Float(reachedTargets)/Float(compSimCount))
-                                                .padding(.bottom, 8)
-                                                .padding(.horizontal, 12)
-                                        }
-                                        
-                                        
-                                        
-                                        Spacer()
+                                
+                                StatsBlock("REACHED TARGETS", compSimCount == 0 ? 150 : 50, true, false) {
+                                    if compSimCount != 0 {
+                                        ReachedTargets(Float(reachedTargets)/Float(compSimCount))
+                                            .padding(.horizontal, 12)
+                                            .offset(y: 30)
+                                    } else {
+                                        Text("not enough solves to\ndisplay graph")
+                                            .font(.system(size: 17, weight: .medium, design: .monospaced))
+                                            .multilineTextAlignment(.center)
+                                            .foregroundColor(Color(uiColor: .systemGray))
                                     }
                                 }
-                                .frame(height: compSimCount == 0 ? 150 : 55)
-                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
                                 
-                                .padding(.horizontal)
-                                
-                                
-                                Divider()
-                                    .frame(width: UIScreen.screenWidth/2)
-                                    .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
+                                StatsDivider()
                             }
                             
                             
@@ -923,13 +907,26 @@ struct StatsView: View {
                                 .padding(.horizontal)
                                 
                                 
-                                Divider()
-                                    .frame(width: UIScreen.screenWidth/2)
-                                    .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
+                                StatsDivider()
                             }
                             
                             
                             if SessionTypes(rawValue: currentSession.session_type)! == .compsim {
+                                
+                                
+                                HStack(spacing: 10) {
+                                    StatsBlock("CURRENT MO10 AO5", 75, false, false) {
+                                        StatsBlockText(formatSolveTime(secs: currentMeanOfTen!, penType: ((currentMeanOfTen == -1) ? .dnf : .none)), false, false, false, (currentMeanOfTen != nil))
+                                    }
+                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                    
+                                    StatsBlock("BEST MO10 AO5", 75, false, false) {
+                                        StatsBlockText(formatSolveTime(secs: bestMeanOfTen!, penType: ((bestMeanOfTen == -1) ? .dnf : .none)), false, false, false, (bestMeanOfTen != nil))
+                                    }
+                                }
+                                .padding(.horizontal)
+                                
+                                
                                 
                                 // mean of 10 calculations
                                 HStack (spacing: 10) {
@@ -996,7 +993,7 @@ struct StatsView: View {
                                 
                                 StatsDivider()
                                 
-                                StatsBlock("TIME TREND", (allCompsimAveragesByDate.count < 2 ? 150 : 300), false) {
+                                StatsBlock("TIME TREND", (allCompsimAveragesByDate.count < 2 ? 150 : 300), true, false) {
                                     TimeTrend(data: allCompsimAveragesByDate, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
                                         .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
                                         .padding(.horizontal, 12)
@@ -1004,12 +1001,12 @@ struct StatsView: View {
                                         .drawingGroup()
                                 }
                             
-                                StatsBlock("TIME DISTRIBUTION", (allCompsimAveragesByTime.count < 4 ? 150 : 300), false) {
+                                StatsBlock("TIME DISTRIBUTION", (allCompsimAveragesByTime.count < 4 ? 150 : 300), true, false) {
                                     TimeDistribution(currentSession: $currentSession, solves: allCompsimAveragesByTime)
                                         .drawingGroup()
                                 }
                             } else {
-                                StatsBlock("TIME TREND", (timesByDateNoDNFs.count < 2 ? 150 : 300), false) {
+                                StatsBlock("TIME TREND", (timesByDateNoDNFs.count < 2 ? 150 : 300), true, false) {
                                     TimeTrend(data: timesByDateNoDNFs, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
                                         .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
                                         .padding(.horizontal, 12)
@@ -1017,7 +1014,7 @@ struct StatsView: View {
                                         .drawingGroup()
                                 }
                                 
-                                StatsBlock("TIME DISTRIBUTION", (allCompsimAveragesByTime.count < 4 ? 150 : 300), false) {
+                                StatsBlock("TIME DISTRIBUTION", (allCompsimAveragesByTime.count < 4 ? 150 : 300), true, false) {
                                     TimeDistribution(currentSession: $currentSession, solves: timesBySpeedNoDNFs)
                                         .drawingGroup()
                                 }

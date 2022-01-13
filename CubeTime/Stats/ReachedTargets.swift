@@ -32,9 +32,3 @@ struct ReachedTargets: View {
         }
     }
 }
-
-struct ReachedTargets_Previews: PreviewProvider {
-    static var previews: some View {
-        ReachedTargets(0.4)
-    }
-}
