@@ -70,7 +70,7 @@ struct StatsBlockText: View {
     let colouredText: Bool
     let colouredBlock: Bool
     let displayDetail: Bool
-    let nilCondition: Optional<Any>
+    let nilCondition: Bool
     
     init(_ displayText: String, _ colouredText: Bool, _ colouredBlock: Bool, _ displayDetail: Bool, _ nilCondition: Bool) {
         self.displayText = displayText
@@ -81,36 +81,73 @@ struct StatsBlockText: View {
     }
     
     var body: some View {
-        if !displayDetail {
-            VStack {
+        VStack {
+            if !displayDetail {
                 Spacer()
-                
-                HStack {
-                    if nilCondition != nil {
-                        Text(displayText)
-                            .font(.system(size: 34, weight: .bold, design: .default))
-                            .modifier(DynamicText())
-                        
-                            .if(!colouredText) { view in
-                                view.foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                            }
-                            .if(colouredText) { view in
-                                view.gradientForeground(gradientSelected: gradientSelected)
-                            }
-                    } else {
-                        Text("-")
-                            .font(.system(size: 28, weight: .medium, design: .default))
-                            .foregroundColor(Color(uiColor: .systemGray5))
-                    }
+            }
+            
+            HStack {
+                if nilCondition {
+                    Text(displayText)
+                        .font(.system(size: 34, weight: .bold, design: .default))
+                        .modifier(DynamicText())
                     
-                    Spacer()
+                        .if(!colouredText) { view in
+                            view.foregroundColor(Color(uiColor: colouredBlock ? .white : (colourScheme == .light ? .black : .white)))
+                        }
+                        .if(colouredText) { view in
+                            view.gradientForeground(gradientSelected: gradientSelected)
+                        }
+                } else {
+                    Text("-")
+                        .font(.system(size: 28, weight: .medium, design: .default))
+                        .foregroundColor(Color(uiColor: .systemGray5))
+                }
+                
+                Spacer()
+            }
+            .offset(y: displayDetail ? 30 : 0)
+            
+            if displayDetail {
+                Spacer()
+            }
+            
+        }
+        .padding(.bottom, 4)
+        .padding(.leading, 12)
+    }
+}
+
+struct StatsBlockDetailText: View {
+    @Environment(\.colorScheme) var colourScheme
+    let accountedSolves: [Solves]
+    let allTimes: [Double]
+    let colouredBlock: Bool
+    
+    init(_ average: CalculatedAverage, _ colouredBlock: Bool) {
+        self.accountedSolves = average.accountedSolves!
+        self.allTimes = accountedSolves.map{timeWithPlusTwoForSolve($0)}
+        self.colouredBlock = colouredBlock
+    }
+    
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 0) {
+                Spacer()
+                ForEach((0...4), id: \.self) { index in
+                    let discarded: Bool = (timeWithPlusTwoForSolve(accountedSolves[index]) == allTimes.min() || timeWithPlusTwoForSolve(accountedSolves[index]) == allTimes.max())
+                    let time: String = formatSolveTime(secs: accountedSolves[index].time, penType: PenTypes(rawValue: accountedSolves[index].penalty))
+                    Text(discarded ? "("+time+")" : time)
+                        .font(.system(size: 17, weight: .regular, design: .default))
+                        .foregroundColor(discarded ? Color(uiColor: colouredBlock ? .systemGray5 : .systemGray) : colouredBlock ? .white : (colourScheme == .light ? .black : .white))
+                        .multilineTextAlignment(.leading)
+                        .padding(.bottom, 2)
                 }
             }
-            .padding(.bottom, 9)
-            .padding(.leading, 12)
-        } else {
-            EmptyView()
+            Spacer()
         }
+        .padding(.bottom, 9)
+        .padding(.leading, 12)
     }
 }
 
@@ -613,207 +650,59 @@ struct StatsView: View {
                                     .frame(width: UIScreen.screenWidth/2)
                                     .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
                             } else {
-                                VStack (spacing: 10) {
-                                    HStack (spacing: 10) {
-                                        VStack (spacing: 10) {
-                                            HStack {
-                                                VStack (alignment: .leading, spacing: 0) {
-                                                    Text("CURRENT AVG")
-                                                        .font(.system(size: 13, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray))
-                                                        .padding(.bottom, 4)
-                                                    
-                                                    if let currentCompsimAverage = currentCompsimAverage {
-                                                        Text(formatSolveTime(secs: currentCompsimAverage.average ?? 0, penType: currentCompsimAverage.totalPen))
-                                                            .font(.system(size: 34, weight: .bold, design: .default))
-                                                            .foregroundColor(colourScheme == .light ? .black : .white)
-                                                            .modifier(DynamicText())
-                                                        
-                                                        Spacer()
-                                                        
-                                                        if let accountedSolves = currentCompsimAverage.accountedSolves {
-                                                        
-                                                            let alltimes = accountedSolves.map{timeWithPlusTwoForSolve($0)}
-                                                            ForEach((0...4), id: \.self) { index in
-                                                                if timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.min() || timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.max() {
-                                                                    Text("("+formatSolveTime(secs: accountedSolves[index].time,
-                                                                                             penType: PenTypes(rawValue: accountedSolves[index].penalty))+")")
-                                                                        .font(.system(size: 17, weight: .regular, design: .default))
-                                                                        .foregroundColor(Color(uiColor: .systemGray))
-                                                                        .multilineTextAlignment(.leading)
-                                                                        .padding(.bottom, 2)
-                                                                } else {
-                                                                    Text(formatSolveTime(secs: accountedSolves[index].time,
-                                                                                         penType: PenTypes(rawValue: accountedSolves[index].penalty)))
-                                                                        .font(.system(size: 17, weight: .regular, design: .default))
-                                                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                                        .multilineTextAlignment(.leading)
-                                                                        .padding(.bottom, 2)
-                                                                }
-                                                            }
-                                                        } else {
-                                                            Text("-")
-                                                                .font(.system(size: 28, weight: .medium, design: .default))
-                                                                .foregroundColor(Color(uiColor: .systemGray2))
-                                                            
-                                                            Spacer()
+                                HStack(spacing: 10) {
+                                    VStack(spacing: 10) {
+                                        StatsBlock("CURRENT AVG", 215, false, false) {
+                                            if currentCompsimAverage != nil {
+                                                StatsBlockText(formatSolveTime(secs: currentCompsimAverage?.average ?? 0, penType: currentCompsimAverage?.totalPen), false, false, true, true)
+                                                    .onTapGesture {
+                                                        if currentCompsimAverage?.totalPen != .dnf {
+                                                            presentedAvg = currentCompsimAverage
                                                         }
-                                                        
-                                                        
-                                                        
-                                                    } else {
-                                                        Text("-")
-                                                            .font(.system(size: 28, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray2))
-                                                        
-                                                        Spacer()
                                                     }
-                                                }
-                                                .onTapGesture {
-                                                    if currentCompsimAverage != nil && currentCompsimAverage?.totalPen != .dnf  {
-                                                        presentedAvg = currentCompsimAverage
-                                                    }
-                                                }
-                                                .padding(.top, 10)
-                                                .padding(.bottom, 10)
-                                                .padding(.leading, 12)
                                                 
-                                                
-                                                
-                                                Spacer()
-                                            }
-                                            .frame(height: 215)
-                                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                            
-                                            HStack {
-                                                VStack (alignment: .leading, spacing: 0) {
-                                                    Text("AVERAGES")
-                                                        .font(.system(size: 13, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray))
-                                                        .padding(.bottom, 4)
-                                                    
-                                                    
-                                                    Text("\(compSimCount)")
-                                                        .font(.system(size: 34, weight: .bold, design: .default))
-                                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                    
-                                                }
-                                                .padding(.top)
-                                                .padding(.bottom, 12)
-                                                .padding(.leading, 12)
-                                                
-                                                Spacer()
-                                            }
-                                            .frame(height: 75)
-                                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                        }
-                                        .frame(minWidth: 0, maxWidth: .infinity)
-                                        
-                                        
-                                        VStack (spacing: 10) {
-                                            HStack {
-                                                VStack (alignment: .leading, spacing: 0) {
-                                                    Text("BEST SINGLE")
-                                                        .font(.system(size: 13, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray))
-                                                        .padding(.bottom, 4)
-                                                    
-                                                    if bestSingle != nil {
-                                                        Text(String(formatSolveTime(secs: bestSingle!.time)))
-                                                            .font(.system(size: 34, weight: .bold, design: .default))
-                                                            .gradientForeground(gradientSelected: gradientSelected)
-                                                            .modifier(DynamicText())
-                                                        
-                                                    } else {
-                                                        Text("-")
-                                                            .font(.system(size: 28, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray2))
-                                                    }
-                                                }
-                                                .padding(.top)
-                                                .padding(.bottom, 12)
-                                                .padding(.leading, 12)
-                                                
-                                                Spacer()
-                                            }
-                                            .frame(height: 75)
-                                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                            .onTapGesture {
-                                                if bestSingle != nil {
-                                                    showBestSinglePopup = true
-                                                }
-                                            }
-                                            
-                                            HStack {
-                                                VStack (alignment: .leading, spacing: 0) {
-                                                    Text("BEST AVG")
-                                                        .font(.system(size: 13, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray5))
-                                                        .padding(.bottom, 4)
-                                                    
-                                                    if let bestCompsimAverage = bestCompsimAverage {
-                                                        Text(formatSolveTime(secs: bestCompsimAverage.average ?? 0, penType: bestCompsimAverage.totalPen))
-                                                            .foregroundColor(.white)
-                                                            .font(.system(size: 34, weight: .bold, design: .default))
-                                                            .modifier(DynamicText())
-                                                        
-                                                        Spacer()
-                                                        
-                                                        
-                                                        if let accountedSolves = bestCompsimAverage.accountedSolves {
-                                                            let alltimes = accountedSolves.map{timeWithPlusTwoForSolve($0)}
-                                                            ForEach((0...4), id: \.self) { index in
-                                                                if timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.min() || timeWithPlusTwoForSolve(accountedSolves[index]) == alltimes.max() {
-                                                                    Text("("+formatSolveTime(secs: accountedSolves[index].time,
-                                                                                             penType: PenTypes(rawValue: accountedSolves[index].penalty))+")")
-                                                                        .font(.system(size: 17, weight: .regular, design: .default))
-                                                                        .foregroundColor(Color(uiColor: .systemGray5))
-                                                                        .multilineTextAlignment(.leading)
-                                                                        .padding(.bottom, 2)
-                                                                } else {
-                                                                    Text(formatSolveTime(secs: accountedSolves[index].time,
-                                                                                         penType: PenTypes(rawValue: accountedSolves[index].penalty)))
-                                                                        .font(.system(size: 17, weight: .regular, design: .default))
-                                                                        .foregroundColor(.white)
-                                                                        .multilineTextAlignment(.leading)
-                                                                        .padding(.bottom, 2)
-                                                                }
-                                                            }
-                                                            
-                                                        }
-                                                        
-                                                        
-                                                        
-                                                    } else {
-                                                        Text("-")
-                                                            .font(.system(size: 28, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray5))
-                                                        
-                                                        Spacer()
-                                                    }
-                                                }
-                                                .padding(.top, 10)
-                                                .padding(.bottom, 10)
-                                                .padding(.leading, 12)
-                                                
-                                                
-                                                
-                                                Spacer()
-                                            }
-                                            .frame(height: 215)
-                                            .background(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)                                        .clipShape(RoundedRectangle(cornerRadius:16)))
-                                            .onTapGesture {
-                                                if bestCompsimAverage != nil && bestCompsimAverage?.totalPen != .dnf {
-                                                    presentedAvg = bestCompsimAverage
-                                                }
+                                                StatsBlockDetailText(currentCompsimAverage!, false)
+                                            } else {
+                                                StatsBlockText("", false, false, false, false)
                                             }
                                         }
-                                        .frame(minWidth: 0, maxWidth: .infinity)
                                         
-                                        
+                                        StatsBlock("AVERAGES", 75, false, false) {
+                                            StatsBlockText("\(compSimCount)", false, false, false, true)
+                                        }
                                     }
-                                    .padding(.horizontal)
+                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                    
+                                    VStack(spacing: 10) {
+                                        StatsBlock("BEST SINGLE", 75, false, false) {
+                                            if bestSingle != nil {
+                                                StatsBlockText(formatSolveTime(secs: bestSingle!.time), true, false, false, true)
+                                                    .onTapGesture {
+                                                        showBestSinglePopup = true
+                                                    }
+                                            } else {
+                                                StatsBlockText("", false, false, false, false)
+                                            }
+                                        }
+                                        
+                                        StatsBlock("BEST AVG", 215, false, true) {
+                                            if bestCompsimAverage != nil {
+                                                StatsBlockText(formatSolveTime(secs: bestCompsimAverage?.average ?? 0, penType: bestCompsimAverage?.totalPen), false, true, true, true)
+                                                    .onTapGesture {
+                                                        if bestCompsimAverage?.totalPen != .dnf {
+                                                            presentedAvg = bestCompsimAverage
+                                                        }
+                                                    }
+                                                
+                                                StatsBlockDetailText(bestCompsimAverage!, true)
+                                            } else {
+                                                StatsBlockText("", false, false, false, false)
+                                            }
+                                        }
+                                    }
+                                    .frame(minWidth: 0, maxWidth: .infinity)
                                 }
+                                .padding(.horizontal)
                                 
                                 StatsDivider()
                                 
@@ -848,146 +737,26 @@ struct StatsView: View {
                             }
                             
                             
-                            /// average phases if multiphase session
-                            if SessionTypes(rawValue: currentSession.session_type)! == .multiphase {
-                                VStack {
-                                    ZStack {
-                                        VStack {
-                                            HStack {
-                                                Text("AVERAGE PHASES")
-                                                    .font(.system(size: 13, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(uiColor: .systemGray))
-                                                Spacer()
-                                            }
-                                            
-                                            if timesBySpeedNoDNFs.count >= 1 {
-                                                VStack (spacing: 8) {
-                                                    Capsule()
-                                                        .frame(height: 10)
-                                                    
-                                                    ForEach(0...4, id: \.self) { phase in
-                                                        HStack (spacing: 16) {
-                                                            Circle()
-                                                                .frame(width: 10, height: 10)
-                                                            
-                                                            HStack (spacing: 8) {
-                                                                Text("Phase \(phase):")
-                                                                    .font(.system(size: 17, weight: .medium))
-                                                                
-                                                                Text("1.50")
-                                                                    .font(.system(size: 17))
-                                                                
-                                                                Text("(25%)")
-                                                                    .foregroundColor(Color(uiColor: .systemGray))
-                                                                    .font(.system(size: 17))
-                                                            }
-                                                            
-                                                            Spacer()
-                                                        }
-                                                    }
-                                                }
-                                                .padding(.horizontal, 2)
-                                                .padding(.top, -2)
-                                            }
-                                            
-                                            Spacer()
-                                        }
-                                        .padding(12)
-                                        
-                                        if timesBySpeedNoDNFs.count == 0 {
-                                            Text("not enough solves to\ndisplay graph")
-                                                .font(.system(size: 17, weight: .medium, design: .monospaced))
-                                                .multilineTextAlignment(.center)
-                                                .foregroundColor(Color(uiColor: .systemGray))
-                                        }
-                                    }
-                                }
-                                .frame(height: timesBySpeedNoDNFs.count == 0 ? 150 : 200)
-                                .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                .padding(.horizontal)
-                                
-                                
-                                StatsDivider()
-                            }
-                            
                             
                             if SessionTypes(rawValue: currentSession.session_type)! == .compsim {
-                                
-                                
                                 HStack(spacing: 10) {
                                     StatsBlock("CURRENT MO10 AO5", 75, false, false) {
-                                        StatsBlockText(formatSolveTime(secs: currentMeanOfTen!, penType: ((currentMeanOfTen == -1) ? .dnf : .none)), false, false, false, (currentMeanOfTen != nil))
+                                        if currentMeanOfTen != nil {
+                                            StatsBlockText(formatSolveTime(secs: currentMeanOfTen!, penType: ((currentMeanOfTen == -1) ? .dnf : .none)), false, false, false, true)
+                                        } else {
+                                            StatsBlockText("", false, false, false, false)
+                                        }
                                     }
                                     .frame(minWidth: 0, maxWidth: .infinity)
                                     
                                     StatsBlock("BEST MO10 AO5", 75, false, false) {
-                                        StatsBlockText(formatSolveTime(secs: bestMeanOfTen!, penType: ((bestMeanOfTen == -1) ? .dnf : .none)), false, false, false, (bestMeanOfTen != nil))
-                                    }
-                                }
-                                .padding(.horizontal)
-                                
-                                
-                                
-                                // mean of 10 calculations
-                                HStack (spacing: 10) {
-                                    HStack {
-                                        VStack (alignment: .leading, spacing: 0) {
-                                            Text("CURRENT MO10 AO5")
-                                                .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(uiColor: .systemGray))
-                                                .padding(.bottom, 4)
-                                            
-                                            if let currentMeanOfTen = currentMeanOfTen {
-                                                Text(formatSolveTime(secs: currentMeanOfTen, penType: ((currentMeanOfTen == -1) ? .dnf : .none)))
-                                                    .font(.system(size: 34, weight: .bold, design: .default))
-                                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                    
-                                            } else {
-                                                Text("-")
-                                                    .font(.system(size: 28, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(uiColor: .systemGray5))
-
-                                            }
-                                            
+                                        if bestMeanOfTen != nil {
+                                            StatsBlockText(formatSolveTime(secs: bestMeanOfTen!, penType: ((bestMeanOfTen == -1) ? .dnf : .none)), false, false, false, true)
+                                        } else {
+                                            StatsBlockText("", false, false, false, false)
                                         }
-                                        .padding(.top)
-                                        .padding(.bottom, 12)
-                                        .padding(.leading, 12)
-                                        
-                                        Spacer()
                                     }
-                                    .frame(height: 75)
                                     .frame(minWidth: 0, maxWidth: .infinity)
-                                    .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                    
-                                    HStack {
-                                        VStack (alignment: .leading, spacing: 0) {
-                                            Text("BEST MO10 AO5")
-                                                .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(uiColor: .systemGray))
-                                                .padding(.bottom, 4)
-                                            
-                                            if let bestMeanOfTen = bestMeanOfTen {
-                                                Text(formatSolveTime(secs: bestMeanOfTen, penType: ((bestMeanOfTen == -1) ? .dnf : .none)))
-                                                    .font(.system(size: 34, weight: .bold, design: .default))
-                                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                            } else {
-                                                Text("-")
-                                                    .font(.system(size: 28, weight: .medium, design: .default))
-                                                    .foregroundColor(Color(uiColor: .systemGray5))
-                                            }
-                                            
-                                        }
-                                        .padding(.top)
-                                        .padding(.bottom, 12)
-                                        .padding(.leading, 12)
-                                        
-                                        Spacer()
-                                    }
-                                    .frame(height: 75)
-                                    .frame(minWidth: 0, maxWidth: .infinity)
-                                    .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                    
                                 }
                                 .padding(.horizontal)
                                 
@@ -1006,6 +775,68 @@ struct StatsView: View {
                                         .drawingGroup()
                                 }
                             } else {
+                                /// average phases if multiphase session
+                                if SessionTypes(rawValue: currentSession.session_type)! == .multiphase {
+                                    VStack {
+                                        ZStack {
+                                            VStack {
+                                                HStack {
+                                                    Text("AVERAGE PHASES")
+                                                        .font(.system(size: 13, weight: .medium, design: .default))
+                                                        .foregroundColor(Color(uiColor: .systemGray))
+                                                    Spacer()
+                                                }
+                                                
+                                                if timesBySpeedNoDNFs.count >= 1 {
+                                                    VStack (spacing: 8) {
+                                                        Capsule()
+                                                            .frame(height: 10)
+                                                        
+                                                        ForEach(0...4, id: \.self) { phase in
+                                                            HStack (spacing: 16) {
+                                                                Circle()
+                                                                    .frame(width: 10, height: 10)
+                                                                
+                                                                HStack (spacing: 8) {
+                                                                    Text("Phase \(phase):")
+                                                                        .font(.system(size: 17, weight: .medium))
+                                                                    
+                                                                    Text("1.50")
+                                                                        .font(.system(size: 17))
+                                                                    
+                                                                    Text("(25%)")
+                                                                        .foregroundColor(Color(uiColor: .systemGray))
+                                                                        .font(.system(size: 17))
+                                                                }
+                                                                
+                                                                Spacer()
+                                                            }
+                                                        }
+                                                    }
+                                                    .padding(.horizontal, 2)
+                                                    .padding(.top, -2)
+                                                }
+                                                
+                                                Spacer()
+                                            }
+                                            .padding(12)
+                                            
+                                            if timesBySpeedNoDNFs.count == 0 {
+                                                Text("not enough solves to\ndisplay graph")
+                                                    .font(.system(size: 17, weight: .medium, design: .monospaced))
+                                                    .multilineTextAlignment(.center)
+                                                    .foregroundColor(Color(uiColor: .systemGray))
+                                            }
+                                        }
+                                    }
+                                    .frame(height: timesBySpeedNoDNFs.count == 0 ? 150 : 200)
+                                    .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+                                    .padding(.horizontal)
+                                    
+                                    
+                                    StatsDivider()
+                                }
+                                
                                 StatsBlock("TIME TREND", (timesByDateNoDNFs.count < 2 ? 150 : 300), true, false) {
                                     TimeTrend(data: timesByDateNoDNFs, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
                                         .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
