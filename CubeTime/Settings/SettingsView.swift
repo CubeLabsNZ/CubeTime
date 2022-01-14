@@ -22,11 +22,7 @@ struct SettingsView: View {
     @Namespace var namespace
     
     
-    let settingsColumns = [
-        GridItem(spacing: 16),
-        GridItem()
-    ]
-    
+    let settingsColumns = [GridItem(spacing: 16), GridItem()]
     
     var body: some View {
         ZStack {

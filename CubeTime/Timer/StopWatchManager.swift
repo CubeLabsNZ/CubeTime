@@ -33,9 +33,8 @@ class StopWatchManager: ObservableObject {
     @Published var scrambleStr: String? = nil
     var nextScrambleStr: String? = nil
     
-    
-    var secondsElapsed = 0.0
     @Published var secondsStr = ""
+    var secondsElapsed = 0.0
     
     
     @Published var mode: stopWatchMode = .stopped
@@ -43,10 +42,7 @@ class StopWatchManager: ObservableObject {
     @Published var showPenOptions = false
     @Published var currentSolveth: Int?
     @Published var inspectionSecs = 0
-    
-    
     @Published var timerColour: Color = TimerTextColours.timerDefaultColour
-    
     
     @Published var solveItem: Solves!
     
@@ -158,8 +154,10 @@ class StopWatchManager: ObservableObject {
     
     
     func touchDown() {
+        NSLog("touch down")
+
         timerColour = TimerTextColours.timerHeldDownColour
-        NSLog("Down")
+        
         if mode == .running {
             prevDownStoppedTimer = true
             stop()
@@ -171,6 +169,9 @@ class StopWatchManager: ObservableObject {
     
     
     func touchUp() {
+        NSLog("touch up")
+        
+        
         timerColour = TimerTextColours.timerDefaultColour
         if !prevDownStoppedTimer {
             if showPenOptions {
@@ -187,6 +188,8 @@ class StopWatchManager: ObservableObject {
     
     
     func longPressStart() {
+        NSLog("long press start")
+        
         if inspectionEnabled ? mode == .inspecting : mode == .stopped {
             timerColour = TimerTextColours.timerCanStartColour
             feedbackStyle?.impactOccurred()
@@ -194,10 +197,11 @@ class StopWatchManager: ObservableObject {
     }
     
     func longPressEnd() {
+        NSLog("long press end")
+        
         // TODO maybe hide pen options
         timerColour = TimerTextColours.timerDefaultColour
         if !prevDownStoppedTimer {
-            NSLog("here")
             if inspectionEnabled ? mode == .inspecting : mode == .stopped {
                 start()
             } else if inspectionEnabled && mode == .stopped {

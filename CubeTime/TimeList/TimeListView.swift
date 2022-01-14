@@ -88,11 +88,7 @@ struct TimeListView: View {
     @State var isSelectMode = false
     @State var selectedSolves: [Solves] = []
     
-    private let columns = [
-        GridItem(spacing: 10),
-        GridItem(spacing: 10),
-        GridItem(spacing: 10)
-    ]
+    private let columns = [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
     
     init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession

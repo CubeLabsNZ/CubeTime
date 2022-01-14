@@ -639,6 +639,7 @@ struct TimeTrend: View {
                 .font(.system(size: 17, weight: .medium, design: .monospaced))
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color(uiColor: .systemGray))
+                .offset(y: 5)
         }
     }
 }

@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+import Foundation
+
+let smallPhone: Bool =  ["iPhone7,2", "iPhone8,1", "iPhone9,1", "iPhone9,3", "iPhone10,1", "iPhone10,4", "iPhone12,8", "iPhone14,4", "iPhone13,1", "x86_64"].contains(UIDevice.modelName)
 
 struct OnboardingView: View {
     @AppStorage("onboarding") var showOnboarding: Bool = true
@@ -13,6 +16,8 @@ struct OnboardingView: View {
     @Environment(\.dismiss) var dismiss
     
     @Binding var pageIndex: Int
+    
+    
     
  
     @Namespace var namespaceOB
@@ -106,7 +111,7 @@ struct OnboardingView: View {
                         HStack (spacing: 10) {
                             ForEach(0..<5, id: \.self) { dot in
                                 Circle()
-                                    .fill(Color(uiColor: dot == pageIndex-1 ? .black : .systemGray))
+                                    .fill(Color(uiColor: dot == pageIndex-1 ? (colourScheme == .light ? .black : .white) : (colourScheme == .light ? .systemGray : .systemGray3)))
                                     .frame(width: 8, height: 8)
                             }
                         }
@@ -145,7 +150,7 @@ struct PageOne: View {
             VStack(spacing: 0) {
                 Text("Welcome")
                     .font(.system(size: 36, weight: .bold))
-                    .padding(.top, 75)
+                    .padding(.top, smallPhone ? 50 : 75)
                     .multilineTextAlignment(.center)
                     .padding(.bottom, 0)
                 
@@ -163,8 +168,9 @@ struct PageOne: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 110)
-                    .padding(.vertical, 50)
+                    .padding(.vertical, smallPhone ? 36 : 50)
                     .shadow(color: .black.opacity(0.32), radius: 12, x: 0, y: 2)
+                
                 
                 Text("This app brings your cubing\nutilities together - all in one place.")
                     .font(.system(size: 22, weight: .medium))
@@ -184,12 +190,17 @@ struct PageTwo: View {
             VStack(spacing: 0) {
                 Text("Timer")
                     .font(.system(size: 32, weight: .bold))
-                    .padding(.top, 60)
+                    .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("The timer view.")
                     .font(.system(size: 21, weight: .medium))
-                    .padding(.vertical, 24)
+                    .if(smallPhone) { view in
+                        view.padding(.bottom, 18)
+                    }
+                    .if(!smallPhone) { view in
+                        view.padding(.vertical, 24)
+                    }
                 
                 Image("1-timer")
                     .resizable()
@@ -205,18 +216,24 @@ struct PageTwo: View {
 
 struct PageThree: View {
     @Binding var pageIndex: Int
+    @Environment(\.colorScheme) var colourScheme
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 Text("Gestures")
                     .font(.system(size: 32, weight: .bold))
-                    .padding(.top, 60)
+                    .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("We feature many intuitive gestures,\nlike the ones shown below:")
                     .font(.system(size: 21, weight: .medium))
                     .multilineTextAlignment(.center)
-                    .padding(.vertical, 24)
+                    .if(smallPhone) { view in
+                        view.padding(.bottom, 18)
+                    }
+                    .if(!smallPhone) { view in
+                        view.padding(.vertical, 24)
+                    }
                 
                 Image("2-gesture")
                     .resizable()
@@ -232,18 +249,24 @@ struct PageThree: View {
 
 struct PageFour: View {
     @Binding var pageIndex: Int
+    @Environment(\.colorScheme) var colourScheme
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 Text("Session Times")
                     .font(.system(size: 32, weight: .bold))
-                    .padding(.top, 60)
+                    .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("All your solves will be shown\nin the solves tab for each session.")
                     .font(.system(size: 21, weight: .medium))
                     .multilineTextAlignment(.center)
-                    .padding(.vertical, 24)
+                    .if(smallPhone) { view in
+                        view.padding(.bottom, 18)
+                    }
+                    .if(!smallPhone) { view in
+                        view.padding(.vertical, 24)
+                    }
                 
                 Image("3-timeslist")
                     .resizable()
@@ -259,18 +282,24 @@ struct PageFour: View {
 
 struct PageFive: View {
     @Binding var pageIndex: Int
+    @Environment(\.colorScheme) var colourScheme
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 Text("Statistics")
                     .font(.system(size: 32, weight: .bold))
-                    .padding(.top, 60)
+                    .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("All your solve statistics are shown\nboth numerically and graphically.")
                     .font(.system(size: 21, weight: .medium))
                     .multilineTextAlignment(.center)
-                    .padding(.vertical, 24)
+                    .if(smallPhone) { view in
+                        view.padding(.bottom, 18)
+                    }
+                    .if(!smallPhone) { view in
+                        view.padding(.vertical, 24)
+                    }
                 
                 Image("4-stats")
                     .resizable()
@@ -287,23 +316,26 @@ struct PageFive: View {
 struct PageSix: View {
     @Binding var pageIndex: Int
     var body: some View {
-        ZStack {
+        ScrollView {
             VStack(spacing: 0) {
                 Text("Sessions")
                     .font(.system(size: 32, weight: .bold))
-                    .padding(.top, 60)
+                    .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("We have a variety of session types.\nHere’s a brief overview:")
                     .font(.system(size: 21, weight: .medium))
                     .multilineTextAlignment(.center)
-                    .padding(.vertical, 24)
+                    .if(!smallPhone) { view in
+                        view.padding(.top, 18).padding(.bottom, 8)
+                    }
                 
                 VStack (alignment: .leading, spacing: 28) {
                     HStack {
                         Image(systemName: "timer.square")
                             .font(.system(size: 36, weight: .regular))
                             .foregroundColor(Color.indigo)
+                            .frame(width: 50)
                         
                         VStack (alignment: .leading) {
                             Text("Standard")
@@ -315,10 +347,12 @@ struct PageSix: View {
                         }
                     }
                     
+                    /*
                     HStack {
                         Image(systemName: "command.square")
                             .font(.system(size: 36, weight: .regular))
                             .foregroundColor(Color.indigo)
+                            .frame(width: 50)
                         
                         VStack (alignment: .leading) {
                             Text("Algorithm Trainer")
@@ -329,11 +363,13 @@ struct PageSix: View {
                                 .foregroundColor(Color(uiColor: .systemGray))
                         }
                     }
+                     */
                     
                     HStack {
                         Image(systemName: "square.stack")
                             .font(.system(size: 36, weight: .regular))
                             .foregroundColor(Color.indigo)
+                            .frame(width: 50)
                         
                         VStack (alignment: .leading) {
                             Text("Multiphase")
@@ -349,6 +385,7 @@ struct PageSix: View {
                         Image(systemName: "square.on.square")
                             .font(.system(size: 36, weight: .regular))
                             .foregroundColor(Color.indigo)
+                            .frame(width: 50)
                         
                         VStack (alignment: .leading) {
                             Text("Playground")
@@ -364,6 +401,7 @@ struct PageSix: View {
                         Image(systemName: "globe.asia.australia")
                             .font(.system(size: 36, weight: .medium))
                             .foregroundColor(Color.indigo)
+                            .frame(width: 50)
                         
                         VStack (alignment: .leading) {
                             Text("Comp Sim")
@@ -377,12 +415,18 @@ struct PageSix: View {
                 }
                 .frame(maxWidth: UIScreen.screenWidth - 32)
                 .padding(.horizontal, 32)
-                .padding(.top, 24)
+                .padding(.top, 18)
                 
                 
                 
                 
                 Spacer()
+            }
+            .safeAreaInset(edge: .bottom) {
+                Rectangle()
+                    .fill(.clear)
+                    .frame(height: 60)
+                
             }
         }
     }
@@ -391,37 +435,57 @@ struct PageSix: View {
 struct PageSeven: View {
     @Binding var pageIndex: Int
     var body: some View {
-        ZStack {
-            VStack(spacing: 0) {
-                Text("Thank you!")
-                    .font(.system(size: 36, weight: .bold))
-                    .padding(.top, 75)
-                    .multilineTextAlignment(.center)
-                    .padding(.bottom, 50)
-                
-
-                Text("We hope you enjoy using this app!")
-                    .font(.system(size: 22, weight: .regular))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-                
-                Spacer()
-                
-                
-                Text("CubeTime is open-source\nand GPLv3 licensed.\n")
-                    .font(.system(size: 17, weight: .medium))
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(Color(uiColor: .systemGray))
-                    .padding(.horizontal)
+        VStack(spacing: 0) {
+            Text("Thanks!")
+                .font(.system(size: 36, weight: .bold))
+                .padding(.top, smallPhone ? 50 : 72)
+                .multilineTextAlignment(.center)
+                .padding(.bottom)
             
-                Text("You can view our source code at\nhttps://github.com/CubeStuffs/CubeTime")
-                    .font(.system(size: 17, weight: .regular))
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(Color(uiColor: .systemGray))
-                    .padding(.horizontal)
-                
-                Spacer()
-            }
+
+            Text("We hope you enjoy using this app.")
+                .font(.system(size: 17, weight: .medium))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+                .padding(.bottom, 36)
+            
+            Text("This app is brought to you by")
+                .font(.system(size: 21, weight: .medium))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            
+            Text("[speedcube.co.nz](https://www.speedcube.co.nz/)")
+                .font(.system(size: 21, weight: .medium))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+                .padding(.bottom, 48)
+            
+            Image("speedcube")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 180)
+            
+            Spacer()
+            
+            
+            Text("CubeTime is open-source and GPLv3 licensed.\n")
+                .font(.system(size: 15, weight: .regular))
+                .multilineTextAlignment(.center)
+                .foregroundColor(Color(uiColor: .systemGray))
+                .padding(.horizontal)
+        
+            Text("You can view our source code at\nhttps://github.com/CubeStuffs/CubeTime")
+                .font(.system(size: 15, weight: .light))
+                .multilineTextAlignment(.center)
+                .foregroundColor(Color(uiColor: .systemGray))
+                .padding(.horizontal)
+                .padding(.bottom)
+        }
+        .safeAreaInset(edge: .bottom) {
+            Rectangle()
+                .fill(.clear)
+                .frame(height: 55)
+                .padding(.bottom)
         }
     }
 }

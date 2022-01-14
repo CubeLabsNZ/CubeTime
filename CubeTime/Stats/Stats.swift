@@ -141,6 +141,49 @@ class Stats {
     }
     
     
+    func getNormalMedian() -> (Double?, Double?) {
+        let cnt = solvesNoDNFs.count
+        
+        if cnt == 0 {
+            return (nil, nil)
+        }
+        
+        let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solvesNoDNFs.map({ $0.time })))
+        
+        print(truncatedValues)
+        print(cnt)
+            
+        
+        
+        if cnt % 2 == 0 {
+            let median = Double((solvesNoDNFs[cnt/2].time + solvesNoDNFs[(cnt/2)-1].time)/2)
+            
+            if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
+                print(truncatedMin)
+                print(truncatedMax)
+                
+                
+                return (median, ((median-truncatedMin)/(truncatedMax-truncatedMin)))
+            }
+            
+            return (median, nil)
+            
+            
+        } else {
+            let median = Double(solvesNoDNFs[(cnt/2)].time)
+            
+            if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
+                print(truncatedMin)
+                print(truncatedMax)
+                
+                return (median, ((median-truncatedMin)/(truncatedMax-truncatedMin)))
+            }
+            
+            return (median, nil)
+        }
+    }
+    
+    
     
     /// AVERAGE FUNCTIONS
     
@@ -328,8 +371,6 @@ class Stats {
                 return getCurrentMeanOfTen()
             } else if cnt > 10 {
                 for i in 0..<cnt-9 {
-                    print((averages[i..<i+10]).map({ $0.average ?? 0 }))
-                    
                     let tempArr = (averages[i..<i+10])
                     
                     if !(tempArr.contains(where: { $0.totalPen == .dnf})) {

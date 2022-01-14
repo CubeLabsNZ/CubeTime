@@ -10,9 +10,7 @@ struct NewStandardSessionViewBlocks: ViewModifier {
         content
             .background(colorScheme == .light ? Color.white : Color(uiColor: .systemGray6))
             .cornerRadius(10)
-        
-            .padding(.trailing)
-            .padding(.leading)
+            .padding(.horizontal)
     }
 }
 
@@ -52,7 +50,6 @@ struct ContextMenuButton: View {
         }
     }
     private func delayedAction() {
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + (delay ? 0.9 : 0)) {
             self.action()
         }
@@ -106,10 +103,7 @@ struct CustomiseStandardSessionView: View {
                             .multilineTextAlignment(TextAlignment.center)
                             .background(Color(uiColor: .systemGray5))
                             .cornerRadius(10)
-                            .padding(.leading)
-                            .padding(.trailing)
-                            .padding(.bottom)
-                        
+                            .padding([.horizontal, .bottom])
                     }
                     .frame(height: 220)
                     .modifier(NewStandardSessionViewBlocks())
@@ -268,7 +262,7 @@ struct NewSessionPopUpView: View {
                             }
                             
                             
-                            
+                            /*
                             HStack {
                                 Image(systemName: "command.square")
                                     .font(.system(size: 26, weight: .regular))
@@ -303,6 +297,9 @@ struct NewSessionPopUpView: View {
                                     .padding(.leading, 64)
                                     .padding(.trailing)
                             }
+                             */
+                            
+                            /// alg trainer commented out for now
                         }
                         
                         
@@ -432,7 +429,6 @@ struct NewSessionPopUpView: View {
                             Spacer()
                             
                             Button {
-                                print("new session view closed")
                                 dismiss()
                             } label: {
                                 Image(systemName: "xmark.circle.fill")
@@ -1127,7 +1123,6 @@ struct SessionCard: View {
     var body: some View {
         
         ZStack {
-            
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color(uiColor: .systemGray5))
                 .frame(height: item.pinned ? 110 : 65)
@@ -1137,7 +1132,6 @@ struct SessionCard: View {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(colourScheme == .dark ? Color(uiColor: .systemGray6) : Color.white)
                 .frame(width: currentSession == item ? 16 : UIScreen.screenWidth - 32, height: item.pinned ? 110 : 65)
-            
                 .offset(x: currentSession == item ? -((UIScreen.screenWidth - 16)/2) + 16 : 0)
             
                 .zIndex(1)
@@ -1145,11 +1139,7 @@ struct SessionCard: View {
             
             VStack {
                 HStack {
-                    
-                    
-                    
                     VStack(alignment: .leading) {
-                        
                         HStack(alignment: .center, spacing: 0) {
                             ZStack {
                                 if SessionTypes(rawValue: item.session_type)! != .standard {
@@ -1360,7 +1350,6 @@ struct SessionsView: View {
                         }
                     }
                 }
-                .navigationTitle("Your Sessions")
                 .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top, 64).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
                 
                 VStack {
@@ -1393,6 +1382,7 @@ struct SessionsView: View {
                 }
                 .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
             }
+            .navigationTitle("Your Sessions")
         }
     }
 }

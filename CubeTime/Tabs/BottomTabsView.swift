@@ -107,10 +107,7 @@ struct BottomTabsView: View {
                     .ignoresSafeArea(.keyboard)
                 }
                 .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : nil)
-                //.transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
                 .transition(.move(edge: .bottom).animation(.easeIn(duration: 6)))
-    //            .transition(AnyTransition.scale.animation(.easeIn(duration: 1)))
-                //
                 
             }
         } else {

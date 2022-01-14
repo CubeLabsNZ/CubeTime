@@ -1,10 +1,12 @@
 import Foundation
 import SwiftUI
+import UIKit
 
 
-class TimerUIView: UIView {
-    let stopWatchManager: StopWatchManager!
-    
+class TimerUIView: UIView {    
+    let stopWatchManager: StopWatchManager
+
+        
     required init(frame: CGRect, stopWatchManager: StopWatchManager) {
         self.stopWatchManager = stopWatchManager
         super.init(frame: frame)

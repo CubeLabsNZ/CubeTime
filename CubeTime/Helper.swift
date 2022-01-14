@@ -1,5 +1,21 @@
 import Foundation
 import SwiftUI
+import UIKit
+
+
+public extension UIDevice {
+    static let modelName: String = {
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let identifier = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+        
+        return identifier
+    }()
+}
 
 
 extension Color: RawRepresentable {
@@ -197,6 +213,13 @@ struct RoundedCorner: Shape {
     func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         return Path(path.cgPath)
+    }
+}
+
+extension View {
+    public func gradientForeground(gradientSelected: Int) -> some View {
+        self.overlay(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
+            .mask(self)
     }
 }
 
