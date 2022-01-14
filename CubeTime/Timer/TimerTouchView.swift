@@ -25,15 +25,21 @@ class TimerUIView: UIView {
     }
 }
 
-struct TimerTouchView: UIViewRepresentable {
+// Must be final class - see
+// https://github.com/mediweb/UIViewRepresentableBug
+final class TimerTouchView: UIViewRepresentable {
     
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @ObservedObject var stopWatchManager: StopWatchManager
     
     @AppStorage(gsKeys.freeze.rawValue) var userHoldTime: Double = 0.5
     @AppStorage(gsKeys.gestureDistance.rawValue) var geatureThreshold: Double = 50
     
+    init (stopWatchManager: StopWatchManager) {
+        self.stopWatchManager = stopWatchManager
+    }
     
-    func makeUIView(context: Context) -> some UIView {
+    
+    func makeUIView(context: UIViewRepresentableContext<TimerTouchView>) -> TimerUIView {
         let v = TimerUIView(frame: .zero, stopWatchManager: stopWatchManager)
         
         let longPressGesture = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.longPress))
@@ -44,6 +50,10 @@ struct TimerTouchView: UIViewRepresentable {
         v.addGestureRecognizer(longPressGesture)
         
         return v
+    }
+    
+    func updateUIView(_ uiView: TimerUIView, context: UIViewRepresentableContext<TimerTouchView>) {
+        
     }
     
     class Coordinator: NSObject {
@@ -64,9 +74,5 @@ struct TimerTouchView: UIViewRepresentable {
     
     func makeCoordinator() -> Coordinator {
         return Coordinator(stopWatchManager: stopWatchManager)
-    }
-    
-    func updateUIView(_ uiView: UIViewType, context: Context) {
-        
     }
 }

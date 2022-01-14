@@ -113,14 +113,13 @@ struct MainTabsView: View {
             ZStack {
                 switch tabRouter.currentTab {
                 case .timer:
-                    TimerView(pageIndex: $pageIndex, currentSession: $currentSession, stopWatchManager: StopWatchManager(currentSession: $currentSession, managedObjectContext: managedObjectContext), hideTabBar: $hideTabBar)
+                    TimerView(pageIndex: $pageIndex, currentSession: $currentSession, managedObjectContext: managedObjectContext, hideTabBar: $hideTabBar)
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .solves:
                     TimeListView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
                         .environment(\.managedObjectContext, managedObjectContext)
                 case .stats:
                     StatsView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
-//                    StatsDetail()
                 case .sessions:
                     SessionsView(currentSession: $currentSession)
                         .environment(\.managedObjectContext, managedObjectContext)
