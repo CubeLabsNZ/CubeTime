@@ -244,8 +244,10 @@ class StopWatchManager: ObservableObject {
     
     
     func displayPenOptions() {
-        withAnimation {
-            showPenOptions = true
+        if solveItem != nil {
+            withAnimation {
+                showPenOptions = true
+            }
         }
     }
     
