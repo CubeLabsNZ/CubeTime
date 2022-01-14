@@ -7,11 +7,7 @@
 
 import SwiftUI
 
-
-
 func getDivisions(data: [Double]) -> Array<(Double, Int)> {
-    
-    
     let cnt: Int = data.count
     
     if cnt >= 4 {
@@ -72,19 +68,6 @@ func getMaxHeight(occurences: [Int]) -> Int? {
     return 1
 }
 
-func getHeights(occurences: [Int]) -> [Int]? {
-    return occurences
-}
-
-extension View {
-    func inExpandingRectangle() -> some View {
-        ZStack {
-            Rectangle()
-                .fill(Color.clear)
-            self
-        }
-    }
-}
 
 func getTruncatedMinMax(numbers: Array<(Double, Int)>) -> (Double?, Double?) {
     if numbers.count >= 6 {

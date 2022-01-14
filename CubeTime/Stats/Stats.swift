@@ -51,7 +51,7 @@ class Stats {
         self.currentSession = currentSession
         
         let sessionSolves = currentSession.solves!.allObjects as! [Solves]
-
+        
         solves = sessionSolves.sorted(by: {timeWithPlusTwoForSolve($0) < timeWithPlusTwoForSolve($1)})
         solvesByDate = sessionSolves.sorted(by: {$0.date! < $1.date!})
         
