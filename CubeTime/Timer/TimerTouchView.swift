@@ -100,7 +100,8 @@ final class TimerTouchView: UIViewRepresentable {
                     self.stopWatchManager.rescramble()
                 }
             default:
-                NSLog("unknown gesture direction")
+                stopWatchManager.touchUp()
+                NSLog("default")
             }
         }
     }
