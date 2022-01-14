@@ -1,15 +1,6 @@
 import SwiftUI
 import CoreData
 
-
-extension View {
-    public func gradientForeground(gradientSelected: Int) -> some View {
-        self.overlay(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
-            .mask(self)
-    }
-}
-
-
 struct StatsBlock<Content: View>: View {
     @Environment(\.colorScheme) var colourScheme
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
@@ -19,7 +10,6 @@ struct StatsBlock<Content: View>: View {
     let blockHeight: CGFloat?
     let bigBlock: Bool
     let coloured: Bool
-    
     
     
     init(_ title: String, _ blockHeight: CGFloat?, _ bigBlock: Bool, _ coloured: Bool, @ViewBuilder _ dataView: () -> Content) {
@@ -150,16 +140,6 @@ struct StatsBlockDetailText: View {
     }
 }
 
-struct StatsDivider: View {
-    @Environment(\.colorScheme) var colourScheme
-
-    var body: some View {
-        Divider()
-            .frame(width: UIScreen.screenWidth/2)
-            .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
-    }
-}
-
 struct StatsBlockSmallText: View {
     @Environment(\.colorScheme) var colourScheme
     
@@ -211,7 +191,15 @@ struct StatsBlockSmallText: View {
     }
 }
 
+struct StatsDivider: View {
+    @Environment(\.colorScheme) var colourScheme
 
+    var body: some View {
+        Divider()
+            .frame(width: UIScreen.screenWidth/2)
+            .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
+    }
+}
 
 struct StatsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -264,8 +252,6 @@ struct StatsView: View {
     // get stats
     let stats: Stats
     
-    
-    
     init(currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
         stats = Stats(currentSession: currentSession.wrappedValue)
@@ -303,8 +289,6 @@ struct StatsView: View {
         self.bestMeanOfTen = stats.getBestMeanOfTen()
     }
     
-    
-    
     var body: some View {
         NavigationView {
             ZStack {
@@ -329,10 +313,11 @@ struct StatsView: View {
                         .padding(.horizontal)
                         .padding(.bottom, 8)
 
+                        let compsim: Bool = SessionTypes(rawValue: currentSession.session_type)! == .compsim
+                        
                         /// everything
                         VStack(spacing: 10) {
-                            /// first bunch of blocks
-                            if currentSession.session_type != SessionTypes.compsim.rawValue {
+                            if !compsim {
                                 HStack(spacing: 10) {
                                     StatsBlock("CURRENT STATS", 160, false, false) {
                                         StatsBlockSmallText(["AO5", "AO12", "AO100"], [currentAo5, currentAo12, currentAo100], $presentedAvg, false)
@@ -388,9 +373,16 @@ struct StatsView: View {
                                 .padding(.horizontal)
                                 
                                 StatsDivider()
-                            }
-                            
-                            if SessionTypes(rawValue: currentSession.session_type)! == .compsim {
+                                
+                                if SessionTypes(rawValue: currentSession.session_type)! == .multiphase {
+                                    StatsBlock("AVERAGE PHASES", timesBySpeedNoDNFs.count == 0 ? 150 : 200, true, false) {
+                                        AveragePhases(timesBySpeedNoDNFs)
+                                            .padding(.top, 20)
+                                    }
+                                    
+                                    StatsDivider()
+                                }
+                            } else {
                                 HStack(spacing: 10) {
                                     VStack(spacing: 10) {
                                         StatsBlock("CURRENT AVG", 215, false, false) {
@@ -498,94 +490,23 @@ struct StatsView: View {
                                 .padding(.horizontal)
                                 
                                 StatsDivider()
-                                
-                                StatsBlock("TIME TREND", (allCompsimAveragesByDate.count < 2 ? 150 : 300), true, false) {
-                                    TimeTrend(data: allCompsimAveragesByDate, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
-                                        .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
-                                        .padding(.horizontal, 12)
-                                        .offset(y: -5)
-                                        .drawingGroup()
-                                }
+                            }
                             
-                                StatsBlock("TIME DISTRIBUTION", (allCompsimAveragesByTime.count < 4 ? 150 : 300), true, false) {
-                                    TimeDistribution(currentSession: $currentSession, solves: allCompsimAveragesByTime)
-                                        .drawingGroup()
-                                }
-                            } else {
-                                /// average phases if multiphase session
-                                if SessionTypes(rawValue: currentSession.session_type)! == .multiphase {
-                                    VStack {
-                                        ZStack {
-                                            VStack {
-                                                HStack {
-                                                    Text("AVERAGE PHASES")
-                                                        .font(.system(size: 13, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray))
-                                                    Spacer()
-                                                }
-                                                
-                                                if timesBySpeedNoDNFs.count >= 1 {
-                                                    VStack (spacing: 8) {
-                                                        Capsule()
-                                                            .frame(height: 10)
-                                                        
-                                                        ForEach(0...4, id: \.self) { phase in
-                                                            HStack (spacing: 16) {
-                                                                Circle()
-                                                                    .frame(width: 10, height: 10)
-                                                                
-                                                                HStack (spacing: 8) {
-                                                                    Text("Phase \(phase):")
-                                                                        .font(.system(size: 17, weight: .medium))
-                                                                    
-                                                                    Text("1.50")
-                                                                        .font(.system(size: 17))
-                                                                    
-                                                                    Text("(25%)")
-                                                                        .foregroundColor(Color(uiColor: .systemGray))
-                                                                        .font(.system(size: 17))
-                                                                }
-                                                                
-                                                                Spacer()
-                                                            }
-                                                        }
-                                                    }
-                                                    .padding(.horizontal, 2)
-                                                    .padding(.top, -2)
-                                                }
-                                                
-                                                Spacer()
-                                            }
-                                            .padding(12)
-                                            
-                                            if timesBySpeedNoDNFs.count == 0 {
-                                                Text("not enough solves to\ndisplay graph")
-                                                    .font(.system(size: 17, weight: .medium, design: .monospaced))
-                                                    .multilineTextAlignment(.center)
-                                                    .foregroundColor(Color(uiColor: .systemGray))
-                                            }
-                                        }
-                                    }
-                                    .frame(height: timesBySpeedNoDNFs.count == 0 ? 150 : 200)
-                                    .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                    .padding(.horizontal)
-                                    
-                                    
-                                    StatsDivider()
-                                }
-                                
-                                StatsBlock("TIME TREND", (timesByDateNoDNFs.count < 2 ? 150 : 300), true, false) {
-                                    TimeTrend(data: timesByDateNoDNFs, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
-                                        .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
-                                        .padding(.horizontal, 12)
-                                        .offset(y: -5)
-                                        .drawingGroup()
-                                }
-                                
-                                StatsBlock("TIME DISTRIBUTION", (timesBySpeedNoDNFs.count < 4 ? 150 : 300), true, false) {
-                                    TimeDistribution(currentSession: $currentSession, solves: timesBySpeedNoDNFs)
-                                        .drawingGroup()
-                                }
+                            
+                            let timeTrendData = (compsim ? allCompsimAveragesByDate : timesByDateNoDNFs)
+                            let timeDistributionData = (compsim ? allCompsimAveragesByTime : timesBySpeedNoDNFs)
+                            
+                            StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 300), true, false) {
+                                TimeTrend(data: timeTrendData, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
+                                    .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
+                                    .padding(.horizontal, 12)
+                                    .offset(y: -5)
+                                    .drawingGroup()
+                            }
+                            
+                            StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? 150 : 300), true, false) {
+                                TimeDistribution(currentSession: $currentSession, solves: timeDistributionData)
+                                    .drawingGroup()
                             }
                         }
                     }

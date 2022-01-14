@@ -216,6 +216,13 @@ struct RoundedCorner: Shape {
     }
 }
 
+extension View {
+    public func gradientForeground(gradientSelected: Int) -> some View {
+        self.overlay(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
+            .mask(self)
+    }
+}
+
 
 
 // TODO 3BLD
