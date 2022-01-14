@@ -190,7 +190,7 @@ class StopWatchManager: ObservableObject {
     func longPressStart() {
         NSLog("long press start")
         
-        if inspectionEnabled ? mode == .inspecting : mode == .stopped {
+        if inspectionEnabled ? mode == .inspecting : mode == .stopped && !prevDownStoppedTimer {
             timerColour = TimerTextColours.timerCanStartColour
             feedbackStyle?.impactOccurred()
         }
