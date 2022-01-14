@@ -23,10 +23,7 @@ struct AppearanceSettingsView: View {
     
     @State var showThemeOptions: Bool = false
     
-    private let columns = [
-        GridItem(spacing: 16),
-        GridItem(spacing: 16)
-    ]
+    private let columns = [GridItem(spacing: 16), GridItem(spacing: 16)]
     
     @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
     @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false

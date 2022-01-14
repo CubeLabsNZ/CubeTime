@@ -207,14 +207,13 @@ struct StatsView: View {
     
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     
-    
     @Binding var currentSession: Sessions
     
     @State var isShowingStatsView: Bool = false
     @State var presentedAvg: CalculatedAverage? = nil
     @State var showBestSinglePopup = false
     
-    let columns = [GridItem(spacing: 10), GridItem(spacing: 10)]
+    let stats: Stats
     
     // best averages
     let bestAo5: CalculatedAverage?
@@ -229,7 +228,6 @@ struct StatsView: View {
     // other block calculations
     let bestSingle: Solves?
     let sessionMean: Double?
-    
     
     // raw values for graphs
     let timesByDateNoDNFs: [Double]
@@ -249,9 +247,6 @@ struct StatsView: View {
     let currentMeanOfTen: Double?
     let bestMeanOfTen: Double?
    
-    // get stats
-    let stats: Stats
-    
     init(currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
         stats = Stats(currentSession: currentSession.wrappedValue)
@@ -268,7 +263,6 @@ struct StatsView: View {
         
         self.bestSingle = stats.getMin()
         self.sessionMean = stats.getSessionMean()
-        
         
         // raw values
         self.timesByDateNoDNFs = stats.solvesNoDNFsbyDate.map { timeWithPlusTwoForSolve($0) }
