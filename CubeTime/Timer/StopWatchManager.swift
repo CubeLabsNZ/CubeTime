@@ -51,6 +51,7 @@ class StopWatchManager: ObservableObject {
     
     
     init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
+        NSLog("Initializing a stopwatchamanager")
         _currentSession = currentSession
         self.managedObjectContext = managedObjectContext
         self.feedbackStyle = hapticEnabled ? UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!) : nil

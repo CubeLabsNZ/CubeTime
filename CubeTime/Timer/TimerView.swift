@@ -30,7 +30,7 @@ struct TimerView: View {
     
     
     
-    @ObservedObject var stopWatchManager: StopWatchManager
+    @StateObject var stopWatchManager: StopWatchManager
     
     @Binding var hideTabBar: Bool
     
@@ -54,14 +54,16 @@ struct TimerView: View {
 //    @State var compSimTarget: String
     
     
-    init(pageIndex: Binding<Int>, currentSession: Binding<Sessions>, stopWatchManager: StopWatchManager, hideTabBar: Binding<Bool>) {
+    init(pageIndex: Binding<Int>, currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext, hideTabBar: Binding<Bool>) {
         self._pageIndex = pageIndex
         self._currentSession = currentSession
-        self.stopWatchManager = stopWatchManager
         self._hideTabBar = hideTabBar
         self._playgroundScrambleType = State(initialValue: Int(currentSession.wrappedValue.scramble_type))
         
         self._targetStr = State(initialValue: filteredStrFromTime((currentSession.wrappedValue as? CompSimSession)?.target))
+        
+        // https://swiftui-lab.com/random-lessons/#data-10
+        self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: currentSession, managedObjectContext: managedObjectContext))
     }
 
     
@@ -160,7 +162,7 @@ struct TimerView: View {
                        
             GeometryReader { geometry in
                 ZStack {
-                    TimerTouchView()
+                    TimerTouchView(stopWatchManager: stopWatchManager)
 //                        .contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
                         .frame(width: geometry.size.width, height: geometry.size.height)
                         .environmentObject(stopWatchManager)
