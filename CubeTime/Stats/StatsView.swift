@@ -10,7 +10,6 @@ extension View {
 }
 
 
-
 struct StatsBlock<Content: View>: View {
     @Environment(\.colorScheme) var colourScheme
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
@@ -38,7 +37,7 @@ struct StatsBlock<Content: View>: View {
                     HStack {
                         Text(title)
                             .font(.system(size: 13, weight: .medium, design: .default))
-                            .foregroundColor(Color(uiColor: coloured ? .systemGray5 : .systemGray))
+                            .foregroundColor(Color(uiColor: title == "CURRENT STATS" ? .black : (coloured ? .systemGray5 : .systemGray)))
                         Spacer()
                     }
                     Spacer()
@@ -54,7 +53,7 @@ struct StatsBlock<Content: View>: View {
             view.background(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)                                        .clipShape(RoundedRectangle(cornerRadius:16)))
         }
         .if(!coloured) { view in
-            view.background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
+            view.background(Color(uiColor: title == "CURRENT STATS" ? .systemGray5 : (colourScheme == .light ? .white : .systemGray6)).clipShape(RoundedRectangle(cornerRadius:16)))
         }
         .if(bigBlock) { view in
             view.padding(.horizontal)
@@ -161,6 +160,57 @@ struct StatsDivider: View {
     }
 }
 
+struct StatsBlockSmallText: View {
+    @Environment(\.colorScheme) var colourScheme
+    
+    var titles: [String]
+    var data: [CalculatedAverage?]
+    var checkDNF: Bool
+    @Binding var presentedAvg: CalculatedAverage?
+    
+    init(_ titles: [String], _ data: [CalculatedAverage?], _ presentedAvg: Binding<CalculatedAverage?>, _ checkDNF: Bool) {
+        self.titles = titles
+        self.data = data
+        self._presentedAvg = presentedAvg
+        self.checkDNF = checkDNF
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            ForEach(Array(zip(titles.indices, titles)), id: \.0) { index, title in
+                HStack {
+                    VStack (alignment: .leading, spacing: -4) {
+                        Text(title)
+                            .font(.system(size: 13, weight: .medium, design: .default))
+                            .foregroundColor(Color(uiColor: .systemGray))
+                        
+                        if let datum = data[index] {
+                            Text(formatSolveTime(secs: datum.average ?? 0, penType: datum.totalPen))
+                                .font(.system(size: 24, weight: .bold, design: .default))
+                                .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                .modifier(DynamicText())
+                        } else {
+                            Text("-")
+                                .font(.system(size: 20, weight: .medium, design: .default))
+                                .foregroundColor(Color(uiColor:.systemGray2))
+                        }
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.leading, 12)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    if data[index] != nil && (!checkDNF || (data[index]?.totalPen != .dnf)) {
+                        presentedAvg = data[index]
+                    }
+                }
+            }
+        }
+        .padding(.top, 12)
+    }
+}
+
 
 
 struct StatsView: View {
@@ -179,9 +229,9 @@ struct StatsView: View {
     let columns = [GridItem(spacing: 10), GridItem(spacing: 10)]
     
     // best averages
-    let ao5: CalculatedAverage?
-    let ao12: CalculatedAverage?
-    let ao100: CalculatedAverage?
+    let bestAo5: CalculatedAverage?
+    let bestAo12: CalculatedAverage?
+    let bestAo100: CalculatedAverage?
     
     // current averages
     let currentAo5: CalculatedAverage?
@@ -221,9 +271,9 @@ struct StatsView: View {
         stats = Stats(currentSession: currentSession.wrappedValue)
         
         
-        self.ao5 = stats.getBestMovingAverageOf(5)
-        self.ao12 = stats.getBestMovingAverageOf(12)
-        self.ao100 = stats.getBestMovingAverageOf(100)
+        self.bestAo5 = stats.getBestMovingAverageOf(5)
+        self.bestAo12 = stats.getBestMovingAverageOf(12)
+        self.bestAo100 = stats.getBestMovingAverageOf(100)
         
         self.currentAo5 = stats.getCurrentAverageOf(5)
         self.currentAo12 = stats.getCurrentAverageOf(12)
@@ -262,9 +312,7 @@ struct StatsView: View {
                     .ignoresSafeArea()
                 
                 ScrollView {
-                    
-                    VStack (spacing: 0) { /// make this lazy???
-                        /// the title
+                    VStack (spacing: 0) {
                         VStack(spacing: 0) {
                             HStack (alignment: .center) {
                                 Text(currentSession.name!)
@@ -285,371 +333,64 @@ struct StatsView: View {
                         VStack(spacing: 10) {
                             /// first bunch of blocks
                             if currentSession.session_type != SessionTypes.compsim.rawValue {
-                                VStack(spacing: 10) {
-                                    HStack (spacing: 10) {
-                                        VStack (alignment: .leading, spacing: 0) {
-                                            Text("CURRENT STATS")
-                                                .font(.system(size: 13, weight: .medium, design: .default))
-                                                .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                .padding(.leading, 12)
-                                                .padding(.top, 10)
-                                            
-                                            VStack (alignment: .leading, spacing: 6) {
-                                                HStack {
-                                                    VStack (alignment: .leading, spacing: -4) {
-                                                        
-                                                        Text("AO5")
-                                                            .font(.system(size: 13, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray))
-                                                            .padding(.leading, 12)
-                                                        
-                                                        if let currentAo5 = currentAo5 {
-                                                            Text(String(formatSolveTime(secs: currentAo5.average ?? 0, penType: currentAo5.totalPen)))
-                                                                .font(.system(size: 24, weight: .bold, design: .default))
-                                                                .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                                .padding(.leading, 12)
-                                                                .modifier(DynamicText())
-                                                            
-                                                        } else {
-                                                            Text("-")
-                                                                .font(.system(size: 20, weight: .medium, design: .default))
-                                                                .foregroundColor(Color(uiColor:.systemGray2))
-                                                                .padding(.leading, 12)
-                                                            
-                                                        }
-                                                    }
-                                                    
-                                                    Spacer()
-                                                }
-                                                .contentShape(Rectangle())
-                                                .onTapGesture {
-                                                    if currentAo5 != nil {
-                                                        presentedAvg = currentAo5
-                                                    }
-                                                }
-                                                
-                                                HStack {
-                                                    VStack (alignment: .leading, spacing: -4) {
-                                                        Text("AO12")
-                                                            .font(.system(size: 13, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray))
-                                                            .padding(.leading, 12)
-                                                        
-                                                        if let currentAo12 = currentAo12 {
-                                                            Text(String(formatSolveTime(secs: currentAo12.average ?? 0, penType: currentAo12.totalPen)))
-                                                                .font(.system(size: 24, weight: .bold, design: .default))
-                                                                .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                                .padding(.leading, 12)
-                                                                .modifier(DynamicText())
-                                                            
-                                                            
-                                                        } else {
-                                                            Text("-")
-                                                                .font(.system(size: 20, weight: .medium, design: .default))
-                                                                .foregroundColor(Color(uiColor: .systemGray2))
-                                                                .padding(.leading, 12)
-                                                            
-                                                        }
-                                                        
-                                                    }
-                                                    
-                                                    
-                                                    Spacer()
-                                                }
-                                                .contentShape(Rectangle())
-                                                .onTapGesture {
-                                                    if currentAo12 != nil {
-                                                        presentedAvg = currentAo12
-                                                    }
-                                                }
-                                                
-                                                HStack {
-                                                    VStack (alignment: .leading, spacing: -4) {
-                                                        Text("AO100")
-                                                            .font(.system(size: 13, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray))
-                                                            .padding(.leading, 12)
-                                                        
-                                                        if let currentAo100 = currentAo100 {
-                                                            Text(String(formatSolveTime(secs: currentAo100.average ?? 0, penType: currentAo100.totalPen)))
-                                                                .font(.system(size: 24, weight: .bold, design: .default))
-                                                                .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                                .padding(.leading, 12)
-                                                        } else {
-                                                            Text("-")
-                                                                .font(.system(size: 20, weight: .medium, design: .default))
-                                                                .foregroundColor(Color(uiColor: .systemGray2))
-                                                                .padding(.leading, 12)
-                                                            
-                                                        }
-                                                        
-                                                    }
-                                                    
-                                                    
-                                                    Spacer()
-                                                    
-                                                }
-                                                .contentShape(Rectangle())
-                                                .onTapGesture {
-                                                    if currentAo100 != nil {
-                                                        presentedAvg = currentAo100
-                                                    }
-                                                }
-                                            }
-                                            .padding(.bottom, 8)
-                                        }
-                                        .frame(height: 160)
-                                        .frame(minWidth: 0, maxWidth: .infinity)
-                                        .background(Color(uiColor: .systemGray5).clipShape(RoundedRectangle(cornerRadius:16)))
-                                        
-                                        VStack {
-                                            HStack {
-                                                VStack (alignment: .leading, spacing: 0) {
-                                                    Text("SOLVE COUNT")
-                                                        .font(.system(size: 13, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray))
-                                                        .padding(.bottom, 4)
-                                                    
-                                                    Text(String(stats.getNumberOfSolves()))
-                                                        .font(.system(size: 34, weight: .bold, design: .default))
-                                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                }
-                                                .padding(.top)
-                                                .padding(.bottom, 12)
-                                                .padding(.leading, 12)
-                                                
-                                                Spacer()
-                                            }
-                                            .frame(height: 75)
-                                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                            
-                                            HStack {
-                                                VStack (alignment: .leading, spacing: 0) {
-                                                    Text("SESSION MEAN")
-                                                        .font(.system(size: 13, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray))
-                                                        .padding(.bottom, 4)
-                                                    
-                                                    
-                                                    if sessionMean != nil {
-                                                        Text(String(formatSolveTime(secs: sessionMean!)))
-                                                            .font(.system(size: 34, weight: .bold, design: .default))
-                                                            .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                            .modifier(DynamicText())
-                                                        
-                                                        
-                                                        
-                                                    } else {
-                                                        Text("-")
-                                                            .font(.system(size: 28, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray2))
-                                                    }
-                                                    
-                                                    
-                                                }
-                                                .padding(.top)
-                                                .padding(.bottom, 12)
-                                                .padding(.leading, 12)
-                                                
-                                                Spacer()
-                                            }
-                                            .frame(height: 75)
-                                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                        }
-                                        
-                                        .frame(minWidth: 0, maxWidth: .infinity)
+                                HStack(spacing: 10) {
+                                    StatsBlock("CURRENT STATS", 160, false, false) {
+                                        StatsBlockSmallText(["AO5", "AO12", "AO100"], [currentAo5, currentAo12, currentAo100], $presentedAvg, false)
                                     }
-                                    .padding(.horizontal)
-                                }
-                                
-                                Divider()
-                                    .frame(width: UIScreen.screenWidth/2)
-                                    .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
-                                
-                                /// best statistics
-                                VStack (spacing: 10) {
-                                    HStack (spacing: 10) {
-                                        VStack (spacing: 10) {
-                                            HStack {
-                                                VStack (alignment: .leading, spacing: 0) {
-                                                    Text("BEST SINGLE")
-                                                        .font(.system(size: 13, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray5))
-                                                        .padding(.bottom, 4)
-                                                    
-                                                    if let bestSingle = bestSingle {
-                                                        Text(String(formatSolveTime(secs: bestSingle.time, penType: PenTypes(rawValue: bestSingle.penalty)!)))
-                                                            .font(.system(size: 34, weight: .bold, design: .default))
-                                                            .foregroundColor(Color(uiColor: colourScheme == .light ? .white : .black))
-                                                    } else {
-                                                        Text("-")
-                                                            .font(.system(size: 28, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray5))
-                                                    }
-                                                }
-                                                .padding(.top)
-                                                .padding(.bottom, 12)
-                                                .padding(.leading, 12)
-                                                
-                                                Spacer()
-                                            }
-                                            .frame(height: 75)
-                                            .background(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)                                        .clipShape(RoundedRectangle(cornerRadius:16)))
-                                            .onTapGesture {
-                                                if bestSingle != nil {
-                                                    showBestSinglePopup = true
-                                                }
-                                            }
-                                            
-                                            VStack (alignment: .leading, spacing: 0) {
-                                                HStack {
-                                                    VStack (alignment: .leading, spacing: 0) {
-                                                        Text("BEST AO12")
-                                                            .font(.system(size: 13, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray))
-                                                            .padding(.leading, 12)
-                                                        
-                                                        if let ao12 = ao12 {
-                                                            Text(String(formatSolveTime(secs: ao12.average ?? 0, penType: ao12.totalPen)))
-                                                                .font(.system(size: 34, weight: .bold, design: .default))
-                                                                .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                                .padding(.leading, 12)
-                                                        } else {
-                                                            Text("-")
-                                                                .font(.system(size: 28, weight: .medium, design: .default))
-                                                                .foregroundColor(Color(uiColor:.systemGray2))
-                                                                .padding(.leading, 12)
-                                                            
-                                                        }
-                                                    }
-                                                    
-                                                    Spacer()
-                                                }
-                                                .contentShape(Rectangle())
-                                                .onTapGesture {
-                                                    if ao12 != nil && ao12?.totalPen != .dnf  {
-                                                        presentedAvg = ao12
-                                                    }
-                                                }
-                                                
-                                                Divider()
-                                                    .padding(.leading, 12)
-                                                    .padding(.vertical, 4)
-                                                
-                                                HStack {
-                                                    VStack (alignment: .leading, spacing: 0) {
-                                                        Text("BEST AO100")
-                                                            .font(.system(size: 13, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray))
-                                                            .padding(.leading, 12)
-                                                        
-                                                        if let ao100 = ao100 {
-                                                            Text(String(formatSolveTime(secs: ao100.average ?? 0, penType: ao100.totalPen)))
-                                                                .font(.system(size: 34, weight: .bold, design: .default))
-                                                                .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                                .padding(.leading, 12)
-                                                        } else {
-                                                            Text("-")
-                                                                .font(.system(size: 28, weight: .medium, design: .default))
-                                                                .foregroundColor(Color(uiColor: .systemGray2))
-                                                                .padding(.leading, 12)
-                                                            
-                                                        }
-                                                        
-                                                    }
-                                                    
-                                                    Spacer()
-                                                }
-                                                .contentShape(Rectangle())
-                                                .onTapGesture {
-                                                    if ao100 != nil && ao100?.totalPen != .dnf {
-                                                        presentedAvg = ao100
-                                                    }
-                                                }
-                                            }
-                                            .frame(height: 130)
-                                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                            
+                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                    
+                                    VStack(spacing: 10) {
+                                        StatsBlock("SOLVE COUNT", 75, false, false) {
+                                            StatsBlockText("\(stats.getNumberOfSolves())", false, false, false, true)
                                         }
-                                        .frame(minWidth: 0, maxWidth: .infinity)
                                         
-                                        VStack (spacing: 10) {
-                                            HStack {
-                                                VStack (alignment: .leading, spacing: 0) {
-                                                    Text("BEST AO5")
-                                                        .font(.system(size: 13, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray))
-                                                        .padding(.bottom, 4)
-                                                    
-                                                    if let ao5 = ao5 {
-                                                        Text(formatSolveTime(secs: ao5.average ?? 0, penType: ao5.totalPen))
-                                                            .font(.system(size: 34, weight: .bold, design: .default))
-                                                            .gradientForeground(gradientSelected: gradientSelected)
-                                                        
-                                                        Spacer()
-                                                        
-                                                        if let accountedSolves = ao5.accountedSolves {
-                                                        
-                                                            ForEach(accountedSolves, id: \.self) { solve in
-                                                                if ao5.trimmedSolves!.contains(solve) {
-                                                                    Text("("+formatSolveTime(secs: solve.time,
-                                                                                             penType: PenTypes(rawValue: solve.penalty))+")")
-                                                                        .font(.system(size: 17, weight: .regular, design: .default))
-                                                                        .foregroundColor(Color(uiColor: .systemGray))
-                                                                        .multilineTextAlignment(.leading)
-                                                                        .padding(.bottom, 2)
-                                                                } else {
-                                                                    Text(formatSolveTime(secs: solve.time,
-                                                                                         penType: PenTypes(rawValue: solve.penalty)))
-                                                                        .font(.system(size: 17, weight: .regular, design: .default))
-                                                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                                                        .multilineTextAlignment(.leading)
-                                                                        .padding(.bottom, 2)
-                                                                }
-                                                            }
-                                                        } else {
-                                                            Text("-")
-                                                                .font(.system(size: 28, weight: .medium, design: .default))
-                                                                .foregroundColor(Color(uiColor: .systemGray2))
-                                                            
-                                                            Spacer()
-                                                        }
-                                                        
-                                                        
-                                                        
-                                                    } else {
-                                                        Text("-")
-                                                            .font(.system(size: 28, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray2))
-                                                        
-                                                        Spacer()
-                                                    }
-                                                }
-                                                .padding(.top, 10)
-                                                .padding(.bottom, 10)
-                                                .padding(.leading, 12)
-                                                
-                                                
-                                                
-                                                Spacer()
-                                            }
-                                            .frame(height: 215)
-                                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:16)))
-                                            .onTapGesture {
-                                                if ao5 != nil && ao5?.totalPen != .dnf {
-                                                    presentedAvg = ao5
-                                                }
+                                        StatsBlock("SESSION MEAN", 75, false, false) {
+                                            if sessionMean != nil {
+                                                StatsBlockText(formatSolveTime(secs: sessionMean!), false, false, false, true)
+                                            } else {
+                                                StatsBlockText("", false, false, false, false)
                                             }
                                         }
-                                        .frame(minWidth: 0, maxWidth: .infinity)
                                     }
-                                    .padding(.horizontal)
+                                    .frame(minWidth: 0, maxWidth: .infinity)
                                 }
+                                .padding(.horizontal)
                                 
-                                Divider()
-                                    .frame(width: UIScreen.screenWidth/2)
-                                    .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
-                            } else {
+                                StatsDivider()
+                                
+                                HStack(spacing: 10) {
+                                    VStack (spacing: 10) {
+                                        StatsBlock("BEST SINGLE", 75, false, true) {
+                                            if bestSingle != nil {
+                                                StatsBlockText(formatSolveTime(secs: bestSingle!.time, penType: PenTypes(rawValue: bestSingle!.penalty)!), false, true, false, true)
+                                            } else {
+                                                StatsBlockText("", false, false, false, false)
+                                            }
+                                        }
+                                        
+                                        StatsBlock("BEST STATS", 130, false, false) {
+                                            StatsBlockSmallText(["AO12", "AO100"], [bestAo12, bestAo100], $presentedAvg, true)
+                                        }
+                                    }
+                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                    
+                                    StatsBlock("BEST AO5", 215, false, false) {
+                                        if bestAo5 != nil {
+                                            StatsBlockText(formatSolveTime(secs: bestAo5?.average ?? 0, penType: bestAo5?.totalPen), true, false, true, true)
+                                            
+                                            StatsBlockDetailText(bestAo5!, false)
+                                        } else {
+                                            StatsBlockText("", false, false, false, false)
+                                        }
+                                    }
+                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                }
+                                .padding(.horizontal)
+                                
+                                StatsDivider()
+                            }
+                            
+                            if SessionTypes(rawValue: currentSession.session_type)! == .compsim {
                                 HStack(spacing: 10) {
                                     VStack(spacing: 10) {
                                         StatsBlock("CURRENT AVG", 215, false, false) {
@@ -734,15 +475,11 @@ struct StatsView: View {
                                 }
                                 
                                 StatsDivider()
-                            }
-                            
-                            
-                            
-                            if SessionTypes(rawValue: currentSession.session_type)! == .compsim {
+                                
                                 HStack(spacing: 10) {
                                     StatsBlock("CURRENT MO10 AO5", 75, false, false) {
                                         if currentMeanOfTen != nil {
-                                            StatsBlockText(formatSolveTime(secs: currentMeanOfTen!, penType: ((currentMeanOfTen == -1) ? .dnf : .none)), false, false, false, true)
+                                            StatsBlockText(formatSolveTime(secs: currentMeanOfTen!, penType: ((currentMeanOfTen == -1) ? .dnf : PenTypes.none)), false, false, false, true)
                                         } else {
                                             StatsBlockText("", false, false, false, false)
                                         }
@@ -751,7 +488,7 @@ struct StatsView: View {
                                     
                                     StatsBlock("BEST MO10 AO5", 75, false, false) {
                                         if bestMeanOfTen != nil {
-                                            StatsBlockText(formatSolveTime(secs: bestMeanOfTen!, penType: ((bestMeanOfTen == -1) ? .dnf : .none)), false, false, false, true)
+                                            StatsBlockText(formatSolveTime(secs: bestMeanOfTen!, penType: ((bestMeanOfTen == -1) ? .dnf : PenTypes.none)), false, false, false, true)
                                         } else {
                                             StatsBlockText("", false, false, false, false)
                                         }
@@ -845,7 +582,7 @@ struct StatsView: View {
                                         .drawingGroup()
                                 }
                                 
-                                StatsBlock("TIME DISTRIBUTION", (allCompsimAveragesByTime.count < 4 ? 150 : 300), true, false) {
+                                StatsBlock("TIME DISTRIBUTION", (timesBySpeedNoDNFs.count < 4 ? 150 : 300), true, false) {
                                     TimeDistribution(currentSession: $currentSession, solves: timesBySpeedNoDNFs)
                                         .drawingGroup()
                                 }
