@@ -126,18 +126,15 @@ struct AboutSettingsView: View {
                     showLicenses = true
                 }
                             
-                Text("\nThis project is kindly sponsored by speedcube.co.nz!\nGo support our local businesses and Buy your cubes from https://www.speedcube.co.nz/   \n")
+                Text("\nThis project is made possible by speedcube.co.nz!\nGo support them and buy your cubes from https://www.speedcube.co.nz/ \n")
                 
                 
-                Text("If you need help, you can view the tutorial again:")
-                Button("Tutorial") { showOnboarding = true }
-                    
-                    
+                Text("If you need a refresher on the primary features, you can see the welcome page again.")
+                Button("Show welcome page\n") {
+                    showOnboarding = true
+                }
                 
-                
-
-                
-                Text("or view our github page!\nhttps://github.com/CubeStuffs/CubeTime")
+                Text("You can also see the full feature list on our github page!\nhttps://github.com/CubeStuffs/CubeTime")
             }
         }
         .padding(.horizontal)

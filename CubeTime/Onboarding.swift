@@ -17,9 +17,6 @@ struct OnboardingView: View {
     
     @Binding var pageIndex: Int
     
-    
-    
- 
     @Namespace var namespaceOB
     
     var body: some View {
@@ -33,7 +30,6 @@ struct OnboardingView: View {
                 PageSix(pageIndex: $pageIndex).tag(5)
                 PageSeven(pageIndex: $pageIndex).tag(6)
             }
-//            .tabViewStyle(PageTabViewStyle())
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             
             VStack {
