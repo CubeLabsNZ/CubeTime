@@ -79,6 +79,7 @@ struct MainTabsView: View {
     @Namespace private var namespace
     
     @StateObject var tabRouter: TabRouter = TabRouter()
+    @StateObject var stopWatchManager: StopWatchManager
     
     @State var pageIndex: Int = 0
     @State var hideTabBar = false
@@ -93,6 +94,9 @@ struct MainTabsView: View {
     init(managedObjectContext: NSManagedObjectContext) {
         let lastUsedSessionURI = UserDefaults.standard.url(forKey: "last_used_session")
                 
+        
+        let currentSession: Sessions
+        
         if lastUsedSessionURI == nil {
             NSLog("Saved ID is nil, creating default object")
             currentSession = Sessions(context: managedObjectContext) // TODO make it playground
@@ -105,7 +109,11 @@ struct MainTabsView: View {
             let objID = managedObjectContext.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI!)!
             currentSession = try! managedObjectContext.existingObject(with: objID) as! Sessions // TODO better error handling
         }
-        
+                
+        // https://swiftui-lab.com/random-lessons/#data-10
+        self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: currentSession, managedObjectContext: managedObjectContext))
+                                             
+        self.currentSession = currentSession
     }
     
     var body: some View {
@@ -115,6 +123,7 @@ struct MainTabsView: View {
                 case .timer:
                     TimerView(pageIndex: $pageIndex, currentSession: $currentSession, managedObjectContext: managedObjectContext, hideTabBar: $hideTabBar)
                         .environment(\.managedObjectContext, managedObjectContext)
+                        .environmentObject(stopWatchManager)
                 case .solves:
                     TimeListView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
                         .environment(\.managedObjectContext, managedObjectContext)
@@ -123,8 +132,10 @@ struct MainTabsView: View {
                 case .sessions:
                     SessionsView(currentSession: $currentSession)
                         .environment(\.managedObjectContext, managedObjectContext)
+                    // TODO move this to SessionsView on tap
                         .onChange(of: currentSession) { [currentSession] newSession in
                             UserDefaults.standard.set(newSession.objectID.uriRepresentation(), forKey: "last_used_session") // TODO what was i thinking move this logic into SessionsView
+                            stopWatchManager.changeCurrentSession(newSession)
                         }
                 case .settings:
                     SettingsView(showOnboarding: $showOnboarding)
