@@ -47,8 +47,17 @@ final class TimerTouchView: UIViewRepresentable {
         let longPressGesture = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.longPress))
         longPressGesture.allowableMovement = geatureThreshold
         longPressGesture.minimumPressDuration = userHoldTime
-//        longPressGesture.requiresExclusiveTouchType = ?
-
+        
+        //        longPressGesture.requiresExclusiveTouchType = ?
+        
+        
+        for direction in [UISwipeGestureRecognizer.Direction.up, UISwipeGestureRecognizer.Direction.down, UISwipeGestureRecognizer.Direction.left, UISwipeGestureRecognizer.Direction.right] {
+            let gesture = UISwipeGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.swipe))
+            gesture.direction = direction
+            gesture.require(toFail: longPressGesture)
+            v.addGestureRecognizer(gesture)
+        }
+        
         v.addGestureRecognizer(longPressGesture)
         
         return v
@@ -70,6 +79,28 @@ final class TimerTouchView: UIViewRepresentable {
                 stopWatchManager.longPressStart()
             } else if gestureRecognizer.state == .ended {
                 stopWatchManager.longPressEnd()
+            }
+        }
+        
+        @objc func swipe(_ gestureRecognizer: UISwipeGestureRecognizer) {
+            NSLog("swiped \(gestureRecognizer.direction)")
+            switch gestureRecognizer.direction {
+            case .down:
+                stopWatchManager.feedbackStyle?.impactOccurred()
+                stopWatchManager.touchUp()
+                stopWatchManager.displayPenOptions()
+            case .left:
+                stopWatchManager.feedbackStyle?.impactOccurred()
+                stopWatchManager.touchUp()
+                stopWatchManager.askToDelete()
+            case .right:
+                stopWatchManager.feedbackStyle?.impactOccurred()
+                stopWatchManager.touchUp()
+                DispatchQueue.main.async {
+                    self.stopWatchManager.rescramble()
+                }
+            default:
+                NSLog("unknown gesture direction")
             }
         }
     }

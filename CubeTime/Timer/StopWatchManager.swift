@@ -24,7 +24,7 @@ class StopWatchManager: ObservableObject {
 
     
     
-    private let feedbackStyle: UIImpactFeedbackGenerator?
+    let feedbackStyle: UIImpactFeedbackGenerator?
     
     
     let scrambler = CHTScrambler.init()
@@ -201,6 +201,9 @@ class StopWatchManager: ObservableObject {
         
         // TODO maybe hide pen options
         timerColour = TimerTextColours.timerDefaultColour
+        withAnimation {
+            showPenOptions = false
+        }
         if !prevDownStoppedTimer {
             if inspectionEnabled ? mode == .inspecting : mode == .stopped {
                 start()
@@ -235,6 +238,21 @@ class StopWatchManager: ObservableObject {
         DispatchQueue.main.async {
             self.nextScrambleStr = nil
             self.rescramble()
+        }
+    }
+    
+    
+    
+    func displayPenOptions() {
+        withAnimation {
+            showPenOptions = true
+        }
+    }
+    
+    func askToDelete() {
+        if solveItem != nil {
+            // todo
+            showDeleteSolveConfirmation = true
         }
     }
 }
