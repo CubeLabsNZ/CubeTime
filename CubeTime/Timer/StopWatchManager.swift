@@ -13,7 +13,7 @@ enum stopWatchMode {
 }
 
 class StopWatchManager: ObservableObject {
-    @Binding var currentSession: Sessions
+    private var currentSession: Sessions
     let managedObjectContext: NSManagedObjectContext
     
     
@@ -24,7 +24,7 @@ class StopWatchManager: ObservableObject {
 
     
     
-    private let feedbackStyle: UIImpactFeedbackGenerator?
+    let feedbackStyle: UIImpactFeedbackGenerator?
     
     
     let scrambler = CHTScrambler.init()
@@ -50,9 +50,9 @@ class StopWatchManager: ObservableObject {
     var penType: PenTypes = .none
     
     
-    init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
+    init (currentSession: Sessions, managedObjectContext: NSManagedObjectContext) {
         NSLog("Initializing a stopwatchamanager")
-        _currentSession = currentSession
+        self.currentSession = currentSession
         self.managedObjectContext = managedObjectContext
         self.feedbackStyle = hapticEnabled ? UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!) : nil
         scrambler.initSq1()
@@ -61,7 +61,7 @@ class StopWatchManager: ObservableObject {
             self.rescramble()
         }
         
-        if let currentSession = currentSession.wrappedValue as? CompSimSession {
+        if let currentSession = currentSession as? CompSimSession {
             if currentSession.solvegroups!.count > 0 {
                 currentSolveth = (currentSession.solvegroups!.lastObject! as? CompSimSolveGroup)!.solves!.count
             } else {
@@ -190,7 +190,7 @@ class StopWatchManager: ObservableObject {
     func longPressStart() {
         NSLog("long press start")
         
-        if inspectionEnabled ? mode == .inspecting : mode == .stopped {
+        if inspectionEnabled ? mode == .inspecting : mode == .stopped && !prevDownStoppedTimer {
             timerColour = TimerTextColours.timerCanStartColour
             feedbackStyle?.impactOccurred()
         }
@@ -201,6 +201,9 @@ class StopWatchManager: ObservableObject {
         
         // TODO maybe hide pen options
         timerColour = TimerTextColours.timerDefaultColour
+        withAnimation {
+            showPenOptions = false
+        }
         if !prevDownStoppedTimer {
             if inspectionEnabled ? mode == .inspecting : mode == .stopped {
                 start()
@@ -228,6 +231,31 @@ class StopWatchManager: ObservableObject {
         if nextScrambleStr == nil { nextScrambleStr = safeGetScramble() }
         scrambleStr = nextScrambleStr
         nextScrambleStr = safeGetScramble()
+    }
+    
+    func changeCurrentSession(_ session: Sessions) {
+        self.currentSession = session
+        DispatchQueue.main.async {
+            self.nextScrambleStr = nil
+            self.rescramble()
+        }
+    }
+    
+    
+    
+    func displayPenOptions() {
+        if solveItem != nil {
+            withAnimation {
+                showPenOptions = true
+            }
+        }
+    }
+    
+    func askToDelete() {
+        if solveItem != nil {
+            // todo
+            showDeleteSolveConfirmation = true
+        }
     }
 }
 

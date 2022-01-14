@@ -30,7 +30,7 @@ struct TimerView: View {
     
     
     
-    @StateObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopWatchManager: StopWatchManager
     
     @Binding var hideTabBar: Bool
     
@@ -61,9 +61,6 @@ struct TimerView: View {
         self._playgroundScrambleType = State(initialValue: Int(currentSession.wrappedValue.scramble_type))
         
         self._targetStr = State(initialValue: filteredStrFromTime((currentSession.wrappedValue as? CompSimSession)?.target))
-        
-        // https://swiftui-lab.com/random-lessons/#data-10
-        self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: currentSession, managedObjectContext: managedObjectContext))
     }
 
     

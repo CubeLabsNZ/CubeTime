@@ -20,9 +20,8 @@
 2. [Screenshots](#screenshots)
 3. [Features](#features)
 4. [User Guide](#user-guide)
-5. [Building it yourself]
-6. [Contributing]
-7. [Some final stuff](#some-final-stuff)
+5. [Contributing]
+6. [Some final stuff](#some-final-stuff)
 
 ## Overview
 
