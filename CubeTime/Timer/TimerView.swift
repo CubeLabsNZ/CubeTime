@@ -64,7 +64,7 @@ struct TimerView: View {
         
         self._targetStr = State(initialValue: filteredStrFromTime((currentSession.wrappedValue as? CompSimSession)?.target))
         
-        self._phaseCount = State(initialValue: Int((currentSession as? MultiphaseSession)?.phase_count ?? 0))
+        self._phaseCount = State(initialValue: Int((currentSession.wrappedValue as? MultiphaseSession)?.phase_count ?? 0))
     }
 
     
@@ -239,6 +239,7 @@ struct TimerView: View {
                                         }
                                     }
                                     .pickerStyle(.menu)
+                                    .frame(width: 10)
                                     .onChange(of: phaseCount) { newValue in
                                         (currentSession as! MultiphaseSession).phase_count = Int16(phaseCount)
     

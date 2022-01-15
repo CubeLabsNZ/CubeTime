@@ -346,6 +346,9 @@ struct StatsView: View {
                                                 StatsBlockText("", false, false, false, false)
                                             }
                                         }
+                                        .onTapGesture {
+                                            if bestSingle != nil { showBestSinglePopup = true }
+                                        }
                                         
                                         StatsBlock("BEST STATS", 130, false, false) {
                                             StatsBlockSmallText(["AO12", "AO100"], [bestAo12, bestAo100], $presentedAvg, true)
@@ -360,6 +363,11 @@ struct StatsView: View {
                                             StatsBlockDetailText(bestAo5!, false)
                                         } else {
                                             StatsBlockText("", false, false, false, false)
+                                        }
+                                    }
+                                    .onTapGesture {
+                                        if bestAo5 != nil && bestAo5?.totalPen != .dnf {
+                                            presentedAvg = bestAo5
                                         }
                                     }
                                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -382,15 +390,15 @@ struct StatsView: View {
                                         StatsBlock("CURRENT AVG", 215, false, false) {
                                             if currentCompsimAverage != nil {
                                                 StatsBlockText(formatSolveTime(secs: currentCompsimAverage?.average ?? 0, penType: currentCompsimAverage?.totalPen), false, false, true, true)
-                                                    .onTapGesture {
-                                                        if currentCompsimAverage?.totalPen != .dnf {
-                                                            presentedAvg = currentCompsimAverage
-                                                        }
-                                                    }
-                                                
+                                                    
                                                 StatsBlockDetailText(currentCompsimAverage!, false)
                                             } else {
                                                 StatsBlockText("", false, false, false, false)
+                                            }
+                                        }
+                                        .onTapGesture {
+                                            if currentCompsimAverage != nil && currentCompsimAverage?.totalPen != .dnf {
+                                                presentedAvg = currentCompsimAverage
                                             }
                                         }
                                         
@@ -404,11 +412,13 @@ struct StatsView: View {
                                         StatsBlock("BEST SINGLE", 75, false, false) {
                                             if bestSingle != nil {
                                                 StatsBlockText(formatSolveTime(secs: bestSingle!.time), true, false, false, true)
-                                                    .onTapGesture {
-                                                        showBestSinglePopup = true
-                                                    }
                                             } else {
                                                 StatsBlockText("", false, false, false, false)
+                                            }
+                                        }
+                                        .onTapGesture {
+                                            if bestSingle != nil {
+                                                showBestSinglePopup = true
                                             }
                                         }
                                         
