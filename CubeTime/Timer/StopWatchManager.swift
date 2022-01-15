@@ -79,8 +79,8 @@ class StopWatchManager: ObservableObject {
     
     var prevDownStoppedTimer = false
     
+    // multiphase temporary variables
     var currentMPCount: Int = 1
-    
     var phaseTimes: [Double] = []
     
     
@@ -146,6 +146,9 @@ class StopWatchManager: ObservableObject {
                 solveItem = MultiphaseSolve(context: managedObjectContext)
                 
                 (solveItem as! MultiphaseSolve).phases = phaseTimes
+                
+                currentMPCount = 1
+                phaseTimes = []
             } else {
                 solveItem = Solves(context: managedObjectContext)
             }

@@ -66,15 +66,20 @@ struct CustomiseStandardSessionView: View {
     
     @State private var name: String
     @State private var targetStr: String
+    @State private var phaseCount: Int
+    
     @State var pinnedSession: Bool
     
     let sessionEventType: Int32
     
     init(sessionItem: Sessions) {
         self.sessionItem = sessionItem
+        
         self._name = State(initialValue: sessionItem.name ?? "")
         self._pinnedSession = State(initialValue: sessionItem.pinned)
         self._targetStr = State(initialValue: filteredStrFromTime((sessionItem as? CompSimSession)?.target))
+        self._phaseCount = State(initialValue: Int((sessionItem as? MultiphaseSession)?.phase_count ?? 0))
+        
         self.sessionEventType = sessionItem.scramble_type
     }
     
@@ -133,6 +138,24 @@ struct CustomiseStandardSessionView: View {
                         .modifier(NewStandardSessionViewBlocks())
                     }
                     
+                    if sessionItem.session_type == SessionTypes.multiphase.rawValue {
+                        VStack (spacing: 0) {
+                            HStack(spacing: 0) {
+                                Text("Phases: ")
+                                    .font(.system(size: 17, weight: .medium))
+                                Text("\(phaseCount)")
+                                
+                                Spacer()
+                                
+                                Stepper("", value: $phaseCount, in: 1...8)
+                                
+                            }
+                            .padding()
+                        }
+                        .frame(height: 45)
+                        .modifier(NewStandardSessionViewBlocks())
+                    }
+                    
                     
                     VStack (spacing: 0) {
                         HStack {
@@ -164,6 +187,10 @@ struct CustomiseStandardSessionView: View {
                             
                             if sessionItem.session_type == SessionTypes.compsim.rawValue {
                                 (sessionItem as! CompSimSession).target = timeFromStr(targetStr)!
+                            }
+                            
+                            if sessionItem.session_type == SessionTypes.multiphase.rawValue {
+                                (sessionItem as! MultiphaseSession).phase_count = Int16(phaseCount)
                             }
                             
                             try! managedObjectContext.save()
@@ -741,7 +768,7 @@ struct NewMultiphaseView: View {
                             .padding(.trailing)
                             .padding(.bottom)
                         
-                        Text("A multiphase session gives you the ability to breakdown your solves into sections, such as blindfolded solves or 3x3 stages.\n\nTo use, tap anywhere on the timer during a solve to record a phase lap. You can access your breakdown statistics in each time card.")
+                        Text("A multiphase session gives you the ability to breakdown your solves into sections, such as blindfolded solves or stages in a 3x3 solve.\n\nTo use, tap anywhere on the timer during a solve to record a phase lap. You can access your breakdown statistics in each time card.")
                             .multilineTextAlignment(.leading)
                             .foregroundColor(Color(uiColor: .systemGray))
                             .padding(.horizontal)
@@ -759,7 +786,7 @@ struct NewMultiphaseView: View {
                             
                             Spacer()
                             
-                            Stepper("", value: $phaseCount, in: 2...8)
+                            Stepper("", value: $phaseCount, in: 1...8)
                             
                         }
                         .padding()
