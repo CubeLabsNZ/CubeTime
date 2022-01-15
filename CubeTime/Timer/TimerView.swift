@@ -40,6 +40,8 @@ struct TimerView: View {
     
     @State private var targetStr: String
     
+    @State private var phaseCount: Int
+    
     @State var hideStatusBar = true
     
     @State var algTrainerSubset = 0
@@ -61,6 +63,8 @@ struct TimerView: View {
         self._playgroundScrambleType = State(initialValue: Int(currentSession.wrappedValue.scramble_type))
         
         self._targetStr = State(initialValue: filteredStrFromTime((currentSession.wrappedValue as? CompSimSession)?.target))
+        
+        self._phaseCount = State(initialValue: Int((currentSession as? MultiphaseSession)?.phase_count ?? 0))
     }
 
     
@@ -224,13 +228,25 @@ struct TimerView: View {
                             case .multiphase:
                                 Text("MULTIPHASE")
                                     .font(.system(size: 17, weight: .medium))
-                                Picker("", selection: $algTrainerSubset) {
-                                    Text("3 PHASES")
-                                        .font(.system(size: 15, weight: .regular))
+                                
+                                HStack(spacing: 0) {
+                                    Text("PHASES: ")
+                                    
+                                    Picker("", selection: $phaseCount) {
+                                        ForEach((1...8), id: \.self) { phase in
+                                            Text("\(phase)").tag(phase)
+                                                .font(.system(size: 15, weight: .regular))
+                                        }
+                                    }
+                                    .pickerStyle(.menu)
+                                    .onChange(of: phaseCount) { newValue in
+                                        (currentSession as! MultiphaseSession).phase_count = Int16(phaseCount)
+    
+                                        try! managedObjectContext.save()
+                                    }
+                                    .padding(.leading, 8)
+                                    .padding(.trailing)
                                 }
-                                .pickerStyle(.menu)
-                                .padding(.leading, 8)
-                                .padding(.trailing)
                             case .playground:
                                 Text("PLAYGROUND")
                                     .font(.system(size: 17, weight: .medium))
@@ -270,26 +286,6 @@ struct TimerView: View {
                                     Image(systemName: "target")
                                         .font(.system(size: 15))
                                     
-                                    /*
-                                    TextField("0.00", text: $targetStr)
-    //                                    .frame(maxWidth: 83)
-                                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                    
-                                        .keyboardType(.numberPad)
-                                        .multilineTextAlignment(.leading)
-                                        .onReceive(Just(targetStr)) { newValue in
-                                            let filtered = filteredTimeInput(newValue)
-                                            if filtered != newValue {
-                                                self.targetStr = filtered
-                                            }
-                                            
-                                            if let time = timeFromStr(targetStr) {
-                                                (currentSession as! CompSimSession).target = time
-                                                
-                                                try! managedObjectContext.save()
-                                            }
-                                        }
-                                     */
                                     ZStack {
                                         Text(targetStr == "" ? "0.00" : targetStr)
                                             .background(GlobalGeometryGetter(rect: $textRect))
