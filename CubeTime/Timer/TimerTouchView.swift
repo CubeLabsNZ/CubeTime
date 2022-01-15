@@ -34,7 +34,7 @@ final class TimerTouchView: UIViewRepresentable {
     @ObservedObject var stopWatchManager: StopWatchManager
     
     @AppStorage(gsKeys.freeze.rawValue) var userHoldTime: Double = 0.5
-    @AppStorage(gsKeys.gestureDistance.rawValue) var geatureThreshold: Double = 50
+    @AppStorage(gsKeys.gestureDistance.rawValue) var gestureThreshold: Double = 50
     
     init (stopWatchManager: StopWatchManager) {
         self.stopWatchManager = stopWatchManager
@@ -45,7 +45,7 @@ final class TimerTouchView: UIViewRepresentable {
         let v = TimerUIView(frame: .zero, stopWatchManager: stopWatchManager)
         
         let longPressGesture = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.longPress))
-        longPressGesture.allowableMovement = geatureThreshold
+        longPressGesture.allowableMovement = gestureThreshold
         longPressGesture.minimumPressDuration = userHoldTime
         
         //        longPressGesture.requiresExclusiveTouchType = ?

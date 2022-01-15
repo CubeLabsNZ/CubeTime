@@ -698,12 +698,19 @@ struct NewMultiphaseView: View {
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
-    @Binding var showNewSessionPopUp: Bool
-    @Binding var currentSession: Sessions
     @State private var name: String = ""
     @State private var sessionEventType: Int32 = 0
+    @State private var phaseCount: Int = 2
+    
+    @Binding var showNewSessionPopUp: Bool
+    @Binding var currentSession: Sessions
+    
     @State var pinnedSession: Bool
     
+//    init(showNewSessionPopUp: Binding<Bool>, currentSession: Binding<Bool>, pinnedSession: Bool) {
+//        self.showNewSessionPopUp
+//    }
+
     let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
     
     var body: some View {
@@ -745,13 +752,14 @@ struct NewMultiphaseView: View {
                     .modifier(NewStandardSessionViewBlocks())
                     
                     VStack (spacing: 0) {
-                        HStack {
-                            Text("Phases")
+                        HStack(spacing: 0) {
+                            Text("Phases: ")
                                 .font(.system(size: 17, weight: .medium))
+                            Text("\(phaseCount)")
                             
                             Spacer()
                             
-                            Text("Stepper")
+                            Stepper("", value: $phaseCount, in: 2...8)
                             
                         }
                         .padding()
@@ -828,10 +836,10 @@ struct NewMultiphaseView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        let sessionItem = Sessions(context: managedObjectContext)
+                        let sessionItem = MultiphaseSession(context: managedObjectContext)
                         sessionItem.name = name
                         sessionItem.pinned = pinnedSession
-                        
+                        sessionItem.phase_count = Int16(phaseCount)
                         sessionItem.session_type = 2
                         
                         NSLog("sessioneventyype is \(sessionEventType)")

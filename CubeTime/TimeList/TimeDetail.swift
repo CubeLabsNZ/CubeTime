@@ -39,9 +39,7 @@ struct TimeDetail: View {
     @State private var userComment: String
     
     
-    init(/*currentSession: Binding<Sessions>*/solve: Solves, currentSolve: Binding<Solves?>?, timeListManager: TimeListManager?){
-        
-//        self._currentSession = currentSession
+    init(solve: Solves, currentSolve: Binding<Solves?>?, timeListManager: TimeListManager?) {
         
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
@@ -175,16 +173,12 @@ struct TimeDetail: View {
                                 Spacer()
                                 
                             }
-                            //.padding(.leading)
-                            //                            .padding(.trailing)
-                            //                            .padding(.top)
                             .padding(.leading, 12)
                             .padding(.trailing)
                             .padding(.top, 12)
                             
                             Divider()
                                 .padding(.leading)
-                            //                                .padding(.bottom)
                             
                             ZStack {
                                 TextEditor(text: $userComment)
@@ -196,19 +190,7 @@ struct TimeDetail: View {
                                 Text(userComment).opacity(0)
                                     .padding(.horizontal)
                                     .padding(.bottom)
-                                
                             }
-                            
-                            
-                            /*TextField("Notes", text: $userComment)
-                            
-                                .padding(.horizontal)
-                                .padding(.bottom, 12)
-                                .onChange(of: userComment) { newValue in
-                                    solve.comment = newValue
-                                }
-                             */
-                            
                         }
                         //.frame(minHeight: minRowHeight * 10)
                         //.frame(height: 300)
@@ -216,6 +198,58 @@ struct TimeDetail: View {
                         //.listStyle(.insetGrouped)
                         .padding(.trailing)
                         .padding(.leading)
+                        
+                        if let multiphaseSolve = (solve as! MultiphaseSolve) {
+                            VStack {
+                                HStack {
+                                    Image(systemName: "square.stack.3d.up.fill")
+                                        .symbolRenderingMode(.hierarchical)
+                                        .font(.system(size: 26, weight: .semibold))
+                                        .foregroundColor(colourScheme == .light ? .black : .white)
+                                    //.padding(.trailing, 8)
+                                    Text("Multiphase Breakdown")
+                                        .font(.system(size: 17, weight: .semibold, design: .default))
+                                        .foregroundColor(colourScheme == .light ? .black : .white)
+                                    
+                                    Spacer()
+                                    
+                                }
+                                .padding(.leading, 12)
+                                .padding(.trailing)
+                                .padding(.top, 12)
+                                
+                                Divider()
+                                    .padding(.leading)
+                                
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    ForEach(Array(zip(multiphaseSolve.phases!.indices, multiphaseSolve.phases!)), id: \.0) { index, phase in
+                                        
+                                        HStack {
+                                            Image(systemName: "\(index).circle")
+                                                .font(.system(size: 17, weight: .medium))
+                                            
+                                            Text(formatSolveTime(secs: phase))
+                                                .font(.system(size: 17, weight: .regular))
+                                            
+                                            Spacer()
+                                        }
+                                        
+                                    }
+                                }
+                                .padding([.bottom, .horizontal], 12)
+                            }
+                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
+                            .padding(.trailing)
+                            .padding(.leading)
+                        }
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         
                         Button {
                             UIPasteboard.general.string = "Generated by CubeTime.\n\(time): \(scramble)"

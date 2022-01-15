@@ -77,6 +77,12 @@ class StopWatchManager: ObservableObject {
     private var timerStartTime: Date?
     
     
+    var prevDownStoppedTimer = false
+    
+    var currentMPCount: Int = 1
+    
+    var phaseTimes: [Double] = []
+    
     
     func startInspection() {
         timer?.invalidate()
@@ -136,8 +142,16 @@ class StopWatchManager: ObservableObject {
             currentSolveth = (currentSession.solvegroups!.lastObject! as? CompSimSolveGroup)!.solves!.count
 
         } else {
-            solveItem = Solves(context: managedObjectContext)
+            if let _ = currentSession as? MultiphaseSession {
+                solveItem = MultiphaseSolve(context: managedObjectContext)
+                
+                (solveItem as! MultiphaseSolve).phases = phaseTimes
+            } else {
+                solveItem = Solves(context: managedObjectContext)
+            }
         }
+        
+        
         solveItem.date = Date()
         solveItem.penalty = penType.rawValue
         // .puzzle_id
@@ -150,7 +164,16 @@ class StopWatchManager: ObservableObject {
     }
     
     
-    var prevDownStoppedTimer = false
+    
+    
+    
+    
+    
+    
+    
+    func lap() {
+        phaseTimes.append(-timerStartTime!.timeIntervalSinceNow)
+    }
     
     
     func touchDown() {
@@ -159,10 +182,33 @@ class StopWatchManager: ObservableObject {
         timerColour = TimerTextColours.timerHeldDownColour
         
         if mode == .running {
-            prevDownStoppedTimer = true
-            stop()
-            DispatchQueue.main.async {
-                self.rescramble()
+            
+            print(currentMPCount)
+            print(currentSession.session_type)
+            
+            if let multiphaseSession = currentSession as? MultiphaseSession {
+                
+                print(currentMPCount)
+                
+                if multiphaseSession.phase_count != currentMPCount {
+                    currentMPCount += 1
+                    lap()
+                } else {
+                    
+                    print(phaseTimes)
+                    lap()
+                    prevDownStoppedTimer = true
+                    stop()
+                    DispatchQueue.main.async {
+                        self.rescramble()
+                    }
+                }
+            } else {
+                prevDownStoppedTimer = true
+                stop()
+                DispatchQueue.main.async {
+                    self.rescramble()
+                }
             }
         }
     }
