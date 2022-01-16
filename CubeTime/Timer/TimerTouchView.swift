@@ -161,12 +161,10 @@ final class TimerTouchView: UIViewRepresentable {
                 stopWatchManager.askToDelete()
             case .right:
                 stopWatchManager.feedbackStyle?.impactOccurred()
-                stopWatchManager.justGestured = true
-                stopWatchManager.touchUp()
-                stopWatchManager.justGestured = false
+                stopWatchManager.timerColour = TimerTextColours.timerDefaultColour
                 stopWatchManager.rescramble()
             default:
-                stopWatchManager.touchUp()
+                stopWatchManager.timerColour = TimerTextColours.timerDefaultColour
                 NSLog("default")
             }
         }

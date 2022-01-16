@@ -83,7 +83,6 @@ class StopWatchManager: ObservableObject {
     
     var prevDownStoppedTimer = false
     var justInspected = false
-    var justGestured = false
     
     // multiphase temporary variables
     var currentMPCount: Int = 1
@@ -228,31 +227,28 @@ class StopWatchManager: ObservableObject {
         
         timerColour = TimerTextColours.timerDefaultColour
         
-        if !justGestured {
+        if !prevDownStoppedTimer && mode == .stopped && inspectionEnabled {
+            startInspection()
             
-            if !prevDownStoppedTimer && mode == .stopped && inspectionEnabled {
-                startInspection()
-                
-                /*
-                 if showPenOptions {
-                     withAnimation {
-                         showPenOptions = false
-                     }
+            /*
+             if showPenOptions {
+                 withAnimation {
+                     showPenOptions = false
                  }
-                 if mode == .stopped && inspectionEnabled {
-                     
-                 }
-                 */
-            }
-            
-            prevDownStoppedTimer = false
-            
-            if inspectionEnabled && mode == .stopped && !justInspected && prevDownStoppedTimer {
-                startInspection()
-                justInspected = true
-            }
+             }
+             if mode == .stopped && inspectionEnabled {
+                 
+             }
+             */
         }
-    }
+        
+        prevDownStoppedTimer = false
+        
+        if inspectionEnabled && mode == .stopped && !justInspected && prevDownStoppedTimer {
+            startInspection()
+            justInspected = true
+        }
+}
     
     
     func longPressStart() {
@@ -333,11 +329,7 @@ class StopWatchManager: ObservableObject {
     
     func displayPenOptions() {
         
-        justGestured = true
-        
-        touchUp()
-        
-        justGestured = false
+        timerColour = TimerTextColours.timerDefaultColour
         
         if solveItem != nil {
             withAnimation {
@@ -348,12 +340,8 @@ class StopWatchManager: ObservableObject {
     
     func askToDelete() {
         
-        justGestured = true
-        
-        touchUp()
-        
-        justGestured = false
-        
+        timerColour = TimerTextColours.timerDefaultColour
+
         if solveItem != nil {
             // todo
             showDeleteSolveConfirmation = true
