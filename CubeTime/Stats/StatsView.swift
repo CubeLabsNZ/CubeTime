@@ -246,10 +246,14 @@ struct StatsView: View {
     
     let currentMeanOfTen: Double?
     let bestMeanOfTen: Double?
+    
+    let phases: String
    
     init(currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
         stats = Stats(currentSession: currentSession.wrappedValue)
+        
+        self.phases = stats.getAveragePhases()
         
         
         self.bestAo5 = stats.getBestMovingAverageOf(5)
@@ -291,6 +295,9 @@ struct StatsView: View {
                 
                 ScrollView {
                     VStack (spacing: 0) {
+                        
+                        Text("\(phases)")
+                        
                         VStack(spacing: 0) {
                             HStack (alignment: .center) {
                                 Text(currentSession.name!)

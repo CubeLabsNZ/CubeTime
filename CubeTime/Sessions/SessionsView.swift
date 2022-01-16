@@ -138,6 +138,11 @@ struct CustomiseStandardSessionView: View {
                         .modifier(NewStandardSessionViewBlocks())
                     }
                     
+                    
+                    /// TEMPORARITLY REMOVED MODIFYING PHASES IN STANDARD MULTIPHASE SESSION
+                    
+                    
+                    /*
                     if sessionItem.session_type == SessionTypes.multiphase.rawValue {
                         VStack (spacing: 0) {
                             HStack(spacing: 0) {
@@ -155,6 +160,7 @@ struct CustomiseStandardSessionView: View {
                         .frame(height: 45)
                         .modifier(NewStandardSessionViewBlocks())
                     }
+                     */
                     
                     
                     VStack (spacing: 0) {

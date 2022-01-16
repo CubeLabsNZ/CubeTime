@@ -44,6 +44,7 @@ class Stats {
     var solvesNoDNFsbyDate: [Solves]
     
     var compsimSession: CompSimSession?
+    var multiphaseSession: MultiphaseSession?
     
     private let currentSession: Sessions
     
@@ -62,6 +63,7 @@ class Stats {
         solvesNoDNFs.removeAll(where: { $0.penalty == PenTypes.dnf.rawValue })
         
         compsimSession = currentSession as? CompSimSession
+        multiphaseSession = currentSession as? MultiphaseSession
     }
     
     /// **HELPER FUNCTIONS**
@@ -389,5 +391,33 @@ class Stats {
         }
         
         return nil
+    }
+    
+    func getAveragePhases() -> String {
+        if multiphaseSession != nil {
+            let times = (solves as! [MultiphaseSolve]).map({ $0.phases! })
+            
+            print(times)
+            
+            let phaseCount = multiphaseSession!.phase_count
+            
+            var summedPhases = [Double](repeating: 0, count: Int(phaseCount))
+                        
+            
+            for i in 0..<Int(phaseCount) {
+                for phase in times {
+                    summedPhases[i] += phase[i]
+                }
+            }
+            
+            print(summedPhases)
+            
+           
+            return "hi"
+//            return summedPhases.map({ $0/Double(phases) })
+        } else {
+            return "hi"
+        }
+        
     }
 }

@@ -222,7 +222,7 @@ struct TimerView: View {
                                         .font(.system(size: 15, weight: .regular))
                                 }
                                 .pickerStyle(.menu)
-                                .padding(.leading, 8)
+                                .padding(.leading, 6)
                                 .padding(.trailing)
                             case .multiphase:
                                 Text("MULTIPHASE")
@@ -230,7 +230,14 @@ struct TimerView: View {
                                 
                                 HStack(spacing: 0) {
                                     Text("PHASES: ")
+                                        .font(.system(size: 15, weight: .regular))
                                     
+                                    Text("\(phaseCount)")
+                                        .font(.system(size: 15, weight: .regular))
+                                    
+                                    /// TEMPORARILY REMOVED THE PICKER UNTIL MULTIPHASE PLAYGROUND IS ADDED - MIGRATE TO THERE
+                                    
+                                    /*
                                     Picker("", selection: $phaseCount) {
                                         ForEach((2...8), id: \.self) { phase in
                                             Text("\(phase)").tag(phase)
@@ -238,15 +245,18 @@ struct TimerView: View {
                                         }
                                     }
                                     .pickerStyle(.menu)
-                                    .frame(width: 10)
+                                    .frame(width: 8)
                                     .onChange(of: phaseCount) { newValue in
                                         (currentSession as! MultiphaseSession).phase_count = Int16(phaseCount)
     
                                         try! managedObjectContext.save()
                                     }
-                                    .padding(.leading, 8)
-                                    .padding(.trailing)
+                                     */
+                                    
+                                    
                                 }
+                                .padding(.leading, 6)
+                                .padding(.trailing)
                             case .playground:
                                 Text("PLAYGROUND")
                                     .font(.system(size: 17, weight: .medium))
@@ -266,7 +276,7 @@ struct TimerView: View {
                                     stopWatchManager.rescramble()
                                     // TODO do not rescramble when setting to same scramble eg 3blnd -> 3oh
                                 }
-                                .padding(.leading, 8)
+                                .padding(.leading, 6)
                                 .padding(.trailing)
                                 
                             case .compsim:
@@ -316,6 +326,7 @@ struct TimerView: View {
                                     }
                                         
                                 }
+                                .padding(.leading, 6)
                                 .padding(.trailing, 12)
                                 .foregroundColor(accentColour)
                                 
