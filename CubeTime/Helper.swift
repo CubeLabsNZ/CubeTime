@@ -241,9 +241,9 @@ let puzzle_types: [PuzzleType] = [
     PuzzleType(name: "Skewb", subtypes: [0: "Random State"], scrID: 10),
     
     PuzzleType(name: "3x3 OH", subtypes: [0: "Random State"], scrID: 1), // TODO map to actual scrambles
-    PuzzleType(name: "3x3 Blindfolded", subtypes: [0: "Random State"], scrID: 1, blind: true),
-    PuzzleType(name: "4x4 Blindfolded", subtypes: [0: "Random State"], scrID: 2, blind: true),
-    PuzzleType(name: "5x5 Blindfolded", subtypes: [0: "Random State"], scrID: 3, blind: true),
+    PuzzleType(name: "3x3 BLD", subtypes: [0: "Random State"], scrID: 1, blind: true),
+    PuzzleType(name: "4x4 BLD", subtypes: [0: "Random State"], scrID: 2, blind: true),
+    PuzzleType(name: "5x5 BLD", subtypes: [0: "Random State"], scrID: 3, blind: true),
     
 ]
 

@@ -44,6 +44,7 @@ class Stats {
     var solvesNoDNFsbyDate: [Solves]
     
     var compsimSession: CompSimSession?
+    var multiphaseSession: MultiphaseSession?
     
     private let currentSession: Sessions
     
@@ -62,6 +63,7 @@ class Stats {
         solvesNoDNFs.removeAll(where: { $0.penalty == PenTypes.dnf.rawValue })
         
         compsimSession = currentSession as? CompSimSession
+        multiphaseSession = currentSession as? MultiphaseSession
     }
     
     /// **HELPER FUNCTIONS**
@@ -389,5 +391,46 @@ class Stats {
         }
         
         return nil
+    }
+    
+    func getAveragePhases() -> [Double]? {
+        if multiphaseSession != nil {
+            let times = (solves as! [MultiphaseSolve]).map({ $0.phases! })
+            
+            print(times)
+            
+            let phaseCount = multiphaseSession!.phase_count
+            
+            var summedPhases = [Double](repeating: 0, count: Int(phaseCount))
+                        
+            
+            for phase in times {
+                var paddedPhase = phase
+                paddedPhase.insert(0, at: 0)
+                
+                let mappedPhase = paddedPhase.chunked().map { $0[1] - $0[0] }
+                
+                print(mappedPhase)
+                
+                for i in 0..<Int(phaseCount) {
+                    summedPhases[i] += mappedPhase[i]
+                }
+            }
+            
+            print(summedPhases)
+            
+            return summedPhases.map({ $0 / Double(multiphaseSession!.solves!.count) })
+        } else {
+            return nil
+        }
+        
+    }
+}
+
+extension Array {
+    func chunked() -> [[Element]] {
+        return stride(from: 0, to: count-1, by: 1).map {
+            Array(self[$0 ..< Swift.min($0 + 2, count)])
+        }
     }
 }
