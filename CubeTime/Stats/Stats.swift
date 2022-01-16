@@ -393,7 +393,7 @@ class Stats {
         return nil
     }
     
-    func getAveragePhases() -> String {
+    func getAveragePhases() -> [Double]? {
         if multiphaseSession != nil {
             let times = (solves as! [MultiphaseSolve]).map({ $0.phases! })
             
@@ -404,20 +404,33 @@ class Stats {
             var summedPhases = [Double](repeating: 0, count: Int(phaseCount))
                         
             
-            for i in 0..<Int(phaseCount) {
-                for phase in times {
-                    summedPhases[i] += phase[i]
+            for phase in times {
+                var paddedPhase = phase
+                paddedPhase.insert(0, at: 0)
+                
+                let mappedPhase = paddedPhase.chunked().map { $0[1] - $0[0] }
+                
+                print(mappedPhase)
+                
+                for i in 0..<Int(phaseCount) {
+                    summedPhases[i] += mappedPhase[i]
                 }
             }
             
             print(summedPhases)
             
-           
-            return "hi"
-//            return summedPhases.map({ $0/Double(phases) })
+            return summedPhases.map({ $0 / Double(multiphaseSession!.solves!.count) })
         } else {
-            return "hi"
+            return nil
         }
         
+    }
+}
+
+extension Array {
+    func chunked() -> [[Element]] {
+        return stride(from: 0, to: count-1, by: 1).map {
+            Array(self[$0 ..< Swift.min($0 + 2, count)])
+        }
     }
 }

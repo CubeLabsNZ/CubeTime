@@ -247,7 +247,7 @@ struct StatsView: View {
     let currentMeanOfTen: Double?
     let bestMeanOfTen: Double?
     
-    let phases: String
+    let phases: [Double]?
    
     init(currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
@@ -294,10 +294,7 @@ struct StatsView: View {
                     .ignoresSafeArea()
                 
                 ScrollView {
-                    VStack (spacing: 0) {
-                        
-                        Text("\(phases)")
-                        
+                    VStack (spacing: 0) {                        
                         VStack(spacing: 0) {
                             HStack (alignment: .center) {
                                 Text(currentSession.name!)
@@ -385,7 +382,7 @@ struct StatsView: View {
                                 
                                 if SessionTypes(rawValue: currentSession.session_type)! == .multiphase {
                                     StatsBlock("AVERAGE PHASES", timesBySpeedNoDNFs.count == 0 ? 150 : 200, true, false) {
-                                        AveragePhases(timesBySpeedNoDNFs)
+                                        AveragePhases(timesBySpeedNoDNFs, phases!)
                                             .padding(.top, 20)
                                     }
                                     
