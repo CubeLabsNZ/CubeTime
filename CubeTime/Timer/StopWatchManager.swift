@@ -229,32 +229,19 @@ class StopWatchManager: ObservableObject {
         
         timerColour = TimerTextColours.timerDefaultColour
         
-        if !justGestured {
-            if !prevDownStoppedTimer && mode == .stopped && inspectionEnabled {
-                startInspection()
-            }
-            
-            
-            if showPenOptions {
-                withAnimation {
-                    showPenOptions = false
-                }
-            }
-            
-            
-            prevDownStoppedTimer = false
-            
-            /*
-             if showPenOptions {
-                 withAnimation {
-                     showPenOptions = false
-                 }
-             }
-             if mode == .stopped && inspectionEnabled {
-                 
-             }
-             */
+        
+        if !prevDownStoppedTimer && mode == .stopped && inspectionEnabled {
+            startInspection()
         }
+        
+        
+        if showPenOptions {
+            withAnimation {
+                showPenOptions = false
+            }
+        }
+            
+            
         
         prevDownStoppedTimer = false
         
