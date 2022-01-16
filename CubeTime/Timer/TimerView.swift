@@ -110,18 +110,8 @@ struct TimerView: View {
                         .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : 18, weight: .semibold, design: .monospaced))
                         .frame(maxHeight: UIScreen.screenHeight/3)
                         .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
-                    
-                    
                         .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
                     
-                        
-                    
-//                        .padding(.horizontal)
-                    
-                        
-                
-                        
-                    /// TODO: **FIX MEGA SCRAMBLES GOES OFF SCREEN AND MAKE [U, U'] GO ON LAST**
                     
                     Spacer()
                 }

@@ -1132,7 +1132,6 @@ struct NewCompsimView: View {
                         try! managedObjectContext.save()
                         currentSession = sessionItem
                         showNewSessionPopUp = false
-                        currentSession = sessionItem
                     } label: {
                         Text("Create")
                     }

@@ -32,6 +32,8 @@ struct GeneralSettingsView: View {
     
     @Environment(\.colorScheme) var colourScheme
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     
     // im thinking of using these interval modes: seconds, 0.1s, 0.001, your refresh rate
     // and for haptics just .light, .medium, .heavy, .rigid, .soft
@@ -60,6 +62,9 @@ struct GeneralSettingsView: View {
                     
                 }
                 .padding(.horizontal)
+                .onChange(of: inspectionTime) { newValue in
+                    stopWatchManager.inspectionEnabled = newValue
+                }
                 
                 Divider()
                 
@@ -95,6 +100,9 @@ struct GeneralSettingsView: View {
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 10)
+                    .onChange(of: timerDP) { newValue in
+                        stopWatchManager.timeDP = newValue
+                    }
                 }
             }
 //            .modifier(settingsBlocks())
@@ -126,6 +134,10 @@ struct GeneralSettingsView: View {
                     
                 }
                 .padding(.horizontal)
+                .onChange(of: hapticFeedback) { newValue in
+                    stopWatchManager.hapticEnabled = newValue
+                    stopWatchManager.calculateFeedbackStyle()
+                }
                 
                 if hapticFeedback {
                     HStack {
@@ -145,6 +157,10 @@ struct GeneralSettingsView: View {
                         
                     }
                     .padding(.horizontal)
+                    .onChange(of: feedbackType) { newValue in
+                        stopWatchManager.hapticType = newValue.rawValue
+                        stopWatchManager.calculateFeedbackStyle()
+                    }
                 }
                 
                 Divider()

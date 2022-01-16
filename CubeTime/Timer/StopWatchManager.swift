@@ -17,14 +17,13 @@ class StopWatchManager: ObservableObject {
     let managedObjectContext: NSManagedObjectContext
     
     
-    private let hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
-    private let hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
-    private let inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
-    private let timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
+    var hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
+    var hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
+    var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
+    var timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
 
     
-    
-    let feedbackStyle: UIImpactFeedbackGenerator?
+    var feedbackStyle: UIImpactFeedbackGenerator?
     
     
     let scrambler = CHTScrambler.init()
@@ -54,14 +53,23 @@ class StopWatchManager: ObservableObject {
         NSLog("Initializing a stopwatchamanager")
         self.currentSession = currentSession
         self.managedObjectContext = managedObjectContext
-        self.feedbackStyle = hapticEnabled ? UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!) : nil
-        scrambler.initSq1()
         secondsStr = formatSolveTime(secs: 0)
+        calculateFeedbackStyle()
+        scrambler.initSq1()
         self.rescramble()
         
+        tryUpdateCurrentSolveth()
+    }
+
+    func calculateFeedbackStyle() {
+        self.feedbackStyle = hapticEnabled ? UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!) : nil
+    }
+    
+    func tryUpdateCurrentSolveth() {
         if let currentSession = currentSession as? CompSimSession {
+            NSLog("current session is compsim")
             if currentSession.solvegroups!.count > 0 {
-                currentSolveth = (currentSession.solvegroups!.lastObject! as? CompSimSolveGroup)!.solves!.count
+                currentSolveth = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup).solves!.count
             } else {
                 currentSolveth = 0
             }
@@ -77,7 +85,6 @@ class StopWatchManager: ObservableObject {
     
     var prevDownStoppedTimer = false
     var justInspected = false
-    var justGestured = false
     
     // multiphase temporary variables
     var currentMPCount: Int = 1
@@ -237,12 +244,25 @@ class StopWatchManager: ObservableObject {
             
             prevDownStoppedTimer = false
             
-            if inspectionEnabled && mode == .stopped && !justInspected && prevDownStoppedTimer {
-                startInspection()
-                justInspected = true
-            }
+            /*
+             if showPenOptions {
+                 withAnimation {
+                     showPenOptions = false
+                 }
+             }
+             if mode == .stopped && inspectionEnabled {
+                 
+             }
+             */
         }
-    }
+        
+        prevDownStoppedTimer = false
+        
+        if inspectionEnabled && mode == .stopped && !justInspected && prevDownStoppedTimer {
+            startInspection()
+            justInspected = true
+        }
+}
     
     
     func longPressStart() {
@@ -313,20 +333,17 @@ class StopWatchManager: ObservableObject {
     
     func changeCurrentSession(_ session: Sessions) {
         // TODO do not rescramble when setting to same scramble eg 3blnd -> 3oh
-        self.currentSession = session
-        self.nextScrambleStr = nil
-        self.rescramble()
+        currentSession = session
+        tryUpdateCurrentSolveth()
+        nextScrambleStr = nil
+        rescramble()
     }
     
     
     
     func displayPenOptions() {
         
-        justGestured = true
-        
-        touchUp()
-        
-        justGestured = false
+        timerColour = TimerTextColours.timerDefaultColour
         
         if solveItem != nil {
             withAnimation {
@@ -337,12 +354,8 @@ class StopWatchManager: ObservableObject {
     
     func askToDelete() {
         
-        justGestured = true
-        
-        touchUp()
-        
-        justGestured = false
-        
+        timerColour = TimerTextColours.timerDefaultColour
+
         if solveItem != nil {
             // todo
             showDeleteSolveConfirmation = true
