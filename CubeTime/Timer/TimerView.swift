@@ -85,7 +85,7 @@ struct TimerView: View {
                     case 12..<15:
                         InspectionColours.twelveColour
                             .ignoresSafeArea()
-                    case let x where x > 15: InspectionColours.penaltyColour
+                    case let x where x >= 15: InspectionColours.penaltyColour
                             .ignoresSafeArea()
                     default:
                         EmptyView()
