@@ -57,9 +57,7 @@ class StopWatchManager: ObservableObject {
         self.feedbackStyle = hapticEnabled ? UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!) : nil
         scrambler.initSq1()
         secondsStr = formatSolveTime(secs: 0)
-        DispatchQueue.main.async {
-            self.rescramble()
-        }
+        self.rescramble()
         
         if let currentSession = currentSession as? CompSimSession {
             if currentSession.solvegroups!.count > 0 {
@@ -207,17 +205,13 @@ class StopWatchManager: ObservableObject {
                     prevDownStoppedTimer = true
                     justInspected = false
                     stop()
-                    DispatchQueue.main.async {
-                        self.rescramble()
-                    }
+                    self.rescramble()
                 }
             } else {
                 prevDownStoppedTimer = true
                 justInspected = false
                 stop()
-                DispatchQueue.main.async {
-                    self.rescramble()
-                }
+                self.rescramble()
             }
         }
     }
@@ -310,17 +304,22 @@ class StopWatchManager: ObservableObject {
     }
     
     func rescramble() {
-        if nextScrambleStr == nil { nextScrambleStr = safeGetScramble() }
+        if nextScrambleStr == nil {
+            DispatchQueue.global(qos: .userInitiated).sync {
+                self.nextScrambleStr = self.safeGetScramble()
+            }
+        }
         scrambleStr = nextScrambleStr
-        nextScrambleStr = safeGetScramble()
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.nextScrambleStr = self.safeGetScramble()
+        }
     }
     
     func changeCurrentSession(_ session: Sessions) {
+        // TODO do not rescramble when setting to same scramble eg 3blnd -> 3oh
         self.currentSession = session
-        DispatchQueue.main.async {
-            self.nextScrambleStr = nil
-            self.rescramble()
-        }
+        self.nextScrambleStr = nil
+        self.rescramble()
     }
     
     
