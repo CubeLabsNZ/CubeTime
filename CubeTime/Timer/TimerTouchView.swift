@@ -132,11 +132,6 @@ final class TimerTouchView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: TimerUIView, context: UIViewRepresentableContext<TimerTouchView>) {
-        let hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
-        let hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
-        let inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
-        let timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
-        
         
     }
     
