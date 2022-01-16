@@ -39,14 +39,7 @@ struct TabIconWithBar: View {
                 }
             }
             
-            Image(systemName: currentTab == assignedTab ? systemIconNameSelected : systemIconName)
-            .font(.system(size: SetValues.iconFontSize))
-            .padding(.horizontal, 14)
-            .padding(.vertical, 12)
-            .contentShape(Rectangle())
-            .onTapGesture {
-                currentTab = assignedTab
-            }
+            TabIcon(currentTab: $currentTab, assignedTab: assignedTab, systemIconName: systemIconName, systemIconNameSelected: systemIconNameSelected)
         }
     }
 }
@@ -67,7 +60,9 @@ struct TabIcon: View {
             .padding(.vertical, 12)
             .contentShape(Rectangle())
             .onTapGesture {
-                currentTab = assignedTab
+                if currentTab != assignedTab {
+                    currentTab = assignedTab
+                }
             }
     }
 }
