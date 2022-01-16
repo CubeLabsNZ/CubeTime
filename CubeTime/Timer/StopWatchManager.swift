@@ -59,9 +59,15 @@ class StopWatchManager: ObservableObject {
         secondsStr = formatSolveTime(secs: 0)
         self.rescramble()
         
+        tryUpdateCurrentSolveth()
+    }
+
+    
+    func tryUpdateCurrentSolveth() {
         if let currentSession = currentSession as? CompSimSession {
+            NSLog("current session is compsim")
             if currentSession.solvegroups!.count > 0 {
-                currentSolveth = (currentSession.solvegroups!.lastObject! as? CompSimSolveGroup)!.solves!.count
+                currentSolveth = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup).solves!.count
             } else {
                 currentSolveth = 0
             }
@@ -317,9 +323,10 @@ class StopWatchManager: ObservableObject {
     
     func changeCurrentSession(_ session: Sessions) {
         // TODO do not rescramble when setting to same scramble eg 3blnd -> 3oh
-        self.currentSession = session
-        self.nextScrambleStr = nil
-        self.rescramble()
+        currentSession = session
+        tryUpdateCurrentSolveth()
+        nextScrambleStr = nil
+        rescramble()
     }
     
     
