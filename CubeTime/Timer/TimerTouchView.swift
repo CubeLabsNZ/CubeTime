@@ -171,10 +171,7 @@ final class TimerTouchView: UIViewRepresentable {
                 stopWatchManager.justGestured = true
                 stopWatchManager.touchUp()
                 stopWatchManager.justGestured = false
-                DispatchQueue.main.async {
-                    
-                    self.stopWatchManager.rescramble()
-                }
+                stopWatchManager.rescramble()
             default:
                 stopWatchManager.touchUp()
                 NSLog("default")
