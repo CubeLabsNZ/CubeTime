@@ -17,14 +17,13 @@ class StopWatchManager: ObservableObject {
     let managedObjectContext: NSManagedObjectContext
     
     
-    private let hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
-    private let hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
-    private let inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
-    private let timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
+    var hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
+    var hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
+    var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
+    var timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
 
     
-    
-    let feedbackStyle: UIImpactFeedbackGenerator?
+    var feedbackStyle: UIImpactFeedbackGenerator?
     
     
     let scrambler = CHTScrambler.init()
@@ -54,14 +53,17 @@ class StopWatchManager: ObservableObject {
         NSLog("Initializing a stopwatchamanager")
         self.currentSession = currentSession
         self.managedObjectContext = managedObjectContext
-        self.feedbackStyle = hapticEnabled ? UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!) : nil
-        scrambler.initSq1()
         secondsStr = formatSolveTime(secs: 0)
+        calculateFeedbackStyle()
+        scrambler.initSq1()
         self.rescramble()
         
         tryUpdateCurrentSolveth()
     }
 
+    func calculateFeedbackStyle() {
+        self.feedbackStyle = hapticEnabled ? UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!) : nil
+    }
     
     func tryUpdateCurrentSolveth() {
         if let currentSession = currentSession as? CompSimSession {

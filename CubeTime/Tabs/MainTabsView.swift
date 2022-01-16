@@ -139,6 +139,7 @@ struct MainTabsView: View {
                         }
                 case .settings:
                     SettingsView(showOnboarding: $showOnboarding)
+                        .environmentObject(stopWatchManager)
                 }
 
                 BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
