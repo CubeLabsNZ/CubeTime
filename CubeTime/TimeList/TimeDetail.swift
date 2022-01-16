@@ -226,13 +226,27 @@ struct TimeDetail: View {
                                     ForEach(Array(zip(multiphaseSolve.phases!.indices, multiphaseSolve.phases!)), id: \.0) { index, phase in
                                         
                                         HStack {
-                                            Image(systemName: "\(index+1).circle")
-                                                .font(.system(size: 17, weight: .medium))
-                                            
-                                            Text(formatSolveTime(secs: phase))
-                                                .font(.system(size: 17, weight: .regular))
+                                            if index == 0 {
+                                                Image(systemName: "\(index+1).circle")
+                                                    .font(.system(size: 17, weight: .medium))
+                                                
+                                                Text("+"+formatSolveTime(secs: phase))
+                                            } else {
+                                                if index < multiphaseSolve.phases!.count {
+                                                    let phaseDifference = multiphaseSolve.phases![index] - multiphaseSolve.phases![index-1]
+                                                    
+                                                    Image(systemName: "\(index+1).circle")
+                                                        .font(.system(size: 17, weight: .medium))
+                                                    
+                                                    Text("+"+formatSolveTime(secs: phaseDifference))
+                                                }
+                                            }
                                             
                                             Spacer()
+                                            
+                                            Text("("+formatSolveTime(secs: phase)+")")
+                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                .font(.system(size: 17, weight: .regular))
                                         }
                                         
                                     }

@@ -147,7 +147,7 @@ struct CustomiseStandardSessionView: View {
                                 
                                 Spacer()
                                 
-                                Stepper("", value: $phaseCount, in: 1...8)
+                                Stepper("", value: $phaseCount, in: 2...8)
                                 
                             }
                             .padding()
@@ -786,7 +786,7 @@ struct NewMultiphaseView: View {
                             
                             Spacer()
                             
-                            Stepper("", value: $phaseCount, in: 1...8)
+                            Stepper("", value: $phaseCount, in: 2...8)
                             
                         }
                         .padding()

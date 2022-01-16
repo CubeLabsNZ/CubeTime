@@ -27,6 +27,74 @@ class TimerUIView: UIView {
     }
 }
 
+/*
+class InspectionUIView: UIView {
+    let stopWatchManager: StopWatchManager
+    
+    required init(frame: CGRect, stopWatchManager: StopWatchManager) {
+        self.stopWatchManager = stopWatchManager
+        super.init(frame: frame)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        stopWatchManager.touchDown()
+    }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        stopWatchManager.touchUp()
+    }
+    
+}
+
+final class InspectionTouchView: UIViewRepresentable {
+    @ObservedObject var stopWatchManager: StopWatchManager
+    
+    init (stopWatchManager: StopWatchManager) {
+        self.stopWatchManager = stopWatchManager
+    }
+    
+    
+    func makeUIView(context: UIViewRepresentableContext<InspectionTouchView>) -> TimerUIView {
+        let v = TimerUIView(frame: .zero, stopWatchManager: stopWatchManager)
+        
+        let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.tap(_:)))
+        
+        v.addGestureRecognizer(tapGesture)
+        
+        return v
+    }
+    
+    func updateUIView(_ uiView: TimerUIView, context: UIViewRepresentableContext<InspectionTouchView>) {
+        
+    }
+    
+    class Coordinator: NSObject {
+        let stopWatchManager: StopWatchManager
+        
+        init(stopWatchManager: StopWatchManager) {
+            self.stopWatchManager = stopWatchManager
+        }
+        
+        @objc func tap(_ gestureRecognizer: UITapGestureRecognizer) {
+            if gestureRecognizer.state == .ended {
+                stopWatchManager.startInspection()
+            }
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(stopWatchManager: stopWatchManager)
+    }
+}
+ */
+
+
+
 // Must be final class - see
 // https://github.com/mediweb/UIViewRepresentableBug
 final class TimerTouchView: UIViewRepresentable {
@@ -64,6 +132,11 @@ final class TimerTouchView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: TimerUIView, context: UIViewRepresentableContext<TimerTouchView>) {
+        let hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
+        let hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
+        let inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
+        let timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
+        
         
     }
     
@@ -87,16 +160,19 @@ final class TimerTouchView: UIViewRepresentable {
             switch gestureRecognizer.direction {
             case .down:
                 stopWatchManager.feedbackStyle?.impactOccurred()
-                stopWatchManager.touchUp()
+//                stopWatchManager.touchUp()
                 stopWatchManager.displayPenOptions()
             case .left:
                 stopWatchManager.feedbackStyle?.impactOccurred()
-                stopWatchManager.touchUp()
+//                stopWatchManager.touchUp()
                 stopWatchManager.askToDelete()
             case .right:
                 stopWatchManager.feedbackStyle?.impactOccurred()
+                stopWatchManager.justGestured = true
                 stopWatchManager.touchUp()
+                stopWatchManager.justGestured = false
                 DispatchQueue.main.async {
+                    
                     self.stopWatchManager.rescramble()
                 }
             default:

@@ -164,7 +164,6 @@ struct TimerView: View {
             GeometryReader { geometry in
                 ZStack {
                     TimerTouchView(stopWatchManager: stopWatchManager)
-//                        .contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
                         .frame(width: geometry.size.width, height: geometry.size.height)
                         .environmentObject(stopWatchManager)
                     
@@ -233,7 +232,7 @@ struct TimerView: View {
                                     Text("PHASES: ")
                                     
                                     Picker("", selection: $phaseCount) {
-                                        ForEach((1...8), id: \.self) { phase in
+                                        ForEach((2...8), id: \.self) { phase in
                                             Text("\(phase)").tag(phase)
                                                 .font(.system(size: 15, weight: .regular))
                                         }

@@ -78,6 +78,8 @@ class StopWatchManager: ObservableObject {
     
     
     var prevDownStoppedTimer = false
+    var justInspected = false
+    var justGestured = false
     
     // multiphase temporary variables
     var currentMPCount: Int = 1
@@ -186,6 +188,8 @@ class StopWatchManager: ObservableObject {
         
         if mode == .running {
             
+            justInspected = false
+            
             print(currentMPCount)
             print(currentSession.session_type)
             
@@ -201,6 +205,7 @@ class StopWatchManager: ObservableObject {
                     print(phaseTimes)
                     lap()
                     prevDownStoppedTimer = true
+                    justInspected = false
                     stop()
                     DispatchQueue.main.async {
                         self.rescramble()
@@ -208,6 +213,7 @@ class StopWatchManager: ObservableObject {
                 }
             } else {
                 prevDownStoppedTimer = true
+                justInspected = false
                 stop()
                 DispatchQueue.main.async {
                     self.rescramble()
@@ -220,19 +226,32 @@ class StopWatchManager: ObservableObject {
     func touchUp() {
         NSLog("touch up")
         
-        
         timerColour = TimerTextColours.timerDefaultColour
-        if !prevDownStoppedTimer {
-            if showPenOptions {
-                withAnimation {
-                    showPenOptions = false
-                }
-            }
-            if mode == .stopped && inspectionEnabled {
+        
+        if !justGestured {
+            
+            if !prevDownStoppedTimer && mode == .stopped && inspectionEnabled {
                 startInspection()
+                
+                /*
+                 if showPenOptions {
+                     withAnimation {
+                         showPenOptions = false
+                     }
+                 }
+                 if mode == .stopped && inspectionEnabled {
+                     
+                 }
+                 */
+            }
+            
+            prevDownStoppedTimer = false
+            
+            if inspectionEnabled && mode == .stopped && !justInspected && prevDownStoppedTimer {
+                startInspection()
+                justInspected = true
             }
         }
-        prevDownStoppedTimer = false
     }
     
     
@@ -248,7 +267,7 @@ class StopWatchManager: ObservableObject {
     func longPressEnd() {
         NSLog("long press end")
         
-        // TODO maybe hide pen options
+        
         timerColour = TimerTextColours.timerDefaultColour
         withAnimation {
             showPenOptions = false
@@ -256,12 +275,26 @@ class StopWatchManager: ObservableObject {
         if !prevDownStoppedTimer {
             if inspectionEnabled ? mode == .inspecting : mode == .stopped {
                 start()
-            } else if inspectionEnabled && mode == .stopped {
-                startInspection()
             }
+        }
+        
+        
+        if inspectionEnabled && mode == .stopped && !justInspected && !prevDownStoppedTimer {
+            startInspection()
+            justInspected = true
         }
         prevDownStoppedTimer = false
     }
+    
+    
+    
+    
+    
+    /// OTHER FUNCS
+    
+    
+    
+    
     
     func changedPen() {
         withAnimation {
@@ -293,6 +326,13 @@ class StopWatchManager: ObservableObject {
     
     
     func displayPenOptions() {
+        
+        justGestured = true
+        
+        touchUp()
+        
+        justGestured = false
+        
         if solveItem != nil {
             withAnimation {
                 showPenOptions = true
@@ -301,6 +341,13 @@ class StopWatchManager: ObservableObject {
     }
     
     func askToDelete() {
+        
+        justGestured = true
+        
+        touchUp()
+        
+        justGestured = false
+        
         if solveItem != nil {
             // todo
             showDeleteSolveConfirmation = true
