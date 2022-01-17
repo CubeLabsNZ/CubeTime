@@ -29,6 +29,8 @@ struct TimerView: View {
     
     @State private var manualInputTime: String = ""
     
+    @State private var showInputField: Bool = false
+    
     @State private var phaseCount: Int
     
     @State var hideStatusBar = true
@@ -349,22 +351,25 @@ struct TimerView: View {
                         .padding(5)
                         
                         Divider()
+                            .frame(width: nil, height: 35)
+                            .padding(.vertical, 4)
                         
                         TimerButton(handler: {
-                            manualInputFocused = true
-                        }, width: 35, text: "+", tintColor: nil)
-                            .padding(5)
-                        
-                        if manualInputFocused {
-                            TimerButton(handler: {
+                            if manualInputFocused {
                                 if manualInputTime != "" {
                                     stopWatchManager.stop(timeFromStr(manualInputTime))
+                                    
+                                    showInputField = false
                                     manualInputFocused = false
                                 }
-                                
-                            }, width: 60, text: "DONE", tintColor: nil)
-                                .disabled(manualInputTime == "")
-                        }
+                            } else {
+                                showInputField = true
+                                manualInputFocused = true
+                            }
+                            
+                        }, width: manualInputFocused ? 60 : 35, text: manualInputFocused ? "DONE" : "+", tintColor: nil)
+                            .disabled(manualInputFocused ? (manualInputTime == "") : false)
+                            .padding(5)
                     }
                     .background(Color(uiColor: .systemGray5).clipShape(Capsule()))
                     .animation(.spring(), value: manualInputFocused)
@@ -385,39 +390,41 @@ struct TimerView: View {
             
             
             
-            
-            VStack {
-                Spacer()
-                
-                HStack {
-                    TextField("0.00", text: $manualInputTime)
-                        .focused($manualInputFocused)
-                        .frame(maxWidth: UIScreen.screenWidth)
-                        .font(.system(size: 56, weight: .bold, design: .monospaced))
-                        .multilineTextAlignment(.trailing)
-                        .foregroundColor(stopWatchManager.timerColour)
-                        .background(Color.white)
-                        .keyboardType(.numberPad)
-                        .onReceive(Just(manualInputTime)) { newValue in
-                            let filtered = filteredTimeInput(newValue)
-                            
-                            if filtered != newValue {
-                                self.manualInputTime = filtered
+            if showInputField {
+                VStack {
+                    Spacer()
+                    
+                    HStack {
+                        TextField("0.00", text: $manualInputTime)
+                            .focused($manualInputFocused)
+                            .frame(maxWidth: UIScreen.screenWidth)
+                            .font(.system(size: 56, weight: .bold, design: .monospaced))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(stopWatchManager.timerColour)
+                            .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
+                            .keyboardType(.numberPad)
+                            .onReceive(Just(manualInputTime)) { newValue in
+                                let filtered = filteredTimeInput(newValue)
+                                
+                                if filtered != newValue {
+                                    self.manualInputTime = filtered
+                                }
                             }
-                        }
+                        
+                        
+                            .modifier(DynamicText())
+                        
+                        Spacer()
+                    }
                     
-                    
-                        .modifier(DynamicText())
-                    
+                        
                     Spacer()
                 }
+                .ignoresSafeArea(edges: .all)
                 
-                    
-                Spacer()
+
             }
-            .ignoresSafeArea(edges: .all)
-            
-            
+                        
             
             
             
