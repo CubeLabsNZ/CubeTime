@@ -18,6 +18,27 @@ public extension UIDevice {
 }
 
 
+extension UIColor {
+    func colorsEqual (_ rhs: UIColor) -> Bool {
+        var sred: CGFloat = 0
+        var sgreen: CGFloat = 0
+        var sblue: CGFloat = 0
+        var salpha: CGFloat = 0
+        
+        var rred: CGFloat = 0
+        var rgreen: CGFloat = 0
+        var rblue: CGFloat = 0
+        var ralpha: CGFloat = 0
+        
+
+        self.getRed(&sred, green: &sgreen, blue: &sblue, alpha: &salpha)
+        rhs.getRed(&rred, green: &rgreen, blue: &rblue, alpha: &ralpha)
+
+        return (sred, sgreen, sblue, salpha) == (rred, rgreen, rblue, ralpha)
+    }
+}
+
+
 extension Color: RawRepresentable {
     public typealias RawValue = String
     init(_ hex: UInt) {
@@ -28,21 +49,12 @@ extension Color: RawRepresentable {
         )
     }
     
-    public init?(rawValue: RawValue) {
-        let colors = rawValue.components(separatedBy: ",")
-        self.init(
-            red: Double(colors[0]) ?? 88/255,
-            green: Double(colors[1]) ?? 86/255,
-            blue: Double(colors[2]) ?? 124/255
-        )
+    public init(rawValue: RawValue) {
+        try! self.init(uiColor: NSKeyedUnarchiver.unarchivedObject(ofClass: UIColor.self, from: Data(base64Encoded: rawValue)!)!)
     }
 
     public var rawValue: RawValue {
-        var r: CGFloat = 0
-        var g: CGFloat = 0
-        var b: CGFloat = 0
-        UIColor(self).getRed(&r, green: &g, blue: &b, alpha: nil)
-        return "\(r),\(g),\(b)"
+        return try! NSKeyedArchiver.archivedData(withRootObject: UIColor(self), requiringSecureCoding: false).base64EncodedString()
     }
 }
 

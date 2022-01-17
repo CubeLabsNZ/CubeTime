@@ -60,10 +60,14 @@ struct AppearanceSettingsView: View {
                     HStack {
                         HStack(spacing: 6) {
                             ForEach(accentColours, id: \.self) { colour in
+                                
+                                // See extension in Helper.swift
+                                let isSameColor = UIColor(colour).colorsEqual(UIColor(accentColour))
+                                
                                 ZStack {
                                     
                                     Circle()
-                                        .strokeBorder(colour.opacity(0.25), lineWidth: (colour == accentColour) ? 2 : 0)
+                                        .strokeBorder(colour.opacity(0.25), lineWidth: isSameColor ? 2 : 0)
 //                                            .strokeBorder(colour.opacity(0.25), lineWidth: 2)
                                         .frame(width: 31, height: 31)
                                      
@@ -72,14 +76,14 @@ struct AppearanceSettingsView: View {
                                     Image(systemName: "circle.fill")
                                         .foregroundColor(colour)
                                         .font(.system(size: 24))
-                                        .shadow(color: (colour == accentColour) ? .black.opacity(0.16) : .clear, radius: 6, x: 0, y: 2)
+                                        .shadow(color: isSameColor ? .black.opacity(0.16) : .clear, radius: 6, x: 0, y: 2)
                                         .drawingGroup()
                                         .onTapGesture {
                                             accentColour = colour
                                         }
     //                                    .padding(.horizontal, 3)
                                     
-                                    if colour == accentColour {
+                                    if isSameColor {
                                         Image(systemName: "checkmark")
                                             .font(.system(size: 13, weight: .bold))
                                             .foregroundColor(.white)
