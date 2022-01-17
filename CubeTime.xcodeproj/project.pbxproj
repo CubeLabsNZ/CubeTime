@@ -72,6 +72,7 @@
 		7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EC3274F392700C2E125 /* SessionsView.swift */; };
 		7D7A9EC6274F396E00C2E125 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EC5274F396E00C2E125 /* SettingsView.swift */; };
 		7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */; };
+		7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7DDF2227955AFF00362DE9 /* PenButton.swift */; };
 		7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E2011275DD52600ADF01D /* Licenses.swift */; };
 		7D878BB1275D8DB3008AC443 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D878BB0275D8DB3008AC443 /* Stats.swift */; };
 /* End PBXBuildFile section */
@@ -189,6 +190,7 @@
 		7D7A9EC5274F396E00C2E125 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7D7C45C42751DE2C0073885C /* 3rdparty-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "3rdparty-Bridging-Header.h"; sourceTree = "<group>"; };
 		7D7D205F274DE13A0016D804 /* txmerdata.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = txmerdata.xcdatamodel; sourceTree = "<group>"; };
+		7D7DDF2227955AFF00362DE9 /* PenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenButton.swift; sourceTree = "<group>"; };
 		7D7E2011275DD52600ADF01D /* Licenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Licenses.swift; sourceTree = "<group>"; };
 		7D878BB0275D8DB3008AC443 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -230,6 +232,7 @@
 			isa = PBXGroup;
 			children = (
 				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
+				7D7DDF2227955AFF00362DE9 /* PenButton.swift */,
 				7D78FF8B276084C2008BB82E /* StopWatchManager.swift */,
 				7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */,
 			);
@@ -657,6 +660,7 @@
 				7D78FF8E276087AF008BB82E /* BottomTabsView.swift in Sources */,
 				23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */,
 				7D69E0B82751FDEA007211CC /* CHTTheme.m in Sources */,
+				7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */,
 				7D69E0B12751FDEA007211CC /* Search.m in Sources */,
 				23E647C62775B2AC00561780 /* TimeDistribution.swift in Sources */,
 				7D69E0AA2751FDEA007211CC /* Cube222.m in Sources */,

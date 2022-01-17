@@ -338,75 +338,36 @@ struct TimerView: View {
                     Spacer()
                     
                     HStack(spacing: 0) {
-                        ZStack {
-                            Button {
-                                stopWatchManager.solveItem.penalty = PenTypes.plustwo.rawValue
-                                stopWatchManager.changedPen()
-                                try! managedObjectContext.save()
-                            } label: {
-                                Text("+2")
-                                    .font(.system(size: 17, weight: .semibold, design: .rounded))
-                                    .fixedSize()
-                            }
-                            .frame(width: 35, height: 35)
-                            .buttonStyle(.bordered)
-                            .foregroundColor(colourScheme == .light ? .black : nil)
-                            .tint(colourScheme == .light ? nil : .yellow)
-                            .background(colourScheme == .light ? Color(uiColor: .systemGray4) : nil)
-                            .controlSize(.regular)
-                            .clipShape(Circle())
-    //                        .background(Color(uiColor: .systemGray4).clipShape(Circle()))
-                        }
+                        PenButton(penType: .plustwo, penText: "+2", darkModeTint: .yellow, width: 35)
                         .padding(5)
                         
-                        
-                        ZStack {
-                            Button {
-                                stopWatchManager.solveItem.penalty = PenTypes.dnf.rawValue
-                                stopWatchManager.changedPen()
-                                try! managedObjectContext.save()
-                            } label: {
-                                Text("DNF")
-                                    .font(.system(size: 17, weight: .semibold, design: .rounded))
-                                    .fixedSize()
-                            }
-                            .frame(width: 50, height: 35)
-                            .buttonStyle(.bordered)
-                            .foregroundColor(colourScheme == .light ? .black : nil)
-                            .tint(colourScheme == .light ? nil : .red)
-                            .background(colourScheme == .light ? Color(uiColor: .systemGray4) : nil)
-                            .controlSize(.regular)
-                            .clipShape(Capsule())
-                        }
+                        PenButton(penType: .dnf, penText: "DNF", darkModeTint: .red, width: 50)
                         .padding(.vertical, 5)
                         .padding(.horizontal, 2)
                         
-                        ZStack {
-                            Circle()
-                                .fill(Color(uiColor: .systemGray4))
-                                .frame(width: 35, height: 35)
-                            
-                            Button {
-                                stopWatchManager.solveItem.penalty = PenTypes.none.rawValue
-                                stopWatchManager.changedPen()
-                                try! managedObjectContext.save()
-                            } label: {
-                                Text("OK")
-                                    .font(.system(size: 17, weight: .semibold, design: .rounded))
-                                    .fixedSize()
-                            }
-                            .frame(width: 35, height: 35)
-                            .buttonStyle(.bordered)
-                            .foregroundColor(colourScheme == .light ? .black : nil)
-                            .tint(colourScheme == .light ? nil : .green)
-                            .background(colourScheme == .light ? Color(uiColor: .systemGray4) : nil)
-                            .controlSize(.regular)
-                            .clipShape(Circle())
-    //                        .background(Color(uiColor: .systemGray4).clipShape(Circle()))
-                        }
+                        PenButton(penType: .none, penText: "OK", darkModeTint: .green, width: 35)
                         .padding(5)
+                        
+                        Divider()
+                        
+                        TimerButton(handler: {
+                            manualInputFocused = true
+                        }, width: 35, text: "+", tintColor: nil)
+                            .padding(5)
+                        
+                        if manualInputFocused {
+                            TimerButton(handler: {
+                                if manualInputTime != "" {
+                                    stopWatchManager.stop(timeFromStr(manualInputTime))
+                                    manualInputFocused = false
+                                }
+                                
+                            }, width: 60, text: "DONE", tintColor: nil)
+                                .disabled(manualInputTime == "")
+                        }
                     }
                     .background(Color(uiColor: .systemGray5).clipShape(Capsule()))
+                    .animation(.spring(), value: manualInputFocused)
                     
                     Spacer()
                 }
@@ -442,19 +403,6 @@ struct TimerView: View {
                             
                             if filtered != newValue {
                                 self.manualInputTime = filtered
-                            }
-                        }
-                        .toolbar {
-                            ToolbarItemGroup(placement: .keyboard) {
-                                Spacer()
-                                
-                                Button("Save") {
-                                    if manualInputTime != "" {
-                                        stopWatchManager.stop(timeFromStr(manualInputTime))
-                                        manualInputFocused = false
-                                    }
-                                }
-                                .disabled(manualInputTime == "")
                             }
                         }
                     
