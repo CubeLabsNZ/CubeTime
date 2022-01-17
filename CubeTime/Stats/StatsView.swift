@@ -381,7 +381,7 @@ struct StatsView: View {
                                 StatsDivider()
                                 
                                 if SessionTypes(rawValue: currentSession.session_type)! == .multiphase {
-                                    StatsBlock("AVERAGE PHASES", timesBySpeedNoDNFs.count == 0 ? 150 : 200, true, false) {
+                                    StatsBlock("AVERAGE PHASES", timesBySpeedNoDNFs.count == 0 ? 150 : nil, true, false) {
                                         AveragePhases(timesBySpeedNoDNFs, phases!)
                                             .padding(.top, 20)
                                     }

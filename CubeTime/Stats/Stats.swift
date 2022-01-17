@@ -152,8 +152,10 @@ class Stats {
         
         let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solvesNoDNFs.map({ $0.time })))
         
+        #if DEBUG
         print(truncatedValues)
         print(cnt)
+        #endif
             
         
         
@@ -161,8 +163,11 @@ class Stats {
             let median = Double((solvesNoDNFs[cnt/2].time + solvesNoDNFs[(cnt/2)-1].time)/2)
             
             if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
+                
+                #if DEBUG
                 print(truncatedMin)
                 print(truncatedMax)
+                #endif
                 
                 
                 return (median, ((median-truncatedMin)/(truncatedMax-truncatedMin)))
@@ -175,8 +180,11 @@ class Stats {
             let median = Double(solvesNoDNFs[(cnt/2)].time)
             
             if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
+                
+                #if DEBUG
                 print(truncatedMin)
                 print(truncatedMax)
+                #endif
                 
                 return (median, ((median-truncatedMin)/(truncatedMax-truncatedMin)))
             }
@@ -397,7 +405,9 @@ class Stats {
         if multiphaseSession != nil {
             let times = (solves as! [MultiphaseSolve]).map({ $0.phases! })
             
+            #if DEBUG
             print(times)
+            #endif
             
             let phaseCount = multiphaseSession!.phase_count
             
@@ -410,14 +420,18 @@ class Stats {
                 
                 let mappedPhase = paddedPhase.chunked().map { $0[1] - $0[0] }
                 
+                #if DEBUG
                 print(mappedPhase)
+                #endif
                 
                 for i in 0..<Int(phaseCount) {
                     summedPhases[i] += mappedPhase[i]
                 }
             }
             
+            #if DEBUG
             print(summedPhases)
+            #endif
             
             return summedPhases.map({ $0 / Double(multiphaseSession!.solves!.count) })
         } else {

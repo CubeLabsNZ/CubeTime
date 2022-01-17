@@ -600,7 +600,9 @@ struct NewStandardSessionView: View {
                         let sessionItem = Sessions(context: managedObjectContext)
                         sessionItem.name = name
                         sessionItem.pinned = pinnedSession
+                        #if DEBUG
                         NSLog("sessioneventyype is \(sessionEventType)")
+                        #endif
                         sessionItem.scramble_type = sessionEventType
                         try! managedObjectContext.save()
                         currentSession = sessionItem
@@ -708,7 +710,10 @@ struct NewAlgTrainerView: View {
                         
                         sessionItem.session_type = 1
                         
+                        #if DEBUG
                         NSLog("sessioneventyype is \(sessionEventType)")
+                        #endif
+                        
                         sessionItem.scramble_type = sessionEventType
                         try! managedObjectContext.save()
                         currentSession = sessionItem
@@ -875,7 +880,11 @@ struct NewMultiphaseView: View {
                         sessionItem.phase_count = Int16(phaseCount)
                         sessionItem.session_type = 2
                         
+                        #if DEBUG
                         NSLog("sessioneventyype is \(sessionEventType)")
+                        #endif
+                        
+                        
                         sessionItem.scramble_type = sessionEventType
                         try! managedObjectContext.save()
                         currentSession = sessionItem
@@ -1125,9 +1134,11 @@ struct NewCompsimView: View {
                         
                         sessionItem.target = timeFromStr(targetStr)!
                         
+                        #if DEBUG
                         NSLog("target time is \(sessionItem.target)")
-                        
                         NSLog("sessioneventyype is \(sessionEventType)")
+                        #endif
+                        
                         sessionItem.scramble_type = sessionEventType
                         try! managedObjectContext.save()
                         currentSession = sessionItem

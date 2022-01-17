@@ -220,7 +220,6 @@ struct TimeListView: View {
                         if isSelectMode {
                             Button {
                                 isSelectMode = false
-                                NSLog("hi")
                                 for object in selectedSolves {
                                     managedObjectContext.delete(object)
                                     withAnimation {

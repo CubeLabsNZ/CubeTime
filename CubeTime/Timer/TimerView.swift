@@ -251,7 +251,9 @@ struct TimerView: View {
                                 Text("PLAYGROUND")
                                     .font(.system(size: 17, weight: .medium))
                                     .onTapGesture() {
+                                        #if DEBUG
                                         NSLog("\(playgroundScrambleType), currentsession: \(currentSession.scramble_type)")
+                                        #endif
                                     }
                                 Picker("", selection: $playgroundScrambleType) {
                                     ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in

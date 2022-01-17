@@ -50,7 +50,11 @@ class StopWatchManager: ObservableObject {
     
     
     init (currentSession: Sessions, managedObjectContext: NSManagedObjectContext) {
+        #if DEBUG
         NSLog("Initializing a stopwatchamanager")
+        #endif
+        
+        
         self.currentSession = currentSession
         self.managedObjectContext = managedObjectContext
         secondsStr = formatSolveTime(secs: 0)
@@ -67,7 +71,10 @@ class StopWatchManager: ObservableObject {
     
     func tryUpdateCurrentSolveth() {
         if let currentSession = currentSession as? CompSimSession {
+            #if DEBUG
             NSLog("current session is compsim")
+            #endif
+            
             if currentSession.solvegroups!.count > 0 {
                 currentSolveth = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup).solves!.count
             } else {
@@ -187,7 +194,9 @@ class StopWatchManager: ObservableObject {
     
     
     func touchDown() {
+        #if DEBUG
         NSLog("touch down")
+        #endif
 
         timerColour = TimerTextColours.timerHeldDownColour
         
@@ -195,19 +204,27 @@ class StopWatchManager: ObservableObject {
             
             justInspected = false
             
+            #if DEBUG
             print(currentMPCount)
             print(currentSession.session_type)
+            #endif
             
             if let multiphaseSession = currentSession as? MultiphaseSession {
                 
+                #if DEBUG
                 print(currentMPCount)
+                #endif
                 
                 if multiphaseSession.phase_count != currentMPCount {
                     currentMPCount += 1
                     lap()
                 } else {
                     
+                    #if DEBUG
                     print(phaseTimes)
+                    #endif
+                    
+                    
                     lap()
                     prevDownStoppedTimer = true
                     justInspected = false
@@ -225,7 +242,9 @@ class StopWatchManager: ObservableObject {
     
     
     func touchUp() {
+        #if DEBUG
         NSLog("touch up")
+        #endif
         
         timerColour = TimerTextColours.timerDefaultColour
         
@@ -253,7 +272,9 @@ class StopWatchManager: ObservableObject {
     
     
     func longPressStart() {
+        #if DEBUG
         NSLog("long press start")
+        #endif
         
         if inspectionEnabled ? mode == .inspecting : mode == .stopped && !prevDownStoppedTimer {
             timerColour = TimerTextColours.timerCanStartColour
@@ -262,7 +283,9 @@ class StopWatchManager: ObservableObject {
     }
     
     func longPressEnd() {
+        #if DEBUG
         NSLog("long press end")
+        #endif
         
         
         timerColour = TimerTextColours.timerDefaultColour

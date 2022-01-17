@@ -93,7 +93,10 @@ struct MainTabsView: View {
         let currentSession: Sessions
         
         if lastUsedSessionURI == nil {
+            #if DEBUG
             NSLog("Saved ID is nil, creating default object")
+            #endif
+            
             currentSession = Sessions(context: managedObjectContext) // TODO make it playground
             currentSession.scramble_type = 1
             currentSession.session_type = SessionTypes.playground.rawValue
