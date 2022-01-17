@@ -156,11 +156,20 @@ final class TimerTouchView: UIViewRepresentable {
             #endif
             switch gestureRecognizer.direction {
             case .down:
-                stopWatchManager.feedbackStyle?.impactOccurred()
-                stopWatchManager.displayPenOptions()
+                if stopWatchManager.canGesture && stopWatchManager.mode != .inspecting {
+                    stopWatchManager.feedbackStyle?.impactOccurred()
+                    stopWatchManager.displayPenOptions()
+                } else {
+                    stopWatchManager.timerColour = TimerTextColours.timerDefaultColour
+                }
+                
             case .left:
-                stopWatchManager.feedbackStyle?.impactOccurred()
-                stopWatchManager.askToDelete()
+                if stopWatchManager.canGesture && stopWatchManager.mode != .inspecting {
+                    stopWatchManager.feedbackStyle?.impactOccurred()
+                    stopWatchManager.askToDelete()
+                } else {
+                    stopWatchManager.timerColour = TimerTextColours.timerDefaultColour
+                }
             case .right:
                 stopWatchManager.feedbackStyle?.impactOccurred()
                 stopWatchManager.timerColour = TimerTextColours.timerDefaultColour

@@ -76,6 +76,22 @@ struct DynamicText: ViewModifier {
 }
 
 
+struct AnimatingFontSize: AnimatableModifier {
+    var fontSize: CGFloat
+
+    var animatableData: CGFloat {
+        get { fontSize }
+        set { fontSize = newValue }
+    }
+
+    func body(content: Self.Content) -> some View {
+        content
+            .font(.system(size: self.fontSize, weight: .bold, design: .monospaced))
+    }
+}
+
+
+
 func formatSolveTime(secs: Double, dp: Int) -> String {
     if secs < 60 {
         return String(format: "%.\(dp)f", secs) // TODO set DP

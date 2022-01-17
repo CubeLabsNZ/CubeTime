@@ -4,19 +4,6 @@ import CoreGraphics
 import Combine
 
 
-struct AnimatingFontSize: AnimatableModifier {
-    var fontSize: CGFloat
-
-    var animatableData: CGFloat {
-        get { fontSize }
-        set { fontSize = newValue }
-    }
-
-    func body(content: Self.Content) -> some View {
-        content
-            .font(.system(size: self.fontSize, weight: .bold, design: .monospaced))
-    }
-}
 
 
 
@@ -40,6 +27,8 @@ struct TimerView: View {
     
     @State private var targetStr: String
     
+    @State private var manualInputTime: String = ""
+    
     @State private var phaseCount: Int
     
     @State var hideStatusBar = true
@@ -52,6 +41,8 @@ struct TimerView: View {
     
     
     @FocusState private var targetFocused: Bool
+    
+    @FocusState private var manualInputFocused: Bool
     
 //    @State var compSimTarget: String
     
@@ -70,13 +61,11 @@ struct TimerView: View {
     
     var body: some View {
         ZStack {
-            
             Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                 .ignoresSafeArea()
     
     
             if stopWatchManager.mode == .inspecting {
-                
                 if colourScheme == .light {
                     switch stopWatchManager.inspectionSecs {
                     case 8..<12:
@@ -104,14 +93,12 @@ struct TimerView: View {
                     .offset(y: 45)
                 }
             } else if  stopWatchManager.mode == .stopped {
-                
                 VStack {
                     Text(stopWatchManager.scrambleStr ?? "Loading scramble...")
                         .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : 18, weight: .semibold, design: .monospaced))
                         .frame(maxHeight: UIScreen.screenHeight/3)
                         .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
                         .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
-                    
                     
                     Spacer()
                 }
@@ -143,7 +130,11 @@ struct TimerView: View {
                 
                 Spacer()
             }
-                    .ignoresSafeArea(edges: .all)
+            .ignoresSafeArea(edges: .all)
+            
+            
+            
+
             
             
             
@@ -422,8 +413,84 @@ struct TimerView: View {
                 .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 2)
                 .ignoresSafeArea(edges: .top)
                 .offset(y: 52)
-                
             }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            VStack {
+                Spacer()
+                
+                HStack {
+                    TextField("0.00", text: $manualInputTime)
+                        .focused($manualInputFocused)
+                        .frame(maxWidth: UIScreen.screenWidth)
+                        .font(.system(size: 56, weight: .bold, design: .monospaced))
+                        .multilineTextAlignment(.trailing)
+                        .foregroundColor(stopWatchManager.timerColour)
+                        .background(Color.white)
+                        .keyboardType(.numberPad)
+                        .onReceive(Just(manualInputTime)) { newValue in
+                            let filtered = filteredTimeInput(newValue)
+                            
+                            if filtered != newValue {
+                                self.manualInputTime = filtered
+                            }
+                        }
+                        .toolbar {
+                            ToolbarItemGroup(placement: .keyboard) {
+                                Spacer()
+                                
+                                Button("Save") {
+                                    if manualInputTime != "" {
+                                        stopWatchManager.stop(timeFromStr(manualInputTime))
+                                        manualInputFocused = false
+                                    }
+                                }
+                                .disabled(manualInputTime == "")
+                            }
+                        }
+                    
+                    
+                        .modifier(DynamicText())
+                    
+                    Spacer()
+                }
+                
+                    
+                Spacer()
+            }
+            .ignoresSafeArea(edges: .all)
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {

@@ -97,6 +97,8 @@ class StopWatchManager: ObservableObject {
     var currentMPCount: Int = 1
     var phaseTimes: [Double] = []
     
+    var canGesture: Bool = true
+    
     
     func startInspection() {
         timer?.invalidate()
@@ -134,9 +136,15 @@ class StopWatchManager: ObservableObject {
     }
     
     
-    func stop() {
+    func stop(_ time: Double?) {
         timer?.invalidate()
-        self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
+        
+        if let time = time {
+            self.secondsElapsed = time
+        } else {
+            self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
+        }
+        
         self.secondsStr = formatSolveTime(secs: self.secondsElapsed)
         mode = .stopped
 
@@ -216,6 +224,8 @@ class StopWatchManager: ObservableObject {
                 #endif
                 
                 if multiphaseSession.phase_count != currentMPCount {
+                    canGesture = false
+                    
                     currentMPCount += 1
                     lap()
                 } else {
@@ -225,16 +235,22 @@ class StopWatchManager: ObservableObject {
                     #endif
                     
                     
+                    canGesture = true
+                    
+                    
                     lap()
                     prevDownStoppedTimer = true
                     justInspected = false
-                    stop()
+                    stop(nil)
                     self.rescramble()
                 }
             } else {
+                
+                canGesture = true
+                
                 prevDownStoppedTimer = true
                 justInspected = false
-                stop()
+                stop(nil)
                 self.rescramble()
             }
         }
@@ -364,7 +380,6 @@ class StopWatchManager: ObservableObject {
     }
     
     func askToDelete() {
-        
         timerColour = TimerTextColours.timerDefaultColour
         prevDownStoppedTimer = false
 
