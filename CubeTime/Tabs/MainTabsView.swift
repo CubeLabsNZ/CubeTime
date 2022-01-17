@@ -71,6 +71,7 @@ struct TabIcon: View {
 
 struct MainTabsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.scenePhase) var scenePhase
     @Namespace private var namespace
     
     @StateObject var tabRouter: TabRouter = TabRouter()
@@ -90,25 +91,25 @@ struct MainTabsView: View {
         let lastUsedSessionURI = UserDefaults.standard.url(forKey: "last_used_session")
                 
         
-        let currentSession: Sessions
+        let fetchedSession: Sessions
         
         if lastUsedSessionURI == nil {
             NSLog("Saved ID is nil, creating default object")
-            currentSession = Sessions(context: managedObjectContext) // TODO make it playground
-            currentSession.scramble_type = 1
-            currentSession.session_type = SessionTypes.playground.rawValue
-            currentSession.name = "Default Session"
+            fetchedSession = Sessions(context: managedObjectContext) // TODO make it playground
+            fetchedSession.scramble_type = 1
+            fetchedSession.session_type = SessionTypes.playground.rawValue
+            fetchedSession.name = "Default Session"
             try! managedObjectContext.save()
-            UserDefaults.standard.set(currentSession.objectID.uriRepresentation(), forKey: "last_used_session")
+            UserDefaults.standard.set(fetchedSession.objectID.uriRepresentation(), forKey: "last_used_session")
         } else {
             let objID = managedObjectContext.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI!)!
-            currentSession = try! managedObjectContext.existingObject(with: objID) as! Sessions // TODO better error handling
+            fetchedSession = try! managedObjectContext.existingObject(with: objID) as! Sessions // TODO better error handling
         }
                 
         // https://swiftui-lab.com/random-lessons/#data-10
-        self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: currentSession, managedObjectContext: managedObjectContext))
+        self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: fetchedSession, managedObjectContext: managedObjectContext))
                                              
-        self.currentSession = currentSession
+        self._currentSession = State(initialValue: fetchedSession)
     }
     
     var body: some View {
@@ -142,6 +143,23 @@ struct MainTabsView: View {
             }
             .sheet(isPresented: $showOnboarding) {
                 OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
+            }
+            .onChange(of: scenePhase) { newValue in
+                NSLog("on appear")
+                if newValue == .active {
+                    if let shortcutItemToProcess = shortcutItemToProcess {
+                        NSLog("shortcut: \(shortcutItemToProcess)")
+                        tabRouter.currentTab = {
+                            switch shortcutItemToProcess.type {
+                            case "timer": return .timer
+                            case "timelist": return .solves
+                            case "stats": return .stats
+                            case "sessions": return .sessions
+                            default: return .timer
+                            }
+                        }()
+                    }
+                }
             }
         }
         .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
