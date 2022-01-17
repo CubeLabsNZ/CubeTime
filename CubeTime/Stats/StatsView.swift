@@ -88,9 +88,14 @@ struct StatsBlockText: View {
                             view.gradientForeground(gradientSelected: gradientSelected)
                         }
                 } else {
-                    Text("-")
-                        .font(.system(size: 28, weight: .medium, design: .default))
-                        .foregroundColor(Color(uiColor: .systemGray5))
+                    VStack {
+                        Text("-")
+                            .font(.system(size: 28, weight: .medium, design: .default))
+                            .foregroundColor(Color(uiColor: .systemGray5))
+                            .padding(.top, 20)
+                        
+                        Spacer()
+                    }
                 }
                 
                 Spacer()
@@ -253,8 +258,6 @@ struct StatsView: View {
         self._currentSession = currentSession
         stats = Stats(currentSession: currentSession.wrappedValue)
         
-        self.phases = stats.getAveragePhases()
-        
         
         self.bestAo5 = stats.getBestMovingAverageOf(5)
         self.bestAo12 = stats.getBestMovingAverageOf(12)
@@ -285,6 +288,8 @@ struct StatsView: View {
         
         self.currentMeanOfTen = stats.getCurrentMeanOfTen()
         self.bestMeanOfTen = stats.getBestMeanOfTen()
+        
+        self.phases = stats.getAveragePhases()
     }
     
     var body: some View {
@@ -382,8 +387,19 @@ struct StatsView: View {
                                 
                                 if SessionTypes(rawValue: currentSession.session_type)! == .multiphase {
                                     StatsBlock("AVERAGE PHASES", timesBySpeedNoDNFs.count == 0 ? 150 : nil, true, false) {
-                                        AveragePhases(timesBySpeedNoDNFs, phases!)
-                                            .padding(.top, 20)
+                                        
+                                        let _ = NSLog("\(timesByDateNoDNFs.count)")
+                                        
+                                        
+                                        if timesByDateNoDNFs.count > 0 {
+                                            AveragePhases(phaseTimes: phases!)
+                                                .padding(.top, 20)
+                                        } else {
+                                            Text("not enough solves to\ndisplay graph")
+                                                .font(.system(size: 17, weight: .medium, design: .monospaced))
+                                                .multilineTextAlignment(.center)
+                                                .foregroundColor(Color(uiColor: .systemGray))
+                                        }
                                     }
                                     
                                     StatsDivider()

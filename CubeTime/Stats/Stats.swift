@@ -130,7 +130,7 @@ class Stats {
     }
     
     func getSessionMean() -> Double? {
-        if solves.count == 0 {
+        if solvesNoDNFs.count == 0 {
             return nil
         } 
         let sum = solvesNoDNFs.reduce(0, {$0 + timeWithPlusTwoForSolve($1) })
@@ -138,7 +138,6 @@ class Stats {
     }
     
     func getNumberOfSolves() -> Int {
-        
         return solves.count
     }
     
@@ -403,11 +402,11 @@ class Stats {
     
     func getAveragePhases() -> [Double]? {
         if multiphaseSession != nil {
-            let times = (solves as! [MultiphaseSolve]).map({ $0.phases! })
+            let times = (solvesNoDNFs as! [MultiphaseSolve]).map({ $0.phases! })
             
-            #if DEBUG
+            
             print(times)
-            #endif
+            
             
             let phaseCount = multiphaseSession!.phase_count
             
@@ -433,7 +432,7 @@ class Stats {
             print(summedPhases)
             #endif
             
-            return summedPhases.map({ $0 / Double(multiphaseSession!.solves!.count) })
+            return summedPhases.map({ $0 / Double(solvesNoDNFs.count) })
         } else {
             return nil
         }

@@ -178,7 +178,8 @@ struct TimeListView: View {
                                     }
                                     
                                 } else {
-                                    Text("display the empty message")
+                                    // re-enable when we have a graphic
+//                                    Text("display the empty message")
                                 }
                                 
                                 
