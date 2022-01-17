@@ -27,7 +27,7 @@ struct StatsBlock<Content: View>: View {
                     HStack {
                         Text(title)
                             .font(.system(size: 13, weight: .medium, design: .default))
-                            .foregroundColor(Color(uiColor: title == "CURRENT STATS" ? .black : (coloured ? .systemGray5 : .systemGray)))
+                            .foregroundColor(Color(uiColor: title == "CURRENT STATS" ? (colourScheme == .light ? .black : .white) : (coloured ? (colourScheme == .light ? .systemGray5 : .white) : .systemGray)))
                         Spacer()
                     }
                     Spacer()
@@ -294,7 +294,7 @@ struct StatsView: View {
                     .ignoresSafeArea()
                 
                 ScrollView {
-                    VStack (spacing: 0) {                        
+                    VStack (spacing: 0) {
                         VStack(spacing: 0) {
                             HStack (alignment: .center) {
                                 Text(currentSession.name!)

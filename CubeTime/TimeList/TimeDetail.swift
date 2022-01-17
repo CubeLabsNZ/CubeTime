@@ -199,7 +199,8 @@ struct TimeDetail: View {
                         .padding(.trailing)
                         .padding(.leading)
                         
-                        if let multiphaseSolve = (solve as! MultiphaseSolve) {
+                        
+                        if let multiphaseSolve = (solve as? MultiphaseSolve) {
                             VStack {
                                 HStack {
                                     Image(systemName: "square.stack.3d.up.fill")

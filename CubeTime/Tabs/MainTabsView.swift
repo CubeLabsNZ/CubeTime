@@ -141,7 +141,7 @@ struct MainTabsView: View {
                 BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
                     .zIndex(1)
             }
-            .sheet(isPresented: $showOnboarding) {
+            .sheet(isPresented: $showOnboarding, onDismiss: { pageIndex = 0 }) {
                 OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
             }
             .onChange(of: scenePhase) { newValue in

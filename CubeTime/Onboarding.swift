@@ -37,6 +37,7 @@ struct OnboardingView: View {
                     Spacer()
                     
                     Button {
+                        
                         dismiss()
                         showOnboarding = false
                     } label: {
@@ -93,6 +94,7 @@ struct OnboardingView: View {
                             .foregroundColor(.white)
                     }
                     .onTapGesture {
+                        
                         dismiss()
                         showOnboarding = false
                     }

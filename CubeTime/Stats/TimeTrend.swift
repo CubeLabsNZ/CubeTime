@@ -608,7 +608,7 @@ struct TimeTrend: View {
     }
     
     var body: some View {
-        if data.points.map { $0.1 }.count > 1 {
+        if data.points.map({ $0.1 }).count > 1 {
             GeometryReader{ geometry in
                 VStack(alignment: .leading, spacing: 8) {
                     ZStack{
