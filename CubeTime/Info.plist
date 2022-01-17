@@ -35,7 +35,7 @@
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Time List</string>
 			<key>UIApplicationShortcutItemType</key>
-			<string>SearchAction</string>
+			<string>timelist</string>
 		</dict>
 		<dict>
 			<key>UIApplicationShortcutItemIconFile</key>
@@ -43,7 +43,7 @@
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Stats</string>
 			<key>UIApplicationShortcutItemType</key>
-			<string>SearchAction</string>
+			<string>stats</string>
 		</dict>
 		<dict>
 			<key>UIApplicationShortcutItemIconFile</key>
@@ -51,7 +51,7 @@
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Sessions</string>
 			<key>UIApplicationShortcutItemType</key>
-			<string>SearchAction</string>
+			<string>sessions</string>
 		</dict>
 	</array>
 </dict>
