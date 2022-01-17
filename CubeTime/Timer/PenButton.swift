@@ -47,10 +47,10 @@ struct TimerButton: View {
                 .fixedSize()
         })
         .frame(width: width, height: 35)
-        .buttonStyle(.bordered)
         .foregroundColor(colourScheme == .light ? .black : nil)
-        .tint(tintColor)
         .background(colourScheme == .light ? Color(uiColor: .systemGray4) : nil)
+        .buttonStyle(.bordered)
+        .tint(tintColor)
         .controlSize(.regular)
         // I know this is bad please spare me
         .if(width > 35, transform: { view in

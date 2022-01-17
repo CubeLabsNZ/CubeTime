@@ -3,11 +3,13 @@ import UIKit
 import CoreData
 
 
-var shortcutItemToProcess: UIApplicationShortcutItem?
-
 @main
 struct CubeTime: App {
     @Environment(\.scenePhase) var phase
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+    var shortcutItem: UIApplicationShortcutItem?
+    
     
     let persistenceController: PersistenceController
     private let moc: NSManagedObjectContext
@@ -32,10 +34,13 @@ struct CubeTime: App {
     
     var body: some Scene {
         WindowGroup {
-            MainTabsView(managedObjectContext: moc)
+            MainTabsView(appDelegate.shortcutItem, managedObjectContext: moc)
                 .environment(\.managedObjectContext, moc)
         }
-        
+        .onChange(of: phase) { newValue in
+            if newValue == .active {
+                print(appDelegate.shortcutItem)
+            }
+        }
     }
 }
-

@@ -33,7 +33,7 @@
 		23E81E71275D8DDA00B741E3 /* IESettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E70275D8DDA00B741E3 /* IESettings.swift */; };
 		23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E72275D8DEA00B741E3 /* AboutSettings.swift */; };
 		23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB8A1D2779B6D3000F6663 /* TimeBar.swift */; };
-		7D2B805E279422BD0006AEDD /* QuickActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2B805D279422BD0006AEDD /* QuickActions.swift */; };
+		7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2B805D279422BD0006AEDD /* AppDelegate.swift */; };
 		7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */; };
 		7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */; };
 		7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6159F82751B53E00DC9A4C /* TimeCard.swift */; };
@@ -123,7 +123,7 @@
 		23E81E70275D8DDA00B741E3 /* IESettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IESettings.swift; sourceTree = "<group>"; };
 		23E81E72275D8DEA00B741E3 /* AboutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettings.swift; sourceTree = "<group>"; };
 		23EB8A1D2779B6D3000F6663 /* TimeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBar.swift; sourceTree = "<group>"; };
-		7D2B805D279422BD0006AEDD /* QuickActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickActions.swift; sourceTree = "<group>"; };
+		7D2B805D279422BD0006AEDD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTouchView.swift; sourceTree = "<group>"; };
 		7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabsView.swift; sourceTree = "<group>"; };
 		7D6159F82751B53E00DC9A4C /* TimeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCard.swift; sourceTree = "<group>"; };
@@ -295,7 +295,7 @@
 				23034727278C31AE00553A7D /* Fonts */,
 				23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */,
 				23DE3BE3274DDBE300254D29 /* Persistence.swift */,
-				7D2B805D279422BD0006AEDD /* QuickActions.swift */,
+				7D2B805D279422BD0006AEDD /* AppDelegate.swift */,
 				239C7E6F2781511300943AF2 /* Onboarding.swift */,
 				233FE7B5274F109600C6F1DF /* Helper.swift */,
 				7D7C45C42751DE2C0073885C /* 3rdparty-Bridging-Header.h */,
@@ -639,7 +639,7 @@
 				7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */,
 				7D69E0AB2751FDEA007211CC /* Im.m in Sources */,
 				7D69E0A32751FDEA007211CC /* Gear.m in Sources */,
-				7D2B805E279422BD0006AEDD /* QuickActions.swift in Sources */,
+				7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */,
 				7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */,
 				23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */,
 				7D78FF8C276084C2008BB82E /* StopWatchManager.swift in Sources */,

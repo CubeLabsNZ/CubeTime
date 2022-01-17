@@ -81,16 +81,20 @@ struct MainTabsView: View {
     @State var hideTabBar = false
     @State var currentSession: Sessions
     
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    var shortcutItem: UIApplicationShortcutItem?
+    
     
     @AppStorage("onboarding") var showOnboarding: Bool = true
     @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
     @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
         
-    init(managedObjectContext: NSManagedObjectContext) {
+    init(_ shortcutItem: UIApplicationShortcutItem?, managedObjectContext: NSManagedObjectContext) {
         let lastUsedSessionURI = UserDefaults.standard.url(forKey: "last_used_session")
-                
+            
+        if let shortcutItem = shortcutItem {
+            self.shortcutItem = shortcutItem
+        }
         
         let fetchedSession: Sessions
         
@@ -149,22 +153,23 @@ struct MainTabsView: View {
                 OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
             }
             .onChange(of: scenePhase) { newValue in
-                
-                #if DEBUG
-                NSLog("on change \(newValue)")
-                NSLog("shortcutitem is \(appDelegate.shortcutItem)")
-                #endif
-                
                 if newValue == .active {
-                    if let shortcutItemToProcess = appDelegate.shortcutItem {
-                        NSLog("shortcut: \(shortcutItemToProcess)")
+                    if let shortcutItem = shortcutItem {
+                        print("HERE")
+                        print(shortcutItem.type)
+                        
                         tabRouter.currentTab = {
-                            switch shortcutItemToProcess.type {
-                            case "timer": return .timer
-                            case "timelist": return .solves
-                            case "stats": return .stats
-                            case "sessions": return .sessions
-                            default: return .timer
+                            switch shortcutItem.type {
+                            case "timer":
+                                return .timer
+                            case "timelist":
+                                return .solves
+                            case "stats":
+                                return .stats
+                            case "sessions":
+                                return .sessions
+                            default:
+                                return .timer
                             }
                         }()
                     }
