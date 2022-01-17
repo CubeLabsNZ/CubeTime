@@ -297,6 +297,7 @@
 				7D7C45C42751DE2C0073885C /* 3rdparty-Bridging-Header.h */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */,
+				7D2B805D279422BD0006AEDD /* QuickActions.swift */,
 				7D69E0632751FDBB007211CC /* 3rdparty */,
 				23A73F5D276B0AC800153748 /* Tabs */,
 				23A73F5C276B0AA100153748 /* Timer */,
@@ -305,7 +306,6 @@
 				23E81E75275D917000B741E3 /* Stats */,
 				23E81E6D275D8DB500B741E3 /* Settings */,
 				23DE3BE0274DDBE300254D29 /* Preview Content */,
-				7D2B805D279422BD0006AEDD /* QuickActions.swift */,
 			);
 			path = CubeTime;
 			sourceTree = "<group>";

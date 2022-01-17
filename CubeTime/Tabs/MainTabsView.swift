@@ -81,6 +81,7 @@ struct MainTabsView: View {
     @State var hideTabBar = false
     @State var currentSession: Sessions
     
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     @AppStorage("onboarding") var showOnboarding: Bool = true
     @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
@@ -145,9 +146,10 @@ struct MainTabsView: View {
                 OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
             }
             .onChange(of: scenePhase) { newValue in
-                NSLog("on appear")
+                NSLog("on change \(newValue)")
+                NSLog("shortcutitem is \(appDelegate.shortcutItem)")
                 if newValue == .active {
-                    if let shortcutItemToProcess = shortcutItemToProcess {
+                    if let shortcutItemToProcess = appDelegate.shortcutItem {
                         NSLog("shortcut: \(shortcutItemToProcess)")
                         tabRouter.currentTab = {
                             switch shortcutItemToProcess.type {

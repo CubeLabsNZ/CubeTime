@@ -8,7 +8,6 @@ var shortcutItemToProcess: UIApplicationShortcutItem?
 @main
 struct CubeTime: App {
     @Environment(\.scenePhase) var phase
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     
     

@@ -9,16 +9,15 @@ import Foundation
 import UIKit
 import SwiftUI
 
-class AppDelegate: NSObject, UIApplicationDelegate {
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        if let shortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
-            return false
-            
-        }
-        return true
-    }
+final class AppDelegate: NSObject, UIApplicationDelegate {
+    var shortcutItem: UIApplicationShortcutItem? {AppDelegate.shortcutItem}
+    
+    fileprivate static var shortcutItem: UIApplicationShortcutItem?
     
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        if let shortcutItem = shortcutItem {
+            AppDelegate.shortcutItem = shortcutItem
+        }
         let sceneConfiguration = UISceneConfiguration(name: "Custom Configuration", sessionRole: connectingSceneSession.role)
         sceneConfiguration.delegateClass = CustomSceneDelegate.self
         
@@ -27,11 +26,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 }
 
 
-class CustomSceneDelegate: UIResponder, UIWindowSceneDelegate {
-    @Environment(\.openURL) var openURL
-    
+private final class CustomSceneDelegate: UIResponder, UIWindowSceneDelegate {
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
-        shortcutItemToProcess = shortcutItem
+        NSLog("scene has shortcutitem \(shortcutItem)")
+        AppDelegate.shortcutItem = shortcutItem
+        completionHandler(true)
     }
 }
 
