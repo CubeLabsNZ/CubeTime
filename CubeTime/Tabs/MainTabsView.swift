@@ -97,6 +97,8 @@ struct MainTabsView: View {
         if lastUsedSessionURI == nil {
             #if DEBUG
             NSLog("Saved ID is nil, creating default object")
+            #endif
+            
             fetchedSession = Sessions(context: managedObjectContext) // TODO make it playground
             fetchedSession.scramble_type = 1
             fetchedSession.session_type = SessionTypes.playground.rawValue
@@ -147,8 +149,12 @@ struct MainTabsView: View {
                 OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
             }
             .onChange(of: scenePhase) { newValue in
+                
+                #if DEBUG
                 NSLog("on change \(newValue)")
                 NSLog("shortcutitem is \(appDelegate.shortcutItem)")
+                #endif
+                
                 if newValue == .active {
                     if let shortcutItemToProcess = appDelegate.shortcutItem {
                         NSLog("shortcut: \(shortcutItemToProcess)")

@@ -28,7 +28,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
 private final class CustomSceneDelegate: UIResponder, UIWindowSceneDelegate {
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        #if DEBUG
         NSLog("scene has shortcutitem \(shortcutItem)")
+        #endif
+        
         AppDelegate.shortcutItem = shortcutItem
         completionHandler(true)
     }

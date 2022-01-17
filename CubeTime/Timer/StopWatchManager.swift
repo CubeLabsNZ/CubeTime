@@ -354,6 +354,7 @@ class StopWatchManager: ObservableObject {
     func displayPenOptions() {
         
         timerColour = TimerTextColours.timerDefaultColour
+        prevDownStoppedTimer = false
         
         if solveItem != nil {
             withAnimation {
@@ -365,6 +366,7 @@ class StopWatchManager: ObservableObject {
     func askToDelete() {
         
         timerColour = TimerTextColours.timerDefaultColour
+        prevDownStoppedTimer = false
 
         if solveItem != nil {
             // todo

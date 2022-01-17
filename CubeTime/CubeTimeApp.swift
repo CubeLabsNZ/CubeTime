@@ -9,8 +9,6 @@ var shortcutItemToProcess: UIApplicationShortcutItem?
 struct CubeTime: App {
     @Environment(\.scenePhase) var phase
     
-    
-    
     let persistenceController: PersistenceController
     private let moc: NSManagedObjectContext
     

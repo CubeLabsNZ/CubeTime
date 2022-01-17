@@ -82,17 +82,16 @@ struct AveragePhases: View {
             let phaseCount: Int = phaseTimes.count - 1
             VStack (spacing: 0) {
                 GeometryReader { geometry in
-                    HStack(spacing: 0) {
+                    
+                    let maxWidth: CGFloat = geometry.size.width - 2*CGFloat(phaseCount)
+                    
+                    HStack(spacing: 2) {
                         ForEach(Array(zip(phaseTimes.indices, phaseTimes)), id: \.0) { index, phase in
                             Rectangle()
                                 .fill(Color(gradientStart.toColor(gradientEnd, percentage: CGFloat(index)/CGFloat(phaseCount))))
-                                .frame(width: geometry.size.width * CGFloat(phase / phaseTimes.reduce(0, +)), height: 10)
+                                .frame(width: maxWidth * CGFloat(phase / phaseTimes.reduce(0, +)), height: 10)
                                 .cornerRadius(index == 0 ? 10 : 0, corners: [.topLeft, .bottomLeft])
                                 .cornerRadius(index == phaseCount ? 10 : 0, corners: [.topRight, .bottomRight])
-                            
-                            Rectangle()
-                                .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
-                                .frame(width: 2)
                         }
                     }
                 }

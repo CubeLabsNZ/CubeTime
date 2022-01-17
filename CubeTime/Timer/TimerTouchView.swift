@@ -164,6 +164,7 @@ final class TimerTouchView: UIViewRepresentable {
             case .right:
                 stopWatchManager.feedbackStyle?.impactOccurred()
                 stopWatchManager.timerColour = TimerTextColours.timerDefaultColour
+                stopWatchManager.prevDownStoppedTimer = false
                 stopWatchManager.rescramble()
             default:
                 stopWatchManager.timerColour = TimerTextColours.timerDefaultColour
