@@ -23,18 +23,16 @@ extension UIColor {
         var sred: CGFloat = 0
         var sgreen: CGFloat = 0
         var sblue: CGFloat = 0
-        var salpha: CGFloat = 0
         
         var rred: CGFloat = 0
         var rgreen: CGFloat = 0
         var rblue: CGFloat = 0
-        var ralpha: CGFloat = 0
         
 
-        self.getRed(&sred, green: &sgreen, blue: &sblue, alpha: &salpha)
-        rhs.getRed(&rred, green: &rgreen, blue: &rblue, alpha: &ralpha)
+        self.getRed(&sred, green: &sgreen, blue: &sblue, alpha: nil)
+        rhs.getRed(&rred, green: &rgreen, blue: &rblue, alpha: nil)
 
-        return (sred, sgreen, sblue, salpha) == (rred, rgreen, rblue, ralpha)
+        return (Int(sred*255), Int(sgreen*255), Int(sblue*255)) == (Int(rred*255), Int(rgreen*255), Int(rblue*255))
     }
 }
 
