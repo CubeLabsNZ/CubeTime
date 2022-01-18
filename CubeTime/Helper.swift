@@ -301,7 +301,7 @@ struct TimeMaskTextField: ViewModifier {
         NSLog("text.count \(text.count) text.last = \(text.last) dotcount \(dotCount)")
         #endif
         // Let the user dot if the text is more than 1, less than six (0.xx.) and there are 2 dots where the last was just entered
-        if text.count > 1 && text.count < 6 && text.last! == "." && dotCount < 3 {
+        if text == "." || ( text.count > 1 && text.count < 6 && text.last! == "." && dotCount < 3 ) {
             userDotted = true
             #if DEBUG
             NSLog("user dotted")
