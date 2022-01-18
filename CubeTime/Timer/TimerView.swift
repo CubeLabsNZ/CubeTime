@@ -150,13 +150,14 @@ struct TimerView: View {
                         .frame(width: geometry.size.width, height: geometry.size.height)
                         .environmentObject(stopWatchManager)
                     
-                    if targetFocused || manualInputFocused {
+                    if targetFocused || manualInputFocused /*|| (!manualInputFocused && showInputField)*/ {
 //                        Color.clear.contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
                         /// ^ this receives tap gesture but gesture is transferred to timertouchview below...
                         Color.white.opacity(0.000001) // workaround for now
                             .onTapGesture {
                                 targetFocused = false
                                 manualInputFocused = false
+                                showInputField = false
                             }
                     }
                 }
@@ -330,6 +331,35 @@ struct TimerView: View {
                 }
             }
             
+            if showInputField {
+                VStack {
+                    Spacer()
+                    
+                    HStack {
+                        Spacer()
+                        
+                        TextField("0.00", text: $manualInputTime)
+                            .focused($manualInputFocused)
+                            .frame(maxWidth: UIScreen.screenWidth-32)
+                            .font(.system(size: 56, weight: .bold, design: .monospaced))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(stopWatchManager.timerColour)
+                            .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
+                            .modifier(DynamicText())
+                            .modifier(TimeMaskTextField(text: $manualInputTime))
+                            
+                        
+                        Spacer()
+                    }
+                    
+                        
+                    Spacer()
+                }
+                .ignoresSafeArea(edges: .all)
+                
+
+            }
+            
             if stopWatchManager.showPenOptions {
                 HStack(alignment: .center) {
                     Spacer()
@@ -346,26 +376,56 @@ struct TimerView: View {
                                 }
                                 .offset(x: 1.5) // to future me who will refactor this, i've spent countless minutes trying to centre it in the bar and it just will not
                             }
-                            
-                            Rectangle()
-                                .fill(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
-                                .frame(width: 1.5, height: 20)
-                                .padding(.horizontal, 12)
                         }
                         
                         if currentSession.session_type != 2 {
+                            if !manualInputFocused {
+                                Rectangle()
+                                    .fill(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
+                                    .frame(width: 1.5, height: 20)
+                                    .padding(.horizontal, 12)
+                            }
+                            
                             PenaltyBar(manualInputFocused ? 68 : 34) {
                                 Button(action: {
                                     if manualInputFocused {
                                         if manualInputTime != "" {
+                                            
+                                            print("here1")
+                                            print(manualInputTime)
+                                            print(showInputField)
+                                            print(manualInputFocused)
+                                            
+                                            
                                             stopWatchManager.stop(timeFromStr(manualInputTime))
                                             
+                                            
                                             showInputField = false
+                                            
+                                            
                                             manualInputFocused = false
+
+                                            manualInputTime = ""
                                         }
                                     } else {
+                                        print("here2")
+                                        print(manualInputTime)
+                                        print(showInputField)
+                                        print(manualInputFocused)
+                                        
+                                        
                                         showInputField = true
-                                        manualInputFocused = true
+                                        
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                            manualInputFocused = true
+                                        }
+                                        
+                                        
+                                        
+                                        manualInputTime = ""
+                                        
+                                        print(showInputField)
+                                        print(manualInputFocused)
                                     }
                                 }, label: {
                                     if manualInputFocused {
@@ -397,33 +457,7 @@ struct TimerView: View {
             
             
             
-            if showInputField {
-                VStack {
-                    Spacer()
-                    
-                    HStack {
-                        Spacer()
-                        
-                        TextField("0.00", text: $manualInputTime)
-                            .focused($manualInputFocused)
-                            .frame(maxWidth: UIScreen.screenWidth-32)
-                            .font(.system(size: 56, weight: .bold, design: .monospaced))
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(stopWatchManager.timerColour)
-                            .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
-                            .modifier(DynamicText())
-                            .modifier(TimeMaskTextField(text: $manualInputTime))
-                        
-                        Spacer()
-                    }
-                    
-                        
-                    Spacer()
-                }
-                .ignoresSafeArea(edges: .all)
-                
-
-            }
+            
                         
             
             
