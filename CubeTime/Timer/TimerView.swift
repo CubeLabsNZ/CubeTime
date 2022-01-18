@@ -208,6 +208,7 @@ struct TimerView: View {
                                 .pickerStyle(.menu)
                                 .padding(.leading, 6)
                                 .padding(.trailing)
+                                .accentColor(accentColour)
                             case .multiphase:
                                 Text("MULTIPHASE")
                                     .font(.system(size: 17, weight: .medium))
@@ -236,8 +237,6 @@ struct TimerView: View {
                                         try! managedObjectContext.save()
                                     }
                                      */
-                                    
-                                    
                                 }
                                 .padding(.leading, 6)
                                 .padding(.trailing)
@@ -255,6 +254,7 @@ struct TimerView: View {
                                             .font(.system(size: 15, weight: .regular))
                                     }
                                 }
+                                .accentColor(accentColour)
                                 .pickerStyle(.menu)
                                 .onChange(of: playgroundScrambleType) { newValue in
                                     currentSession.scramble_type = Int32(newValue)
@@ -281,6 +281,7 @@ struct TimerView: View {
                                 HStack (spacing: 10) {
                                     Image(systemName: "target")
                                         .font(.system(size: 15))
+                                        .foregroundColor(accentColour)
                                     
                                     ZStack {
                                         Text(targetStr == "" ? "0.00" : targetStr)
@@ -295,6 +296,7 @@ struct TimerView: View {
                                             .submitLabel(.done)
                                             .focused($targetFocused)
                                             .multilineTextAlignment(.leading)
+                                            .tint(accentColour)
                                             .modifier(TimeMaskTextField(text: $targetStr, onReceiveAlso: { text in
                                                 if let time = timeFromStr(text) {
                                                     (currentSession as! CompSimSession).target = time
