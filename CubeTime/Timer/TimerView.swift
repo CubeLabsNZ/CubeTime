@@ -365,7 +365,7 @@ struct TimerView: View {
                         if !manualInputFocused {
                             PenaltyBar(114) {
                                 HStack(spacing: 12) {
-                                    PenaltyButton(penType: .plustwo, penSymbol: "+2", imageSymbol: true, canType: false, colour: Color.yellow)
+                                    PenaltyButton(penType: .plustwo, penSymbol: "+2", imageSymbol: true, canType: false, colour: Color.orange)
                                     
                                     PenaltyButton(penType: .dnf, penSymbol: "xmark.circle", imageSymbol: false, canType: false, colour: Color.red)
                                     
