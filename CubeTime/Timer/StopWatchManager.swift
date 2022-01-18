@@ -333,7 +333,11 @@ class StopWatchManager: ObservableObject {
     
     
     func changedPen() {
-        withAnimation {
+        if PenTypes(rawValue: solveItem.penalty)! == .plustwo {
+            withAnimation {
+                secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
+            }
+        } else {
             secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
         }
     }

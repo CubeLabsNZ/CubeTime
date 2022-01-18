@@ -100,7 +100,7 @@ struct TimerView: View {
                         .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : 18, weight: .semibold, design: .monospaced))
                         .frame(maxHeight: UIScreen.screenHeight/3)
                         .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
-                        .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+//                        .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
                     
                     Spacer()
                 }
@@ -112,8 +112,7 @@ struct TimerView: View {
                 Spacer()
                 
                 Text(stopWatchManager.secondsStr)
-                    .foregroundColor(
-                        {
+                    .foregroundColor({
                             if stopWatchManager.mode == .inspecting && colourScheme == .dark && stopWatchManager.timerColour == TimerTextColours.timerDefaultColour {
                                 switch stopWatchManager.inspectionSecs {
                                 case ..<8: return TimerTextColours.timerDefaultColour
