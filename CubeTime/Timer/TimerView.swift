@@ -291,22 +291,16 @@ struct TimerView: View {
                                         TextField("0.00", text: $targetStr)
                                             .frame(width: textRect.width + CGFloat(targetStr.count > 6 ? 12 : 6))
     //                                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                            .keyboardType(.numberPad)
                                             .submitLabel(.done)
                                             .focused($targetFocused)
                                             .multilineTextAlignment(.leading)
-                                            .onReceive(Just(targetStr)) { newValue in
-                                                let filtered = filteredTimeInput(newValue)
-                                                if filtered != newValue {
-                                                    self.targetStr = filtered
-                                                }
-                                                
-                                                if let time = timeFromStr(targetStr) {
+                                            .modifier(TimeMaskTextField(text: $targetStr, onReceiveAlso: { text in
+                                                if let time = timeFromStr(text) {
                                                     (currentSession as! CompSimSession).target = time
                                                     
                                                     try! managedObjectContext.save()
                                                 }
-                                            }
+                                            }))
                                             .padding(.trailing, 4)
                                     }
                                         
@@ -402,17 +396,8 @@ struct TimerView: View {
                             .multilineTextAlignment(.center)
                             .foregroundColor(stopWatchManager.timerColour)
                             .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
-                            .keyboardType(.numberPad)
-                            .onReceive(Just(manualInputTime)) { newValue in
-                                let filtered = filteredTimeInput(newValue)
-                                
-                                if filtered != newValue {
-                                    self.manualInputTime = filtered
-                                }
-                            }
-                        
-                        
                             .modifier(DynamicText())
+                            .modifier(TimeMaskTextField(text: $manualInputTime))
                         
                         Spacer()
                     }
