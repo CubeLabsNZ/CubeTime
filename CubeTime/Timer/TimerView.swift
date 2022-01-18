@@ -243,11 +243,7 @@ struct TimerView: View {
                             case .playground:
                                 Text("PLAYGROUND")
                                     .font(.system(size: 17, weight: .medium))
-                                    .onTapGesture() {
-                                        #if DEBUG
-                                        NSLog("\(playgroundScrambleType), currentsession: \(currentSession.scramble_type)")
-                                        #endif
-                                    }
+                                    
                                 Picker("", selection: $playgroundScrambleType) {
                                     ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
                                         Text(element.name).tag(index)
@@ -391,13 +387,6 @@ struct TimerView: View {
                                 Button(action: {
                                     if manualInputFocused {
                                         if manualInputTime != "" {
-                                            
-                                            print("here1")
-                                            print(manualInputTime)
-                                            print(showInputField)
-                                            print(manualInputFocused)
-                                            
-                                            
                                             stopWatchManager.stop(timeFromStr(manualInputTime))
                                             
                                             
@@ -409,24 +398,14 @@ struct TimerView: View {
                                             manualInputTime = ""
                                         }
                                     } else {
-                                        print("here2")
-                                        print(manualInputTime)
-                                        print(showInputField)
-                                        print(manualInputFocused)
-                                        
-                                        
                                         showInputField = true
                                         
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                                             manualInputFocused = true
                                         }
                                         
-                                        
-                                        
                                         manualInputTime = ""
                                         
-                                        print(showInputField)
-                                        print(manualInputFocused)
                                     }
                                 }, label: {
                                     if manualInputFocused {

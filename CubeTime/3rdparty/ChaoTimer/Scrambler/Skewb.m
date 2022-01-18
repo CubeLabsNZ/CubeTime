@@ -106,7 +106,6 @@ bool ini = false;
                         }
                     }
                 }
-        //System.out.println(depth+" "+nVisited);
     }
     
     for(int depth = 0; depth < 7; depth++) {
@@ -127,7 +126,6 @@ bool ini = false;
                                 }
                             }
                         }
-        //System.out.println(depth+" "+nVisited);
     }
     ini = true;
 }

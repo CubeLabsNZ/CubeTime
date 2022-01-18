@@ -101,10 +101,6 @@ struct MainTabsView: View {
         let fetchedSession: Sessions
         
         if lastUsedSessionURI == nil {
-            #if DEBUG
-            NSLog("Saved ID is nil, creating default object")
-            #endif
-            
             fetchedSession = Sessions(context: managedObjectContext) // TODO make it playground
             fetchedSession.scramble_type = 1
             fetchedSession.session_type = SessionTypes.playground.rawValue

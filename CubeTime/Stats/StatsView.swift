@@ -388,9 +388,6 @@ struct StatsView: View {
                                 if SessionTypes(rawValue: currentSession.session_type)! == .multiphase {
                                     StatsBlock("AVERAGE PHASES", timesBySpeedNoDNFs.count == 0 ? 150 : nil, true, false) {
                                         
-                                        let _ = NSLog("\(timesByDateNoDNFs.count)")
-                                        
-                                        
                                         if timesByDateNoDNFs.count > 0 {
                                             AveragePhases(phaseTimes: phases!)
                                                 .padding(.top, 20)

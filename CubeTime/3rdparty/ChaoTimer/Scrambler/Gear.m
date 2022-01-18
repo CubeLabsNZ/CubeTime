@@ -68,7 +68,6 @@ NSArray *turnge, *suffge;
                             }
                         }
                     }
-            //System.out.println(d+" "+n);
         }
     }
 }
