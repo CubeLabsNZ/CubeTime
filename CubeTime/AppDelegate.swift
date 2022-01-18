@@ -10,7 +10,7 @@ import UIKit
 import SwiftUI
 
 
-
+/*
 final class AppDelegate: NSObject, UIApplicationDelegate {
     var shortcutItem: UIApplicationShortcutItem? {
         AppDelegate.shortcutItem
@@ -58,3 +58,4 @@ private final class CustomSceneDelegate: UIResponder, UIWindowSceneDelegate {
         AppDelegate.shortcutItem = shortcutItem
     }
 }
+*/

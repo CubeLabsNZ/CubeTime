@@ -6,9 +6,11 @@ import CoreData
 @main
 struct CubeTime: App {
     @Environment(\.scenePhase) var phase
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
+    /*
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     var shortcutItem: UIApplicationShortcutItem?
+     */
     
     
     let persistenceController: PersistenceController
@@ -34,13 +36,13 @@ struct CubeTime: App {
     
     var body: some Scene {
         WindowGroup {
-            MainTabsView(appDelegate.shortcutItem, managedObjectContext: moc)
+            MainTabsView(managedObjectContext: moc)
                 .environment(\.managedObjectContext, moc)
         }
-        .onChange(of: phase) { newValue in
-            if newValue == .active {
-                print(appDelegate.shortcutItem)
-            }
-        }
+//        .onChange(of: phase) { newValue in
+//            if newValue == .active {
+//                print(appDelegate.shortcutItem)
+//            }
+//        }
     }
 }

@@ -81,7 +81,7 @@ struct MainTabsView: View {
     @State var hideTabBar = false
     @State var currentSession: Sessions
     
-    var shortcutItem: UIApplicationShortcutItem?
+//    var shortcutItem: UIApplicationShortcutItem?
     
     
     @AppStorage("onboarding") var showOnboarding: Bool = true
@@ -89,12 +89,14 @@ struct MainTabsView: View {
     @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
         
-    init(_ shortcutItem: UIApplicationShortcutItem?, managedObjectContext: NSManagedObjectContext) {
+    init(managedObjectContext: NSManagedObjectContext) {
         let lastUsedSessionURI = UserDefaults.standard.url(forKey: "last_used_session")
-            
+        
+        /*
         if let shortcutItem = shortcutItem {
             self.shortcutItem = shortcutItem
         }
+         */
         
         let fetchedSession: Sessions
         
@@ -148,10 +150,12 @@ struct MainTabsView: View {
 
                 BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
                     .zIndex(1)
+                    .ignoresSafeArea(.keyboard)
             }
             .sheet(isPresented: $showOnboarding, onDismiss: { pageIndex = 0 }) {
                 OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
             }
+            /*
             .onChange(of: scenePhase) { newValue in
                 if newValue == .active {
                     if let shortcutItem = shortcutItem {
@@ -175,6 +179,7 @@ struct MainTabsView: View {
                     }
                 }
             }
+             */
         }
         .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
         .tint(accentColour)

@@ -132,12 +132,12 @@ struct AppearanceSettingsView: View {
                                 .font(.system(size: 13, weight: .medium))
                                 .foregroundColor(Color(uiColor: .systemGray))
                                 .multilineTextAlignment(.leading)
-                                .padding(.leading)
+                                .padding(.horizontal)
                                 .padding(.bottom, 12)
                                 .padding(.top, 10)
-                                .padding(.trailing)
                         } else {
                             VStack(alignment: .leading, spacing: 0) {
+                                /* add this switch back when dynamic gradient added
                                 HStack {
                                     Toggle(isOn: $staticGradient) {
                                         Text("Use Static Gradient")
@@ -148,15 +148,15 @@ struct AppearanceSettingsView: View {
                                 }
                                 .padding(.horizontal)
                                 .padding(.bottom, 10)
+                                 */
                                 
                                 Text("By default, the gradient is static. Dynamic gradient coming soon!")
 //                                Text("By default, the gradient is dynamic and changes throughout the day. If turned off, the gradient will only be of static colours.")
                                     .font(.system(size: 13, weight: .medium))
                                     .foregroundColor(Color(uiColor: .systemGray))
                                     .multilineTextAlignment(.leading)
-                                    .padding(.leading)
+                                    .padding(.horizontal)
                                     .padding(.bottom, 12)
-                                    .padding(.trailing)
                                 
                                 if staticGradient {
                                     LazyVGrid(columns: columns, spacing: 16) {

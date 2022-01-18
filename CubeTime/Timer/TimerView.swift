@@ -150,12 +150,13 @@ struct TimerView: View {
                         .frame(width: geometry.size.width, height: geometry.size.height)
                         .environmentObject(stopWatchManager)
                     
-                    if targetFocused {
+                    if targetFocused || manualInputFocused {
 //                        Color.clear.contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
                         /// ^ this receives tap gesture but gesture is transferred to timertouchview below...
                         Color.white.opacity(0.000001) // workaround for now
                             .onTapGesture {
                                 targetFocused = false
+                                manualInputFocused = false
                             }
                     }
                 }
@@ -340,45 +341,57 @@ struct TimerView: View {
                     Spacer()
                     
                     HStack(spacing: 0) {
-                        PenButton(penType: .plustwo, penText: "+2", darkModeTint: .yellow, width: 35)
-                        .padding(5)
-                        
-                        PenButton(penType: .dnf, penText: "DNF", darkModeTint: .red, width: 50)
-                        .padding(.vertical, 5)
-                        .padding(.horizontal, 2)
-                        
-                        PenButton(penType: .none, penText: "OK", darkModeTint: .green, width: 35)
-                        .padding(5)
-                        
-                        Divider()
-                            .frame(width: nil, height: 35)
-                            .padding(.vertical, 4)
-                        
-                        TimerButton(handler: {
-                            if manualInputFocused {
-                                if manualInputTime != "" {
-                                    stopWatchManager.stop(timeFromStr(manualInputTime))
+                        if !manualInputFocused {
+                            PenaltyBar(114) {
+                                HStack(spacing: 12) {
+                                    PenaltyButton(penType: .plustwo, penSymbol: "+2", imageSymbol: true, canType: false, colour: Color.yellow)
                                     
-                                    showInputField = false
-                                    manualInputFocused = false
+                                    PenaltyButton(penType: .dnf, penSymbol: "xmark.circle", imageSymbol: false, canType: false, colour: Color.red)
+                                    
+                                    PenaltyButton(penType: .none, penSymbol: "checkmark.circle", imageSymbol: false, canType: false, colour: Color.green)
                                 }
-                            } else {
-                                showInputField = true
-                                manualInputFocused = true
+                                .offset(x: 1.5) // to future me who will refactor this, i've spent countless minutes trying to centre it in the bar and it just will not
                             }
                             
-                        }, width: manualInputFocused ? 60 : 35, text: manualInputFocused ? "DONE" : "+", tintColor: nil)
-                            .disabled(manualInputFocused ? (manualInputTime == "") : false)
-                            .padding(5)
+                            Rectangle()
+                                .fill(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
+                                .frame(width: 1.5, height: 20)
+                                .padding(.horizontal, 12)
+                        }
+                        
+                        if currentSession.session_type != 2 {
+                            PenaltyBar(manualInputFocused ? 68 : 34) {
+                                Button(action: {
+                                    if manualInputFocused {
+                                        if manualInputTime != "" {
+                                            stopWatchManager.stop(timeFromStr(manualInputTime))
+                                            
+                                            showInputField = false
+                                            manualInputFocused = false
+                                        }
+                                    } else {
+                                        showInputField = true
+                                        manualInputFocused = true
+                                    }
+                                }, label: {
+                                    if manualInputFocused {
+                                        Text("Done")
+                                            .font(.system(size: 21, weight: .semibold, design: .rounded))
+                                    } else {
+                                        Image(systemName: "plus.circle")
+                                            .font(.system(size: 24, weight: .semibold, design: .rounded))
+                                    }
+                                })
+                                    .disabled(manualInputFocused ? (manualInputTime == "") : false)
+                            }
+                        }
                     }
-                    .background(Color(uiColor: .systemGray5).clipShape(Capsule()))
-                    .animation(.spring(), value: manualInputFocused)
                     
                     Spacer()
                 }
-                .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 2)
-                .ignoresSafeArea(edges: .top)
-                .offset(y: 52)
+                .offset(y: 45)
+                .ignoresSafeArea(edges: .all)
+
             }
             
             
@@ -395,9 +408,11 @@ struct TimerView: View {
                     Spacer()
                     
                     HStack {
+                        Spacer()
+                        
                         TextField("0.00", text: $manualInputTime)
                             .focused($manualInputFocused)
-                            .frame(maxWidth: UIScreen.screenWidth)
+                            .frame(maxWidth: UIScreen.screenWidth-32)
                             .font(.system(size: 56, weight: .bold, design: .monospaced))
                             .multilineTextAlignment(.center)
                             .foregroundColor(stopWatchManager.timerColour)
@@ -464,5 +479,6 @@ struct TimerView: View {
             hideStatusBar = newMode == .inspecting || newMode == .running
         }
         .statusBar(hidden: hideStatusBar) /// TODO MAKE SO ANIMATION IS ASYMMETRIC WITH VALUES OF THE OTHER ANIMATIONS
+        .ignoresSafeArea(.keyboard)
     }
 }

@@ -99,7 +99,7 @@ struct TimeCard: View {
                 formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
                 try! managedObjectContext.save()
             } label: {
-                Label("+2", systemImage: "plus.circle") /// TODO: add custom icons because no good icons
+                Label("+2", image: "+2.label") /// TODO: add custom icons because no good icons
             }
             
             Button {
@@ -108,7 +108,7 @@ struct TimeCard: View {
                 formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
                 try! managedObjectContext.save()
             } label: {
-                Label("DNF", systemImage: "slash.circle") /// TODO: add custom icons because no good icons
+                Label("DNF", systemImage: "xmark.circle") /// TODO: add custom icons because no good icons
             }
             
             Divider()

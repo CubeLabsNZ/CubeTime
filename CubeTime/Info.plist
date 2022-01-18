@@ -17,6 +17,7 @@
 	<array>
 		<string>RecursiveSansLnrSt-Regular.ttf</string>
 	</array>
+    <!--
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>
@@ -54,5 +55,6 @@
 			<string>sessions</string>
 		</dict>
 	</array>
+    -->
 </dict>
 </plist>
