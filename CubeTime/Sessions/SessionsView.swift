@@ -122,15 +122,8 @@ struct CustomiseStandardSessionView: View {
                                 Spacer()
                                 
                                 TextField("0.00", text: $targetStr)
-                                    .keyboardType(.numberPad)
                                     .multilineTextAlignment(.trailing)
-                                    .onReceive(Just(targetStr)) { newValue in
-                                        // TODO make this accept dots from the user
-                                        let filtered = filteredTimeInput(newValue)
-                                        if filtered != newValue {
-                                            self.targetStr = filtered
-                                        }
-                                    }
+                                    .modifier(TimeMaskTextField(text: $targetStr))
                             }
                             .padding()
                         }
@@ -1044,14 +1037,8 @@ struct NewCompsimView: View {
                             Spacer()
                             
                             TextField("0.00", text: $targetStr)
-                                .keyboardType(.numberPad)
                                 .multilineTextAlignment(.trailing)
-                                .onReceive(Just(targetStr)) { newValue in
-                                    let filtered = filteredTimeInput(newValue)
-                                    if filtered != newValue {
-                                        self.targetStr = filtered
-                                    }
-                                }
+                                .modifier(TimeMaskTextField(text: $targetStr))
                         }
                         .padding()
                     }
