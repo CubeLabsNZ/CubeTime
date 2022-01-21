@@ -5,6 +5,7 @@ enum ProjectLicense {
     case cubetime
     case chaotimer
     case chartview
+    case svgkit
     case icons
     case recursivefont
     case privacypolicy
@@ -23,6 +24,8 @@ struct LicensePopUpView: View {
                 ChaoTimerLicense()
             case .chartview:
                 ChartViewLicense()
+            case .svgkit:
+                SVGKitLicense()
             case .icons:
                 CubingIconsLicense()
             case .recursivefont:
@@ -60,6 +63,10 @@ struct LicensesPopUpView: View {
                     }
                     Button("ChartView") {
                         projectLicense = .chartview
+                        showLicense = true
+                    }
+                    Button("SVGKit") {
+                        projectLicense = .svgkit
                         showLicense = true
                     }
                     Button("WCA Icons (Cubing Icons and Fonts)") {

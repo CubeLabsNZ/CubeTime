@@ -28,8 +28,7 @@ struct TimeDetail: View {
     // This is so that when the item is deleted they don't reset to default values
     let date: Date
     let time: String
-    let puzzle_type: PuzzleType
-    let puzzle_subtype: String
+    let puzzle_type: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
     let scramble: String
     
 //    @Binding var currentSession: Sessions
@@ -45,7 +44,6 @@ struct TimeDetail: View {
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
         self.time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
         self.puzzle_type = puzzle_types[Int(solve.scramble_type)]
-        self.puzzle_subtype = puzzle_type.subtypes[Int(solve.scramble_subtype)]!
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
         self._currentSolve = currentSolve ?? Binding.constant(nil)
         self.timeListManager = timeListManager
@@ -90,7 +88,7 @@ struct TimeDetail: View {
                         
                         VStack {
                             HStack {
-                                Image(puzzle_type.name)
+                                Image(puzzle_type.getDescription())
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 32, height: 32)
@@ -98,14 +96,14 @@ struct TimeDetail: View {
                                     .padding(.leading, 2)
                                     .padding(.trailing, 4)
                                 
-                                Text(puzzle_type.name)
+                                Text(puzzle_type.getDescription())
                                     .font(.system(size: 17, weight: .semibold, design: .default))
                                 
                                 Spacer()
                                 
-                                Text(puzzle_subtype.uppercased())
-                                    .font(.system(size: 13, weight: .semibold, design: .default))
-                                    .offset(y: 2)
+//                                Text(puzzle_type.getDescription().uppercased())
+//                                    .font(.system(size: 13, weight: .semibold, design: .default))
+//                                    .offset(y: 2)
                                 
                             }
                             .padding(.leading, 12)
@@ -115,7 +113,7 @@ struct TimeDetail: View {
                             Divider()
                                 .padding(.leading)
                             
-                            if puzzle_type.name == "Megaminx" {
+                            if puzzle_type.getKey() == "minx" {
                                 Text(scramble.dropLast())
                                 
                                 
@@ -366,8 +364,7 @@ struct TimeDetailViewOnly: View {
     // This is so that when the item is deleted they don't reset to default values
     let date: Date
     let time: String
-    let puzzle_type: PuzzleType
-    let puzzle_subtype: String
+    let puzzle_type: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
     let scramble: String
     
 //    @Binding var currentSession: Sessions
@@ -385,7 +382,6 @@ struct TimeDetailViewOnly: View {
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
         self.time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
         self.puzzle_type = puzzle_types[Int(solve.scramble_type)]
-        self.puzzle_subtype = puzzle_type.subtypes[Int(solve.scramble_subtype)]!
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
         self._currentSolve = currentSolve ?? Binding.constant(nil)
         self.timeListManager = timeListManager
@@ -431,7 +427,7 @@ struct TimeDetailViewOnly: View {
                         HStack {
                             //Image("sq-1")
                             //  .padding(.trailing, 8)
-                            Image(puzzle_type.name)
+                            Image(puzzle_type.getDescription())
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 32, height: 32)
@@ -440,14 +436,14 @@ struct TimeDetailViewOnly: View {
                                 .padding(.trailing, 4)
                             //.padding(.leading)
                             
-                            Text(puzzle_type.name)
+                            Text(puzzle_type.getDescription())
                                 .font(.system(size: 17, weight: .semibold, design: .default))
                             
                             Spacer()
                             
-                            Text(puzzle_subtype.uppercased())
-                                .font(.system(size: 13, weight: .semibold, design: .default))
-                                .offset(y: 2)
+//                            Text(puzzle_subtype.uppercased())
+//                                .font(.system(size: 13, weight: .semibold, design: .default))
+//                                .offset(y: 2)
                             
                         }
                         .padding(.leading, 12)
@@ -457,7 +453,7 @@ struct TimeDetailViewOnly: View {
                         Divider()
                             .padding(.leading)
                         
-                        if puzzle_type.name == "Megaminx" {
+                        if puzzle_type.getKey() == "minx" {
                             Text(scramble.dropLast())
                             
                             

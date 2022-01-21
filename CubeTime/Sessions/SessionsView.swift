@@ -94,7 +94,7 @@ struct CustomiseStandardSessionView: View {
                 
                 ScrollView {
                     VStack (alignment: .center, spacing: 0) {
-                        Image(puzzle_types[Int(sessionEventType)].name)
+                        Image(puzzle_types[Int(sessionEventType)].getDescription())
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .padding(.top)
@@ -498,7 +498,7 @@ struct NewStandardSessionView: View {
                 VStack (spacing: 16) {
                     
                     VStack (alignment: .center, spacing: 0) {
-                        Image(puzzle_types[Int(sessionEventType)].name)
+                        Image(puzzle_types[Int(sessionEventType)].getDescription())
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 100, height: 100)
@@ -532,7 +532,7 @@ struct NewStandardSessionView: View {
                             
                             Picker("", selection: $sessionEventType) {
                                 ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
-                                    Text(element.name).tag(Int32(index))
+                                    Text(element.getDescription()).tag(Int32(index))
                                 }
                             }
                             .pickerStyle(.menu)
@@ -552,7 +552,7 @@ struct NewStandardSessionView: View {
                                     sessionEventType = Int32(index)
                                 } label: {
                                     ZStack {
-                                        Image("circular-" + element.name)
+                                        Image("circular-" + element.getDescription())
                                         
                                         Circle()
                                             .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
@@ -663,7 +663,7 @@ struct NewAlgTrainerView: View {
                             
                             Picker("", selection: $sessionEventType) {
                                 ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
-                                    Text(element.name).tag(Int32(index))
+                                    Text(element.getDescription()).tag(Int32(index))
                                 }
                             }
                             .pickerStyle(.menu)
@@ -753,7 +753,7 @@ struct NewMultiphaseView: View {
                 VStack (spacing: 16) {
                     
                     VStack (alignment: .center, spacing: 0) {
-                        Image(puzzle_types[Int(sessionEventType)].name)
+                        Image(puzzle_types[Int(sessionEventType)].getDescription())
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 100, height: 100)
@@ -809,7 +809,7 @@ struct NewMultiphaseView: View {
                             
                             Picker("", selection: $sessionEventType) {
                                 ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
-                                    Text(element.name).tag(Int32(index))
+                                    Text(element.getDescription()).tag(Int32(index))
                                 }
                             }
                             .pickerStyle(.menu)
@@ -829,7 +829,7 @@ struct NewMultiphaseView: View {
                                     sessionEventType = Int32(index)
                                 } label: {
                                     ZStack {
-                                        Image("circular-" + element.name)
+                                        Image("circular-" + element.getDescription())
                                         
                                         Circle()
                                             .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
@@ -999,7 +999,7 @@ struct NewCompsimView: View {
                 VStack (spacing: 16) {
                     
                     VStack (alignment: .center, spacing: 0) {
-                        Image(puzzle_types[Int(sessionEventType)].name)
+                        Image(puzzle_types[Int(sessionEventType)].getDescription())
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 100, height: 100)
@@ -1055,7 +1055,7 @@ struct NewCompsimView: View {
                             
                             Picker("", selection: $sessionEventType) {
                                 ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
-                                    Text(element.name).tag(Int32(index))
+                                    Text(element.getDescription()).tag(Int32(index))
                                 }
                             }
                             .pickerStyle(.menu)
@@ -1075,7 +1075,7 @@ struct NewCompsimView: View {
                                     sessionEventType = Int32(index)
                                 } label: {
                                     ZStack {
-                                        Image("circular-" + element.name)
+                                        Image("circular-" + element.getDescription())
                                         
                                         Circle()
                                             .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
@@ -1218,7 +1218,7 @@ struct SessionCard: View {
                                     Text(item.name ?? "Unkown session name")
                                         .font(.system(size: 22, weight: .bold, design: .default))
                                         .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
-                                    Text(SessionTypes(rawValue: item.session_type)! != .playground ? puzzle_types[Int(item.scramble_type)].name : "Playground")
+                                    Text(SessionTypes(rawValue: item.session_type)! != .playground ? puzzle_types[Int(item.scramble_type)].getDescription() : "Playground")
                                         .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                                 }
                             } else {
@@ -1226,7 +1226,7 @@ struct SessionCard: View {
                                     Text(item.name ?? "Unkown session name")
                                         .font(.system(size: 22, weight: .bold, design: .default))
                                         .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
-                                    Text(SessionTypes(rawValue: item.session_type)! != .playground ? puzzle_types[Int(item.scramble_type)].name : "Playground")
+                                    Text(SessionTypes(rawValue: item.session_type)! != .playground ? puzzle_types[Int(item.scramble_type)].getDescription() : "Playground")
                                         .font(.system(size: 15, weight: .medium, design: .default))
                                         .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                                 }
@@ -1245,9 +1245,9 @@ struct SessionCard: View {
                     
                     Spacer()
                     
-                    if item.session_type != 3 {
+                    if item.session_type != SessionTypes.playground.rawValue {
                         if item.pinned {
-                            Image(puzzle_types[Int(item.scramble_type)].name)
+                            Image(puzzle_types[Int(item.scramble_type)].getDescription())
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
@@ -1255,7 +1255,7 @@ struct SessionCard: View {
                                 .padding(.bottom, 4)
                                 .padding(.trailing, 12)
                         } else {
-                            Image(puzzle_types[Int(item.scramble_type)].name)
+                            Image(puzzle_types[Int(item.scramble_type)].getDescription())
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .foregroundColor(colourScheme == .dark ? Color.white : Color.black)

@@ -307,7 +307,7 @@ struct StatsView: View {
                                     .foregroundColor(Color(uiColor: .systemGray))
                                 Spacer()
                                 
-                                Text(puzzle_types[Int(currentSession.scramble_type)].name) // TODO playground
+                                Text(puzzle_types[Int(currentSession.scramble_type)].getDescription()) // TODO playground
                                     .font(.system(size: 16, weight: .semibold, design: .default))
                                     .foregroundColor(Color(uiColor: .systemGray))
                             }

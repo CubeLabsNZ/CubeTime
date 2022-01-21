@@ -26,7 +26,7 @@ class StopWatchManager: ObservableObject {
     var feedbackStyle: UIImpactFeedbackGenerator?
     
     
-    let scrambler = CHTScrambler.init()
+//    let scrambler = CHTScrambler.init()
 
     
     @Published var scrambleStr: String? = nil
@@ -59,7 +59,7 @@ class StopWatchManager: ObservableObject {
         self.managedObjectContext = managedObjectContext
         secondsStr = formatSolveTime(secs: 0)
         calculateFeedbackStyle()
-        scrambler.initSq1()
+//        scrambler.initSq1()
         self.rescramble()
         
         tryUpdateCurrentSolveth()
@@ -339,10 +339,7 @@ class StopWatchManager: ObservableObject {
     }
     
     func safeGetScramble() -> String {
-        guard let scr = CHTScramble.getNewScramble(by: scrambler, type: puzzle_types[Int(currentSession.scramble_type)].scrID, subType: 0).scramble else {
-            return "Failed to load scramble."
-        }
-        return scr
+        return puzzle_types[Int(currentSession.scramble_type)].getScrambler()!.generateScramble()
     }
     
     func rescramble() {
