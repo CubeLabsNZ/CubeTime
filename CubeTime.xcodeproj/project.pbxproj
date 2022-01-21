@@ -49,6 +49,7 @@
 		7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */; };
 		7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7DDF2227955AFF00362DE9 /* PenButton.swift */; };
 		7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E2011275DD52600ADF01D /* Licenses.swift */; };
+		7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */; };
 		7D878BB1275D8DB3008AC443 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D878BB0275D8DB3008AC443 /* Stats.swift */; };
 /* End PBXBuildFile section */
 
@@ -126,6 +127,7 @@
 		7D7D205F274DE13A0016D804 /* txmerdata.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = txmerdata.xcdatamodel; sourceTree = "<group>"; };
 		7D7DDF2227955AFF00362DE9 /* PenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenButton.swift; sourceTree = "<group>"; };
 		7D7E2011275DD52600ADF01D /* Licenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Licenses.swift; sourceTree = "<group>"; };
+		7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleView.swift; sourceTree = "<group>"; };
 		7D878BB0275D8DB3008AC443 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -247,6 +249,7 @@
 				23E81E75275D917000B741E3 /* Stats */,
 				23E81E6D275D8DB500B741E3 /* Settings */,
 				23DE3BE0274DDBE300254D29 /* Preview Content */,
+				7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */,
 			);
 			path = CubeTime;
 			sourceTree = "<group>";
@@ -478,6 +481,7 @@
 				23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */,
 				7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */,
 				23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */,
+				7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */,
 				7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */,
 				237B35502761995F00CC39BF /* SettingsCard.swift in Sources */,
 				7D78FF8E276087AF008BB82E /* BottomTabsView.swift in Sources */,
