@@ -590,6 +590,8 @@ struct Legend: View {
 
 struct TimeTrend: View {
     @AppStorage(asKeys.gradientSelected.rawValue) var gradientSelected: Int = 6
+    @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
+    
     @ObservedObject var data: ChartData
     var title: String?
     var legend: String?
@@ -624,7 +626,9 @@ struct TimeTrend: View {
                                  maxDataValue: .constant(nil),
                                  showBackground: false
                             )
-                                .colouredGlow(gradientSelected: gradientSelected)
+                                .if(graphGlow) { view in
+                                    view.colouredGlow(gradientSelected: gradientSelected)
+                                }
                                 .offset(x: 30, y: 6)
                         }
                         .frame(width: geometry.frame(in: .local).size.width, height: 240)

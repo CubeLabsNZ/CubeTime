@@ -15,6 +15,9 @@ struct TimerView: View {
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @AppStorage("onboarding") private var showOnboarding: Bool = true
     
+    @AppStorage(gsKeys.showScramble.rawValue) var showScramble: Bool = true
+    @AppStorage(gsKeys.showStats.rawValue) var showStats: Bool = true
+    
     
     
     @EnvironmentObject var stopWatchManager: StopWatchManager
@@ -95,21 +98,32 @@ struct TimerView: View {
                     .offset(y: 45)
                 }
             } else if  stopWatchManager.mode == .stopped {
-                VStack {
-                    if let scr = stopWatchManager.scrambleStr {
+                if let scr = stopWatchManager.scrambleStr {
+                    VStack {
                         Text(scr)
                             .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : 18, weight: .semibold, design: .monospaced))
                             .frame(maxHeight: UIScreen.screenHeight/3)
                             .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
                             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
-                    } else {
-                        ProgressView("Loading scramble...")
+                        
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                    .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+                } else {
+                    HStack {
+                        Spacer()
+                        
+                        VStack {
+                            ProgressView()
+                                .frame(maxHeight: 35)
+                                .padding(.trailing)
+                            
+                            Spacer()
+                        }
                     }
                     
-                    Spacer()
                 }
-                .padding(.horizontal)
-                .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
             }
             
             VStack {
@@ -333,6 +347,56 @@ struct TimerView: View {
                     
                     Spacer()
                 }
+                
+                GeometryReader { geometry in
+                    VStack {
+                        Spacer()
+                        
+                        let maxWidth = geometry.size.width - 12 - UIScreen.screenWidth/2
+                        
+                        ZStack {
+                            if showScramble {
+                                HStack {
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                            .fill(Color(uiColor: .systemGray5))
+                                            .frame(width: maxWidth, height: 120)
+                                        
+                                        if let scr = stopWatchManager.scrambleStr {
+                                            /*
+                                            ScrambleImageView(puzzle: .constant(puzzle_types[Int(currentSession.scramble_type)]), scramble: .constant(scr))
+                                                .frame(maxWidth: maxWidth, maxHeight: 120)
+                                                .aspectRatio(contentMode: .fit)
+                                             */
+                                                
+                                        } else {
+                                            ProgressView()
+                                                .frame(maxWidth: maxWidth, maxHeight: 120)
+                                        }
+                                    }
+                                    .frame(minWidth: maxWidth-20, idealWidth: maxWidth-10, maxWidth: maxWidth, minHeight: 100, idealHeight: 110, maxHeight: 120)
+                                    
+                                    
+                                    Spacer()
+                                }
+                            }
+                            
+                            if showStats {
+                                HStack {
+                                    Spacer()
+                                    
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                            .fill(Color(uiColor: .systemGray5))
+                                            .frame(width: UIScreen.screenWidth/2, height: 120)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 50+12)
             }
             
             if showInputField {
@@ -369,25 +433,29 @@ struct TimerView: View {
                     Spacer()
                     
                     HStack(spacing: 0) {
-                        if !manualInputFocused {
-                            PenaltyBar(114) {
-                                HStack(spacing: 12) {
-                                    PenaltyButton(penType: .plustwo, penSymbol: "+2", imageSymbol: true, canType: false, colour: Color.yellow)
-                                    
-                                    PenaltyButton(penType: .dnf, penSymbol: "xmark.circle", imageSymbol: false, canType: false, colour: Color.red)
-                                    
-                                    PenaltyButton(penType: .none, penSymbol: "checkmark.circle", imageSymbol: false, canType: false, colour: Color.green)
+                        if !stopWatchManager.nilSolve {
+                            if !manualInputFocused {
+                                PenaltyBar(114) {
+                                    HStack(spacing: 12) {
+                                        PenaltyButton(penType: .plustwo, penSymbol: "+2", imageSymbol: true, canType: false, colour: Color.yellow)
+                                        
+                                        PenaltyButton(penType: .dnf, penSymbol: "xmark.circle", imageSymbol: false, canType: false, colour: Color.red)
+                                        
+                                        PenaltyButton(penType: .none, penSymbol: "checkmark.circle", imageSymbol: false, canType: false, colour: Color.green)
+                                    }
+                                    .offset(x: 1.5) // to future me who will refactor this, i've spent countless minutes trying to centre it in the bar and it just will not
                                 }
-                                .offset(x: 1.5) // to future me who will refactor this, i've spent countless minutes trying to centre it in the bar and it just will not
                             }
                         }
                         
                         if currentSession.session_type != 2 {
-                            if !manualInputFocused {
-                                Rectangle()
-                                    .fill(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
-                                    .frame(width: 1.5, height: 20)
-                                    .padding(.horizontal, 12)
+                            if !stopWatchManager.nilSolve {
+                                if !manualInputFocused {
+                                    Rectangle()
+                                        .fill(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
+                                        .frame(width: 1.5, height: 20)
+                                        .padding(.horizontal, 12)
+                                }
                             }
                             
                             PenaltyBar(manualInputFocused ? 68 : 34) {
@@ -451,21 +519,6 @@ struct TimerView: View {
                 .ignoresSafeArea(edges: .all)
 
             }
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-                        
-            
-            
-            
             
             
             

@@ -191,28 +191,16 @@ struct TimeDetailViewOnly: View {
                         
                         if puzzle_type.getKey() == "minx" {
                             Text(scramble.dropLast())
-                            
-                            
-                            
                                 .font(.system(size: (UIScreen.screenWidth-32) / (42.00) * 1.44, weight: .regular, design: .monospaced))
-                            
-//                                    .frame(maxWidth: UIScreen.screenWidth - 40)
-                            
-//                                    .minimumScaleFactor(0.5)
-//                                    .fixedSize(horizontal: true, vertical: false)
-                            
-//                                    .offset(x: 4)
-                            
                                 .foregroundColor(colourScheme == .light ? .black : .white)
-                            
-                                .padding([.bottom, .horizontal], 12)
-
-                            
+//                                .padding([.bottom, .horizontal], 12)
+                                .padding([.horizontal], 12)
                         } else {
                             Text(scramble)
                                 .font(.system(size: 16, weight: .regular, design: .monospaced))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
-                                .padding([.bottom, .horizontal], 12)
+//                                .padding([.bottom, .horizontal], 12)
+                                .padding([.horizontal], 12)
                         }
                         
                         if let scr = solve.scramble {
@@ -221,12 +209,12 @@ struct TimeDetailViewOnly: View {
                             
                             AsyncScrambleView(puzzle: .constant(puzzle_type), scramble: .constant(scr))
                                 .aspectRatio(contentMode: .fit)
-                                .padding(.horizontal)
+                                .frame(height: puzzle_type.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
+                                .padding(.horizontal, 32)
                                 .padding(.bottom)
                                 .padding(.top, 12)
                         }
                     }
-//                        .frame(maxHeight: puzzle_type.name == "Megaminx" ? 220 : nil)
                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
                     
                     .padding(.trailing)

@@ -81,8 +81,9 @@ func getTruncatedMinMax(numbers: Array<(Double, Int)>) -> (Double?, Double?) {
 
 
 struct TimeDistribution: View {
-    @AppStorage(asKeys.gradientSelected.rawValue) var gradientSelected: Int = 6
-    
+    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
+
     
     @Binding var currentSession: Sessions
     
@@ -166,7 +167,9 @@ struct TimeDistribution: View {
                                         .multilineTextAlignment(.center)
                                         .font(.system(size: 10, weight: .bold, design: .monospaced))
                                 }
-                                .colouredGlow(gradientSelected: gradientSelected)
+                                .if(graphGlow) { view in
+                                    view.colouredGlow(gradientSelected: gradientSelected)
+                                }
                             
                             Text((datum == 0 ? "<" : (datum == data.count-1 ? ">" : ""))+formatLegendTime(secs: data[datum].0, dp: 1)+(datum != 0 && datum != data.count-1 ? "+" : ""))
                                 .foregroundColor(Color(uiColor: .systemGray2))

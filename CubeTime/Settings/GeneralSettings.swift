@@ -2,7 +2,7 @@ import SwiftUI
 
 
 enum gsKeys: String {
-    case inspection, freeze, timeDpWhenRunning, hapBool, hapType, gestureDistance, displayDP
+    case inspection, freeze, timeDpWhenRunning, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats, scrambleSize
 }
 
 extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
@@ -19,6 +19,11 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.hapType.rawValue) var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
     @AppStorage(gsKeys.gestureDistance.rawValue) var gestureActivationDistance: Double = 50
     @AppStorage(gsKeys.displayDP.rawValue) var displayDP: Int = 3
+    
+    @AppStorage(gsKeys.showScramble.rawValue) var showScramble: Bool = true
+    @AppStorage(gsKeys.showStats.rawValue) var showStats: Bool = true
+    
+    @AppStorage(gsKeys.scrambleSize.rawValue) var scrambleSize: Int = 0
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
@@ -105,7 +110,58 @@ struct GeneralSettingsView: View {
                     }
                 }
             }
-//            .modifier(settingsBlocks())
+            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            
+            VStack(alignment: .leading) {
+                HStack {
+                    Image(systemName: "wrench")
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundColor(accentColour)
+                    Text("Timer Tools")
+                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                    
+                    Spacer()
+                }
+                .padding([.horizontal, .top], 10)
+                
+                
+                
+                HStack {
+                    Toggle(isOn: $showScramble) {
+                        Text("Show draw scramble on timer")
+                            .font(.system(size: 17, weight: .medium))
+                    }
+                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                    
+                }
+                .padding(.horizontal)
+                .onChange(of: inspectionTime) { newValue in
+                    stopWatchManager.inspectionEnabled = newValue
+                }
+                
+                Divider()
+                
+                
+                HStack {
+                    Toggle(isOn: $showStats) {
+                        Text("Show stats on timer")
+                            .font(.system(size: 17, weight: .medium))
+                    }
+                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                    
+                }
+                .padding(.horizontal)
+                .onChange(of: inspectionTime) { newValue in
+                    stopWatchManager.inspectionEnabled = newValue
+                }
+                
+                Text("Show scramble/statistics on the timer screen.")
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundColor(Color(uiColor: .systemGray))
+                    .multilineTextAlignment(.leading)
+                    .padding(.horizontal)
+                    .padding(.bottom, 12)
+            }
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
             
             VStack {
@@ -121,17 +177,11 @@ struct GeneralSettingsView: View {
                 .padding([.horizontal, .top], 10)
                 
                 
-                
-                
-                Divider()
-                
                 HStack {
                     Toggle(isOn: $hapticFeedback) {
                         Text("Haptic Feedback")
                             .font(.system(size: 17, weight: .medium))
                     }
-//                        .toggleStyle(SwitchToggleStyle(tint: Color("AccentColor")))
-                    
                 }
                 .padding(.horizontal)
                 .onChange(of: hapticFeedback) { newValue in
