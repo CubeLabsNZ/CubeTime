@@ -219,7 +219,7 @@ struct TimeDetailViewOnly: View {
                             Divider()
                                 .padding(.leading)
                             
-                            ScrambleImageView(puzzle: .constant(puzzle_type), scramble: .constant(scr))
+                            AsyncScrambleView(puzzle: .constant(puzzle_type), scramble: .constant(scr))
                                 .aspectRatio(contentMode: .fit)
                                 .padding(.horizontal)
                                 .padding(.bottom)
