@@ -362,17 +362,9 @@ struct TimerView: View {
                                             .fill(Color(uiColor: .systemGray5))
                                             .frame(width: maxWidth, height: 120)
                                         
-                                        if let scr = stopWatchManager.scrambleStr {
-                                            /*
-                                            ScrambleImageView(puzzle: .constant(puzzle_types[Int(currentSession.scramble_type)]), scramble: .constant(scr))
-                                                .frame(maxWidth: maxWidth, maxHeight: 120)
-                                                .aspectRatio(contentMode: .fit)
-                                             */
-                                                
-                                        } else {
-                                            ProgressView()
-                                                .frame(maxWidth: maxWidth, maxHeight: 120)
-                                        }
+                                        TimerScrambleView(svg: stopWatchManager.scrambleSVG)
+                                            .frame(maxWidth: maxWidth, maxHeight: 120)
+                                            .aspectRatio(contentMode: .fit)
                                     }
                                     .frame(minWidth: maxWidth-20, idealWidth: maxWidth-10, maxWidth: maxWidth, minHeight: 100, idealHeight: 110, maxHeight: 120)
                                     

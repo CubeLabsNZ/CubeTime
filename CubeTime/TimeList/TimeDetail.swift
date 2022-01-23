@@ -207,7 +207,7 @@ struct TimeDetailViewOnly: View {
                             Divider()
                                 .padding(.leading)
                             
-                            AsyncScrambleView(puzzle: .constant(puzzle_type), scramble: .constant(scr))
+                            AsyncScrambleView(puzzle: puzzle_type, scramble: scr)
                                 .aspectRatio(contentMode: .fit)
                                 .frame(height: puzzle_type.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
                                 .padding(.horizontal, 32)

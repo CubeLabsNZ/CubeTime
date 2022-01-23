@@ -18,24 +18,38 @@ struct SVGView: UIViewRepresentable {
 
 struct AsyncScrambleView: View {
     @State var svg = ""
-    @Binding var puzzle: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
-    @Binding var scramble: String
+    var puzzle: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
+    var scramble: String
     
     var body: some View {
+        let _ = NSLog("async something")
         Group {
             if svg == "" {
-                ProgressView("Loading scramble image")
+                ProgressView()
                     .progressViewStyle(.linear)
             } else {
                 SVGView(svg: $svg)
             }
-        }.task {
-            let task = Task.detached(priority: .userInitiated) { () -> String in 
+        }
+        .task {
+            NSLog("task")
+            let task = Task.detached(priority: .userInitiated) { () -> String in
                 NSLog("ismainthread \(Thread.isMainThread)")
                 return JavaUtilObjects.toString(withId: puzzle.getScrambler().drawScramble(with: scramble, with: nil))
             }
             let result = await task.result
             svg = try! result.get()
+        }
+    }
+}
+
+struct TimerScrambleView: View {
+    let svg: String?
+    var body: some View {
+        if let svg = svg {
+            SVGView(svg: .constant(svg))
+        } else {
+            ProgressView()
         }
     }
 }

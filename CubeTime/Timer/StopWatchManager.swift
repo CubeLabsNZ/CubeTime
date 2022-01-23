@@ -30,6 +30,7 @@ class StopWatchManager: ObservableObject {
 
     
     @Published var scrambleStr: String? = nil
+    @Published var scrambleSVG: String? = nil
     var prevScrambleStr: String! = nil
     
     @Published var secondsStr = ""
@@ -348,7 +349,7 @@ class StopWatchManager: ObservableObject {
     }
     
     func safeGetScramble() -> String {
-        return puzzle_types[Int(currentSession.scramble_type)].getScrambler()!.generateScramble()
+        return puzzle_types[Int(currentSession.scramble_type)].getScrambler().generateScramble()
     }
     
     let group = DispatchGroup()
@@ -357,7 +358,8 @@ class StopWatchManager: ObservableObject {
         NSLog("rescramble")
         group.enter()
         prevScrambleStr = scrambleStr
-        self.scrambleStr = nil
+        scrambleStr = nil
+        scrambleSVG = nil
         var scramble: String = "Failed to load scramble."
         DispatchQueue.global(qos: .userInitiated).async {
             scramble = self.safeGetScramble()
@@ -365,8 +367,14 @@ class StopWatchManager: ObservableObject {
         }
         group.notify(queue: .main) {
             self.scrambleStr = scramble
+            DispatchQueue.global(qos: .userInitiated).async {
+                let svg = JavaUtilObjects.toString(withId: puzzle_types[Int(self.currentSession.scramble_type)].getScrambler().drawScramble(with: scramble, with: nil))
+                
+                DispatchQueue.main.async {
+                    self.scrambleSVG = svg
+                }
+            }
         }
-        
     }
     
     func changeCurrentSession(_ session: Sessions) {
