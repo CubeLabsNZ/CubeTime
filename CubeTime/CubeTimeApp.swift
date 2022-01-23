@@ -7,8 +7,9 @@ import CoreData
 struct CubeTime: App {
     @Environment(\.scenePhase) var phase
     
-    /*
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+    /*
     var shortcutItem: UIApplicationShortcutItem?
      */
     
@@ -19,6 +20,9 @@ struct CubeTime: App {
     init() {
         persistenceController = PersistenceController.shared
         moc = persistenceController.container.viewContext
+        
+        
+//        UIApplication.shared.isIdleTimerDisabled = true
         
         let userDefaults = UserDefaults.standard
         userDefaults.register(

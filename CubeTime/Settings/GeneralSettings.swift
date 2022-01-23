@@ -2,7 +2,7 @@ import SwiftUI
 
 
 enum gsKeys: String {
-    case inspection, freeze, timeDpWhenRunning, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats
+    case inspection, freeze, timeDpWhenRunning, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats, scrambleSize
 }
 
 extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
@@ -22,6 +22,8 @@ struct GeneralSettingsView: View {
     
     @AppStorage(gsKeys.showScramble.rawValue) var showScramble: Bool = true
     @AppStorage(gsKeys.showStats.rawValue) var showStats: Bool = true
+    
+    @AppStorage(gsKeys.scrambleSize.rawValue) var scrambleSize: Int = 0
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
