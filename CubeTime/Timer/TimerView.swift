@@ -99,11 +99,15 @@ struct TimerView: View {
                 }
             } else if  stopWatchManager.mode == .stopped {
                 VStack {
-                    Text(stopWatchManager.scrambleStr ?? "Loading scramble...")
-                        .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : 18, weight: .semibold, design: .monospaced))
-                        .frame(maxHeight: UIScreen.screenHeight/3)
-                        .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
-                        .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+                    if let scr = stopWatchManager.scrambleStr {
+                        Text(scr)
+                            .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : 18, weight: .semibold, design: .monospaced))
+                            .frame(maxHeight: UIScreen.screenHeight/3)
+                            .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
+                            .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+                    } else {
+                        ProgressView("Loading scramble...")
+                    }
                     
                     Spacer()
                 }
@@ -262,7 +266,7 @@ struct TimerView: View {
                                 .pickerStyle(.menu)
                                 .onChange(of: playgroundScrambleType) { newValue in
                                     currentSession.scramble_type = Int32(newValue)
-                                    stopWatchManager.nextScrambleStr = nil
+//                                    stopWatchManager.nextScrambleStr = nil
                                     stopWatchManager.rescramble()
                                     // TODO do not rescramble when setting to same scramble eg 3blnd -> 3oh
                                 }

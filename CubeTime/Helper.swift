@@ -240,28 +240,26 @@ extension View {
 
 
 
-// TODO 3BLD
-
 let puzzle_types: [OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry] = [
     OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.TWO,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry_get_THREE().unsafelyUnwrapped,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry_get_FOUR().unsafelyUnwrapped,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry_get_FIVE().unsafelyUnwrapped,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry_get_SIX().unsafelyUnwrapped,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry_get_SEVEN().unsafelyUnwrapped,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry_get_SQ1().unsafelyUnwrapped,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry_get_MEGA().unsafelyUnwrapped,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry_get_PYRA().unsafelyUnwrapped,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry_get_CLOCK().unsafelyUnwrapped,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry_get_SKEWB().unsafelyUnwrapped,
+    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.THREE,
+    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.FOUR_FAST,
+    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.FIVE,
+    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.SIX,
+    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.SEVEN,
+    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.SQ1,
+    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.MEGA,
+    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.PYRA,
+    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.CLOCK,
+    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.SKEWB,
     
     // One hand
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry_get_THREE().unsafelyUnwrapped,
+    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.THREE,
     
     // Blind
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry_get_THREE().unsafelyUnwrapped,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry_get_FOUR().unsafelyUnwrapped,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry_get_FIVE().unsafelyUnwrapped
+    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.THREE,
+    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.FOUR_FAST,
+    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.FIVE
 ]
 
 
