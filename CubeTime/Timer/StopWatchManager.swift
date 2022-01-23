@@ -30,7 +30,7 @@ class StopWatchManager: ObservableObject {
 
     
     @Published var scrambleStr: String? = nil
-    var nextScrambleStr: String? = nil
+    var prevScrambleStr: String! = nil
     
     @Published var secondsStr = ""
     var secondsElapsed = 0.0
@@ -117,6 +117,9 @@ class StopWatchManager: ObservableObject {
     }
     
     func start() {
+        #if DEBUG
+        NSLog("starting")
+        #endif
         mode = .running
         
         timer?.invalidate() // Stop possibly running inspections
@@ -137,6 +140,9 @@ class StopWatchManager: ObservableObject {
     
     
     func stop(_ time: Double?) {
+        #if DEBUG
+        NSLog("stopping")
+        #endif
         timer?.invalidate()
         
         if let time = time {
@@ -181,7 +187,7 @@ class StopWatchManager: ObservableObject {
         solveItem.penalty = penType.rawValue
         // .puzzle_id
         solveItem.session = currentSession
-        solveItem.scramble = scrambleStr
+        solveItem.scramble = prevScrambleStr
         solveItem.scramble_type = currentSession.scramble_type
         solveItem.scramble_subtype = 0
         solveItem.time = self.secondsElapsed
@@ -242,7 +248,6 @@ class StopWatchManager: ObservableObject {
                     prevDownStoppedTimer = true
                     justInspected = false
                     stop(nil)
-                    self.rescramble()
                 }
             } else {
                 
@@ -251,7 +256,6 @@ class StopWatchManager: ObservableObject {
                 prevDownStoppedTimer = true
                 justInspected = false
                 stop(nil)
-                self.rescramble()
             }
         }
     }
@@ -311,12 +315,16 @@ class StopWatchManager: ObservableObject {
         if !prevDownStoppedTimer {
             if inspectionEnabled ? mode == .inspecting : mode == .stopped {
                 start()
+                if !inspectionEnabled {
+                    rescramble()
+                }
             }
         }
         
         
         if inspectionEnabled && mode == .stopped && !justInspected && !prevDownStoppedTimer {
             startInspection()
+            rescramble()
             justInspected = true
         }
         prevDownStoppedTimer = false
@@ -342,23 +350,28 @@ class StopWatchManager: ObservableObject {
         return puzzle_types[Int(currentSession.scramble_type)].getScrambler()!.generateScramble()
     }
     
+    let group = DispatchGroup()
+    
     func rescramble() {
-        if nextScrambleStr == nil {
-            DispatchQueue.global(qos: .userInitiated).sync {
-                self.nextScrambleStr = self.safeGetScramble()
-            }
-        }
-        scrambleStr = nextScrambleStr
+        NSLog("rescramble")
+        group.enter()
+        prevScrambleStr = scrambleStr
+        self.scrambleStr = nil
+        var scramble: String = "Failed to load scramble."
         DispatchQueue.global(qos: .userInitiated).async {
-            self.nextScrambleStr = self.safeGetScramble()
+            scramble = self.safeGetScramble()
+            self.group.leave()
         }
+        group.notify(queue: .main) {
+            self.scrambleStr = scramble
+        }
+        
     }
     
     func changeCurrentSession(_ session: Sessions) {
         // TODO do not rescramble when setting to same scramble eg 3blnd -> 3oh
         currentSession = session
         tryUpdateCurrentSolveth()
-        nextScrambleStr = nil
         rescramble()
     }
     
