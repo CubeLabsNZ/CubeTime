@@ -1,10 +1,3 @@
-//
-//  ScrambleView.swift
-//  CubeTime
-//
-//  Created by macos sucks balls on 1/21/22.
-//
-
 import Foundation
 import SwiftUI
 import SVGKit

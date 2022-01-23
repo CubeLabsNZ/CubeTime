@@ -29,7 +29,10 @@ struct CubeTime: App {
                 gsKeys.hapBool.rawValue: true,
                 gsKeys.hapType.rawValue: UIImpactFeedbackGenerator.FeedbackStyle.rigid.rawValue,
                 gsKeys.timeDpWhenRunning.rawValue: 3,
-                gsKeys.displayDP.rawValue: 3
+                gsKeys.displayDP.rawValue: 3,
+                gsKeys.showStats.rawValue: true,
+                gsKeys.showScramble.rawValue: true,
+                asKeys.graphGlow.rawValue: true
             ]
         )
     }

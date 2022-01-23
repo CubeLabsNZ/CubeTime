@@ -11,6 +11,8 @@
 		23034729278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		2303472A278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		2303472B278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
+		230CB290279C07C7008E475E /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 230CB28F279C07C7008E475E /* SVGKit */; };
+		230CB292279C07C7008E475E /* SVGKitSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 230CB291279C07C7008E475E /* SVGKitSwift */; };
 		2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2319F8B8276872F200644EB3 /* TimeTrend.swift */; };
 		2337E6882767619D00438F43 /* StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2337E6872767619D00438F43 /* StatsDetail.swift */; };
 		233FE7B6274F109600C6F1DF /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Helper.swift */; };
@@ -37,8 +39,6 @@
 		7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */; };
 		7D5521DC2799657300B418BE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5521DB2799657300B418BE /* Security.framework */; };
 		7D5521DE279965B600B418BE /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5521DD2799657B00B418BE /* libiconv.tbd */; };
-		7D5521E827997BA300B418BE /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7D5521E727997BA300B418BE /* SVGKit */; };
-		7D5521EA27997BA300B418BE /* SVGKitSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7D5521E927997BA300B418BE /* SVGKitSwift */; };
 		7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */; };
 		7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6159F82751B53E00DC9A4C /* TimeCard.swift */; };
 		7D78FF8C276084C2008BB82E /* StopWatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78FF8B276084C2008BB82E /* StopWatchManager.swift */; };
@@ -136,8 +136,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D5521EA27997BA300B418BE /* SVGKitSwift in Frameworks */,
-				7D5521E827997BA300B418BE /* SVGKit in Frameworks */,
+				230CB292279C07C7008E475E /* SVGKitSwift in Frameworks */,
+				230CB290279C07C7008E475E /* SVGKit in Frameworks */,
 				7D5521DE279965B600B418BE /* libiconv.tbd in Frameworks */,
 				7D5521DC2799657300B418BE /* Security.framework in Frameworks */,
 			);
@@ -175,6 +175,7 @@
 				7D7DDF2227955AFF00362DE9 /* PenButton.swift */,
 				7D78FF8B276084C2008BB82E /* StopWatchManager.swift */,
 				7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */,
+				7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */,
 			);
 			path = Timer;
 			sourceTree = "<group>";
@@ -249,7 +250,6 @@
 				23E81E75275D917000B741E3 /* Stats */,
 				23E81E6D275D8DB500B741E3 /* Settings */,
 				23DE3BE0274DDBE300254D29 /* Preview Content */,
-				7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */,
 			);
 			path = CubeTime;
 			sourceTree = "<group>";
@@ -341,8 +341,8 @@
 			);
 			name = CubeTime;
 			packageProductDependencies = (
-				7D5521E727997BA300B418BE /* SVGKit */,
-				7D5521E927997BA300B418BE /* SVGKitSwift */,
+				230CB28F279C07C7008E475E /* SVGKit */,
+				230CB291279C07C7008E475E /* SVGKitSwift */,
 			);
 			productName = txmer;
 			productReference = 23DE3BD7274DDBE200254D29 /* CubeTime.app */;
@@ -417,7 +417,7 @@
 			);
 			mainGroup = 23DE3BCE274DDBE200254D29;
 			packageReferences = (
-				7D5521E627997BA300B418BE /* XCRemoteSwiftPackageReference "SVGKit" */,
+				230CB28E279C07C7008E475E /* XCRemoteSwiftPackageReference "SVGKit" */,
 			);
 			productRefGroup = 23DE3BD8274DDBE200254D29 /* Products */;
 			projectDirPath = "";
@@ -897,7 +897,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		7D5521E627997BA300B418BE /* XCRemoteSwiftPackageReference "SVGKit" */ = {
+		230CB28E279C07C7008E475E /* XCRemoteSwiftPackageReference "SVGKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SVGKit/SVGKit";
 			requirement = {
@@ -908,14 +908,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		7D5521E727997BA300B418BE /* SVGKit */ = {
+		230CB28F279C07C7008E475E /* SVGKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7D5521E627997BA300B418BE /* XCRemoteSwiftPackageReference "SVGKit" */;
+			package = 230CB28E279C07C7008E475E /* XCRemoteSwiftPackageReference "SVGKit" */;
 			productName = SVGKit;
 		};
-		7D5521E927997BA300B418BE /* SVGKitSwift */ = {
+		230CB291279C07C7008E475E /* SVGKitSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7D5521E627997BA300B418BE /* XCRemoteSwiftPackageReference "SVGKit" */;
+			package = 230CB28E279C07C7008E475E /* XCRemoteSwiftPackageReference "SVGKit" */;
 			productName = SVGKitSwift;
 		};
 /* End XCSwiftPackageProductDependency section */

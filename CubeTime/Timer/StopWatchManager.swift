@@ -99,6 +99,7 @@ class StopWatchManager: ObservableObject {
     
     var canGesture: Bool = true
     
+    var nilSolve: Bool = true
     
     func startInspection() {
         timer?.invalidate()
@@ -369,11 +370,11 @@ class StopWatchManager: ObservableObject {
         timerColour = TimerTextColours.timerDefaultColour
         prevDownStoppedTimer = false
         
-        if solveItem != nil {
-            withAnimation {
-                showPenOptions = true
-            }
+        withAnimation {
+            showPenOptions = true
+            nilSolve = (solveItem == nil)
         }
+        
     }
     
     func askToDelete() {
