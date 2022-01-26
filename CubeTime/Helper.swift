@@ -4,6 +4,20 @@ import UIKit
 import Combine
 
 
+
+extension CGSize {
+    public init(_ svgdimen: OrgWorldcubeassociationTnoodleSvgliteDimension) {
+        self.init(width: Int(svgdimen.getWidth()), height: Int(svgdimen.getHeight()))
+    }
+}
+
+extension OrgWorldcubeassociationTnoodleSvgliteDimension {
+    public convenience init(_ cgsize: CGSize) {
+        self.init(int: jint(cgsize.width), with: jint(cgsize.height))
+    }
+}
+
+
 public extension UIDevice {
     static let modelName: String = {
         var systemInfo = utsname()

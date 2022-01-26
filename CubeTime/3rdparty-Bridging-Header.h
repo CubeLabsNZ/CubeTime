@@ -4,6 +4,7 @@
 #import "org/worldcubeassociation/tnoodle/scrambles/PuzzleRegistry.h"
 #import "org/worldcubeassociation/tnoodle/scrambles/Puzzle.h"
 #import "org/worldcubeassociation/tnoodle/svglite/Svg.h"
+#import "org/worldcubeassociation/tnoodle/svglite/Dimension.h"
 
 // drawScramble() color scheme
 #import "java/util/HashMap.h"

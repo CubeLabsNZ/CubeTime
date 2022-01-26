@@ -4,7 +4,7 @@ import SVGKit
 
 
 struct SVGView: UIViewRepresentable {
-    @Binding var svg: String
+    var svg: String
     
     func makeUIView(context: Context) -> SVGKFastImageView {
         let svgImage = SVGKImage(data: svg.data(using: .utf8))
@@ -20,19 +20,18 @@ struct AsyncScrambleView: View {
     @State var svg = ""
     var puzzle: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
     var scramble: String
+
     
     var body: some View {
-        let _ = NSLog("async something")
         Group {
             if svg == "" {
                 ProgressView()
                     .progressViewStyle(.linear)
             } else {
-                SVGView(svg: $svg)
+                SVGView(svg: svg)
+                    .aspectRatio(contentMode: .fit)
             }
-        }
-        .task {
-            NSLog("task")
+        }.task {
             let task = Task.detached(priority: .userInitiated) { () -> String in
                 NSLog("ismainthread \(Thread.isMainThread)")
                 return JavaUtilObjects.toString(withId: puzzle.getScrambler().drawScramble(with: scramble, with: nil))
@@ -47,7 +46,7 @@ struct TimerScrambleView: View {
     let svg: String?
     var body: some View {
         if let svg = svg {
-            SVGView(svg: .constant(svg))
+            SVGView(svg: svg)
         } else {
             ProgressView()
         }
