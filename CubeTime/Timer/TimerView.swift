@@ -65,6 +65,10 @@ struct TimerView: View {
     var sessionMean: Double?
     
     
+    var bpa: Double?
+    var wpa: Double?
+    
+    
     init(pageIndex: Binding<Int>, currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext, hideTabBar: Binding<Bool>) {
         self._pageIndex = pageIndex
         self._currentSession = currentSession
@@ -82,6 +86,10 @@ struct TimerView: View {
         self.currentAo12 = stats.getCurrentAverageOf(12)
         self.currentAo100 = stats.getCurrentAverageOf(100)
         self.sessionMean = stats.getSessionMean()
+        
+        
+        self.bpa = stats.getWpaBpa().0
+        self.wpa = stats.getWpaBpa().1
     }
     
     var body: some View {
@@ -341,7 +349,7 @@ struct TimerView: View {
                                 }
                             }
                             
-                            if showStats {
+                            if showStats && SessionTypes(rawValue: currentSession.session_type)! != .compsim {
                                 HStack {
                                     Spacer()
                                     
@@ -423,6 +431,66 @@ struct TimerView: View {
                                                     }
                                                 }
                                                 .frame(minWidth: 0, maxWidth: .infinity)
+                                            }
+                                            .padding(.bottom, 6)
+                                        }
+                                        .padding(.horizontal, 4)
+                                    }
+                                    .frame(width: UIScreen.screenWidth/2, height: 120)
+                                }
+                            } else {
+                                HStack {
+                                    Spacer()
+                                    
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                            .fill(Color(uiColor: .systemGray5))
+                                            .frame(width: UIScreen.screenWidth/2, height: 120)
+                                        
+                                        
+                                        VStack(spacing: 6) {
+                                            VStack(spacing: 0) {
+                                                Text("BPA")
+                                                    .font(.system(size: 13, weight: .medium))
+                                                
+                                                if let bpa = bpa {
+                                                    Text(formatSolveTime(secs: bpa))
+                                                        .font(.system(size: 24, weight: .bold))
+                                                        .modifier(DynamicText())
+                                                } else {
+                                                    Text("...")
+                                                        .font(.system(size: 24, weight: .medium, design: .default))
+                                                        .foregroundColor(Color(uiColor: .systemGray))
+                                                }
+                                                    
+                                            }
+                                            .padding(.top, 6)
+                                            
+                                            Divider()
+                                                .frame(width: UIScreen.screenWidth/2 - 48)
+                                            
+                                            VStack(spacing: 0) {
+                                                Text("WPA")
+                                                    .font(.system(size: 13, weight: .medium))
+                                                
+                                                if let wpa = wpa {
+                                                    if wpa == -1 {
+                                                        Text("DNF")
+                                                            .font(.system(size: 24, weight: .bold))
+                                                            .modifier(DynamicText())
+                                                    } else {
+                                                        Text(formatSolveTime(secs: wpa))
+                                                            .font(.system(size: 24, weight: .bold))
+                                                            .modifier(DynamicText())
+                                                    }
+                                                    
+                                                    
+                                                    
+                                                } else {
+                                                    Text("...")
+                                                        .font(.system(size: 24, weight: .medium, design: .default))
+                                                        .foregroundColor(Color(uiColor: .systemGray))
+                                                }
                                             }
                                             .padding(.bottom, 6)
                                         }
@@ -628,6 +696,9 @@ struct TimerView: View {
                     
                 }
             }
+            
+            
+//            Text("\(wpa)")
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {
