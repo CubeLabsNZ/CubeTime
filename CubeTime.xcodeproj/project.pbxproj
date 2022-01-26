@@ -684,6 +684,7 @@
 					"$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/lib",
 					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/lib",
 				);
+				LLVM_LTO = YES_THIN;
 				MARKETING_VERSION = 0.1.0;
 				OTHER_LDFLAGS = (
 					"-ltnoodle",
@@ -696,7 +697,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "CubeTime/3rdparty-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -741,6 +741,7 @@
 					"$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/lib",
 					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/lib",
 				);
+				LLVM_LTO = YES_THIN;
 				MARKETING_VERSION = 0.1.0;
 				OTHER_LDFLAGS = (
 					"-ltnoodle",
@@ -753,7 +754,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "CubeTime/3rdparty-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
