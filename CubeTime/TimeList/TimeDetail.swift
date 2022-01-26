@@ -84,6 +84,7 @@ struct TimeDetailViewOnly: View {
     
     @State var offsetValue: CGFloat = -25
     
+    @FocusState private var commentFocus: Bool
     
     let solve: Solves
     
@@ -244,15 +245,28 @@ struct TimeDetailViewOnly: View {
                         
                         ZStack {
                             TextEditor(text: $userComment)
+                                .focused($commentFocus)
                                 .padding(.horizontal)
                                 .padding(.bottom, 12)
                                 .onChange(of: userComment) { newValue in
                                     solve.comment = newValue
                                 }
+                                .toolbar {
+                                    ToolbarItemGroup(placement: .keyboard) {
+                                        HStack {
+                                            Spacer()
+                                            
+                                            
+                                            Button("Comment") {
+                                                commentFocus = false
+                                            }
+                                        }
+                                    }
+                                }
+                            
                             Text(userComment).opacity(0)
                                 .padding(.horizontal)
                                 .padding(.bottom)
-                            
                         }
                     }
                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))

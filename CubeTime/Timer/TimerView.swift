@@ -44,6 +44,7 @@ struct TimerView: View {
     @State var playgroundScrambleType: Int
     
     @State private var showScrambleSheet: Bool = false
+    @State private var showDrawScrambleSheet: Bool = false
     
     
     @State private var textRect = CGRect()
@@ -56,6 +57,14 @@ struct TimerView: View {
 //    @State var compSimTarget: String
     
     
+    let stats: Stats
+    
+    var currentAo5: CalculatedAverage?
+    var currentAo12: CalculatedAverage?
+    var currentAo100: CalculatedAverage?
+    var sessionMean: Double?
+    
+    
     init(pageIndex: Binding<Int>, currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext, hideTabBar: Binding<Bool>) {
         self._pageIndex = pageIndex
         self._currentSession = currentSession
@@ -65,8 +74,15 @@ struct TimerView: View {
         self._targetStr = State(initialValue: filteredStrFromTime((currentSession.wrappedValue as? CompSimSession)?.target))
         
         self._phaseCount = State(initialValue: Int((currentSession.wrappedValue as? MultiphaseSession)?.phase_count ?? 0))
+        
+        stats = Stats(currentSession: currentSession.wrappedValue)
+        
+        
+        self.currentAo5 = stats.getCurrentAverageOf(5)
+        self.currentAo12 = stats.getCurrentAverageOf(12)
+        self.currentAo100 = stats.getCurrentAverageOf(100)
+        self.sessionMean = stats.getSessionMean()
     }
-
     
     var body: some View {
         ZStack {
@@ -314,6 +330,9 @@ struct TimerView: View {
                                         TimerScrambleView(svg: stopWatchManager.scrambleSVG)
                                             .frame(maxWidth: maxWidth, maxHeight: 120)
                                             .aspectRatio(contentMode: .fit)
+                                            .onTapGesture {
+                                                showDrawScrambleSheet = true
+                                            }
                                     }
                                     .frame(minWidth: maxWidth-20, idealWidth: maxWidth-10, maxWidth: maxWidth, minHeight: 100, idealHeight: 110, maxHeight: 120)
                                     
@@ -330,7 +349,86 @@ struct TimerView: View {
                                         RoundedRectangle(cornerRadius: 16, style: .continuous)
                                             .fill(Color(uiColor: .systemGray5))
                                             .frame(width: UIScreen.screenWidth/2, height: 120)
+                                        
+                                        
+                                        VStack(spacing: 6) {
+                                            HStack(spacing: 0) {
+                                                VStack(spacing: 0) {
+                                                    Text("AO5")
+                                                        .font(.system(size: 13, weight: .medium))
+                                                    
+                                                    if let currentAo5 = currentAo5 {
+                                                        Text(formatSolveTime(secs: currentAo5.average!, penType: currentAo5.totalPen))
+                                                            .font(.system(size: 24, weight: .bold))
+                                                            .modifier(DynamicText())
+                                                    } else {
+                                                        Text("-")
+                                                            .font(.system(size: 24, weight: .medium, design: .default))
+                                                            .foregroundColor(Color(uiColor: .systemGray))
+                                                    }
+                                                        
+                                                }
+                                                .frame(minWidth: 0, maxWidth: .infinity)
+                                                
+                                                VStack(spacing: 0) {
+                                                    Text("AO12")
+                                                        .font(.system(size: 13, weight: .medium))
+                                                    
+                                                    if let currentAo12 = currentAo12 {
+                                                        Text(formatSolveTime(secs: currentAo12.average!, penType: currentAo12.totalPen))
+                                                            .font(.system(size: 24, weight: .bold))
+                                                            .modifier(DynamicText())
+                                                    } else {
+                                                        Text("-")
+                                                            .font(.system(size: 24, weight: .medium, design: .default))
+                                                            .foregroundColor(Color(uiColor: .systemGray))
+                                                    }
+                                                }
+                                                .frame(minWidth: 0, maxWidth: .infinity)
+                                            }
+                                            .padding(.top, 6)
+                                            
+                                            Divider()
+                                                .frame(width: UIScreen.screenWidth/2 - 48)
+                                            
+                                            HStack(spacing: 0) {
+                                                VStack(spacing: 0) {
+                                                    Text("AO100")
+                                                        .font(.system(size: 13, weight: .medium))
+                                                    
+                                                    if let currentAo100 = currentAo100 {
+                                                        Text(formatSolveTime(secs: currentAo100.average!, penType: currentAo100.totalPen))
+                                                            .font(.system(size: 24, weight: .bold))
+                                                            .modifier(DynamicText())
+                                                    } else {
+                                                        Text("-")
+                                                            .font(.system(size: 24, weight: .medium, design: .default))
+                                                            .foregroundColor(Color(uiColor: .systemGray))
+                                                    }
+                                                }
+                                                .frame(minWidth: 0, maxWidth: .infinity)
+                                                
+                                                VStack(spacing: 0) {
+                                                    Text("MEAN")
+                                                        .font(.system(size: 13, weight: .medium))
+                                                    
+                                                    if let sessionMean = sessionMean {
+                                                        Text(formatSolveTime(secs: sessionMean))
+                                                            .font(.system(size: 24, weight: .bold))
+                                                            .modifier(DynamicText())
+                                                    } else {
+                                                        Text("-")
+                                                            .font(.system(size: 24, weight: .medium, design: .default))
+                                                            .foregroundColor(Color(uiColor: .systemGray))
+                                                    }
+                                                }
+                                                .frame(minWidth: 0, maxWidth: .infinity)
+                                            }
+                                            .padding(.bottom, 6)
+                                        }
+                                        .padding(.horizontal, 4)
                                     }
+                                    .frame(width: UIScreen.screenWidth/2, height: 120)
                                 }
                             }
                         }
@@ -546,6 +644,9 @@ struct TimerView: View {
         .sheet(isPresented: $showScrambleSheet) {
             ScrambleDetail(stopWatchManager.scrambleStr!)
         }
+        .sheet(isPresented: $showDrawScrambleSheet) {
+            DiagramDetail(stopWatchManager.scrambleSVG)
+        }
         .onReceive(stopWatchManager.$mode) { newMode in
             hideTabBar = newMode == .inspecting || newMode == .running
             hideStatusBar = newMode == .inspecting || newMode == .running
@@ -582,6 +683,52 @@ struct ScrambleDetail: View {
                 }
                 .navigationTitle("Scramble")
                 .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+}
+
+struct DiagramDetail: View {
+    @Environment(\.dismiss) var dismiss
+    
+    var svg: String?
+    
+    init(_ svg: String?) {
+        self.svg = svg
+    }
+    
+    
+    var body: some View {
+        NavigationView {
+            if let svg = svg {
+                TimerScrambleView(svg: svg)
+                    .aspectRatio(contentMode: .fit)
+                    .padding()
+                
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button {
+                                dismiss()
+                            } label: {
+                                Text("Done")
+                            }
+                        }
+                    }
+                    .navigationTitle("Scramble")
+                    .navigationBarTitleDisplayMode(.inline)
+            } else {
+                ProgressView()
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button {
+                                dismiss()
+                            } label: {
+                                Text("Done")
+                            }
+                        }
+                    }
+                    .navigationTitle("Scramble")
+                    .navigationBarTitleDisplayMode(.inline)
+            }
         }
     }
 }
