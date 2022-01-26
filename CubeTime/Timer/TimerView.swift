@@ -68,6 +68,8 @@ struct TimerView: View {
     var bpa: Double?
     var wpa: Double?
     
+    var timeNeededForTarget: Double?
+    
     
     init(pageIndex: Binding<Int>, currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext, hideTabBar: Binding<Bool>) {
         self._pageIndex = pageIndex
@@ -90,6 +92,8 @@ struct TimerView: View {
         
         self.bpa = stats.getWpaBpa().0
         self.wpa = stats.getWpaBpa().1
+        
+        self.timeNeededForTarget = stats.getTimeNeededForTarget()
     }
     
     var body: some View {
@@ -330,17 +334,21 @@ struct TimerView: View {
                         ZStack {
                             if showScramble {
                                 HStack {
-                                    ZStack {
+                                    ZStack(alignment: .bottomLeading) {
                                         RoundedRectangle(cornerRadius: 16, style: .continuous)
                                             .fill(Color(uiColor: .systemGray5))
                                             .frame(width: maxWidth, height: 120)
                                         
+                                        // tried .overlay but the geometry becomes fixed and scaling doesn't work correctly
+                                        
                                         TimerScrambleView(svg: stopWatchManager.scrambleSVG)
-                                            .frame(width: maxWidth, height: 120)
                                             .aspectRatio(contentMode: .fit)
-                                            .onTapGesture {
-                                                showDrawScrambleSheet = true
-                                            }
+                                            .onTapGesture { showDrawScrambleSheet = true }
+//                                                .scaleEffect((geo.size.height/UIScreen.screenWidth > 116/(maxWidth-4)) ? (116/geo.size.height) : ((maxWidth-4)/UIScreen.screenWidth), anchor: .bottomLeading)
+                                            .frame(width: maxWidth-4, height: 116)
+                                        
+                                        
+                                        
                                     }
                                     
                                     Spacer()
@@ -436,7 +444,7 @@ struct TimerView: View {
                                     }
                                     .frame(width: UIScreen.screenWidth/2, height: 120)
                                 }
-                            } else {
+                            } else if showStats && SessionTypes(rawValue: currentSession.session_type)! == .compsim {
                                 HStack {
                                     Spacer()
                                     
@@ -447,20 +455,48 @@ struct TimerView: View {
                                         
                                         
                                         VStack(spacing: 6) {
-                                            VStack(spacing: 0) {
-                                                Text("BPA")
-                                                    .font(.system(size: 13, weight: .medium))
-                                                
-                                                if let bpa = bpa {
-                                                    Text(formatSolveTime(secs: bpa))
-                                                        .font(.system(size: 24, weight: .bold))
-                                                        .modifier(DynamicText())
-                                                } else {
-                                                    Text("...")
-                                                        .font(.system(size: 24, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray))
-                                                }
+                                            HStack {
+                                                VStack(spacing: 0) {
+                                                    Text("BPA")
+                                                        .font(.system(size: 13, weight: .medium))
                                                     
+                                                    if let bpa = bpa {
+                                                        Text(formatSolveTime(secs: bpa))
+                                                            .font(.system(size: 24, weight: .bold))
+                                                            .modifier(DynamicText())
+                                                    } else {
+                                                        Text("...")
+                                                            .font(.system(size: 24, weight: .medium, design: .default))
+                                                            .foregroundColor(Color(uiColor: .systemGray))
+                                                    }
+                                                        
+                                                }
+                                                .frame(minWidth: 0, maxWidth: .infinity)
+                                                
+                                                VStack(spacing: 0) {
+                                                    Text("WPA")
+                                                        .font(.system(size: 13, weight: .medium))
+                                                    
+                                                    if let wpa = wpa {
+                                                        if wpa == -1 {
+                                                            Text("DNF")
+                                                                .font(.system(size: 24, weight: .bold))
+                                                                .modifier(DynamicText())
+                                                        } else {
+                                                            Text(formatSolveTime(secs: wpa))
+                                                                .font(.system(size: 24, weight: .bold))
+                                                                .modifier(DynamicText())
+                                                        }
+                                                        
+                                                        
+                                                        
+                                                    } else {
+                                                        Text("...")
+                                                            .font(.system(size: 24, weight: .medium, design: .default))
+                                                            .foregroundColor(Color(uiColor: .systemGray))
+                                                    }
+                                                }
+                                                .frame(minWidth: 0, maxWidth: .infinity)
                                             }
                                             .padding(.top, 6)
                                             
@@ -468,16 +504,20 @@ struct TimerView: View {
                                                 .frame(width: UIScreen.screenWidth/2 - 48)
                                             
                                             VStack(spacing: 0) {
-                                                Text("WPA")
+                                                Text("TARGET TIME")
                                                     .font(.system(size: 13, weight: .medium))
                                                 
-                                                if let wpa = wpa {
-                                                    if wpa == -1 {
-                                                        Text("DNF")
-                                                            .font(.system(size: 24, weight: .bold))
+                                                if let timeNeededForTarget = timeNeededForTarget {
+                                                    if timeNeededForTarget == -1 {
+                                                        Text("Not Possible")
+                                                            .font(.system(size: 22, weight: .bold))
+                                                            .modifier(DynamicText())
+                                                    } else if timeNeededForTarget == -2 {
+                                                        Text("Gauranteed")
+                                                            .font(.system(size: 22, weight: .bold))
                                                             .modifier(DynamicText())
                                                     } else {
-                                                        Text(formatSolveTime(secs: wpa))
+                                                        Text("≤"+formatSolveTime(secs: timeNeededForTarget))
                                                             .font(.system(size: 24, weight: .bold))
                                                             .modifier(DynamicText())
                                                     }
@@ -759,9 +799,9 @@ struct ScrambleDetail: View {
 struct DiagramDetail: View {
     @Environment(\.dismiss) var dismiss
     
-    var svg: String?
+    var svg: OrgWorldcubeassociationTnoodleSvgliteSvg?
     
-    init(_ svg: String?) {
+    init(_ svg: OrgWorldcubeassociationTnoodleSvgliteSvg?) {
         self.svg = svg
     }
     

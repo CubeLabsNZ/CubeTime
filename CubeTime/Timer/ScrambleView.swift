@@ -45,20 +45,34 @@ struct AsyncScrambleView: View {
 
 struct TimerSVGView: UIViewRepresentable {
     var svg: OrgWorldcubeassociationTnoodleSvgliteSvg
-    var size: CGSize
     
     func makeUIView(context: Context) -> SVGKFastImageView {
-        NSLog("\(UIScreen.main.scale)")
+        
+        
+        
+        
+//        NSLog("\(UIScreen.main.scale)")
 
-        let svgsize = CGSize(svg.getSize())
-        NSLog("svgsize \(svgsize)")
-        let ratio: CGFloat = CGFloat(svgsize.width) / CGFloat(svgsize.height)
-        NSLog("ratio \(ratio)")
-        let newsize = CGSize(width: size.width, height: CGFloat(size.width) / ratio)
-        NSLog("newsize \(newsize)")
-        svg.setSizeWith(OrgWorldcubeassociationTnoodleSvgliteDimension(newsize))
+//        let svgsize = CGSize(svg.getSize())
+//        NSLog("svgsize \(svgsize)")
+        
+//        NSLog("width: \(svgsize.width), height: \(svgsize.height)")
+        
+//        let ratio: CGFloat = CGFloat(svgsize.width) / CGFloat(svgsize.height)
+//        NSLog("ratio \(ratio)")
+//        let newsize = CGSize(width: size.width, height: CGFloat(size.width) * ratio)
+//        NSLog("newsize \(newsize)")
+        
+//        let newsize = CGSize(width: 20, height: 10)
+        
+//        svg.setSizeWith(OrgWorldcubeassociationTnoodleSvgliteDimension(newsize))
         let svgstr = JavaUtilObjects.toString(withId: svg)
         let svgImage = SVGKImage(data: svgstr.data(using: .utf8))!
+        
+        
+        
+//        svgImage.size = newsize
+        
         return SVGKFastImageView(svgkImage: svgImage)!
     }
     
@@ -72,10 +86,7 @@ struct TimerScrambleView: View {
     let svg: OrgWorldcubeassociationTnoodleSvgliteSvg?
     var body: some View {
         if let svg = svg {
-            GeometryReader { geo in
-                let _ = NSLog("\(geo.size)")
-                TimerSVGView(svg: svg, size: geo.size)
-            }.background(Color.red)
+            TimerSVGView(svg: svg)
         } else {
             ProgressView()
         }
