@@ -18,6 +18,8 @@ struct TimerView: View {
     @AppStorage(gsKeys.showScramble.rawValue) var showScramble: Bool = true
     @AppStorage(gsKeys.showStats.rawValue) var showStats: Bool = true
     
+    @AppStorage(gsKeys.scrambleSize.rawValue) var scrambleSize: Int = 18
+    
     
     
     @EnvironmentObject var stopWatchManager: StopWatchManager
@@ -40,6 +42,8 @@ struct TimerView: View {
     
     @State var algTrainerSubset = 0
     @State var playgroundScrambleType: Int
+    
+    @State private var showScrambleSheet: Bool = false
     
     
     @State private var textRect = CGRect()
@@ -70,61 +74,6 @@ struct TimerView: View {
                 .ignoresSafeArea()
     
     
-            if stopWatchManager.mode == .inspecting {
-                if colourScheme == .light {
-                    switch stopWatchManager.inspectionSecs {
-                    case 8..<12:
-                        InspectionColours.eightColour
-                            .ignoresSafeArea()
-                    case 12..<15:
-                        InspectionColours.twelveColour
-                            .ignoresSafeArea()
-                    case let x where x >= 15: InspectionColours.penaltyColour
-                            .ignoresSafeArea()
-                    default:
-                        EmptyView()
-                    }
-                }
-                
-                if stopWatchManager.inspectionSecs >= 17 {
-                    Text("DNF")
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
-                    .foregroundColor(colourScheme == .light ? .black : nil)
-                    .offset(y: 45)
-                } else if stopWatchManager.inspectionSecs >= 15 {
-                    Text("+2")
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
-                    .foregroundColor(colourScheme == .light ? .black : nil)
-                    .offset(y: 45)
-                }
-            } else if  stopWatchManager.mode == .stopped {
-                if let scr = stopWatchManager.scrambleStr {
-                    VStack {
-                        Text(scr)
-                            .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : 18, weight: .semibold, design: .monospaced))
-                            .frame(maxHeight: UIScreen.screenHeight/3)
-                            .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
-                            .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
-                        
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                    .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
-                } else {
-                    HStack {
-                        Spacer()
-                        
-                        VStack {
-                            ProgressView()
-                                .frame(maxHeight: 35)
-                                .padding(.trailing)
-                            
-                            Spacer()
-                        }
-                    }
-                    
-                }
-            }
             
             VStack {
                 Spacer()
@@ -528,15 +477,67 @@ struct TimerView: View {
             
             
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
+            if stopWatchManager.mode == .inspecting {
+                if colourScheme == .light {
+                    switch stopWatchManager.inspectionSecs {
+                    case 8..<12:
+                        InspectionColours.eightColour
+                            .ignoresSafeArea()
+                    case 12..<15:
+                        InspectionColours.twelveColour
+                            .ignoresSafeArea()
+                    case let x where x >= 15: InspectionColours.penaltyColour
+                            .ignoresSafeArea()
+                    default:
+                        EmptyView()
+                    }
+                }
+                
+                if stopWatchManager.inspectionSecs >= 17 {
+                    Text("DNF")
+                    .font(.system(size: 22, weight: .semibold, design: .rounded))
+                    .foregroundColor(colourScheme == .light ? .black : nil)
+                    .offset(y: 45)
+                } else if stopWatchManager.inspectionSecs >= 15 {
+                    Text("+2")
+                    .font(.system(size: 22, weight: .semibold, design: .rounded))
+                    .foregroundColor(colourScheme == .light ? .black : nil)
+                    .offset(y: 45)
+                }
+            } else if  stopWatchManager.mode == .stopped {
+                if let scr = stopWatchManager.scrambleStr {
+                
+                    VStack {
+                        Text(scr)
+                            .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
+                            .frame(maxHeight: UIScreen.screenHeight/3)
+                            .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
+                            .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+                            .onTapGesture {
+                                showScrambleSheet = true
+                            }
+                        
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                    .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+                
+                    
+                } else {
+                    HStack {
+                        Spacer()
+                        
+                        VStack {
+                            ProgressView()
+                                .frame(maxHeight: 35)
+                                .padding(.trailing)
+                            
+                            Spacer()
+                        }
+                    }
+                    
+                }
+            }
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {
@@ -550,11 +551,45 @@ struct TimerView: View {
                 
             }
         }
+        .sheet(isPresented: $showScrambleSheet) {
+            ScrambleDetail(stopWatchManager.scrambleStr!)
+        }
         .onReceive(stopWatchManager.$mode) { newMode in
             hideTabBar = newMode == .inspecting || newMode == .running
             hideStatusBar = newMode == .inspecting || newMode == .running
         }
         .statusBar(hidden: hideStatusBar) /// TODO MAKE SO ANIMATION IS ASYMMETRIC WITH VALUES OF THE OTHER ANIMATIONS
         .ignoresSafeArea(.keyboard)
+    }
+}
+
+struct ScrambleDetail: View {
+    @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
+    @Environment(\.dismiss) var dismiss
+    
+    var scramble: String
+    
+    init(_ scramble: String) {
+        self.scramble = scramble
+    }
+    
+    var body: some View {
+        NavigationView {
+            Text(scramble)
+                .font(.system(size: CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Text("Done")
+                        }
+                    }
+                }
+                .navigationTitle("Scramble")
+                .navigationBarTitleDisplayMode(.inline)
+        }
     }
 }

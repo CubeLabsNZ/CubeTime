@@ -217,8 +217,8 @@ struct TimeDetailViewOnly: View {
                     }
                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
                     
-                    .padding(.trailing)
-                    .padding(.leading)
+                    .padding(.top, -10)
+                    .padding(.horizontal)
                     
                     VStack {
                         HStack {
@@ -257,24 +257,70 @@ struct TimeDetailViewOnly: View {
                                 .padding(.bottom)
                             
                         }
-                        
-                        
-                        /*TextField("Notes", text: $userComment)
-                        
-                            .padding(.horizontal)
-                            .padding(.bottom, 12)
-                            .onChange(of: userComment) { newValue in
-                                solve.comment = newValue
-                            }
-                         */
-                        
                     }
-                    //.frame(minHeight: minRowHeight * 10)
-                    //.frame(height: 300)
                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
-                    //.listStyle(.insetGrouped)
                     .padding(.trailing)
                     .padding(.leading)
+                    
+                    if let multiphaseSolve = (solve as? MultiphaseSolve) {
+                        VStack {
+                            HStack {
+                                Image(systemName: "square.stack.3d.up.fill")
+                                    .symbolRenderingMode(.hierarchical)
+                                    .font(.system(size: 26, weight: .semibold))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
+                                //.padding(.trailing, 8)
+                                Text("Multiphase Breakdown")
+                                    .font(.system(size: 17, weight: .semibold, design: .default))
+                                    .foregroundColor(colourScheme == .light ? .black : .white)
+                                
+                                Spacer()
+                                
+                            }
+                            .padding(.leading, 12)
+                            .padding(.trailing)
+                            .padding(.top, 12)
+                            
+                            Divider()
+                                .padding(.leading)
+                            
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                ForEach(Array(zip(multiphaseSolve.phases!.indices, multiphaseSolve.phases!)), id: \.0) { index, phase in
+                                    
+                                    HStack {
+                                        if index == 0 {
+                                            Image(systemName: "\(index+1).circle")
+                                                .font(.system(size: 17, weight: .medium))
+                                            
+                                            Text("+"+formatSolveTime(secs: phase))
+                                        } else {
+                                            if index < multiphaseSolve.phases!.count {
+                                                let phaseDifference = multiphaseSolve.phases![index] - multiphaseSolve.phases![index-1]
+                                                
+                                                Image(systemName: "\(index+1).circle")
+                                                    .font(.system(size: 17, weight: .medium))
+                                                
+                                                Text("+"+formatSolveTime(secs: phaseDifference))
+                                            }
+                                        }
+                                        
+                                        Spacer()
+                                        
+                                        Text("("+formatSolveTime(secs: phase)+")")
+                                            .foregroundColor(Color(uiColor: .systemGray))
+                                            .font(.system(size: 17, weight: .regular))
+                                    }
+                                    
+                                }
+                            }
+                            .padding([.bottom, .horizontal], 12)
+                        }
+                        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
+                        .padding(.trailing)
+                        .padding(.leading)
+                    }
+                    
                     
                     Button {
                         UIPasteboard.general.string = "Generated by CubeTime.\n\(time): \(scramble)"

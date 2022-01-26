@@ -23,7 +23,7 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.showScramble.rawValue) var showScramble: Bool = true
     @AppStorage(gsKeys.showStats.rawValue) var showStats: Bool = true
     
-    @AppStorage(gsKeys.scrambleSize.rawValue) var scrambleSize: Int = 0
+    @AppStorage(gsKeys.scrambleSize.rawValue) var scrambleSize: Int = 18
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
@@ -63,7 +63,7 @@ struct GeneralSettingsView: View {
                         Text("Inspection Time")
                             .font(.system(size: 17, weight: .medium))
                     }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
                     
                 }
                 .padding(.horizontal)
@@ -131,7 +131,7 @@ struct GeneralSettingsView: View {
                         Text("Show draw scramble on timer")
                             .font(.system(size: 17, weight: .medium))
                     }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
                     
                 }
                 .padding(.horizontal)
@@ -147,7 +147,7 @@ struct GeneralSettingsView: View {
                         Text("Show stats on timer")
                             .font(.system(size: 17, weight: .medium))
                     }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
                     
                 }
                 .padding(.horizontal)
@@ -216,6 +216,21 @@ struct GeneralSettingsView: View {
                 Divider()
                 
                 
+                VStack (alignment: .leading) {
+                    HStack {
+                        Stepper(value: $scrambleSize, in: 15...36, step: 1) {
+                            Text("Scramble Size: ")
+                                .font(.system(size: 17, weight: .medium))
+                            Text("\(scrambleSize)")
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+                
+                
+                Divider()
+                
+                
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Gesture Activation Distance")
                         .font(.system(size: 17, weight: .medium))
@@ -275,7 +290,7 @@ struct GeneralSettingsView: View {
                 .padding(.horizontal)
                 .padding(.bottom, 10)
             }
-//            .modifier(settingsBlocks())
+            //            .modifier(settingsBlocks())
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
             
             

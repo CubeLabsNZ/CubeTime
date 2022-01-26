@@ -36,6 +36,7 @@ struct CubeTime: App {
                 gsKeys.displayDP.rawValue: 3,
                 gsKeys.showStats.rawValue: true,
                 gsKeys.showScramble.rawValue: true,
+                gsKeys.scrambleSize.rawValue: 18,
                 asKeys.graphGlow.rawValue: true
             ]
         )
