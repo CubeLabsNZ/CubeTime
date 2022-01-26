@@ -42,11 +42,40 @@ struct AsyncScrambleView: View {
     }
 }
 
+
+struct TimerSVGView: UIViewRepresentable {
+    var svg: OrgWorldcubeassociationTnoodleSvgliteSvg
+    var size: CGSize
+    
+    func makeUIView(context: Context) -> SVGKFastImageView {
+        NSLog("\(UIScreen.main.scale)")
+
+        let svgsize = CGSize(svg.getSize())
+        NSLog("svgsize \(svgsize)")
+        let ratio: CGFloat = CGFloat(svgsize.width) / CGFloat(svgsize.height)
+        NSLog("ratio \(ratio)")
+        let newsize = CGSize(width: size.width, height: CGFloat(size.width) / ratio)
+        NSLog("newsize \(newsize)")
+        svg.setSizeWith(OrgWorldcubeassociationTnoodleSvgliteDimension(newsize))
+        let svgstr = JavaUtilObjects.toString(withId: svg)
+        let svgImage = SVGKImage(data: svgstr.data(using: .utf8))!
+        return SVGKFastImageView(svgkImage: svgImage)!
+    }
+    
+    func updateUIView(_ uiView: SVGKFastImageView, context: Context) {
+        
+    }
+}
+
+
 struct TimerScrambleView: View {
-    let svg: String?
+    let svg: OrgWorldcubeassociationTnoodleSvgliteSvg?
     var body: some View {
         if let svg = svg {
-            SVGView(svg: svg)
+            GeometryReader { geo in
+                let _ = NSLog("\(geo.size)")
+                TimerSVGView(svg: svg, size: geo.size)
+            }.background(Color.red)
         } else {
             ProgressView()
         }
