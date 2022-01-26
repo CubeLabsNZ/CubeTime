@@ -264,7 +264,18 @@ struct TimeDetailViewOnly: View {
                                     }
                                 }
                             
-                            Text(userComment).opacity(0)
+                            if userComment == "" {
+                                Text("Comment something...")
+                                    .foregroundColor(Color(uiColor: .systemGray2))
+                                    .offset(y: -4)
+                                    .onTapGesture {
+                                        commentFocus = true
+                                    }
+                            }
+                            
+                            Text(userComment)
+                                .opacity(0)
+//                                .foregroundColor(.green)
                                 .padding(.horizontal)
                                 .padding(.bottom)
                         }
