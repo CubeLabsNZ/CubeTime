@@ -363,11 +363,9 @@ struct TimerView: View {
                                             .frame(width: maxWidth, height: 120)
                                         
                                         TimerScrambleView(svg: stopWatchManager.scrambleSVG)
-                                            .frame(maxWidth: maxWidth, maxHeight: 120)
+                                            .frame(width: maxWidth, height: 120)
                                             .aspectRatio(contentMode: .fit)
                                     }
-                                    .frame(minWidth: maxWidth-20, idealWidth: maxWidth-10, maxWidth: maxWidth, minHeight: 100, idealHeight: 110, maxHeight: 120)
-                                    
                                     
                                     Spacer()
                                 }
