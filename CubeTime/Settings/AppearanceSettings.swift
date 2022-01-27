@@ -9,7 +9,7 @@ struct settingsBlocks: ViewModifier {
 }
 
 enum asKeys: String {
-    case accentColour, overrideDM, dmBool, staticGradient, gradientSelected
+    case accentColour, overrideDM, dmBool, staticGradient, gradientSelected, graphGlow
 }
 
 
@@ -30,6 +30,8 @@ struct AppearanceSettingsView: View {
     
     @AppStorage(asKeys.staticGradient.rawValue) private var staticGradient: Bool = true
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    
+    @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
     
     
     var body: some View {
@@ -187,6 +189,29 @@ struct AppearanceSettingsView: View {
                             .padding(.top, 8)
                         }
                     }
+                    
+                    Divider()
+                        .padding(.vertical, 10)
+                    
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        HStack {
+                            Toggle(isOn: $graphGlow) {
+                                Text("Graph Glow")
+                                    .font(.system(size: 17, weight: .medium))
+                            }
+                                .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        }
+                        .padding(.horizontal)
+                        .padding(.bottom, 10)
+                       
+                        Text("Turn on/off the glow effect on graphs.")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundColor(Color(uiColor: .systemGray))
+                            .multilineTextAlignment(.leading)
+                            .padding(.horizontal)
+                            .padding(.bottom, 12)
+                    }
                 }
             }
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
@@ -227,34 +252,7 @@ struct AppearanceSettingsView: View {
                         .padding(.horizontal)
                         .padding(.bottom, 12)
                     }
-                        
-                        
-                    /*
-                    Divider()
-                        .padding(.vertical, 10)
-                    
-                    
-                    HStack(alignment: .center) {
-                        Text("App Icon")
-                            .font(.system(size: 17, weight: .medium))
-                        
-                        Spacer()
-                        
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(Color(uiColor: .systemGray3))
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom, 12)
-                    .onTapGesture {
-                        print("go to app icon selection page")
-                    }
-                     */
-                    
-                    
-                    
                 }
-                
             }
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
         }

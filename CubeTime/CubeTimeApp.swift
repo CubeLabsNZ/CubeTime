@@ -7,8 +7,9 @@ import CoreData
 struct CubeTime: App {
     @Environment(\.scenePhase) var phase
     
-    /*
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+    /*
     var shortcutItem: UIApplicationShortcutItem?
      */
     
@@ -20,6 +21,9 @@ struct CubeTime: App {
         persistenceController = PersistenceController.shared
         moc = persistenceController.container.viewContext
         
+        
+//        UIApplication.shared.isIdleTimerDisabled = true
+        
         let userDefaults = UserDefaults.standard
         userDefaults.register(
             defaults: [
@@ -29,7 +33,11 @@ struct CubeTime: App {
                 gsKeys.hapBool.rawValue: true,
                 gsKeys.hapType.rawValue: UIImpactFeedbackGenerator.FeedbackStyle.rigid.rawValue,
                 gsKeys.timeDpWhenRunning.rawValue: 3,
-                gsKeys.displayDP.rawValue: 3
+                gsKeys.displayDP.rawValue: 3,
+                gsKeys.showStats.rawValue: true,
+                gsKeys.showScramble.rawValue: true,
+                gsKeys.scrambleSize.rawValue: 18,
+                asKeys.graphGlow.rawValue: true
             ]
         )
     }

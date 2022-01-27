@@ -51,6 +51,11 @@ class StopWatchManager: ObservableObject {
     
     
     init (currentSession: Sessions, managedObjectContext: NSManagedObjectContext) {
+        #if DEBUG
+        NSLog("Initializing a stopwatchamanager")
+        #endif
+        
+        
         self.currentSession = currentSession
         self.managedObjectContext = managedObjectContext
         secondsStr = formatSolveTime(secs: 0)
@@ -67,6 +72,10 @@ class StopWatchManager: ObservableObject {
     
     func tryUpdateCurrentSolveth() {
         if let currentSession = currentSession as? CompSimSession {
+            #if DEBUG
+            NSLog("current session is compsim")
+            #endif
+            
             if currentSession.solvegroups!.count > 0 {
                 currentSolveth = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup).solves!.count
             } else {
@@ -95,7 +104,6 @@ class StopWatchManager: ObservableObject {
     
     func startInspection() {
         timer?.invalidate()
-        penType = .none // reset penType from last solve
         secondsStr = "0"
         inspectionSecs = 0
         mode = .inspecting
@@ -186,7 +194,6 @@ class StopWatchManager: ObservableObject {
         solveItem.scramble_subtype = 0
         solveItem.time = self.secondsElapsed
         try! managedObjectContext.save()
-        
     }
     
     
@@ -203,13 +210,26 @@ class StopWatchManager: ObservableObject {
     
     
     func touchDown() {
+        #if DEBUG
+        NSLog("touch down")
+        #endif
+
         timerColour = TimerTextColours.timerHeldDownColour
         
         if mode == .running {
             
             justInspected = false
             
+            #if DEBUG
+            print(currentMPCount)
+            print(currentSession.session_type)
+            #endif
+            
             if let multiphaseSession = currentSession as? MultiphaseSession {
+                
+                #if DEBUG
+                print(currentMPCount)
+                #endif
                 
                 if multiphaseSession.phase_count != currentMPCount {
                     canGesture = false
@@ -217,6 +237,11 @@ class StopWatchManager: ObservableObject {
                     currentMPCount += 1
                     lap()
                 } else {
+                    
+                    #if DEBUG
+                    print(phaseTimes)
+                    #endif
+                    
                     
                     canGesture = true
                     
@@ -239,6 +264,10 @@ class StopWatchManager: ObservableObject {
     
     
     func touchUp() {
+        #if DEBUG
+        NSLog("touch up")
+        #endif
+        
         timerColour = TimerTextColours.timerDefaultColour
         
         
@@ -265,6 +294,10 @@ class StopWatchManager: ObservableObject {
     
     
     func longPressStart() {
+        #if DEBUG
+        NSLog("long press start")
+        #endif
+        
         if inspectionEnabled ? mode == .inspecting : mode == .stopped && !prevDownStoppedTimer {
             timerColour = TimerTextColours.timerCanStartColour
             feedbackStyle?.impactOccurred()
@@ -272,6 +305,11 @@ class StopWatchManager: ObservableObject {
     }
     
     func longPressEnd() {
+        #if DEBUG
+        NSLog("long press end")
+        #endif
+        
+        
         timerColour = TimerTextColours.timerDefaultColour
         withAnimation {
             showPenOptions = false
@@ -305,17 +343,13 @@ class StopWatchManager: ObservableObject {
     
     
     func changedPen() {
-        if PenTypes(rawValue: solveItem.penalty)! == .plustwo {
-            withAnimation {
-                secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
-            }
-        } else {
+        withAnimation {
             secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
         }
     }
     
     func safeGetScramble() -> String {
-        return puzzle_types[Int(currentSession.scramble_type)].getScrambler().generateScramble()
+        return puzzle_types[Int(currentSession.scramble_type)].puzzle.getScrambler().generateScramble()
     }
     
     let group = DispatchGroup()
@@ -334,7 +368,7 @@ class StopWatchManager: ObservableObject {
         group.notify(queue: .main) {
             self.scrambleStr = scramble
             DispatchQueue.global(qos: .userInitiated).async {
-                let svg = puzzle_types[Int(self.currentSession.scramble_type)].getScrambler().drawScramble(with: scramble, with: nil)
+                let svg = puzzle_types[Int(self.currentSession.scramble_type)].puzzle.getScrambler().drawScramble(with: scramble, with: nil)
                 
                 DispatchQueue.main.async {
                     self.scrambleSVG = svg

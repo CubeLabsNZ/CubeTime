@@ -4,6 +4,20 @@ import UIKit
 import Combine
 
 
+
+extension CGSize {
+    public init(_ svgdimen: OrgWorldcubeassociationTnoodleSvgliteDimension) {
+        self.init(width: Int(svgdimen.getWidth()), height: Int(svgdimen.getHeight()))
+    }
+}
+
+extension OrgWorldcubeassociationTnoodleSvgliteDimension {
+    public convenience init(_ cgsize: CGSize) {
+        self.init(int: jint(cgsize.width), with: jint(cgsize.height))
+    }
+}
+
+
 public extension UIDevice {
     static let modelName: String = {
         var systemInfo = utsname()
@@ -172,18 +186,6 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
 }
 
 
-struct PuzzleType {
-    let name: String
-    let subtypes: [Int: String]
-    
-    let scrID: Int32
-    var blind = false
-}
-
-
-
-
-
 
 /// as the default textfield does not dynamically adjust its width according to the text
 /// and instead is always set to the maximum width, this globalgeometrygetter is used
@@ -251,27 +253,35 @@ extension View {
 }
 
 
+struct PuzzleType {
+    let name: String
+    let puzzle: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
+}
 
-// TODO 3BLD
+
+let chtscramblesthatdontworkwithtnoodle: [OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry] = [.SIX, .SEVEN, .SKEWB]
+                    
 
 let puzzle_types: [PuzzleType] = [
-    PuzzleType(name: "2x2", subtypes: [0: "Random State"], scrID: 0),
-    PuzzleType(name: "3x3", subtypes: [0: "Random State", 2: "Cross Solved"], scrID: 1),
-    PuzzleType(name: "4x4", subtypes: [0: "WCA"], scrID: 2),
-    PuzzleType(name: "5x5", subtypes: [0: "WCA"], scrID: 3),
-    PuzzleType(name: "6x6", subtypes: [0: "prefix", 1: "SiGN (OLD)"], scrID: 4), // TODO remove prefix only here because 0 hardcoded
-    PuzzleType(name: "7x7", subtypes: [0: "prefix", 1: "SiGN (OLD)"], scrID: 5), // TODO remove prefix
-    PuzzleType(name: "Square-1", subtypes: [0: "Random State"], scrID: 6),
-    PuzzleType(name: "Megaminx", subtypes:  [0: "Pochmann"], scrID: 7),
-    PuzzleType(name: "Pyraminx", subtypes: [0: "Random State", 1: "Random Moves"], scrID: 8),
-    PuzzleType(name: "Clock", subtypes: [0: "WCA"], scrID: 9),
-    PuzzleType(name: "Skewb", subtypes: [0: "Random State"], scrID: 10),
+    PuzzleType(name: "2x2", puzzle: .TWO),
+    PuzzleType(name: "3x3", puzzle: .THREE),
+    PuzzleType(name: "4x4", puzzle: .FOUR_FAST),
+    PuzzleType(name: "5x5", puzzle: .FIVE),
+    PuzzleType(name: "6x6", puzzle: .SIX),
+    PuzzleType(name: "7x7", puzzle: .SEVEN),
+    PuzzleType(name: "Square-1", puzzle: .SQ1),
+    PuzzleType(name: "Megaminx", puzzle: .MEGA),
+    PuzzleType(name: "Pyraminx", puzzle: .PYRA),
+    PuzzleType(name: "Clock", puzzle: .CLOCK),
+    PuzzleType(name: "Skewb", puzzle: .SKEWB),
     
-    PuzzleType(name: "3x3 OH", subtypes: [0: "Random State"], scrID: 1), // TODO map to actual scrambles
-    PuzzleType(name: "3x3 BLD", subtypes: [0: "Random State"], scrID: 1, blind: true),
-    PuzzleType(name: "4x4 BLD", subtypes: [0: "Random State"], scrID: 2, blind: true),
-    PuzzleType(name: "5x5 BLD", subtypes: [0: "Random State"], scrID: 3, blind: true),
+    // One hand
+    PuzzleType(name: "3x3 OH", puzzle: .THREE),
     
+    // Blind
+    PuzzleType(name: "3x3 BLD", puzzle: .THREE),
+    PuzzleType(name: "4x4 BLD", puzzle: .FOUR_FAST),
+    PuzzleType(name: "5x5 BLD", puzzle: .FIVE),
 ]
 
 
@@ -288,6 +298,8 @@ struct TimeMaskTextField: ViewModifier {
             .keyboardType(text.count > 2 ? .numberPad : .decimalPad)
             .onReceive(Just(text)) { newValue in
                 refilter()
+                
+                onReceiveAlso?(newValue)
             }
     }
     

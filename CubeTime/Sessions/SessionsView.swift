@@ -1228,7 +1228,7 @@ struct SessionCard: View {
                     
                     Spacer()
                     
-                    if item.session_type != 3 {
+                    if item.session_type != SessionTypes.playground.rawValue {
                         if item.pinned {
                             Image(puzzle_types[Int(item.scramble_type)].name)
                                 .resizable()

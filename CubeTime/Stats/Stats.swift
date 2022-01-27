@@ -415,7 +415,55 @@ class Stats {
         } else {
             return nil
         }
+    }
+    
+    
+    func getWpaBpa() -> (Double?, Double?) {
+        if let compsimSession = compsimSession {
+            let solveGroups = (compsimSession.solvegroups!.array as! [CompSimSolveGroup])
+            
+            if solveGroups.count == 0 { return (nil, nil) } else {
+                let lastGroupSolves = (solveGroups.last!.solves!.array as! [Solves])
+                if lastGroupSolves.count == 4 {
+                    let sortedGroup = lastGroupSolves.sorted(by: Stats.sortWithDNFsLast)
+                    
+                    print(sortedGroup.map{$0.time})
+                    
+                    let bpa = (sortedGroup.dropFirst().reduce(0) {$0 + timeWithPlusTwoForSolve($1)}) / 3.00
+                    
+                    let wpa = sortedGroup.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) ? -1 : (sortedGroup.dropLast().reduce(0) {$0 + timeWithPlusTwoForSolve($1)}) / 3.00
+                    
+                    return (bpa, wpa)
+                }
+            }
+        } else { return (nil, nil) }
         
+        return (nil, nil)
+    }
+    
+    func getTimeNeededForTarget() -> Double? {
+        if let compsimSession = compsimSession {
+            let solveGroups = (compsimSession.solvegroups!.array as! [CompSimSolveGroup])
+            
+            if solveGroups.count == 0 { return nil } else {
+                let lastGroupSolves = (solveGroups.last!.solves!.array as! [Solves])
+                if lastGroupSolves.count == 4 {
+                    let sortedGroup = lastGroupSolves.sorted(by: Stats.sortWithDNFsLast)
+                    
+                    let timeNeededForTarget = (compsimSession as! CompSimSession).target * 3 - (sortedGroup.dropFirst().dropLast().reduce(0) {$0 + timeWithPlusTwoForSolve($1)})
+                    
+                    if timeNeededForTarget < sortedGroup.last!.time {
+                        return -1 // not possible
+                    } else if timeNeededForTarget > sortedGroup.first!.time && !sortedGroup.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) {
+                        return -2 // guaranteed
+                    } else {
+                        return timeNeededForTarget // standard return
+                    }
+                }
+            }
+        } else { return nil }
+        
+        return nil
     }
 }
 

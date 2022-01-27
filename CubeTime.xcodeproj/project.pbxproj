@@ -11,6 +11,8 @@
 		23034729278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		2303472A278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		2303472B278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
+		230CB290279C07C7008E475E /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 230CB28F279C07C7008E475E /* SVGKit */; };
+		230CB292279C07C7008E475E /* SVGKitSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 230CB291279C07C7008E475E /* SVGKitSwift */; };
 		2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2319F8B8276872F200644EB3 /* TimeTrend.swift */; };
 		2337E6882767619D00438F43 /* StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2337E6872767619D00438F43 /* StatsDetail.swift */; };
 		233FE7B6274F109600C6F1DF /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Helper.swift */; };
@@ -35,38 +37,11 @@
 		23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB8A1D2779B6D3000F6663 /* TimeBar.swift */; };
 		7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2B805D279422BD0006AEDD /* AppDelegate.swift */; };
 		7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */; };
+		7D5521DC2799657300B418BE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5521DB2799657300B418BE /* Security.framework */; };
+		7D5521DE279965B600B418BE /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5521DD2799657B00B418BE /* libiconv.tbd */; };
 		7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */; };
 		7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6159F82751B53E00DC9A4C /* TimeCard.swift */; };
-		7D69E0A22751FDEA007211CC /* Sq12phase.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0662751FDEA007211CC /* Sq12phase.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0A32751FDEA007211CC /* Gear.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E06D2751FDEA007211CC /* Gear.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0A42751FDEA007211CC /* Pyraminx.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E06E2751FDEA007211CC /* Pyraminx.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0A52751FDEA007211CC /* Megaminx.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E06F2751FDEA007211CC /* Megaminx.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0A62751FDEA007211CC /* Clock.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0702751FDEA007211CC /* Clock.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0A72751FDEA007211CC /* Skewb.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0712751FDEA007211CC /* Skewb.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0A82751FDEA007211CC /* scrambleTypes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D69E0732751FDEA007211CC /* scrambleTypes.plist */; };
-		7D69E0A92751FDEA007211CC /* SQ1.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0742751FDEA007211CC /* SQ1.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0AA2751FDEA007211CC /* Cube222.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0752751FDEA007211CC /* Cube222.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0AB2751FDEA007211CC /* Im.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0762751FDEA007211CC /* Im.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0AC2751FDEA007211CC /* CHTScrambler.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0772751FDEA007211CC /* CHTScrambler.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0AD2751FDEA007211CC /* Cross.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0782751FDEA007211CC /* Cross.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0AE2751FDEA007211CC /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E07A2751FDEA007211CC /* Util.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0AF2751FDEA007211CC /* TwoPhaseScrambler.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E07C2751FDEA007211CC /* TwoPhaseScrambler.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0B02751FDEA007211CC /* CoordCube.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E07D2751FDEA007211CC /* CoordCube.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0B12751FDEA007211CC /* Search.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E07E2751FDEA007211CC /* Search.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0B22751FDEA007211CC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 7D69E07F2751FDEA007211CC /* README.md */; };
-		7D69E0B32751FDEA007211CC /* CubieCube.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0802751FDEA007211CC /* CubieCube.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0B42751FDEA007211CC /* CHTScramble.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E08A2751FDEA007211CC /* CHTScramble.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0B52751FDEA007211CC /* CHTSolve.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E08B2751FDEA007211CC /* CHTSolve.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0B62751FDEA007211CC /* CHTSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0902751FDEA007211CC /* CHTSession.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0B72751FDEA007211CC /* CHTSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0912751FDEA007211CC /* CHTSessionManager.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0B82751FDEA007211CC /* CHTTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0932751FDEA007211CC /* CHTTheme.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0B92751FDEA007211CC /* CHTSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0952751FDEA007211CC /* CHTSettings.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0BA2751FDEB007211CC /* CHTOneStat.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0972751FDEA007211CC /* CHTOneStat.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0BB2751FDEB007211CC /* CHTUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E09A2751FDEA007211CC /* CHTUtil.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0BC2751FDEB007211CC /* RubiksTimerTimeObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E09C2751FDEA007211CC /* RubiksTimerTimeObj.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0BD2751FDEB007211CC /* RubiksTimerDataProcessing.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E09F2751FDEA007211CC /* RubiksTimerDataProcessing.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D69E0BE2751FDEB007211CC /* CHTUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D69E0A12751FDEA007211CC /* CHTUpdater.m */; settings = {COMPILER_FLAGS = "-w"; }; };
-		7D78FF8C276084C2008BB82E /* StopWatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78FF8B276084C2008BB82E /* StopWatchManager.swift */; };
+		7D78FF8C276084C2008BB82E /* StopwatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78FF8B276084C2008BB82E /* StopwatchManager.swift */; };
 		7D78FF8E276087AF008BB82E /* BottomTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78FF8D276087AF008BB82E /* BottomTabsView.swift */; };
 		7D7A9EC0274F38CD00C2E125 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EBF274F38CD00C2E125 /* StatsView.swift */; };
 		7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EC3274F392700C2E125 /* SessionsView.swift */; };
@@ -74,6 +49,7 @@
 		7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */; };
 		7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7DDF2227955AFF00362DE9 /* PenButton.swift */; };
 		7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E2011275DD52600ADF01D /* Licenses.swift */; };
+		7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */; };
 		7D878BB1275D8DB3008AC443 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D878BB0275D8DB3008AC443 /* Stats.swift */; };
 /* End PBXBuildFile section */
 
@@ -93,6 +69,19 @@
 			remoteInfo = txmer;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7D5521E527997A2E00B418BE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		23034724278BD22600553A7D /* TimeDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDetail.swift; sourceTree = "<group>"; };
@@ -125,65 +114,11 @@
 		23EB8A1D2779B6D3000F6663 /* TimeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBar.swift; sourceTree = "<group>"; };
 		7D2B805D279422BD0006AEDD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTouchView.swift; sourceTree = "<group>"; };
+		7D5521DB2799657300B418BE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		7D5521DD2799657B00B418BE /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabsView.swift; sourceTree = "<group>"; };
 		7D6159F82751B53E00DC9A4C /* TimeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCard.swift; sourceTree = "<group>"; };
-		7D69E0662751FDEA007211CC /* Sq12phase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sq12phase.m; sourceTree = "<group>"; };
-		7D69E0672751FDEA007211CC /* Skewb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skewb.h; sourceTree = "<group>"; };
-		7D69E0682751FDEA007211CC /* Cross.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cross.h; sourceTree = "<group>"; };
-		7D69E0692751FDEA007211CC /* CHTScrambler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTScrambler.h; sourceTree = "<group>"; };
-		7D69E06A2751FDEA007211CC /* Im.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Im.h; sourceTree = "<group>"; };
-		7D69E06B2751FDEA007211CC /* Cube222.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cube222.h; sourceTree = "<group>"; };
-		7D69E06C2751FDEA007211CC /* SQ1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQ1.h; sourceTree = "<group>"; };
-		7D69E06D2751FDEA007211CC /* Gear.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Gear.m; sourceTree = "<group>"; };
-		7D69E06E2751FDEA007211CC /* Pyraminx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pyraminx.m; sourceTree = "<group>"; };
-		7D69E06F2751FDEA007211CC /* Megaminx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Megaminx.m; sourceTree = "<group>"; };
-		7D69E0702751FDEA007211CC /* Clock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Clock.m; sourceTree = "<group>"; };
-		7D69E0712751FDEA007211CC /* Skewb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Skewb.m; sourceTree = "<group>"; };
-		7D69E0722751FDEA007211CC /* Sq12phase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sq12phase.h; sourceTree = "<group>"; };
-		7D69E0732751FDEA007211CC /* scrambleTypes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = scrambleTypes.plist; sourceTree = "<group>"; };
-		7D69E0742751FDEA007211CC /* SQ1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQ1.m; sourceTree = "<group>"; };
-		7D69E0752751FDEA007211CC /* Cube222.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cube222.m; sourceTree = "<group>"; };
-		7D69E0762751FDEA007211CC /* Im.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Im.m; sourceTree = "<group>"; };
-		7D69E0772751FDEA007211CC /* CHTScrambler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTScrambler.m; sourceTree = "<group>"; };
-		7D69E0782751FDEA007211CC /* Cross.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cross.m; sourceTree = "<group>"; };
-		7D69E07A2751FDEA007211CC /* Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Util.m; sourceTree = "<group>"; };
-		7D69E07B2751FDEA007211CC /* CubieCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CubieCube.h; sourceTree = "<group>"; };
-		7D69E07C2751FDEA007211CC /* TwoPhaseScrambler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwoPhaseScrambler.m; sourceTree = "<group>"; };
-		7D69E07D2751FDEA007211CC /* CoordCube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoordCube.m; sourceTree = "<group>"; };
-		7D69E07E2751FDEA007211CC /* Search.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Search.m; sourceTree = "<group>"; };
-		7D69E07F2751FDEA007211CC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		7D69E0802751FDEA007211CC /* CubieCube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CubieCube.m; sourceTree = "<group>"; };
-		7D69E0812751FDEA007211CC /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
-		7D69E0822751FDEA007211CC /* TwoPhaseScrambler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwoPhaseScrambler.h; sourceTree = "<group>"; };
-		7D69E0832751FDEA007211CC /* Search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Search.h; sourceTree = "<group>"; };
-		7D69E0842751FDEA007211CC /* CoordCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoordCube.h; sourceTree = "<group>"; };
-		7D69E0852751FDEA007211CC /* Gear.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gear.h; sourceTree = "<group>"; };
-		7D69E0862751FDEA007211CC /* Clock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Clock.h; sourceTree = "<group>"; };
-		7D69E0872751FDEA007211CC /* Megaminx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Megaminx.h; sourceTree = "<group>"; };
-		7D69E0882751FDEA007211CC /* Pyraminx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pyraminx.h; sourceTree = "<group>"; };
-		7D69E08A2751FDEA007211CC /* CHTScramble.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTScramble.m; sourceTree = "<group>"; };
-		7D69E08B2751FDEA007211CC /* CHTSolve.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTSolve.m; sourceTree = "<group>"; };
-		7D69E08C2751FDEA007211CC /* CHTSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTSession.h; sourceTree = "<group>"; };
-		7D69E08D2751FDEA007211CC /* CHTSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTSessionManager.h; sourceTree = "<group>"; };
-		7D69E08E2751FDEA007211CC /* CHTScramble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTScramble.h; sourceTree = "<group>"; };
-		7D69E08F2751FDEA007211CC /* CHTSolve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTSolve.h; sourceTree = "<group>"; };
-		7D69E0902751FDEA007211CC /* CHTSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTSession.m; sourceTree = "<group>"; };
-		7D69E0912751FDEA007211CC /* CHTSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTSessionManager.m; sourceTree = "<group>"; };
-		7D69E0932751FDEA007211CC /* CHTTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTTheme.m; sourceTree = "<group>"; };
-		7D69E0942751FDEA007211CC /* CHTOneStat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTOneStat.h; sourceTree = "<group>"; };
-		7D69E0952751FDEA007211CC /* CHTSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTSettings.m; sourceTree = "<group>"; };
-		7D69E0962751FDEA007211CC /* CHTUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTUtil.h; sourceTree = "<group>"; };
-		7D69E0972751FDEA007211CC /* CHTOneStat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTOneStat.m; sourceTree = "<group>"; };
-		7D69E0982751FDEA007211CC /* CHTTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTTheme.h; sourceTree = "<group>"; };
-		7D69E0992751FDEA007211CC /* CHTSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTSettings.h; sourceTree = "<group>"; };
-		7D69E09A2751FDEA007211CC /* CHTUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTUtil.m; sourceTree = "<group>"; };
-		7D69E09C2751FDEA007211CC /* RubiksTimerTimeObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RubiksTimerTimeObj.m; sourceTree = "<group>"; };
-		7D69E09D2751FDEA007211CC /* RubiksTimerDataProcessing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RubiksTimerDataProcessing.h; sourceTree = "<group>"; };
-		7D69E09E2751FDEA007211CC /* CHTUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTUpdater.h; sourceTree = "<group>"; };
-		7D69E09F2751FDEA007211CC /* RubiksTimerDataProcessing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RubiksTimerDataProcessing.m; sourceTree = "<group>"; };
-		7D69E0A02751FDEA007211CC /* RubiksTimerTimeObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RubiksTimerTimeObj.h; sourceTree = "<group>"; };
-		7D69E0A12751FDEA007211CC /* CHTUpdater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTUpdater.m; sourceTree = "<group>"; };
-		7D78FF8B276084C2008BB82E /* StopWatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopWatchManager.swift; sourceTree = "<group>"; };
+		7D78FF8B276084C2008BB82E /* StopwatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchManager.swift; sourceTree = "<group>"; };
 		7D78FF8D276087AF008BB82E /* BottomTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomTabsView.swift; sourceTree = "<group>"; };
 		7D7A9EBF274F38CD00C2E125 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		7D7A9EC3274F392700C2E125 /* SessionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsView.swift; sourceTree = "<group>"; };
@@ -192,6 +127,7 @@
 		7D7D205F274DE13A0016D804 /* txmerdata.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = txmerdata.xcdatamodel; sourceTree = "<group>"; };
 		7D7DDF2227955AFF00362DE9 /* PenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenButton.swift; sourceTree = "<group>"; };
 		7D7E2011275DD52600ADF01D /* Licenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Licenses.swift; sourceTree = "<group>"; };
+		7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleView.swift; sourceTree = "<group>"; };
 		7D878BB0275D8DB3008AC443 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -200,6 +136,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				230CB292279C07C7008E475E /* SVGKitSwift in Frameworks */,
+				230CB290279C07C7008E475E /* SVGKit in Frameworks */,
+				7D5521DE279965B600B418BE /* libiconv.tbd in Frameworks */,
+				7D5521DC2799657300B418BE /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,8 +173,9 @@
 			children = (
 				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
 				7D7DDF2227955AFF00362DE9 /* PenButton.swift */,
-				7D78FF8B276084C2008BB82E /* StopWatchManager.swift */,
+				7D78FF8B276084C2008BB82E /* StopwatchManager.swift */,
 				7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */,
+				7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */,
 			);
 			path = Timer;
 			sourceTree = "<group>";
@@ -341,6 +282,8 @@
 		23E647C22775B21B00561780 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7D5521DD2799657B00B418BE /* libiconv.tbd */,
+				7D5521DB2799657300B418BE /* Security.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -376,112 +319,8 @@
 		7D69E0632751FDBB007211CC /* 3rdparty */ = {
 			isa = PBXGroup;
 			children = (
-				7D69E0642751FDCB007211CC /* ChaoTimer */,
 			);
 			path = 3rdparty;
-			sourceTree = "<group>";
-		};
-		7D69E0642751FDCB007211CC /* ChaoTimer */ = {
-			isa = PBXGroup;
-			children = (
-				7D69E0892751FDEA007211CC /* DataStructure */,
-				7D69E0652751FDEA007211CC /* Scrambler */,
-				7D69E0922751FDEA007211CC /* Util */,
-			);
-			path = ChaoTimer;
-			sourceTree = "<group>";
-		};
-		7D69E0652751FDEA007211CC /* Scrambler */ = {
-			isa = PBXGroup;
-			children = (
-				7D69E0662751FDEA007211CC /* Sq12phase.m */,
-				7D69E0672751FDEA007211CC /* Skewb.h */,
-				7D69E0682751FDEA007211CC /* Cross.h */,
-				7D69E0692751FDEA007211CC /* CHTScrambler.h */,
-				7D69E06A2751FDEA007211CC /* Im.h */,
-				7D69E06B2751FDEA007211CC /* Cube222.h */,
-				7D69E06C2751FDEA007211CC /* SQ1.h */,
-				7D69E06D2751FDEA007211CC /* Gear.m */,
-				7D69E06E2751FDEA007211CC /* Pyraminx.m */,
-				7D69E06F2751FDEA007211CC /* Megaminx.m */,
-				7D69E0702751FDEA007211CC /* Clock.m */,
-				7D69E0712751FDEA007211CC /* Skewb.m */,
-				7D69E0722751FDEA007211CC /* Sq12phase.h */,
-				7D69E0732751FDEA007211CC /* scrambleTypes.plist */,
-				7D69E0742751FDEA007211CC /* SQ1.m */,
-				7D69E0752751FDEA007211CC /* Cube222.m */,
-				7D69E0762751FDEA007211CC /* Im.m */,
-				7D69E0772751FDEA007211CC /* CHTScrambler.m */,
-				7D69E0782751FDEA007211CC /* Cross.m */,
-				7D69E0792751FDEA007211CC /* min2phase */,
-				7D69E0852751FDEA007211CC /* Gear.h */,
-				7D69E0862751FDEA007211CC /* Clock.h */,
-				7D69E0872751FDEA007211CC /* Megaminx.h */,
-				7D69E0882751FDEA007211CC /* Pyraminx.h */,
-			);
-			path = Scrambler;
-			sourceTree = "<group>";
-		};
-		7D69E0792751FDEA007211CC /* min2phase */ = {
-			isa = PBXGroup;
-			children = (
-				7D69E07A2751FDEA007211CC /* Util.m */,
-				7D69E07B2751FDEA007211CC /* CubieCube.h */,
-				7D69E07C2751FDEA007211CC /* TwoPhaseScrambler.m */,
-				7D69E07D2751FDEA007211CC /* CoordCube.m */,
-				7D69E07E2751FDEA007211CC /* Search.m */,
-				7D69E07F2751FDEA007211CC /* README.md */,
-				7D69E0802751FDEA007211CC /* CubieCube.m */,
-				7D69E0812751FDEA007211CC /* Util.h */,
-				7D69E0822751FDEA007211CC /* TwoPhaseScrambler.h */,
-				7D69E0832751FDEA007211CC /* Search.h */,
-				7D69E0842751FDEA007211CC /* CoordCube.h */,
-			);
-			path = min2phase;
-			sourceTree = "<group>";
-		};
-		7D69E0892751FDEA007211CC /* DataStructure */ = {
-			isa = PBXGroup;
-			children = (
-				7D69E08A2751FDEA007211CC /* CHTScramble.m */,
-				7D69E08B2751FDEA007211CC /* CHTSolve.m */,
-				7D69E08C2751FDEA007211CC /* CHTSession.h */,
-				7D69E08D2751FDEA007211CC /* CHTSessionManager.h */,
-				7D69E08E2751FDEA007211CC /* CHTScramble.h */,
-				7D69E08F2751FDEA007211CC /* CHTSolve.h */,
-				7D69E0902751FDEA007211CC /* CHTSession.m */,
-				7D69E0912751FDEA007211CC /* CHTSessionManager.m */,
-			);
-			path = DataStructure;
-			sourceTree = "<group>";
-		};
-		7D69E0922751FDEA007211CC /* Util */ = {
-			isa = PBXGroup;
-			children = (
-				7D69E0932751FDEA007211CC /* CHTTheme.m */,
-				7D69E0942751FDEA007211CC /* CHTOneStat.h */,
-				7D69E0952751FDEA007211CC /* CHTSettings.m */,
-				7D69E0962751FDEA007211CC /* CHTUtil.h */,
-				7D69E0972751FDEA007211CC /* CHTOneStat.m */,
-				7D69E0982751FDEA007211CC /* CHTTheme.h */,
-				7D69E0992751FDEA007211CC /* CHTSettings.h */,
-				7D69E09A2751FDEA007211CC /* CHTUtil.m */,
-				7D69E09B2751FDEA007211CC /* ForUpdate */,
-			);
-			path = Util;
-			sourceTree = "<group>";
-		};
-		7D69E09B2751FDEA007211CC /* ForUpdate */ = {
-			isa = PBXGroup;
-			children = (
-				7D69E09C2751FDEA007211CC /* RubiksTimerTimeObj.m */,
-				7D69E09D2751FDEA007211CC /* RubiksTimerDataProcessing.h */,
-				7D69E09E2751FDEA007211CC /* CHTUpdater.h */,
-				7D69E09F2751FDEA007211CC /* RubiksTimerDataProcessing.m */,
-				7D69E0A02751FDEA007211CC /* RubiksTimerTimeObj.h */,
-				7D69E0A12751FDEA007211CC /* CHTUpdater.m */,
-			);
-			path = ForUpdate;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -494,6 +333,7 @@
 				23DE3BD3274DDBE200254D29 /* Sources */,
 				23DE3BD4274DDBE200254D29 /* Frameworks */,
 				23DE3BD5274DDBE200254D29 /* Resources */,
+				7D5521E527997A2E00B418BE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -501,6 +341,8 @@
 			);
 			name = CubeTime;
 			packageProductDependencies = (
+				230CB28F279C07C7008E475E /* SVGKit */,
+				230CB291279C07C7008E475E /* SVGKitSwift */,
 			);
 			productName = txmer;
 			productReference = 23DE3BD7274DDBE200254D29 /* CubeTime.app */;
@@ -575,6 +417,7 @@
 			);
 			mainGroup = 23DE3BCE274DDBE200254D29;
 			packageReferences = (
+				230CB28E279C07C7008E475E /* XCRemoteSwiftPackageReference "SVGKit" */,
 			);
 			productRefGroup = 23DE3BD8274DDBE200254D29 /* Products */;
 			projectDirPath = "";
@@ -595,8 +438,6 @@
 				23DE3BE2274DDBE300254D29 /* Preview Assets.xcassets in Resources */,
 				23034729278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */,
 				23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */,
-				7D69E0B22751FDEA007211CC /* README.md in Resources */,
-				7D69E0A82751FDEA007211CC /* scrambleTypes.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -623,64 +464,38 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D69E0AF2751FDEA007211CC /* TwoPhaseScrambler.m in Sources */,
 				7D878BB1275D8DB3008AC443 /* Stats.swift in Sources */,
-				7D69E0A62751FDEA007211CC /* Clock.m in Sources */,
 				23E81E71275D8DDA00B741E3 /* IESettings.swift in Sources */,
-				7D69E0B02751FDEA007211CC /* CoordCube.m in Sources */,
 				2397131F2791032300268DFA /* AveragePhases.swift in Sources */,
-				7D69E0B52751FDEA007211CC /* CHTSolve.m in Sources */,
-				7D69E0AD2751FDEA007211CC /* Cross.m in Sources */,
-				7D69E0BB2751FDEB007211CC /* CHTUtil.m in Sources */,
 				23DE3BE4274DDBE300254D29 /* Persistence.swift in Sources */,
-				7D69E0AC2751FDEA007211CC /* CHTScrambler.m in Sources */,
-				7D69E0B92751FDEA007211CC /* CHTSettings.m in Sources */,
-				7D69E0BD2751FDEB007211CC /* RubiksTimerDataProcessing.m in Sources */,
 				7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */,
-				7D69E0AB2751FDEA007211CC /* Im.m in Sources */,
-				7D69E0A32751FDEA007211CC /* Gear.m in Sources */,
 				7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */,
 				7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */,
 				23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */,
-				7D78FF8C276084C2008BB82E /* StopWatchManager.swift in Sources */,
-				7D69E0B72751FDEA007211CC /* CHTSessionManager.m in Sources */,
+				7D78FF8C276084C2008BB82E /* StopwatchManager.swift in Sources */,
 				23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */,
-				7D69E0A72751FDEA007211CC /* Skewb.m in Sources */,
 				23E81E6C275D8DAE00B741E3 /* GeneralSettings.swift in Sources */,
 				7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */,
-				7D69E0B42751FDEA007211CC /* CHTScramble.m in Sources */,
 				7D7A9EC0274F38CD00C2E125 /* StatsView.swift in Sources */,
 				23E81E6F275D8DCA00B741E3 /* AppearanceSettings.swift in Sources */,
 				23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */,
 				7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */,
 				23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */,
-				7D69E0A22751FDEA007211CC /* Sq12phase.m in Sources */,
+				7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */,
 				7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */,
 				237B35502761995F00CC39BF /* SettingsCard.swift in Sources */,
 				7D78FF8E276087AF008BB82E /* BottomTabsView.swift in Sources */,
 				23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */,
-				7D69E0B82751FDEA007211CC /* CHTTheme.m in Sources */,
 				7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */,
-				7D69E0B12751FDEA007211CC /* Search.m in Sources */,
 				23E647C62775B2AC00561780 /* TimeDistribution.swift in Sources */,
-				7D69E0AA2751FDEA007211CC /* Cube222.m in Sources */,
-				7D69E0A52751FDEA007211CC /* Megaminx.m in Sources */,
 				2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */,
-				7D69E0BC2751FDEB007211CC /* RubiksTimerTimeObj.m in Sources */,
-				7D69E0BA2751FDEB007211CC /* CHTOneStat.m in Sources */,
-				7D69E0A42751FDEA007211CC /* Pyraminx.m in Sources */,
 				7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */,
 				233FE7B6274F109600C6F1DF /* Helper.swift in Sources */,
 				7D7A9EC6274F396E00C2E125 /* SettingsView.swift in Sources */,
-				7D69E0B32751FDEA007211CC /* CubieCube.m in Sources */,
-				7D69E0BE2751FDEB007211CC /* CHTUpdater.m in Sources */,
 				23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */,
-				7D69E0A92751FDEA007211CC /* SQ1.m in Sources */,
 				23034725278BD22600553A7D /* TimeDetail.swift in Sources */,
-				7D69E0B62751FDEA007211CC /* CHTSession.m in Sources */,
 				239C7E702781511300943AF2 /* Onboarding.swift in Sources */,
 				2337E6882767619D00438F43 /* StatsDetail.swift in Sources */,
-				7D69E0AE2751FDEA007211CC /* Util.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -840,10 +655,18 @@
 				DEVELOPMENT_ASSET_PATHS = "\"CubeTime/Preview Content\"";
 				DEVELOPMENT_TEAM = 52VS5QG4YD;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/CubeTime/3rdparty",
+					"$(PROJECT_DIR)",
+				);
 				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/include",
+					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/include",
+				);
 				INFOPLIST_FILE = CubeTime/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CubeTime;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -857,12 +680,23 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/lib",
+					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/lib",
+				);
+				LLVM_LTO = YES_THIN;
 				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"-ltnoodle",
+					"-ljre_core",
+					"-ljre_security",
+					"-ljre_net",
+					"-ljre_util",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.cubetime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "CubeTime/3rdparty-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -878,10 +712,18 @@
 				DEVELOPMENT_ASSET_PATHS = "\"CubeTime/Preview Content\"";
 				DEVELOPMENT_TEAM = 52VS5QG4YD;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/CubeTime/3rdparty",
+					"$(PROJECT_DIR)",
+				);
 				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/include",
+					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/include",
+				);
 				INFOPLIST_FILE = CubeTime/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CubeTime;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -895,12 +737,23 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/lib",
+					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/lib",
+				);
+				LLVM_LTO = YES_THIN;
 				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"-ltnoodle",
+					"-ljre_core",
+					"-ljre_security",
+					"-ljre_net",
+					"-ljre_util",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.cubetime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "CubeTime/3rdparty-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1042,6 +895,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		230CB28E279C07C7008E475E /* XCRemoteSwiftPackageReference "SVGKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SVGKit/SVGKit";
+			requirement = {
+				branch = 3.x;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		230CB28F279C07C7008E475E /* SVGKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 230CB28E279C07C7008E475E /* XCRemoteSwiftPackageReference "SVGKit" */;
+			productName = SVGKit;
+		};
+		230CB291279C07C7008E475E /* SVGKitSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 230CB28E279C07C7008E475E /* XCRemoteSwiftPackageReference "SVGKit" */;
+			productName = SVGKitSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */ = {

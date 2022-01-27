@@ -133,7 +133,7 @@ struct StatsBlockDetailText: View {
                     let time: String = formatSolveTime(secs: accountedSolves[index].time, penType: PenTypes(rawValue: accountedSolves[index].penalty))
                     Text(discarded ? "("+time+")" : time)
                         .font(.system(size: 17, weight: .regular, design: .default))
-                        .foregroundColor(discarded ? Color(uiColor: colouredBlock ? .systemGray5 : .systemGray) : colouredBlock ? .white : (colourScheme == .light ? .black : .white))
+                        .foregroundColor(discarded ? Color(uiColor: colouredBlock ? .systemGray5 : .systemGray) : (colouredBlock ? .white : (colourScheme == .light ? .black : .white)))
                         .multilineTextAlignment(.leading)
                         .padding(.bottom, 2)
                 }
@@ -307,9 +307,43 @@ struct StatsView: View {
                                     .foregroundColor(Color(uiColor: .systemGray))
                                 Spacer()
                                 
-                                Text(puzzle_types[Int(currentSession.scramble_type)].name) // TODO playground
-                                    .font(.system(size: 16, weight: .semibold, design: .default))
-                                    .foregroundColor(Color(uiColor: .systemGray))
+                                switch SessionTypes(rawValue: currentSession.session_type)! {
+                                case .standard:
+                                    Text(puzzle_types[Int(currentSession.scramble_type)].name)
+                                        .font(.system(size: 16, weight: .semibold, design: .default))
+                                        .foregroundColor(Color(uiColor: .systemGray))
+                                case .multiphase:
+                                    HStack(spacing: 2) {
+                                        Image(systemName: "square.stack")
+                                            .font(.system(size: 14, weight: .semibold, design: .default))
+                                            .foregroundColor(Color(uiColor: .systemGray))
+                                        
+                                        Text(puzzle_types[Int(currentSession.scramble_type)].name)
+                                            .font(.system(size: 16, weight: .semibold, design: .default))
+                                            .foregroundColor(Color(uiColor: .systemGray))
+                                    }
+                                    
+                                case .compsim:
+                                    HStack(spacing: 2) {
+                                        Image(systemName: "globe.asia.australia")
+                                            .font(.system(size: 16, weight: .bold, design: .default))
+                                            .foregroundColor(Color(uiColor: .systemGray))
+                                        
+                                        Text(puzzle_types[Int(currentSession.scramble_type)].name)
+                                            .font(.system(size: 16, weight: .semibold, design: .default))
+                                            .foregroundColor(Color(uiColor: .systemGray))
+                                    }
+                                
+                                case .playground:
+                                    Text("Playground")
+                                        .font(.system(size: 16, weight: .semibold, design: .default))
+                                        .foregroundColor(Color(uiColor: .systemGray))
+                                
+                                default:
+                                    Text(puzzle_types[Int(currentSession.scramble_type)].name)
+                                        .font(.system(size: 16, weight: .semibold, design: .default))
+                                        .foregroundColor(Color(uiColor: .systemGray))
+                                }
                             }
                         }
                         .padding(.top, -6)

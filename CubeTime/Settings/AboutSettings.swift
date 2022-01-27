@@ -3,8 +3,9 @@ import SwiftUI
 
 enum ProjectLicense {
     case cubetime
-    case chaotimer
+    case tnoodle
     case chartview
+    case svgkit
     case icons
     case recursivefont
     case privacypolicy
@@ -19,10 +20,12 @@ struct LicensePopUpView: View {
             switch projectLicense {
             case .cubetime:
                 CubeTimeLicense()
-            case .chaotimer:
-                ChaoTimerLicense()
+            case .tnoodle:
+                tnoodleLicense()
             case .chartview:
                 ChartViewLicense()
+            case .svgkit:
+                SVGKitLicense()
             case .icons:
                 CubingIconsLicense()
             case .recursivefont:
@@ -54,12 +57,16 @@ struct LicensesPopUpView: View {
                         projectLicense = .cubetime
                         showLicense = true
                     }
-                    Button("ChaoTimer") {
-                        projectLicense = .chaotimer
+                    Button("tnoodle") {
+                        projectLicense = .tnoodle
                         showLicense = true
                     }
                     Button("ChartView") {
                         projectLicense = .chartview
+                        showLicense = true
+                    }
+                    Button("SVGKit") {
+                        projectLicense = .svgkit
                         showLicense = true
                     }
                     Button("WCA Icons (Cubing Icons and Fonts)") {
@@ -115,26 +122,42 @@ struct AboutSettingsView: View {
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(Color(uiColor: .systemGray))
                 }
-                .padding(.bottom, 4)
+                .padding(.bottom, 12)
             }
             
-            VStack (alignment: .leading, spacing: 0) {
-                Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\nClick below for more info on source licenses and our privacy policy:")
-                    .multilineTextAlignment(.leading)
-                                
-                Button("Open licenses") {
-                    showLicenses = true
-                }
+            Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\nClick below for more info on source licenses and our privacy policy:")
+                .multilineTextAlignment(.leading)
                             
-                Text("\nThis project is made possible by speedcube.co.nz!\nGo support them and buy your cubes from https://www.speedcube.co.nz/ \n")
-                
-                
-                Text("If you need a refresher on the primary features, you can see the welcome page again.")
-                Button("Show welcome page\n") {
-                    showOnboarding = true
-                }
-                
-                Text("You can also see the full feature list on our github page!\nhttps://github.com/CubeStuffs/CubeTime")
+            Button("Open licenses") {
+                showLicenses = true
+            }
+                        
+            Text("\nThis project is made possible by speedcube.co.nz!\nGo support them and buy your cubes from https://www.speedcube.co.nz/ \n")
+            
+            Text("You can support us directly by donating to us on Ko-Fi!")
+            
+            Button {
+                guard let kofiLink = URL(string: "https://ko-fi.com/cubetime"),
+                      UIApplication.shared.canOpenURL(kofiLink) else {
+                          return
+                      }
+                UIApplication.shared.open(kofiLink,
+                                          options: [:],
+                completionHandler: nil)
+            } label: {
+                Image("kofiButton")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: UIScreen.screenWidth*0.65)
+            }
+            .padding(.top, 2)
+            
+            
+            Text("\nYou can also see the full feature list on our github page!\nhttps://github.com/CubeStuffs/CubeTime")
+            
+            Text("\nIf you need a refresher on the primary features, you can see the welcome page again.")
+            Button("Show welcome page") {
+                showOnboarding = true
             }
         }
         .padding(.horizontal)

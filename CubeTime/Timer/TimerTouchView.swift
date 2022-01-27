@@ -19,10 +19,12 @@ class TimerUIView: UIView {
     // TODO make this a subclass of UIGestureRecognizer instead to use the same coordinator
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
+        UIApplication.shared.isIdleTimerDisabled = true
         stopWatchManager.touchDown()
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
+        UIApplication.shared.isIdleTimerDisabled = false
         stopWatchManager.touchUp()
     }
 }
