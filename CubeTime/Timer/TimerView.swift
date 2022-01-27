@@ -43,6 +43,8 @@ struct TimerView: View {
     @State var algTrainerSubset = 0
     @State var playgroundScrambleType: Int
     
+    @State private var presentedAvg: CalculatedAverage?
+    
     @State private var showScrambleSheet: Bool = false
     @State private var showDrawScrambleSheet: Bool = false
     
@@ -69,6 +71,7 @@ struct TimerView: View {
     var wpa: Double?
     
     var timeNeededForTarget: Double?
+    
     
     
     init(pageIndex: Binding<Int>, currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext, hideTabBar: Binding<Bool>) {
@@ -384,6 +387,11 @@ struct TimerView: View {
                                                         
                                                 }
                                                 .frame(minWidth: 0, maxWidth: .infinity)
+                                                .onTapGesture {
+                                                    if currentAo5 != nil && currentAo5?.totalPen != .dnf {
+                                                        presentedAvg = currentAo5
+                                                    }
+                                                }
                                                 
                                                 VStack(spacing: 0) {
                                                     Text("AO12")
@@ -400,6 +408,11 @@ struct TimerView: View {
                                                     }
                                                 }
                                                 .frame(minWidth: 0, maxWidth: .infinity)
+                                                .onTapGesture {
+                                                    if currentAo12 != nil && currentAo12?.totalPen != .dnf {
+                                                        presentedAvg = currentAo12
+                                                    }
+                                                }
                                             }
                                             .padding(.top, 6)
                                             
@@ -422,6 +435,11 @@ struct TimerView: View {
                                                     }
                                                 }
                                                 .frame(minWidth: 0, maxWidth: .infinity)
+                                                .onTapGesture {
+                                                    if currentAo100 != nil && currentAo100?.totalPen != .dnf {
+                                                        presentedAvg = currentAo100
+                                                    }
+                                                }
                                                 
                                                 VStack(spacing: 0) {
                                                     Text("MEAN")
@@ -756,6 +774,9 @@ struct TimerView: View {
         }
         .sheet(isPresented: $showDrawScrambleSheet) {
             DiagramDetail(stopWatchManager.scrambleSVG)
+        }
+        .sheet(item: $presentedAvg) { item in
+            StatsDetail(solves: item, session: currentSession)
         }
         .onReceive(stopWatchManager.$mode) { newMode in
             hideTabBar = newMode == .inspecting || newMode == .running
