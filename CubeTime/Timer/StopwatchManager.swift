@@ -349,7 +349,7 @@ class StopWatchManager: ObservableObject {
     }
     
     func safeGetScramble() -> String {
-        return puzzle_types[Int(currentSession.scramble_type)].getScrambler().generateScramble()
+        return puzzle_types[Int(currentSession.scramble_type)].puzzle.getScrambler().generateScramble()
     }
     
     let group = DispatchGroup()
@@ -368,7 +368,7 @@ class StopWatchManager: ObservableObject {
         group.notify(queue: .main) {
             self.scrambleStr = scramble
             DispatchQueue.global(qos: .userInitiated).async {
-                let svg = puzzle_types[Int(self.currentSession.scramble_type)].getScrambler().drawScramble(with: scramble, with: nil)
+                let svg = puzzle_types[Int(self.currentSession.scramble_type)].puzzle.getScrambler().drawScramble(with: scramble, with: nil)
                 
                 DispatchQueue.main.async {
                     self.scrambleSVG = svg

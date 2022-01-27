@@ -263,7 +263,7 @@ struct TimerView: View {
                                     }
                                 Picker("", selection: $playgroundScrambleType) {
                                     ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                                        Text(element.getDescription()).tag(index)
+                                        Text(element.name).tag(index)
                                             .font(.system(size: 15, weight: .regular))
                                     }
                                 }

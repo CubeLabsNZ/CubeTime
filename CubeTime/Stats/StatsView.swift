@@ -309,7 +309,7 @@ struct StatsView: View {
                                 
                                 switch SessionTypes(rawValue: currentSession.session_type)! {
                                 case .standard:
-                                    Text(puzzle_types[Int(currentSession.scramble_type)].getDescription())
+                                    Text(puzzle_types[Int(currentSession.scramble_type)].name)
                                         .font(.system(size: 16, weight: .semibold, design: .default))
                                         .foregroundColor(Color(uiColor: .systemGray))
                                 case .multiphase:
@@ -318,7 +318,7 @@ struct StatsView: View {
                                             .font(.system(size: 14, weight: .semibold, design: .default))
                                             .foregroundColor(Color(uiColor: .systemGray))
                                         
-                                        Text(puzzle_types[Int(currentSession.scramble_type)].getDescription())
+                                        Text(puzzle_types[Int(currentSession.scramble_type)].name)
                                             .font(.system(size: 16, weight: .semibold, design: .default))
                                             .foregroundColor(Color(uiColor: .systemGray))
                                     }
@@ -329,7 +329,7 @@ struct StatsView: View {
                                             .font(.system(size: 16, weight: .bold, design: .default))
                                             .foregroundColor(Color(uiColor: .systemGray))
                                         
-                                        Text(puzzle_types[Int(currentSession.scramble_type)].getDescription())
+                                        Text(puzzle_types[Int(currentSession.scramble_type)].name)
                                             .font(.system(size: 16, weight: .semibold, design: .default))
                                             .foregroundColor(Color(uiColor: .systemGray))
                                     }
@@ -340,7 +340,7 @@ struct StatsView: View {
                                         .foregroundColor(Color(uiColor: .systemGray))
                                 
                                 default:
-                                    Text(puzzle_types[Int(currentSession.scramble_type)].getDescription())
+                                    Text(puzzle_types[Int(currentSession.scramble_type)].name)
                                         .font(.system(size: 16, weight: .semibold, design: .default))
                                         .foregroundColor(Color(uiColor: .systemGray))
                                 }

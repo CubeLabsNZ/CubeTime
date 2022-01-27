@@ -253,29 +253,35 @@ extension View {
 }
 
 
+struct PuzzleType {
+    let name: String
+    let puzzle: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
+}
+
+
 let chtscramblesthatdontworkwithtnoodle: [OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry] = [.SIX, .SEVEN, .SKEWB]
                     
 
-let puzzle_types: [OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry] = [
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.TWO,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.THREE,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.FOUR_FAST,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.FIVE,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.SIX,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.SEVEN,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.SQ1,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.MEGA,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.PYRA,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.CLOCK,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.SKEWB,
+let puzzle_types: [PuzzleType] = [
+    PuzzleType(name: "2x2", puzzle: .TWO),
+    PuzzleType(name: "3x3", puzzle: .THREE),
+    PuzzleType(name: "4x4", puzzle: .FOUR_FAST),
+    PuzzleType(name: "5x5", puzzle: .FIVE),
+    PuzzleType(name: "6x6", puzzle: .SIX),
+    PuzzleType(name: "7x7", puzzle: .SEVEN),
+    PuzzleType(name: "Square-1", puzzle: .SQ1),
+    PuzzleType(name: "Megaminx", puzzle: .MEGA),
+    PuzzleType(name: "Pyraminx", puzzle: .PYRA),
+    PuzzleType(name: "Clock", puzzle: .CLOCK),
+    PuzzleType(name: "Skewb", puzzle: .SKEWB),
     
     // One hand
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.THREE,
+    PuzzleType(name: "3x3 OH", puzzle: .THREE),
     
     // Blind
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.THREE,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.FOUR_FAST,
-    OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.FIVE
+    PuzzleType(name: "3x3 BLD", puzzle: .THREE),
+    PuzzleType(name: "4x4 BLD", puzzle: .FOUR_FAST),
+    PuzzleType(name: "5x5 BLD", puzzle: .FIVE),
 ]
 
 

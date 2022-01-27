@@ -88,7 +88,7 @@ struct TimeDetailViewOnly: View {
     // This is so that when the item is deleted they don't reset to default values
     let date: Date
     let time: String
-    let puzzle_type: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
+    let puzzle_type: PuzzleType
     let scramble: String
     let scrambleSVG: String?
     
@@ -116,7 +116,7 @@ struct TimeDetailViewOnly: View {
 //        self.scrambleSVG = puzzle_type.getScrambler().drawScramble(solve.scramble!)
 //        self.scrambleSVG = nil
         if let scr = solve.scramble {
-            self.scrambleSVG = JavaUtilObjects.toString(withId: puzzle_type.getScrambler().drawScramble(with: scr, with: nil))
+            self.scrambleSVG = JavaUtilObjects.toString(withId: puzzle_type.puzzle.getScrambler().drawScramble(with: scr, with: nil))
         } else {
             self.scrambleSVG = nil
         }
@@ -160,7 +160,7 @@ struct TimeDetailViewOnly: View {
                         HStack {
                             //Image("sq-1")
                             //  .padding(.trailing, 8)
-                            Image(puzzle_type.getDescription())
+                            Image(puzzle_type.name)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 32, height: 32)
@@ -169,7 +169,7 @@ struct TimeDetailViewOnly: View {
                                 .padding(.trailing, 4)
                             //.padding(.leading)
                             
-                            Text(puzzle_type.getDescription())
+                            Text(puzzle_type.name)
                                 .font(.system(size: 17, weight: .semibold, design: .default))
                             
                             Spacer()
@@ -186,7 +186,7 @@ struct TimeDetailViewOnly: View {
                         Divider()
                             .padding(.leading)
                         
-                        if puzzle_type.getKey() == "minx" {
+                        if puzzle_type.name == "Megaminx" {
                             Text(scramble.dropLast())
                                 .font(.system(size: (UIScreen.screenWidth-32) / (42.00) * 1.44, weight: .regular, design: .monospaced))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
@@ -200,12 +200,12 @@ struct TimeDetailViewOnly: View {
                                 .padding([.horizontal], 12)
                         }
                         
-                        if !chtscramblesthatdontworkwithtnoodle.contains(puzzle_type) ||
+                        if !chtscramblesthatdontworkwithtnoodle.contains(puzzle_type.puzzle) ||
                             date > Date(timeIntervalSince1970: TimeInterval(1643278.400)) {
                             Divider()
                                 .padding(.leading)
                             
-                            AsyncScrambleView(puzzle: puzzle_type, scramble: scramble)
+                            AsyncScrambleView(puzzle: puzzle_type.puzzle, scramble: scramble)
     //                            .frame(height: puzzle_type.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
                                 .padding(.horizontal, 32)
                                 .padding(.bottom)

@@ -63,7 +63,7 @@ struct StatsDetail: View {
                                     .foregroundColor(Color(uiColor: .systemGray))
                                 Spacer()
                                 
-                                Text(puzzle_types[Int(session.scramble_type)].getDescription())
+                                Text(puzzle_types[Int(session.scramble_type)].name)
                                     .font(.system(size: 16, weight: .semibold, design: .default))
                                     .foregroundColor(Color(uiColor: .systemGray))
                             }
@@ -73,14 +73,14 @@ struct StatsDetail: View {
                             
                             VStack {
                                 HStack {
-                                    Image(puzzle_types[Int(session.scramble_type)].getDescription())
+                                    Image(puzzle_types[Int(session.scramble_type)].name)
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: 32, height: 32)
                                         .padding(.leading, 2)
                                         .padding(.trailing, 4)
                                     
-                                    Text(puzzle_types[Int(session.scramble_type)].getDescription())
+                                    Text(puzzle_types[Int(session.scramble_type)].name)
                                         .font(.system(size: 17, weight: .semibold, design: .default))
                                     
                                     Spacer()
