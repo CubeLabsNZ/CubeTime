@@ -133,7 +133,7 @@ struct StatsBlockDetailText: View {
                     let time: String = formatSolveTime(secs: accountedSolves[index].time, penType: PenTypes(rawValue: accountedSolves[index].penalty))
                     Text(discarded ? "("+time+")" : time)
                         .font(.system(size: 17, weight: .regular, design: .default))
-                        .foregroundColor(discarded ? Color(uiColor: colouredBlock ? .systemGray5 : .systemGray) : colouredBlock ? .white : (colourScheme == .light ? .black : .white))
+                        .foregroundColor(discarded ? Color(uiColor: colouredBlock ? .systemGray5 : .systemGray) : (colouredBlock ? .white : (colourScheme == .light ? .black : .white)))
                         .multilineTextAlignment(.leading)
                         .padding(.bottom, 2)
                 }

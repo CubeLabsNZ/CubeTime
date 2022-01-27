@@ -184,6 +184,8 @@ struct StatsDetail: View {
                                             } else {
                                                 str += formattedTime
                                             }
+                                            
+                                            str += ":\t"+pair.1.scramble!
                                         }
                                         
                                         return str
