@@ -3,7 +3,7 @@ import SwiftUI
 
 enum ProjectLicense {
     case cubetime
-    case chaotimer
+    case tnoodle
     case chartview
     case svgkit
     case icons
@@ -20,8 +20,8 @@ struct LicensePopUpView: View {
             switch projectLicense {
             case .cubetime:
                 CubeTimeLicense()
-            case .chaotimer:
-                ChaoTimerLicense()
+            case .tnoodle:
+                tnoodleLicense()
             case .chartview:
                 ChartViewLicense()
             case .svgkit:
@@ -57,8 +57,8 @@ struct LicensesPopUpView: View {
                         projectLicense = .cubetime
                         showLicense = true
                     }
-                    Button("ChaoTimer") {
-                        projectLicense = .chaotimer
+                    Button("tnoodle") {
+                        projectLicense = .tnoodle
                         showLicense = true
                     }
                     Button("ChartView") {
