@@ -120,11 +120,12 @@ struct TimerView: View {
     
     var body: some View {
         ZStack {
+            // BACKGROUND COLOUR
             Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                 .ignoresSafeArea()
     
     
-            
+            // MAIN TIMER TEXT
             VStack {
                 Spacer()
                 
@@ -151,16 +152,7 @@ struct TimerView: View {
             }
             .ignoresSafeArea(edges: .all)
             
-            
-            
-
-            
-            
-            
-        
-            
-            
-                       
+            // TOUCH (GESTURE) RECOGNISER
             GeometryReader { geometry in
                 ZStack {
                     TimerTouchView(stopWatchManager: stopWatchManager)
@@ -183,6 +175,7 @@ struct TimerView: View {
             .ignoresSafeArea(edges: .top)
             
             
+            // VIEWS WHEN TIMER NOT RUNNING
             if !hideTabBar {
                 VStack {
                     HStack {
@@ -211,6 +204,7 @@ struct TimerView: View {
                                 }
                             }
                             
+                            // TOP BAR
                             switch SessionTypes(rawValue: currentSession.session_type)! {
                             case .standard:
                                 Text("STANDARD SESSION")
@@ -337,7 +331,6 @@ struct TimerView: View {
                         .background(Color(uiColor: .systemGray5))
                         .frame(height: 35)
                         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-    //                    .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
                         .padding(.horizontal)
                         .padding(.top, SetValues.hasBottomBar ? 0 : hideTabBar ? nil : 8)
                         
@@ -348,6 +341,7 @@ struct TimerView: View {
                     Spacer()
                 }
                 
+                // SCRAMBLE VIEW
                 GeometryReader { geometry in
                     VStack {
                         Spacer()
@@ -357,8 +351,6 @@ struct TimerView: View {
                                                 
                         ZStack {
                             if showScramble {
-                                
-                                
                                 HStack {
                                     ZStack(alignment: .bottomLeading) {
                                         RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -374,10 +366,6 @@ struct TimerView: View {
                                             .frame(width: maxWidth-4, height: 116)
                                             .scaleEffect(scaleAmount)
                                             
-                                        
-                                        
-                                        
-                                        
                                     }
                                     
                                     Spacer()
