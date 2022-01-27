@@ -149,25 +149,15 @@ class Stats {
             return (nil, nil)
         }
         
-        let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solvesNoDNFs.map({ $0.time })))
+        let solvesNoDNFsPlusTwoed = solvesNoDNFs.map({ timeWithPlusTwoForSolve($0) })
         
-        #if DEBUG
-        print(truncatedValues)
-        print(cnt)
-        #endif
-            
+        let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solvesNoDNFsPlusTwoed))
         
         
         if cnt % 2 == 0 {
-            let median = Double((solvesNoDNFs[cnt/2].time + solvesNoDNFs[(cnt/2)-1].time)/2)
+            let median = Double((solvesNoDNFsPlusTwoed[cnt/2] + solvesNoDNFsPlusTwoed[(cnt/2)-1])/2)
             
             if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
-                
-                #if DEBUG
-                print(truncatedMin)
-                print(truncatedMax)
-                #endif
-                
                 
                 return (median, ((median-truncatedMin)/(truncatedMax-truncatedMin)))
             }
@@ -176,14 +166,10 @@ class Stats {
             
             
         } else {
-            let median = Double(solvesNoDNFs[(cnt/2)].time)
+            let median = Double(solvesNoDNFsPlusTwoed[(cnt/2)])
             
             if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
                 
-                #if DEBUG
-                print(truncatedMin)
-                print(truncatedMax)
-                #endif
                 
                 return (median, ((median-truncatedMin)/(truncatedMax-truncatedMin)))
             }
@@ -405,7 +391,6 @@ class Stats {
             let times = (solvesNoDNFs as! [MultiphaseSolve]).map({ $0.phases! })
             
             
-            print(times)
             
             
             let phaseCount = multiphaseSession!.phase_count
@@ -419,18 +404,12 @@ class Stats {
                 
                 let mappedPhase = paddedPhase.chunked().map { $0[1] - $0[0] }
                 
-                #if DEBUG
-                print(mappedPhase)
-                #endif
-                
+               
                 for i in 0..<Int(phaseCount) {
                     summedPhases[i] += mappedPhase[i]
                 }
             }
-            
-            #if DEBUG
-            print(summedPhases)
-            #endif
+           
             
             return summedPhases.map({ $0 / Double(solvesNoDNFs.count) })
         } else {

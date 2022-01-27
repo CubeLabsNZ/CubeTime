@@ -153,9 +153,6 @@ final class TimerTouchView: UIViewRepresentable {
         }
         
         @objc func swipe(_ gestureRecognizer: UISwipeGestureRecognizer) {
-            #if DEBUG
-            NSLog("swiped \(gestureRecognizer.direction)")
-            #endif
             switch gestureRecognizer.direction {
             case .down:
                 if stopWatchManager.canGesture && stopWatchManager.mode != .inspecting {
@@ -179,9 +176,6 @@ final class TimerTouchView: UIViewRepresentable {
                 stopWatchManager.rescramble()
             default:
                 stopWatchManager.timerColour = TimerTextColours.timerDefaultColour
-                #if DEBUG
-                NSLog("default")
-                #endif
             }
         }
     }

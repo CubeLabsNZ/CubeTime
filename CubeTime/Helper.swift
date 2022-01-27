@@ -308,16 +308,10 @@ struct TimeMaskTextField: ViewModifier {
         
         let dotCount = text.filter({ $0 == "."}).count
         
-        // Check if the user entered a dot and if there are no existing dots.
-        #if DEBUG
-        NSLog("text.count \(text.count) text.last = \(text.last) dotcount \(dotCount)")
-        #endif
+        
         // Let the user dot if the text is more than 1, less than six (0.xx.) and there are 2 dots where the last was just entered
         if text == "." || ( text.count > 1 && text.count < 6 && text.last! == "." && dotCount < 3 ) {
             userDotted = true
-            #if DEBUG
-            NSLog("user dotted")
-            #endif
         } else if dotCount == 0 {
             userDotted = false
         }

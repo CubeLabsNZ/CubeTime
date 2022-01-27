@@ -51,11 +51,6 @@ class StopWatchManager: ObservableObject {
     
     
     init (currentSession: Sessions, managedObjectContext: NSManagedObjectContext) {
-        #if DEBUG
-        NSLog("Initializing a stopwatchamanager")
-        #endif
-        
-        
         self.currentSession = currentSession
         self.managedObjectContext = managedObjectContext
         secondsStr = formatSolveTime(secs: 0)
@@ -72,10 +67,6 @@ class StopWatchManager: ObservableObject {
     
     func tryUpdateCurrentSolveth() {
         if let currentSession = currentSession as? CompSimSession {
-            #if DEBUG
-            NSLog("current session is compsim")
-            #endif
-            
             if currentSession.solvegroups!.count > 0 {
                 currentSolveth = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup).solves!.count
             } else {
@@ -104,6 +95,7 @@ class StopWatchManager: ObservableObject {
     
     func startInspection() {
         timer?.invalidate()
+        penType = .none // reset penType from last solve
         secondsStr = "0"
         inspectionSecs = 0
         mode = .inspecting
@@ -194,6 +186,7 @@ class StopWatchManager: ObservableObject {
         solveItem.scramble_subtype = 0
         solveItem.time = self.secondsElapsed
         try! managedObjectContext.save()
+        
     }
     
     
@@ -210,26 +203,13 @@ class StopWatchManager: ObservableObject {
     
     
     func touchDown() {
-        #if DEBUG
-        NSLog("touch down")
-        #endif
-
         timerColour = TimerTextColours.timerHeldDownColour
         
         if mode == .running {
             
             justInspected = false
             
-            #if DEBUG
-            print(currentMPCount)
-            print(currentSession.session_type)
-            #endif
-            
             if let multiphaseSession = currentSession as? MultiphaseSession {
-                
-                #if DEBUG
-                print(currentMPCount)
-                #endif
                 
                 if multiphaseSession.phase_count != currentMPCount {
                     canGesture = false
@@ -237,11 +217,6 @@ class StopWatchManager: ObservableObject {
                     currentMPCount += 1
                     lap()
                 } else {
-                    
-                    #if DEBUG
-                    print(phaseTimes)
-                    #endif
-                    
                     
                     canGesture = true
                     
@@ -264,10 +239,6 @@ class StopWatchManager: ObservableObject {
     
     
     func touchUp() {
-        #if DEBUG
-        NSLog("touch up")
-        #endif
-        
         timerColour = TimerTextColours.timerDefaultColour
         
         
@@ -294,10 +265,6 @@ class StopWatchManager: ObservableObject {
     
     
     func longPressStart() {
-        #if DEBUG
-        NSLog("long press start")
-        #endif
-        
         if inspectionEnabled ? mode == .inspecting : mode == .stopped && !prevDownStoppedTimer {
             timerColour = TimerTextColours.timerCanStartColour
             feedbackStyle?.impactOccurred()
@@ -305,11 +272,6 @@ class StopWatchManager: ObservableObject {
     }
     
     func longPressEnd() {
-        #if DEBUG
-        NSLog("long press end")
-        #endif
-        
-        
         timerColour = TimerTextColours.timerDefaultColour
         withAnimation {
             showPenOptions = false
@@ -343,7 +305,11 @@ class StopWatchManager: ObservableObject {
     
     
     func changedPen() {
-        withAnimation {
+        if PenTypes(rawValue: solveItem.penalty)! == .plustwo {
+            withAnimation {
+                secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
+            }
+        } else {
             secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
         }
     }

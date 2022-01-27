@@ -114,13 +114,13 @@ struct StatsBlockText: View {
 
 struct StatsBlockDetailText: View {
     @Environment(\.colorScheme) var colourScheme
+    let trimmedSolves: [Solves]
     let accountedSolves: [Solves]
-    let allTimes: [Double]
     let colouredBlock: Bool
     
     init(_ average: CalculatedAverage, _ colouredBlock: Bool) {
-        self.accountedSolves = average.accountedSolves!
-        self.allTimes = accountedSolves.map{timeWithPlusTwoForSolve($0)}
+        self.accountedSolves = average.accountedSolves! // THIS CRASHES
+        self.trimmedSolves = average.trimmedSolves!
         self.colouredBlock = colouredBlock
     }
     
@@ -129,7 +129,7 @@ struct StatsBlockDetailText: View {
             VStack(alignment: .leading, spacing: 0) {
                 Spacer()
                 ForEach((0...4), id: \.self) { index in
-                    let discarded: Bool = (timeWithPlusTwoForSolve(accountedSolves[index]) == allTimes.min() || timeWithPlusTwoForSolve(accountedSolves[index]) == allTimes.max())
+                    let discarded: Bool = trimmedSolves.contains(accountedSolves[index])
                     let time: String = formatSolveTime(secs: accountedSolves[index].time, penType: PenTypes(rawValue: accountedSolves[index].penalty))
                     Text(discarded ? "("+time+")" : time)
                         .font(.system(size: 17, weight: .regular, design: .default))
@@ -421,9 +421,6 @@ struct StatsView: View {
                                 
                                 if SessionTypes(rawValue: currentSession.session_type)! == .multiphase {
                                     StatsBlock("AVERAGE PHASES", timesBySpeedNoDNFs.count == 0 ? 150 : nil, true, false) {
-                                        
-                                        let _ = NSLog("\(timesByDateNoDNFs.count)")
-                                        
                                         
                                         if timesByDateNoDNFs.count > 0 {
                                             AveragePhases(phaseTimes: phases!)

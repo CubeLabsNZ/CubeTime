@@ -125,13 +125,52 @@ struct TimerView: View {
                 .ignoresSafeArea()
     
     
-            // MAIN TIMER TEXT
+            if stopWatchManager.mode == .inspecting {
+                if colourScheme == .light {
+                    switch stopWatchManager.inspectionSecs {
+                    case 8..<12:
+                        InspectionColours.eightColour
+                            .ignoresSafeArea()
+                    case 12..<15:
+                        InspectionColours.twelveColour
+                            .ignoresSafeArea()
+                    case let x where x >= 15: InspectionColours.penaltyColour
+                            .ignoresSafeArea()
+                    default:
+                        EmptyView()
+                    }
+                }
+                
+                if stopWatchManager.inspectionSecs >= 17 {
+                    Text("DNF")
+                    .font(.system(size: 22, weight: .semibold, design: .rounded))
+                    .foregroundColor(colourScheme == .light ? .black : nil)
+                    .offset(y: 45)
+                } else if stopWatchManager.inspectionSecs >= 15 {
+                    Text("+2")
+                    .font(.system(size: 22, weight: .semibold, design: .rounded))
+                    .foregroundColor(colourScheme == .light ? .black : nil)
+                    .offset(y: 45)
+                }
+            } else if  stopWatchManager.mode == .stopped {
+                VStack {
+                    Text(stopWatchManager.scrambleStr ?? "Loading scramble...")
+                        .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : 18, weight: .semibold, design: .monospaced))
+                        .frame(maxHeight: UIScreen.screenHeight/3)
+                        .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
+//                        .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+                    
+                    Spacer()
+                }
+                .padding(.horizontal)
+                .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+            }
+            
             VStack {
                 Spacer()
                 
                 Text(stopWatchManager.secondsStr)
-                    .foregroundColor(
-                        {
+                    .foregroundColor({
                             if stopWatchManager.mode == .inspecting && colourScheme == .dark && stopWatchManager.timerColour == TimerTextColours.timerDefaultColour {
                                 switch stopWatchManager.inspectionSecs {
                                 case ..<8: return TimerTextColours.timerDefaultColour
@@ -220,6 +259,7 @@ struct TimerView: View {
                                 .pickerStyle(.menu)
                                 .padding(.leading, 6)
                                 .padding(.trailing)
+                                .accentColor(accentColour)
                             case .multiphase:
                                 Text("MULTIPHASE")
                                     .font(.system(size: 17, weight: .medium))
@@ -248,19 +288,13 @@ struct TimerView: View {
                                         try! managedObjectContext.save()
                                     }
                                      */
-                                    
-                                    
                                 }
                                 .padding(.leading, 6)
                                 .padding(.trailing)
                             case .playground:
                                 Text("PLAYGROUND")
                                     .font(.system(size: 17, weight: .medium))
-                                    .onTapGesture() {
-                                        #if DEBUG
-                                        NSLog("\(playgroundScrambleType), currentsession: \(currentSession.scramble_type)")
-                                        #endif
-                                    }
+                                    
                                 Picker("", selection: $playgroundScrambleType) {
                                     ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
                                         Text(element.name).tag(index)
@@ -294,6 +328,7 @@ struct TimerView: View {
                                 HStack (spacing: 10) {
                                     Image(systemName: "target")
                                         .font(.system(size: 15))
+                                        .foregroundColor(accentColour)
                                     
                                     ZStack {
                                         Text(targetStr == "" ? "0.00" : targetStr)
@@ -308,6 +343,7 @@ struct TimerView: View {
                                             .submitLabel(.done)
                                             .focused($targetFocused)
                                             .multilineTextAlignment(.leading)
+                                            .tint(accentColour)
                                             .modifier(TimeMaskTextField(text: $targetStr, onReceiveAlso: { text in
                                                 if let time = timeFromStr(text) {
                                                     (currentSession as! CompSimSession).target = time
@@ -645,13 +681,6 @@ struct TimerView: View {
                                 Button(action: {
                                     if manualInputFocused {
                                         if manualInputTime != "" {
-                                            
-                                            print("here1")
-                                            print(manualInputTime)
-                                            print(showInputField)
-                                            print(manualInputFocused)
-                                            
-                                            
                                             stopWatchManager.stop(timeFromStr(manualInputTime))
                                             
                                             
@@ -663,24 +692,14 @@ struct TimerView: View {
                                             manualInputTime = ""
                                         }
                                     } else {
-                                        print("here2")
-                                        print(manualInputTime)
-                                        print(showInputField)
-                                        print(manualInputFocused)
-                                        
-                                        
                                         showInputField = true
                                         
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                                             manualInputFocused = true
                                         }
                                         
-                                        
-                                        
                                         manualInputTime = ""
                                         
-                                        print(showInputField)
-                                        print(manualInputFocused)
                                     }
                                 }, label: {
                                     if manualInputFocused {

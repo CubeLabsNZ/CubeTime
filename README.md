@@ -11,6 +11,10 @@
     <img src="https://user-images.githubusercontent.com/24711088/146530953-94bc8542-8a1a-49a5-9faf-75c63281f2fc.png"
          height="48">
   </a>
+  <a href="https://ko-fi.com/cubetime">
+      <img src="https://user-images.githubusercontent.com/65262710/151313673-05574ab7-371c-4735-ab95-319b6dd40d82.png"
+           height="48">
+  </a>
 </p>
 
 ---
