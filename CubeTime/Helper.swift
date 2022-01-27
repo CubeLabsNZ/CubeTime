@@ -253,6 +253,8 @@ extension View {
 }
 
 
+let chtscramblesthatdontworkwithtnoodle: [OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry] = [.SIX, .SEVEN, .SKEWB]
+                    
 
 let puzzle_types: [OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry] = [
     OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry.TWO,

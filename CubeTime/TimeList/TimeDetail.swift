@@ -202,15 +202,18 @@ struct TimeDetailViewOnly: View {
 //                                .padding([.bottom, .horizontal], 12)
                                 .padding([.horizontal], 12)
                         }
-                    
-                        Divider()
-                            .padding(.leading)
                         
-                        AsyncScrambleView(puzzle: puzzle_type, scramble: scramble)
-//                            .frame(height: puzzle_type.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
-                            .padding(.horizontal, 32)
-                            .padding(.bottom)
-                            .padding(.top, 12)
+                        if !chtscramblesthatdontworkwithtnoodle.contains(puzzle_type) ||
+                            date > Date(timeIntervalSince1970: TimeInterval(1643278.400)) {
+                            Divider()
+                                .padding(.leading)
+                            
+                            AsyncScrambleView(puzzle: puzzle_type, scramble: scramble)
+    //                            .frame(height: puzzle_type.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
+                                .padding(.horizontal, 32)
+                                .padding(.bottom)
+                                .padding(.top, 12)
+                        }
                     }
                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
                     
