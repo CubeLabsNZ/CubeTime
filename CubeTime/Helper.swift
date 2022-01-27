@@ -292,6 +292,8 @@ struct TimeMaskTextField: ViewModifier {
             .keyboardType(text.count > 2 ? .numberPad : .decimalPad)
             .onReceive(Just(text)) { newValue in
                 refilter()
+                
+                onReceiveAlso?(newValue)
             }
     }
     
