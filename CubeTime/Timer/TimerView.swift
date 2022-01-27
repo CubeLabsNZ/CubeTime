@@ -72,7 +72,8 @@ struct TimerView: View {
     
     var timeNeededForTarget: Double?
     
-    
+    private var scaleAmount: CGFloat
+       
     
     init(pageIndex: Binding<Int>, currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext, hideTabBar: Binding<Bool>) {
         self._pageIndex = pageIndex
@@ -97,6 +98,24 @@ struct TimerView: View {
         self.wpa = stats.getWpaBpa().1
         
         self.timeNeededForTarget = stats.getTimeNeededForTarget()
+        
+        self.scaleAmount = {
+            let type = Int(currentSession.wrappedValue.scramble_type)
+            
+            switch type {
+            case 2: return 0.86 // 4
+            case 3: return 0.68 // 5
+            case 4: return 0.58 // 6
+            case 5: return 0.5 // 7
+            case 6: return 0.48 // sq1
+            case 7: return  0.50 // mega
+            case 8: return 0.68 // pyra
+            case 9: return 0.48 // clock
+            case 10: return 0.60 // skewb
+            default:
+                return 1
+            }
+        }()
     }
     
     var body: some View {
@@ -335,8 +354,11 @@ struct TimerView: View {
                         
                         let maxWidth = geometry.size.width - 12 - UIScreen.screenWidth/2
                         
+                                                
                         ZStack {
                             if showScramble {
+                                
+                                
                                 HStack {
                                     ZStack(alignment: .bottomLeading) {
                                         RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -350,6 +372,9 @@ struct TimerView: View {
                                             .onTapGesture { showDrawScrambleSheet = true }
 //                                                .scaleEffect((geo.size.height/UIScreen.screenWidth > 116/(maxWidth-4)) ? (116/geo.size.height) : ((maxWidth-4)/UIScreen.screenWidth), anchor: .bottomLeading)
                                             .frame(width: maxWidth-4, height: 116)
+                                            .scaleEffect(scaleAmount)
+                                            
+                                        
                                         
                                         
                                         
