@@ -341,7 +341,7 @@ struct TimerView: View {
                     Spacer()
                 }
                 
-                // SCRAMBLE VIEW
+                // GEO READER FOR BOTTOM TOOLS
                 GeometryReader { geometry in
                     VStack {
                         Spacer()
@@ -350,6 +350,7 @@ struct TimerView: View {
                         
                                                 
                         ZStack {
+                            // SCRAMBLE VIEW
                             if showScramble {
                                 HStack {
                                     ZStack(alignment: .bottomLeading) {
@@ -372,6 +373,8 @@ struct TimerView: View {
                                 }
                             }
                             
+                            
+                            // STATS
                             if showStats && SessionTypes(rawValue: currentSession.session_type)! != .compsim {
                                 HStack {
                                     Spacer()
@@ -573,9 +576,10 @@ struct TimerView: View {
                     }
                 }
                 .padding(.horizontal)
-                .padding(.bottom, 50+12)
+                .safeAreaInset(edge: .bottom, spacing: 0) {Rectangle().fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : 12)}
             }
             
+            // MANUAL ENTRY FIELD
             if showInputField {
                 VStack {
                     Spacer()
@@ -605,6 +609,8 @@ struct TimerView: View {
 
             }
             
+            
+            // PENALTY BAR
             if stopWatchManager.showPenOptions {
                 HStack(alignment: .center) {
                     Spacer()
@@ -698,13 +704,7 @@ struct TimerView: View {
             }
             
             
-            
-            
-            
-            
-            
-            
-            
+            // SCRAMBLE
             if stopWatchManager.mode == .inspecting {
                 if colourScheme == .light {
                     switch stopWatchManager.inspectionSecs {
@@ -766,9 +766,6 @@ struct TimerView: View {
                     
                 }
             }
-            
-            
-//            Text("\(wpa)")
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {
