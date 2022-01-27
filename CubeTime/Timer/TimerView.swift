@@ -251,6 +251,7 @@ struct TimerView: View {
                                             .font(.system(size: 15, weight: .regular))
                                     }
                                 }
+                                .accentColor(accentColour)
                                 .pickerStyle(.menu)
                                 .onChange(of: playgroundScrambleType) { newValue in
                                     currentSession.scramble_type = Int32(newValue)
@@ -504,7 +505,7 @@ struct TimerView: View {
                                                 .frame(width: UIScreen.screenWidth/2 - 48)
                                             
                                             VStack(spacing: 0) {
-                                                Text("TARGET TIME")
+                                                Text("TO REACH TARGET")
                                                     .font(.system(size: 13, weight: .medium))
                                                 
                                                 if let timeNeededForTarget = timeNeededForTarget {
@@ -513,7 +514,7 @@ struct TimerView: View {
                                                             .font(.system(size: 22, weight: .bold))
                                                             .modifier(DynamicText())
                                                     } else if timeNeededForTarget == -2 {
-                                                        Text("Gauranteed")
+                                                        Text("Guaranteed")
                                                             .font(.system(size: 22, weight: .bold))
                                                             .modifier(DynamicText())
                                                     } else {

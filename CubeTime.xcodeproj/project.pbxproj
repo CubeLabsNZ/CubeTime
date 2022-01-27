@@ -41,7 +41,7 @@
 		7D5521DE279965B600B418BE /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5521DD2799657B00B418BE /* libiconv.tbd */; };
 		7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */; };
 		7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6159F82751B53E00DC9A4C /* TimeCard.swift */; };
-		7D78FF8C276084C2008BB82E /* StopWatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78FF8B276084C2008BB82E /* StopWatchManager.swift */; };
+		7D78FF8C276084C2008BB82E /* StopwatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78FF8B276084C2008BB82E /* StopwatchManager.swift */; };
 		7D78FF8E276087AF008BB82E /* BottomTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78FF8D276087AF008BB82E /* BottomTabsView.swift */; };
 		7D7A9EC0274F38CD00C2E125 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EBF274F38CD00C2E125 /* StatsView.swift */; };
 		7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EC3274F392700C2E125 /* SessionsView.swift */; };
@@ -118,7 +118,7 @@
 		7D5521DD2799657B00B418BE /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabsView.swift; sourceTree = "<group>"; };
 		7D6159F82751B53E00DC9A4C /* TimeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCard.swift; sourceTree = "<group>"; };
-		7D78FF8B276084C2008BB82E /* StopWatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopWatchManager.swift; sourceTree = "<group>"; };
+		7D78FF8B276084C2008BB82E /* StopwatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchManager.swift; sourceTree = "<group>"; };
 		7D78FF8D276087AF008BB82E /* BottomTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomTabsView.swift; sourceTree = "<group>"; };
 		7D7A9EBF274F38CD00C2E125 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		7D7A9EC3274F392700C2E125 /* SessionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsView.swift; sourceTree = "<group>"; };
@@ -173,7 +173,7 @@
 			children = (
 				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
 				7D7DDF2227955AFF00362DE9 /* PenButton.swift */,
-				7D78FF8B276084C2008BB82E /* StopWatchManager.swift */,
+				7D78FF8B276084C2008BB82E /* StopwatchManager.swift */,
 				7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */,
 				7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */,
 			);
@@ -472,7 +472,7 @@
 				7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */,
 				7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */,
 				23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */,
-				7D78FF8C276084C2008BB82E /* StopWatchManager.swift in Sources */,
+				7D78FF8C276084C2008BB82E /* StopwatchManager.swift in Sources */,
 				23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */,
 				23E81E6C275D8DAE00B741E3 /* GeneralSettings.swift in Sources */,
 				7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */,

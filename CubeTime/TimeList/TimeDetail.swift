@@ -52,11 +52,7 @@ struct TimeDetail: View {
                     Button {
                         currentSolve = nil
                         
-                        //                                self.presentation.wrappedValue.dismiss()
-                        
                         dismiss()
-                        
-                        //                                dismiss() // Dismiss in case called from StatsView
                         
                         if managedObjectContext.hasChanges {
                             try! managedObjectContext.save()

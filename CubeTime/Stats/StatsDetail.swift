@@ -224,5 +224,6 @@ struct StatsDetail: View {
                 }
             }
         }
+            .accentColor(accentColour)
     }
 }

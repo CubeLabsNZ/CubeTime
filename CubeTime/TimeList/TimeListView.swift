@@ -52,11 +52,27 @@ class TimeListManager: ObservableObject {
                 } else {
                     return $0.date! > $1.date!
                 }
-            } else {
+            } /*else {
                 if ascending {
                     return timeWithPlusTwoForSolve($0) < timeWithPlusTwoForSolve($1)
                 } else {
                     return timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve($1)
+                }
+            }*/
+            else {
+                let pen0 = PenTypes(rawValue: $0.penalty)!
+                let pen1 = PenTypes(rawValue: $1.penalty)!
+                
+                if (pen0 != .dnf && pen1 != .dnf) || (pen0 == .dnf && pen1 == .dnf) {
+                    if ascending {
+                        return timeWithPlusTwoForSolve($0) < timeWithPlusTwoForSolve($1)
+                    } else {
+                        return timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve($1)
+                    }
+                } else if pen0 == .dnf && pen1 != .dnf {
+                    return !ascending
+                } else {
+                    return ascending
                 }
             }
         }
@@ -74,9 +90,13 @@ class TimeListManager: ObservableObject {
     }
 }
 
+
+
 struct TimeListView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
+    
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     @Binding var currentSession: Sessions
     
@@ -111,9 +131,43 @@ struct TimeListView: View {
                                 .foregroundColor(Color(uiColor: .systemGray))
                             Spacer()
                             
-                            Text(puzzle_types[Int(currentSession.scramble_type)].getDescription()) // TODO playground
-                                .font(.system(size: 16, weight: .semibold, design: .default))
-                                .foregroundColor(Color(uiColor: .systemGray))
+                            switch SessionTypes(rawValue: currentSession.session_type)! {
+                            case .standard:
+                                Text(puzzle_types[Int(currentSession.scramble_type)].getDescription())
+                                    .font(.system(size: 16, weight: .semibold, design: .default))
+                                    .foregroundColor(Color(uiColor: .systemGray))
+                            case .multiphase:
+                                HStack(spacing: 2) {
+                                    Image(systemName: "square.stack")
+                                        .font(.system(size: 14, weight: .semibold, design: .default))
+                                        .foregroundColor(Color(uiColor: .systemGray))
+                                    
+                                    Text(puzzle_types[Int(currentSession.scramble_type)].getDescription())
+                                        .font(.system(size: 16, weight: .semibold, design: .default))
+                                        .foregroundColor(Color(uiColor: .systemGray))
+                                }
+                                
+                            case .compsim:
+                                HStack(spacing: 2) {
+                                    Image(systemName: "globe.asia.australia")
+                                        .font(.system(size: 16, weight: .bold, design: .default))
+                                        .foregroundColor(Color(uiColor: .systemGray))
+                                    
+                                    Text(puzzle_types[Int(currentSession.scramble_type)].getDescription())
+                                        .font(.system(size: 16, weight: .semibold, design: .default))
+                                        .foregroundColor(Color(uiColor: .systemGray))
+                                }
+                            
+                            case .playground:
+                                Text("Playground")
+                                    .font(.system(size: 16, weight: .semibold, design: .default))
+                                    .foregroundColor(Color(uiColor: .systemGray))
+                            
+                            default:
+                                Text(puzzle_types[Int(currentSession.scramble_type)].getDescription())
+                                    .font(.system(size: 16, weight: .semibold, design: .default))
+                                    .foregroundColor(Color(uiColor: .systemGray))
+                            }
                         }
                         .padding(.horizontal)
                         
@@ -210,7 +264,7 @@ struct TimeListView: View {
 //                .navigationBarTitleDisplayMode(isSelectMode ? .inline : .large)
                 
                 .sheet(item: $solve) { item in
-                    TimeDetail(/*currentSession: $currentSession, */solve: item, currentSolve: $solve, timeListManager: timeListManager)
+                    TimeDetail(solve: item, currentSolve: $solve, timeListManager: timeListManager)
                         .environment(\.managedObjectContext, managedObjectContext)
                 }
                 .sheet(item: $calculatedAverage) { item in
@@ -273,7 +327,7 @@ struct TimeListView: View {
             }
             
         }
-//        .searchable(text: $timeListManager.filter, placement: .navigationBarDrawer)
+        .accentColor(accentColour)
         .navigationViewStyle(StackNavigationViewStyle())
     }
 }
