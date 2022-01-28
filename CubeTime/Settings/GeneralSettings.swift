@@ -76,7 +76,7 @@ struct GeneralSettingsView: View {
                 
                 VStack (alignment: .leading) {
                     HStack {
-                        Stepper(value: $holdDownTime, in: 0.2...1.0, step: 0.05) {
+                        Stepper(value: $holdDownTime, in: 0.05...1.0, step: 0.05) {
                             Text("Hold Down Time: ")
                                 .font(.system(size: 17, weight: .medium))
                             Text(String(format: "%.2fs", holdDownTime))

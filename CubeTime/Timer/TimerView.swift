@@ -51,7 +51,6 @@ struct TimerView: View {
     
     @State private var textRect = CGRect()
     
-    
     @FocusState private var targetFocused: Bool
     
     @FocusState private var manualInputFocused: Bool
@@ -194,10 +193,11 @@ struct TimerView: View {
             // TOUCH (GESTURE) RECOGNISER
             GeometryReader { geometry in
                 ZStack {
+                    
                     TimerTouchView(stopWatchManager: stopWatchManager)
                         .frame(width: geometry.size.width, height: geometry.size.height)
                         .environmentObject(stopWatchManager)
-                    
+                                        
                     if targetFocused || manualInputFocused /*|| (!manualInputFocused && showInputField)*/ {
 //                        Color.clear.contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
                         /// ^ this receives tap gesture but gesture is transferred to timertouchview below...
