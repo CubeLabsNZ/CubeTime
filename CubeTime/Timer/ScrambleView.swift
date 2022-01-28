@@ -26,7 +26,6 @@ struct AsyncScrambleView: View {
         Group {
             if svg == "" {
                 ProgressView()
-                    .progressViewStyle(.linear)
             } else {
                 SVGView(svg: svg)
                     .aspectRatio(contentMode: .fit)
