@@ -21,6 +21,7 @@ class StopWatchManager: ObservableObject {
     var hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
     var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
     var timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
+    var insCountDown: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionCountsDown.rawValue)
 
     
     var feedbackStyle: UIImpactFeedbackGenerator?
@@ -96,12 +97,16 @@ class StopWatchManager: ObservableObject {
     func startInspection() {
         timer?.invalidate()
         penType = .none // reset penType from last solve
-        secondsStr = "0"
+        secondsStr = insCountDown ? "15" : "0"
         inspectionSecs = 0
         mode = .inspecting
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
             inspectionSecs += 1
-            self.secondsStr = String(inspectionSecs)
+            if insCountDown {
+                self.secondsStr = String(15 - inspectionSecs)
+            } else {
+                self.secondsStr = String(inspectionSecs)
+            }
             if inspectionSecs == plustwotime {
                 penType = .plustwo
             } else if inspectionSecs == dnftime {
