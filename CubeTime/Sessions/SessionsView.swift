@@ -62,6 +62,8 @@ struct CustomiseStandardSessionView: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     let sessionItem: Sessions
     
     @State private var name: String
@@ -70,7 +72,14 @@ struct CustomiseStandardSessionView: View {
     
     @State var pinnedSession: Bool
     
-    let sessionEventType: Int32
+    
+    
+    
+    let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
+    
+    
+    @State private var sessionEventType: Int32
+    
     
     init(sessionItem: Sessions) {
         self.sessionItem = sessionItem
@@ -80,10 +89,9 @@ struct CustomiseStandardSessionView: View {
         self._targetStr = State(initialValue: filteredStrFromTime((sessionItem as? CompSimSession)?.target))
         self._phaseCount = State(initialValue: Int((sessionItem as? MultiphaseSession)?.phase_count ?? 0))
         
-        self.sessionEventType = sessionItem.scramble_type
+        self._sessionEventType = State(initialValue: sessionItem.scramble_type)
     }
     
-    let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
     
     
     var body: some View {
@@ -155,6 +163,30 @@ struct CustomiseStandardSessionView: View {
                     }
                      */
                     
+                    if sessionItem.session_type == SessionTypes.playground.rawValue {
+                        VStack (spacing: 0) {
+                            LazyVGrid(columns: sessionEventTypeColumns, spacing: 0) {
+                                ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                                    Button {
+                                        sessionEventType = Int32(index)
+                                    } label: {
+                                        ZStack {
+                                            Image("circular-" + element.name)
+                                            
+                                            Circle()
+                                                .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
+                                                .frame(width: 54, height: 54)
+                                                .offset(x: -0.2)
+                                        }
+                                    }
+                                }
+                            }
+                            .padding()
+                        }
+                        .frame(height: 180)
+                        .modifier(NewStandardSessionViewBlocks())
+                    }
+                    
                     
                     VStack (spacing: 0) {
                         HStack {
@@ -190,6 +222,11 @@ struct CustomiseStandardSessionView: View {
                             
                             if sessionItem.session_type == SessionTypes.multiphase.rawValue {
                                 (sessionItem as! MultiphaseSession).phase_count = Int16(phaseCount)
+                            }
+                            
+                            if sessionItem.session_type == SessionTypes.playground.rawValue {
+                                sessionItem.scramble_type = Int32(sessionEventType)
+                                stopWatchManager.rescramble()
                             }
                             
                             try! managedObjectContext.save()

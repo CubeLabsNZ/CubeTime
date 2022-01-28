@@ -123,7 +123,7 @@ struct TimerView: View {
             Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                 .ignoresSafeArea()
     
-    
+            // SCRAMBLE            
             if stopWatchManager.mode == .inspecting {
                 if colourScheme == .light {
                     switch stopWatchManager.inspectionSecs {
@@ -151,18 +151,6 @@ struct TimerView: View {
                     .foregroundColor(colourScheme == .light ? .black : nil)
                     .offset(y: 45)
                 }
-            } else if  stopWatchManager.mode == .stopped {
-                VStack {
-                    Text(stopWatchManager.scrambleStr ?? "Loading scramble...")
-                        .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : 18, weight: .semibold, design: .monospaced))
-                        .frame(maxHeight: UIScreen.screenHeight/3)
-                        .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
-//                        .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
-                    
-                    Spacer()
-                }
-                .padding(.horizontal)
-                .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
             }
             
             VStack {
@@ -723,37 +711,8 @@ struct TimerView: View {
             }
             
             
-            // SCRAMBLE
-            if stopWatchManager.mode == .inspecting {
-                if colourScheme == .light {
-                    switch stopWatchManager.inspectionSecs {
-                    case 8..<12:
-                        InspectionColours.eightColour
-                            .ignoresSafeArea()
-                    case 12..<15:
-                        InspectionColours.twelveColour
-                            .ignoresSafeArea()
-                    case let x where x >= 15: InspectionColours.penaltyColour
-                            .ignoresSafeArea()
-                    default:
-                        EmptyView()
-                    }
-                }
-                
-                if stopWatchManager.inspectionSecs >= 17 {
-                    Text("DNF")
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
-                    .foregroundColor(colourScheme == .light ? .black : nil)
-                    .offset(y: 45)
-                } else if stopWatchManager.inspectionSecs >= 15 {
-                    Text("+2")
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
-                    .foregroundColor(colourScheme == .light ? .black : nil)
-                    .offset(y: 45)
-                }
-            } else if  stopWatchManager.mode == .stopped {
+            if stopWatchManager.mode == .stopped {
                 if let scr = stopWatchManager.scrambleStr {
-                
                     VStack {
                         Text(scr)
                             .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
@@ -785,6 +744,16 @@ struct TimerView: View {
                     
                 }
             }
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {
