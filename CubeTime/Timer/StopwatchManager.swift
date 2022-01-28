@@ -247,8 +247,10 @@ class StopWatchManager: ObservableObject {
         timerColour = TimerTextColours.timerDefaultColour
         
         
-        if !prevDownStoppedTimer && mode == .stopped && inspectionEnabled {
+        if inspectionEnabled && mode == .stopped && !prevDownStoppedTimer {
             startInspection()
+            rescramble()
+            justInspected = true
         }
         
         
@@ -257,15 +259,7 @@ class StopWatchManager: ObservableObject {
                 showPenOptions = false
             }
         }
-            
-            
-        
         prevDownStoppedTimer = false
-        
-        if inspectionEnabled && mode == .stopped && !justInspected && prevDownStoppedTimer {
-            startInspection()
-            justInspected = true
-        }
 }
     
     
@@ -287,15 +281,15 @@ class StopWatchManager: ObservableObject {
                 if !inspectionEnabled {
                     rescramble()
                 }
+            } else if inspectionEnabled && mode == .stopped && !justInspected {
+                startInspection()
+                rescramble()
+                justInspected = true
             }
         }
         
         
-        if inspectionEnabled && mode == .stopped && !justInspected && !prevDownStoppedTimer {
-            startInspection()
-            rescramble()
-            justInspected = true
-        }
+
         prevDownStoppedTimer = false
     }
     
