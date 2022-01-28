@@ -186,12 +186,17 @@ class StopWatchManager: ObservableObject {
         solveItem.penalty = penType.rawValue
         // .puzzle_id
         solveItem.session = currentSession
-        solveItem.scramble = prevScrambleStr
+        // Use the current scramble if stopped from manual input
+        solveItem.scramble = time == nil ? prevScrambleStr : scrambleStr
         solveItem.scramble_type = currentSession.scramble_type
         solveItem.scramble_subtype = 0
         solveItem.time = self.secondsElapsed
         try! managedObjectContext.save()
         
+        // Rescramble if from manual input
+        if time != nil {
+            rescramble()
+        }
     }
     
     
@@ -247,8 +252,10 @@ class StopWatchManager: ObservableObject {
         timerColour = TimerTextColours.timerDefaultColour
         
         
-        if !prevDownStoppedTimer && mode == .stopped && inspectionEnabled {
+        if inspectionEnabled && mode == .stopped && !prevDownStoppedTimer {
             startInspection()
+            rescramble()
+            justInspected = true
         }
         
         
@@ -257,15 +264,7 @@ class StopWatchManager: ObservableObject {
                 showPenOptions = false
             }
         }
-            
-            
-        
         prevDownStoppedTimer = false
-        
-        if inspectionEnabled && mode == .stopped && !justInspected && prevDownStoppedTimer {
-            startInspection()
-            justInspected = true
-        }
 }
     
     
@@ -287,15 +286,15 @@ class StopWatchManager: ObservableObject {
                 if !inspectionEnabled {
                     rescramble()
                 }
+            } else if inspectionEnabled && mode == .stopped && !justInspected {
+                startInspection()
+                rescramble()
+                justInspected = true
             }
         }
         
         
-        if inspectionEnabled && mode == .stopped && !justInspected && !prevDownStoppedTimer {
-            startInspection()
-            rescramble()
-            justInspected = true
-        }
+
         prevDownStoppedTimer = false
     }
     
