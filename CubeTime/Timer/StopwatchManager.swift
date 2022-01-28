@@ -186,12 +186,17 @@ class StopWatchManager: ObservableObject {
         solveItem.penalty = penType.rawValue
         // .puzzle_id
         solveItem.session = currentSession
-        solveItem.scramble = prevScrambleStr
+        // Use the current scramble if stopped from manual input
+        solveItem.scramble = time == nil ? prevScrambleStr : scrambleStr
         solveItem.scramble_type = currentSession.scramble_type
         solveItem.scramble_subtype = 0
         solveItem.time = self.secondsElapsed
         try! managedObjectContext.save()
         
+        // Rescramble if from manual input
+        if time != nil {
+            rescramble()
+        }
     }
     
     
