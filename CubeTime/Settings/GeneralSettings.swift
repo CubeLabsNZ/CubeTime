@@ -2,7 +2,7 @@ import SwiftUI
 
 
 enum gsKeys: String {
-    case inspection, freeze, timeDpWhenRunning, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats, scrambleSize
+    case inspection, freeze, timeDpWhenRunning, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats, scrambleSize, inspectionCountsDown
 }
 
 extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
@@ -24,6 +24,7 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.showStats.rawValue) var showStats: Bool = true
     
     @AppStorage(gsKeys.scrambleSize.rawValue) var scrambleSize: Int = 18
+    @AppStorage(gsKeys.inspectionCountsDown.rawValue) var insCountDown: Bool = false
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
@@ -59,7 +60,7 @@ struct GeneralSettingsView: View {
                 .padding([.horizontal, .top], 10)
                 
                 HStack {
-                    Toggle(isOn: $inspectionTime) {
+                    Toggle(isOn: $inspectionTime.animation(.spring())) {
                         Text("Inspection Time")
                             .font(.system(size: 17, weight: .medium))
                     }
@@ -73,6 +74,22 @@ struct GeneralSettingsView: View {
                 
                 Divider()
                 
+                if inspectionTime {
+                    HStack {
+                        Toggle(isOn: $insCountDown) {
+                            Text("Inspection Counts Down")
+                                .font(.system(size: 17, weight: .medium))
+                        }
+                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        
+                    }
+                    .padding(.horizontal)
+                    .onChange(of: insCountDown) { newValue in
+                        stopWatchManager.insCountDown = newValue
+                    }
+                    
+                    Divider()
+                }
                 
                 VStack (alignment: .leading) {
                     HStack {
