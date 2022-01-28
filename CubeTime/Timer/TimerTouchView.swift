@@ -139,32 +139,21 @@ final class TimerTouchView: UIViewRepresentable {
     func updateUIView(_ uiView: TimerUIView, context: UIViewRepresentableContext<TimerTouchView>) {
         if stopWatchManager.scrambleStr == nil {
             for gesture in uiView.gestureRecognizers! {
+                /*
                 if gesture is UISwipeGestureRecognizer && (gesture as! UISwipeGestureRecognizer).direction == UISwipeGestureRecognizer.Direction.right {
                     uiView.removeGestureRecognizer(gesture)
-                } else if gesture is UILongPressGestureRecognizer {
+                } else */
+                if gesture is UILongPressGestureRecognizer {
                     uiView.removeGestureRecognizer(gesture)
                 }
             }
-            
-            print("RAN")
         } else {
             let longPressGesture = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.longPress))
             longPressGesture.allowableMovement = gestureThreshold
             longPressGesture.minimumPressDuration = userHoldTime
-
-            
             
             uiView.addGestureRecognizer(longPressGesture)
-            
-            print("ADDED")
         }
-        
-        print("view updated")
-        
-        
-        
-        
-        
     }
     
     class Coordinator: NSObject {

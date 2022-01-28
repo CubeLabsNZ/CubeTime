@@ -123,7 +123,7 @@ struct TimerView: View {
             Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                 .ignoresSafeArea()
     
-            // SCRAMBLE            
+            // SCRAMBLE
             if stopWatchManager.mode == .inspecting {
                 if colourScheme == .light {
                     switch stopWatchManager.inspectionSecs {
@@ -289,6 +289,7 @@ struct TimerView: View {
                                             .font(.system(size: 15, weight: .regular))
                                     }
                                 }
+                                .disabled(stopWatchManager.scrambleStr == nil)
                                 .accentColor(accentColour)
                                 .pickerStyle(.menu)
                                 .onChange(of: playgroundScrambleType) { newValue in
@@ -657,7 +658,7 @@ struct TimerView: View {
                         
                         if currentSession.session_type != 2 {
                             if !stopWatchManager.nilSolve {
-                                if !manualInputFocused {
+                                if !manualInputFocused && stopWatchManager.scrambleStr != nil {
                                     Rectangle()
                                         .fill(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
                                         .frame(width: 1.5, height: 20)
@@ -665,40 +666,42 @@ struct TimerView: View {
                                 }
                             }
                             
-                            PenaltyBar(manualInputFocused ? 68 : 34) {
-                                Button(action: {
-                                    if manualInputFocused {
-                                        if manualInputTime != "" {
-                                            stopWatchManager.stop(timeFromStr(manualInputTime))
-                                            
-                                            
-                                            showInputField = false
-                                            
-                                            
-                                            manualInputFocused = false
+                            if stopWatchManager.scrambleStr != nil {
+                                PenaltyBar(manualInputFocused ? 68 : 34) {
+                                    Button(action: {
+                                        if manualInputFocused {
+                                            if manualInputTime != "" {
+                                                stopWatchManager.stop(timeFromStr(manualInputTime))
+                                                
+                                                
+                                                showInputField = false
+                                                
+                                                
+                                                manualInputFocused = false
 
+                                                manualInputTime = ""
+                                            }
+                                        } else {
+                                            showInputField = true
+                                            
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                                manualInputFocused = true
+                                            }
+                                            
                                             manualInputTime = ""
+                                            
                                         }
-                                    } else {
-                                        showInputField = true
-                                        
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                                            manualInputFocused = true
+                                    }, label: {
+                                        if manualInputFocused {
+                                            Text("Done")
+                                                .font(.system(size: 21, weight: .semibold, design: .rounded))
+                                        } else {
+                                            Image(systemName: "plus.circle")
+                                                .font(.system(size: 24, weight: .semibold, design: .rounded))
                                         }
-                                        
-                                        manualInputTime = ""
-                                        
-                                    }
-                                }, label: {
-                                    if manualInputFocused {
-                                        Text("Done")
-                                            .font(.system(size: 21, weight: .semibold, design: .rounded))
-                                    } else {
-                                        Image(systemName: "plus.circle")
-                                            .font(.system(size: 24, weight: .semibold, design: .rounded))
-                                    }
-                                })
-                                    .disabled(manualInputFocused ? (manualInputTime == "") : false)
+                                    })
+                                        .disabled(manualInputFocused ? (manualInputTime == "") : false)
+                                }
                             }
                         }
                     }
