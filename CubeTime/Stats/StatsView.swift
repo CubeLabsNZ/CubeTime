@@ -578,6 +578,7 @@ struct StatsView: View {
                             let timeDistributionData = (compsim ? allCompsimAveragesByTime : timesBySpeedNoDNFs)
                             
                             StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 300), true, false) {
+                                
                                 TimeTrend(data: timeTrendData, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
                                     .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
                                     .padding(.horizontal, 12)
