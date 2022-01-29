@@ -800,21 +800,23 @@ struct ScrambleDetail: View {
     
     var body: some View {
         NavigationView {
-            Text(scramble)
-                .font(.system(size: CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button {
-                            dismiss()
-                        } label: {
-                            Text("Done")
+            ScrollView {
+                Text(scramble)
+                    .font(.system(size: CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button {
+                                dismiss()
+                            } label: {
+                                Text("Done")
+                            }
                         }
                     }
-                }
-                .navigationTitle("Scramble")
-                .navigationBarTitleDisplayMode(.inline)
+            }
+            .navigationTitle("Scramble")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
