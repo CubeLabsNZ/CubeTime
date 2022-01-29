@@ -137,6 +137,7 @@ final class TimerTouchView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: TimerUIView, context: UIViewRepresentableContext<TimerTouchView>) {
+        /*
         if stopWatchManager.scrambleStr == nil {
             for gesture in uiView.gestureRecognizers! {
                 /*
@@ -154,6 +155,7 @@ final class TimerTouchView: UIViewRepresentable {
             
             uiView.addGestureRecognizer(longPressGesture)
         }
+         */
     }
     
     class Coordinator: NSObject {
