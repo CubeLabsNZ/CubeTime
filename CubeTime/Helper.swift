@@ -394,7 +394,7 @@ class SetValues {
     
     static let hasBottomBar = ((UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.bottom)! > 0
     
-//    static let hasBottomBar = UIApplication.shared.windows[0].safeAreaInsets.bottom > 0
+//    static let hasBottomBar = UIApplication.shared.windows[0].safeAreaInsets.bottom > 0 /// deprecated
 }
 
 class TimerTextColours {
