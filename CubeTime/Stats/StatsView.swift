@@ -119,23 +119,16 @@ struct StatsBlockText: View {
 
 struct StatsBlockDetailText: View {
     @Environment(\.colorScheme) var colourScheme
-    let accountedSolves: [Solves]
-    let allTimes: [Double]
+    let calculatedAverage: CalculatedAverage
     let colouredBlock: Bool
-    
-    init(_ average: CalculatedAverage, _ colouredBlock: Bool) {
-        self.accountedSolves = average.accountedSolves!
-        self.allTimes = accountedSolves.map{timeWithPlusTwoForSolve($0)}
-        self.colouredBlock = colouredBlock
-    }
     
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 0) {
                 Spacer()
-                ForEach((0...4), id: \.self) { index in
-                    let discarded: Bool = (timeWithPlusTwoForSolve(accountedSolves[index]) == allTimes.min() || timeWithPlusTwoForSolve(accountedSolves[index]) == allTimes.max())
-                    let time: String = formatSolveTime(secs: accountedSolves[index].time, penType: PenTypes(rawValue: accountedSolves[index].penalty))
+                ForEach(calculatedAverage.accountedSolves!, id: \.self) { solve in
+                    let discarded = calculatedAverage.trimmedSolves!.contains(solve)
+                    let time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
                     Text(discarded ? "("+time+")" : time)
                         .font(.system(size: 17, weight: .regular, design: .default))
                         .foregroundColor(discarded ? Color(uiColor: colouredBlock ? .systemGray5 : .systemGray) : (colouredBlock ? .white : (colourScheme == .light ? .black : .white)))
@@ -434,7 +427,7 @@ struct StatsView: View {
                                         if bestAo5 != nil {
                                             StatsBlockText(formatSolveTime(secs: bestAo5?.average ?? 0, penType: bestAo5?.totalPen), true, false, true, true)
                                             
-                                            StatsBlockDetailText(bestAo5!, false)
+                                            StatsBlockDetailText(calculatedAverage: bestAo5!, colouredBlock: false)
                                         } else {
                                             StatsBlockText("", false, false, false, false)
                                         }
@@ -473,7 +466,7 @@ struct StatsView: View {
                                             if currentCompsimAverage != nil {
                                                 StatsBlockText(formatSolveTime(secs: currentCompsimAverage?.average ?? 0, penType: currentCompsimAverage?.totalPen), false, false, true, true)
                                                     
-                                                StatsBlockDetailText(currentCompsimAverage!, false)
+                                                StatsBlockDetailText(calculatedAverage: currentCompsimAverage!, colouredBlock: false)
                                             } else {
                                                 StatsBlockText("", false, false, false, false)
                                             }
@@ -513,7 +506,8 @@ struct StatsView: View {
                                                         }
                                                     }
                                                 
-                                                StatsBlockDetailText(bestCompsimAverage!, true)
+                                                StatsBlockDetailText(calculatedAverage: bestCompsimAverage!, colouredBlock: true)
+
                                             } else {
                                                 StatsBlockText("", false, false, false, false)
                                             }
