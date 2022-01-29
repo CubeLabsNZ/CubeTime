@@ -391,7 +391,10 @@ class SetValues {
     static let spacingIcons = 20
     static let marginBottom = 16
     static let iconFontSize = CGFloat(22)
-    static let hasBottomBar = UIApplication.shared.windows[0].safeAreaInsets.bottom > 0
+    
+    static let hasBottomBar = ((UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.bottom)! > 0
+    
+//    static let hasBottomBar = UIApplication.shared.windows[0].safeAreaInsets.bottom > 0
 }
 
 class TimerTextColours {

@@ -136,7 +136,7 @@ struct MainTabsView: View {
                         .environment(\.managedObjectContext, managedObjectContext)
                         .environmentObject(stopWatchManager)
                     // TODO move this to SessionsView on tap
-                        .onChange(of: currentSession) { [currentSession] newSession in
+                        .onChange(of: currentSession) { newSession in
                             
                             UserDefaults.standard.set(newSession.objectID.uriRepresentation(), forKey: "last_used_session") // TODO what was i thinking move this logic into SessionsView
                             stopWatchManager.changeCurrentSession(newSession)
