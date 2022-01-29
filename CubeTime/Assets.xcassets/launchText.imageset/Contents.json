@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "scramble-placeholder-2.png",
+      "filename" : "launchText.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "scramble-placeholder-1.png",
+      "filename" : "launchText@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "scramble-placeholder.png",
+      "filename" : "launchText@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

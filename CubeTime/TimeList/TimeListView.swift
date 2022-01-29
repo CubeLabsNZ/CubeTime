@@ -226,6 +226,14 @@ struct TimeListView: View {
                                 if groups.count != 0 {
                                     TimeBar(solvegroup: groups.last!, timeListManager: timeListManager, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode)
                                     
+                                    if groups.last!.solves!.array.count != 0 {
+                                        LazyVGrid(columns: columns, spacing: 12) {
+                                            ForEach(groups.last!.solves!.array as! [Solves], id: \.self) { solve in
+                                                TimeCard(solve: solve, timeListManager: timeListManager, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
+                                            }
+                                        }
+                                    }
+                                    
                                     if groups.count > 1 {
                                         Divider()
                                             .padding(.horizontal)

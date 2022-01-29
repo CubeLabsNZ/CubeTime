@@ -293,6 +293,32 @@ struct StatsView: View {
                 
                 ScrollView {
                     VStack (spacing: 0) {
+                        
+                        #if DEBUG
+                        Button {
+                            let solveItem: Solves!
+
+                            solveItem = Solves(context: managedObjectContext)
+                            solveItem.date = Date()
+                            solveItem.session = currentSession
+                            solveItem.scramble = "R U R' F' D D' D F B B "
+                            solveItem.scramble_type = 1
+                            solveItem.scramble_subtype = 0
+                            solveItem.time = Double.random(in: 6..<11)
+                            
+                            do {
+                                try managedObjectContext.save()
+                            } catch {
+                                if let error = error as NSError? {
+                                    fatalError("Unresolved error \(error), \(error.userInfo)")
+                                }
+                            }
+                        } label: {
+                            Text("sdfsdf")
+                        }
+                        #endif
+                        
+                        
                         VStack(spacing: 0) {
                             HStack (alignment: .center) {
                                 Text(currentSession.name!)
@@ -546,6 +572,7 @@ struct StatsView: View {
                             let timeDistributionData = (compsim ? allCompsimAveragesByTime : timesBySpeedNoDNFs)
                             
                             StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 300), true, false) {
+                                
                                 TimeTrend(data: timeTrendData, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
                                     .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
                                     .padding(.horizontal, 12)

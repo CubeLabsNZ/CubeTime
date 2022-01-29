@@ -51,7 +51,6 @@ struct TimerView: View {
     
     @State private var textRect = CGRect()
     
-    
     @FocusState private var targetFocused: Bool
     
     @FocusState private var manualInputFocused: Bool
@@ -124,7 +123,7 @@ struct TimerView: View {
             Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                 .ignoresSafeArea()
     
-    
+            // SCRAMBLE
             if stopWatchManager.mode == .inspecting {
                 if colourScheme == .light {
                     switch stopWatchManager.inspectionSecs {
@@ -152,18 +151,6 @@ struct TimerView: View {
                     .foregroundColor(colourScheme == .light ? .black : nil)
                     .offset(y: 45)
                 }
-            } else if  stopWatchManager.mode == .stopped {
-                VStack {
-                    Text(stopWatchManager.scrambleStr ?? "Loading scramble...")
-                        .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : 18, weight: .semibold, design: .monospaced))
-                        .frame(maxHeight: UIScreen.screenHeight/3)
-                        .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
-//                        .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
-                    
-                    Spacer()
-                }
-                .padding(.horizontal)
-                .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
             }
             
             VStack {
@@ -194,10 +181,11 @@ struct TimerView: View {
             // TOUCH (GESTURE) RECOGNISER
             GeometryReader { geometry in
                 ZStack {
+                    
                     TimerTouchView(stopWatchManager: stopWatchManager)
                         .frame(width: geometry.size.width, height: geometry.size.height)
                         .environmentObject(stopWatchManager)
-                    
+                                        
                     if targetFocused || manualInputFocused /*|| (!manualInputFocused && showInputField)*/ {
 //                        Color.clear.contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
                         /// ^ this receives tap gesture but gesture is transferred to timertouchview below...
@@ -301,6 +289,7 @@ struct TimerView: View {
                                             .font(.system(size: 15, weight: .regular))
                                     }
                                 }
+                                .disabled(stopWatchManager.scrambleStr == nil)
                                 .accentColor(accentColour)
                                 .pickerStyle(.menu)
                                 .onChange(of: playgroundScrambleType) { newValue in
@@ -669,7 +658,7 @@ struct TimerView: View {
                         
                         if currentSession.session_type != 2 {
                             if !stopWatchManager.nilSolve {
-                                if !manualInputFocused {
+                                if !manualInputFocused && stopWatchManager.scrambleStr != nil {
                                     Rectangle()
                                         .fill(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
                                         .frame(width: 1.5, height: 20)
@@ -677,40 +666,42 @@ struct TimerView: View {
                                 }
                             }
                             
-                            PenaltyBar(manualInputFocused ? 68 : 34) {
-                                Button(action: {
-                                    if manualInputFocused {
-                                        if manualInputTime != "" {
-                                            stopWatchManager.stop(timeFromStr(manualInputTime))
-                                            
-                                            
-                                            showInputField = false
-                                            
-                                            
-                                            manualInputFocused = false
+                            if stopWatchManager.scrambleStr != nil {
+                                PenaltyBar(manualInputFocused ? 68 : 34) {
+                                    Button(action: {
+                                        if manualInputFocused {
+                                            if manualInputTime != "" {
+                                                stopWatchManager.stop(timeFromStr(manualInputTime))
+                                                
+                                                
+                                                showInputField = false
+                                                
+                                                
+                                                manualInputFocused = false
 
+                                                manualInputTime = ""
+                                            }
+                                        } else {
+                                            showInputField = true
+                                            
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                                manualInputFocused = true
+                                            }
+                                            
                                             manualInputTime = ""
+                                            
                                         }
-                                    } else {
-                                        showInputField = true
-                                        
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                                            manualInputFocused = true
+                                    }, label: {
+                                        if manualInputFocused {
+                                            Text("Done")
+                                                .font(.system(size: 21, weight: .semibold, design: .rounded))
+                                        } else {
+                                            Image(systemName: "plus.circle")
+                                                .font(.system(size: 24, weight: .semibold, design: .rounded))
                                         }
-                                        
-                                        manualInputTime = ""
-                                        
-                                    }
-                                }, label: {
-                                    if manualInputFocused {
-                                        Text("Done")
-                                            .font(.system(size: 21, weight: .semibold, design: .rounded))
-                                    } else {
-                                        Image(systemName: "plus.circle")
-                                            .font(.system(size: 24, weight: .semibold, design: .rounded))
-                                    }
-                                })
-                                    .disabled(manualInputFocused ? (manualInputTime == "") : false)
+                                    })
+                                        .disabled(manualInputFocused ? (manualInputTime == "") : false)
+                                }
                             }
                         }
                     }
@@ -723,37 +714,8 @@ struct TimerView: View {
             }
             
             
-            // SCRAMBLE
-            if stopWatchManager.mode == .inspecting {
-                if colourScheme == .light {
-                    switch stopWatchManager.inspectionSecs {
-                    case 8..<12:
-                        InspectionColours.eightColour
-                            .ignoresSafeArea()
-                    case 12..<15:
-                        InspectionColours.twelveColour
-                            .ignoresSafeArea()
-                    case let x where x >= 15: InspectionColours.penaltyColour
-                            .ignoresSafeArea()
-                    default:
-                        EmptyView()
-                    }
-                }
-                
-                if stopWatchManager.inspectionSecs >= 17 {
-                    Text("DNF")
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
-                    .foregroundColor(colourScheme == .light ? .black : nil)
-                    .offset(y: 45)
-                } else if stopWatchManager.inspectionSecs >= 15 {
-                    Text("+2")
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
-                    .foregroundColor(colourScheme == .light ? .black : nil)
-                    .offset(y: 45)
-                }
-            } else if  stopWatchManager.mode == .stopped {
+            if stopWatchManager.mode == .stopped {
                 if let scr = stopWatchManager.scrambleStr {
-                
                     VStack {
                         Text(scr)
                             .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
@@ -785,6 +747,16 @@ struct TimerView: View {
                     
                 }
             }
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {
@@ -828,21 +800,23 @@ struct ScrambleDetail: View {
     
     var body: some View {
         NavigationView {
-            Text(scramble)
-                .font(.system(size: CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button {
-                            dismiss()
-                        } label: {
-                            Text("Done")
+            ScrollView {
+                Text(scramble)
+                    .font(.system(size: CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button {
+                                dismiss()
+                            } label: {
+                                Text("Done")
+                            }
                         }
                     }
-                }
-                .navigationTitle("Scramble")
-                .navigationBarTitleDisplayMode(.inline)
+            }
+            .navigationTitle("Scramble")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

@@ -120,13 +120,13 @@ class StopWatchManager: ObservableObject {
         NSLog("starting")
         #endif
         mode = .running
-        
+
         timer?.invalidate() // Stop possibly running inspections
-        
+
         secondsElapsed = 0
         secondsStr = formatSolveTime(secs: 0)
         timerStartTime = Date()
-        
+
         if timeDP != -1 {
             timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { [self] timer in
                 self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow

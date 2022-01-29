@@ -472,25 +472,24 @@ struct Line: View {
         return curvedLines ? Path.quadClosedCurvedPathWithPoints(points: points, step: CGPoint(x: stepWidth, y: stepHeight), globalOffset: minDataValue) : Path.closedLinePathWithPoints(points: points, step: CGPoint(x: stepWidth, y: stepHeight))
     }
     
+    
     var body: some View {
-        ZStack {
-            self.path
-                .trim(from: 0, to: self.showFull ? 1:0)
-                .stroke(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected), style: StrokeStyle(lineWidth: 3, lineJoin: .round))
-                .rotationEffect(.degrees(180), anchor: .center)
-                .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
-                .animation(.easeInOut(duration: 1.2))
+        self.path
+        
+            .trim(from: 0, to: self.showFull ? 1 : 0)
+            .stroke(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected), style: StrokeStyle(lineWidth: 3, lineJoin: .round))
+            .rotationEffect(.degrees(180), anchor: .center)
+            .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
             
-                .onAppear {
+            .onAppear {
+                withAnimation(.easeInOut(duration: 1.2)) {
                     self.showFull = true
                 }
-                .onDisappear {
-                    self.showFull = false
-                }
+                    
+            }
+            .onDisappear { self.showFull = false }
         }
     }
-    
-}
 
 
 struct Legend: View {
@@ -538,13 +537,14 @@ struct Legend: View {
                     
                     Spacer()
                     
-                    
-                    self.line(atHeight: self.getYLegendSafe(height: height), width: self.frame.width)
-                        .stroke(Color(uiColor: .systemGray5), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5,height == 0 ? 0 : 10]))
-                        .rotationEffect(.degrees(180), anchor: .center)
-                        .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
-                        .animation(.easeOut(duration: 0.2))
-                        .clipped()
+                    withAnimation(.easeOut(duration: 0.2)) {
+                        self.line(atHeight: self.getYLegendSafe(height: height), width: self.frame.width)
+                            .stroke(Color(uiColor: .systemGray5), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5,height == 0 ? 0 : 10]))
+                            .rotationEffect(.degrees(180), anchor: .center)
+                            .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
+//                            .animation(.easeOut(duration: 0.2))
+                            .clipped()
+                    }
                 }
                 
             }
@@ -615,10 +615,13 @@ struct TimeTrend: View {
                 VStack(alignment: .leading, spacing: 8) {
                     ZStack{
                         GeometryReader{ reader in
-                            Legend(data: self.data,
-                                   frame: .constant(reader.frame(in: .local)))
-                                .transition(.opacity)
-                                .animation(Animation.easeOut(duration: 1.2))
+                            withAnimation(.easeOut(duration: 1.2)) {
+                                Legend(data: self.data,
+                                       frame: .constant(reader.frame(in: .local)))
+                                    .transition(.opacity)
+//                                    .animation(Animation.easeOut(duration: 1.2))
+                            }
+                            
                             
                             Line(data: self.data,
                                  frame: .constant(CGRect(x: 0, y: 0, width: reader.frame(in: .local).width - 30, height: reader.frame(in: .local).height + 25)),

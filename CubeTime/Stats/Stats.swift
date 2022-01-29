@@ -450,7 +450,7 @@ class Stats {
                 if lastGroupSolves.count == 4 {
                     let sortedGroup = lastGroupSolves.sorted(by: Stats.sortWithDNFsLast)
                     
-                    let timeNeededForTarget = (compsimSession as! CompSimSession).target * 3 - (sortedGroup.dropFirst().dropLast().reduce(0) {$0 + timeWithPlusTwoForSolve($1)})
+                    let timeNeededForTarget = (compsimSession as CompSimSession).target * 3 - (sortedGroup.dropFirst().dropLast().reduce(0) {$0 + timeWithPlusTwoForSolve($1)})
                     
                     if timeNeededForTarget < sortedGroup.last!.time {
                         return -1 // not possible
