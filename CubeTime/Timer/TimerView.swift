@@ -13,12 +13,12 @@ struct TimerView: View {
     //@ObservedObject var currentSession: Sessions
    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
-    @AppStorage("onboarding") private var showOnboarding: Bool = true
+    @AppStorage("onboarding") var showOnboarding: Bool = true
     
-    @AppStorage(gsKeys.showScramble.rawValue) var showScramble: Bool = true
-    @AppStorage(gsKeys.showStats.rawValue) var showStats: Bool = true
+    @AppStorage(gsKeys.showScramble.rawValue) private var showScramble: Bool = true
+    @AppStorage(gsKeys.showStats.rawValue) private var showStats: Bool = true
     
-    @AppStorage(gsKeys.scrambleSize.rawValue) var scrambleSize: Int = 18
+    @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     
     
     
@@ -391,6 +391,8 @@ struct TimerView: View {
 //                                                .scaleEffect((geo.size.height/UIScreen.screenWidth > 116/(maxWidth-4)) ? (116/geo.size.height) : ((maxWidth-4)/UIScreen.screenWidth), anchor: .bottomLeading)
                                             .frame(width: maxWidth-4, height: 116)
                                             .scaleEffect(scaleAmount)
+                                        
+                                            .offset(x: 1, y: -2.5)
                                             
                                     }
                                     
@@ -419,6 +421,7 @@ struct TimerView: View {
                                                     if let currentAo5 = currentAo5 {
                                                         Text(formatSolveTime(secs: currentAo5.average!, penType: currentAo5.totalPen))
                                                             .font(.system(size: 24, weight: .bold))
+                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
                                                             .modifier(DynamicText())
                                                     } else {
                                                         Text("-")
@@ -441,6 +444,7 @@ struct TimerView: View {
                                                     if let currentAo12 = currentAo12 {
                                                         Text(formatSolveTime(secs: currentAo12.average!, penType: currentAo12.totalPen))
                                                             .font(.system(size: 24, weight: .bold))
+                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
                                                             .modifier(DynamicText())
                                                     } else {
                                                         Text("-")
@@ -468,6 +472,7 @@ struct TimerView: View {
                                                     if let currentAo100 = currentAo100 {
                                                         Text(formatSolveTime(secs: currentAo100.average!, penType: currentAo100.totalPen))
                                                             .font(.system(size: 24, weight: .bold))
+                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
                                                             .modifier(DynamicText())
                                                     } else {
                                                         Text("-")
@@ -489,6 +494,7 @@ struct TimerView: View {
                                                     if let sessionMean = sessionMean {
                                                         Text(formatSolveTime(secs: sessionMean))
                                                             .font(.system(size: 24, weight: .bold))
+                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
                                                             .modifier(DynamicText())
                                                     } else {
                                                         Text("-")
@@ -523,6 +529,7 @@ struct TimerView: View {
                                                     if let bpa = bpa {
                                                         Text(formatSolveTime(secs: bpa))
                                                             .font(.system(size: 24, weight: .bold))
+                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
                                                             .modifier(DynamicText())
                                                     } else {
                                                         Text("...")
@@ -545,6 +552,7 @@ struct TimerView: View {
                                                         } else {
                                                             Text(formatSolveTime(secs: wpa))
                                                                 .font(.system(size: 24, weight: .bold))
+                                                                .frame(maxWidth: UIScreen.screenWidth/4-8)
                                                                 .modifier(DynamicText())
                                                         }
                                                         

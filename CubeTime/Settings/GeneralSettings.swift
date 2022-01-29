@@ -12,19 +12,19 @@ extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
 
 struct GeneralSettingsView: View {
     
-    @AppStorage(gsKeys.inspection.rawValue) var inspectionTime: Bool = false
-    @AppStorage(gsKeys.freeze.rawValue) var holdDownTime: Double = 0.5
-    @AppStorage(gsKeys.timeDpWhenRunning.rawValue) var timerDP: Int = 3
-    @AppStorage(gsKeys.hapBool.rawValue) var hapticFeedback: Bool = true
-    @AppStorage(gsKeys.hapType.rawValue) var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
-    @AppStorage(gsKeys.gestureDistance.rawValue) var gestureActivationDistance: Double = 50
-    @AppStorage(gsKeys.displayDP.rawValue) var displayDP: Int = 3
+    @AppStorage(gsKeys.inspection.rawValue) private var inspectionTime: Bool = false
+    @AppStorage(gsKeys.freeze.rawValue) private var holdDownTime: Double = 0.5
+    @AppStorage(gsKeys.timeDpWhenRunning.rawValue) private var timerDP: Int = 3
+    @AppStorage(gsKeys.hapBool.rawValue) private var hapticFeedback: Bool = true
+    @AppStorage(gsKeys.hapType.rawValue) private var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
+    @AppStorage(gsKeys.gestureDistance.rawValue) private var gestureActivationDistance: Double = 50
+    @AppStorage(gsKeys.displayDP.rawValue) private var displayDP: Int = 3
     
-    @AppStorage(gsKeys.showScramble.rawValue) var showScramble: Bool = true
-    @AppStorage(gsKeys.showStats.rawValue) var showStats: Bool = true
+    @AppStorage(gsKeys.showScramble.rawValue) private var showScramble: Bool = true
+    @AppStorage(gsKeys.showStats.rawValue) private var showStats: Bool = true
     
-    @AppStorage(gsKeys.scrambleSize.rawValue) var scrambleSize: Int = 18
-    @AppStorage(gsKeys.inspectionCountsDown.rawValue) var insCountDown: Bool = false
+    @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
+    @AppStorage(gsKeys.inspectionCountsDown.rawValue) private var insCountDown: Bool = false
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     

@@ -7,6 +7,8 @@ struct TimeCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    
     let solve: Solves
     let timeListManager: TimeListManager
     
@@ -63,7 +65,7 @@ struct TimeCard: View {
                     .font(.system(size: 17, weight: .bold, design: .default))
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(Color("AccentColor"))
+                        .foregroundColor(accentColour)
                 }
             }
         }

@@ -36,24 +36,9 @@ struct TimeBar: View {
         ZStack {
             RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(isSelected ? Color(uiColor: .systemGray4) : colourScheme == .dark ? Color(uiColor: .systemGray6) : Color(uiColor: .systemBackground))
-                .frame(minHeight: 70, maxHeight: 70) /// todo check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectange
+//                .frame(minHeight: 70, maxHeight: 70) /// todo check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectange
                 
                 .onTapGesture {
-//                    if isSelectMode {
-//                        withAnimation {
-//                            if isSelected {
-//                                isSelected = false
-//                                if let index = selectedSolves.firstIndex(of: solve) {
-//                                    selectedSolves.remove(at: index)
-//                                }
-//                            } else {
-//                                isSelected = true
-//                                selectedSolves.append(solve)
-//                            }
-//                        }
-//                    } else {
-//                        currentSolve = solve
-//                    }
                     if isSelectMode {
                         
                     } else if solvegroup.solves!.count < 5 {
@@ -78,20 +63,30 @@ struct TimeBar: View {
                             Spacer()
                         }
                         
-                        HStack(spacing: 0) {
-                            ForEach(Array((solvegroup.solves!.array as! [Solves]).enumerated()), id: \.offset) { index, solve in
+                        let displayText: NSMutableAttributedString = {
+                            let finalStr = NSMutableAttributedString(string: "")
+                            
+                            let grey: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.systemGray, .font: UIFont.systemFont(ofSize: 17, weight: .medium)]
+                            let normal: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 17, weight: .medium)]
+                            
+                            
+                            for (index, solve) in Array((solvegroup.solves!.array as! [Solves]).enumerated()) {
                                 if calculatedAverage.trimmedSolves!.contains(solve) {
-                                    Text("(" + formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)) + ")")
-                                        .font(.system(size: 17, weight: .medium))
-                                        .foregroundColor(Color(uiColor: .systemGray))
+                                    finalStr.append(NSMutableAttributedString(string: "(" + formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)) + ")", attributes: grey))
                                 } else {
-                                    Text(formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)))
-                                        .font(.system(size: 17, weight: .medium))
+                                    finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)), attributes: normal))
                                 }
                                 if index < solvegroup.solves!.count-1 {
-                                    Text(", ")
+                                    finalStr.append(NSMutableAttributedString(string: ", "))
                                 }
                             }
+                            
+                            return finalStr
+                        }()
+                                           
+                        
+                        HStack(spacing: 0) {
+                            Text(AttributedString(displayText))
                             
                             Spacer()
                         }
@@ -104,15 +99,30 @@ struct TimeBar: View {
                                 Spacer()
                             }
                             
-                            HStack(spacing: 0) {
-                                ForEach(Array((solvegroup.solves!.array as! [Solves]).enumerated()), id: \.offset) { index, solve in
-                                    Text(formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)))
-                                        .font(.system(size: 17, weight: .medium))
+                            let displayText: NSMutableAttributedString = {
+                                let finalStr = NSMutableAttributedString(string: "")
+                                
+                                let normal: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 17, weight: .medium)]
+                                
+                                
+                                for (index, solve) in Array((solvegroup.solves!.array as! [Solves]).enumerated()) {
+                                    finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)), attributes: normal))
                                     
-                                    if index < solvegroup.solves!.count-1 {
-                                        Text(", ")
+                                    if index < solvegroup.solves!.count - 1 {
+                                        finalStr.append(NSMutableAttributedString(string: ", "))
                                     }
                                 }
+                                
+                                return finalStr
+                            }()
+
+                            
+                            
+                            
+                            
+                            
+                            HStack(spacing: 0) {
+                                Text(AttributedString(displayText))
                                 
                                 Spacer()
                             }
@@ -140,6 +150,7 @@ struct TimeBar: View {
                         .padding(.trailing, 12)
                 }
             }
+            .padding(.vertical, 6)
         }
         .onChange(of: isSelectMode) {newValue in
             if !newValue && isSelected {

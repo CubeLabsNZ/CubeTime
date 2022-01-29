@@ -589,7 +589,7 @@ struct Legend: View {
 
 
 struct TimeTrend: View {
-    @AppStorage(asKeys.gradientSelected.rawValue) var gradientSelected: Int = 6
+    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
     
     @ObservedObject var data: ChartData

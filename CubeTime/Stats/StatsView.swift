@@ -79,7 +79,9 @@ struct StatsBlockText: View {
                 if nilCondition {
                     Text(displayText)
                         .font(.system(size: 34, weight: .bold, design: .default))
+                        .frame(minWidth: 0, maxWidth: UIScreen.screenWidth/2 - 42, alignment: .leading)
                         .modifier(DynamicText())
+                        .padding(.bottom, 2)
                     
                         .if(!colouredText) { view in
                             view.foregroundColor(Color(uiColor: colouredBlock ? .white : (colourScheme == .light ? .black : .white)))
@@ -87,12 +89,14 @@ struct StatsBlockText: View {
                         .if(colouredText) { view in
                             view.gradientForeground(gradientSelected: gradientSelected)
                         }
+                    
+                        
+                    
                 } else {
                     VStack {
                         Text("-")
                             .font(.system(size: 28, weight: .medium, design: .default))
                             .foregroundColor(Color(uiColor: .systemGray5))
-                            .padding(.top, 20)
                         
                         Spacer()
                     }
@@ -100,6 +104,7 @@ struct StatsBlockText: View {
                 
                 Spacer()
             }
+            .frame(minWidth: 0, maxWidth: .infinity)
             .offset(y: displayDetail ? 30 : 0)
             
             if displayDetail {

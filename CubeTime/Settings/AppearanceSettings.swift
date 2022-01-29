@@ -137,6 +137,7 @@ struct AppearanceSettingsView: View {
                                 .padding(.horizontal)
                                 .padding(.bottom, 12)
                                 .padding(.top, 10)
+                                .offset(x: 1, y: 1)
                         } else {
                             VStack(alignment: .leading, spacing: 0) {
                                 /* add this switch back when dynamic gradient added

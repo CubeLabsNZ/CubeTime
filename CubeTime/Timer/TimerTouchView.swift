@@ -103,8 +103,8 @@ final class TimerTouchView: UIViewRepresentable {
     
     @ObservedObject var stopWatchManager: StopWatchManager
     
-    @AppStorage(gsKeys.freeze.rawValue) var userHoldTime: Double = 0.5
-    @AppStorage(gsKeys.gestureDistance.rawValue) var gestureThreshold: Double = 50
+    @AppStorage(gsKeys.freeze.rawValue) private var userHoldTime: Double = 0.5
+    @AppStorage(gsKeys.gestureDistance.rawValue) private var gestureThreshold: Double = 50
     
     init (stopWatchManager: StopWatchManager) {
         self.stopWatchManager = stopWatchManager
