@@ -17,6 +17,7 @@
 		2337E6882767619D00438F43 /* StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2337E6872767619D00438F43 /* StatsDetail.swift */; };
 		233FE7B6274F109600C6F1DF /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Helper.swift */; };
 		2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2359689227A367A0003ED9E1 /* StopwatchManager.swift */; };
+		235CDA0327A786D800F48C89 /* Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235CDA0227A786D800F48C89 /* Updates.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
 		239C7E702781511300943AF2 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239C7E6F2781511300943AF2 /* Onboarding.swift */; };
@@ -93,6 +94,7 @@
 		233FE7B5274F109600C6F1DF /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		2354882227642E2800FE8D7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2359689227A367A0003ED9E1 /* StopwatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchManager.swift; sourceTree = "<group>"; };
+		235CDA0227A786D800F48C89 /* Updates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updates.swift; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
 		2397131E2791032300268DFA /* AveragePhases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AveragePhases.swift; sourceTree = "<group>"; };
 		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 				23DE3BE3274DDBE300254D29 /* Persistence.swift */,
 				7D2B805D279422BD0006AEDD /* AppDelegate.swift */,
 				239C7E6F2781511300943AF2 /* Onboarding.swift */,
+				235CDA0227A786D800F48C89 /* Updates.swift */,
 				233FE7B5274F109600C6F1DF /* Helper.swift */,
 				23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */,
 				7D7C45C42751DE2C0073885C /* 3rdparty-Bridging-Header.h */,
@@ -495,6 +498,7 @@
 				23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */,
 				7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */,
 				23E647C62775B2AC00561780 /* TimeDistribution.swift in Sources */,
+				235CDA0327A786D800F48C89 /* Updates.swift in Sources */,
 				2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */,
 				7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */,
 				233FE7B6274F109600C6F1DF /* Helper.swift in Sources */,
@@ -659,7 +663,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CubeTime/Preview Content\"";
 				DEVELOPMENT_TEAM = 52VS5QG4YD;
 				ENABLE_PREVIEWS = YES;
@@ -693,7 +697,7 @@
 					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/lib",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.8;
 				OTHER_LDFLAGS = (
 					"-ltnoodle",
 					"-ljre_core",
@@ -716,7 +720,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CubeTime/Preview Content\"";
 				DEVELOPMENT_TEAM = 52VS5QG4YD;
 				ENABLE_PREVIEWS = YES;
@@ -750,7 +754,7 @@
 					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/lib",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.8;
 				OTHER_LDFLAGS = (
 					"-ltnoodle",
 					"-ljre_core",

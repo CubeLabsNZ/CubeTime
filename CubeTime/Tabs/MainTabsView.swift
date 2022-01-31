@@ -81,21 +81,23 @@ struct MainTabsView: View {
     @State var hideTabBar = false
     @State var currentSession: Sessions
     
-//    var shortcutItem: UIApplicationShortcutItem?
+    @State var showUpdates: Bool = false
+    
+    //    var shortcutItem: UIApplicationShortcutItem?
     
     
     @AppStorage("onboarding") var showOnboarding: Bool = true
     @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
     @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
-        
+    
     init(managedObjectContext: NSManagedObjectContext) {
         let lastUsedSessionURI = UserDefaults.standard.url(forKey: "last_used_session")
         
         /*
-        if let shortcutItem = shortcutItem {
-            self.shortcutItem = shortcutItem
-        }
+         if let shortcutItem = shortcutItem {
+         self.shortcutItem = shortcutItem
+         }
          */
         
         let fetchedSession: Sessions
@@ -111,11 +113,27 @@ struct MainTabsView: View {
             let objID = managedObjectContext.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI!)!
             fetchedSession = try! managedObjectContext.existingObject(with: objID) as! Sessions // TODO better error handling
         }
-                
+        
         // https://swiftui-lab.com/random-lessons/#data-10
         self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: fetchedSession, managedObjectContext: managedObjectContext))
-                                             
+        
         self._currentSession = State(initialValue: fetchedSession)
+    }
+    
+    
+    func checkForUpdate() {
+        let newVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String)
+        
+        let currentVersion = UserDefaults.standard.string(forKey: "currentVersion")
+        
+        if currentVersion == newVersion {
+            print("same")
+        } else {
+            if !showOnboarding {
+                showUpdates = true
+            }
+            UserDefaults.standard.set(newVersion, forKey: "currentVersion")
+        }
     }
     
     var body: some View {
@@ -146,13 +164,13 @@ struct MainTabsView: View {
                             
                             UserDefaults.standard.set(newSession.objectID.uriRepresentation(), forKey: "last_used_session") // TODO what was i thinking move this logic into SessionsView
                             stopWatchManager.changeCurrentSession(newSession)
-
+                            
                         }
                 case .settings:
                     SettingsView(showOnboarding: $showOnboarding)
                         .environmentObject(stopWatchManager)
                 }
-
+                
                 BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
                     .zIndex(1)
                     .ignoresSafeArea(.keyboard)
@@ -160,30 +178,35 @@ struct MainTabsView: View {
             .sheet(isPresented: $showOnboarding, onDismiss: { pageIndex = 0 }) {
                 OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
             }
-            /*
-            .onChange(of: scenePhase) { newValue in
-                if newValue == .active {
-                    if let shortcutItem = shortcutItem {
-                        print("HERE")
-                        print(shortcutItem.type)
-                        
-                        tabRouter.currentTab = {
-                            switch shortcutItem.type {
-                            case "timer":
-                                return .timer
-                            case "timelist":
-                                return .solves
-                            case "stats":
-                                return .stats
-                            case "sessions":
-                                return .sessions
-                            default:
-                                return .timer
-                            }
-                        }()
-                    }
-                }
+            .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
+                Updates(showUpdates: $showUpdates)
             }
+            .onAppear(perform: checkForUpdate)
+            
+            /* attempted shortcut menu :tear:
+             .onChange(of: scenePhase) { newValue in
+             if newValue == .active {
+             if let shortcutItem = shortcutItem {
+             print("HERE")
+             print(shortcutItem.type)
+             
+             tabRouter.currentTab = {
+             switch shortcutItem.type {
+             case "timer":
+             return .timer
+             case "timelist":
+             return .solves
+             case "stats":
+             return .stats
+             case "sessions":
+             return .sessions
+             default:
+             return .timer
+             }
+             }()
+             }
+             }
+             }
              */
         }
         .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
