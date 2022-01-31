@@ -16,8 +16,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launchImage" translatesAutoresizingMaskIntoConstraints="NO" id="e2n-se-3cS">
-                                <rect key="frame" x="167" y="335" width="80" height="80"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="launchImage" translatesAutoresizingMaskIntoConstraints="NO" id="e2n-se-3cS">
+                                <rect key="frame" x="167" y="408" width="80" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="80" id="4uA-oH-r0S"/>
                                     <constraint firstAttribute="width" constant="80" id="PJV-GF-BI0"/>
@@ -26,19 +26,19 @@
                                 </constraints>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="launchText" translatesAutoresizingMaskIntoConstraints="NO" id="HcI-0g-vSd">
-                                <rect key="frame" x="146" y="788" width="122" height="41"/>
+                                <rect key="frame" x="145.5" y="788" width="123" height="41"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="122" id="erv-DV-gwM"/>
-                                    <constraint firstAttribute="height" constant="41" id="yz4-R7-VzD"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="122" id="erv-DV-gwM"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="yz4-R7-VzD"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" name="launchBackground"/>
                         <constraints>
-                            <constraint firstItem="HcI-0g-vSd" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="146" id="8T8-xh-fiF"/>
                             <constraint firstItem="e2n-se-3cS" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="FmF-0q-zCg"/>
-                            <constraint firstItem="e2n-se-3cS" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="291" id="Yju-ef-rbz"/>
+                            <constraint firstItem="e2n-se-3cS" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="SES-1d-2l7"/>
+                            <constraint firstItem="e2n-se-3cS" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Y0x-bS-Q0q"/>
                             <constraint firstItem="HcI-0g-vSd" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="h9w-L9-teH"/>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="HcI-0g-vSd" secondAttribute="bottom" constant="33" id="kTM-Mn-sjh"/>
                             <constraint firstItem="e2n-se-3cS" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="ygf-vX-jtB"/>
