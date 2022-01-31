@@ -48,17 +48,13 @@ struct TimeDetail: View {
                 
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
+                        currentSolve = nil
                         
                         dismiss()
                         
-                        
-                        currentSolve = nil
-                        
-//                        dismiss()
-                        
-//                        if managedObjectContext.hasChanges {
-//                            try! managedObjectContext.save()
-//                        }
+                        if managedObjectContext.hasChanges {
+                            try! managedObjectContext.save()
+                        }
                     } label: {
                         Text("Done")
                     }
@@ -91,17 +87,12 @@ struct TimeDetailViewOnly: View {
     let puzzle_type: PuzzleType
     let scramble: String
     
-//    @Binding var currentSession: Sessions
-    
     @Binding var currentSolve: Solves?
     
     @State private var userComment: String
     
     
-    init(/*currentSession: Binding<Sessions>*/solve: Solves, currentSolve: Binding<Solves?>?, timeListManager: TimeListManager?){
-        
-//        self._currentSession = currentSession
-        
+    init(solve: Solves, currentSolve: Binding<Solves?>?, timeListManager: TimeListManager?){
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
         self.time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
@@ -110,10 +101,7 @@ struct TimeDetailViewOnly: View {
         self._currentSolve = currentSolve ?? Binding.constant(nil)
         self.timeListManager = timeListManager
         _userComment = State(initialValue: solve.comment ?? "")
-        
 
-//        self.scrambleSVG = puzzle_type.getScrambler().drawScramble(solve.scramble!)
-//        self.scrambleSVG = nil
         
         self.titleDateFormat = DateFormatter()
         
@@ -129,21 +117,7 @@ struct TimeDetailViewOnly: View {
                 .ignoresSafeArea()
             
             ScrollView {
-                EmptyView()
-//                Text("sdf")
-//                Text("\(puzzle_type.puzzle)")
-//                Text("\(scramble)")
-                
-                
-//                AsyncScrambleView(puzzle: puzzle_type.puzzle, scramble: scramble)
-//                    .padding(.horizontal, 32)
-//                    .padding(.bottom)
-//                    .padding(.top, 12)
-
-
-                
-                
-                /* VStack (spacing: 12) {
+                VStack (spacing: 12) {
                     HStack {
                         Text(time)
                             .font(.system(size: 34, weight: .bold))
@@ -154,7 +128,6 @@ struct TimeDetailViewOnly: View {
                     .padding(.top)
                     
                     HStack {
-//                            Text(date, format: .dateTime.day().month().year())
                         Text(date, formatter: titleDateFormat)
                             .font(.system(size: 22, weight: .semibold, design: .default))
                             .foregroundColor(Color(uiColor: .systemGray))
@@ -166,8 +139,6 @@ struct TimeDetailViewOnly: View {
                     
                     VStack {
                         HStack {
-                            //Image("sq-1")
-                            //  .padding(.trailing, 8)
                             Image(puzzle_type.name)
                                 .resizable()
                                 .scaledToFit()
@@ -175,17 +146,11 @@ struct TimeDetailViewOnly: View {
                                 
                                 .padding(.leading, 2)
                                 .padding(.trailing, 4)
-                            //.padding(.leading)
                             
                             Text(puzzle_type.name)
                                 .font(.system(size: 17, weight: .semibold, design: .default))
                             
                             Spacer()
-                            
-//                            Text(puzzle_subtype.uppercased())
-//                                .font(.system(size: 13, weight: .semibold, design: .default))
-//                                .offset(y: 2)
-                            
                         }
                         .padding(.leading, 12)
                         .padding(.trailing)
@@ -198,13 +163,11 @@ struct TimeDetailViewOnly: View {
                             Text(scramble.dropLast())
                                 .font(.system(size: (UIScreen.screenWidth-32) / (42.00) * 1.44, weight: .regular, design: .monospaced))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
-//                                .padding([.bottom, .horizontal], 12)
                                 .padding([.horizontal], 12)
                         } else {
                             Text(scramble)
                                 .font(.system(size: 16, weight: .regular, design: .monospaced))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
-//                                .padding([.bottom, .horizontal], 12)
                                 .padding([.horizontal], 12)
                         }
                         
@@ -213,15 +176,13 @@ struct TimeDetailViewOnly: View {
                             Divider()
                                 .padding(.leading)
                             
-//                            TimerScrambleView(svg: puzzle_type.puzzle.getScrambler().drawScramble(with: scramble, with: nil))
                             
-                            /*
                             AsyncScrambleView(puzzle: puzzle_type.puzzle, scramble: scramble)
-    //                            .frame(height: puzzle_type.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
+                                .frame(height: puzzle_type.puzzle.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
                                 .padding(.horizontal, 32)
                                 .padding(.bottom)
                                 .padding(.top, 12)
-                             */
+                             
                         }
                     }
                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
@@ -235,7 +196,7 @@ struct TimeDetailViewOnly: View {
                                 .symbolRenderingMode(.hierarchical)
                                 .font(.system(size: 30, weight: .semibold))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
-                            //.padding(.trailing, 8)
+                            
                             Text("Comment")
                                 .font(.system(size: 17, weight: .semibold, design: .default))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
@@ -243,16 +204,12 @@ struct TimeDetailViewOnly: View {
                             Spacer()
                             
                         }
-                        //.padding(.leading)
-                        //                            .padding(.trailing)
-                        //                            .padding(.top)
                         .padding(.leading, 12)
                         .padding(.trailing)
                         .padding(.top, 12)
                         
                         Divider()
                             .padding(.leading)
-                        //                                .padding(.bottom)
                         
                         ZStack {
                             TextEditor(text: $userComment)
@@ -302,7 +259,7 @@ struct TimeDetailViewOnly: View {
                                     .symbolRenderingMode(.hierarchical)
                                     .font(.system(size: 26, weight: .semibold))
                                     .foregroundColor(colourScheme == .light ? .black : .white)
-                                //.padding(.trailing, 8)
+                                
                                 Text("Multiphase Breakdown")
                                     .font(.system(size: 17, weight: .semibold, design: .default))
                                     .foregroundColor(colourScheme == .light ? .black : .white)
@@ -379,14 +336,8 @@ struct TimeDetailViewOnly: View {
                     }
                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
                     .padding(.horizontal)
-                        
-                    
-                    
-                    
-                    
-                    
-                } */
-//                .offset(y: -6)
+                }
+                .offset(y: -6)
                 .navigationBarTitle("", displayMode: .inline)
                 
             }
