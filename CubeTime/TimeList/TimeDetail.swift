@@ -152,15 +152,9 @@ struct TimeDetailViewOnly: View {
                             
                             Spacer()
                             
-                            if (["2x2", "3x3", "Square-1", "Pyraminx", "Skewb", "3x3 OH", "3x3 BLD"].contains(puzzle_type.name)) {
-                                Text("RANDOM STATE")
-                                    .font(.system(size: 13, weight: .semibold, design: .default))
-                                    .offset(y: 2)
-                            } else {
-                                Text("RANDOM MOVES")
-                                    .font(.system(size: 13, weight: .semibold, design: .default))
-                                    .offset(y: 2)
-                            }
+                            Text((["2x2", "3x3", "Square-1", "Pyraminx", "Skewb", "3x3 OH", "3x3 BLD"].contains(puzzle_type.name)) ? "RANDOM STATE" : "RANDOM MOVES")
+                                .font(.system(size: 13, weight: .semibold, design: .default))
+                                .offset(y: 2)
                         }
                         .padding(.leading, 12)
                         .padding(.trailing)
