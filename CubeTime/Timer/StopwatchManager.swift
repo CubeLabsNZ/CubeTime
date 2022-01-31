@@ -213,7 +213,11 @@ class StopWatchManager: ObservableObject {
     
     
     func touchDown() {
-        timerColour = TimerTextColours.timerHeldDownColour
+        if mode != .stopped || scrambleStr != nil {
+            timerColour = TimerTextColours.timerHeldDownColour
+        } else if prevDownStoppedTimer {
+            timerColour = TimerTextColours.timerLoadingColor
+        }
         
         if mode == .running {
             
@@ -249,13 +253,14 @@ class StopWatchManager: ObservableObject {
     
     
     func touchUp() {
-        timerColour = TimerTextColours.timerDefaultColour
-        
-        
-        if inspectionEnabled && mode == .stopped && !prevDownStoppedTimer {
-            startInspection()
-            rescramble()
-            justInspected = true
+        if mode != .stopped || scrambleStr != nil {
+            timerColour = TimerTextColours.timerDefaultColour
+            
+            if inspectionEnabled && mode == .stopped && !prevDownStoppedTimer {
+                startInspection()
+                rescramble()
+                justInspected = true
+            }
         }
         
         
@@ -269,18 +274,24 @@ class StopWatchManager: ObservableObject {
     
     
     func longPressStart() {
-        if inspectionEnabled ? mode == .inspecting : mode == .stopped && !prevDownStoppedTimer {
+        NSLog("long press start")
+        if inspectionEnabled ? mode == .inspecting : mode == .stopped && !prevDownStoppedTimer && ( mode != .stopped || scrambleStr != nil ) {
+            NSLog("timer can start")
             timerColour = TimerTextColours.timerCanStartColour
             feedbackStyle?.impactOccurred()
         }
     }
     
     func longPressEnd() {
-        timerColour = TimerTextColours.timerDefaultColour
+        if mode != .stopped || scrambleStr != nil {
+            timerColour = TimerTextColours.timerDefaultColour
+        } else if prevDownStoppedTimer {
+            timerColour = TimerTextColours.timerLoadingColor
+        }
         withAnimation {
             showPenOptions = false
         }
-        if !prevDownStoppedTimer {
+        if !prevDownStoppedTimer && ( mode != .stopped || scrambleStr != nil ) {
             if inspectionEnabled ? mode == .inspecting : mode == .stopped {
                 start()
                 if !inspectionEnabled {
@@ -322,29 +333,34 @@ class StopWatchManager: ObservableObject {
         return puzzle_types[Int(currentSession.scramble_type)].puzzle.getScrambler().generateScramble()
     }
     
-    let group = DispatchGroup()
+    var scrambleWorkItem: DispatchWorkItem?
     
     func rescramble() {
         NSLog("rescramble")
-        group.enter()
+        if let scrambleWorkItem = scrambleWorkItem {
+            scrambleWorkItem.cancel()
+        }
         prevScrambleStr = scrambleStr
         scrambleStr = nil
-        scrambleSVG = nil
-        var scramble: String = "Failed to load scramble."
-        DispatchQueue.global(qos: .userInitiated).async {
-            scramble = self.safeGetScramble()
-            self.group.leave()
+        if mode != .inspecting {
+            self.timerColour = TimerTextColours.timerLoadingColor
         }
-        group.notify(queue: .main) {
-            self.scrambleStr = scramble
-            DispatchQueue.global(qos: .userInitiated).async {
-                let svg = puzzle_types[Int(self.currentSession.scramble_type)].puzzle.getScrambler().drawScramble(with: scramble, with: nil)
-                
-                DispatchQueue.main.async {
-                    self.scrambleSVG = svg
-                }
+        scrambleSVG = nil
+        let newWorkItem = DispatchWorkItem {
+            let scramble = self.safeGetScramble()
+            
+            DispatchQueue.main.async {
+                self.scrambleStr = scramble
+                self.timerColour = TimerTextColours.timerDefaultColour
+            }
+            let svg = puzzle_types[Int(self.currentSession.scramble_type)].puzzle.getScrambler().drawScramble(with: scramble, with: nil)
+            
+            DispatchQueue.main.async {
+                self.scrambleSVG = svg
             }
         }
+        scrambleWorkItem = newWorkItem
+        DispatchQueue.global(qos: .userInitiated).async(execute: newWorkItem)
     }
     
     func changeCurrentSession(_ session: Sessions) {
@@ -358,7 +374,9 @@ class StopWatchManager: ObservableObject {
     
     func displayPenOptions() {
         
-        timerColour = TimerTextColours.timerDefaultColour
+        if solveItem != nil {
+            timerColour = TimerTextColours.timerDefaultColour
+        }
         prevDownStoppedTimer = false
         
         withAnimation {

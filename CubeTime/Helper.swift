@@ -402,6 +402,7 @@ class TimerTextColours {
     static let timerDefaultColourDarkMode: Color = Color.primary
     static let timerHeldDownColour: Color = Color.red
     static let timerCanStartColour: Color = Color.green
+    static let timerLoadingColor: Color = Color(uiColor: .systemGray)
 }
 
 class InspectionColours {
