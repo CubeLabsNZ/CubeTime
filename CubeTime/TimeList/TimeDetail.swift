@@ -163,31 +163,34 @@ struct TimeDetailViewOnly: View {
                         Divider()
                             .padding(.leading)
                         
-                        if puzzle_type.name == "Megaminx" {
-                            Text(scramble.dropLast())
-                                .font(.system(size: (UIScreen.screenWidth-32) / (42.00) * 1.44, weight: .regular, design: .monospaced))
-                                .foregroundColor(colourScheme == .light ? .black : .white)
-                                .padding([.horizontal], 12)
-                        } else {
-                            Text(scramble)
-                                .font(.system(size: 16, weight: .regular, design: .monospaced))
-                                .foregroundColor(colourScheme == .light ? .black : .white)
-                                .padding([.horizontal], 12)
-                        }
+                        let brokenScramble: Bool = chtscramblesthatdontworkwithtnoodle.contains(puzzle_type.puzzle) && (date < Date(timeIntervalSince1970: TimeInterval(1643760000)))
                         
-                        if !chtscramblesthatdontworkwithtnoodle.contains(puzzle_type.puzzle) ||
-                            date > Date(timeIntervalSince1970: TimeInterval(1643278.400)) {
+                        Group {
+                            if puzzle_type.name == "Megaminx" {
+                                Text(scramble.dropLast())
+                                    .font(.system(size: (UIScreen.screenWidth-32) / (42.00) * 1.44, weight: .regular, design: .monospaced))
+                            } else {
+                                Text(scramble)
+                                    .font(.system(size: 16, weight: .regular, design: .monospaced))
+                            }
+                        }
+                        .foregroundColor(colourScheme == .light ? .black : .white)
+                        .padding([.horizontal], 12)
+                        .padding(.bottom, brokenScramble ? 12 : 0)
+                        
+                        
+                        if !(brokenScramble) {
                             Divider()
                                 .padding(.leading)
-                            
                             
                             AsyncScrambleView(puzzle: puzzle_type.puzzle, scramble: scramble)
                                 .frame(height: puzzle_type.puzzle.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
                                 .padding(.horizontal, 32)
                                 .padding(.bottom)
                                 .padding(.top, 12)
-                             
                         }
+                        
+//                        if !chtscramblesthatdontworkwithtnoodle.contains(puzzle_type.puzzle) || date > Date(timeIntervalSince1970: TimeInterval(1643278.400))
                     }
                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
                     
