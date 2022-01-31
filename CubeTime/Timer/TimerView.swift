@@ -289,7 +289,6 @@ struct TimerView: View {
                                             .font(.system(size: 15, weight: .regular))
                                     }
                                 }
-                                .disabled(stopWatchManager.scrambleStr == nil)
                                 .accentColor(accentColour)
                                 .pickerStyle(.menu)
                                 .onChange(of: playgroundScrambleType) { newValue in
