@@ -11,20 +11,28 @@ extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
 }
 
 struct GeneralSettingsView: View {
-    
+    // timer settings
     @AppStorage(gsKeys.inspection.rawValue) private var inspectionTime: Bool = false
+    @AppStorage(gsKeys.inspectionCountsDown.rawValue) private var insCountDown: Bool = false
     @AppStorage(gsKeys.freeze.rawValue) private var holdDownTime: Double = 0.5
     @AppStorage(gsKeys.timeDpWhenRunning.rawValue) private var timerDP: Int = 3
-    @AppStorage(gsKeys.hapBool.rawValue) private var hapticFeedback: Bool = true
-    @AppStorage(gsKeys.hapType.rawValue) private var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
-    @AppStorage(gsKeys.gestureDistance.rawValue) private var gestureActivationDistance: Double = 50
-    @AppStorage(gsKeys.displayDP.rawValue) private var displayDP: Int = 3
     
+    // timer tools
     @AppStorage(gsKeys.showScramble.rawValue) private var showScramble: Bool = true
     @AppStorage(gsKeys.showStats.rawValue) private var showStats: Bool = true
     
+    // accessibility
+    @AppStorage(gsKeys.hapBool.rawValue) private var hapticFeedback: Bool = true
+    @AppStorage(gsKeys.hapType.rawValue) private var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
     @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
-    @AppStorage(gsKeys.inspectionCountsDown.rawValue) private var insCountDown: Bool = false
+    @AppStorage(gsKeys.gestureDistance.rawValue) private var gestureActivationDistance: Double = 50
+    
+    // statistics
+    @AppStorage(gsKeys.displayDP.rawValue) private var displayDP: Int = 3
+    
+        
+    @Environment(\.colorScheme) var colourScheme
+    @EnvironmentObject var stopWatchManager: StopWatchManager
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
@@ -35,15 +43,6 @@ struct GeneralSettingsView: View {
         UIImpactFeedbackGenerator.FeedbackStyle.soft: "Soft",
         UIImpactFeedbackGenerator.FeedbackStyle.rigid: "Rigid"
     ]
-    
-    @Environment(\.colorScheme) var colourScheme
-    
-    @EnvironmentObject var stopWatchManager: StopWatchManager
-    
-    
-    // im thinking of using these interval modes: seconds, 0.1s, 0.001, your refresh rate
-    // and for haptics just .light, .medium, .heavy, .rigid, .soft
-    // and we need to have a clear to defaults option or something
     
     var body: some View {
         VStack(spacing: 16) {

@@ -16,22 +16,25 @@ enum asKeys: String {
 struct AppearanceSettingsView: View {
     @Environment(\.colorScheme) var colourScheme
     
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
-    
-//    @State private var accentColour: Color = .indigo
-    let accentColours: [Color] = [.cyan, .blue, .indigo, .purple, .red]
-    
     @State var showThemeOptions: Bool = false
+    
+    let accentColours: [Color] = [.cyan, .blue, .indigo, .purple, .red]
     
     private let columns = [GridItem(spacing: 16), GridItem(spacing: 16)]
     
+    // colours
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.staticGradient.rawValue) private var staticGradient: Bool = true
+    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
+    
+    // system settings (appearance)
     @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
     @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
     
-    @AppStorage(asKeys.staticGradient.rawValue) private var staticGradient: Bool = true
-    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     
-    @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
+    
+    
     
     
     var body: some View {

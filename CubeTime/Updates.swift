@@ -10,6 +10,8 @@ import SwiftUI
 struct Updates: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
+    
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @Binding var showUpdates: Bool
     
     var body: some View {
@@ -91,6 +93,7 @@ struct Updates: View {
                             .padding([.top, .trailing])
                     }
                 }
+                
                 Spacer()
             }
         }
