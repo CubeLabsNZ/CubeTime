@@ -217,10 +217,8 @@ class StopWatchManager: ObservableObject {
     
     
     func touchDown() {
-        if mode != .stopped || scrambleStr != nil {
+        if mode != .stopped || scrambleStr != nil || prevDownStoppedTimer {
             timerColour = TimerTextColours.timerHeldDownColour
-        } else if prevDownStoppedTimer {
-            timerColour = TimerTextColours.timerLoadingColor
         }
         
         if mode == .running {
@@ -265,6 +263,8 @@ class StopWatchManager: ObservableObject {
                 rescramble()
                 justInspected = true
             }
+        } else if prevDownStoppedTimer && scrambleStr == nil {
+            timerColour = TimerTextColours.timerLoadingColor
         }
         
         
@@ -289,7 +289,7 @@ class StopWatchManager: ObservableObject {
     func longPressEnd() {
         if mode != .stopped || scrambleStr != nil {
             timerColour = TimerTextColours.timerDefaultColour
-        } else if prevDownStoppedTimer {
+        } else if prevDownStoppedTimer && scrambleStr == nil {
             timerColour = TimerTextColours.timerLoadingColor
         }
         withAnimation {
@@ -346,7 +346,7 @@ class StopWatchManager: ObservableObject {
         }
         prevScrambleStr = scrambleStr
         scrambleStr = nil
-        if mode != .inspecting {
+        if mode == .stopped {
             self.timerColour = TimerTextColours.timerLoadingColor
         }
         scrambleSVG = nil
