@@ -58,14 +58,50 @@ struct StatsDetail: View {
                             }
                             
                             HStack (alignment: .center) {
-                                Text(session.name ?? "Unknown session name")
-                                    .font(.system(size: 20, weight: .semibold, design: .default))
-                                    .foregroundColor(Color(uiColor: .systemGray))
-                                Spacer()
-                                
-                                Text(puzzle_types[Int(session.scramble_type)].name)
-                                    .font(.system(size: 16, weight: .semibold, design: .default))
-                                    .foregroundColor(Color(uiColor: .systemGray))
+                                HStack (alignment: .center) {
+                                    Text(session.name ?? "Unknown session name")
+                                        .font(.system(size: 20, weight: .semibold, design: .default))
+                                        .foregroundColor(Color(uiColor: .systemGray))
+                                    Spacer()
+                                    
+                                    switch SessionTypes(rawValue: session.session_type)! {
+                                    case .standard:
+                                        Text(puzzle_types[Int(session.scramble_type)].name)
+                                            .font(.system(size: 16, weight: .semibold, design: .default))
+                                            .foregroundColor(Color(uiColor: .systemGray))
+                                    case .multiphase:
+                                        HStack(spacing: 2) {
+                                            Image(systemName: "square.stack")
+                                                .font(.system(size: 14, weight: .semibold, design: .default))
+                                                .foregroundColor(Color(uiColor: .systemGray))
+                                            
+                                            Text(puzzle_types[Int(session.scramble_type)].name)
+                                                .font(.system(size: 16, weight: .semibold, design: .default))
+                                                .foregroundColor(Color(uiColor: .systemGray))
+                                        }
+                                        
+                                    case .compsim:
+                                        HStack(spacing: 2) {
+                                            Image(systemName: "globe.asia.australia")
+                                                .font(.system(size: 16, weight: .bold, design: .default))
+                                                .foregroundColor(Color(uiColor: .systemGray))
+                                            
+                                            Text(puzzle_types[Int(session.scramble_type)].name)
+                                                .font(.system(size: 16, weight: .semibold, design: .default))
+                                                .foregroundColor(Color(uiColor: .systemGray))
+                                        }
+                                    
+                                    case .playground:
+                                        Text("Playground")
+                                            .font(.system(size: 16, weight: .semibold, design: .default))
+                                            .foregroundColor(Color(uiColor: .systemGray))
+                                    
+                                    default:
+                                        Text(puzzle_types[Int(session.scramble_type)].name)
+                                            .font(.system(size: 16, weight: .semibold, design: .default))
+                                            .foregroundColor(Color(uiColor: .systemGray))
+                                    }
+                                }
                             }
                             .padding(.horizontal)
                             .padding(.top, isCurrentCompSimAverage ? 10 : -10)
@@ -73,22 +109,30 @@ struct StatsDetail: View {
                             
                             VStack {
                                 HStack {
-                                    Image(puzzle_types[Int(session.scramble_type)].name)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 32, height: 32)
-                                        .padding(.leading, 2)
-                                        .padding(.trailing, 4)
+                                    if SessionTypes(rawValue: session.session_type)! == .playground {
+                                        Image(systemName: "square.filled.on.square")
+                                            .symbolRenderingMode(.hierarchical)
+                                            .font(.system(size: 26, weight: .semibold))
+                                            .foregroundColor(colourScheme == .light ? .black : .white)
+                                        
+                                        Text("Playground")
+                                            .font(.system(size: 17, weight: .semibold, design: .default))
+                                    } else {
+                                        Image(puzzle_types[Int(session.scramble_type)].name)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 32, height: 32)
+                                            .padding(.leading, 2)
+                                            .padding(.trailing, 4)
+                                        
+                                        Text(puzzle_types[Int(session.scramble_type)].name)
+                                            .font(.system(size: 17, weight: .semibold, design: .default))
+                                    }
                                     
-                                    Text(puzzle_types[Int(session.scramble_type)].name)
-                                        .font(.system(size: 17, weight: .semibold, design: .default))
+                                    
                                     
                                     Spacer()
-                                    
-                                    Text("RANDOM STATE")
-                                        .font(.system(size: 13, weight: .semibold, design: .default))
-                                        .offset(y: 2)
-                                    
+                                                                        
                                 }
                                 .padding(.leading, 12)
                                 .padding(.trailing)
@@ -130,7 +174,7 @@ struct StatsDetail: View {
                                                 
                                                 
                                                 Text(solve.scramble ?? "Failed to load scramble")
-                                                    .font(.system(size: session.scramble_type == 7 ? ((UIScreen.screenWidth-32) / (42.00) * 2) : 17, weight: .medium))
+                                                    .font(.system(size: solve.scramble_type == 7 ? ((UIScreen.screenWidth-32) / (42.00) * 1.42) : 16, weight: .regular, design: .monospaced))
                                                 
                                                 Spacer()
                                             }
@@ -151,7 +195,7 @@ struct StatsDetail: View {
                         }
                         .offset(y: -6)
                         .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle(solves.id == "Comp sim solve" ? "Comp Sim" : solves.id)
+                        .navigationTitle(solves.id == "Comp Sim Solve" ? "Comp Sim" : solves.id)
                         .toolbar {
                             ToolbarItem(placement: .navigationBarLeading) {
                                 Button {
