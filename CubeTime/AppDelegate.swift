@@ -62,7 +62,7 @@ private final class CustomSceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        UIApplication.shared.isIdleTimerDisabled = true
+//        UIApplication.shared.isIdleTimerDisabled = true
         return true
     }
 }

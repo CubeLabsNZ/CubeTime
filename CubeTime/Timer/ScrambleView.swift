@@ -23,6 +23,8 @@ struct AsyncScrambleView: View {
 
     
     var body: some View {
+        let _ = NSLog("here")
+        
         Group {
             if svg == "" {
                 ProgressView()

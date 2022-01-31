@@ -97,6 +97,7 @@ struct StatsBlockText: View {
                         Text("-")
                             .font(.system(size: 28, weight: .medium, design: .default))
                             .foregroundColor(Color(uiColor: .systemGray5))
+                            .padding(.top, 20)
                         
                         Spacer()
                     }
