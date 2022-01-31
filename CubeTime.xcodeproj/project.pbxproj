@@ -21,6 +21,7 @@
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
 		239C7E702781511300943AF2 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239C7E6F2781511300943AF2 /* Onboarding.swift */; };
 		23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA845F2783EBA1003901FB /* ReachedTargets.swift */; };
+		23CE093427A76D610013E227 /* SessionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CE093327A76D610013E227 /* SessionCard.swift */; };
 		23D01FE327A4AA5D0019FCE5 /* Splash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */; };
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
 		23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */; };
@@ -96,6 +97,7 @@
 		2397131E2791032300268DFA /* AveragePhases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AveragePhases.swift; sourceTree = "<group>"; };
 		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		23CA845F2783EBA1003901FB /* ReachedTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachedTargets.swift; sourceTree = "<group>"; };
+		23CE093327A76D610013E227 /* SessionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCard.swift; sourceTree = "<group>"; };
 		23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Splash.storyboard; sourceTree = "<group>"; };
 		23D2FC4C274E12DE00D7071A /* TimeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeListView.swift; sourceTree = "<group>"; };
 		23DE3BD7274DDBE200254D29 /* CubeTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -206,6 +208,7 @@
 			isa = PBXGroup;
 			children = (
 				7D7A9EC3274F392700C2E125 /* SessionsView.swift */,
+				23CE093327A76D610013E227 /* SessionCard.swift */,
 			);
 			path = Sessions;
 			sourceTree = "<group>";
@@ -499,6 +502,7 @@
 				23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */,
 				23034725278BD22600553A7D /* TimeDetail.swift in Sources */,
 				239C7E702781511300943AF2 /* Onboarding.swift in Sources */,
+				23CE093427A76D610013E227 /* SessionCard.swift in Sources */,
 				2337E6882767619D00438F43 /* StatsDetail.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

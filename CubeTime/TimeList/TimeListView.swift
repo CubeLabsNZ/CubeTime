@@ -271,13 +271,6 @@ struct TimeListView: View {
                 .navigationTitle(isSelectMode ? "Select Solves" : "Session Times")
 //                .navigationBarTitleDisplayMode(isSelectMode ? .inline : .large)
                 
-                .sheet(item: $solve) { item in
-                    TimeDetail(solve: item, currentSolve: $solve, timeListManager: timeListManager)
-                        .environment(\.managedObjectContext, managedObjectContext)
-                }
-                .sheet(item: $calculatedAverage) { item in
-                    StatsDetail(solves: item, session: currentSession)
-                }
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {
                         if isSelectMode {
@@ -337,5 +330,13 @@ struct TimeListView: View {
         }
         .accentColor(accentColour)
         .navigationViewStyle(StackNavigationViewStyle())
+        .sheet(item: $solve) { item in
+            TimeDetail(solve: item, currentSolve: $solve, timeListManager: timeListManager)
+                .environment(\.managedObjectContext, managedObjectContext)
+        }
+        
+        .sheet(item: $calculatedAverage) { item in
+            StatsDetail(solves: item, session: currentSession)
+        }
     }
 }

@@ -31,9 +31,7 @@ struct TimeDetail: View {
                 ToolbarItem(placement: .navigationBarTrailing) { // Only show delete if called from timelist and not stats
                     if timeListManager != nil {
                         Button {
-                            withAnimation {
-                                currentSolve = nil
-                            }
+                            currentSolve = nil
                             
                             managedObjectContext.delete(solve)
                             try! managedObjectContext.save()
@@ -50,13 +48,17 @@ struct TimeDetail: View {
                 
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        currentSolve = nil
                         
                         dismiss()
                         
-                        if managedObjectContext.hasChanges {
-                            try! managedObjectContext.save()
-                        }
+                        
+                        currentSolve = nil
+                        
+//                        dismiss()
+                        
+//                        if managedObjectContext.hasChanges {
+//                            try! managedObjectContext.save()
+//                        }
                     } label: {
                         Text("Done")
                     }
@@ -70,9 +72,7 @@ struct TimeDetail: View {
 struct TimeDetailViewOnly: View {
     @Environment(\.presentationMode) var presentation
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
-    @Environment(\.defaultMinListRowHeight) var minRowHeight
-    
+    @Environment(\.colorScheme) var colourScheme    
     
     private let titleDateFormat: DateFormatter
     
@@ -90,7 +90,6 @@ struct TimeDetailViewOnly: View {
     let time: String
     let puzzle_type: PuzzleType
     let scramble: String
-    let scrambleSVG: String?
     
 //    @Binding var currentSession: Sessions
     
@@ -115,11 +114,6 @@ struct TimeDetailViewOnly: View {
 
 //        self.scrambleSVG = puzzle_type.getScrambler().drawScramble(solve.scramble!)
 //        self.scrambleSVG = nil
-        if let scr = solve.scramble {
-            self.scrambleSVG = JavaUtilObjects.toString(withId: puzzle_type.puzzle.getScrambler().drawScramble(with: scr, with: nil))
-        } else {
-            self.scrambleSVG = nil
-        }
         
         self.titleDateFormat = DateFormatter()
         
@@ -134,8 +128,22 @@ struct TimeDetailViewOnly: View {
             Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                 .ignoresSafeArea()
             
-            ScrollView() {
-                VStack (spacing: 12) {
+            ScrollView {
+                EmptyView()
+//                Text("sdf")
+//                Text("\(puzzle_type.puzzle)")
+//                Text("\(scramble)")
+                
+                
+//                AsyncScrambleView(puzzle: puzzle_type.puzzle, scramble: scramble)
+//                    .padding(.horizontal, 32)
+//                    .padding(.bottom)
+//                    .padding(.top, 12)
+
+
+                
+                
+                /* VStack (spacing: 12) {
                     HStack {
                         Text(time)
                             .font(.system(size: 34, weight: .bold))
@@ -205,11 +213,15 @@ struct TimeDetailViewOnly: View {
                             Divider()
                                 .padding(.leading)
                             
+//                            TimerScrambleView(svg: puzzle_type.puzzle.getScrambler().drawScramble(with: scramble, with: nil))
+                            
+                            /*
                             AsyncScrambleView(puzzle: puzzle_type.puzzle, scramble: scramble)
     //                            .frame(height: puzzle_type.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
                                 .padding(.horizontal, 32)
                                 .padding(.bottom)
                                 .padding(.top, 12)
+                             */
                         }
                     }
                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
@@ -373,8 +385,8 @@ struct TimeDetailViewOnly: View {
                     
                     
                     
-                }
-                .offset(y: -6)
+                } */
+//                .offset(y: -6)
                 .navigationBarTitle("", displayMode: .inline)
                 
             }

@@ -118,6 +118,7 @@ struct TimeCard: View {
             Button (role: .destructive) {
                 managedObjectContext.delete(solve)
                 try! managedObjectContext.save()
+                
                 withAnimation {
                     timeListManager.delete(solve)
                 }

@@ -595,14 +595,14 @@ struct StatsView: View {
                 }
                 .navigationTitle("Your Solves")
                 .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
-                .sheet(item: $presentedAvg) { item in
-                    StatsDetail(solves: item, session: currentSession)
-                }
-                .sheet(isPresented: $showBestSinglePopup) {
-                    TimeDetail(solve: bestSingle!, currentSolve: nil, timeListManager: nil) // TODO make delete work from here
-                    // maybe pass stats object and make it remove min
-                }
             }
+        }
+        .sheet(item: $presentedAvg) { item in
+            StatsDetail(solves: item, session: currentSession)
+        }
+        .sheet(isPresented: $showBestSinglePopup) {
+            TimeDetail(solve: bestSingle!, currentSolve: nil, timeListManager: nil) // TODO make delete work from here
+            // maybe pass stats object and make it remove min
         }
     }
 }
