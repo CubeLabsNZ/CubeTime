@@ -103,7 +103,11 @@ class StopWatchManager: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
             inspectionSecs += 1
             if insCountDown {
-                self.secondsStr = String(15 - inspectionSecs)
+                if inspectionSecs == 16 {
+                    self.secondsStr = "-"
+                } else if inspectionSecs < 16 {
+                    self.secondsStr = String(15 - inspectionSecs)
+                }
             } else {
                 self.secondsStr = String(inspectionSecs)
             }
@@ -213,10 +217,8 @@ class StopWatchManager: ObservableObject {
     
     
     func touchDown() {
-        if mode != .stopped || scrambleStr != nil {
+        if mode != .stopped || scrambleStr != nil || prevDownStoppedTimer {
             timerColour = TimerTextColours.timerHeldDownColour
-        } else if prevDownStoppedTimer {
-            timerColour = TimerTextColours.timerLoadingColor
         }
         
         if mode == .running {
@@ -261,6 +263,8 @@ class StopWatchManager: ObservableObject {
                 rescramble()
                 justInspected = true
             }
+        } else if prevDownStoppedTimer && scrambleStr == nil {
+            timerColour = TimerTextColours.timerLoadingColor
         }
         
         
@@ -285,7 +289,7 @@ class StopWatchManager: ObservableObject {
     func longPressEnd() {
         if mode != .stopped || scrambleStr != nil {
             timerColour = TimerTextColours.timerDefaultColour
-        } else if prevDownStoppedTimer {
+        } else if prevDownStoppedTimer && scrambleStr == nil {
             timerColour = TimerTextColours.timerLoadingColor
         }
         withAnimation {
@@ -338,25 +342,33 @@ class StopWatchManager: ObservableObject {
     func rescramble() {
         NSLog("rescramble")
         if let scrambleWorkItem = scrambleWorkItem {
-            scrambleWorkItem.cancel()
+            NSLog("calling cancel")
         }
         prevScrambleStr = scrambleStr
         scrambleStr = nil
-        if mode != .inspecting {
+        if mode == .stopped {
             self.timerColour = TimerTextColours.timerLoadingColor
         }
         scrambleSVG = nil
         let newWorkItem = DispatchWorkItem {
+            NSLog("running work item")
+            let scrTypeAtWorkStart = self.currentSession.scramble_type
             let scramble = self.safeGetScramble()
+
+            /// This absolutely is not best practice, but I couldn't find another way to do it
+            /// **PLEASE** file a PR or issue if you know of a better way
+            /// TODO make this not actually continue the scramble ... . .
+            if scrTypeAtWorkStart == self.currentSession.scramble_type {
+                DispatchQueue.main.async {
+                    self.scrambleStr = scramble
+                    self.timerColour = TimerTextColours.timerDefaultColour
+                }
+                
+                let svg = puzzle_types[Int(self.currentSession.scramble_type)].puzzle.getScrambler().drawScramble(with: scramble, with: nil)
             
-            DispatchQueue.main.async {
-                self.scrambleStr = scramble
-                self.timerColour = TimerTextColours.timerDefaultColour
-            }
-            let svg = puzzle_types[Int(self.currentSession.scramble_type)].puzzle.getScrambler().drawScramble(with: scramble, with: nil)
-            
-            DispatchQueue.main.async {
-                self.scrambleSVG = svg
+                DispatchQueue.main.async {
+                    self.scrambleSVG = svg
+                }
             }
         }
         scrambleWorkItem = newWorkItem
