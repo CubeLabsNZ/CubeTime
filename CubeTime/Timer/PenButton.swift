@@ -18,19 +18,12 @@ struct PenaltyButton: View {
     let canType: Bool
     let colour: Color
     
-    init(penType: PenTypes, penSymbol: String, imageSymbol: Bool, canType: Bool, colour: Color) {
-        self.penType = penType
-        self.penSymbol = penSymbol
-        self.imageSymbol = imageSymbol
-        self.canType = canType
-        self.colour = colour
-    }
-    
     var body: some View {
         Button(action: {
             stopWatchManager.solveItem.penalty = penType.rawValue
             stopWatchManager.changedPen()
             try! managedObjectContext.save()
+            
         }, label: {
             if imageSymbol {
                 Image(penSymbol)
