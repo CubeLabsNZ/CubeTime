@@ -25,10 +25,23 @@ struct Updates: View {
                         .offset(y: -4)
                     
                     
-                    Text("Firstly - thanks for using this app, and we hope you continue to enjoy using it!")
+                    Text("Firstly - thanks for using this app, and we hope you continue to enjoy using it!\n")
                         .font(.system(size: 21, weight: .medium))
                     
-                    Text("\nNow on to the updates. New features: ")
+                    
+                    Text("Importance bug fixes: ")
+                        .font(.system(size: 17, weight: .medium))
+                    
+                    Text("""
+                            -   penalty bar crash fixed if solve deleted
+                            -   sleep timer now globally disabled, (i thought i could disable it for just the timer view, but swiftui bug prevented this :( )
+                        """)
+                        .font(.system(size: 15, weight: .medium))
+                        .padding(.bottom)
+                    
+                    
+                    
+                    Text("New features from last update: ")
                         .font(.system(size: 17, weight: .medium))
                     
                     Text("""
@@ -52,16 +65,7 @@ struct Updates: View {
                         .font(.system(size: 15, weight: .regular))
                         .padding(.bottom)
                     
-                    Text("Bug fixes: ")
-                        .font(.system(size: 17, weight: .medium))
                     
-                    Text("""
-                            –   a lot of UI bugs and inconsistencies fixed
-                            –   performance issues and animations fixed
-                            –   fixed sorting by speed with DNFs (will now sort with it as slowest times)
-                        """)
-                        .font(.system(size: 15, weight: .regular))
-                        .padding(.bottom)
                     
                     
                     Text("Again - thanks for using this app! As this app is still in it's beta stage, you may experience some slight problems, such as crashes for example. In the event that the app does crash - please please please message me on discord (teeem#7263) or open an issue on our github page (https://github.com/CubeStuffs/CubeTime/issues).")

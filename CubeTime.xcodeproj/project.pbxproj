@@ -697,7 +697,7 @@
 					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/lib",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2;
 				OTHER_LDFLAGS = (
 					"-ltnoodle",
 					"-ljre_core",
@@ -754,7 +754,7 @@
 					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/lib",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2;
 				OTHER_LDFLAGS = (
 					"-ltnoodle",
 					"-ljre_core",
