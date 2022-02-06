@@ -22,7 +22,7 @@ struct CubeTime: App {
         moc = persistenceController.container.viewContext
         
         
-//        UIApplication.shared.isIdleTimerDisabled = true
+        UIApplication.shared.isIdleTimerDisabled = true
         
         let userDefaults = UserDefaults.standard
         userDefaults.register(

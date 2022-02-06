@@ -144,12 +144,7 @@ struct MainTabsView: View {
                     TimerView(pageIndex: $pageIndex, currentSession: $currentSession, managedObjectContext: managedObjectContext, hideTabBar: $hideTabBar)
                         .environment(\.managedObjectContext, managedObjectContext)
                         .environmentObject(stopWatchManager)
-                        .onAppear {
-                            UIApplication.shared.isIdleTimerDisabled = true
-                        }
-                        .onDisappear {
-                            UIApplication.shared.isIdleTimerDisabled = false
-                        }
+                        .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
                 case .solves:
                     TimeListView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
                         .environment(\.managedObjectContext, managedObjectContext)
