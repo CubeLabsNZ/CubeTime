@@ -385,15 +385,19 @@ struct TimerView: View {
                                         
                                         // tried .overlay but the geometry becomes fixed and scaling doesn't work correctly
                                         
-                                        TimerScrambleView(svg: stopWatchManager.scrambleSVG)
-                                            .aspectRatio(contentMode: .fit)
-                                            .onTapGesture { showDrawScrambleSheet = true }
-//                                                .scaleEffect((geo.size.height/UIScreen.screenWidth > 116/(maxWidth-4)) ? (116/geo.size.height) : ((maxWidth-4)/UIScreen.screenWidth), anchor: .bottomLeading)
-                                            .frame(width: maxWidth-4, height: 116)
-                                            .scaleEffect(scaleAmount)
-                                        
-                                            .offset(x: 1, y: -2.5)
+                                        if let svg = stopWatchManager.scrambleSVG {
+                                            TimerScrambleView(svg: svg)
+                                                .aspectRatio(contentMode: .fit)
+                                                .onTapGesture { showDrawScrambleSheet = true }
+                                                .frame(width: maxWidth-4, height: 116)
+                                                .scaleEffect(scaleAmount)
                                             
+                                                .offset(x: 1, y: -2.5)
+                                            
+                                        } else {
+                                            ProgressView()
+                                                .frame(width: maxWidth-4, height: 116)
+                                        }
                                     }
                                     
                                     Spacer()

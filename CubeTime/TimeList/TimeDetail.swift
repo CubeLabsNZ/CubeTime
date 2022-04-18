@@ -86,6 +86,7 @@ struct TimeDetailViewOnly: View {
     let time: String
     let puzzle_type: PuzzleType
     let scramble: String
+    let phases: Array<Double>?
     
     @Binding var currentSolve: Solves?
     
@@ -98,6 +99,14 @@ struct TimeDetailViewOnly: View {
         self.time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
         self.puzzle_type = puzzle_types[Int(solve.scramble_type)]
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
+            
+        if let multiphaseSolve = (solve as? MultiphaseSolve) {
+            self.phases = multiphaseSolve.phases ?? [0.00, 0.00, 0.00, 0.00]
+//            Array(zip(multiphaseSolve.phases!.indices, multiphaseSolve.phases!))
+        } else {
+            self.phases = nil
+        }
+        
         self._currentSolve = currentSolve ?? Binding.constant(nil)
         self.timeListManager = timeListManager
         _userComment = State(initialValue: solve.comment ?? "")
@@ -163,31 +172,34 @@ struct TimeDetailViewOnly: View {
                         Divider()
                             .padding(.leading)
                         
-                        if puzzle_type.name == "Megaminx" {
-                            Text(scramble.dropLast())
-                                .font(.system(size: (UIScreen.screenWidth-32) / (42.00) * 1.44, weight: .regular, design: .monospaced))
-                                .foregroundColor(colourScheme == .light ? .black : .white)
-                                .padding([.horizontal], 12)
-                        } else {
-                            Text(scramble)
-                                .font(.system(size: 16, weight: .regular, design: .monospaced))
-                                .foregroundColor(colourScheme == .light ? .black : .white)
-                                .padding([.horizontal], 12)
-                        }
+                        let brokenScramble: Bool = chtscramblesthatdontworkwithtnoodle.contains(puzzle_type.puzzle) && (date < Date(timeIntervalSince1970: TimeInterval(1643760000)))
                         
-                        if !chtscramblesthatdontworkwithtnoodle.contains(puzzle_type.puzzle) ||
-                            date > Date(timeIntervalSince1970: TimeInterval(1643278.400)) {
+                        Group {
+                            if puzzle_type.name == "Megaminx" {
+                                Text(scramble.dropLast())
+                                    .font(.system(size: (UIScreen.screenWidth-32) / (42.00) * 1.44, weight: .regular, design: .monospaced))
+                            } else {
+                                Text(scramble)
+                                    .font(.system(size: 16, weight: .regular, design: .monospaced))
+                            }
+                        }
+                        .foregroundColor(colourScheme == .light ? .black : .white)
+                        .padding([.horizontal], 12)
+                        .padding(.bottom, brokenScramble ? 12 : 0)
+                        
+                        
+                        if !(brokenScramble) {
                             Divider()
                                 .padding(.leading)
-                            
                             
                             AsyncScrambleView(puzzle: puzzle_type.puzzle, scramble: scramble)
                                 .frame(height: puzzle_type.puzzle.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
                                 .padding(.horizontal, 32)
                                 .padding(.bottom)
                                 .padding(.top, 12)
-                             
                         }
+                        
+//                        if !chtscramblesthatdontworkwithtnoodle.contains(puzzle_type.puzzle) || date > Date(timeIntervalSince1970: TimeInterval(1643278.400))
                     }
                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
                     
@@ -280,7 +292,7 @@ struct TimeDetailViewOnly: View {
                             
                             
                             VStack(alignment: .leading, spacing: 4) {
-                                ForEach(Array(zip(multiphaseSolve.phases!.indices, multiphaseSolve.phases!)), id: \.0) { index, phase in
+                                ForEach(Array(zip(self.phases!.indices, self.phases!)), id: \.0) { index, phase in
                                     
                                     HStack {
                                         if index == 0 {
@@ -289,8 +301,8 @@ struct TimeDetailViewOnly: View {
                                             
                                             Text("+"+formatSolveTime(secs: phase))
                                         } else {
-                                            if index < multiphaseSolve.phases!.count {
-                                                let phaseDifference = multiphaseSolve.phases![index] - multiphaseSolve.phases![index-1]
+                                            if index < self.phases!.count {
+                                                let phaseDifference = self.phases![index] - self.phases![index-1]
                                                 
                                                 Image(systemName: "\(index+1).circle")
                                                     .font(.system(size: 17, weight: .medium))

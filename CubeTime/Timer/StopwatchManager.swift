@@ -341,9 +341,7 @@ class StopWatchManager: ObservableObject {
     
     func rescramble() {
         NSLog("rescramble")
-        if let scrambleWorkItem = scrambleWorkItem {
-            NSLog("calling cancel")
-        }
+        
         prevScrambleStr = scrambleStr
         scrambleStr = nil
         if mode == .stopped {
@@ -399,6 +397,10 @@ class StopWatchManager: ObservableObject {
     }
     
     func askToDelete() {
+        withAnimation {
+            showPenOptions = false
+        }
+        
         timerColour = TimerTextColours.timerDefaultColour
         prevDownStoppedTimer = false
 
