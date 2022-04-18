@@ -69,7 +69,7 @@ struct TimerView: View {
     var bpa: Double?
     var wpa: Double?
     
-    var timeNeededForTarget: Double?
+    @State var timeNeededForTarget: Double?
     
     private var scaleAmount: CGFloat
        
@@ -96,7 +96,7 @@ struct TimerView: View {
         self.bpa = stats.getWpaBpa().0
         self.wpa = stats.getWpaBpa().1
         
-        self.timeNeededForTarget = stats.getTimeNeededForTarget()
+        self._timeNeededForTarget = State(initialValue: stats.getTimeNeededForTarget())
         
         self.scaleAmount = {
             let type = Int(currentSession.wrappedValue.scramble_type)
@@ -338,6 +338,7 @@ struct TimerView: View {
                                                     
                                                     try! managedObjectContext.save()
                                                 }
+                                                timeNeededForTarget = stats.getTimeNeededForTarget()
                                             }))
                                             .padding(.trailing, 4)
                                     }

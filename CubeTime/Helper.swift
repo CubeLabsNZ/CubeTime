@@ -377,7 +377,7 @@ func timeFromStr(_ formattedTime: String) -> Double? {
     }
     let separated = formattedTime.components(separatedBy: ":")
     let mins: UInt = separated.count > 1 ? UInt(separated[0])! : 0
-    let secs: Double = Double(separated.last!)!
+    let secs: Double = Double(separated.last!) ?? 0
     
     return Double(mins) * 60 + secs
 }
