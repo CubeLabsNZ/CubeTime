@@ -424,6 +424,7 @@ class ChartData: ObservableObject, Identifiable {
 
 struct Line: View {
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    @AppStorage(asKeys.graphAnimation.rawValue) private var graphAnimation: Bool = true
     @ObservedObject var data: ChartData
     @Binding var frame: CGRect
     @Binding var minDataValue: Double?
@@ -475,21 +476,18 @@ struct Line: View {
     
     var body: some View {
         self.path
-        
             .trim(from: 0, to: self.showFull ? 1 : 0)
             .stroke(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected), style: StrokeStyle(lineWidth: 3, lineJoin: .round))
             .rotationEffect(.degrees(180), anchor: .center)
             .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
-            
             .onAppear {
-                withAnimation(.easeInOut(duration: 1.2)) {
+                withAnimation(.easeInOut(duration: graphAnimation ? 1.2 : 0)) {
                     self.showFull = true
                 }
-                    
             }
             .onDisappear { self.showFull = false }
-        }
     }
+}
 
 
 struct Legend: View {
