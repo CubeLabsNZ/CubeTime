@@ -111,11 +111,21 @@ struct TimeListView: View {
     @State var isSelectMode = false
     @State var selectedSolves: [Solves] = []
     
+    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
+                                    (scene as? UIWindowScene)?.keyWindow
+                                }).first?.frame.size
+    
     private var columns: [GridItem] {
+        NSLog("\(UIScreen.screenWidth)")
+        NSLog("\(windowSize!.width)")
         if hSizeClass == .regular {
             return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
         } else {
-            return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+            if windowSize!.width > UIScreen.screenWidth/2 {
+                return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+            } else {
+                return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+            }
         }
     }
     
