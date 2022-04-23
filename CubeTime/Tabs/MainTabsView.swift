@@ -73,7 +73,7 @@ struct MainTabsView: View {
     @Environment(\.scenePhase) var scenePhase
     
     @Environment(\.horizontalSizeClass) var hSizeClass
-    @Environment(\.verticalSizeClass) var vSizeClass
+
     
     
     @Namespace private var namespace
@@ -172,7 +172,14 @@ struct MainTabsView: View {
                     .zIndex(1)
                     .ignoresSafeArea(.keyboard)
             }
-            .sheet(isPresented: $showOnboarding, onDismiss: { pageIndex = 0 }) {
+            .sheet(isPresented: $showOnboarding, onDismiss: {
+                pageIndex = 0
+                if hSizeClass == .regular { /// FIX IN FUTURE: check for first time register and not just == 18 because can break :sob:
+                    if UserDefaults.standard.integer(forKey: gsKeys.scrambleSize.rawValue) == 18 {
+                        UserDefaults.standard.set(24, forKey: gsKeys.scrambleSize.rawValue)
+                    }
+                }
+            }) {
                 OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
             }
             .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {

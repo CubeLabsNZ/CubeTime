@@ -15,6 +15,7 @@ struct OnboardingView: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
     
+    
     @Binding var pageIndex: Int
     
     @Namespace var namespaceOB

@@ -12,8 +12,10 @@ struct TimerView: View {
     @Environment(\.colorScheme) var colourScheme
     
     @Environment(\.horizontalSizeClass) var hSizeClass
-    //@ObservedObject var currentSession: Sessions
    
+    
+    
+    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @AppStorage("onboarding") var showOnboarding: Bool = true
     
@@ -144,14 +146,14 @@ struct TimerView: View {
                 
                 if stopWatchManager.inspectionSecs >= 17 {
                     Text("DNF")
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
-                    .foregroundColor(colourScheme == .light ? .black : nil)
-                    .offset(y: 45)
+                        .font(.system(size: hSizeClass == .regular ? 28 : 22, weight: .semibold, design: .rounded))
+                        .foregroundColor(colourScheme == .light ? .black : nil)
+                        .offset(y: 52)
                 } else if stopWatchManager.inspectionSecs >= 15 {
                     Text("+2")
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
-                    .foregroundColor(colourScheme == .light ? .black : nil)
-                    .offset(y: 45)
+                        .font(.system(size: hSizeClass == .regular ? 28 : 22, weight: .semibold, design: .rounded))
+                        .foregroundColor(colourScheme == .light ? .black : nil)
+                        .offset(y: 52)
                 }
             }
             
@@ -184,7 +186,7 @@ struct TimerView: View {
                             
                         }
                     }
-                    .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 70 : 56))
+                    .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 100 : 72))
                     .modifier(DynamicText())
                     .animation(Animation.spring(), value: stopWatchManager.mode == .running)
                 

@@ -7,6 +7,7 @@ import CoreData
 struct CubeTime: App {
     @Environment(\.scenePhase) var phase
     
+    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     /*
@@ -24,7 +25,13 @@ struct CubeTime: App {
         
         UIApplication.shared.isIdleTimerDisabled = true
         
+           
+
+        
+        
+        
         let userDefaults = UserDefaults.standard
+                
         userDefaults.register(
             defaults: [
                 // timer settings

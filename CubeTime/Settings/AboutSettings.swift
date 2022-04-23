@@ -102,10 +102,12 @@ struct LicensesPopUpView: View {
 
 struct AboutSettingsView: View {
     @AppStorage("onboarding") var showOnboarding = false
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    
     @State var showLicenses = false
     
     var body: some View {
-        VStack (alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .center) {
                 Image("about-icon")
                     .resizable()
@@ -123,6 +125,8 @@ struct AboutSettingsView: View {
                         .foregroundColor(Color(uiColor: .systemGray))
                 }
                 .padding(.bottom, 12)
+                
+                Spacer()
             }
             
             Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\nClick below for more info on source licenses and our privacy policy:")
@@ -148,7 +152,7 @@ struct AboutSettingsView: View {
                 Image("kofiButton")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: UIScreen.screenWidth*0.65)
+                    .frame(width: UIScreen.screenWidth*(hSizeClass == .compact ? 0.65 : 0.3))
             }
             .padding(.top, 2)
             
@@ -160,6 +164,7 @@ struct AboutSettingsView: View {
                 showOnboarding = true
             }
         }
+        .background(Color.red)
         .padding(.horizontal)
         .sheet(isPresented: $showLicenses) {
             LicensesPopUpView(showLicenses: $showLicenses)
