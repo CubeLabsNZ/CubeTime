@@ -118,14 +118,19 @@ struct TimeListView: View {
     private var columns: [GridItem] {
         NSLog("\(UIScreen.screenWidth)")
         NSLog("\(windowSize!.width)")
-        if hSizeClass == .regular {
-            return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
         } else {
-            if windowSize!.width > UIScreen.screenWidth/2 {
-                return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+            if hSizeClass == .regular {
+                return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
             } else {
-                return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+                if windowSize!.width > UIScreen.screenWidth/2 {
+                    return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+                } else {
+                    return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+                }
             }
+
         }
     }
     

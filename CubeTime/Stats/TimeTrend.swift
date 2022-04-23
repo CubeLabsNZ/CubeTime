@@ -480,12 +480,16 @@ struct Line: View {
             .stroke(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected), style: StrokeStyle(lineWidth: 3, lineJoin: .round))
             .rotationEffect(.degrees(180), anchor: .center)
             .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
+            .animation(.easeInOut(duration: graphAnimation ? 1.2 : 0), value: self.showFull)
             .onAppear {
-                withAnimation(.easeInOut(duration: graphAnimation ? 1.2 : 0)) {
-                    self.showFull = true
-                }
+                self.showFull = true
             }
-            .onDisappear { self.showFull = false }
+//            .onAppear {
+//                withAnimation(.easeInOut(duration: graphAnimation ? 1.2 : 0)) {
+//                    self.showFull = true
+//                }
+//            }
+//            .onDisappear { self.showFull = false }
     }
 }
 

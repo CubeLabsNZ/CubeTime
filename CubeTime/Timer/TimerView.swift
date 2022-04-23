@@ -193,7 +193,12 @@ struct TimerView: View {
                             
                         }
                     }
-                    .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 100 : 72))
+                    .if(hSizeClass == .regular) { view in
+                        view.modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 100 : 72))
+                    }
+                    .if(hSizeClass == .compact) { view in
+                        view.modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 70 : 56))
+                    }
                     .modifier(DynamicText())
                     .animation(Animation.spring(), value: stopWatchManager.mode == .running)
                 
