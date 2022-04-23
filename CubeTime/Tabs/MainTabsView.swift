@@ -68,7 +68,6 @@ struct TabIcon: View {
 }
 
 
-
 struct MainTabsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.scenePhase) var scenePhase
