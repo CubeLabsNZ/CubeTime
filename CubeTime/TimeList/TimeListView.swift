@@ -96,6 +96,9 @@ struct TimeListView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    @Environment(\.verticalSizeClass) var vSizeClass
+    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     @Binding var currentSession: Sessions
@@ -108,7 +111,13 @@ struct TimeListView: View {
     @State var isSelectMode = false
     @State var selectedSolves: [Solves] = []
     
-    private let columns = [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+    private var columns: [GridItem] {
+        if hSizeClass == .regular {
+            return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+        } else {
+            return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+        }
+    }
     
     init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession

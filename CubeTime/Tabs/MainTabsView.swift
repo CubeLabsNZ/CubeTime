@@ -72,6 +72,11 @@ struct TabIcon: View {
 struct MainTabsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.scenePhase) var scenePhase
+    
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    @Environment(\.verticalSizeClass) var vSizeClass
+    
+    
     @Namespace private var namespace
     
     @StateObject var tabRouter: TabRouter = TabRouter()
@@ -156,10 +161,8 @@ struct MainTabsView: View {
                         .environmentObject(stopWatchManager)
                     // TODO move this to SessionsView on tap
                         .onChange(of: currentSession) { newSession in
-                            
                             UserDefaults.standard.set(newSession.objectID.uriRepresentation(), forKey: "last_used_session") // TODO what was i thinking move this logic into SessionsView
                             stopWatchManager.changeCurrentSession(newSession)
-                            
                         }
                 case .settings:
                     SettingsView(showOnboarding: $showOnboarding)
@@ -177,32 +180,6 @@ struct MainTabsView: View {
                 Updates(showUpdates: $showUpdates)
             }
             .onAppear(perform: checkForUpdate)
-            
-            /* attempted shortcut menu :tear:
-             .onChange(of: scenePhase) { newValue in
-             if newValue == .active {
-             if let shortcutItem = shortcutItem {
-             print("HERE")
-             print(shortcutItem.type)
-             
-             tabRouter.currentTab = {
-             switch shortcutItem.type {
-             case "timer":
-             return .timer
-             case "timelist":
-             return .solves
-             case "stats":
-             return .stats
-             case "sessions":
-             return .sessions
-             default:
-             return .timer
-             }
-             }()
-             }
-             }
-             }
-             */
         }
         .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
         .tint(accentColour)

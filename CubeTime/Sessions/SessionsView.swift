@@ -507,6 +507,7 @@ struct NewSessionPopUpView: View {
                     }
                 )
             }
+            .navigationViewStyle(StackNavigationViewStyle())
             .accentColor(accentColour)
         }
     }
@@ -1255,5 +1256,6 @@ struct SessionsView: View {
             }
             .navigationTitle("Your Sessions")
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }

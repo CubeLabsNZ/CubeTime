@@ -1,116 +1,44 @@
 import SwiftUI
+import Combine
+
+final class DeviceOrientation: ObservableObject {
+      enum Orientation {
+        case portrait
+        case landscape
+    }
+    @Published var orientation: Orientation
+    private var listener: AnyCancellable?
+    init() {
+        orientation = UIDevice.current.orientation.isLandscape ? .landscape : .portrait
+        listener = NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)
+            .compactMap { ($0.object as? UIDevice)?.orientation }
+            .compactMap { deviceOrientation -> Orientation? in
+                if deviceOrientation.isPortrait {
+                    return .portrait
+                } else if deviceOrientation.isLandscape {
+                    return .landscape
+                } else {
+                    return nil
+                }
+            }
+            .assign(to: \.orientation, on: self)
+    }
+    deinit {
+        listener?.cancel()
+    }
+}
+
 
 struct BottomTabsView: View {
     @Binding var hide: Bool
     @Binding var currentTab: Tab
     
+    @StateObject var orientation = DeviceOrientation()
+    
     var namespace: Namespace.ID
     
     var body: some View {
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            if !hide {
-                GeometryReader { geometry in
-                    ZStack {
-                        HStack {
-                            
-                            
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .fill(Color(uiColor: .systemGray5))
-                            
-                                .frame(
-                                    width: geometry.size.width - CGFloat(SetValues.marginLeftRight * 2),
-                                    height: CGFloat(SetValues.tabBarHeight),
-                                    alignment: .center
-                                )
-                                .shadow(color: .black.opacity(0.16), radius: 10, x: 0, y: 3)
-                                .padding(.horizontal)
-                            
-                            Spacer()
-                        }
-                        .zIndex(0)
-                        
-                                            
-                        HStack {
-                            
-                            VStack {
-                                VStack {
-                                    TabIconWithBar(
-                                        currentTab: $currentTab,
-                                        assignedTab: .timer,
-                                        systemIconName: "stopwatch",
-                                        systemIconNameSelected: "stopwatch.fill",
-                                        namespace: namespace
-                                    )
-                                    
-    //                                Spacer()
-                                    
-                                    TabIconWithBar(
-                                        currentTab: $currentTab,
-                                        assignedTab: .solves,
-                                        systemIconName: "hourglass.bottomhalf.filled",
-                                        systemIconNameSelected: "hourglass.tophalf.filled",
-                                        namespace: namespace
-                                    )
-                                    
-    //                                Spacer()
-                                    
-                                    TabIconWithBar(
-                                        currentTab: $currentTab,
-                                        assignedTab: .stats,
-                                        systemIconName: "chart.pie",
-                                        systemIconNameSelected: "chart.pie.fill",
-                                        namespace: namespace
-                                    )
-                                    
-                                    
-    //                                Spacer()
-                                    
-                                    TabIconWithBar(
-                                        currentTab: $currentTab,
-                                        assignedTab: .sessions,
-                                        systemIconName: "line.3.horizontal.circle",
-                                        systemIconNameSelected: "line.3.horizontal.circle.fill",
-                                        namespace: namespace
-                                    )
-    //                                    .padding(.trailing, 14)
-                                }
-                                .frame(
-                                    width: CGFloat(SetValues.tabBarHeight),
-                                    height: nil,
-                                    alignment: .leading
-                                )
-                                .background(Color(uiColor: .systemGray4).clipShape(RoundedRectangle(cornerRadius:12)))
-                                .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 3.5)
-    //                            .padding(.leading, CGFloat(SetValues.marginLeftRight))
-                                .animation(.spring(), value: self.currentTab)
-                                
-                                Spacer()
-                                
-                                
-                                
-                                TabIcon(
-                                    currentTab: $currentTab,
-                                    assignedTab: .settings,
-                                    systemIconName: "gearshape",
-                                    systemIconNameSelected: "gearshape.fill"
-                                )
-    //                                .padding(.trailing, CGFloat(SetValues.marginLeftRight + 12))
-                            }
-                            .padding(.horizontal)
-                            
-                            Spacer()
-                            
-                            
-                        }
-                        .zIndex(1)
-                    }
-                    .ignoresSafeArea(.keyboard)
-                }
-                .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : nil)
-                .transition(.move(edge: .bottom).animation(.easeIn(duration: 6)))
-                
-            }
-        } else {
+        if UIDevice.current.userInterfaceIdiom == .phone || (UIDevice.current.userInterfaceIdiom == .pad && orientation.orientation == .portrait) {
             if !hide {
                 GeometryReader { geometry in
                     ZStack {
@@ -143,9 +71,7 @@ struct BottomTabsView: View {
                                         systemIconNameSelected: "stopwatch.fill",
                                         namespace: namespace
                                     )
-                                    
-    //                                Spacer()
-                                    
+                                                                        
                                     TabIconWithBar(
                                         currentTab: $currentTab,
                                         assignedTab: .solves,
@@ -153,8 +79,6 @@ struct BottomTabsView: View {
                                         systemIconNameSelected: "hourglass.tophalf.filled",
                                         namespace: namespace
                                     )
-                                    
-    //                                Spacer()
                                     
                                     TabIconWithBar(
                                         currentTab: $currentTab,
@@ -164,9 +88,6 @@ struct BottomTabsView: View {
                                         namespace: namespace
                                     )
                                     
-                                    
-    //                                Spacer()
-                                    
                                     TabIconWithBar(
                                         currentTab: $currentTab,
                                         assignedTab: .sessions,
@@ -174,7 +95,6 @@ struct BottomTabsView: View {
                                         systemIconNameSelected: "line.3.horizontal.circle.fill",
                                         namespace: namespace
                                     )
-    //                                    .padding(.trailing, 14)
                                 }
                                 .frame(
                                     width: nil,
@@ -183,7 +103,6 @@ struct BottomTabsView: View {
                                 )
                                 .background(Color(uiColor: .systemGray4).clipShape(RoundedRectangle(cornerRadius:12)))
                                 .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 3.5)
-    //                            .padding(.leading, CGFloat(SetValues.marginLeftRight))
                                 .animation(.spring(), value: self.currentTab)
                                 
                                 Spacer()
@@ -196,23 +115,20 @@ struct BottomTabsView: View {
                                     systemIconName: "gearshape",
                                     systemIconNameSelected: "gearshape.fill"
                                 )
-    //                                .padding(.trailing, CGFloat(SetValues.marginLeftRight + 12))
                             }
                             .padding(.horizontal)
-                            
-                            
                         }
                         .zIndex(1)
                     }
                     .ignoresSafeArea(.keyboard)
                 }
                 .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : nil)
-                //.transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
                 .transition(.move(edge: .bottom).animation(.easeIn(duration: 6)))
-    //            .transition(AnyTransition.scale.animation(.easeIn(duration: 1)))
-                //
-                
             }
+        } else if UIDevice.current.userInterfaceIdiom == .pad && orientation.orientation == .landscape {
+            Text("ipad mode & lanscape")
+        } else {
+            Text("/????????????")
         }
     }
 }
