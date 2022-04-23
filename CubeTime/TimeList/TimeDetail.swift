@@ -68,7 +68,8 @@ struct TimeDetail: View {
 struct TimeDetailViewOnly: View {
     @Environment(\.presentationMode) var presentation
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme    
+    @Environment(\.colorScheme) var colourScheme
+    @Environment(\.horizontalSizeClass) var hSizeClass
     
     private let titleDateFormat: DateFormatter
     
@@ -192,14 +193,21 @@ struct TimeDetailViewOnly: View {
                             Divider()
                                 .padding(.leading)
                             
-                            AsyncScrambleView(puzzle: puzzle_type.puzzle, scramble: scramble)
-                                .frame(height: puzzle_type.puzzle.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
-                                .padding(.horizontal, 32)
-                                .padding(.bottom)
-                                .padding(.top, 12)
+                            if hSizeClass == .regular {
+                                AsyncScrambleView(puzzle: puzzle_type.puzzle, scramble: scramble)
+                                    .frame(height: puzzle_type.puzzle.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
+                                    .frame(width: UIScreen.screenWidth/3)
+                                    .padding(.horizontal, 32)
+                                    .padding(.bottom)
+                                    .padding(.top, 12)
+                            } else {
+                                AsyncScrambleView(puzzle: puzzle_type.puzzle, scramble: scramble)
+                                    .frame(height: puzzle_type.puzzle.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
+                                    .padding(.horizontal, 32)
+                                    .padding(.bottom)
+                                    .padding(.top, 12)
+                            }
                         }
-                        
-//                        if !chtscramblesthatdontworkwithtnoodle.contains(puzzle_type.puzzle) || date > Date(timeIntervalSince1970: TimeInterval(1643278.400))
                     }
                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
                     

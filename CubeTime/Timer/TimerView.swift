@@ -10,6 +10,8 @@ import Combine
 struct TimerView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
+    
+    @Environment(\.horizontalSizeClass) var hSizeClass
     //@ObservedObject var currentSession: Sessions
    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
@@ -170,6 +172,18 @@ struct TimerView: View {
                             }
                         }()
                     )
+                    .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
+                        Button("Confirm", role: .destructive) {
+                            managedObjectContext.delete(detail.wrappedValue!)
+                            detail.wrappedValue = nil
+                            stopWatchManager.secondsElapsed = 0
+                            try! managedObjectContext.save()
+                            stopWatchManager.secondsStr = formatSolveTime(secs: 0)
+                        }
+                        Button("Cancel", role: .cancel) {
+                            
+                        }
+                    }
                     .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 70 : 56))
                     .modifier(DynamicText())
                     .animation(Animation.spring(), value: stopWatchManager.mode == .running)
@@ -366,197 +380,230 @@ struct TimerView: View {
                     Spacer()
                 }
                 
-                // GEO READER FOR BOTTOM TOOLS
-                GeometryReader { geometry in
-                    VStack {
-                        Spacer()
-                        
-                        let maxWidth = geometry.size.width - 12 - UIScreen.screenWidth/2
-                        
-                                                
-                        ZStack {
-                            // SCRAMBLE VIEW
-                            if showScramble {
-                                HStack {
-                                    ZStack(alignment: .bottomLeading) {
-                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                            .fill(Color(uiColor: .systemGray5))
-                                            .frame(width: maxWidth, height: 120)
-                                        
-                                        // tried .overlay but the geometry becomes fixed and scaling doesn't work correctly
-                                        
-                                        if let svg = stopWatchManager.scrambleSVG {
-                                            TimerScrambleView(svg: svg)
-                                                .aspectRatio(contentMode: .fit)
-                                                .onTapGesture { showDrawScrambleSheet = true }
-                                                .frame(width: maxWidth-4, height: 116)
-                                                .scaleEffect(scaleAmount)
-                                            
-                                                .offset(x: 1, y: -2.5)
-                                            
-                                        } else {
-                                            ProgressView()
-                                                .frame(width: maxWidth-4, height: 116)
-                                        }
-                                    }
-                                    
-                                    Spacer()
-                                }
-                            }
+                if hSizeClass == .regular {
+                    GeometryReader { geometry in
+                        VStack {
+                            Spacer()
                             
-                            
-                            // STATS
-                            if showStats && SessionTypes(rawValue: currentSession.session_type)! != .compsim {
-                                HStack {
-                                    Spacer()
-                                    
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                            .fill(Color(uiColor: .systemGray5))
-                                            .frame(width: UIScreen.screenWidth/2, height: 120)
-                                        
-                                        
-                                        VStack(spacing: 6) {
-                                            HStack(spacing: 0) {
-                                                VStack(spacing: 0) {
-                                                    Text("AO5")
-                                                        .font(.system(size: 13, weight: .medium))
-                                                    
-                                                    if let currentAo5 = currentAo5 {
-                                                        Text(formatSolveTime(secs: currentAo5.average!, penType: currentAo5.totalPen))
-                                                            .font(.system(size: 24, weight: .bold))
-                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
-                                                            .modifier(DynamicText())
-                                                    } else {
-                                                        Text("-")
-                                                            .font(.system(size: 24, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray))
-                                                    }
-                                                        
-                                                }
-                                                .frame(minWidth: 0, maxWidth: .infinity)
-                                                .onTapGesture {
-                                                    if currentAo5 != nil && currentAo5?.totalPen != .dnf {
-                                                        presentedAvg = currentAo5
-                                                    }
-                                                }
-                                                
-                                                VStack(spacing: 0) {
-                                                    Text("AO12")
-                                                        .font(.system(size: 13, weight: .medium))
-                                                    
-                                                    if let currentAo12 = currentAo12 {
-                                                        Text(formatSolveTime(secs: currentAo12.average!, penType: currentAo12.totalPen))
-                                                            .font(.system(size: 24, weight: .bold))
-                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
-                                                            .modifier(DynamicText())
-                                                    } else {
-                                                        Text("-")
-                                                            .font(.system(size: 24, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray))
-                                                    }
-                                                }
-                                                .frame(minWidth: 0, maxWidth: .infinity)
-                                                .onTapGesture {
-                                                    if currentAo12 != nil && currentAo12?.totalPen != .dnf {
-                                                        presentedAvg = currentAo12
-                                                    }
-                                                }
-                                            }
-                                            .padding(.top, 6)
+                            let maxWidth = geometry.size.width - 12 - UIScreen.screenWidth/1.35
+                                     
+                            ZStack {
+                                // SCRAMBLE VIEW
+                                if showScramble {
+                                    HStack {
+                                        ZStack(alignment: .bottomLeading) {
+                                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                                .fill(Color(uiColor: .systemGray5))
+                                                .frame(width: maxWidth, height: 120)
                                             
-                                            Divider()
-                                                .frame(width: UIScreen.screenWidth/2 - 48)
+                                            // tried .overlay but the geometry becomes fixed and scaling doesn't work correctly
                                             
-                                            HStack(spacing: 0) {
-                                                VStack(spacing: 0) {
-                                                    Text("AO100")
-                                                        .font(.system(size: 13, weight: .medium))
-                                                    
-                                                    if let currentAo100 = currentAo100 {
-                                                        Text(formatSolveTime(secs: currentAo100.average!, penType: currentAo100.totalPen))
-                                                            .font(.system(size: 24, weight: .bold))
-                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
-                                                            .modifier(DynamicText())
-                                                    } else {
-                                                        Text("-")
-                                                            .font(.system(size: 24, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray))
-                                                    }
-                                                }
-                                                .frame(minWidth: 0, maxWidth: .infinity)
-                                                .onTapGesture {
-                                                    if currentAo100 != nil && currentAo100?.totalPen != .dnf {
-                                                        presentedAvg = currentAo100
-                                                    }
-                                                }
+                                            if let svg = stopWatchManager.scrambleSVG {
+                                                TimerScrambleView(svg: svg)
+                                                    .aspectRatio(contentMode: .fit)
+                                                    .onTapGesture { showDrawScrambleSheet = true }
+                                                    .frame(width: maxWidth-4, height: 116)
+                                                    .scaleEffect(scaleAmount)
                                                 
-                                                VStack(spacing: 0) {
-                                                    Text("MEAN")
-                                                        .font(.system(size: 13, weight: .medium))
-                                                    
-                                                    if let sessionMean = sessionMean {
-                                                        Text(formatSolveTime(secs: sessionMean))
-                                                            .font(.system(size: 24, weight: .bold))
-                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
-                                                            .modifier(DynamicText())
-                                                    } else {
-                                                        Text("-")
-                                                            .font(.system(size: 24, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray))
-                                                    }
-                                                }
-                                                .frame(minWidth: 0, maxWidth: .infinity)
+                                                    .offset(x: 1, y: -2.5)
+                                                
+                                            } else {
+                                                ProgressView()
+                                                    .frame(width: maxWidth-4, height: 116)
                                             }
-                                            .padding(.bottom, 6)
                                         }
-                                        .padding(.horizontal, 4)
+                                        
+                                        Spacer()
                                     }
-                                    .frame(width: UIScreen.screenWidth/2, height: 120)
                                 }
-                            } else if showStats && SessionTypes(rawValue: currentSession.session_type)! == .compsim {
-                                HStack {
-                                    Spacer()
-                                    
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                            .fill(Color(uiColor: .systemGray5))
-                                            .frame(width: UIScreen.screenWidth/2, height: 120)
+                                
+                                
+                                // STATS
+                                if showStats && SessionTypes(rawValue: currentSession.session_type)! != .compsim {
+                                    HStack {
+                                        Spacer()
                                         
-                                        
-                                        VStack(spacing: 6) {
-                                            HStack {
-                                                VStack(spacing: 0) {
-                                                    Text("BPA")
-                                                        .font(.system(size: 13, weight: .medium))
-                                                    
-                                                    if let bpa = bpa {
-                                                        Text(formatSolveTime(secs: bpa))
-                                                            .font(.system(size: 24, weight: .bold))
-                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
-                                                            .modifier(DynamicText())
-                                                    } else {
-                                                        Text("...")
-                                                            .font(.system(size: 24, weight: .medium, design: .default))
-                                                            .foregroundColor(Color(uiColor: .systemGray))
-                                                    }
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                                .fill(Color(uiColor: .systemGray5))
+                                                .frame(width: UIScreen.screenWidth/4, height: 120)
+                                            
+                                            
+                                            VStack(spacing: 6) {
+                                                HStack(spacing: 0) {
+                                                    VStack(spacing: 0) {
+                                                        Text("AO5")
+                                                            .font(.system(size: 13, weight: .medium))
                                                         
-                                                }
-                                                .frame(minWidth: 0, maxWidth: .infinity)
-                                                
-                                                VStack(spacing: 0) {
-                                                    Text("WPA")
-                                                        .font(.system(size: 13, weight: .medium))
-                                                    
-                                                    if let wpa = wpa {
-                                                        if wpa == -1 {
-                                                            Text("DNF")
+                                                        if let currentAo5 = currentAo5 {
+                                                            Text(formatSolveTime(secs: currentAo5.average!, penType: currentAo5.totalPen))
                                                                 .font(.system(size: 24, weight: .bold))
+                                                                .frame(maxWidth: UIScreen.screenWidth/8-8)
                                                                 .modifier(DynamicText())
                                                         } else {
-                                                            Text(formatSolveTime(secs: wpa))
+                                                            Text("-")
+                                                                .font(.system(size: 24, weight: .medium, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                        }
+                                                            
+                                                    }
+                                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                                    .onTapGesture {
+                                                        if currentAo5 != nil && currentAo5?.totalPen != .dnf {
+                                                            presentedAvg = currentAo5
+                                                        }
+                                                    }
+                                                    
+                                                    VStack(spacing: 0) {
+                                                        Text("AO12")
+                                                            .font(.system(size: 13, weight: .medium))
+                                                        
+                                                        if let currentAo12 = currentAo12 {
+                                                            Text(formatSolveTime(secs: currentAo12.average!, penType: currentAo12.totalPen))
+                                                                .font(.system(size: 24, weight: .bold))
+                                                                .frame(maxWidth: UIScreen.screenWidth/8-8)
+                                                                .modifier(DynamicText())
+                                                        } else {
+                                                            Text("-")
+                                                                .font(.system(size: 24, weight: .medium, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                        }
+                                                    }
+                                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                                    .onTapGesture {
+                                                        if currentAo12 != nil && currentAo12?.totalPen != .dnf {
+                                                            presentedAvg = currentAo12
+                                                        }
+                                                    }
+                                                }
+                                                .padding(.top, 6)
+                                                
+                                                Divider()
+                                                    .frame(width: UIScreen.screenWidth/4 - 48)
+                                                
+                                                HStack(spacing: 0) {
+                                                    VStack(spacing: 0) {
+                                                        Text("AO100")
+                                                            .font(.system(size: 13, weight: .medium))
+                                                        
+                                                        if let currentAo100 = currentAo100 {
+                                                            Text(formatSolveTime(secs: currentAo100.average!, penType: currentAo100.totalPen))
+                                                                .font(.system(size: 24, weight: .bold))
+                                                                .frame(maxWidth: UIScreen.screenWidth/8-8)
+                                                                .modifier(DynamicText())
+                                                        } else {
+                                                            Text("-")
+                                                                .font(.system(size: 24, weight: .medium, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                        }
+                                                    }
+                                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                                    .onTapGesture {
+                                                        if currentAo100 != nil && currentAo100?.totalPen != .dnf {
+                                                            presentedAvg = currentAo100
+                                                        }
+                                                    }
+                                                    
+                                                    VStack(spacing: 0) {
+                                                        Text("MEAN")
+                                                            .font(.system(size: 13, weight: .medium))
+                                                        
+                                                        if let sessionMean = sessionMean {
+                                                            Text(formatSolveTime(secs: sessionMean))
+                                                                .font(.system(size: 24, weight: .bold))
+                                                                .frame(maxWidth: UIScreen.screenWidth/8-8)
+                                                                .modifier(DynamicText())
+                                                        } else {
+                                                            Text("-")
+                                                                .font(.system(size: 24, weight: .medium, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                        }
+                                                    }
+                                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                                }
+                                                .padding(.bottom, 6)
+                                            }
+                                            .padding(.horizontal, 4)
+                                        }
+                                        .frame(width: UIScreen.screenWidth/4, height: 120)
+                                    }
+                                } else if showStats && SessionTypes(rawValue: currentSession.session_type)! == .compsim {
+                                    HStack {
+                                        Spacer()
+                                        
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                                .fill(Color(uiColor: .systemGray5))
+                                                .frame(width: UIScreen.screenWidth/2, height: 120)
+                                            
+                                            
+                                            VStack(spacing: 6) {
+                                                HStack {
+                                                    VStack(spacing: 0) {
+                                                        Text("BPA")
+                                                            .font(.system(size: 13, weight: .medium))
+                                                        
+                                                        if let bpa = bpa {
+                                                            Text(formatSolveTime(secs: bpa))
                                                                 .font(.system(size: 24, weight: .bold))
                                                                 .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                .modifier(DynamicText())
+                                                        } else {
+                                                            Text("...")
+                                                                .font(.system(size: 24, weight: .medium, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                        }
+                                                            
+                                                    }
+                                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                                    
+                                                    VStack(spacing: 0) {
+                                                        Text("WPA")
+                                                            .font(.system(size: 13, weight: .medium))
+                                                        
+                                                        if let wpa = wpa {
+                                                            if wpa == -1 {
+                                                                Text("DNF")
+                                                                    .font(.system(size: 24, weight: .bold))
+                                                                    .modifier(DynamicText())
+                                                            } else {
+                                                                Text(formatSolveTime(secs: wpa))
+                                                                    .font(.system(size: 24, weight: .bold))
+                                                                    .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                    .modifier(DynamicText())
+                                                            }
+                                                            
+                                                            
+                                                            
+                                                        } else {
+                                                            Text("...")
+                                                                .font(.system(size: 24, weight: .medium, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                        }
+                                                    }
+                                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                                }
+                                                .padding(.top, 6)
+                                                
+                                                Divider()
+                                                    .frame(width: UIScreen.screenWidth/2 - 48)
+                                                
+                                                VStack(spacing: 0) {
+                                                    Text("TO REACH TARGET")
+                                                        .font(.system(size: 13, weight: .medium))
+                                                    
+                                                    if let timeNeededForTarget = timeNeededForTarget {
+                                                        if timeNeededForTarget == -1 {
+                                                            Text("Not Possible")
+                                                                .font(.system(size: 22, weight: .bold))
+                                                                .modifier(DynamicText())
+                                                        } else if timeNeededForTarget == -2 {
+                                                            Text("Guaranteed")
+                                                                .font(.system(size: 22, weight: .bold))
+                                                                .modifier(DynamicText())
+                                                        } else {
+                                                            Text("≤"+formatSolveTime(secs: timeNeededForTarget))
+                                                                .font(.system(size: 24, weight: .bold))
                                                                 .modifier(DynamicText())
                                                         }
                                                         
@@ -568,52 +615,268 @@ struct TimerView: View {
                                                             .foregroundColor(Color(uiColor: .systemGray))
                                                     }
                                                 }
-                                                .frame(minWidth: 0, maxWidth: .infinity)
+                                                .padding(.bottom, 6)
                                             }
-                                            .padding(.top, 6)
-                                            
-                                            Divider()
-                                                .frame(width: UIScreen.screenWidth/2 - 48)
-                                            
-                                            VStack(spacing: 0) {
-                                                Text("TO REACH TARGET")
-                                                    .font(.system(size: 13, weight: .medium))
-                                                
-                                                if let timeNeededForTarget = timeNeededForTarget {
-                                                    if timeNeededForTarget == -1 {
-                                                        Text("Not Possible")
-                                                            .font(.system(size: 22, weight: .bold))
-                                                            .modifier(DynamicText())
-                                                    } else if timeNeededForTarget == -2 {
-                                                        Text("Guaranteed")
-                                                            .font(.system(size: 22, weight: .bold))
-                                                            .modifier(DynamicText())
-                                                    } else {
-                                                        Text("≤"+formatSolveTime(secs: timeNeededForTarget))
-                                                            .font(.system(size: 24, weight: .bold))
-                                                            .modifier(DynamicText())
-                                                    }
-                                                    
-                                                    
-                                                    
-                                                } else {
-                                                    Text("...")
-                                                        .font(.system(size: 24, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray))
-                                                }
-                                            }
-                                            .padding(.bottom, 6)
+                                            .padding(.horizontal, 4)
                                         }
-                                        .padding(.horizontal, 4)
+                                        .frame(width: UIScreen.screenWidth/2, height: 120)
                                     }
-                                    .frame(width: UIScreen.screenWidth/2, height: 120)
                                 }
                             }
                         }
                     }
+                    .padding(.horizontal)
+                    .safeAreaInset(edge: .bottom, spacing: 0) {Rectangle().fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : 12)}
+                } else {
+                    GeometryReader { geometry in
+                        VStack {
+                            Spacer()
+                            
+                            let maxWidth = geometry.size.width - 12 - UIScreen.screenWidth/2
+                            
+                                                    
+                            ZStack {
+                                // SCRAMBLE VIEW
+                                if showScramble {
+                                    HStack {
+                                        ZStack(alignment: .bottomLeading) {
+                                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                                .fill(Color(uiColor: .systemGray5))
+                                                .frame(width: maxWidth, height: 120)
+                                            
+                                            // tried .overlay but the geometry becomes fixed and scaling doesn't work correctly
+                                            
+                                            if let svg = stopWatchManager.scrambleSVG {
+                                                TimerScrambleView(svg: svg)
+                                                    .aspectRatio(contentMode: .fit)
+                                                    .onTapGesture { showDrawScrambleSheet = true }
+                                                    .frame(width: maxWidth-4, height: 116)
+                                                    .scaleEffect(scaleAmount)
+                                                
+                                                    .offset(x: 1, y: -2.5)
+                                                
+                                            } else {
+                                                ProgressView()
+                                                    .frame(width: maxWidth-4, height: 116)
+                                            }
+                                        }
+                                        
+                                        Spacer()
+                                    }
+                                }
+                                
+                                
+                                // STATS
+                                if showStats && SessionTypes(rawValue: currentSession.session_type)! != .compsim {
+                                    HStack {
+                                        Spacer()
+                                        
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                                .fill(Color(uiColor: .systemGray5))
+                                                .frame(width: UIScreen.screenWidth/2, height: 120)
+                                            
+                                            
+                                            VStack(spacing: 6) {
+                                                HStack(spacing: 0) {
+                                                    VStack(spacing: 0) {
+                                                        Text("AO5")
+                                                            .font(.system(size: 13, weight: .medium))
+                                                        
+                                                        if let currentAo5 = currentAo5 {
+                                                            Text(formatSolveTime(secs: currentAo5.average!, penType: currentAo5.totalPen))
+                                                                .font(.system(size: 24, weight: .bold))
+                                                                .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                .modifier(DynamicText())
+                                                        } else {
+                                                            Text("-")
+                                                                .font(.system(size: 24, weight: .medium, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                        }
+                                                            
+                                                    }
+                                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                                    .onTapGesture {
+                                                        if currentAo5 != nil && currentAo5?.totalPen != .dnf {
+                                                            presentedAvg = currentAo5
+                                                        }
+                                                    }
+                                                    
+                                                    VStack(spacing: 0) {
+                                                        Text("AO12")
+                                                            .font(.system(size: 13, weight: .medium))
+                                                        
+                                                        if let currentAo12 = currentAo12 {
+                                                            Text(formatSolveTime(secs: currentAo12.average!, penType: currentAo12.totalPen))
+                                                                .font(.system(size: 24, weight: .bold))
+                                                                .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                .modifier(DynamicText())
+                                                        } else {
+                                                            Text("-")
+                                                                .font(.system(size: 24, weight: .medium, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                        }
+                                                    }
+                                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                                    .onTapGesture {
+                                                        if currentAo12 != nil && currentAo12?.totalPen != .dnf {
+                                                            presentedAvg = currentAo12
+                                                        }
+                                                    }
+                                                }
+                                                .padding(.top, 6)
+                                                
+                                                Divider()
+                                                    .frame(width: UIScreen.screenWidth/2 - 48)
+                                                
+                                                HStack(spacing: 0) {
+                                                    VStack(spacing: 0) {
+                                                        Text("AO100")
+                                                            .font(.system(size: 13, weight: .medium))
+                                                        
+                                                        if let currentAo100 = currentAo100 {
+                                                            Text(formatSolveTime(secs: currentAo100.average!, penType: currentAo100.totalPen))
+                                                                .font(.system(size: 24, weight: .bold))
+                                                                .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                .modifier(DynamicText())
+                                                        } else {
+                                                            Text("-")
+                                                                .font(.system(size: 24, weight: .medium, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                        }
+                                                    }
+                                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                                    .onTapGesture {
+                                                        if currentAo100 != nil && currentAo100?.totalPen != .dnf {
+                                                            presentedAvg = currentAo100
+                                                        }
+                                                    }
+                                                    
+                                                    VStack(spacing: 0) {
+                                                        Text("MEAN")
+                                                            .font(.system(size: 13, weight: .medium))
+                                                        
+                                                        if let sessionMean = sessionMean {
+                                                            Text(formatSolveTime(secs: sessionMean))
+                                                                .font(.system(size: 24, weight: .bold))
+                                                                .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                .modifier(DynamicText())
+                                                        } else {
+                                                            Text("-")
+                                                                .font(.system(size: 24, weight: .medium, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                        }
+                                                    }
+                                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                                }
+                                                .padding(.bottom, 6)
+                                            }
+                                            .padding(.horizontal, 4)
+                                        }
+                                        .frame(width: UIScreen.screenWidth/2, height: 120)
+                                    }
+                                } else if showStats && SessionTypes(rawValue: currentSession.session_type)! == .compsim {
+                                    HStack {
+                                        Spacer()
+                                        
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                                .fill(Color(uiColor: .systemGray5))
+                                                .frame(width: UIScreen.screenWidth/2, height: 120)
+                                            
+                                            
+                                            VStack(spacing: 6) {
+                                                HStack {
+                                                    VStack(spacing: 0) {
+                                                        Text("BPA")
+                                                            .font(.system(size: 13, weight: .medium))
+                                                        
+                                                        if let bpa = bpa {
+                                                            Text(formatSolveTime(secs: bpa))
+                                                                .font(.system(size: 24, weight: .bold))
+                                                                .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                .modifier(DynamicText())
+                                                        } else {
+                                                            Text("...")
+                                                                .font(.system(size: 24, weight: .medium, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                        }
+                                                            
+                                                    }
+                                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                                    
+                                                    VStack(spacing: 0) {
+                                                        Text("WPA")
+                                                            .font(.system(size: 13, weight: .medium))
+                                                        
+                                                        if let wpa = wpa {
+                                                            if wpa == -1 {
+                                                                Text("DNF")
+                                                                    .font(.system(size: 24, weight: .bold))
+                                                                    .modifier(DynamicText())
+                                                            } else {
+                                                                Text(formatSolveTime(secs: wpa))
+                                                                    .font(.system(size: 24, weight: .bold))
+                                                                    .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                    .modifier(DynamicText())
+                                                            }
+                                                            
+                                                            
+                                                            
+                                                        } else {
+                                                            Text("...")
+                                                                .font(.system(size: 24, weight: .medium, design: .default))
+                                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                        }
+                                                    }
+                                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                                }
+                                                .padding(.top, 6)
+                                                
+                                                Divider()
+                                                    .frame(width: UIScreen.screenWidth/2 - 48)
+                                                
+                                                VStack(spacing: 0) {
+                                                    Text("TO REACH TARGET")
+                                                        .font(.system(size: 13, weight: .medium))
+                                                    
+                                                    if let timeNeededForTarget = timeNeededForTarget {
+                                                        if timeNeededForTarget == -1 {
+                                                            Text("Not Possible")
+                                                                .font(.system(size: 22, weight: .bold))
+                                                                .modifier(DynamicText())
+                                                        } else if timeNeededForTarget == -2 {
+                                                            Text("Guaranteed")
+                                                                .font(.system(size: 22, weight: .bold))
+                                                                .modifier(DynamicText())
+                                                        } else {
+                                                            Text("≤"+formatSolveTime(secs: timeNeededForTarget))
+                                                                .font(.system(size: 24, weight: .bold))
+                                                                .modifier(DynamicText())
+                                                        }
+                                                        
+                                                        
+                                                        
+                                                    } else {
+                                                        Text("...")
+                                                            .font(.system(size: 24, weight: .medium, design: .default))
+                                                            .foregroundColor(Color(uiColor: .systemGray))
+                                                    }
+                                                }
+                                                .padding(.bottom, 6)
+                                            }
+                                            .padding(.horizontal, 4)
+                                        }
+                                        .frame(width: UIScreen.screenWidth/2, height: 120)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                    .safeAreaInset(edge: .bottom, spacing: 0) {Rectangle().fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : 12)}
                 }
-                .padding(.horizontal)
-                .safeAreaInset(edge: .bottom, spacing: 0) {Rectangle().fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : 12)}
+                // GEO READER FOR BOTTOM TOOLS
             }
             
             // MANUAL ENTRY FIELD
@@ -758,28 +1021,6 @@ struct TimerView: View {
                     }
                     
                 }
-            }
-
-            
-            
-            
-            
-            
-            
-            
-            
-            
-        }
-        .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
-            Button("Confirm", role: .destructive) {
-                managedObjectContext.delete(detail.wrappedValue!)
-                detail.wrappedValue = nil
-                stopWatchManager.secondsElapsed = 0
-                try! managedObjectContext.save()
-                stopWatchManager.secondsStr = formatSolveTime(secs: 0)
-            }
-            Button("Cancel", role: .cancel) {
-                
             }
         }
         .sheet(isPresented: $showScrambleSheet) {
