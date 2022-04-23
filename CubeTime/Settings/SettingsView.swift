@@ -16,8 +16,11 @@ struct AnimatingFontSizeV2: AnimatableModifier {
 
 struct SettingsView: View {
     @State var currentCard: SettingsCardInfo?
-    //    @Binding var hideTabBar: Bool
+    
     @Environment(\.colorScheme) var colourScheme
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    
+    
     @Binding var showOnboarding: Bool
     @Namespace var namespace
     
@@ -31,23 +34,39 @@ struct SettingsView: View {
                     Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                         .ignoresSafeArea()
                     
-                    VStack (spacing: 16) {
-                        HStack (spacing: 16) {
-                            SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
-                            SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
+                    if hSizeClass == .regular {
+                        VStack (spacing: 16) {
+                            HStack (spacing: 16) {
+                                SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
+                                SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
+                                SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
+                                SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
+                            }
+                            
+                            Spacer()
                         }
-                        HStack (spacing: 16) {
-                            SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
-                            SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
+                        .navigationBarTitle("Settings")
+                        .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                        .padding(.vertical, 6)
+                        .padding(.horizontal)
+                    } else {
+                        VStack (spacing: 16) {
+                            HStack (spacing: 16) {
+                                SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
+                                SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
+                            }
+                            HStack (spacing: 16) {
+                                SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
+                                SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
+                            }
+                            
+                            Spacer()
                         }
-                        
-                        Spacer()
+                        .navigationBarTitle("Settings")
+                        .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                        .padding(.vertical, 6)
+                        .padding(.horizontal)
                     }
-                    .navigationBarTitle("Settings")
-                    
-                    .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
-                    .padding(.vertical, 6)
-                    .padding(.horizontal)
                 }
             }
             .navigationViewStyle(StackNavigationViewStyle())
@@ -65,6 +84,8 @@ struct SettingsCard: View {
     var namespace: Namespace.ID
     
     @Environment(\.colorScheme) var colourScheme
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    
     
     var body: some View {
         Button {
@@ -72,41 +93,80 @@ struct SettingsCard: View {
                 currentCard = info
             }
         } label: {
-            ZStack {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
-                    .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
-                    .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
-                    .shadow(color: .black.opacity(0.1), radius: 8, x: 3, y: 3)
-                
-                VStack {
-                    HStack {
-                        Text(info.name)
-                            .matchedGeometryEffect(id: info.name, in: namespace)
-                            .minimumScaleFactor(0.75)
-                            .lineLimit(info.name == "Appearance" ? 1 : 2)
-                            .allowsTightening(true)
-                            .font(.system(size: 22, weight: .bold))
-                            .padding(.horizontal, info.name == "Appearance" ? 14 : nil)
-                            .padding(.top, info.name == "Appearance" ? 15 : 12)
-                        
+            if hSizeClass == .regular {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
+                        .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
+                        .frame(height: UIScreen.screenHeight/5, alignment: .center)
+                        .shadow(color: .black.opacity(0.1), radius: 8, x: 3, y: 3)
+                    
+                    VStack {
+                        HStack {
+                            Text(info.name)
+                                .matchedGeometryEffect(id: info.name, in: namespace)
+                                .minimumScaleFactor(0.75)
+                                .lineLimit(info.name == "Appearance" ? 1 : 2)
+                                .allowsTightening(true)
+                                .font(.system(size: 22, weight: .bold))
+                                .padding(.horizontal, info.name == "Appearance" ? 14 : nil)
+                                .padding(.top, info.name == "Appearance" ? 15 : 12)
+                            
+                            
+                            Spacer()
+                        }
                         
                         Spacer()
-                    }
-                    
-                    Spacer()
-                    
-                    HStack {
-                                                           
-                        Image(systemName: info.icon)
-                            .matchedGeometryEffect(id: info.icon, in: namespace)
-                            .font(info.iconStyle)
-                            .padding(12)
                         
-                        Spacer()
+                        HStack {
+                                                               
+                            Image(systemName: info.icon)
+                                .matchedGeometryEffect(id: info.icon, in: namespace)
+                                .font(info.iconStyle)
+                                .padding(12)
+                            
+                            Spacer()
+                        }
                     }
+                    .frame(height: UIScreen.screenHeight/5, alignment: .center)
                 }
-                .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+            } else {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
+                        .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
+                        .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+                        .shadow(color: .black.opacity(0.1), radius: 8, x: 3, y: 3)
+                    
+                    VStack {
+                        HStack {
+                            Text(info.name)
+                                .matchedGeometryEffect(id: info.name, in: namespace)
+                                .minimumScaleFactor(0.75)
+                                .lineLimit(info.name == "Appearance" ? 1 : 2)
+                                .allowsTightening(true)
+                                .font(.system(size: 22, weight: .bold))
+                                .padding(.horizontal, info.name == "Appearance" ? 14 : nil)
+                                .padding(.top, info.name == "Appearance" ? 15 : 12)
+                            
+                            
+                            Spacer()
+                        }
+                        
+                        Spacer()
+                        
+                        HStack {
+                                                               
+                            Image(systemName: info.icon)
+                                .matchedGeometryEffect(id: info.icon, in: namespace)
+                                .font(info.iconStyle)
+                                .padding(12)
+                            
+                            Spacer()
+                        }
+                    }
+                    .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+                }
             }
         }
         .buttonStyle(CardButtonStyle())
