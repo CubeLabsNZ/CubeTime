@@ -13,6 +13,10 @@ struct SessionCard: View {
     var item: Sessions
     var numSessions: Int
     
+    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
+                                (scene as? UIWindowScene)?.keyWindow
+                            }).first?.frame.size
+    
     @Namespace var namespace
     
     var body: some View {
@@ -26,8 +30,8 @@ struct SessionCard: View {
             
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(colourScheme == .dark ? Color(uiColor: .systemGray6) : Color.white)
-                .frame(width: currentSession == item ? 16 : UIScreen.screenWidth - 32, height: item.pinned ? 110 : 65)
-                .offset(x: currentSession == item ? -((UIScreen.screenWidth - 16)/2) + 16 : 0)
+                .frame(width: currentSession == item ? 16 : windowSize!.width - 32, height: item.pinned ? 110 : 65)
+                .offset(x: currentSession == item ? -((windowSize!.width - 16)/2) + 16 : 0)
             
                 .zIndex(1)
             

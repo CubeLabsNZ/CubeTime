@@ -17,6 +17,10 @@ struct StatsDetail: View {
     
     private let isCurrentCompSimAverage: Bool
     
+    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
+                                (scene as? UIWindowScene)?.keyWindow
+                            }).first?.frame.size
+    
 //    let dateFormatter = DateFormatter()
 //    dateFormatter.dateFormat = "h:mm a, MM/dd/yyyy"
     
@@ -176,7 +180,7 @@ struct StatsDetail: View {
                                                 
                                                 
                                                 Text(solve.scramble ?? "Failed to load scramble")
-                                                    .font(.system(size: solve.scramble_type == 7 ? ((UIScreen.screenWidth-32) / (42.00) * 1.42) : 16, weight: .regular, design: .monospaced))
+                                                    .font(.system(size: solve.scramble_type == 7 ? ((windowSize!.width-32) / (42.00) * 1.42) : 16, weight: .regular, design: .monospaced))
                                                 
                                                 Spacer()
                                             }

@@ -104,6 +104,10 @@ struct AboutSettingsView: View {
     @AppStorage("onboarding") var showOnboarding = false
     @Environment(\.horizontalSizeClass) var hSizeClass
     
+    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
+                                (scene as? UIWindowScene)?.keyWindow
+                            }).first?.frame.size
+    
     @State var showLicenses = false
     
     var body: some View {
@@ -152,7 +156,7 @@ struct AboutSettingsView: View {
                 Image("kofiButton")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: UIScreen.screenWidth*(hSizeClass == .compact ? 0.65 : 0.3))
+                    .frame(width: windowSize!.width*(hSizeClass == .compact ? 0.65 : 0.3))
             }
             .padding(.top, 2)
             
@@ -164,7 +168,6 @@ struct AboutSettingsView: View {
                 showOnboarding = true
             }
         }
-        .background(Color.red)
         .padding(.horizontal)
         .sheet(isPresented: $showLicenses) {
             LicensesPopUpView(showLicenses: $showLicenses)

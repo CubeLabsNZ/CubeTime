@@ -68,6 +68,7 @@ struct TabIcon: View {
 }
 
 
+
 struct MainTabsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.scenePhase) var scenePhase
@@ -97,6 +98,11 @@ struct MainTabsView: View {
     
     init(managedObjectContext: NSManagedObjectContext) {
         let lastUsedSessionURI = UserDefaults.standard.url(forKey: "last_used_session")
+        
+        let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
+                            (scene as? UIWindowScene)?.keyWindow
+                        }).first?.frame.size
+
         
         /*
          if let shortcutItem = shortcutItem {

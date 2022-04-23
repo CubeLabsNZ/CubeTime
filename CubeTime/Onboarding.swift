@@ -314,6 +314,12 @@ struct PageFive: View {
 
 struct PageSix: View {
     @Binding var pageIndex: Int
+    
+    
+    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
+                                (scene as? UIWindowScene)?.keyWindow
+                            }).first?.frame.size
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
@@ -412,7 +418,7 @@ struct PageSix: View {
                         }
                     }
                 }
-                .frame(maxWidth: UIScreen.screenWidth - 32)
+                .frame(maxWidth: windowSize!.width - 32)
                 .padding(.horizontal, 32)
                 .padding(.top, 18)
                 

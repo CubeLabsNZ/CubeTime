@@ -32,13 +32,14 @@ final class DeviceOrientation: ObservableObject {
 struct BottomTabsView: View {
     @Binding var hide: Bool
     @Binding var currentTab: Tab
+    @Environment(\.horizontalSizeClass) var hSizeClass
     
     @StateObject var orientation = DeviceOrientation()
     
     var namespace: Namespace.ID
     
     var body: some View {
-        if UIDevice.current.userInterfaceIdiom == .phone || (UIDevice.current.userInterfaceIdiom == .pad && orientation.orientation == .portrait) {
+        if UIDevice.current.userInterfaceIdiom == .phone || (UIDevice.current.userInterfaceIdiom == .pad && orientation.orientation == .portrait) || hSizeClass == .compact {
             if !hide {
                 GeometryReader { geometry in
                     ZStack {

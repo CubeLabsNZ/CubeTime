@@ -76,7 +76,10 @@ struct TimerView: View {
     @State var timeNeededForTarget: Double?
     
     private var scaleAmount: CGFloat
-       
+    
+    let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
+                        (scene as? UIWindowScene)?.keyWindow
+                    }).first?.frame.size
     
     init(pageIndex: Binding<Int>, currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext, hideTabBar: Binding<Bool>) {
         self._pageIndex = pageIndex
@@ -89,6 +92,10 @@ struct TimerView: View {
         self._phaseCount = State(initialValue: Int((currentSession.wrappedValue as? MultiphaseSession)?.phase_count ?? 0))
         
         stats = Stats(currentSession: currentSession.wrappedValue)
+        
+        
+        
+
         
         
         self.currentAo5 = stats.getCurrentAverageOf(5)
@@ -387,7 +394,8 @@ struct TimerView: View {
                         VStack {
                             Spacer()
                             
-                            let maxWidth = geometry.size.width - 12 - UIScreen.screenWidth/1.35
+//                            let maxWidth = geometry.size.width - 12 - windowSize!.width/1.35
+                            let maxWidth = geometry.size.width - 12 - windowSize!.width/1.35
                                      
                             ZStack {
                                 // SCRAMBLE VIEW
@@ -428,7 +436,7 @@ struct TimerView: View {
                                         ZStack {
                                             RoundedRectangle(cornerRadius: 16, style: .continuous)
                                                 .fill(Color(uiColor: .systemGray5))
-                                                .frame(width: UIScreen.screenWidth/4, height: 120)
+                                                .frame(width: windowSize!.width/4, height: 120)
                                             
                                             
                                             VStack(spacing: 6) {
@@ -440,7 +448,7 @@ struct TimerView: View {
                                                         if let currentAo5 = currentAo5 {
                                                             Text(formatSolveTime(secs: currentAo5.average!, penType: currentAo5.totalPen))
                                                                 .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: UIScreen.screenWidth/8-8)
+                                                                .frame(maxWidth: windowSize!.width/8-8)
                                                                 .modifier(DynamicText())
                                                         } else {
                                                             Text("-")
@@ -463,7 +471,7 @@ struct TimerView: View {
                                                         if let currentAo12 = currentAo12 {
                                                             Text(formatSolveTime(secs: currentAo12.average!, penType: currentAo12.totalPen))
                                                                 .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: UIScreen.screenWidth/8-8)
+                                                                .frame(maxWidth: windowSize!.width/8-8)
                                                                 .modifier(DynamicText())
                                                         } else {
                                                             Text("-")
@@ -481,7 +489,7 @@ struct TimerView: View {
                                                 .padding(.top, 6)
                                                 
                                                 Divider()
-                                                    .frame(width: UIScreen.screenWidth/4 - 48)
+                                                    .frame(width: windowSize!.width/4 - 48)
                                                 
                                                 HStack(spacing: 0) {
                                                     VStack(spacing: 0) {
@@ -491,7 +499,7 @@ struct TimerView: View {
                                                         if let currentAo100 = currentAo100 {
                                                             Text(formatSolveTime(secs: currentAo100.average!, penType: currentAo100.totalPen))
                                                                 .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: UIScreen.screenWidth/8-8)
+                                                                .frame(maxWidth: windowSize!.width/8-8)
                                                                 .modifier(DynamicText())
                                                         } else {
                                                             Text("-")
@@ -513,7 +521,7 @@ struct TimerView: View {
                                                         if let sessionMean = sessionMean {
                                                             Text(formatSolveTime(secs: sessionMean))
                                                                 .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: UIScreen.screenWidth/8-8)
+                                                                .frame(maxWidth: windowSize!.width/8-8)
                                                                 .modifier(DynamicText())
                                                         } else {
                                                             Text("-")
@@ -527,7 +535,7 @@ struct TimerView: View {
                                             }
                                             .padding(.horizontal, 4)
                                         }
-                                        .frame(width: UIScreen.screenWidth/4, height: 120)
+                                        .frame(width: windowSize!.width/4, height: 120)
                                     }
                                 } else if showStats && SessionTypes(rawValue: currentSession.session_type)! == .compsim {
                                     HStack {
@@ -536,7 +544,7 @@ struct TimerView: View {
                                         ZStack {
                                             RoundedRectangle(cornerRadius: 16, style: .continuous)
                                                 .fill(Color(uiColor: .systemGray5))
-                                                .frame(width: UIScreen.screenWidth/2, height: 120)
+                                                .frame(width: windowSize!.width/2, height: 120)
                                             
                                             
                                             VStack(spacing: 6) {
@@ -548,7 +556,7 @@ struct TimerView: View {
                                                         if let bpa = bpa {
                                                             Text(formatSolveTime(secs: bpa))
                                                                 .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                .frame(maxWidth: windowSize!.width/4-8)
                                                                 .modifier(DynamicText())
                                                         } else {
                                                             Text("...")
@@ -571,7 +579,7 @@ struct TimerView: View {
                                                             } else {
                                                                 Text(formatSolveTime(secs: wpa))
                                                                     .font(.system(size: 24, weight: .bold))
-                                                                    .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                    .frame(maxWidth: windowSize!.width/4-8)
                                                                     .modifier(DynamicText())
                                                             }
                                                             
@@ -588,7 +596,7 @@ struct TimerView: View {
                                                 .padding(.top, 6)
                                                 
                                                 Divider()
-                                                    .frame(width: UIScreen.screenWidth/2 - 48)
+                                                    .frame(width: windowSize!.width/2 - 48)
                                                 
                                                 VStack(spacing: 0) {
                                                     Text("TO REACH TARGET")
@@ -621,7 +629,7 @@ struct TimerView: View {
                                             }
                                             .padding(.horizontal, 4)
                                         }
-                                        .frame(width: UIScreen.screenWidth/2, height: 120)
+                                        .frame(width: windowSize!.width/2, height: 120)
                                     }
                                 }
                             }
@@ -634,7 +642,7 @@ struct TimerView: View {
                         VStack {
                             Spacer()
                             
-                            let maxWidth = geometry.size.width - 12 - UIScreen.screenWidth/2
+                            let maxWidth = geometry.size.width - 12 - windowSize!.width/2
                             
                                                     
                             ZStack {
@@ -676,7 +684,7 @@ struct TimerView: View {
                                         ZStack {
                                             RoundedRectangle(cornerRadius: 16, style: .continuous)
                                                 .fill(Color(uiColor: .systemGray5))
-                                                .frame(width: UIScreen.screenWidth/2, height: 120)
+                                                .frame(width: windowSize!.width/2, height: 120)
                                             
                                             
                                             VStack(spacing: 6) {
@@ -688,7 +696,7 @@ struct TimerView: View {
                                                         if let currentAo5 = currentAo5 {
                                                             Text(formatSolveTime(secs: currentAo5.average!, penType: currentAo5.totalPen))
                                                                 .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                .frame(maxWidth: windowSize!.width/4-8)
                                                                 .modifier(DynamicText())
                                                         } else {
                                                             Text("-")
@@ -711,7 +719,7 @@ struct TimerView: View {
                                                         if let currentAo12 = currentAo12 {
                                                             Text(formatSolveTime(secs: currentAo12.average!, penType: currentAo12.totalPen))
                                                                 .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                .frame(maxWidth: windowSize!.width/4-8)
                                                                 .modifier(DynamicText())
                                                         } else {
                                                             Text("-")
@@ -729,7 +737,7 @@ struct TimerView: View {
                                                 .padding(.top, 6)
                                                 
                                                 Divider()
-                                                    .frame(width: UIScreen.screenWidth/2 - 48)
+                                                    .frame(width: windowSize!.width/2 - 48)
                                                 
                                                 HStack(spacing: 0) {
                                                     VStack(spacing: 0) {
@@ -739,7 +747,7 @@ struct TimerView: View {
                                                         if let currentAo100 = currentAo100 {
                                                             Text(formatSolveTime(secs: currentAo100.average!, penType: currentAo100.totalPen))
                                                                 .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                .frame(maxWidth: windowSize!.width/4-8)
                                                                 .modifier(DynamicText())
                                                         } else {
                                                             Text("-")
@@ -761,7 +769,7 @@ struct TimerView: View {
                                                         if let sessionMean = sessionMean {
                                                             Text(formatSolveTime(secs: sessionMean))
                                                                 .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                .frame(maxWidth: windowSize!.width/4-8)
                                                                 .modifier(DynamicText())
                                                         } else {
                                                             Text("-")
@@ -775,7 +783,7 @@ struct TimerView: View {
                                             }
                                             .padding(.horizontal, 4)
                                         }
-                                        .frame(width: UIScreen.screenWidth/2, height: 120)
+                                        .frame(width: windowSize!.width/2, height: 120)
                                     }
                                 } else if showStats && SessionTypes(rawValue: currentSession.session_type)! == .compsim {
                                     HStack {
@@ -784,7 +792,7 @@ struct TimerView: View {
                                         ZStack {
                                             RoundedRectangle(cornerRadius: 16, style: .continuous)
                                                 .fill(Color(uiColor: .systemGray5))
-                                                .frame(width: UIScreen.screenWidth/2, height: 120)
+                                                .frame(width: windowSize!.width/2, height: 120)
                                             
                                             
                                             VStack(spacing: 6) {
@@ -796,7 +804,7 @@ struct TimerView: View {
                                                         if let bpa = bpa {
                                                             Text(formatSolveTime(secs: bpa))
                                                                 .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                .frame(maxWidth: windowSize!.width/4-8)
                                                                 .modifier(DynamicText())
                                                         } else {
                                                             Text("...")
@@ -819,7 +827,7 @@ struct TimerView: View {
                                                             } else {
                                                                 Text(formatSolveTime(secs: wpa))
                                                                     .font(.system(size: 24, weight: .bold))
-                                                                    .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                    .frame(maxWidth: windowSize!.width/4-8)
                                                                     .modifier(DynamicText())
                                                             }
                                                             
@@ -836,7 +844,7 @@ struct TimerView: View {
                                                 .padding(.top, 6)
                                                 
                                                 Divider()
-                                                    .frame(width: UIScreen.screenWidth/2 - 48)
+                                                    .frame(width: windowSize!.width/2 - 48)
                                                 
                                                 VStack(spacing: 0) {
                                                     Text("TO REACH TARGET")
@@ -869,7 +877,7 @@ struct TimerView: View {
                                             }
                                             .padding(.horizontal, 4)
                                         }
-                                        .frame(width: UIScreen.screenWidth/2, height: 120)
+                                        .frame(width: windowSize!.width/2, height: 120)
                                     }
                                 }
                             }
@@ -891,7 +899,7 @@ struct TimerView: View {
                         
                         TextField("0.00", text: $manualInputTime)
                             .focused($manualInputFocused)
-                            .frame(maxWidth: UIScreen.screenWidth-32)
+                            .frame(maxWidth: windowSize!.width-32)
                             .font(.system(size: 56, weight: .bold, design: .monospaced))
                             .multilineTextAlignment(.center)
                             .foregroundColor(stopWatchManager.timerColour)
@@ -995,7 +1003,7 @@ struct TimerView: View {
                 if let scr = stopWatchManager.scrambleStr {
                     VStack {
                         Text(scr)
-                            .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
+                            .font(.system(size: currentSession.scramble_type == 7 ? (windowSize!.width) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
                             .frame(maxHeight: UIScreen.screenHeight/3)
                             .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
                             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))

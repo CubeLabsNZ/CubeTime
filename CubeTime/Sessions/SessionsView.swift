@@ -62,6 +62,8 @@ struct CustomiseStandardSessionView: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
     
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
     let sessionItem: Sessions
@@ -183,7 +185,7 @@ struct CustomiseStandardSessionView: View {
                             }
                             .padding()
                         }
-                        .frame(height: 180)
+                        .frame(height: hSizeClass == .compact ? 180 : 120)
                         .modifier(NewStandardSessionViewBlocks())
                     }
                     
@@ -251,6 +253,7 @@ struct NewSessionPopUpView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colourScheme
+    @Environment(\.horizontalSizeClass) var hSizeClass
     
     @State private var showNewStandardSessionView = false
     @State private var showNewAlgTrainerView = false
@@ -516,7 +519,7 @@ struct NewSessionPopUpView: View {
 struct NewStandardSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
-    
+    @Environment(\.horizontalSizeClass) var hSizeClass
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     @Binding var showNewSessionPopUp: Bool
@@ -602,7 +605,7 @@ struct NewStandardSessionView: View {
                         }
                         .padding()
                     }
-                    .frame(height: 180)
+                    .frame(height: hSizeClass == .compact ? 180 : 120)
                     .modifier(NewStandardSessionViewBlocks())
                     
                     
@@ -757,7 +760,7 @@ struct NewAlgTrainerView: View {
 struct NewMultiphaseView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
-    
+    @Environment(\.horizontalSizeClass) var hSizeClass
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     @State private var name: String = ""
@@ -872,7 +875,7 @@ struct NewMultiphaseView: View {
                         }
                         .padding()
                     }
-                    .frame(height: 180)
+                    .frame(height: hSizeClass == .compact ? 180 : 120)
                     .modifier(NewStandardSessionViewBlocks())
                     
                     
@@ -923,7 +926,7 @@ struct NewMultiphaseView: View {
 struct NewPlaygroundView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
-    
+    @Environment(\.horizontalSizeClass) var hSizeClass
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     @Binding var showNewSessionPopUp: Bool
@@ -1004,6 +1007,7 @@ struct NewPlaygroundView: View {
 struct NewCompsimView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
+    @Environment(\.horizontalSizeClass) var hSizeClass
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
@@ -1113,7 +1117,7 @@ struct NewCompsimView: View {
                         }
                         .padding()
                     }
-                    .frame(height: 180)
+                    .frame(height: hSizeClass == .compact ? 180 : 120)
                     .modifier(NewStandardSessionViewBlocks())
                     
                     

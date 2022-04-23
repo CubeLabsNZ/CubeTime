@@ -51,6 +51,8 @@ struct StatsBlock<Content: View>: View {
     }
 }
 
+
+
 struct StatsBlockText: View {
     @Environment(\.colorScheme) var colourScheme
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
@@ -60,6 +62,10 @@ struct StatsBlockText: View {
     let colouredBlock: Bool
     let displayDetail: Bool
     let nilCondition: Bool
+    
+    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
+                                (scene as? UIWindowScene)?.keyWindow
+                            }).first?.frame.size
     
     init(_ displayText: String, _ colouredText: Bool, _ colouredBlock: Bool, _ displayDetail: Bool, _ nilCondition: Bool) {
         self.displayText = displayText
@@ -79,7 +85,7 @@ struct StatsBlockText: View {
                 if nilCondition {
                     Text(displayText)
                         .font(.system(size: 34, weight: .bold, design: .default))
-                        .frame(minWidth: 0, maxWidth: UIScreen.screenWidth/2 - 42, alignment: .leading)
+                        .frame(minWidth: 0, maxWidth: windowSize!.width/2 - 42, alignment: .leading)
                         .modifier(DynamicText())
                         .padding(.bottom, 2)
                     
@@ -198,10 +204,14 @@ struct StatsBlockSmallText: View {
 struct StatsDivider: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.horizontalSizeClass) var hSizeClass
+    
+    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
+                                (scene as? UIWindowScene)?.keyWindow
+                            }).first?.frame.size
 
     var body: some View {
         Divider()
-            .frame(width: UIScreen.screenWidth/(hSizeClass == .regular ? 4 : 2))
+            .frame(width: windowSize!.width/(hSizeClass == .regular ? 4 : 2))
             .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
     }
 }
@@ -219,6 +229,10 @@ struct StatsView: View {
     @State var isShowingStatsView: Bool = false
     @State var presentedAvg: CalculatedAverage? = nil
     @State var showBestSinglePopup = false
+    
+    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
+                                (scene as? UIWindowScene)?.keyWindow
+                            }).first?.frame.size
     
     let stats: Stats
     
@@ -593,7 +607,7 @@ struct StatsView: View {
                                     StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 300), true, false) {
                                         
                                         TimeTrend(data: timeTrendData, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
-                                            .frame(width: UIScreen.screenWidth / 2 - (2 * 16) - (2 * 12))
+                                            .frame(width: windowSize!.width / 2 - (2 * 16) - (2 * 12))
                                             .padding(.leading, 12)
                                             .padding(.trailing)
                                             .offset(y: -5)
@@ -810,7 +824,7 @@ struct StatsView: View {
                                 StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 300), true, false) {
                                     
                                     TimeTrend(data: timeTrendData, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
-                                        .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
+                                        .frame(width: windowSize!.width - (2 * 16) - (2 * 12))
                                         .padding(.horizontal, 12)
                                         .offset(y: -5)
                                         .drawingGroup()
