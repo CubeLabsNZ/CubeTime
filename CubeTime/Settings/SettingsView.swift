@@ -64,12 +64,13 @@ struct SettingsViewInner: View {
 
 struct SettingsView: View {
     @State var currentCard: SettingsCardInfo?
+    
     @Namespace var namespace
     
     var body: some View {
         ZStack {
             NavigationView {
-                SettingsViewInner(currentCard: self.$currentCard, namespace: namespace)
+                SettingsViewInner(currentCard: $currentCard, namespace: namespace)
             }
             .navigationViewStyle(StackNavigationViewStyle())
             .overlay(

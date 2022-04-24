@@ -364,7 +364,7 @@ struct TimerView: View {
                         
                         VStack {
                             if showZenMode {
-                                CTButton(type: .halfcoloured, size: .large, square: true, supportsDynamicResizing: false, expandWidth: false, onTapRun: {
+                                CTButton(type: .halfcoloured(nil), size: .large, square: true, supportsDynamicResizing: false, expandWidth: false, onTapRun: {
                                     withAnimation(.customEaseInOut) {
                                         stopwatchManager.zenMode = true
                                     }

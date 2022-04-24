@@ -117,7 +117,7 @@ struct AboutSettingsView: View {
                 .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
             
-            CTButton(type: .halfcoloured, size: .medium, onTapRun: {
+            CTButton(type: .halfcoloured(nil), size: .medium, onTapRun: {
                 showLicenses = true
             }) {
                 Label("Open Licenses & Privacy Policy", systemImage: "arrow.up.forward.square")
@@ -152,7 +152,7 @@ struct AboutSettingsView: View {
             Text("\nIf you run into any issues, please visit our GitHub page and submit an issue. \nhttps://github.com/CubeStuffs/CubeTime/issues")
                 .fixedSize(horizontal: false, vertical: true)
             
-            CTButton(type: .halfcoloured, size: .medium, onTapRun: {
+            CTButton(type: .halfcoloured(nil), size: .medium, onTapRun: {
                 self.showUpdates = true
             }) {
                 Text("Show Updates List")

@@ -153,13 +153,13 @@ struct TimeDetailView: View {
                                 HStack(spacing: 6) {
                                     Spacer()
                                     
-                                    CTButton(type: solve.penalty == Penalty.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    CTButton(type: solve.penalty == Penalty.none.rawValue ? .halfcoloured(nil) : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .none)
                                     }) {
                                         Label("OK", systemImage: "checkmark.circle")
                                     }
                                     
-                                    CTButton(type: solve.penalty == Penalty.plustwo.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    CTButton(type: solve.penalty == Penalty.plustwo.rawValue ? .halfcoloured(nil) : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .plustwo)
                                     }) {
                                         Label(title: {
@@ -170,7 +170,7 @@ struct TimeDetailView: View {
                                         })
                                     }
                                     
-                                    CTButton(type: solve.penalty == Penalty.dnf.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    CTButton(type: solve.penalty == Penalty.dnf.rawValue ? .halfcoloured(nil) : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .dnf)
                                     }) {
                                         Label("DNF", systemImage: "xmark.circle")
@@ -203,7 +203,7 @@ struct TimeDetailView: View {
                                 CTShareButton(toShare: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: "Share Solve")
                                 
                                 
-                                CTButton(type: .red, size: .large, square: true, onTapRun: {
+                                CTButton(type: .coloured(Color("red")), size: .large, square: true, onTapRun: {
                                     if currentSolve == nil {
                                         dismiss()
                                     }

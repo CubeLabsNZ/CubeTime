@@ -171,7 +171,7 @@ struct ScrambleGeneratorTool: View {
                     
                     if let num = scrambleGenerator.numScramble {
                         if (num > 0 && (scrambleGenerator.scrambles?.count == nil)) {
-                            CTButton(type: .coloured, size: .large, onTapRun: {
+                            CTButton(type: .coloured(nil), size: .large, onTapRun: {
                                 scrambleGenerator.generate()
                             }) {
                                 Text("Generate!")
