@@ -24,7 +24,6 @@ class TimerUIView: UIView {
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        UIApplication.shared.isIdleTimerDisabled = false
         stopWatchManager.touchUp()
     }
 }
