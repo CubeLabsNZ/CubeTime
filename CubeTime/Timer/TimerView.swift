@@ -172,6 +172,7 @@ struct TimerView: View {
                 }
             }
             
+            // TIMER TEXT / INSPECTION
             VStack {
                 Spacer()
                 
@@ -236,14 +237,6 @@ struct TimerView: View {
                 
             }
             .ignoresSafeArea(edges: .top)
-            
-            
-            
-            TestView()
-                .rotationEffect((.degrees(180)))
-            
-            
-            
             
             
             // VIEWS WHEN TIMER NOT RUNNING
@@ -1304,16 +1297,15 @@ struct TimerView: View {
                     
                 }
             }
+            
+            
+            FloatingPanel() {
+                Text("hi")
+            }
         }
-        .sheet(isPresented: $showScrambleSheet) {
-            ScrambleDetail(stopWatchManager.scrambleStr!)
-        }
-        .sheet(isPresented: $showDrawScrambleSheet) {
-            DiagramDetail(stopWatchManager.scrambleSVG)
-        }
-        .sheet(item: $presentedAvg) { item in
-            StatsDetail(solves: item, session: currentSession)
-        }
+        .sheet(isPresented: $showScrambleSheet) { ScrambleDetail(stopWatchManager.scrambleStr!) }
+        .sheet(isPresented: $showDrawScrambleSheet) { DiagramDetail(stopWatchManager.scrambleSVG) }
+        .sheet(item: $presentedAvg) { item in StatsDetail(solves: item, session: currentSession) }
         .onReceive(stopWatchManager.$mode) { newMode in
             hideTabBar = newMode == .inspecting || newMode == .running
             hideStatusBar = newMode == .inspecting || newMode == .running

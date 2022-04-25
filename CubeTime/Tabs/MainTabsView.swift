@@ -152,16 +152,21 @@ struct MainTabsView: View {
                 switch tabRouter.currentTab {
                 case .timer:
                     ZStack {
-                        TimerView(pageIndex: $pageIndex, currentSession: $currentSession, managedObjectContext: managedObjectContext, hideTabBar: $hideTabBar)
+                        TimerViewLandscape(pageIndex: $pageIndex, currentSession: $currentSession, managedObjectContext: managedObjectContext, hideTabBar: $hideTabBar)
                             .environment(\.managedObjectContext, managedObjectContext)
                             .environmentObject(stopWatchManager)
                             .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
                         
                         
                         
+//                        TimerView(pageIndex: $pageIndex, currentSession: $currentSession, managedObjectContext: managedObjectContext, hideTabBar: $hideTabBar)
+//                            .environment(\.managedObjectContext, managedObjectContext)
+//                            .environmentObject(stopWatchManager)
+//                            .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
+
+                        
+                        
                     }
-                    /*
-                     */
                     
                 case .solves:
                     TimeListView(currentSession: $currentSession, managedObjectContext: managedObjectContext)

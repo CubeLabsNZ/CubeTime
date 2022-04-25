@@ -2,13 +2,13 @@ import Aiolos
 import UIKit
 import SwiftUI
 
+/*
 struct FloatingPanel: UIViewControllerRepresentable {
     typealias UIViewControllerType = FloatingPanelViewController
        
     
     func makeUIViewController(context: Context) -> FloatingPanelViewController {
-             
-    
+        
         return FloatingPanelViewController()
     }
     
@@ -17,6 +17,7 @@ struct FloatingPanel: UIViewControllerRepresentable {
         
     }
 }
+ */
 
 
 

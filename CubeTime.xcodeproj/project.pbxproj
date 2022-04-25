@@ -25,6 +25,7 @@
 		23CE093427A76D610013E227 /* SessionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CE093327A76D610013E227 /* SessionCard.swift */; };
 		23D01FE327A4AA5D0019FCE5 /* Splash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */; };
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
+		23DAD2B42816ABB200DAF880 /* TimerViewLandscape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DAD2B32816ABB200DAF880 /* TimerViewLandscape.swift */; };
 		23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */; };
 		23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDC274DDBE200254D29 /* TimerView.swift */; };
 		23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23DE3BDE274DDBE300254D29 /* Assets.xcassets */; };
@@ -106,6 +107,7 @@
 		23CE093327A76D610013E227 /* SessionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCard.swift; sourceTree = "<group>"; };
 		23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Splash.storyboard; sourceTree = "<group>"; };
 		23D2FC4C274E12DE00D7071A /* TimeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeListView.swift; sourceTree = "<group>"; };
+		23DAD2B32816ABB200DAF880 /* TimerViewLandscape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewLandscape.swift; sourceTree = "<group>"; };
 		23DE3BD7274DDBE200254D29 /* CubeTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeTimeApp.swift; sourceTree = "<group>"; };
 		23DE3BDC274DDBE200254D29 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
+				23DAD2B32816ABB200DAF880 /* TimerViewLandscape.swift */,
 				7D7DDF2227955AFF00362DE9 /* PenButton.swift */,
 				2359689227A367A0003ED9E1 /* StopwatchManager.swift */,
 				7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */,
@@ -523,6 +526,7 @@
 				23034725278BD22600553A7D /* TimeDetail.swift in Sources */,
 				239C7E702781511300943AF2 /* Onboarding.swift in Sources */,
 				23CE093427A76D610013E227 /* SessionCard.swift in Sources */,
+				23DAD2B42816ABB200DAF880 /* TimerViewLandscape.swift in Sources */,
 				2337E6882767619D00438F43 /* StatsDetail.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

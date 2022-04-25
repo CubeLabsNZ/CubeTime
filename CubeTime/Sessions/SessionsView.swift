@@ -429,8 +429,7 @@ struct NewSessionPopUpView: View {
                             .onTapGesture {
                                 showNewPlaygroundView = true
                             }
-                            .cornerRadius(10, corners: .bottomRight)
-                            .cornerRadius(10, corners: .bottomLeft)
+                            .cornerRadius(10, corners: [.bottomRight, .bottomLeft])
                             .padding(.horizontal)
                             
                             
