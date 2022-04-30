@@ -54,7 +54,6 @@
 		7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E2011275DD52600ADF01D /* Licenses.swift */; };
 		7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */; };
 		7D878BB1275D8DB3008AC443 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D878BB0275D8DB3008AC443 /* Stats.swift */; };
-		7D8828FF280D48C100B671EF /* IEUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8828FE280D48C100B671EF /* IEUtil.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,7 +135,6 @@
 		7D7E2011275DD52600ADF01D /* Licenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Licenses.swift; sourceTree = "<group>"; };
 		7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleView.swift; sourceTree = "<group>"; };
 		7D878BB0275D8DB3008AC443 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
-		7D8828FE280D48C100B671EF /* IEUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IEUtil.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -309,7 +307,6 @@
 				23E81E70275D8DDA00B741E3 /* IESettings.swift */,
 				23E81E72275D8DEA00B741E3 /* AboutSettings.swift */,
 				7D7E2011275DD52600ADF01D /* Licenses.swift */,
-				7D8828FE280D48C100B671EF /* IEUtil.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -478,7 +475,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D878BB1275D8DB3008AC443 /* Stats.swift in Sources */,
-				7D8828FF280D48C100B671EF /* IEUtil.swift in Sources */,
 				23E81E71275D8DDA00B741E3 /* IESettings.swift in Sources */,
 				2397131F2791032300268DFA /* AveragePhases.swift in Sources */,
 				23DE3BE4274DDBE300254D29 /* Persistence.swift in Sources */,

@@ -9,7 +9,7 @@ struct settingsBlocks: ViewModifier {
 }
 
 enum asKeys: String {
-    case accentColour, overrideDM, dmBool, staticGradient, gradientSelected, graphGlow
+    case accentColour, overrideDM, dmBool, staticGradient, gradientSelected, graphGlow, graphAnimation
 }
 
 
@@ -27,6 +27,7 @@ struct AppearanceSettingsView: View {
     @AppStorage(asKeys.staticGradient.rawValue) private var staticGradient: Bool = true
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
+    @AppStorage(asKeys.graphAnimation.rawValue) private var graphAnimation: Bool = true
     
     // system settings (appearance)
     @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
@@ -210,6 +211,25 @@ struct AppearanceSettingsView: View {
                         .padding(.bottom, 10)
                        
                         Text("Turn on/off the glow effect on graphs.")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundColor(Color(uiColor: .systemGray))
+                            .multilineTextAlignment(.leading)
+                            .padding(.horizontal)
+                            .padding(.bottom, 12)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        HStack {
+                            Toggle(isOn: $graphAnimation) {
+                                Text("Graph Animation")
+                                    .font(.system(size: 17, weight: .medium))
+                            }
+                                .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        }
+                        .padding(.horizontal)
+                        .padding(.bottom, 10)
+                       
+                        Text("Turn on/off the line animation for the time trend graph.")
                             .font(.system(size: 13, weight: .medium))
                             .foregroundColor(Color(uiColor: .systemGray))
                             .multilineTextAlignment(.leading)
