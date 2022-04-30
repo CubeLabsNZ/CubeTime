@@ -4,7 +4,10 @@ import CoreGraphics
 import Combine
 
 
-
+struct SheetStrWrapper: Identifiable {
+    let id = UUID()
+    let str: String
+}
 
 
 struct TimerView: View {
@@ -45,7 +48,7 @@ struct TimerView: View {
     
     @State private var presentedAvg: CalculatedAverage?
     
-    @State private var showScrambleSheet: Bool = false
+    @State private var scrambleSheetStr: SheetStrWrapper? = nil
     @State private var showDrawScrambleSheet: Bool = false
     
     
@@ -735,7 +738,7 @@ struct TimerView: View {
                             .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
                             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
                             .onTapGesture {
-                                showScrambleSheet = true
+                                scrambleSheetStr = SheetStrWrapper(str: scr)
                             }
                         
                         Spacer()
@@ -782,8 +785,8 @@ struct TimerView: View {
                 
             }
         }
-        .sheet(isPresented: $showScrambleSheet) {
-            ScrambleDetail(stopWatchManager.scrambleStr!)
+        .sheet(item: $scrambleSheetStr) { str in
+            ScrambleDetail(str.str)
         }
         .sheet(isPresented: $showDrawScrambleSheet) {
             DiagramDetail(stopWatchManager.scrambleSVG)
