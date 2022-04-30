@@ -299,7 +299,7 @@ struct TimeMaskTextField: ViewModifier {
             .onReceive(Just(text)) { newValue in
                 refilter()
                 
-                onReceiveAlso?(newValue)
+                onReceiveAlso?(text)
             }
     }
     
