@@ -268,7 +268,7 @@ struct TimeDetailViewOnly: View {
                     .padding(.trailing)
                     .padding(.leading)
                     
-                    if let multiphaseSolve = (solve as? MultiphaseSolve) {
+                    if let phases = self.phases {
                         VStack {
                             HStack {
                                 Image(systemName: "square.stack.3d.up.fill")
@@ -292,7 +292,7 @@ struct TimeDetailViewOnly: View {
                             
                             
                             VStack(alignment: .leading, spacing: 4) {
-                                ForEach(Array(zip(self.phases!.indices, self.phases!)), id: \.0) { index, phase in
+                                ForEach(Array(zip(phases.indices, phases)), id: \.0) { index, phase in
                                     
                                     HStack {
                                         if index == 0 {
@@ -301,8 +301,8 @@ struct TimeDetailViewOnly: View {
                                             
                                             Text("+"+formatSolveTime(secs: phase))
                                         } else {
-                                            if index < self.phases!.count {
-                                                let phaseDifference = self.phases![index] - self.phases![index-1]
+                                            if index < phases.count {
+                                                let phaseDifference = phases[index] - phases[index-1]
                                                 
                                                 Image(systemName: "\(index+1).circle")
                                                     .font(.system(size: 17, weight: .medium))
