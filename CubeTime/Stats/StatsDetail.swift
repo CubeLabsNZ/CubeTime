@@ -141,7 +141,9 @@ struct StatsDetail: View {
                                 .padding(.top, 12)
                                 
                                 VStack(spacing: 0) {
-                                    ForEach(Array(zip(solves.accountedSolves!.indices, solves.accountedSolves!)), id: \.0) {index, solve in
+                                    
+                                    
+                                    ForEach(Array(zip(solves.accountedSolves!.indices, solves.accountedSolves!.sorted(by: { $0.date! > $1.date! }))), id: \.0) {index, solve in
                                         VStack(spacing: 0) {
                                             Divider()
                                                 .padding(.leading)
@@ -164,7 +166,6 @@ struct StatsDetail: View {
                                                 
                                                 
                                                 
-//                                                Text(solve.date ?? Date(timeIntervalSince1970: 0), format: .dateTime.hour().minute().second().day().month().year())
                                                 Text(solve.date ?? Date(timeIntervalSince1970: 0), formatter: detailDateFormat)
                                                     .font(.system(size: 13, weight: .bold, design: .rounded))
                                                     .foregroundColor(Color(uiColor: .systemGray))
