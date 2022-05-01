@@ -59,20 +59,7 @@ struct TimerView: View {
     @FocusState private var manualInputFocused: Bool
     
 //    @State var compSimTarget: String
-    
-    
-    let stats: Stats?
-    
-    var currentAo5: CalculatedAverage?
-    var currentAo12: CalculatedAverage?
-    var currentAo100: CalculatedAverage?
-    var sessionMean: Double?
-    
-    
-    var bpa: Double?
-    var wpa: Double?
-    
-    @State var timeNeededForTarget: Double?
+
     
     private var scaleAmount: CGFloat
        
@@ -86,27 +73,6 @@ struct TimerView: View {
         self._targetStr = State(initialValue: filteredStrFromTime((currentSession.wrappedValue as? CompSimSession)?.target))
         
         self._phaseCount = State(initialValue: Int((currentSession.wrappedValue as? MultiphaseSession)?.phase_count ?? 0))
-        
-        
-        
-        
-        if UserDefaults.standard.bool(forKey: gsKeys.showStats.rawValue) {
-            stats = Stats(currentSession: currentSession.wrappedValue)
-            
-            self.currentAo5 = stats!.getCurrentAverageOf(5)
-            self.currentAo12 = stats!.getCurrentAverageOf(12)
-            self.currentAo100 = stats!.getCurrentAverageOf(100)
-            self.sessionMean = stats!.getSessionMean()
-            
-            self.bpa = stats!.getWpaBpa().0
-            self.wpa = stats!.getWpaBpa().1
-            
-            self._timeNeededForTarget = State(initialValue: stats!.getTimeNeededForTarget())
-        } else {
-            stats = nil
-        }
-        
-        
         
         
         
@@ -435,7 +401,7 @@ struct TimerView: View {
                                                     Text("AO5")
                                                         .font(.system(size: 13, weight: .medium))
                                                     
-                                                    if let currentAo5 = currentAo5 {
+                                                    if let currentAo5 = stopWatchManager.currentAo5 {
                                                         Text(formatSolveTime(secs: currentAo5.average!, penType: currentAo5.totalPen))
                                                             .font(.system(size: 24, weight: .bold))
                                                             .frame(maxWidth: UIScreen.screenWidth/4-8)
@@ -449,8 +415,8 @@ struct TimerView: View {
                                                 }
                                                 .frame(minWidth: 0, maxWidth: .infinity)
                                                 .onTapGesture {
-                                                    if currentAo5 != nil && currentAo5?.totalPen != .dnf {
-                                                        presentedAvg = currentAo5
+                                                    if stopWatchManager.currentAo5 != nil && stopWatchManager.currentAo5?.totalPen != .dnf {
+                                                        presentedAvg = stopWatchManager.currentAo5
                                                     }
                                                 }
                                                 
@@ -458,7 +424,7 @@ struct TimerView: View {
                                                     Text("AO12")
                                                         .font(.system(size: 13, weight: .medium))
                                                     
-                                                    if let currentAo12 = currentAo12 {
+                                                    if let currentAo12 = stopWatchManager.currentAo12 {
                                                         Text(formatSolveTime(secs: currentAo12.average!, penType: currentAo12.totalPen))
                                                             .font(.system(size: 24, weight: .bold))
                                                             .frame(maxWidth: UIScreen.screenWidth/4-8)
@@ -471,8 +437,8 @@ struct TimerView: View {
                                                 }
                                                 .frame(minWidth: 0, maxWidth: .infinity)
                                                 .onTapGesture {
-                                                    if currentAo12 != nil && currentAo12?.totalPen != .dnf {
-                                                        presentedAvg = currentAo12
+                                                    if stopWatchManager.currentAo12 != nil && stopWatchManager.currentAo12?.totalPen != .dnf {
+                                                        presentedAvg = stopWatchManager.currentAo12
                                                     }
                                                 }
                                             }
@@ -486,7 +452,7 @@ struct TimerView: View {
                                                     Text("AO100")
                                                         .font(.system(size: 13, weight: .medium))
                                                     
-                                                    if let currentAo100 = currentAo100 {
+                                                    if let currentAo100 = stopWatchManager.currentAo100 {
                                                         Text(formatSolveTime(secs: currentAo100.average!, penType: currentAo100.totalPen))
                                                             .font(.system(size: 24, weight: .bold))
                                                             .frame(maxWidth: UIScreen.screenWidth/4-8)
@@ -499,8 +465,8 @@ struct TimerView: View {
                                                 }
                                                 .frame(minWidth: 0, maxWidth: .infinity)
                                                 .onTapGesture {
-                                                    if currentAo100 != nil && currentAo100?.totalPen != .dnf {
-                                                        presentedAvg = currentAo100
+                                                    if stopWatchManager.currentAo100 != nil && stopWatchManager.currentAo100?.totalPen != .dnf {
+                                                        presentedAvg = stopWatchManager.currentAo100
                                                     }
                                                 }
                                                 
@@ -508,7 +474,7 @@ struct TimerView: View {
                                                     Text("MEAN")
                                                         .font(.system(size: 13, weight: .medium))
                                                     
-                                                    if let sessionMean = sessionMean {
+                                                    if let sessionMean = stopWatchManager.sessionMean {
                                                         Text(formatSolveTime(secs: sessionMean))
                                                             .font(.system(size: 24, weight: .bold))
                                                             .frame(maxWidth: UIScreen.screenWidth/4-8)
@@ -543,7 +509,7 @@ struct TimerView: View {
                                                     Text("BPA")
                                                         .font(.system(size: 13, weight: .medium))
                                                     
-                                                    if let bpa = bpa {
+                                                    if let bpa = stopWatchManager.bpa {
                                                         Text(formatSolveTime(secs: bpa))
                                                             .font(.system(size: 24, weight: .bold))
                                                             .frame(maxWidth: UIScreen.screenWidth/4-8)
@@ -561,7 +527,7 @@ struct TimerView: View {
                                                     Text("WPA")
                                                         .font(.system(size: 13, weight: .medium))
                                                     
-                                                    if let wpa = wpa {
+                                                    if let wpa = stopWatchManager.wpa {
                                                         if wpa == -1 {
                                                             Text("DNF")
                                                                 .font(.system(size: 24, weight: .bold))
@@ -592,7 +558,7 @@ struct TimerView: View {
                                                 Text("TO REACH TARGET")
                                                     .font(.system(size: 13, weight: .medium))
                                                 
-                                                if let timeNeededForTarget = timeNeededForTarget {
+                                                if let timeNeededForTarget = stopWatchManager.timeNeededForTarget {
                                                     if timeNeededForTarget == -1 {
                                                         Text("Not Possible")
                                                             .font(.system(size: 22, weight: .bold))

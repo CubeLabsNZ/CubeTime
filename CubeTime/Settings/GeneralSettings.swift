@@ -163,6 +163,9 @@ struct GeneralSettingsView: View {
                         Text("Show stats on timer")
                             .font(.system(size: 17, weight: .medium))
                     }
+                    .onChange(of: showStats) { newValue in
+                        stopWatchManager.updateStats()
+                    }
                     .toggleStyle(SwitchToggleStyle(tint: accentColour))
                     
                 }

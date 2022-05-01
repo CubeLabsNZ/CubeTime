@@ -50,6 +50,18 @@ class StopWatchManager: ObservableObject {
     
     var penType: PenTypes = .none
     
+    var stats: Stats?
+    
+    @Published var currentAo5: CalculatedAverage?
+    @Published var currentAo12: CalculatedAverage?
+    @Published var currentAo100: CalculatedAverage?
+    @Published var sessionMean: Double?
+    
+    @Published var bpa: Double?
+    @Published var wpa: Double?
+    
+    @Published var timeNeededForTarget: Double?
+    
     
     init (currentSession: Sessions, managedObjectContext: NSManagedObjectContext) {
         self.currentSession = currentSession
@@ -81,7 +93,22 @@ class StopWatchManager: ObservableObject {
         }
     }
     
-    
+    func updateStats() {
+        // TODO maybe make these async?
+        if UserDefaults.standard.bool(forKey: gsKeys.showStats.rawValue) {
+            stats = Stats(currentSession: currentSession)
+            
+            self.currentAo5 = stats!.getCurrentAverageOf(5)
+            self.currentAo12 = stats!.getCurrentAverageOf(12)
+            self.currentAo100 = stats!.getCurrentAverageOf(100)
+            self.sessionMean = stats!.getSessionMean()
+            
+            self.bpa = stats!.getWpaBpa().0
+            self.wpa = stats!.getWpaBpa().1
+            
+            self.timeNeededForTarget = stats!.getTimeNeededForTarget()
+        }
+    }
     
     var timer: Timer?
     
@@ -206,6 +233,8 @@ class StopWatchManager: ObservableObject {
         if time != nil {
             rescramble()
         }
+        
+        updateStats()
     }
     
     
@@ -383,6 +412,7 @@ class StopWatchManager: ObservableObject {
         currentSession = session
         tryUpdateCurrentSolveth()
         rescramble()
+        updateStats()
     }
     
     
