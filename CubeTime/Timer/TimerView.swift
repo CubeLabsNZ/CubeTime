@@ -399,14 +399,18 @@ struct TimerView: View {
                                         // tried .overlay but the geometry becomes fixed and scaling doesn't work correctly
                                         
                                         if let svg = stopWatchManager.scrambleSVG {
-                                            TimerScrambleView(svg: svg)
-                                                .aspectRatio(contentMode: .fit)
-                                                .onTapGesture { showDrawScrambleSheet = true }
-                                                .frame(width: maxWidth-4, height: 116)
-                                                .scaleEffect(scaleAmount)
-                                            
-                                                .offset(x: 1, y: -2.5)
-                                            
+                                            if let scr = stopWatchManager.scrambleStr {
+                                                TimerScrambleView(svg: svg)
+                                                    .aspectRatio(contentMode: .fit)
+                                                    .onTapGesture {
+                                                        scrambleSheetStr = SheetStrWrapper(str: scr)
+                                                    }
+    //                                                .onTapGesture { showDrawScrambleSheet = true }
+                                                    .frame(width: maxWidth-4, height: 116)
+                                                    .scaleEffect(scaleAmount)
+                                                
+                                                    .offset(x: 1, y: -2.5)
+                                            }
                                         } else {
                                             ProgressView()
                                                 .frame(width: maxWidth-4, height: 116)
@@ -796,11 +800,12 @@ struct TimerView: View {
             }
         }
         .sheet(item: $scrambleSheetStr) { str in
-            ScrambleDetail(str.str)
+            TimeScrambleDetail(str.str, stopWatchManager.scrambleSVG)
+//            ScrambleDetail(str.str)
         }
-        .sheet(isPresented: $showDrawScrambleSheet) {
-            DiagramDetail(stopWatchManager.scrambleSVG)
-        }
+//        .sheet(isPresented: $showDrawScrambleSheet) {
+//            DiagramDetail(stopWatchManager.scrambleSVG)
+//        }
         .sheet(item: $presentedAvg) { item in
             StatsDetail(solves: item, session: currentSession)
         }
@@ -813,80 +818,70 @@ struct TimerView: View {
     }
 }
 
-struct ScrambleDetail: View {
-    @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
+
+struct TimeScrambleDetail: View {
     @Environment(\.dismiss) var dismiss
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     var scramble: String
-    
-    init(_ scramble: String) {
-        self.scramble = scramble
-    }
-    
-    var body: some View {
-        NavigationView {
-            ScrollView {
-                Text(scramble)
-                    .font(.system(size: CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button {
-                                dismiss()
-                            } label: {
-                                Text("Done")
-                            }
-                        }
-                    }
-            }
-            .navigationTitle("Scramble")
-            .navigationBarTitleDisplayMode(.inline)
-        }
-    }
-}
-
-struct DiagramDetail: View {
-    @Environment(\.dismiss) var dismiss
-    
     var svg: OrgWorldcubeassociationTnoodleSvgliteSvg?
+    @State var windowedScrambleSize: Int = UserDefaults.standard.integer(forKey: gsKeys.scrambleSize.rawValue)
     
-    init(_ svg: OrgWorldcubeassociationTnoodleSvgliteSvg?) {
+    init(_ scramble: String, _ svg: OrgWorldcubeassociationTnoodleSvgliteSvg?) {
+        self.scramble = scramble
         self.svg = svg
     }
     
-    
     var body: some View {
         NavigationView {
-            if let svg = svg {
-                TimerScrambleView(svg: svg)
-                    .aspectRatio(contentMode: .fit)
-                    .padding()
+            VStack {
+                ScrollView {
+                    Text(scramble)
+                        .font(.system(size: CGFloat(windowedScrambleSize), weight: .semibold, design: .monospaced))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                }
                 
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button {
-                                dismiss()
-                            } label: {
-                                Text("Done")
-                            }
+                
+                if let svg = svg {
+                    TimerScrambleView(svg: svg)
+                        .aspectRatio(contentMode: .fit)
+                        .padding()
+                } else {
+                    ProgressView()
+                }
+            }
+            .navigationTitle("Scramble")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    HStack(alignment: .bottom) {
+                        Button {
+                            windowedScrambleSize = max(windowedScrambleSize - 1, 1)
+                        } label: {
+                            Image(systemName: "textformat.size.smaller")
+                                .font(.system(size: 17, weight: .medium, design: .rounded))
+                                .foregroundColor(accentColour)
+                        }
+                        
+                        
+                        Button {
+                            windowedScrambleSize += 1
+                        } label: {
+                            Image(systemName: "textformat.size.larger")
+                                .font(.system(size: 17, weight: .medium, design: .rounded))
+                                .foregroundColor(accentColour)
                         }
                     }
-                    .navigationTitle("Scramble")
-                    .navigationBarTitleDisplayMode(.inline)
-            } else {
-                ProgressView()
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button {
-                                dismiss()
-                            } label: {
-                                Text("Done")
-                            }
-                        }
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("Done")
                     }
-                    .navigationTitle("Scramble")
-                    .navigationBarTitleDisplayMode(.inline)
+                }
             }
         }
     }
