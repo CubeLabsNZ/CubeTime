@@ -22,6 +22,8 @@ struct TimeCard: View {
     
     @State var isSelected = false
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     
     init(solve: Solves, timeListManager: TimeListManager, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<[Solves]>) {
         self.solve = solve
@@ -118,6 +120,7 @@ struct TimeCard: View {
             Button (role: .destructive) {
                 managedObjectContext.delete(solve)
                 try! managedObjectContext.save()
+                stopWatchManager.tryUpdateCurrentSolveth()
                 
                 withAnimation {
                     timeListManager.delete(solve)
