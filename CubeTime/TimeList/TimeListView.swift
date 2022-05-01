@@ -224,7 +224,7 @@ struct TimeListView: View {
                                 let groups = ((currentSession as! CompSimSession).solvegroups!.array as! [CompSimSolveGroup])
                                 
                                 if groups.count != 0 {
-                                    TimeBar(solvegroup: groups.last!, timeListManager: timeListManager, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode)
+                                    TimeBar(solvegroup: groups.last!, timeListManager: timeListManager, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode, current: true)
                                     
                                     if groups.last!.solves!.array.count != 0 {
                                         LazyVGrid(columns: columns, spacing: 12) {
@@ -253,7 +253,7 @@ struct TimeListView: View {
                                 
                                 ForEach(groups, id: \.self) { item in
                                     if item != groups.last! {
-                                        TimeBar(solvegroup: item, timeListManager: timeListManager, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode)
+                                        TimeBar(solvegroup: item, timeListManager: timeListManager, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode, current: false)
                                     }
                                 }
                                  
