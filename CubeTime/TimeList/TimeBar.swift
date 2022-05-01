@@ -23,13 +23,17 @@ struct TimeBar: View {
     
     @State var isSelected = false
     
+    let current: Bool
     
-    init(solvegroup: CompSimSolveGroup, timeListManager: TimeListManager, currentCalculatedAverage: Binding<CalculatedAverage?>, isSelectMode: Binding<Bool>/*, selectedSolves: Binding<[Solves]>*/) {
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
+    init(solvegroup: CompSimSolveGroup, timeListManager: TimeListManager, currentCalculatedAverage: Binding<CalculatedAverage?>, isSelectMode: Binding<Bool>/*, selectedSolves: Binding<[Solves]>*/, current: Bool) {
         self.solvegroup = solvegroup
         self.timeListManager = timeListManager
         self._currentCalculatedAverage = currentCalculatedAverage
         self._isSelectMode = isSelectMode
 //        self._selectedSolvegroups = selectedSolves
+        self.current = current
     }
     
     var body: some View {
@@ -180,6 +184,7 @@ struct TimeBar: View {
                         .foregroundColor(Color.green) /// FIX: colours not working
                 }
             }
+            .disabled(current)
         }
     }
 }

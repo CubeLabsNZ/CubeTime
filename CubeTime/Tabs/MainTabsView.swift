@@ -148,6 +148,7 @@ struct MainTabsView: View {
                 case .solves:
                     TimeListView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
                         .environment(\.managedObjectContext, managedObjectContext)
+                        .environmentObject(stopWatchManager)
                 case .stats:
                     StatsView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
                 case .sessions:

@@ -67,12 +67,17 @@ class StopWatchManager: ObservableObject {
     }
     
     func tryUpdateCurrentSolveth() {
+        NSLog("here")
         if let currentSession = currentSession as? CompSimSession {
+            NSLog("here2")
             if currentSession.solvegroups!.count > 0 {
+                NSLog("\(currentSession.solvegroups!.lastObject! as! CompSimSolveGroup).solves!)")
                 currentSolveth = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup).solves!.count
             } else {
                 currentSolveth = 0
             }
+        } else {
+            NSLog("current sesesion no com,p scim !!!?!!?")
         }
     }
     
