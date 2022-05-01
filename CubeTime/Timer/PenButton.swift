@@ -28,12 +28,15 @@ struct PenaltyButton: View {
             if imageSymbol {
                 Image(penSymbol)
                     .frame(width: 24, height: 71/3)
+                    .contentShape(Rectangle())
             } else {
                 Image(systemName: penSymbol)
                     .font(.system(size: 24, weight: .semibold, design: .rounded))
                     .foregroundColor(colour)
+                    
             }
         })
+            .padding(2)
         .disabled(canType)
     }
 }
@@ -51,7 +54,7 @@ struct PenaltyBar<Content: View>: View {
     
     var body: some View {
         buttons
-            .padding(2)
+//            .padding(2)
             .frame(width: width, height: 35)
             .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
             .clipShape(Capsule())
