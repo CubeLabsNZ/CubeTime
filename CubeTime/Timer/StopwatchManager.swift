@@ -67,17 +67,13 @@ class StopWatchManager: ObservableObject {
     }
     
     func tryUpdateCurrentSolveth() {
-        NSLog("here")
         if let currentSession = currentSession as? CompSimSession {
-            NSLog("here2")
             if currentSession.solvegroups!.count > 0 {
                 NSLog("\(currentSession.solvegroups!.lastObject! as! CompSimSolveGroup).solves!)")
                 currentSolveth = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup).solves!.count
             } else {
                 currentSolveth = 0
             }
-        } else {
-            NSLog("current sesesion no com,p scim !!!?!!?")
         }
     }
     
@@ -283,9 +279,15 @@ class StopWatchManager: ObservableObject {
     
     
     func longPressStart() {
+        #if DEBUG
         NSLog("long press start")
+        #endif
+        
         if inspectionEnabled ? mode == .inspecting : mode == .stopped && !prevDownStoppedTimer && ( mode != .stopped || scrambleStr != nil ) {
+            #if DEBUG
             NSLog("timer can start")
+            #endif
+            
             timerColour = TimerTextColours.timerCanStartColour
             feedbackStyle?.impactOccurred()
         }
@@ -345,7 +347,9 @@ class StopWatchManager: ObservableObject {
     var scrambleWorkItem: DispatchWorkItem?
     
     func rescramble() {
+        #if DEBUG
         NSLog("rescramble")
+        #endif
         
         prevScrambleStr = scrambleStr
         scrambleStr = nil
@@ -354,7 +358,11 @@ class StopWatchManager: ObservableObject {
         }
         scrambleSVG = nil
         let newWorkItem = DispatchWorkItem {
+            #if DEBUG
             NSLog("running work item")
+            #endif
+            
+            
             let scrTypeAtWorkStart = self.currentSession.scramble_type
             let scramble = self.safeGetScramble()
 

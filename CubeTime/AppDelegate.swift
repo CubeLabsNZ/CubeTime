@@ -14,7 +14,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         UIApplication.shared.isIdleTimerDisabled = true
         
-        print("hi")
+//        print("hi")
         
         return true
     }
@@ -23,7 +23,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         let sceneConfiguration = UISceneConfiguration(name: "customConfig", sessionRole: connectingSceneSession.role)
         sceneConfiguration.delegateClass = CustomScene.self
         
-        print("hi")
+//        print("hi")
         
         return sceneConfiguration
     }
@@ -31,7 +31,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
 final class CustomScene: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
-        print("hi")
+//        print("hi")
         
         UIApplication.shared.isIdleTimerDisabled = true
     }
