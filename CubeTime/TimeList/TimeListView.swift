@@ -123,7 +123,7 @@ struct TimeListView: View {
                     .ignoresSafeArea()
                 
                 
-                ScrollView() {
+                ScrollView {
                     LazyVStack {
                         HStack (alignment: .center) {
                             Text(currentSession.name!)
@@ -269,7 +269,7 @@ struct TimeListView: View {
                     .padding(.vertical, -6)
                 }
                 .navigationTitle(isSelectMode ? "Select Solves" : "Session Times")
-//                .navigationBarTitleDisplayMode(isSelectMode ? .inline : .large)
+                
                 
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {

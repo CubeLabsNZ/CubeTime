@@ -61,7 +61,7 @@ struct TimerView: View {
 //    @State var compSimTarget: String
     
     
-    let stats: Stats
+    let stats: Stats?
     
     var currentAo5: CalculatedAverage?
     var currentAo12: CalculatedAverage?
@@ -87,19 +87,29 @@ struct TimerView: View {
         
         self._phaseCount = State(initialValue: Int((currentSession.wrappedValue as? MultiphaseSession)?.phase_count ?? 0))
         
-        stats = Stats(currentSession: currentSession.wrappedValue)
         
         
-        self.currentAo5 = stats.getCurrentAverageOf(5)
-        self.currentAo12 = stats.getCurrentAverageOf(12)
-        self.currentAo100 = stats.getCurrentAverageOf(100)
-        self.sessionMean = stats.getSessionMean()
+        
+        if UserDefaults.standard.bool(forKey: gsKeys.showStats.rawValue) {
+            stats = Stats(currentSession: currentSession.wrappedValue)
+            
+            self.currentAo5 = stats!.getCurrentAverageOf(5)
+            self.currentAo12 = stats!.getCurrentAverageOf(12)
+            self.currentAo100 = stats!.getCurrentAverageOf(100)
+            self.sessionMean = stats!.getSessionMean()
+            
+            self.bpa = stats!.getWpaBpa().0
+            self.wpa = stats!.getWpaBpa().1
+            
+            self._timeNeededForTarget = State(initialValue: stats!.getTimeNeededForTarget())
+        } else {
+            stats = nil
+        }
         
         
-        self.bpa = stats.getWpaBpa().0
-        self.wpa = stats.getWpaBpa().1
         
-        self._timeNeededForTarget = State(initialValue: stats.getTimeNeededForTarget())
+        
+        
         
         self.scaleAmount = {
             let type = Int(currentSession.wrappedValue.scramble_type)
@@ -341,7 +351,7 @@ struct TimerView: View {
                                                     
                                                     try! managedObjectContext.save()
                                                 }
-                                                timeNeededForTarget = stats.getTimeNeededForTarget()
+//                                                timeNeededForTarget = stats.getTimeNeededForTarget()
                                             }))
                                             .padding(.trailing, 4)
                                     }
@@ -658,7 +668,7 @@ struct TimerView: View {
                     HStack(spacing: 0) {
                         if !stopWatchManager.nilSolve {
                             if !manualInputFocused {
-                                PenaltyBar(114) {
+                                PenaltyBar(122) {
                                     HStack(spacing: 12) {
                                         PenaltyButton(penType: .plustwo, penSymbol: "+2", imageSymbol: true, canType: false, colour: Color.yellow)
                                         

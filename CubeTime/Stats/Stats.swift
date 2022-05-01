@@ -427,7 +427,7 @@ class Stats {
                 if lastGroupSolves.count == 4 {
                     let sortedGroup = lastGroupSolves.sorted(by: Stats.sortWithDNFsLast)
                     
-                    print(sortedGroup.map{$0.time})
+//                    print(sortedGroup.map{$0.time})
                     
                     let bpa = (sortedGroup.dropFirst().reduce(0) {$0 + timeWithPlusTwoForSolve($1)}) / 3.00
                     
