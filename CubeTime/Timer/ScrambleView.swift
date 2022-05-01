@@ -23,8 +23,6 @@ struct AsyncScrambleView: View {
 
     
     var body: some View {
-        let _ = NSLog("here")
-        
         Group {
             if svg == "" {
                 ProgressView()
@@ -34,7 +32,10 @@ struct AsyncScrambleView: View {
             }
         }.task {
             let task = Task.detached(priority: .userInitiated) { () -> String in
+                #if DEBUG
                 NSLog("ismainthread \(Thread.isMainThread)")
+                #endif
+                
                 return JavaUtilObjects.toString(withId: puzzle.getScrambler().drawScramble(with: scramble, with: nil))
             }
             let result = await task.result

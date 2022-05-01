@@ -127,7 +127,7 @@ struct MainTabsView: View {
         let currentVersion = UserDefaults.standard.string(forKey: "currentVersion")
         
         if currentVersion == newVersion {
-            print("same")
+//            print("same")
         } else {
             if !showOnboarding {
                 showUpdates = true
@@ -179,31 +179,31 @@ struct MainTabsView: View {
             }
             .onAppear(perform: checkForUpdate)
             
-            /* attempted shortcut menu :tear:
-             .onChange(of: scenePhase) { newValue in
-             if newValue == .active {
-             if let shortcutItem = shortcutItem {
-             print("HERE")
-             print(shortcutItem.type)
+            /// attempted shortcut menu :tear:
+//            .onChange(of: scenePhase) { newValue in
+//                if newValue == .active {
+//                    if let shortcutItem = shortcutItem {
+//                        print("HERE")
+//                        print(shortcutItem.type)
+//
+//                        tabRouter.currentTab = {
+//                            switch shortcutItem.type {
+//                            case "timer":
+//                                return .timer
+//                            case "timelist":
+//                                return .solves
+//                            case "stats":
+//                                return .stats
+//                            case "sessions":
+//                                return .sessions
+//                            default:
+//                                return .timer
+//                            }
+//                        }()
+//                    }
+//                }
+//            }
              
-             tabRouter.currentTab = {
-             switch shortcutItem.type {
-             case "timer":
-             return .timer
-             case "timelist":
-             return .solves
-             case "stats":
-             return .stats
-             case "sessions":
-             return .sessions
-             default:
-             return .timer
-             }
-             }()
-             }
-             }
-             }
-             */
         }
         .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
         .tint(accentColour)
