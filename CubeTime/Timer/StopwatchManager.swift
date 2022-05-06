@@ -72,6 +72,7 @@ class StopWatchManager: ObservableObject {
         self.rescramble()
         
         tryUpdateCurrentSolveth()
+        updateStats()
     }
 
     func calculateFeedbackStyle() {
