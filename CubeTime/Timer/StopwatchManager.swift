@@ -27,9 +27,6 @@ class StopWatchManager: ObservableObject {
     var feedbackStyle: UIImpactFeedbackGenerator?
     
     
-//    let scrambler = CHTScrambler.init()
-
-    
     @Published var scrambleStr: String? = nil
     @Published var scrambleSVG: OrgWorldcubeassociationTnoodleSvgliteSvg? = nil
     var prevScrambleStr: String! = nil
@@ -73,6 +70,8 @@ class StopWatchManager: ObservableObject {
         
         tryUpdateCurrentSolveth()
         updateStats()
+        
+        print("initialised")
     }
 
     func calculateFeedbackStyle() {
@@ -147,6 +146,19 @@ class StopWatchManager: ObservableObject {
             }
         }
     }
+    
+    func interruptInspection() {
+        mode = .stopped
+        timer?.invalidate()
+        inspectionSecs = 0
+        secondsElapsed = 0
+        justInspected = false
+        secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: timeDP)
+        
+    }
+
+    
+    
     
     func start() {
         #if DEBUG
@@ -248,6 +260,9 @@ class StopWatchManager: ObservableObject {
     
     
     func touchDown() {
+        #if DEBUG
+        NSLog("touch down")
+        #endif
         if mode != .stopped || scrambleStr != nil || prevDownStoppedTimer {
             timerColour = TimerTextColours.timerHeldDownColour
         }
@@ -264,9 +279,7 @@ class StopWatchManager: ObservableObject {
                     currentMPCount += 1
                     lap()
                 } else {
-                    
                     canGesture = true
-                    
                     
                     lap()
                     prevDownStoppedTimer = true
@@ -274,9 +287,7 @@ class StopWatchManager: ObservableObject {
                     stop(nil)
                 }
             } else {
-                
                 canGesture = true
-                
                 prevDownStoppedTimer = true
                 justInspected = false
                 stop(nil)
@@ -286,12 +297,14 @@ class StopWatchManager: ObservableObject {
     
     
     func touchUp() {
+        #if DEBUG
+        NSLog("touchup")
+        #endif
         if mode != .stopped || scrambleStr != nil {
             timerColour = TimerTextColours.timerDefaultColour
             
             if inspectionEnabled && mode == .stopped && !prevDownStoppedTimer {
                 startInspection()
-                rescramble()
                 justInspected = true
             }
         } else if prevDownStoppedTimer && scrambleStr == nil {
@@ -324,29 +337,30 @@ class StopWatchManager: ObservableObject {
     }
     
     func longPressEnd() {
+        #if DEBUG
+        NSLog("long press end")
+        #endif
         if mode != .stopped || scrambleStr != nil {
             timerColour = TimerTextColours.timerDefaultColour
         } else if prevDownStoppedTimer && scrambleStr == nil {
             timerColour = TimerTextColours.timerLoadingColor
         }
+        
         withAnimation {
             showPenOptions = false
         }
+        
         if !prevDownStoppedTimer && ( mode != .stopped || scrambleStr != nil ) {
             if inspectionEnabled ? mode == .inspecting : mode == .stopped {
                 start()
-                if !inspectionEnabled {
-                    rescramble()
-                }
+                rescramble()
             } else if inspectionEnabled && mode == .stopped && !justInspected {
                 startInspection()
-                rescramble()
+//                rescramble()
                 justInspected = true
             }
         }
         
-        
-
         prevDownStoppedTimer = false
     }
     

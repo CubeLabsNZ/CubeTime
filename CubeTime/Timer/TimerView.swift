@@ -745,6 +745,12 @@ struct TimerView: View {
 
             
             
+            Button {
+                stopWatchManager.interruptInspection()
+            } label: {
+                Text("stop")
+            }
+            
             
             
             
