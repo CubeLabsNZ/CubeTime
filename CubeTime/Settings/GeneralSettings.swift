@@ -41,7 +41,7 @@ struct GeneralSettingsView: View {
         UIImpactFeedbackGenerator.FeedbackStyle.medium: "Medium",
         UIImpactFeedbackGenerator.FeedbackStyle.heavy: "Heavy",
         UIImpactFeedbackGenerator.FeedbackStyle.soft: "Soft",
-        UIImpactFeedbackGenerator.FeedbackStyle.rigid: "Rigid"
+        UIImpactFeedbackGenerator.FeedbackStyle.rigid: "Rigid",
     ]
     
     var body: some View {

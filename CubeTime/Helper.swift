@@ -447,6 +447,6 @@ class CustomGradientColours {
         [Color(0xfb5b5c), Color(0xff9528)], // pink-orange
         [Color(0xd35082), Color(0xf77d4f)], // magenta-orange
         [Color(0x8548ba), Color(0xd95378)], // purple-pink
-        [Color(0x3f248f), Color(0x702f86)] // dark blue-purple
+        [Color(0x3f248f), Color(0x702f86)], // dark blue-purple
     ]
 }
