@@ -32,8 +32,6 @@ struct TimerView: View {
     
     @Binding var currentSession: Sessions
     
-    @Binding var pageIndex: Int
-    
     @State private var targetStr: String
     
     @State private var manualInputTime: String = ""
@@ -85,8 +83,7 @@ struct TimerView: View {
                         (scene as? UIWindowScene)?.keyWindow
                     }).first?.frame.size
     
-    init(pageIndex: Binding<Int>, currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext, hideTabBar: Binding<Bool>) {
-        self._pageIndex = pageIndex
+    init( currentSession: Binding<Sessions>, hideTabBar: Binding<Bool>) {
         self._currentSession = currentSession
         self._hideTabBar = hideTabBar
         self._playgroundScrambleType = State(initialValue: Int(currentSession.wrappedValue.scramble_type))
@@ -96,12 +93,6 @@ struct TimerView: View {
         self._phaseCount = State(initialValue: Int((currentSession.wrappedValue as? MultiphaseSession)?.phase_count ?? 0))
         
         stats = Stats(currentSession: currentSession.wrappedValue)
-        
-        
-        
-        
-
-        
         
         self.currentAo5 = stats.getCurrentAverageOf(5)
         self.currentAo12 = stats.getCurrentAverageOf(12)

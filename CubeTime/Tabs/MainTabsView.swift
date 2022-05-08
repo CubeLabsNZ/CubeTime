@@ -68,143 +68,48 @@ struct TabIcon: View {
 }
 
 
-
 struct MainTabsView: View {
-    @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.scenePhase) var scenePhase
-    
     @Environment(\.horizontalSizeClass) var hSizeClass
 
-    
     
     @Namespace private var namespace
     
     @StateObject var tabRouter: TabRouter = TabRouter()
-    @StateObject var stopWatchManager: StopWatchManager
     
-    @State var pageIndex: Int = 0
     @State var hideTabBar = false
-    @State var currentSession: Sessions
-    
-    @State var showUpdates: Bool = false
-    
-    //    var shortcutItem: UIApplicationShortcutItem?
     
     
-    @AppStorage("onboarding") var showOnboarding: Bool = true
     @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
     @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
-    
-    init(managedObjectContext: NSManagedObjectContext) {
-        let lastUsedSessionURI = UserDefaults.standard.url(forKey: "last_used_session")
-        
-        let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
-                            (scene as? UIWindowScene)?.keyWindow
-                        }).first?.frame.size
-
-        
-        /*
-         if let shortcutItem = shortcutItem {
-         self.shortcutItem = shortcutItem
-         }
-         */
-        
-        let fetchedSession: Sessions
-        
-        if lastUsedSessionURI == nil {
-            fetchedSession = Sessions(context: managedObjectContext) // TODO make it playground
-            fetchedSession.scramble_type = 1
-            fetchedSession.session_type = SessionTypes.playground.rawValue
-            fetchedSession.name = "Default Session"
-            try! managedObjectContext.save()
-            UserDefaults.standard.set(fetchedSession.objectID.uriRepresentation(), forKey: "last_used_session")
-        } else {
-            let objID = managedObjectContext.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI!)!
-            fetchedSession = try! managedObjectContext.existingObject(with: objID) as! Sessions // TODO better error handling
-        }
-        
-        // https://swiftui-lab.com/random-lessons/#data-10
-        self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: fetchedSession, managedObjectContext: managedObjectContext))
-        
-        self._currentSession = State(initialValue: fetchedSession)
-    }
-    
-    
-    func checkForUpdate() {
-        let newVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String)
-        
-        let currentVersion = UserDefaults.standard.string(forKey: "currentVersion")
-        
-        if currentVersion == newVersion {
-            print("same")
-        } else {
-            if !showOnboarding {
-                showUpdates = true
-            }
-            UserDefaults.standard.set(newVersion, forKey: "currentVersion")
-        }
-    }
     
     var body: some View {
         VStack {
             ZStack {
                 switch tabRouter.currentTab {
                 case .timer:
-                    ZStack {
-                        TimerViewLandscape(pageIndex: $pageIndex, currentSession: $currentSession, managedObjectContext: managedObjectContext, hideTabBar: $hideTabBar)
-                            .environment(\.managedObjectContext, managedObjectContext)
-                            .environmentObject(stopWatchManager)
-                            .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
-                        
-                        
-                        
-//                        TimerView(pageIndex: $pageIndex, currentSession: $currentSession, managedObjectContext: managedObjectContext, hideTabBar: $hideTabBar)
-//                            .environment(\.managedObjectContext, managedObjectContext)
-//                            .environmentObject(stopWatchManager)
-//                            .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
-
-                        
-                        
-                    }
-                    
+                    TimerView(hideTabBar: $hideTabBar)
+                        .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
                 case .solves:
-                    TimeListView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
-                        .environment(\.managedObjectContext, managedObjectContext)
+                    TimeListView()
                 case .stats:
                     StatsView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
                 case .sessions:
-                    SessionsView(currentSession: $currentSession)
-                        .environment(\.managedObjectContext, managedObjectContext)
-                        .environmentObject(stopWatchManager)
+                    SessionsView()
                     // TODO move this to SessionsView on tap
                         .onChange(of: currentSession) { newSession in
                             UserDefaults.standard.set(newSession.objectID.uriRepresentation(), forKey: "last_used_session") // TODO what was i thinking move this logic into SessionsView
                             stopWatchManager.changeCurrentSession(newSession)
                         }
                 case .settings:
-                    SettingsView(showOnboarding: $showOnboarding)
-                        .environmentObject(stopWatchManager)
+                    SettingsView()
                 }
                 
                 BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
                     .zIndex(1)
                     .ignoresSafeArea(.keyboard)
             }
-            .sheet(isPresented: $showOnboarding, onDismiss: {
-                pageIndex = 0
-                if hSizeClass == .regular { /// FIX IN FUTURE: check for first time register and not just == 18 because can break :sob:
-                    if UserDefaults.standard.integer(forKey: gsKeys.scrambleSize.rawValue) == 18 {
-                        UserDefaults.standard.set(24, forKey: gsKeys.scrambleSize.rawValue)
-                    }
-                }
-            }) {
-                OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
-            }
-            .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
-                Updates(showUpdates: $showUpdates)
-            }
-            .onAppear(perform: checkForUpdate)
         }
         .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
         .tint(accentColour)

@@ -134,7 +134,7 @@ struct TimeListView: View {
         }
     }
     
-    init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
+    init (currentSession: Binding<Sessions>) {
         self._currentSession = currentSession
         // TODO FIXME use a smarter way of this for more performance
         self._timeListManager = StateObject(wrappedValue: TimeListManager(currentSession: currentSession))

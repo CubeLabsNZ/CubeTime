@@ -21,7 +21,6 @@ struct SettingsView: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
     
     
-    @Binding var showOnboarding: Bool
     @Namespace var namespace
     
     
@@ -72,7 +71,7 @@ struct SettingsView: View {
             .navigationViewStyle(StackNavigationViewStyle())
             .zIndex(1)
             .overlay(
-                SettingsDetail(currentCard: $currentCard, showOnboarding: $showOnboarding, namespace: namespace)
+                SettingsDetail(currentCard: $currentCard, namespace: namespace)
             )
         }
     }
@@ -175,7 +174,6 @@ struct SettingsCard: View {
 
 struct SettingsDetail: View {
     @Binding var currentCard: SettingsCardInfo?
-    @Binding var showOnboarding: Bool
     @Environment(\.colorScheme) var colourScheme
     
     var namespace: Namespace.ID
@@ -196,7 +194,7 @@ struct SettingsDetail: View {
                     case "Import &\nExport":
                         ImportExportSettingsView()
                     case "Help &\nAbout Us":
-                        AboutSettingsView(showOnboarding: showOnboarding)
+                        AboutSettingsView()
                     default:
                         EmptyView()
                     }

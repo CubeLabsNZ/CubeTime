@@ -14,9 +14,18 @@ struct CubeTime: App {
     var shortcutItem: UIApplicationShortcutItem?
      */
     
+    @AppStorage("onboarding") var showOnboarding: Bool = true
     
     let persistenceController: PersistenceController
     private let moc: NSManagedObjectContext
+    
+    @StateObject var stopWatchManager: StopWatchManager
+    @State var currentSession: Sessions
+    @State var showUpdates: Bool = false
+    @State var pageIndex: Int = 0
+    
+    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     
     init() {
         persistenceController = PersistenceController.shared
@@ -25,12 +34,40 @@ struct CubeTime: App {
         
         UIApplication.shared.isIdleTimerDisabled = true
         
-           
-
-        
-        
-        
         let userDefaults = UserDefaults.standard
+        
+        let lastUsedSessionURI = userDefaults.url(forKey: "last_used_session")
+        let fetchedSession: Sessions
+        
+        if lastUsedSessionURI == nil {
+            fetchedSession = Sessions(context: moc)
+            fetchedSession.scramble_type = 1
+            fetchedSession.session_type = SessionTypes.playground.rawValue
+            fetchedSession.name = "Default Session"
+            try! moc.save()
+            userDefaults.set(fetchedSession.objectID.uriRepresentation(), forKey: "last_used_session")
+        } else {
+            let objID = moc.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI!)!
+            fetchedSession = try! moc.existingObject(with: objID) as! Sessions // TODO better error handling
+        }
+        
+        // https://swiftui-lab.com/random-lessons/#data-10
+        self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: fetchedSession, managedObjectContext: moc))
+        
+        self.currentSession = fetchedSession
+        
+        let newVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String)
+    
+        let currentVersion = UserDefaults.standard.string(forKey: "currentVersion")
+        
+        if currentVersion == newVersion {
+            print("same")
+        } else {
+            if !showOnboarding {
+                showUpdates = true
+            }
+            UserDefaults.standard.set(newVersion, forKey: "currentVersion")
+        }
                 
         userDefaults.register(
             defaults: [
@@ -60,14 +97,32 @@ struct CubeTime: App {
     }
     
     var body: some Scene {
+        
         WindowGroup {
-            MainTabsView(managedObjectContext: moc)
-                .environment(\.managedObjectContext, moc)
+            VStack {
+                if horizontalSizeClass == .regular && verticalSizeClass == .regular {
+                    TimerView()
+                } else {
+                    MainTabsView(managedObjectContext: moc)
+                }
+            }
+            .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
+                Updates(showUpdates: $showUpdates)
+            }
+            .sheet(isPresented: $showOnboarding, onDismiss: {
+                pageIndex = 0
+                if hSizeClass == .regular { /// FIX IN FUTURE: check for first time register and not just == 18 because can break :sob:
+                    if UserDefaults.standard.integer(forKey: gsKeys.scrambleSize.rawValue) == 18 {
+                        UserDefaults.standard.set(24, forKey: gsKeys.scrambleSize.rawValue)
+                    }
+                }
+            }) {
+                OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
+            }
+            .environment(\.managedObjectContext, moc)
+            .environment(\.currentSession, currentSession)
+            .environmentObject(stopWatchManager)
         }
-//        .onChange(of: phase) { newValue in
-//            if newValue == .active {
-//                print(appDelegate.shortcutItem)
-//            }
-//        }
+
     }
 }
