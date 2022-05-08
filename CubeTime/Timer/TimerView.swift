@@ -743,13 +743,26 @@ struct TimerView: View {
                 }
             }
 
-            
-            
-            Button {
-                stopWatchManager.interruptInspection()
-            } label: {
-                Text("stop")
+            if stopWatchManager.mode == .inspecting {
+                VStack {
+                    Button {
+                        stopWatchManager.interruptInspection()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 24, weight: .semibold))
+                            .padding(4)
+                    }
+                    .shadow(color: .black.opacity(0.12), radius: 10, x: 0, y: 3)
+                    .overlay(Circle().stroke(Color.black.opacity(0.05), lineWidth: 0.5))
+                    .background(accentColour.opacity(0.20))
+                    .background(.thinMaterial, in: Circle())
+                    .frame(height: UIScreen.screenHeight / 3)
+                    
+                    Spacer()
+                }
             }
+            
+            
             
             
             

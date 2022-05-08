@@ -1165,6 +1165,8 @@ struct NewCompsimView: View {
 
 /// **Main session views**
 struct SessionsView: View {
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    
     @Binding var currentSession: Sessions
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
@@ -1226,18 +1228,19 @@ struct SessionsView: View {
                         Button {
                             showNewSessionPopUp = true
                         } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.system(size: 24, weight: .semibold))
-                                .padding(.leading, -5)
-                            Text("New Session")
-                                .font(.system(size: 18, weight: .medium))
-                                .padding(.leading, -2)
+                            HStack(spacing: 4) {
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.system(size: 24, weight: .semibold))
+                                Text("New Session")
+                                    .font(.system(size: 18, weight: .medium))
+                                    .padding(.trailing, 4)
+                            }
+                            .padding(4)
                         }
                         .shadow(color: .black.opacity(0.12), radius: 10, x: 0, y: 3)
                         .overlay(Capsule().stroke(Color.black.opacity(0.05), lineWidth: 0.5))
-                        .buttonStyle(.bordered)
-                        .controlSize(.small)
-                        .background(.ultraThinMaterial, in: Capsule())
+                        .background(accentColour.opacity(0.20))
+                        .background(.thinMaterial, in: Capsule())
                         .sheet(isPresented: $showNewSessionPopUp) {
                             NewSessionPopUpView(currentSession: $currentSession, showNewSessionPopUp: $showNewSessionPopUp)
                                 .environment(\.managedObjectContext, managedObjectContext)
