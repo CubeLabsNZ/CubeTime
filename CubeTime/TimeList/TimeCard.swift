@@ -7,10 +7,11 @@ struct TimeCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     let solve: Solves
-    let timeListManager: TimeListManager
     
     @State var formattedTime: String
     @State var pen: PenTypes
@@ -23,9 +24,8 @@ struct TimeCard: View {
     @State var isSelected = false
     
     
-    init(solve: Solves, timeListManager: TimeListManager, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<[Solves]>) {
+    init(solve: Solves, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<[Solves]>) {
         self.solve = solve
-        self.timeListManager = timeListManager
         self._formattedTime = State(initialValue: formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!))
         self._pen = State(initialValue: PenTypes(rawValue: solve.penalty)!)
         self._currentSolve = currentSolve
@@ -116,11 +116,8 @@ struct TimeCard: View {
             Divider()
             
             Button (role: .destructive) {
-                managedObjectContext.delete(solve)
-                try! managedObjectContext.save()
-                
                 withAnimation {
-                    timeListManager.delete(solve)
+                    stopWatchManager.delete(solve: solve)
                 }
             } label: {
                 Label {

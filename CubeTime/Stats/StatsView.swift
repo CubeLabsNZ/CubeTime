@@ -219,12 +219,11 @@ struct StatsDivider: View {
 struct StatsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
+    @EnvironmentObject var stopWatchManager: StopWatchManager
     
     @Environment(\.horizontalSizeClass) var hSizeClass
     
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
-    
-    @Binding var currentSession: Sessions
     
     @State var isShowingStatsView: Bool = false
     @State var presentedAvg: CalculatedAverage? = nil
@@ -234,79 +233,21 @@ struct StatsView: View {
                                 (scene as? UIWindowScene)?.keyWindow
                             }).first?.frame.size
     
-    let stats: Stats
-    
-    // best averages
-    let bestAo5: CalculatedAverage?
-    let bestAo12: CalculatedAverage?
-    let bestAo100: CalculatedAverage?
-    
-    // current averages
-    let currentAo5: CalculatedAverage?
-    let currentAo12: CalculatedAverage?
-    let currentAo100: CalculatedAverage?
-    
-    // other block calculations
-    let bestSingle: Solves?
-    let sessionMean: Double?
-    
-    // raw values for graphs
-    let timesByDateNoDNFs: [Double]
-    let timesBySpeedNoDNFs: [Double]
-    
-    
-    // comp sim stats
-    let compSimCount: Int
-    let reachedTargets: Int
-    
-    let allCompsimAveragesByDate: [Double] // has no dnfs!!
-    let allCompsimAveragesByTime: [Double]
-    
-    let bestCompsimAverage: CalculatedAverage?
-    let currentCompsimAverage: CalculatedAverage?
-    
-    let currentMeanOfTen: Double?
-    let bestMeanOfTen: Double?
-    
-    let phases: [Double]?
-   
-    init(currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
-        self._currentSession = currentSession
-        stats = Stats(currentSession: currentSession.wrappedValue)
-        
-        
-        self.bestAo5 = stats.getBestMovingAverageOf(5)
-        self.bestAo12 = stats.getBestMovingAverageOf(12)
-        self.bestAo100 = stats.getBestMovingAverageOf(100)
-        
-        self.currentAo5 = stats.getCurrentAverageOf(5)
-        self.currentAo12 = stats.getCurrentAverageOf(12)
-        self.currentAo100 = stats.getCurrentAverageOf(100)
-        
-        
-        self.bestSingle = stats.getMin()
-        self.sessionMean = stats.getSessionMean()
-        
-        // raw values
-        self.timesByDateNoDNFs = stats.solvesNoDNFsbyDate.map { timeWithPlusTwoForSolve($0) }
-        self.timesBySpeedNoDNFs = stats.solvesNoDNFs.map { timeWithPlusTwoForSolve($0) }
-        
-        
-        // comp sim
-        self.compSimCount = stats.getNumberOfAverages()
-        self.reachedTargets = stats.getReachedTargets()
-       
-        self.allCompsimAveragesByDate = stats.getBestCompsimAverageAndArrayOfCompsimAverages().1.map { $0.average! }
-        self.allCompsimAveragesByTime = self.allCompsimAveragesByDate.sorted(by: <)
-        
-        self.currentCompsimAverage = stats.getCurrentCompsimAverage()
-        self.bestCompsimAverage = stats.getBestCompsimAverageAndArrayOfCompsimAverages().0
-        
-        self.currentMeanOfTen = stats.getCurrentMeanOfTen()
-        self.bestMeanOfTen = stats.getBestMeanOfTen()
-        
-        self.phases = stats.getAveragePhases()
-    }
+
+//        // comp sim
+//        self.compSimCount = stats.getNumberOfAverages()
+//        self.reachedTargets = stats.getReachedTargets()
+//
+//        self.allCompsimAveragesByDate = stats.getBestCompsimAverageAndArrayOfCompsimAverages().1.map { $0.average! }
+//        self.allCompsimAveragesByTime = self.allCompsimAveragesByDate.sorted(by: <)
+//
+//        self.currentCompsimAverage = stats.getCurrentCompsimAverage()
+//        self.bestCompsimAverage = stats.getBestCompsimAverageAndArrayOfCompsimAverages().0
+//
+//        self.currentMeanOfTen = stats.getCurrentMeanOfTen()
+//        self.bestMeanOfTen = stats.getBestMeanOfTen()
+//
+//        self.phases = stats.getAveragePhases()
     
     var body: some View {
         NavigationView {
@@ -324,7 +265,7 @@ struct StatsView: View {
 
                                 solveItem = Solves(context: managedObjectContext)
                                 solveItem.date = Date()
-                                solveItem.session = currentSession
+                                solveItem.session = stopWatchManager.currentSession
                                 solveItem.scramble = "R U R' F' D D' D F B B "
                                 solveItem.scramble_type = 1
                                 solveItem.scramble_subtype = 0
@@ -346,14 +287,14 @@ struct StatsView: View {
                         /// TOP INFO
                         VStack(spacing: 0) {
                             HStack (alignment: .center) {
-                                Text(currentSession.name!)
+                                Text(stopWatchManager.currentSession.name!)
                                     .font(.system(size: 20, weight: .semibold, design: .default))
                                     .foregroundColor(Color(uiColor: .systemGray))
                                 Spacer()
                                 
-                                switch SessionTypes(rawValue: currentSession.session_type)! {
+                                switch SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! {
                                 case .standard:
-                                    Text(puzzle_types[Int(currentSession.scramble_type)].name)
+                                    Text(puzzle_types[Int(stopWatchManager.currentSession.scramble_type)].name)
                                         .font(.system(size: 16, weight: .semibold, design: .default))
                                         .foregroundColor(Color(uiColor: .systemGray))
                                 case .multiphase:
@@ -362,7 +303,7 @@ struct StatsView: View {
                                             .font(.system(size: 14, weight: .semibold, design: .default))
                                             .foregroundColor(Color(uiColor: .systemGray))
                                         
-                                        Text(puzzle_types[Int(currentSession.scramble_type)].name)
+                                        Text(puzzle_types[Int(stopWatchManager.currentSession.scramble_type)].name)
                                             .font(.system(size: 16, weight: .semibold, design: .default))
                                             .foregroundColor(Color(uiColor: .systemGray))
                                     }
@@ -373,7 +314,7 @@ struct StatsView: View {
                                             .font(.system(size: 16, weight: .bold, design: .default))
                                             .foregroundColor(Color(uiColor: .systemGray))
                                         
-                                        Text(puzzle_types[Int(currentSession.scramble_type)].name)
+                                        Text(puzzle_types[Int(stopWatchManager.currentSession.scramble_type)].name)
                                             .font(.system(size: 16, weight: .semibold, design: .default))
                                             .foregroundColor(Color(uiColor: .systemGray))
                                     }
@@ -384,7 +325,7 @@ struct StatsView: View {
                                         .foregroundColor(Color(uiColor: .systemGray))
                                 
                                 default:
-                                    Text(puzzle_types[Int(currentSession.scramble_type)].name)
+                                    Text(puzzle_types[Int(stopWatchManager.currentSession.scramble_type)].name)
                                         .font(.system(size: 16, weight: .semibold, design: .default))
                                         .foregroundColor(Color(uiColor: .systemGray))
                                 }
@@ -394,250 +335,26 @@ struct StatsView: View {
                         .padding(.horizontal)
                         .padding(.bottom, 8)
 
-                        let compsim: Bool = SessionTypes(rawValue: currentSession.session_type)! == .compsim
+                        let compsim: Bool = SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! == .compsim
                         
                         /// everything
-                        
-                        if hSizeClass == .regular {
-                            HStack(alignment: .top, spacing: 0) {
-                                VStack(spacing: 10) {
-                                    if !compsim {
-                                        HStack(spacing: 10) {
-                                            StatsBlock("CURRENT STATS", 160, false, false) {
-                                                StatsBlockSmallText(["AO5", "AO12", "AO100"], [currentAo5, currentAo12, currentAo100], $presentedAvg, false)
-                                            }
-                                            .frame(minWidth: 0, maxWidth: .infinity)
-                                            
-                                            VStack(spacing: 10) {
-                                                StatsBlock("SOLVE COUNT", 75, false, false) {
-                                                    StatsBlockText("\(stats.getNumberOfSolves())", false, false, false, true)
-                                                }
-                                                
-                                                StatsBlock("SESSION MEAN", 75, false, false) {
-                                                    if sessionMean != nil {
-                                                        StatsBlockText(formatSolveTime(secs: sessionMean!), false, false, false, true)
-                                                    } else {
-                                                        StatsBlockText("", false, false, false, false)
-                                                    }
-                                                }
-                                            }
-                                            .frame(minWidth: 0, maxWidth: .infinity)
-                                        }
-                                        .padding(.leading)
-                                        .padding(.trailing, 10)
-                                        
-                                        StatsDivider()
-                                        
-                                        HStack(spacing: 10) {
-                                            VStack (spacing: 10) {
-                                                StatsBlock("BEST SINGLE", 75, false, true) {
-                                                    if bestSingle != nil {
-                                                        StatsBlockText(formatSolveTime(secs: bestSingle!.time, penType: PenTypes(rawValue: bestSingle!.penalty)!), false, true, false, true)
-                                                    } else {
-                                                        StatsBlockText("", false, false, false, false)
-                                                    }
-                                                }
-                                                .onTapGesture {
-                                                    if bestSingle != nil { showBestSinglePopup = true }
-                                                }
-                                                
-                                                StatsBlock("BEST STATS", 130, false, false) {
-                                                    StatsBlockSmallText(["AO12", "AO100"], [bestAo12, bestAo100], $presentedAvg, true)
-                                                }
-                                            }
-                                            .frame(minWidth: 0, maxWidth: .infinity)
-                                            
-                                            StatsBlock("BEST AO5", 215, false, false) {
-                                                if bestAo5 != nil {
-                                                    StatsBlockText(formatSolveTime(secs: bestAo5?.average ?? 0, penType: bestAo5?.totalPen), true, false, true, true)
-                                                    
-                                                    StatsBlockDetailText(calculatedAverage: bestAo5!, colouredBlock: false)
-                                                } else {
-                                                    StatsBlockText("", false, false, false, false)
-                                                }
-                                            }
-                                            .onTapGesture {
-                                                if bestAo5 != nil && bestAo5?.totalPen != .dnf {
-                                                    presentedAvg = bestAo5
-                                                }
-                                            }
-                                            .frame(minWidth: 0, maxWidth: .infinity)
-                                        }
-                                        .padding(.leading)
-                                        .padding(.trailing, 10)
-                                        
-//                                        StatsDivider()
-                                        
-                                        if SessionTypes(rawValue: currentSession.session_type)! == .multiphase {
-                                            StatsDivider()
-                                            
-                                            StatsBlock("AVERAGE PHASES", timesBySpeedNoDNFs.count == 0 ? 150 : nil, true, false) {
-                                                
-                                                if timesByDateNoDNFs.count > 0 {
-                                                    AveragePhases(phaseTimes: phases!)
-                                                        .padding(.top, 20)
-                                                } else {
-                                                    Text("not enough solves to\ndisplay graph")
-                                                        .font(.system(size: 17, weight: .medium, design: .monospaced))
-                                                        .multilineTextAlignment(.center)
-                                                        .foregroundColor(Color(uiColor: .systemGray))
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        HStack(spacing: 10) {
-                                            VStack(spacing: 10) {
-                                                StatsBlock("CURRENT AVG", 215, false, false) {
-                                                    if currentCompsimAverage != nil {
-                                                        StatsBlockText(formatSolveTime(secs: currentCompsimAverage?.average ?? 0, penType: currentCompsimAverage?.totalPen), false, false, true, true)
-                                                            
-                                                        StatsBlockDetailText(calculatedAverage: currentCompsimAverage!, colouredBlock: false)
-                                                    } else {
-                                                        StatsBlockText("", false, false, false, false)
-                                                    }
-                                                }
-                                                .onTapGesture {
-                                                    if currentCompsimAverage != nil && currentCompsimAverage?.totalPen != .dnf {
-                                                        presentedAvg = currentCompsimAverage
-                                                    }
-                                                }
-                                                
-                                                StatsBlock("AVERAGES", 75, false, false) {
-                                                    StatsBlockText("\(compSimCount)", false, false, false, true)
-                                                }
-                                            }
-                                            .frame(minWidth: 0, maxWidth: .infinity)
-                                            
-                                            VStack(spacing: 10) {
-                                                StatsBlock("BEST SINGLE", 75, false, false) {
-                                                    if bestSingle != nil {
-                                                        StatsBlockText(formatSolveTime(secs: bestSingle!.time), true, false, false, true)
-                                                    } else {
-                                                        StatsBlockText("", false, false, false, false)
-                                                    }
-                                                }
-                                                .onTapGesture {
-                                                    if bestSingle != nil {
-                                                        showBestSinglePopup = true
-                                                    }
-                                                }
-                                                
-                                                StatsBlock("BEST AVG", 215, false, true) {
-                                                    if bestCompsimAverage != nil {
-                                                        StatsBlockText(formatSolveTime(secs: bestCompsimAverage?.average ?? 0, penType: bestCompsimAverage?.totalPen), false, true, true, true)
-                                                            .onTapGesture {
-                                                                if bestCompsimAverage?.totalPen != .dnf {
-                                                                    presentedAvg = bestCompsimAverage
-                                                                }
-                                                            }
-                                                        
-                                                        StatsBlockDetailText(calculatedAverage: bestCompsimAverage!, colouredBlock: true)
-
-                                                    } else {
-                                                        StatsBlockText("", false, false, false, false)
-                                                    }
-                                                }
-                                            }
-                                            .frame(minWidth: 0, maxWidth: .infinity)
-                                        }
-                                        .padding(.leading)
-                                        .padding(.trailing, 10)
-                                        
-                                        StatsDivider()
-                                        
-                                        HStack(spacing: 10) {
-                                            StatsBlock("TARGET", 75, false, false) {
-                                                StatsBlockText(formatSolveTime(secs: (currentSession as! CompSimSession).target, dp: 2), false, false, false, true)
-                                            }
-                                                .frame(minWidth: 0, maxWidth: .infinity)
-                                            
-                                            StatsBlock("REACHED", 75, false, false) {
-                                                StatsBlockText("\(reachedTargets)/\(compSimCount)", false, false, false, (bestSingle != nil))
-                                            }
-                                                .frame(minWidth: 0, maxWidth: .infinity)
-                                        }
-                                        .padding(.leading)
-                                        .padding(.trailing, 10)
-                                        
-                                        
-                                        StatsBlock("REACHED TARGETS", compSimCount == 0 ? 150 : 50, true, false) {
-                                            if compSimCount != 0 {
-                                                ReachedTargets(Float(reachedTargets)/Float(compSimCount))
-                                                    .padding(.horizontal, 12)
-                                                    .offset(y: 30)
-                                            } else {
-                                                Text("not enough solves to\ndisplay graph")
-                                                    .font(.system(size: 17, weight: .medium, design: .monospaced))
-                                                    .multilineTextAlignment(.center)
-                                                    .foregroundColor(Color(uiColor: .systemGray))
-                                            }
-                                        }
-                                        
-                                        StatsDivider()
-                                        
-                                        HStack(spacing: 10) {
-                                            StatsBlock("CURRENT MO10 AO5", 75, false, false) {
-                                                if currentMeanOfTen != nil {
-                                                    StatsBlockText(formatSolveTime(secs: currentMeanOfTen!, penType: ((currentMeanOfTen == -1) ? .dnf : PenTypes.none)), false, false, false, true)
-                                                } else {
-                                                    StatsBlockText("", false, false, false, false)
-                                                }
-                                            }
-                                            .frame(minWidth: 0, maxWidth: .infinity)
-                                            
-                                            StatsBlock("BEST MO10 AO5", 75, false, false) {
-                                                if bestMeanOfTen != nil {
-                                                    StatsBlockText(formatSolveTime(secs: bestMeanOfTen!, penType: ((bestMeanOfTen == -1) ? .dnf : PenTypes.none)), false, false, false, true)
-                                                } else {
-                                                    StatsBlockText("", false, false, false, false)
-                                                }
-                                            }
-                                            .frame(minWidth: 0, maxWidth: .infinity)
-                                        }
-                                        .padding(.leading)
-                                        .padding(.trailing, 10)
-                                    }
-                                }
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                
-                                VStack(spacing: 10) {
-                                    let timeTrendData = (compsim ? allCompsimAveragesByDate : timesByDateNoDNFs)
-                                    let timeDistributionData = (compsim ? allCompsimAveragesByTime : timesBySpeedNoDNFs)
-                                    
-                                    StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 300), true, false) {
-                                        
-                                        TimeTrend(data: timeTrendData, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
-                                            .frame(width: windowSize!.width / 2 - (2 * 16) - (2 * 12))
-                                            .padding(.leading, 12)
-                                            .padding(.trailing)
-                                            .offset(y: -5)
-                                            .drawingGroup()
-                                    }
-                                    
-                                    StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? 150 : 300), true, false) {
-                                        TimeDistribution(currentSession: $currentSession, solves: timeDistributionData)
-                                            .drawingGroup()
-                                    }
-                                }
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                            }
-                        } else {
+                        HStack(alignment: .top, spacing: 0) {
                             VStack(spacing: 10) {
                                 if !compsim {
                                     HStack(spacing: 10) {
                                         StatsBlock("CURRENT STATS", 160, false, false) {
-                                            StatsBlockSmallText(["AO5", "AO12", "AO100"], [currentAo5, currentAo12, currentAo100], $presentedAvg, false)
+                                            StatsBlockSmallText(["AO5", "AO12", "AO100"], [stopWatchManager.currentAo5, stopWatchManager.currentAo12, stopWatchManager.currentAo100], $presentedAvg, false)
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
                                         VStack(spacing: 10) {
                                             StatsBlock("SOLVE COUNT", 75, false, false) {
-                                                StatsBlockText("\(stats.getNumberOfSolves())", false, false, false, true)
+                                                StatsBlockText("\(stopWatchManager.getNumberOfSolves())", false, false, false, true)
                                             }
                                             
                                             StatsBlock("SESSION MEAN", 75, false, false) {
-                                                if sessionMean != nil {
-                                                    StatsBlockText(formatSolveTime(secs: sessionMean!), false, false, false, true)
+                                                if let sessionMean = stopWatchManager.sessionMean {
+                                                    StatsBlockText(formatSolveTime(secs: sessionMean), false, false, false, true)
                                                 } else {
                                                     StatsBlockText("", false, false, false, false)
                                                 }
@@ -645,54 +362,58 @@ struct StatsView: View {
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     }
-                                    .padding(.horizontal)
+                                    .padding(.leading)
+                                    .padding(.trailing, 10)
                                     
                                     StatsDivider()
                                     
                                     HStack(spacing: 10) {
                                         VStack (spacing: 10) {
                                             StatsBlock("BEST SINGLE", 75, false, true) {
-                                                if bestSingle != nil {
-                                                    StatsBlockText(formatSolveTime(secs: bestSingle!.time, penType: PenTypes(rawValue: bestSingle!.penalty)!), false, true, false, true)
+                                                if let bestSingle = stopWatchManager.bestSingle {
+                                                    StatsBlockText(formatSolveTime(secs: bestSingle.time, penType: PenTypes(rawValue: bestSingle.penalty)!), false, true, false, true)
                                                 } else {
                                                     StatsBlockText("", false, false, false, false)
                                                 }
                                             }
                                             .onTapGesture {
-                                                if bestSingle != nil { showBestSinglePopup = true }
+                                                if stopWatchManager.bestSingle != nil { showBestSinglePopup = true }
                                             }
                                             
                                             StatsBlock("BEST STATS", 130, false, false) {
-                                                StatsBlockSmallText(["AO12", "AO100"], [bestAo12, bestAo100], $presentedAvg, true)
+                                                StatsBlockSmallText(["AO12", "AO100"], [stopWatchManager.bestAo12, stopWatchManager.bestAo100], $presentedAvg, true)
                                             }
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
                                         StatsBlock("BEST AO5", 215, false, false) {
-                                            if bestAo5 != nil {
-                                                StatsBlockText(formatSolveTime(secs: bestAo5?.average ?? 0, penType: bestAo5?.totalPen), true, false, true, true)
+                                            if let bestAo5 = stopWatchManager.bestAo5 {
+                                                StatsBlockText(formatSolveTime(secs: bestAo5.average ?? 0, penType: bestAo5.totalPen), true, false, true, true)
                                                 
-                                                StatsBlockDetailText(calculatedAverage: bestAo5!, colouredBlock: false)
+                                                StatsBlockDetailText(calculatedAverage: bestAo5, colouredBlock: false)
                                             } else {
                                                 StatsBlockText("", false, false, false, false)
                                             }
                                         }
                                         .onTapGesture {
-                                            if bestAo5 != nil && bestAo5?.totalPen != .dnf {
-                                                presentedAvg = bestAo5
+                                            if stopWatchManager.bestAo5 != nil && stopWatchManager.bestAo5?.totalPen != .dnf {
+                                                presentedAvg = stopWatchManager.bestAo5
                                             }
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     }
-                                    .padding(.horizontal)
+                                    .padding(.leading)
+                                    .padding(.trailing, 10)
                                     
-                                    StatsDivider()
+//                                        StatsDivider()
                                     
-                                    if SessionTypes(rawValue: currentSession.session_type)! == .multiphase {
-                                        StatsBlock("AVERAGE PHASES", timesBySpeedNoDNFs.count == 0 ? 150 : nil, true, false) {
+                                    if SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! == .multiphase {
+                                        StatsDivider()
+                                        
+                                        StatsBlock("AVERAGE PHASES", stopWatchManager.timesBySpeedNoDNFs.count == 0 ? 150 : nil, true, false) {
                                             
-                                            if timesByDateNoDNFs.count > 0 {
-                                                AveragePhases(phaseTimes: phases!)
+                                            if stopWatchManager.timesByDateNoDNFs.count > 0 {
+                                                AveragePhases(phaseTimes: stopWatchManager.phases!)
                                                     .padding(.top, 20)
                                             } else {
                                                 Text("not enough solves to\ndisplay graph")
@@ -701,57 +422,55 @@ struct StatsView: View {
                                                     .foregroundColor(Color(uiColor: .systemGray))
                                             }
                                         }
-                                        
-                                        StatsDivider()
                                     }
                                 } else {
                                     HStack(spacing: 10) {
                                         VStack(spacing: 10) {
                                             StatsBlock("CURRENT AVG", 215, false, false) {
-                                                if currentCompsimAverage != nil {
-                                                    StatsBlockText(formatSolveTime(secs: currentCompsimAverage?.average ?? 0, penType: currentCompsimAverage?.totalPen), false, false, true, true)
+                                                if let currentCompsimAverage = stopWatchManager.currentCompsimAverage {
+                                                    StatsBlockText(formatSolveTime(secs: currentCompsimAverage.average ?? 0, penType: currentCompsimAverage.totalPen), false, false, true, true)
                                                         
-                                                    StatsBlockDetailText(calculatedAverage: currentCompsimAverage!, colouredBlock: false)
+                                                    StatsBlockDetailText(calculatedAverage: currentCompsimAverage, colouredBlock: false)
                                                 } else {
                                                     StatsBlockText("", false, false, false, false)
                                                 }
                                             }
                                             .onTapGesture {
-                                                if currentCompsimAverage != nil && currentCompsimAverage?.totalPen != .dnf {
-                                                    presentedAvg = currentCompsimAverage
+                                                if stopWatchManager.currentCompsimAverage != nil && stopWatchManager.currentCompsimAverage?.totalPen != .dnf {
+                                                    presentedAvg = stopWatchManager.currentCompsimAverage
                                                 }
                                             }
                                             
                                             StatsBlock("AVERAGES", 75, false, false) {
-                                                StatsBlockText("\(compSimCount)", false, false, false, true)
+                                                StatsBlockText("\(stopWatchManager.compSimCount)", false, false, false, true)
                                             }
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
                                         VStack(spacing: 10) {
                                             StatsBlock("BEST SINGLE", 75, false, false) {
-                                                if bestSingle != nil {
-                                                    StatsBlockText(formatSolveTime(secs: bestSingle!.time), true, false, false, true)
+                                                if let bestSingle = stopWatchManager.bestSingle {
+                                                    StatsBlockText(formatSolveTime(secs: bestSingle.time), true, false, false, true)
                                                 } else {
                                                     StatsBlockText("", false, false, false, false)
                                                 }
                                             }
                                             .onTapGesture {
-                                                if bestSingle != nil {
+                                                if stopWatchManager.bestSingle != nil {
                                                     showBestSinglePopup = true
                                                 }
                                             }
                                             
                                             StatsBlock("BEST AVG", 215, false, true) {
-                                                if bestCompsimAverage != nil {
-                                                    StatsBlockText(formatSolveTime(secs: bestCompsimAverage?.average ?? 0, penType: bestCompsimAverage?.totalPen), false, true, true, true)
+                                                if let bestCompsimAverage = stopWatchManager.bestCompsimAverage {
+                                                    StatsBlockText(formatSolveTime(secs: bestCompsimAverage.average ?? 0, penType: bestCompsimAverage.totalPen), false, true, true, true)
                                                         .onTapGesture {
-                                                            if bestCompsimAverage?.totalPen != .dnf {
+                                                            if bestCompsimAverage.totalPen != .dnf {
                                                                 presentedAvg = bestCompsimAverage
                                                             }
                                                         }
                                                     
-                                                    StatsBlockDetailText(calculatedAverage: bestCompsimAverage!, colouredBlock: true)
+                                                    StatsBlockDetailText(calculatedAverage: bestCompsimAverage, colouredBlock: true)
 
                                                 } else {
                                                     StatsBlockText("", false, false, false, false)
@@ -760,27 +479,29 @@ struct StatsView: View {
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     }
-                                    .padding(.horizontal)
+                                    .padding(.leading)
+                                    .padding(.trailing, 10)
                                     
                                     StatsDivider()
                                     
                                     HStack(spacing: 10) {
                                         StatsBlock("TARGET", 75, false, false) {
-                                            StatsBlockText(formatSolveTime(secs: (currentSession as! CompSimSession).target, dp: 2), false, false, false, true)
+                                            StatsBlockText(formatSolveTime(secs: (stopWatchManager.currentSession as! CompSimSession).target, dp: 2), false, false, false, true)
                                         }
                                             .frame(minWidth: 0, maxWidth: .infinity)
                                         
                                         StatsBlock("REACHED", 75, false, false) {
-                                            StatsBlockText("\(reachedTargets)/\(compSimCount)", false, false, false, (bestSingle != nil))
+                                            StatsBlockText("\(stopWatchManager.reachedTargets)/\(stopWatchManager.compSimCount)", false, false, false, (stopWatchManager.bestSingle != nil))
                                         }
                                             .frame(minWidth: 0, maxWidth: .infinity)
                                     }
-                                    .padding(.horizontal)
+                                    .padding(.leading)
+                                    .padding(.trailing, 10)
                                     
                                     
-                                    StatsBlock("REACHED TARGETS", compSimCount == 0 ? 150 : 50, true, false) {
-                                        if compSimCount != 0 {
-                                            ReachedTargets(Float(reachedTargets)/Float(compSimCount))
+                                    StatsBlock("REACHED TARGETS", stopWatchManager.compSimCount == 0 ? 150 : 50, true, false) {
+                                        if stopWatchManager.compSimCount != 0 {
+                                            ReachedTargets(Float(stopWatchManager.reachedTargets)/Float(stopWatchManager.compSimCount))
                                                 .padding(.horizontal, 12)
                                                 .offset(y: 30)
                                         } else {
@@ -795,8 +516,8 @@ struct StatsView: View {
                                     
                                     HStack(spacing: 10) {
                                         StatsBlock("CURRENT MO10 AO5", 75, false, false) {
-                                            if currentMeanOfTen != nil {
-                                                StatsBlockText(formatSolveTime(secs: currentMeanOfTen!, penType: ((currentMeanOfTen == -1) ? .dnf : PenTypes.none)), false, false, false, true)
+                                            if let currentMeanOfTen = stopWatchManager.currentMeanOfTen {
+                                                StatsBlockText(formatSolveTime(secs: currentMeanOfTen, penType: ((currentMeanOfTen == -1) ? .dnf : PenTypes.none)), false, false, false, true)
                                             } else {
                                                 StatsBlockText("", false, false, false, false)
                                             }
@@ -804,37 +525,40 @@ struct StatsView: View {
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
                                         StatsBlock("BEST MO10 AO5", 75, false, false) {
-                                            if bestMeanOfTen != nil {
-                                                StatsBlockText(formatSolveTime(secs: bestMeanOfTen!, penType: ((bestMeanOfTen == -1) ? .dnf : PenTypes.none)), false, false, false, true)
+                                            if let bestMeanOfTen = stopWatchManager.bestMeanOfTen {
+                                                StatsBlockText(formatSolveTime(secs: bestMeanOfTen, penType: ((bestMeanOfTen == -1) ? .dnf : PenTypes.none)), false, false, false, true)
                                             } else {
                                                 StatsBlockText("", false, false, false, false)
                                             }
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     }
-                                    .padding(.horizontal)
-                                    
-                                    StatsDivider()
+                                    .padding(.leading)
+                                    .padding(.trailing, 10)
                                 }
-                                
-                                
-                                let timeTrendData = (compsim ? allCompsimAveragesByDate : timesByDateNoDNFs)
-                                let timeDistributionData = (compsim ? allCompsimAveragesByTime : timesBySpeedNoDNFs)
+                            }
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            
+                            VStack(spacing: 10) {
+                                let timeTrendData = (compsim ? stopWatchManager.allCompsimAveragesByDate : stopWatchManager.timesByDateNoDNFs)!
+                                let timeDistributionData = (compsim ? stopWatchManager.allCompsimAveragesByTime : stopWatchManager.timesBySpeedNoDNFs)!
                                 
                                 StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 300), true, false) {
                                     
                                     TimeTrend(data: timeTrendData, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
-                                        .frame(width: windowSize!.width - (2 * 16) - (2 * 12))
-                                        .padding(.horizontal, 12)
+                                        .frame(width: windowSize!.width / 2 - (2 * 16) - (2 * 12))
+                                        .padding(.leading, 12)
+                                        .padding(.trailing)
                                         .offset(y: -5)
                                         .drawingGroup()
                                 }
                                 
                                 StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? 150 : 300), true, false) {
-                                    TimeDistribution(currentSession: $currentSession, solves: timeDistributionData)
+                                    TimeDistribution(stopWatchManager: stopWatchManager, solves: timeDistributionData)
                                         .drawingGroup()
                                 }
                             }
+                            .frame(minWidth: 0, maxWidth: .infinity)
                         }
                     }
                 }
@@ -845,10 +569,10 @@ struct StatsView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .sheet(item: $presentedAvg) { item in
-            StatsDetail(solves: item, session: currentSession)
+            StatsDetail(solves: item, session: stopWatchManager.currentSession)
         }
         .sheet(isPresented: $showBestSinglePopup) {
-            TimeDetail(solve: bestSingle!, currentSolve: nil, timeListManager: nil) // TODO make delete work from here
+            TimeDetail(solve: stopWatchManager.bestSingle!, currentSolve: nil) // TODO make delete work from here
             // maybe pass stats object and make it remove min
         }
     }

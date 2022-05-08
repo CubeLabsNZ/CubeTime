@@ -11,38 +11,34 @@ struct TimeDetail: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.dismiss) var dismiss
     
-    var timeListManager: TimeListManager?
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     let solve: Solves
     @Binding var currentSolve: Solves?
     
     
-    init(solve: Solves, currentSolve: Binding<Solves?>?, timeListManager: TimeListManager?) {
+    init(solve: Solves, currentSolve: Binding<Solves?>?) {
         
         self.solve = solve
         self._currentSolve = currentSolve ?? Binding.constant(nil)
-        self.timeListManager = timeListManager
         
     }
     
     var body: some View {
         NavigationView {
-            TimeDetailViewOnly(solve: solve, currentSolve: $currentSolve, timeListManager: timeListManager)
+            TimeDetailViewOnly(solve: solve, currentSolve: $currentSolve)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) { // Only show delete if called from timelist and not stats
-                    if timeListManager != nil {
-                        Button {
-                            currentSolve = nil
-                            
-                            managedObjectContext.delete(solve)
-                            try! managedObjectContext.save()
-                            withAnimation {
-                                timeListManager?.delete(solve)
-                            }
-                        } label: {
-                            Text("Delete Solve")
-                                .font(.system(size: 17, weight: .medium))
-                                .foregroundColor(Color.red)
+                    Button {
+                        currentSolve = nil
+                        
+                        withAnimation {
+                            stopWatchManager.delete(solve: solve)
                         }
+                    } label: {
+                        Text("Delete Solve")
+                            .font(.system(size: 17, weight: .medium))
+                            .foregroundColor(Color.red)
                     }
                 }
                 
@@ -73,8 +69,6 @@ struct TimeDetailViewOnly: View {
     
     private let titleDateFormat: DateFormatter
     
-    var timeListManager: TimeListManager?
-    
     @State var offsetValue: CGFloat = -25
     
     @FocusState private var commentFocus: Bool
@@ -99,7 +93,7 @@ struct TimeDetailViewOnly: View {
     @State private var userComment: String
     
     
-    init(solve: Solves, currentSolve: Binding<Solves?>?, timeListManager: TimeListManager?){
+    init(solve: Solves, currentSolve: Binding<Solves?>?){
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
         self.time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
@@ -114,7 +108,6 @@ struct TimeDetailViewOnly: View {
         }
         
         self._currentSolve = currentSolve ?? Binding.constant(nil)
-        self.timeListManager = timeListManager
         _userComment = State(initialValue: solve.comment ?? "")
 
         

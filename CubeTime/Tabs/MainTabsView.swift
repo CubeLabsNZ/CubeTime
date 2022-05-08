@@ -11,6 +11,7 @@ enum Tab {
 
 class TabRouter: ObservableObject {
     @Published var currentTab: Tab = .timer
+    @Published var hideTabBar: Bool = false
 }
 
 struct TabIconWithBar: View {
@@ -71,11 +72,12 @@ struct TabIcon: View {
 struct MainTabsView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.horizontalSizeClass) var hSizeClass
+    @EnvironmentObject var tabRouter: TabRouter
 
     
     @Namespace private var namespace
     
-    @StateObject var tabRouter: TabRouter = TabRouter()
+    
     
     @State var hideTabBar = false
     
@@ -89,19 +91,14 @@ struct MainTabsView: View {
             ZStack {
                 switch tabRouter.currentTab {
                 case .timer:
-                    TimerView(hideTabBar: $hideTabBar)
+                    TimerView()
                         .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
                 case .solves:
                     TimeListView()
                 case .stats:
-                    StatsView(currentSession: $currentSession, managedObjectContext: managedObjectContext)
+                    StatsView()
                 case .sessions:
                     SessionsView()
-                    // TODO move this to SessionsView on tap
-                        .onChange(of: currentSession) { newSession in
-                            UserDefaults.standard.set(newSession.objectID.uriRepresentation(), forKey: "last_used_session") // TODO what was i thinking move this logic into SessionsView
-                            stopWatchManager.changeCurrentSession(newSession)
-                        }
                 case .settings:
                     SettingsView()
                 }

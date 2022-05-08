@@ -56,7 +56,6 @@
 		7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7DDF2227955AFF00362DE9 /* PenButton.swift */; };
 		7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E2011275DD52600ADF01D /* Licenses.swift */; };
 		7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */; };
-		7D878BB1275D8DB3008AC443 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D878BB0275D8DB3008AC443 /* Stats.swift */; };
 		7D8828FF280D48C100B671EF /* IEUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8828FE280D48C100B671EF /* IEUtil.swift */; };
 /* End PBXBuildFile section */
 
@@ -140,7 +139,6 @@
 		7D7DDF2227955AFF00362DE9 /* PenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenButton.swift; sourceTree = "<group>"; };
 		7D7E2011275DD52600ADF01D /* Licenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Licenses.swift; sourceTree = "<group>"; };
 		7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleView.swift; sourceTree = "<group>"; };
-		7D878BB0275D8DB3008AC443 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 		7D8828FE280D48C100B671EF /* IEUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IEUtil.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -325,7 +323,6 @@
 		23E81E75275D917000B741E3 /* Stats */ = {
 			isa = PBXGroup;
 			children = (
-				7D878BB0275D8DB3008AC443 /* Stats.swift */,
 				7D7A9EBF274F38CD00C2E125 /* StatsView.swift */,
 				2337E6872767619D00438F43 /* StatsDetail.swift */,
 				2319F8B8276872F200644EB3 /* TimeTrend.swift */,
@@ -487,7 +484,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D878BB1275D8DB3008AC443 /* Stats.swift in Sources */,
 				7D8828FF280D48C100B671EF /* IEUtil.swift in Sources */,
 				23E9B1E128151CD5005804A0 /* FloatingPanel.swift in Sources */,
 				23E9B1DF28151C0F005804A0 /* FloatingPanelViewController.swift in Sources */,

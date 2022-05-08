@@ -5,9 +5,10 @@ struct SessionCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
-    @Binding var currentSession: Sessions
     @State private var isShowingDeleteDialog = false
     @State var customizing = false
     var item: Sessions
@@ -30,8 +31,8 @@ struct SessionCard: View {
             
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(colourScheme == .dark ? Color(uiColor: .systemGray6) : Color.white)
-                .frame(width: currentSession == item ? 16 : windowSize!.width - 32, height: item.pinned ? 110 : 65)
-                .offset(x: currentSession == item ? -((windowSize!.width - 16)/2) + 16 : 0)
+                .frame(width: stopWatchManager.currentSession == item ? 16 : windowSize!.width - 32, height: item.pinned ? 110 : 65)
+                .offset(x: stopWatchManager.currentSession == item ? -((windowSize!.width - 16)/2) + 16 : 0)
             
                 .zIndex(1)
             
@@ -110,7 +111,7 @@ struct SessionCard: View {
                                 .padding(.bottom, 4)
                         }
                     }
-                    .offset(x: currentSession == item ? 10 : 0)
+                    .offset(x: stopWatchManager.currentSession == item ? 10 : 0)
                     
                     Spacer()
                     
@@ -150,7 +151,7 @@ struct SessionCard: View {
         
         .onTapGesture {
             withAnimation(.spring(response: 0.325)) {
-                currentSession = item
+                stopWatchManager.currentSession = item
             }
         }
         
@@ -180,7 +181,7 @@ struct SessionCard: View {
             },
                               title: "Delete Session",
                               systemImage: "trash",
-                              disableButton: numSessions <= 1 || item == currentSession)
+                              disableButton: numSessions <= 1 || item == stopWatchManager.currentSession)
                 .foregroundColor(Color.red)
         })
         .padding(.horizontal)

@@ -255,6 +255,8 @@ struct NewSessionPopUpView: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.horizontalSizeClass) var hSizeClass
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     @State private var showNewStandardSessionView = false
     @State private var showNewAlgTrainerView = false
     @State private var showNewMultiphaseView = false
@@ -266,7 +268,6 @@ struct NewSessionPopUpView: View {
     
     @State private var testBool = false
     
-    @Binding var currentSession: Sessions
     @Binding var showNewSessionPopUp: Bool
     
     
@@ -469,15 +470,15 @@ struct NewSessionPopUpView: View {
                         
                         
                         
-                        NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession, pinnedSession: false), isActive: $showNewStandardSessionView)
+                        NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false), isActive: $showNewStandardSessionView)
                         
-                        NavigationLink("", destination: NewAlgTrainerView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession, pinnedSession: false), isActive: $showNewAlgTrainerView)
+                        NavigationLink("", destination: NewAlgTrainerView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false), isActive: $showNewAlgTrainerView)
                         
-                        NavigationLink("", destination: NewMultiphaseView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession, pinnedSession: false), isActive: $showNewMultiphaseView)
+                        NavigationLink("", destination: NewMultiphaseView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false), isActive: $showNewMultiphaseView)
                         
-                        NavigationLink("", destination: NewPlaygroundView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession, pinnedSession: false), isActive: $showNewPlaygroundView)
+                        NavigationLink("", destination: NewPlaygroundView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false), isActive: $showNewPlaygroundView)
                         
-                        NavigationLink("", destination: NewCompsimView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession, pinnedSession: false), isActive: $showNewCompsimView)
+                        NavigationLink("", destination: NewCompsimView(showNewSessionPopUp: $showNewSessionPopUp, pinnedSession: false), isActive: $showNewCompsimView)
                         
                         Spacer()
                         
@@ -521,8 +522,9 @@ struct NewStandardSessionView: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     @Binding var showNewSessionPopUp: Bool
-    @Binding var currentSession: Sessions
     @State private var name: String = ""
     @State private var sessionEventType: Int32 = 0
     @State var pinnedSession: Bool
@@ -635,9 +637,8 @@ struct NewStandardSessionView: View {
                         sessionItem.pinned = pinnedSession
                         sessionItem.scramble_type = sessionEventType
                         try! managedObjectContext.save()
-                        currentSession = sessionItem
+                        stopWatchManager.currentSession = sessionItem
                         showNewSessionPopUp = false
-                        currentSession = sessionItem
                     } label: {
                         Text("Create")
                     }
@@ -653,10 +654,11 @@ struct NewAlgTrainerView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     @Binding var showNewSessionPopUp: Bool
-    @Binding var currentSession: Sessions
     @State private var name: String = ""
     @State private var sessionEventType: Int32 = 0
     @State var pinnedSession: Bool
@@ -742,9 +744,8 @@ struct NewAlgTrainerView: View {
                         
                         sessionItem.scramble_type = sessionEventType
                         try! managedObjectContext.save()
-                        currentSession = sessionItem
+                        stopWatchManager.currentSession = sessionItem
                         showNewSessionPopUp = false
-                        currentSession = sessionItem
                     } label: {
                         Text("Create")
                     }
@@ -760,6 +761,9 @@ struct NewMultiphaseView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.horizontalSizeClass) var hSizeClass
+    
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     @State private var name: String = ""
@@ -767,7 +771,6 @@ struct NewMultiphaseView: View {
     @State private var phaseCount: Int = 2
     
     @Binding var showNewSessionPopUp: Bool
-    @Binding var currentSession: Sessions
     
     @State var pinnedSession: Bool
     
@@ -908,9 +911,8 @@ struct NewMultiphaseView: View {
                         
                         sessionItem.scramble_type = sessionEventType
                         try! managedObjectContext.save()
-                        currentSession = sessionItem
+                        stopWatchManager.currentSession = sessionItem
                         showNewSessionPopUp = false
-                        currentSession = sessionItem
                     } label: {
                         Text("Create")
                     }
@@ -926,10 +928,12 @@ struct NewPlaygroundView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.horizontalSizeClass) var hSizeClass
+    
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     @Binding var showNewSessionPopUp: Bool
-    @Binding var currentSession: Sessions
     @State private var name: String = ""
     @State private var sessionEventType: Int32 = 0
     @State var pinnedSession: Bool
@@ -988,9 +992,8 @@ struct NewPlaygroundView: View {
                         
                         sessionItem.session_type = 3
                         try! managedObjectContext.save()
-                        currentSession = sessionItem
+                        stopWatchManager.currentSession = sessionItem
                         showNewSessionPopUp = false
-                        currentSession = sessionItem
                         
                     } label: {
                         Text("Create")
@@ -1008,10 +1011,11 @@ struct NewCompsimView: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.horizontalSizeClass) var hSizeClass
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     @Binding var showNewSessionPopUp: Bool
-    @Binding var currentSession: Sessions
     @State private var name: String = ""
     @State private var targetStr: String = ""
     @State private var sessionEventType: Int32 = 0
@@ -1152,7 +1156,7 @@ struct NewCompsimView: View {
                         
                         sessionItem.scramble_type = sessionEventType
                         try! managedObjectContext.save()
-                        currentSession = sessionItem
+                        stopWatchManager.currentSession = sessionItem
                         showNewSessionPopUp = false
                     } label: {
                         Text("Create")
@@ -1169,19 +1173,12 @@ struct NewCompsimView: View {
 
 /// **Main session views**
 struct SessionsView: View {
-    @Binding var currentSession: Sessions
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
-    
-    
+    @EnvironmentObject var stopWatchManager: StopWatchManager
     
     @State var showNewSessionPopUp = false
-    
-    
-    var solveCount: Int = 1603
-    
-    
     
     // I know that this is bad
     // I tried to use SectionedFetchRequest to no avail
@@ -1214,12 +1211,12 @@ struct SessionsView: View {
                 ScrollView {
                     VStack (spacing: 10) {
                         ForEach(pinnedSessions) { item in
-                            SessionCard(currentSession: $currentSession, item: item, numSessions: pinnedSessions.count + unPinnedSessions.count)
+                            SessionCard(item: item, numSessions: pinnedSessions.count + unPinnedSessions.count)
                                 .environment(\.managedObjectContext, managedObjectContext)
                             
                         }
                         ForEach(unPinnedSessions) { item in
-                            SessionCard(currentSession: $currentSession, item: item, numSessions: pinnedSessions.count + unPinnedSessions.count)
+                            SessionCard(item: item, numSessions: pinnedSessions.count + unPinnedSessions.count)
                                 .environment(\.managedObjectContext, managedObjectContext)
                             
                         }
@@ -1246,7 +1243,7 @@ struct SessionsView: View {
                         .controlSize(.small)
                         .background(.ultraThinMaterial, in: Capsule())
                         .sheet(isPresented: $showNewSessionPopUp) {
-                            NewSessionPopUpView(currentSession: $currentSession, showNewSessionPopUp: $showNewSessionPopUp)
+                            NewSessionPopUpView(showNewSessionPopUp: $showNewSessionPopUp)
                                 .environment(\.managedObjectContext, managedObjectContext)
                         }
                         .padding(.leading)

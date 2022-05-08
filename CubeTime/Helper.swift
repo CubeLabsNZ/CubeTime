@@ -162,6 +162,7 @@ func formatLegendTime(secs: Double, dp: Int) -> String {
 }
 
 
+// Todo make good
 func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAverage? {
     
     let trim = 1
@@ -172,7 +173,7 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
         return nil
     }
     
-    let sorted = solves.sorted(by: Stats.sortWithDNFsLast)
+    let sorted = solves.sorted(by: StopWatchManager.sortWithDNFsLast)
     let trimmedSolves: [Solves] = sorted.prefix(trim) + sorted.suffix(trim)
     
     return CalculatedAverage(

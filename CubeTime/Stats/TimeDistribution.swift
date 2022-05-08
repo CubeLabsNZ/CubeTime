@@ -84,30 +84,22 @@ struct TimeDistribution: View {
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
 
-    
-    @Binding var currentSession: Sessions
-    
+    @EnvironmentObject var stopWatchManager: StopWatchManager
     
     var count: Int
     var data: Array<(Double, Int)>
     var max_height: CGFloat
     
-    let stats: Stats
-    
     let median: Double?
     let medianPercentage: Double?
     
-    init(currentSession: Binding<Sessions>, solves: [Double]) {
-        self._currentSession = currentSession
-        stats = Stats(currentSession: currentSession.wrappedValue)
-        
-        
+    init(stopWatchManager: StopWatchManager, solves: [Double]) {
         self.count = solves.count
         self.data = getDivisions(data: solves)
         self.max_height = CGFloat(220 / Float(getMaxHeight(occurences: data.map { $0.1 })!))
         
-        self.median = stats.getNormalMedian().0
-        self.medianPercentage = stats.getNormalMedian().1
+        self.median = stopWatchManager.getNormalMedian().0
+        self.medianPercentage = stopWatchManager.getNormalMedian().1
     }
     
     var body: some View {

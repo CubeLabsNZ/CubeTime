@@ -6,6 +6,7 @@ import CoreData
 @main
 struct CubeTime: App {
     @Environment(\.scenePhase) var phase
+    @Environment(\.horizontalSizeClass) var hSizeClass
     
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -20,7 +21,7 @@ struct CubeTime: App {
     private let moc: NSManagedObjectContext
     
     @StateObject var stopWatchManager: StopWatchManager
-    @State var currentSession: Sessions
+    @StateObject var tabRouter: TabRouter = TabRouter()
     @State var showUpdates: Bool = false
     @State var pageIndex: Int = 0
     
@@ -29,10 +30,12 @@ struct CubeTime: App {
     
     init() {
         persistenceController = PersistenceController.shared
-        moc = persistenceController.container.viewContext
+        let moc = persistenceController.container.viewContext
         
-        
+        // TODO move to WM
         UIApplication.shared.isIdleTimerDisabled = true
+        
+        // TODO move to SWM init
         
         let userDefaults = UserDefaults.standard
         
@@ -54,11 +57,11 @@ struct CubeTime: App {
         // https://swiftui-lab.com/random-lessons/#data-10
         self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: fetchedSession, managedObjectContext: moc))
         
-        self.currentSession = fetchedSession
+        self.moc = moc
         
         let newVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String)
     
-        let currentVersion = UserDefaults.standard.string(forKey: "currentVersion")
+        let currentVersion = userDefaults.string(forKey: "currentVersion")
         
         if currentVersion == newVersion {
             print("same")
@@ -66,7 +69,7 @@ struct CubeTime: App {
             if !showOnboarding {
                 showUpdates = true
             }
-            UserDefaults.standard.set(newVersion, forKey: "currentVersion")
+            userDefaults.set(newVersion, forKey: "currentVersion")
         }
                 
         userDefaults.register(
@@ -103,7 +106,7 @@ struct CubeTime: App {
                 if horizontalSizeClass == .regular && verticalSizeClass == .regular {
                     TimerView()
                 } else {
-                    MainTabsView(managedObjectContext: moc)
+                    MainTabsView()
                 }
             }
             .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
@@ -120,8 +123,8 @@ struct CubeTime: App {
                 OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
             }
             .environment(\.managedObjectContext, moc)
-            .environment(\.currentSession, currentSession)
             .environmentObject(stopWatchManager)
+            .environmentObject(tabRouter)
         }
 
     }
