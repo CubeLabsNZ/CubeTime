@@ -1175,9 +1175,6 @@ struct SessionsView: View {
     @State var showNewSessionPopUp = false
     
     
-    var solveCount: Int = 1603
-    
-    
     
     // I know that this is bad
     // I tried to use SectionedFetchRequest to no avail

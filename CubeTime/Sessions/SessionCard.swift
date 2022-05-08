@@ -16,7 +16,6 @@ struct SessionCard: View {
     @Namespace var namespace
     
     var body: some View {
-        
         ZStack {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color(uiColor: .systemGray5))

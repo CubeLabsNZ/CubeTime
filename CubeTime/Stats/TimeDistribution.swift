@@ -12,29 +12,22 @@ func getDivisions(data: [Double]) -> Array<(Double, Int)> {
     
     if cnt >= 4 {
         var bars: Int {
-            if cnt < 8 {
-                return cnt
-            } else {
-                return 8
-            }
+            return (cnt < 8 ? cnt : 8)
         }
         
         let trim: Int = Int(ceil(Double(cnt) * 0.1))
-        
-        let tc_data: ArraySlice<Double> = data[trim...cnt-trim-1]
-        
+        let tc_data: ArraySlice<Double> = data[trim ... (cnt-trim - 1)]
+        var increments: [Double: Int] = [:]
+
         var fd: Double = tc_data.first!
         let ld: Double = tc_data.last!
-        let ifd: Double = data[trim-1]
+        let ifd: Double = data[trim - 1]
         let ild: Double = data.suffix(trim).first!
         
         let div_incr: Double = (ld - fd) / Double(bars)
         
-        var increments: [Double: Int] = [:]
-        
         for i in 0..<bars {
-            let range: Range<Double> = fd..<(fd+div_incr + (i == bars-1 ? (ild-ld)/2 : 0))
-            
+            let range: Range<Double> = fd ..< (fd + div_incr + (i == bars-1 ? (ild - ld)/2 : 0))
             var tmpocc = 0
             
             for datum in Array(tc_data) {
@@ -50,12 +43,10 @@ func getDivisions(data: [Double]) -> Array<(Double, Int)> {
         sorted.insert((ifd,trim), at: 0)
         sorted.append((ild,trim))
         
-        
         return sorted
-
-    } else {
-        return [(0.00, 0)]
     }
+    
+    return [(0.00, 0)]
 }
 
 func getMaxHeight(occurences: [Int]) -> Int? {
