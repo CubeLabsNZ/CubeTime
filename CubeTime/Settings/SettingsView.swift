@@ -31,8 +31,8 @@ struct SettingsView: View {
                     Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                         .ignoresSafeArea()
                     
-                    VStack (spacing: 16) {
-                        HStack (spacing: 16) {
+                    VStack(spacing: 16) {
+                        HStack(spacing: 16) {
                             SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
                             SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
                         }
@@ -94,7 +94,8 @@ struct SettingsCard: View {
                                 .minimumScaleFactor(0.75)
                                 .lineLimit(info.name == "Appearance" ? 1 : 2)
                                 .allowsTightening(true)
-                                .font(.system(size: 22, weight: .bold))
+                                .font(.title2.weight(.bold))
+                                // .font(.system(size: 22, weight: .bold))
                                 .padding(.horizontal, info.name == "Appearance" ? 14 : nil)
                                 .padding(.top, info.name == "Appearance" ? 15 : 12)
                             
@@ -138,7 +139,8 @@ struct SettingsCard: View {
                                 .minimumScaleFactor(0.75)
                                 .lineLimit(info.name == "Appearance" ? 1 : 2)
                                 .allowsTightening(true)
-                                .font(.system(size: 22, weight: .bold))
+                                .font(.title2.weight(.bold))
+                                // .font(.system(size: 22, weight: .bold))
                                 .padding(.horizontal, info.name == "Appearance" ? 14 : nil)
                                 .padding(.top, info.name == "Appearance" ? 15 : 12)
                             
@@ -212,7 +214,7 @@ struct SettingsDetail: View {
 //                                    .lineLimit(1)
                                     .lineLimit(currentCard!.name == "Appearance" ? 1 : 2)
                                     .allowsTightening(true)
-                                    .font(.system(size: 22, weight: .bold))
+                                    .font(.title2.weight(.bold))
                                 
 
                                 Spacer()
