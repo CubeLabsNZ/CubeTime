@@ -53,59 +53,12 @@ struct StatsDetail: View {
                                     
                                     Spacer()
                                 }
+                                .padding([.horizontal, .top])
+                            }
+                            
+                            SessionBar(name: session.name ?? "Unknown Session Name", session: session)
                                 .padding(.horizontal)
-                                .padding(.top)
-                            }
-                            
-                            HStack (alignment: .center) {
-                                HStack (alignment: .center) {
-                                    Text(session.name ?? "Unknown session name")
-                                        .font(.system(size: 20, weight: .semibold, design: .default))
-                                        .foregroundColor(Color(uiColor: .systemGray))
-                                    Spacer()
-                                    
-                                    switch SessionTypes(rawValue: session.session_type)! {
-                                    case .standard:
-                                        Text(puzzle_types[Int(session.scramble_type)].name)
-                                            .font(.system(size: 16, weight: .semibold, design: .default))
-                                            .foregroundColor(Color(uiColor: .systemGray))
-                                    case .multiphase:
-                                        HStack(spacing: 2) {
-                                            Image(systemName: "square.stack")
-                                                .font(.system(size: 14, weight: .semibold, design: .default))
-                                                .foregroundColor(Color(uiColor: .systemGray))
-                                            
-                                            Text(puzzle_types[Int(session.scramble_type)].name)
-                                                .font(.system(size: 16, weight: .semibold, design: .default))
-                                                .foregroundColor(Color(uiColor: .systemGray))
-                                        }
-                                        
-                                    case .compsim:
-                                        HStack(spacing: 2) {
-                                            Image(systemName: "globe.asia.australia")
-                                                .font(.system(size: 16, weight: .bold, design: .default))
-                                                .foregroundColor(Color(uiColor: .systemGray))
-                                            
-                                            Text(puzzle_types[Int(session.scramble_type)].name)
-                                                .font(.system(size: 16, weight: .semibold, design: .default))
-                                                .foregroundColor(Color(uiColor: .systemGray))
-                                        }
-                                    
-                                    case .playground:
-                                        Text("Playground")
-                                            .font(.system(size: 16, weight: .semibold, design: .default))
-                                            .foregroundColor(Color(uiColor: .systemGray))
-                                    
-                                    default:
-                                        Text(puzzle_types[Int(session.scramble_type)].name)
-                                            .font(.system(size: 16, weight: .semibold, design: .default))
-                                            .foregroundColor(Color(uiColor: .systemGray))
-                                    }
-                                }
-                            }
-                            .padding(.horizontal)
-                            .padding(.top, isCurrentCompSimAverage ? 10 : -10)
-                            
+                                .padding(.top, isCurrentCompSimAverage ? 10 : -10)
                             
                             VStack {
                                 HStack {
@@ -136,19 +89,15 @@ struct StatsDetail: View {
                                         .offset(y: 2)
                                                                         
                                 }
-                                .padding(.leading, 12)
+                                .padding([.leading, .top], 12)
                                 .padding(.trailing)
-                                .padding(.top, 12)
                                 
                                 VStack(spacing: 0) {
-                                    
-                                    
                                     ForEach(Array(zip(solves.accountedSolves!.indices, solves.accountedSolves!.sorted(by: { $0.date! > $1.date! }))), id: \.0) {index, solve in
                                         VStack(spacing: 0) {
                                             Divider()
                                                 .padding(.leading)
                                                 
-                                            
                                             HStack(alignment: .bottom) {
                                                 Text("\(index+1).")
                                                     .font(.system(size: 15, weight: .bold, design: .rounded))

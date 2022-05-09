@@ -327,55 +327,10 @@ struct StatsView: View {
                         #endif
                         
                         
-                        VStack(spacing: 0) {
-                            HStack (alignment: .center) {
-                                Text(currentSession.name!)
-                                    .font(.system(size: 20, weight: .semibold, design: .default))
-                                    .foregroundColor(Color(uiColor: .systemGray))
-                                Spacer()
-                                
-                                switch SessionTypes(rawValue: currentSession.session_type)! {
-                                case .standard:
-                                    Text(puzzle_types[Int(currentSession.scramble_type)].name)
-                                        .font(.system(size: 16, weight: .semibold, design: .default))
-                                        .foregroundColor(Color(uiColor: .systemGray))
-                                case .multiphase:
-                                    HStack(spacing: 2) {
-                                        Image(systemName: "square.stack")
-                                            .font(.system(size: 14, weight: .semibold, design: .default))
-                                            .foregroundColor(Color(uiColor: .systemGray))
-                                        
-                                        Text(puzzle_types[Int(currentSession.scramble_type)].name)
-                                            .font(.system(size: 16, weight: .semibold, design: .default))
-                                            .foregroundColor(Color(uiColor: .systemGray))
-                                    }
-                                    
-                                case .compsim:
-                                    HStack(spacing: 2) {
-                                        Image(systemName: "globe.asia.australia")
-                                            .font(.system(size: 16, weight: .bold, design: .default))
-                                            .foregroundColor(Color(uiColor: .systemGray))
-                                        
-                                        Text(puzzle_types[Int(currentSession.scramble_type)].name)
-                                            .font(.system(size: 16, weight: .semibold, design: .default))
-                                            .foregroundColor(Color(uiColor: .systemGray))
-                                    }
-                                
-                                case .playground:
-                                    Text("Playground")
-                                        .font(.system(size: 16, weight: .semibold, design: .default))
-                                        .foregroundColor(Color(uiColor: .systemGray))
-                                
-                                default:
-                                    Text(puzzle_types[Int(currentSession.scramble_type)].name)
-                                        .font(.system(size: 16, weight: .semibold, design: .default))
-                                        .foregroundColor(Color(uiColor: .systemGray))
-                                }
-                            }
-                        }
-                        .padding(.top, -6)
-                        .padding(.horizontal)
-                        .padding(.bottom, 8)
+                        SessionBar(name: currentSession.name!, session: currentSession)
+                            .padding(.top, -6)
+                            .padding(.horizontal)
+                            .padding(.bottom, 8)
 
                         let compsim: Bool = SessionTypes(rawValue: currentSession.session_type)! == .compsim
                         
