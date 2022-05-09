@@ -56,7 +56,7 @@ struct StatsDetail: View {
                                 .padding([.horizontal, .top])
                             }
                             
-                            SessionBar(name: session.name ?? "Unknown Session Name", session: session)
+                            SessionBar(name: session.name ?? "Unknown session name", session: session)
                                 .padding(.horizontal)
                                 .padding(.top, isCurrentCompSimAverage ? 10 : -10)
                             

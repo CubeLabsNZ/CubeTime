@@ -16,7 +16,6 @@ struct SessionBar: View {
         HStack (alignment: .center) {
             Text(name)
                 .font(.title3).fontWeight(.semibold)
-//                .font(.system(size: 20, weight: .semibold, design: .default))
                 .foregroundColor(Color(uiColor: .systemGray))
             Spacer()
             
@@ -24,7 +23,6 @@ struct SessionBar: View {
             case .standard:
                 Text(puzzle_types[Int(session.scramble_type)].name)
                     .font(.callout).fontWeight(.semibold)
-//                    .font(.system(size: 16, weight: .semibold, design: .default))
                     .foregroundColor(Color(uiColor: .systemGray))
             case .multiphase:
                 HStack(spacing: 2) {

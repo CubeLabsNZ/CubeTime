@@ -152,8 +152,6 @@ struct PageOne: View {
             VStack(spacing: 0) {
                 Text("Welcome")
                     .scaledCustomFont(name: "SFPro", size: 34, sf: true, weight: Font.Weight.bold)
-//                    .font(.largeTitle).fontWeight(.bold)
-//                    .font(.system(size: 36, weight: .bold))
                     .padding(.top, smallPhone ? 50 : 75)
                     .multilineTextAlignment(.center)
                     .padding(.bottom, 0)
@@ -162,12 +160,9 @@ struct PageOne: View {
                     Text("to")
                         .scaledCustomFont(name: "SFPro", size: 34, sf: true, weight: Font.Weight.bold)
                     Text("CubeTime.")
-//                        .font(.custom("RecursiveSansLnrSt-Regular", size: 36))
                         .scaledCustomFont(name: "RecursiveSansLnrSt-Regular", size: 34, sf: false, weight: Font.Weight.regular)
-//                        .font(.custom("RecursiveSansLnrSt-Regular", size: UIFontMetrics(forTextStyle: .largeTitle).scaledValue(for: 30)))
                         .foregroundColor(Color.indigo)
                 }
-//                .font(.system(size: 36, weight: .bold))
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 0)
                 
@@ -181,7 +176,6 @@ struct PageOne: View {
                 
                 Text("This app brings your cubing\nutilities together - all in one place.")
                     .font(.title2).fontWeight(.medium)
-//                    .font(.system(size: 22, weight: .medium))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
                 
@@ -198,13 +192,11 @@ struct PageTwo: View {
             VStack(spacing: 0) {
                 Text("Timer")
                     .font(.title).fontWeight(.bold)
-//                    .font(.system(size: 32, weight: .bold))
                     .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("The timer view.")
                     .font(.title2).fontWeight(.medium)
-//                    .font(.system(size: 21, weight: .medium))
                     .if(smallPhone) { view in
                         view.padding(.bottom, 18)
                     }
@@ -232,13 +224,11 @@ struct PageThree: View {
             VStack(spacing: 0) {
                 Text("Gestures")
                     .font(.title).fontWeight(.bold)
-//                    .font(.system(size: 32, weight: .bold))
                     .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("We feature many intuitive gestures,\nlike the ones shown below:")
                     .font(.title2).fontWeight(.medium)
-//                    .font(.system(size: 21, weight: .medium))
                     .multilineTextAlignment(.center)
                     .if(smallPhone) { view in
                         view.padding(.bottom, 18)
@@ -267,13 +257,11 @@ struct PageFour: View {
             VStack(spacing: 0) {
                 Text("Session Times")
                     .font(.title).fontWeight(.bold)
-//                    .font(.system(size: 32, weight: .bold))
                     .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("All your solves will be shown\nin the solves tab for each session.")
                     .font(.title2).fontWeight(.medium)
-//                    .font(.system(size: 21, weight: .medium))
                     .multilineTextAlignment(.center)
                     .if(smallPhone) { view in
                         view.padding(.bottom, 18)
@@ -302,13 +290,11 @@ struct PageFive: View {
             VStack(spacing: 0) {
                 Text("Statistics")
                     .font(.title).fontWeight(.bold)
-//                    .font(.system(size: 32, weight: .bold))
                     .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("All your solve statistics are shown\nboth numerically and graphically.")
                     .font(.title2).fontWeight(.medium)
-//                    .font(.system(size: 21, weight: .medium))
                     .multilineTextAlignment(.center)
                     .if(smallPhone) { view in
                         view.padding(.bottom, 18)
@@ -336,13 +322,11 @@ struct PageSix: View {
             VStack(spacing: 0) {
                 Text("Sessions")
                     .font(.title).fontWeight(.bold)
-//                    .font(.system(size: 32, weight: .bold))
                     .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("We have a variety of session types.\nHere’s a brief overview:")
                     .font(.title2).fontWeight(.medium)
-//                    .font(.system(size: 21, weight: .medium))
                     .multilineTextAlignment(.center)
                     .if(!smallPhone) { view in
                         view.padding(.top, 18).padding(.bottom, 8)
@@ -358,11 +342,9 @@ struct PageSix: View {
                         VStack (alignment: .leading) {
                             Text("Standard")
                                 .font(.body).fontWeight(.medium)
-//                                .font(.system(size: 17, weight: .medium))
                             
                             Text("The default normal session. Set to a chosen puzzle type.")
                                 .font(.body)
-//                                .font(.system(size: 17, weight: .regular))
                                 .foregroundColor(Color(uiColor: .systemGray))
                         }
                     }

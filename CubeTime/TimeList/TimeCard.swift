@@ -87,7 +87,6 @@ struct TimeCard: View {
             VStack {
                 Text(formattedTime)
                     .font(.body.weight(.bold))
-//                    .font(.system(size: 17, weight: .bold, design: .default))
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(accentColour)
