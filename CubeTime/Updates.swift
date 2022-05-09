@@ -21,17 +21,17 @@ struct Updates: View {
                     Group {
                         Text("VERSION: \((Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String))")
                             .foregroundColor(Color(uiColor: .systemGray))
-                            .font(.system(size: 15, weight: .medium))
+                            .font(.subheadline).fontWeight(.medium)
                             .padding(.bottom)
                             .offset(y: -4)
                         
                         
                         Text("A quick apology: sorry for the lack of updates - we're just two high school students and we've had a very busy school term! \n")
-                            .font(.system(size: 21, weight: .medium))
+                            .font(.title3).fontWeight(.medium)
                         
                         
                         Text("Major Bug fixes: ")
-                            .font(.system(size: 17, weight: .medium))
+                            .font(.body).fontWeight(.medium)
                         
                         Text("""
                                                 -   fixed multiphase solve deletion crash
@@ -52,33 +52,33 @@ struct Updates: View {
 
 
                                             """)
-                            .font(.system(size: 15, weight: .regular))
+                            .font(.subheadline)
                             .padding(.bottom)
                         
                         
                         
                         Text("New features: ")
-                            .font(.system(size: 17, weight: .medium))
+                            .font(.body).fontWeight(.medium)
                         
                         Text("""
                                                 -   added changable font size in scramble/image popup
                                             """)
-                            .font(.system(size: 15, weight: .regular))
+                            .font(.subheadline)
                             .padding(.bottom)
                         
                         Text("Again - thanks for using this app! As this app is still in it's beta stage, you may experience some slight bugs and crashes. In the event that the app does crash - please please please message me on discord (teeem#7263) or open an issue on our github page (https://github.com/CubeStuffs/CubeTime/issues).")
-                            .font(.system(size: 17, weight: .medium))
+                            .font(.body).fontWeight(.medium)
                     }
                     
                     Group {
                         Text("Past Updates:")
-                            .font(.system(size: 24, weight: .bold))
+                            .font(.title).fontWeight(.bold)
                             .padding(.top)
                             .padding(.bottom, 6)
                         
                         Text("VERSION: 1.2")
                             .foregroundColor(Color(uiColor: .systemGray))
-                            .font(.system(size: 15, weight: .medium))
+                            .font(.subheadline).fontWeight(.medium)
                             .offset(y: -4)
                         
                         Text("""
@@ -99,7 +99,7 @@ struct Updates: View {
                                                 -   lowered minimum hold down time to 0.05s
                                                 -   added a launch screen!
                                             """)
-                            .font(.system(size: 15, weight: .regular))
+                            .font(.subheadline)
                             .padding(.bottom)
                     }
                     

@@ -68,7 +68,8 @@ struct OnboardingView: View {
                             .padding()
                         
                         Text("Take me on a short tour!")
-                            .font(.system(size: 18, weight: .medium))
+                            .font(.body)
+                            .fontWeight(.medium)
                             .foregroundColor(.white)
                     }
                     .onTapGesture(perform: {
@@ -90,7 +91,8 @@ struct OnboardingView: View {
                             .padding()
                         
                         Text("Get started")
-                            .font(.system(size: 18, weight: .medium))
+                            .font(.body)
+                            .fontWeight(.medium)
                             .foregroundColor(.white)
                     }
                     .onTapGesture {
@@ -143,22 +145,29 @@ struct OnboardingView: View {
 
 struct PageOne: View {
     @Binding var pageIndex: Int
+    @Environment(\.sizeCategory) var sizeCategory
+    
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 Text("Welcome")
-                    .font(.system(size: 36, weight: .bold))
+                    .scaledCustomFont(name: "SFPro", size: 34, sf: true, weight: Font.Weight.bold)
+//                    .font(.largeTitle).fontWeight(.bold)
+//                    .font(.system(size: 36, weight: .bold))
                     .padding(.top, smallPhone ? 50 : 75)
                     .multilineTextAlignment(.center)
                     .padding(.bottom, 0)
                 
                 HStack {
                     Text("to")
+                        .scaledCustomFont(name: "SFPro", size: 34, sf: true, weight: Font.Weight.bold)
                     Text("CubeTime.")
-                        .font(.custom("RecursiveSansLnrSt-Regular", size: 36))
+//                        .font(.custom("RecursiveSansLnrSt-Regular", size: 36))
+                        .scaledCustomFont(name: "RecursiveSansLnrSt-Regular", size: 34, sf: false, weight: Font.Weight.regular)
+//                        .font(.custom("RecursiveSansLnrSt-Regular", size: UIFontMetrics(forTextStyle: .largeTitle).scaledValue(for: 30)))
                         .foregroundColor(Color.indigo)
                 }
-                .font(.system(size: 36, weight: .bold))
+//                .font(.system(size: 36, weight: .bold))
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 0)
                 
@@ -171,7 +180,8 @@ struct PageOne: View {
                 
                 
                 Text("This app brings your cubing\nutilities together - all in one place.")
-                    .font(.system(size: 22, weight: .medium))
+                    .font(.title2).fontWeight(.medium)
+//                    .font(.system(size: 22, weight: .medium))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
                 
@@ -187,12 +197,14 @@ struct PageTwo: View {
         ZStack {
             VStack(spacing: 0) {
                 Text("Timer")
-                    .font(.system(size: 32, weight: .bold))
+                    .font(.title).fontWeight(.bold)
+//                    .font(.system(size: 32, weight: .bold))
                     .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("The timer view.")
-                    .font(.system(size: 21, weight: .medium))
+                    .font(.title2).fontWeight(.medium)
+//                    .font(.system(size: 21, weight: .medium))
                     .if(smallPhone) { view in
                         view.padding(.bottom, 18)
                     }
@@ -219,12 +231,14 @@ struct PageThree: View {
         ZStack {
             VStack(spacing: 0) {
                 Text("Gestures")
-                    .font(.system(size: 32, weight: .bold))
+                    .font(.title).fontWeight(.bold)
+//                    .font(.system(size: 32, weight: .bold))
                     .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("We feature many intuitive gestures,\nlike the ones shown below:")
-                    .font(.system(size: 21, weight: .medium))
+                    .font(.title2).fontWeight(.medium)
+//                    .font(.system(size: 21, weight: .medium))
                     .multilineTextAlignment(.center)
                     .if(smallPhone) { view in
                         view.padding(.bottom, 18)
@@ -252,12 +266,14 @@ struct PageFour: View {
         ZStack {
             VStack(spacing: 0) {
                 Text("Session Times")
-                    .font(.system(size: 32, weight: .bold))
+                    .font(.title).fontWeight(.bold)
+//                    .font(.system(size: 32, weight: .bold))
                     .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("All your solves will be shown\nin the solves tab for each session.")
-                    .font(.system(size: 21, weight: .medium))
+                    .font(.title2).fontWeight(.medium)
+//                    .font(.system(size: 21, weight: .medium))
                     .multilineTextAlignment(.center)
                     .if(smallPhone) { view in
                         view.padding(.bottom, 18)
@@ -285,12 +301,14 @@ struct PageFive: View {
         ZStack {
             VStack(spacing: 0) {
                 Text("Statistics")
-                    .font(.system(size: 32, weight: .bold))
+                    .font(.title).fontWeight(.bold)
+//                    .font(.system(size: 32, weight: .bold))
                     .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("All your solve statistics are shown\nboth numerically and graphically.")
-                    .font(.system(size: 21, weight: .medium))
+                    .font(.title2).fontWeight(.medium)
+//                    .font(.system(size: 21, weight: .medium))
                     .multilineTextAlignment(.center)
                     .if(smallPhone) { view in
                         view.padding(.bottom, 18)
@@ -317,12 +335,14 @@ struct PageSix: View {
         ScrollView {
             VStack(spacing: 0) {
                 Text("Sessions")
-                    .font(.system(size: 32, weight: .bold))
+                    .font(.title).fontWeight(.bold)
+//                    .font(.system(size: 32, weight: .bold))
                     .padding(.top, smallPhone ? 48 : 60)
                     .multilineTextAlignment(.center)
                 
                 Text("We have a variety of session types.\nHere’s a brief overview:")
-                    .font(.system(size: 21, weight: .medium))
+                    .font(.title2).fontWeight(.medium)
+//                    .font(.system(size: 21, weight: .medium))
                     .multilineTextAlignment(.center)
                     .if(!smallPhone) { view in
                         view.padding(.top, 18).padding(.bottom, 8)
@@ -337,10 +357,12 @@ struct PageSix: View {
                         
                         VStack (alignment: .leading) {
                             Text("Standard")
-                                .font(.system(size: 17, weight: .medium))
+                                .font(.body).fontWeight(.medium)
+//                                .font(.system(size: 17, weight: .medium))
                             
                             Text("The default normal session. Set to a chosen puzzle type.")
-                                .font(.system(size: 17, weight: .regular))
+                                .font(.body)
+//                                .font(.system(size: 17, weight: .regular))
                                 .foregroundColor(Color(uiColor: .systemGray))
                         }
                     }
@@ -371,10 +393,10 @@ struct PageSix: View {
                         
                         VStack (alignment: .leading) {
                             Text("Multiphase")
-                                .font(.system(size: 17, weight: .medium))
+                                .font(.body).fontWeight(.medium)
                             
                             Text("Be able to time phases during a solve. Tap during a solve to record phases.")
-                                .font(.system(size: 17, weight: .regular))
+                                .font(.body)
                                 .foregroundColor(Color(uiColor: .systemGray))
                         }
                     }
@@ -387,10 +409,10 @@ struct PageSix: View {
                         
                         VStack (alignment: .leading) {
                             Text("Playground")
-                                .font(.system(size: 17, weight: .medium))
+                                .font(.body).fontWeight(.medium)
                             
                             Text("A versatile session. You can change the scramble type within the session.")
-                                .font(.system(size: 17, weight: .regular))
+                                .font(.body)
                                 .foregroundColor(Color(uiColor: .systemGray))
                         }
                     }
@@ -403,10 +425,10 @@ struct PageSix: View {
                         
                         VStack (alignment: .leading) {
                             Text("Comp Sim")
-                                .font(.system(size: 17, weight: .medium))
+                                .font(.body).fontWeight(.medium)
                             
                             Text("Record non-rolling averages of 5. Simulates a competition.")
-                                .font(.system(size: 17, weight: .regular))
+                                .font(.body)
                                 .foregroundColor(Color(uiColor: .systemGray))
                         }
                     }
@@ -435,6 +457,7 @@ struct PageSeven: View {
     var body: some View {
         VStack(spacing: 0) {
             Text("Thanks!")
+                .font(.largeTitle).fontWeight(.bold)
                 .font(.system(size: 36, weight: .bold))
                 .padding(.top, smallPhone ? 50 : 72)
                 .multilineTextAlignment(.center)
@@ -442,18 +465,18 @@ struct PageSeven: View {
             
 
             Text("We hope you enjoy using this app.")
-                .font(.system(size: 17, weight: .medium))
+                .font(.body).fontWeight(.medium)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
                 .padding(.bottom, 36)
             
             Text("This app is brought to you by")
-                .font(.system(size: 21, weight: .medium))
+                .font(.title3).fontWeight(.medium)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
             
             Text("[speedcube.co.nz](https://www.speedcube.co.nz/)")
-                .font(.system(size: 21, weight: .medium))
+                .font(.title3).fontWeight(.medium)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
                 .padding(.bottom, 48)
@@ -467,13 +490,13 @@ struct PageSeven: View {
             
             
             Text("CubeTime is open-source and GPLv3 licensed.\n")
-                .font(.system(size: 15, weight: .regular))
+                .font(.subheadline).fontWeight(.medium)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color(uiColor: .systemGray))
                 .padding(.horizontal)
         
             Text("You can view our source code at\nhttps://github.com/CubeStuffs/CubeTime")
-                .font(.system(size: 15, weight: .light))
+                .font(.subheadline).fontWeight(.light)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color(uiColor: .systemGray))
                 .padding(.horizontal)

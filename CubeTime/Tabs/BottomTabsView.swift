@@ -18,8 +18,8 @@ struct BottomTabsView: View {
                                 .fill(Color(uiColor: .systemGray5))
                             
                                 .frame(
-                                    width: geometry.size.width - CGFloat(SetValues.marginLeftRight * 2),
-                                    height: CGFloat(SetValues.tabBarHeight),
+                                    width: geometry.size.width - 32,
+                                    height: 50,
                                     alignment: .center
                                 )
                                 .shadow(color: .black.opacity(0.16), radius: 10, x: 0, y: 3)
@@ -42,7 +42,6 @@ struct BottomTabsView: View {
                                         namespace: namespace
                                     )
                                     
-    //                                Spacer()
                                     
                                     TabIconWithBar(
                                         currentTab: $currentTab,
@@ -52,7 +51,6 @@ struct BottomTabsView: View {
                                         namespace: namespace
                                     )
                                     
-    //                                Spacer()
                                     
                                     TabIconWithBar(
                                         currentTab: $currentTab,
@@ -63,7 +61,6 @@ struct BottomTabsView: View {
                                     )
                                     
                                     
-    //                                Spacer()
                                     
                                     TabIconWithBar(
                                         currentTab: $currentTab,
@@ -72,16 +69,14 @@ struct BottomTabsView: View {
                                         systemIconNameSelected: "line.3.horizontal.circle.fill",
                                         namespace: namespace
                                     )
-    //                                    .padding(.trailing, 14)
                                 }
                                 .frame(
-                                    width: CGFloat(SetValues.tabBarHeight),
+                                    width: 50,
                                     height: nil,
                                     alignment: .leading
                                 )
                                 .background(Color(uiColor: .systemGray4).clipShape(RoundedRectangle(cornerRadius:12)))
                                 .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 3.5)
-    //                            .padding(.leading, CGFloat(SetValues.marginLeftRight))
                                 .animation(.spring(), value: self.currentTab)
                                 
                                 Spacer()
@@ -94,7 +89,6 @@ struct BottomTabsView: View {
                                     systemIconName: "gearshape",
                                     systemIconNameSelected: "gearshape.fill"
                                 )
-    //                                .padding(.trailing, CGFloat(SetValues.marginLeftRight + 12))
                             }
                             .padding(.horizontal)
                             
@@ -121,8 +115,8 @@ struct BottomTabsView: View {
                                 .fill(Color(uiColor: .systemGray5))
                             
                                 .frame(
-                                    width: geometry.size.width - CGFloat(SetValues.marginLeftRight * 2),
-                                    height: CGFloat(SetValues.tabBarHeight),
+                                    width: geometry.size.width - 32,
+                                    height: 50,
                                     alignment: .center
                                 )
                                 .shadow(color: .black.opacity(0.16), radius: 10, x: 0, y: 3)
@@ -178,12 +172,11 @@ struct BottomTabsView: View {
                                 }
                                 .frame(
                                     width: nil,
-                                    height: CGFloat(SetValues.tabBarHeight),
+                                    height: 50,
                                     alignment: .leading
                                 )
                                 .background(Color(uiColor: .systemGray4).clipShape(RoundedRectangle(cornerRadius:12)))
                                 .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 3.5)
-    //                            .padding(.leading, CGFloat(SetValues.marginLeftRight))
                                 .animation(.spring(), value: self.currentTab)
                                 
                                 Spacer()
@@ -196,7 +189,6 @@ struct BottomTabsView: View {
                                     systemIconName: "gearshape",
                                     systemIconNameSelected: "gearshape.fill"
                                 )
-    //                                .padding(.trailing, CGFloat(SetValues.marginLeftRight + 12))
                             }
                             .padding(.horizontal)
                             

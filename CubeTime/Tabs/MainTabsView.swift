@@ -55,7 +55,7 @@ struct TabIcon: View {
             systemName:
                 currentTab == assignedTab ? systemIconNameSelected : systemIconName
         )
-            .font(.system(size: SetValues.iconFontSize))
+            .font(.system(size: 22))
             .padding(.horizontal, 14)
             .padding(.vertical, 12)
             .contentShape(Rectangle())

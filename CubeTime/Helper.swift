@@ -116,6 +116,33 @@ struct AnimatingFontSize: AnimatableModifier {
 }
 
 
+@available(iOS 15, *)
+struct ScaledCustomFont: ViewModifier {
+    @Environment(\.sizeCategory) var sizeCategory
+    
+    var name: String
+    var size: CGFloat
+    var sf: Bool
+    var weight: Font.Weight?
+    
+    func body(content: Content) -> some View {
+        let scaledSize = UIFontMetrics.default.scaledValue(for: size)
+        if sf {
+            return content.font(.system(size: scaledSize, weight: weight ?? .regular, design: .default))
+        } else {
+            return content.font(.custom(name, size: scaledSize))
+        }
+    }
+}
+
+@available(iOS 15, *)
+extension View {
+    func scaledCustomFont(name: String, size: CGFloat, sf: Bool, weight: Font.Weight?) -> some View {
+        return self.modifier(ScaledCustomFont(name: name, size: size, sf: sf, weight: weight))
+    }
+}
+
+
 
 func formatSolveTime(secs: Double, dp: Int) -> String {
     if secs < 60 {
@@ -383,18 +410,7 @@ func timeFromStr(_ formattedTime: String) -> Double? {
 }
 
 class SetValues {
-    
-    
-    static let tabBarHeight = 50
-    static let marginLeftRight = 16
-    static let paddingIcons = 14
-    static let spacingIcons = 20
-    static let marginBottom = 16
-    static let iconFontSize = CGFloat(22)
-    
     static let hasBottomBar = ((UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.bottom)! > 0
-    
-//    static let hasBottomBar = UIApplication.shared.windows[0].safeAreaInsets.bottom > 0 /// deprecated
 }
 
 class TimerTextColours {
