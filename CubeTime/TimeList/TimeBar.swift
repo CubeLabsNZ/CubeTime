@@ -63,7 +63,6 @@ struct TimeBar: View {
                         HStack {
                             Text(formatSolveTime(secs: calculatedAverage.average!, penType: calculatedAverage.totalPen))
                                 .font(.title2.weight(.bold))
-//                                .font(.system(size: 26, weight: .bold, design: .default))
 
                             Spacer()
                         }
@@ -99,7 +98,7 @@ struct TimeBar: View {
                         if solvegroup.solves!.count < 5 {
                             HStack {
                                 Text("Current Average")
-                                    .font(.system(size: 26, weight: .bold, design: .default))
+                                    .font(.title2.weight(.bold))
 
                                 Spacer()
                             }
@@ -140,7 +139,7 @@ struct TimeBar: View {
                         } else {
                             HStack {
                                 Text("Loading...")
-                                    .font(.system(size: 26, weight: .bold, design: .default))
+                                    .font(.title2.weight(.bold))
 
                                 Spacer()
                             }

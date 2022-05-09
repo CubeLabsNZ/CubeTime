@@ -40,7 +40,7 @@ struct TimeDetail: View {
                             }
                         } label: {
                             Text("Delete Solve")
-                                .font(.system(size: 17, weight: .medium))
+                                .font(.body.weight(.medium))
                                 .foregroundColor(Color.red)
                         }
                     }
@@ -129,7 +129,7 @@ struct TimeDetailViewOnly: View {
                 VStack (spacing: 12) {
                     HStack {
                         Text(time)
-                            .font(.system(size: 34, weight: .bold))
+                            .font(.largeTitle.weight(.bold))
                         
                         Spacer()
                     }
@@ -138,7 +138,7 @@ struct TimeDetailViewOnly: View {
                     
                     HStack {
                         Text(date, formatter: titleDateFormat)
-                            .font(.system(size: 22, weight: .semibold, design: .default))
+                            .font(.title2.weight(.semibold))
                             .foregroundColor(Color(uiColor: .systemGray))
                         
                         Spacer()
@@ -157,12 +157,12 @@ struct TimeDetailViewOnly: View {
                                 .padding(.trailing, 4)
                             
                             Text(puzzle_type.name)
-                                .font(.system(size: 17, weight: .semibold, design: .default))
+                                .font(.body.weight(.semibold))
                             
                             Spacer()
                             
                             Text((["2x2", "3x3", "Square-1", "Pyraminx", "Skewb", "3x3 OH", "3x3 BLD"].contains(puzzle_type.name)) ? "RANDOM STATE" : "RANDOM MOVES")
-                                .font(.system(size: 13, weight: .semibold, design: .default))
+                                .font(.footnote.weight(.semibold))
                                 .offset(y: 2)
                         }
                         .padding(.leading, 12)
@@ -180,7 +180,7 @@ struct TimeDetailViewOnly: View {
                                     .font(.system(size: (UIScreen.screenWidth-32) / (42.00) * 1.44, weight: .regular, design: .monospaced))
                             } else {
                                 Text(scramble)
-                                    .font(.system(size: 16, weight: .regular, design: .monospaced))
+                                    .font(.callout.monospaced())
                             }
                         }
                         .foregroundColor(colourScheme == .light ? .black : .white)
@@ -214,7 +214,7 @@ struct TimeDetailViewOnly: View {
                                 .foregroundColor(colourScheme == .light ? .black : .white)
                             
                             Text("Comment")
-                                .font(.system(size: 17, weight: .semibold, design: .default))
+                                .font(.body.weight(.semibold))
                                 .foregroundColor(colourScheme == .light ? .black : .white)
                             
                             Spacer()
@@ -251,6 +251,7 @@ struct TimeDetailViewOnly: View {
                             if userComment == "" {
                                 Text("Comment something...")
                                     .foregroundColor(Color(uiColor: .systemGray2))
+                                    .padding(.vertical, 10)
                                     .offset(y: -4)
                                     .onTapGesture {
                                         commentFocus = true
@@ -259,14 +260,11 @@ struct TimeDetailViewOnly: View {
                             
                             Text(userComment)
                                 .opacity(0)
-//                                .foregroundColor(.green)
-                                .padding(.horizontal)
-                                .padding(.bottom)
+                                .padding([.horizontal, .bottom])
                         }
                     }
                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
-                    .padding(.trailing)
-                    .padding(.leading)
+                    .padding(.horizontal)
                     
                     if let phases = self.phases {
                         VStack {
@@ -277,7 +275,7 @@ struct TimeDetailViewOnly: View {
                                     .foregroundColor(colourScheme == .light ? .black : .white)
                                 
                                 Text("Multiphase Breakdown")
-                                    .font(.system(size: 17, weight: .semibold, design: .default))
+                                    .font(.body.weight(.semibold))
                                     .foregroundColor(colourScheme == .light ? .black : .white)
                                 
                                 Spacer()
@@ -297,7 +295,7 @@ struct TimeDetailViewOnly: View {
                                     HStack {
                                         if index == 0 {
                                             Image(systemName: "\(index+1).circle")
-                                                .font(.system(size: 17, weight: .medium))
+                                                .font(.body.weight(.medium))
                                             
                                             Text("+"+formatSolveTime(secs: phase))
                                         } else {
@@ -305,7 +303,7 @@ struct TimeDetailViewOnly: View {
                                                 let phaseDifference = phases[index] - phases[index-1]
                                                 
                                                 Image(systemName: "\(index+1).circle")
-                                                    .font(.system(size: 17, weight: .medium))
+                                                    .font(.body.weight(.medium))
                                                 
                                                 Text("+"+formatSolveTime(secs: phaseDifference))
                                             }
@@ -315,9 +313,8 @@ struct TimeDetailViewOnly: View {
                                         
                                         Text("("+formatSolveTime(secs: phase)+")")
                                             .foregroundColor(Color(uiColor: .systemGray))
-                                            .font(.system(size: 17, weight: .regular))
+                                            .font(.body)
                                     }
-                                    
                                 }
                             }
                             .padding([.bottom, .horizontal], 12)
@@ -355,7 +352,8 @@ struct TimeDetailViewOnly: View {
                             
                             
                             Image(systemName: "checkmark")
-                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .font(Font.system(.subheadline, design: .rounded).weight(.bold))
+//                                .font(.system(size: 15, weight: .bold, design: .rounded))
                                 .clipShape(Rectangle().offset(x: self.offsetValue))
                             
                             Spacer()

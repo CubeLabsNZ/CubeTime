@@ -49,7 +49,7 @@ struct StatsDetail: View {
                             if !isCurrentCompSimAverage {
                                 HStack {
                                     Text(formatSolveTime(secs: solves.average!, penType: solves.totalPen))
-                                        .font(.system(size: 34, weight: .bold))
+                                        .font(.largeTitle.weight(.bold))
                                     
                                     Spacer()
                                 }
@@ -69,7 +69,7 @@ struct StatsDetail: View {
                                             .foregroundColor(colourScheme == .light ? .black : .white)
                                         
                                         Text("Playground")
-                                            .font(.system(size: 17, weight: .semibold, design: .default))
+                                            .font(.body.weight(.semibold))
                                     } else {
                                         Image(puzzle_types[Int(session.scramble_type)].name)
                                             .resizable()
@@ -79,13 +79,13 @@ struct StatsDetail: View {
                                             .padding(.trailing, 4)
                                         
                                         Text(puzzle_types[Int(session.scramble_type)].name)
-                                            .font(.system(size: 17, weight: .semibold, design: .default))
+                                            .font(.body.weight(.semibold))
                                     }
                                     
                                     Spacer()
                                     
                                     Text((["2x2", "3x3", "Square-1", "Pyraminx", "Skewb", "3x3 OH", "3x3 BLD"].contains(puzzle_types[Int(session.scramble_type)].name)) ? "RANDOM STATE" : "RANDOM MOVES")
-                                        .font(.system(size: 13, weight: .semibold, design: .default))
+                                        .font(.footnote.weight(.semibold))
                                         .offset(y: 2)
                                                                         
                                 }
@@ -100,15 +100,15 @@ struct StatsDetail: View {
                                                 
                                             HStack(alignment: .bottom) {
                                                 Text("\(index+1).")
-                                                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                                                    .font(Font.system(.subheadline, design: .rounded).weight(.bold))
                                                     .foregroundColor(accentColour)
                                                 if solves.trimmedSolves!.contains(solve) {
                                                     Text("(" + formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!) + ")")
-                                                        .font(.system(size: 17, weight: .bold))
+                                                        .font(.body.weight(.bold))
                                                         .foregroundColor(Color(uiColor: .systemGray))
                                                 } else {
                                                     Text(formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!))
-                                                        .font(.system(size: 17, weight: .bold))
+                                                        .font(.body.weight(.bold))
                                                 }
                                                 
                                                 Spacer()
@@ -116,7 +116,7 @@ struct StatsDetail: View {
                                                 
                                                 
                                                 Text(solve.date ?? Date(timeIntervalSince1970: 0), formatter: detailDateFormat)
-                                                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                                                    .font(Font.system(.footnote, design: .rounded).weight(.bold))
                                                     .foregroundColor(Color(uiColor: .systemGray))
                                             }
                                             .padding(.top, 8)
@@ -124,9 +124,14 @@ struct StatsDetail: View {
                                             
                                             HStack {
                                                 
+                                                if solve.scramble_type == 7 {
+                                                    Text(solve.scramble ?? "Failed to load scramble")
+                                                        .font(.system(size: ((UIScreen.screenWidth-32) / (42.00) * 1.42), weight: .regular, design: .monospaced))
+                                                } else {
+                                                    Text(solve.scramble ?? "Failed to load scramble")
+                                                        .font(.callout.monospaced())
+                                                }
                                                 
-                                                Text(solve.scramble ?? "Failed to load scramble")
-                                                    .font(.system(size: solve.scramble_type == 7 ? ((UIScreen.screenWidth-32) / (42.00) * 1.42) : 16, weight: .regular, design: .monospaced))
                                                 
                                                 Spacer()
                                             }
@@ -153,12 +158,7 @@ struct StatsDetail: View {
                                 Button {
                                     dismiss()
                                 } label: {
-//                                    Image(systemName: "chevron.left")
-//                                        .font(.system(size: 17, weight: .medium))
-//                                        .padding(.leading, -4)
-//                                    Text(solves.id == "Comp sim solve" ? "Time list" : "Stats")
                                     Text("Done")
-//                                        .padding(.leading, -4)
                                 }
                             }
                             ToolbarItem(placement: .navigationBarTrailing) {
@@ -201,15 +201,14 @@ struct StatsDetail: View {
                                     ZStack {
                                         if self.offsetValue != 0 {
                                             Image(systemName: "doc.on.doc")
-    //                                        Text("Copy Average")
-                                                .font(.system(size: 15, weight: .medium))
+                                                .font(.subheadline.weight(.medium))
                                                 .foregroundColor(accentColour)
                                                
                                         }
                                         
                                         
                                         Image(systemName: "checkmark")
-                                            .font(.system(size: 13, weight: .bold, design: .rounded))
+                                            .font(Font.system(.footnote, design: .rounded).weight(.bold))
                                             .clipShape(Rectangle().offset(x: self.offsetValue))
                                     }
                                     .frame(width: 20)
