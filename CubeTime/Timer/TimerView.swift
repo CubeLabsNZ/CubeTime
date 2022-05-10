@@ -305,8 +305,8 @@ struct TimerView: View {
                                         
                                         
                                         TextField("0.00", text: $targetStr)
+                                            .font(.system(size: 17, weight: .regular))
                                             .frame(width: textRect.width + CGFloat(targetStr.count > 6 ? 12 : 6))
-    //                                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                             .submitLabel(.done)
                                             .focused($targetFocused)
                                             .multilineTextAlignment(.leading)
@@ -317,11 +317,9 @@ struct TimerView: View {
                                                     
                                                     try! managedObjectContext.save()
                                                 }
-//                                                timeNeededForTarget = stats.getTimeNeededForTarget()
                                             }))
                                             .padding(.trailing, 4)
                                     }
-                                        
                                 }
                                 .padding(.leading, 6)
                                 .padding(.trailing, 12)
