@@ -103,13 +103,14 @@ struct LicensesPopUpView: View {
 struct AboutSettingsView: View {
     @AppStorage("onboarding") var showOnboarding = false
     @State var showLicenses = false
+    @ScaledMetric(relativeTo: .largeTitle) var iconSize: CGFloat = 60
     
     var body: some View {
         VStack (alignment: .leading, spacing: 0) {
             HStack(alignment: .center) {
                 Image("about-icon")
                     .resizable()
-                    .frame(width: 60, height: 60)
+                    .frame(width: iconSize, height: iconSize)
                     .aspectRatio(contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     .padding(.trailing, 6)
@@ -119,7 +120,7 @@ struct AboutSettingsView: View {
                         .font(.custom("RecursiveSansLnrSt-Regular", size: 30))
                         .padding(.top, 20)
                     Text("VERSION \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)\n")
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.subheadline.weight(.semibold))
                         .foregroundColor(Color(uiColor: .systemGray))
                 }
                 .padding(.bottom, 12)
