@@ -40,6 +40,8 @@ struct CubeTime: App {
                 // accessibility
                 gsKeys.hapBool.rawValue: true,
                 gsKeys.hapType.rawValue: UIImpactFeedbackGenerator.FeedbackStyle.rigid.rawValue,
+                gsKeys.forceAppZoom.rawValue: false,
+                gsKeys.appZoom.rawValue: 3,
                 gsKeys.scrambleSize.rawValue: 18,
                 gsKeys.gestureDistance.rawValue: 50,
                 

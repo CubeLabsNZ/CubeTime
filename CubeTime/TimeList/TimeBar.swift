@@ -62,7 +62,7 @@ struct TimeBar: View {
                     if let calculatedAverage = calculatedAverage {
                         HStack {
                             Text(formatSolveTime(secs: calculatedAverage.average!, penType: calculatedAverage.totalPen))
-                                .font(.system(size: 26, weight: .bold, design: .default))
+                                .font(.title2.weight(.bold))
 
                             Spacer()
                         }
@@ -72,7 +72,7 @@ struct TimeBar: View {
                             
                             let grey: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.systemGray, .font: UIFont.systemFont(ofSize: 17, weight: .medium)]
                             let normal: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 17, weight: .medium)]
-                            
+                          
                             
                             for (index, solve) in Array((solvegroup.solves!.array as! [Solves]).enumerated()) {
                                 if calculatedAverage.trimmedSolves!.contains(solve) {
@@ -98,7 +98,7 @@ struct TimeBar: View {
                         if solvegroup.solves!.count < 5 {
                             HStack {
                                 Text("Current Average")
-                                    .font(.system(size: 26, weight: .bold, design: .default))
+                                    .font(.title2.weight(.bold))
 
                                 Spacer()
                             }
@@ -106,7 +106,13 @@ struct TimeBar: View {
                             let displayText: NSMutableAttributedString = {
                                 let finalStr = NSMutableAttributedString(string: "")
                                 
-                                let normal: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 17, weight: .medium)]
+//                                let normal: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 17, weight: .medium)]
+                                
+//                                let normal: [NSAttributedString.Key: Any] = [.font: UIFontMetrics.default.scaledFont(for: UIFont.preferredFont(forTextStyle: .body))]
+                                
+                                let normal: [NSAttributedString.Key: Any] = [
+                                    .font: UIFont.preferredFont(forTextStyle: .body),
+                                ]
                                 
                                 
                                 for (index, solve) in Array((solvegroup.solves!.array as! [Solves]).enumerated()) {
@@ -133,7 +139,7 @@ struct TimeBar: View {
                         } else {
                             HStack {
                                 Text("Loading...")
-                                    .font(.system(size: 26, weight: .bold, design: .default))
+                                    .font(.title2.weight(.bold))
 
                                 Spacer()
                             }

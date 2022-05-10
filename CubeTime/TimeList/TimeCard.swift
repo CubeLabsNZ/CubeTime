@@ -24,6 +24,28 @@ struct TimeCard: View {
     
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
+    @Environment(\.sizeCategory) var sizeCategory
+    
+    private var cardWidth: CGFloat {
+        if sizeCategory > ContentSizeCategory.extraLarge {
+            return 200
+        } else if sizeCategory < ContentSizeCategory.small {
+            return 100
+        } else {
+            return 120
+        }
+    }
+    
+    private var cardHeight: CGFloat {
+        if sizeCategory > ContentSizeCategory.extraLarge {
+            return 60
+        } else if sizeCategory < ContentSizeCategory.small {
+            return 50
+        } else {
+            return 55
+        }
+    }
+    
     
     init(solve: Solves, timeListManager: TimeListManager, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<[Solves]>) {
         self.solve = solve
@@ -39,7 +61,7 @@ struct TimeCard: View {
         ZStack {
             RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(isSelected ? Color(uiColor: .systemGray4) : colourScheme == .dark ? Color(uiColor: .systemGray6) : Color(uiColor: .systemBackground))
-                .frame(maxWidth: 120, minHeight: 55, maxHeight: 55) /// todo check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectange
+                .frame(maxWidth: cardWidth, minHeight: cardHeight, maxHeight: cardHeight) /// todo check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectange
                 .onTapGesture {
                     if isSelectMode {
                         withAnimation {
@@ -64,7 +86,7 @@ struct TimeCard: View {
                 
             VStack {
                 Text(formattedTime)
-                    .font(.system(size: 17, weight: .bold, design: .default))
+                    .font(.body.weight(.bold))
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(accentColour)
@@ -94,7 +116,7 @@ struct TimeCard: View {
                 formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
                 try! managedObjectContext.save()
             } label: {
-                Label("No Penalty", systemImage: "checkmark.circle") /// TODO: add custom icons because no good icons
+                Label("No Penalty", systemImage: "checkmark.circle")
             }
             
             Button {
@@ -103,7 +125,7 @@ struct TimeCard: View {
                 formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
                 try! managedObjectContext.save()
             } label: {
-                Label("+2", image: "+2.label") /// TODO: add custom icons because no good icons
+                Label("+2", image: "+2.label")
             }
             
             Button {
@@ -112,7 +134,7 @@ struct TimeCard: View {
                 formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
                 try! managedObjectContext.save()
             } label: {
-                Label("DNF", systemImage: "xmark.circle") /// TODO: add custom icons because no good icons
+                Label("DNF", systemImage: "xmark.circle")
             }
             
             Divider()

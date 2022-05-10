@@ -95,6 +95,7 @@ class TimeListManager: ObservableObject {
 struct TimeListView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
+    @Environment(\.sizeCategory) var sizeCategory
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
@@ -108,7 +109,15 @@ struct TimeListView: View {
     @State var isSelectMode = false
     @State var selectedSolves: [Solves] = []
     
-    private let columns = [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+    private var columns: [GridItem] {
+        if sizeCategory > ContentSizeCategory.extraLarge {
+            return [GridItem(spacing: 10), GridItem(spacing: 10)]
+        } else if sizeCategory < ContentSizeCategory.small {
+            return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+        } else {
+            return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+        }
+    }
     
     init (currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext) {
         self._currentSession = currentSession
@@ -125,51 +134,9 @@ struct TimeListView: View {
                 
                 ScrollView {
                     LazyVStack {
-                        HStack (alignment: .center) {
-                            Text(currentSession.name!)
-                                .font(.system(size: 20, weight: .semibold, design: .default))
-                                .foregroundColor(Color(uiColor: .systemGray))
-                            Spacer()
-                            
-                            switch SessionTypes(rawValue: currentSession.session_type)! {
-                            case .standard:
-                                Text(puzzle_types[Int(currentSession.scramble_type)].name)
-                                    .font(.system(size: 16, weight: .semibold, design: .default))
-                                    .foregroundColor(Color(uiColor: .systemGray))
-                            case .multiphase:
-                                HStack(spacing: 2) {
-                                    Image(systemName: "square.stack")
-                                        .font(.system(size: 14, weight: .semibold, design: .default))
-                                        .foregroundColor(Color(uiColor: .systemGray))
-                                    
-                                    Text(puzzle_types[Int(currentSession.scramble_type)].name)
-                                        .font(.system(size: 16, weight: .semibold, design: .default))
-                                        .foregroundColor(Color(uiColor: .systemGray))
-                                }
-                                
-                            case .compsim:
-                                HStack(spacing: 2) {
-                                    Image(systemName: "globe.asia.australia")
-                                        .font(.system(size: 16, weight: .bold, design: .default))
-                                        .foregroundColor(Color(uiColor: .systemGray))
-                                    
-                                    Text(puzzle_types[Int(currentSession.scramble_type)].name)
-                                        .font(.system(size: 16, weight: .semibold, design: .default))
-                                        .foregroundColor(Color(uiColor: .systemGray))
-                                }
-                            
-                            case .playground:
-                                Text("Playground")
-                                    .font(.system(size: 16, weight: .semibold, design: .default))
-                                    .foregroundColor(Color(uiColor: .systemGray))
-                            
-                            default:
-                                Text(puzzle_types[Int(currentSession.scramble_type)].name)
-                                    .font(.system(size: 16, weight: .semibold, design: .default))
-                                    .foregroundColor(Color(uiColor: .systemGray))
-                            }
-                        }
-                        .padding(.horizontal)
+                        SessionBar(name: currentSession.name!, session: currentSession)
+                            .padding(.horizontal)
+                        
                         
                         // REMOVE THIS IF WHEN SORT IMPELEMNTED FOR COMP SIM SESSIONS
                         if currentSession.session_type != SessionTypes.compsim.rawValue {
@@ -200,15 +167,13 @@ struct TimeListView: View {
                                         //solves.sortDescriptors = [sortDesc]
                                     } label: {
                                         Image(systemName: timeListManager.ascending ? "chevron.up.circle" : "chevron.down.circle")
-                                            .font(.system(size: 20, weight: .medium))
+                                            .font(.title3.weight(.medium))
                                     }
-    //                                        .padding(.trailing, 16.5)
                                     .padding(.trailing)
                                     .padding(.top, -6)
                                     .padding(.bottom, 4)
                                 }
                             }
-                            
                         }
                         
                         
@@ -290,7 +255,7 @@ struct TimeListView: View {
                                 }
                             } label: {
                                 Text("Delete Solves")
-                                    .font(.system(size: 15, weight: .medium))
+                                    .font(.subheadline.weight(.medium))
                                     .foregroundColor(Color.red)
                             }
                             .tint(.red)
@@ -314,7 +279,7 @@ struct TimeListView: View {
                                     isSelectMode = true
                                 } label: {
                                     Image(systemName: "ellipsis.circle")
-                                        .font(.system(size: 17, weight: .medium))
+                                        .font(.body.weight(.medium))
                                 }
                             }
                         }

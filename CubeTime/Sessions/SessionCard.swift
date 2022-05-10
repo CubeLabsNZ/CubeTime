@@ -71,8 +71,9 @@ struct SessionCard: View {
                             
                             
                             VStack(alignment: .leading, spacing: 0) {
-                                Text(item.name ?? "Unkown session name")
-                                    .font(.system(size: 22, weight: .bold, design: .default))
+                                Text(item.name ?? "Unknown session name")
+                                    .font(.title2.weight(.bold))
+//                                    .font(.system(size: 22, weight: .bold, design: .default))
                                     .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                                 
                                 Group {
@@ -89,7 +90,9 @@ struct SessionCard: View {
                                         EmptyView()
                                     }
                                 }
-                                .font(.system(size: item.pinned ? 15 : 16, weight: item.pinned ? .medium : .regular, design: .default))
+                                .font((item.pinned ? Font.subheadline : .callout).weight(item.pinned ? .medium : .regular))
+                                
+//                                .font(.system(size: item.pinned ? 15 : 16, weight: item.pinned ? .medium : .regular, design: .default))
                                 .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                                 .if(!item.pinned) { view in
                                     view.offset(y: -2)
@@ -100,7 +103,8 @@ struct SessionCard: View {
                         if item.pinned {
                             Spacer()
                             Text("\(item.solves?.count ?? -1) Solves")
-                                .font(.system(size: 15, weight: .bold, design: .default))
+                                .font(.subheadline.weight(.bold))
+//                                .font(.system(size: 15, weight: .bold, design: .default))
                                 .foregroundColor(Color(uiColor: .systemGray))
                                 .padding(.bottom, 4)
                         }
@@ -115,8 +119,7 @@ struct SessionCard: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
-                                .padding(.top, 4)
-                                .padding(.bottom, 4)
+                                .padding(.vertical, 4)
                                 .padding(.trailing, 12)
                         } else {
                             Image(puzzle_types[Int(item.scramble_type)].name)

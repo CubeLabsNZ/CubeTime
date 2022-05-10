@@ -2,13 +2,14 @@ import SwiftUI
 
 
 enum gsKeys: String {
-    case inspection, freeze, timeDpWhenRunning, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats, scrambleSize, inspectionCountsDown
+    case inspection, freeze, timeDpWhenRunning, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats, scrambleSize, inspectionCountsDown, appZoom, forceAppZoom
 }
 
 extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
     public static var allCases: [UIImpactFeedbackGenerator.FeedbackStyle] = [.light, .medium, .heavy, .soft, .rigid]
     var localizedName: String { "\(self)" }
 }
+
 
 struct GeneralSettingsView: View {
     // timer settings
@@ -24,6 +25,8 @@ struct GeneralSettingsView: View {
     // accessibility
     @AppStorage(gsKeys.hapBool.rawValue) private var hapticFeedback: Bool = true
     @AppStorage(gsKeys.hapType.rawValue) private var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
+    @AppStorage(gsKeys.forceAppZoom.rawValue) private var forceAppZoom: Bool = false
+    @AppStorage(gsKeys.appZoom.rawValue) private var appZoom: Int = 0
     @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     @AppStorage(gsKeys.gestureDistance.rawValue) private var gestureActivationDistance: Double = 50
     
@@ -44,15 +47,25 @@ struct GeneralSettingsView: View {
         UIImpactFeedbackGenerator.FeedbackStyle.rigid: "Rigid",
     ]
     
+    let appZoomNames: [DynamicTypeSize: String] = [
+        DynamicTypeSize.xSmall: "Extra Small",
+        DynamicTypeSize.small: "Small",
+        DynamicTypeSize.medium: "Medium",
+        DynamicTypeSize.large: "Large (Default)",
+        DynamicTypeSize.xLarge: "Extra Large",
+        DynamicTypeSize.xxLarge: "Extra Extra Large",
+        DynamicTypeSize.xxxLarge: "Extra Extra Extra Large",
+    ]
+    
     var body: some View {
         VStack(spacing: 16) {
             VStack {
                 HStack {
                     Image(systemName: "timer")
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
                         .foregroundColor(accentColour)
                     Text("Timer Settings")
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .font(Font.system(.body, design: .rounded).weight(.bold))
                     
                     Spacer()
                 }
@@ -61,7 +74,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Toggle(isOn: $inspectionTime.animation(.spring())) {
                         Text("Inspection Time")
-                            .font(.system(size: 17, weight: .medium))
+                            .font(.body.weight(.medium))
                     }
                     .toggleStyle(SwitchToggleStyle(tint: accentColour))
                     
@@ -77,7 +90,7 @@ struct GeneralSettingsView: View {
                     HStack {
                         Toggle(isOn: $insCountDown) {
                             Text("Inspection Counts Down")
-                                .font(.system(size: 17, weight: .medium))
+                                .font(.body.weight(.medium))
                         }
                         .toggleStyle(SwitchToggleStyle(tint: accentColour))
                         
@@ -94,7 +107,7 @@ struct GeneralSettingsView: View {
                     HStack {
                         Stepper(value: $holdDownTime, in: 0.05...1.0, step: 0.05) {
                             Text("Hold Down Time: ")
-                                .font(.system(size: 17, weight: .medium))
+                                .font(.body.weight(.medium))
                             Text(String(format: "%.2fs", holdDownTime))
                         }
                     }
@@ -106,7 +119,7 @@ struct GeneralSettingsView: View {
                 VStack (alignment: .leading) {
                     HStack {
                         Text("Timer Update")
-                            .font(.system(size: 17, weight: .medium))
+                            .font(.body.weight(.medium))
                         Spacer()
                         Picker("", selection: $timerDP) {
                             Text("Nothing")
@@ -117,7 +130,7 @@ struct GeneralSettingsView: View {
                         }
                         .pickerStyle(.menu)
                         .accentColor(accentColour)
-                        .font(.system(size: 17, weight: .regular))
+                        .font(.body)
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 10)
@@ -131,10 +144,10 @@ struct GeneralSettingsView: View {
             VStack(alignment: .leading) {
                 HStack {
                     Image(systemName: "wrench")
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
                         .foregroundColor(accentColour)
                     Text("Timer Tools")
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .font(Font.system(.body, design: .rounded).weight(.bold))
                     
                     Spacer()
                 }
@@ -145,7 +158,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Toggle(isOn: $showScramble) {
                         Text("Show draw scramble on timer")
-                            .font(.system(size: 17, weight: .medium))
+                            .font(.body.weight(.medium))
                     }
                     .toggleStyle(SwitchToggleStyle(tint: accentColour))
                     
@@ -161,7 +174,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Toggle(isOn: $showStats) {
                         Text("Show stats on timer")
-                            .font(.system(size: 17, weight: .medium))
+                            .font(.body.weight(.medium))
                     }
                     .onChange(of: showStats) { newValue in
                         stopWatchManager.updateStats()
@@ -175,7 +188,8 @@ struct GeneralSettingsView: View {
                 }
                 
                 Text("Show scramble/statistics on the timer screen.")
-                    .font(.system(size: 13, weight: .medium))
+                    .font(.footnote.weight(.medium))
+                    .fixedSize(horizontal: false, vertical: true)
                     .foregroundColor(Color(uiColor: .systemGray))
                     .multilineTextAlignment(.leading)
                     .padding(.horizontal)
@@ -186,10 +200,10 @@ struct GeneralSettingsView: View {
             VStack {
                 HStack {
                     Image(systemName: "eye")
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
                         .foregroundColor(accentColour)
                     Text("Accessibility")
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .font(Font.system(.body, design: .rounded).weight(.bold))
                     
                     Spacer()
                 }
@@ -199,7 +213,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Toggle(isOn: $hapticFeedback) {
                         Text("Haptic Feedback")
-                            .font(.system(size: 17, weight: .medium))
+                            .font(.body.weight(.medium))
                     }
                 }
                 .padding(.horizontal)
@@ -211,7 +225,7 @@ struct GeneralSettingsView: View {
                 if hapticFeedback {
                     HStack {
                         Text("Haptic Mode")
-                            .font(.system(size: 17, weight: .medium))
+                            .font(.body.weight(.medium))
                         
                         Spacer()
                         
@@ -222,8 +236,7 @@ struct GeneralSettingsView: View {
                         }
                         .pickerStyle(.menu)
                         .accentColor(accentColour)
-                        .font(.system(size: 17, weight: .regular))
-                        
+                        .font(.body)
                     }
                     .padding(.horizontal)
                     .onChange(of: feedbackType) { newValue in
@@ -235,11 +248,43 @@ struct GeneralSettingsView: View {
                 Divider()
                 
                 
+                
+                HStack {
+                    Toggle(isOn: $forceAppZoom) {
+                        Text("Override System Zoom")
+                            .font(.body.weight(.medium))
+                    }
+                }
+                .padding(.horizontal)
+                
+                
+                VStack (alignment: .leading) {
+                    HStack {
+                        Text("App Zoom")
+                            .font(.body.weight(.medium))
+
+                        Spacer()
+
+                        Picker("", selection: $appZoom) {
+                            ForEach(Array(DynamicTypeSize.allCases.prefix(7)), id: \.self) { mode in
+                                let _ = NSLog("\(DynamicTypeSize.allCases.prefix(7))")
+                                
+                                Text(appZoomNames[mode] ?? "Large (Default)")
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .accentColor(accentColour)
+                        .font(.body)
+                    }
+                    .padding(.horizontal)
+                }
+                
+                
                 VStack (alignment: .leading) {
                     HStack {
                         Stepper(value: $scrambleSize, in: 15...36, step: 1) {
                             Text("Scramble Size: ")
-                                .font(.system(size: 17, weight: .medium))
+                                .font(.body.weight(.medium))
                             Text("\(scrambleSize)")
                         }
                     }
@@ -252,19 +297,19 @@ struct GeneralSettingsView: View {
                 
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Gesture Activation Distance")
-                        .font(.system(size: 17, weight: .medium))
+                        .font(.body.weight(.medium))
                         .padding(.bottom, 4)
                     
                     HStack {
                         Text("MIN")
-                            .font(.system(size: 13, weight: .regular, design: .rounded))
+                            .font(Font.system(.footnote, design: .rounded))
                             .foregroundColor(Color(uiColor: .systemGray2))
                         
                         Slider(value: $gestureActivationDistance, in: 20...300)
                             .padding(.horizontal, 4)
                         
                         Text("MAX")
-                            .font(.system(size: 13, weight: .regular, design: .rounded))
+                            .font(Font.system(.footnote, design: .rounded))
                             .foregroundColor(Color(uiColor: .systemGray2))
                         
                     }
@@ -279,10 +324,10 @@ struct GeneralSettingsView: View {
             VStack {
                 HStack {
                     Image(systemName: "chart.bar.xaxis")
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
                         .foregroundColor(accentColour)
                     Text("Statistics")
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .font(Font.system(.body, design: .rounded).weight(.bold))
                     
                     Spacer()
                 }
@@ -290,7 +335,7 @@ struct GeneralSettingsView: View {
                 
                 HStack {
                     Text("Times Displayed To: ")
-                        .font(.system(size: 17, weight: .medium))
+                        .font(.body.weight(.medium))
                     
                     Spacer()
                     
@@ -301,7 +346,7 @@ struct GeneralSettingsView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                    .font(.system(size: 17, weight: .regular))
+                    .font(.body)
                     .accentColor(accentColour)
                     .foregroundColor(accentColour)
                     

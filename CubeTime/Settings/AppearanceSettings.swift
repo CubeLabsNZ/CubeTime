@@ -43,10 +43,10 @@ struct AppearanceSettingsView: View {
             VStack {
                 HStack {
                     Image(systemName: "paintbrush.pointed.fill")
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
                         .foregroundColor(accentColour)
                     Text("Colours")
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .font(Font.system(.body, design: .rounded).weight(.bold))
                     
                     Spacer()
                 }
@@ -56,7 +56,7 @@ struct AppearanceSettingsView: View {
                 VStack(spacing: 0) {
                     HStack {
                         Text("Accent Colour")
-                            .font(.system(size: 17, weight: .medium))
+                            .font(.body.weight(.medium))
                         
                         Spacer()
                         
@@ -114,12 +114,12 @@ struct AppearanceSettingsView: View {
                     VStack(alignment: .leading, spacing: 0) {
                         HStack(alignment: .center) {
                             Text("Theme")
-                                .font(.system(size: 17, weight: .medium))
+                                .font(.body.weight(.medium))
                             
                             Spacer()
                             
                             Image(systemName: "chevron.right")
-                                .font(.system(size: 13, weight: .bold))
+                                .font(.footnote.weight(.bold))
                                 .foregroundColor(Color(uiColor: .systemGray3))
                                 .rotationEffect(.degrees(showThemeOptions ? 90 : 0))
                         }
@@ -135,7 +135,8 @@ struct AppearanceSettingsView: View {
                         
                         if !showThemeOptions {
                             Text("Customise the app theme and gradients.\nNote: this is separate from the accent colour.")
-                                .font(.system(size: 13, weight: .medium))
+                                .font(.footnote.weight(.medium))
+                                .fixedSize(horizontal: false, vertical: true)
                                 .foregroundColor(Color(uiColor: .systemGray))
                                 .multilineTextAlignment(.leading)
                                 .padding(.horizontal)
@@ -148,7 +149,7 @@ struct AppearanceSettingsView: View {
                                 HStack {
                                     Toggle(isOn: $staticGradient) {
                                         Text("Use Static Gradient")
-                                            .font(.system(size: 17, weight: .medium))
+                                            .font(.body.weight(.medium))
                                     }
                                         .toggleStyle(SwitchToggleStyle(tint: accentColour))
                                     
@@ -159,7 +160,8 @@ struct AppearanceSettingsView: View {
                                 
                                 Text("By default, the gradient is static. Dynamic gradient coming soon!")
 //                                Text("By default, the gradient is dynamic and changes throughout the day. If turned off, the gradient will only be of static colours.")
-                                    .font(.system(size: 13, weight: .medium))
+                                    .font(.footnote.weight(.medium))
+                                    .fixedSize(horizontal: false, vertical: true)
                                     .foregroundColor(Color(uiColor: .systemGray))
                                     .multilineTextAlignment(.leading)
                                     .padding(.horizontal)
@@ -203,7 +205,7 @@ struct AppearanceSettingsView: View {
                         HStack {
                             Toggle(isOn: $graphGlow) {
                                 Text("Graph Glow")
-                                    .font(.system(size: 17, weight: .medium))
+                                    .font(.body.weight(.medium))
                             }
                                 .toggleStyle(SwitchToggleStyle(tint: accentColour))
                         }
@@ -211,7 +213,8 @@ struct AppearanceSettingsView: View {
                         .padding(.bottom, 10)
                        
                         Text("Turn on/off the glow effect on graphs.")
-                            .font(.system(size: 13, weight: .medium))
+                            .font(.footnote.weight(.medium))
+                            .fixedSize(horizontal: false, vertical: true)
                             .foregroundColor(Color(uiColor: .systemGray))
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
@@ -222,7 +225,7 @@ struct AppearanceSettingsView: View {
                         HStack {
                             Toggle(isOn: $graphAnimation) {
                                 Text("Graph Animation")
-                                    .font(.system(size: 17, weight: .medium))
+                                    .font(.body.weight(.medium))
                             }
                                 .toggleStyle(SwitchToggleStyle(tint: accentColour))
                         }
@@ -230,7 +233,8 @@ struct AppearanceSettingsView: View {
                         .padding(.bottom, 10)
                        
                         Text("Turn on/off the line animation for the time trend graph.")
-                            .font(.system(size: 13, weight: .medium))
+                            .font(.footnote.weight(.medium))
+                            .fixedSize(horizontal: false, vertical: true)
                             .foregroundColor(Color(uiColor: .systemGray))
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
@@ -243,10 +247,10 @@ struct AppearanceSettingsView: View {
             VStack {
                 HStack {
                     Image(systemName: "command")
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
                         .foregroundColor(accentColour)
                     Text("System Settings")
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .font(Font.system(.body, design: .rounded).weight(.bold))
                     
                     Spacer()
                 }
@@ -257,7 +261,7 @@ struct AppearanceSettingsView: View {
                     HStack {
                         Toggle(isOn: $overrideSystemAppearance) {
                             Text("Override System Appearance")
-                                .font(.system(size: 17, weight: .medium))
+                                .font(.body.weight(.medium))
                         }
                             .toggleStyle(SwitchToggleStyle(tint: accentColour))
                         
@@ -269,7 +273,7 @@ struct AppearanceSettingsView: View {
                         HStack {
                             Toggle(isOn: $darkMode) {
                                 Text("Dark Mode")
-                                    .font(.system(size: 17, weight: .medium))
+                                    .font(.body.weight(.medium))
                             }
                                 .toggleStyle(SwitchToggleStyle(tint: accentColour))
                         }
