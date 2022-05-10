@@ -31,8 +31,8 @@ struct SettingsView: View {
                     Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                         .ignoresSafeArea()
                     
-                    VStack (spacing: 16) {
-                        HStack (spacing: 16) {
+                    VStack(spacing: 16) {
+                        HStack(spacing: 16) {
                             SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
                             SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
                         }
