@@ -172,11 +172,11 @@ struct TimeDistribution: View {
                     
                     HStack (spacing: 0) {
                         Text("MEDIAN: ")
-                            .font(.system(size: 12, weight: .bold, design: .default))
+                            .font(.system(size: 11, weight: .bold, design: .default))
                             .foregroundColor(Color(uiColor: .systemGray))
                         
                         Text(formatSolveTime(secs: median!))
-                            .font(.system(size: 12, weight: .bold, design: .monospaced))
+                            .font(.system(size: 11, weight: .bold, design: .monospaced))
                             .foregroundColor(Color(uiColor: .systemGray))
                     }
                     .position(x: medianxloc, y: -16)

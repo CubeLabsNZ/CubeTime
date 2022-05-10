@@ -26,7 +26,7 @@ struct StatsBlock<Content: View>: View {
                 VStack {
                     HStack {
                         Text(title)
-                            .font(.system(size: 13, weight: .medium, design: .default))
+                            .font(.footnote.weight(.medium))
                             .foregroundColor(Color(uiColor: title == "CURRENT STATS" ? (colourScheme == .light ? .black : .white) : (coloured ? (colourScheme == .light ? .systemGray5 : .white) : .systemGray)))
                         Spacer()
                     }
@@ -78,7 +78,7 @@ struct StatsBlockText: View {
             HStack {
                 if nilCondition {
                     Text(displayText)
-                        .font(.system(size: 34, weight: .bold, design: .default))
+                        .font(.largeTitle.weight(.bold))
                         .frame(minWidth: 0, maxWidth: UIScreen.screenWidth/2 - 42, alignment: .leading)
                         .modifier(DynamicText())
                         .padding(.bottom, 2)
@@ -95,7 +95,7 @@ struct StatsBlockText: View {
                 } else {
                     VStack {
                         Text("-")
-                            .font(.system(size: 28, weight: .medium, design: .default))
+                            .font(.title.weight(.medium))
                             .foregroundColor(Color(uiColor: .systemGray5))
                             .padding(.top, 20)
                         
@@ -131,7 +131,7 @@ struct StatsBlockDetailText: View {
                     let discarded = calculatedAverage.trimmedSolves!.contains(solve)
                     let time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
                     Text(discarded ? "("+time+")" : time)
-                        .font(.system(size: 17, weight: .regular, design: .default))
+                        .font(.body)
                         .foregroundColor(discarded ? Color(uiColor: colouredBlock ? .systemGray5 : .systemGray) : (colouredBlock ? .white : (colourScheme == .light ? .black : .white)))
                         .multilineTextAlignment(.leading)
                         .padding(.bottom, 2)
@@ -165,17 +165,17 @@ struct StatsBlockSmallText: View {
                 HStack {
                     VStack (alignment: .leading, spacing: -4) {
                         Text(title)
-                            .font(.system(size: 13, weight: .medium, design: .default))
+                            .font(.footnote.weight(.medium))
                             .foregroundColor(Color(uiColor: .systemGray))
                         
                         if let datum = data[index] {
                             Text(formatSolveTime(secs: datum.average ?? 0, penType: datum.totalPen))
-                                .font(.system(size: 24, weight: .bold, design: .default))
+                                .font(.title2.weight(.bold))
                                 .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                                 .modifier(DynamicText())
                         } else {
                             Text("-")
-                                .font(.system(size: 20, weight: .medium, design: .default))
+                                .font(.title3.weight(.medium))
                                 .foregroundColor(Color(uiColor:.systemGray2))
                         }
                     }
@@ -210,6 +210,13 @@ struct StatsView: View {
     @Environment(\.colorScheme) var colourScheme
     
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    
+    // Accessibility Scaling
+    @ScaledMetric var blockHeightSmall = 75
+    @ScaledMetric var blockHeightMedium = 130
+    @ScaledMetric var blockHeightLarge = 160
+    @ScaledMetric var blockHeightExtraLarge = 215
+    
     
     @Binding var currentSession: Sessions
     
@@ -338,17 +345,17 @@ struct StatsView: View {
                         VStack(spacing: 10) {
                             if !compsim {
                                 HStack(spacing: 10) {
-                                    StatsBlock("CURRENT STATS", 160, false, false) {
+                                    StatsBlock("CURRENT STATS", blockHeightLarge, false, false) {
                                         StatsBlockSmallText(["AO5", "AO12", "AO100"], [currentAo5, currentAo12, currentAo100], $presentedAvg, false)
                                     }
                                     .frame(minWidth: 0, maxWidth: .infinity)
                                     
                                     VStack(spacing: 10) {
-                                        StatsBlock("SOLVE COUNT", 75, false, false) {
+                                        StatsBlock("SOLVE COUNT", blockHeightSmall, false, false) {
                                             StatsBlockText("\(stats.getNumberOfSolves())", false, false, false, true)
                                         }
                                         
-                                        StatsBlock("SESSION MEAN", 75, false, false) {
+                                        StatsBlock("SESSION MEAN", blockHeightSmall, false, false) {
                                             if sessionMean != nil {
                                                 StatsBlockText(formatSolveTime(secs: sessionMean!), false, false, false, true)
                                             } else {
@@ -364,7 +371,7 @@ struct StatsView: View {
                                 
                                 HStack(spacing: 10) {
                                     VStack (spacing: 10) {
-                                        StatsBlock("BEST SINGLE", 75, false, true) {
+                                        StatsBlock("BEST SINGLE", blockHeightSmall, false, true) {
                                             if bestSingle != nil {
                                                 StatsBlockText(formatSolveTime(secs: bestSingle!.time, penType: PenTypes(rawValue: bestSingle!.penalty)!), false, true, false, true)
                                             } else {
@@ -375,13 +382,13 @@ struct StatsView: View {
                                             if bestSingle != nil { showBestSinglePopup = true }
                                         }
                                         
-                                        StatsBlock("BEST STATS", 130, false, false) {
+                                        StatsBlock("BEST STATS", blockHeightMedium, false, false) {
                                             StatsBlockSmallText(["AO12", "AO100"], [bestAo12, bestAo100], $presentedAvg, true)
                                         }
                                     }
                                     .frame(minWidth: 0, maxWidth: .infinity)
                                     
-                                    StatsBlock("BEST AO5", 215, false, false) {
+                                    StatsBlock("BEST AO5", blockHeightExtraLarge, false, false) {
                                         if bestAo5 != nil {
                                             StatsBlockText(formatSolveTime(secs: bestAo5?.average ?? 0, penType: bestAo5?.totalPen), true, false, true, true)
                                             
@@ -420,7 +427,7 @@ struct StatsView: View {
                             } else {
                                 HStack(spacing: 10) {
                                     VStack(spacing: 10) {
-                                        StatsBlock("CURRENT AVG", 215, false, false) {
+                                        StatsBlock("CURRENT AVG", blockHeightExtraLarge, false, false) {
                                             if currentCompsimAverage != nil {
                                                 StatsBlockText(formatSolveTime(secs: currentCompsimAverage?.average ?? 0, penType: currentCompsimAverage?.totalPen), false, false, true, true)
                                                     
@@ -435,14 +442,14 @@ struct StatsView: View {
                                             }
                                         }
                                         
-                                        StatsBlock("AVERAGES", 75, false, false) {
+                                        StatsBlock("AVERAGES", blockHeightSmall, false, false) {
                                             StatsBlockText("\(compSimCount)", false, false, false, true)
                                         }
                                     }
                                     .frame(minWidth: 0, maxWidth: .infinity)
                                     
                                     VStack(spacing: 10) {
-                                        StatsBlock("BEST SINGLE", 75, false, false) {
+                                        StatsBlock("BEST SINGLE", blockHeightSmall, false, false) {
                                             if bestSingle != nil {
                                                 StatsBlockText(formatSolveTime(secs: bestSingle!.time), true, false, false, true)
                                             } else {
@@ -455,7 +462,7 @@ struct StatsView: View {
                                             }
                                         }
                                         
-                                        StatsBlock("BEST AVG", 215, false, true) {
+                                        StatsBlock("BEST AVG", blockHeightExtraLarge, false, true) {
                                             if bestCompsimAverage != nil {
                                                 StatsBlockText(formatSolveTime(secs: bestCompsimAverage?.average ?? 0, penType: bestCompsimAverage?.totalPen), false, true, true, true)
                                                     .onTapGesture {
@@ -478,12 +485,12 @@ struct StatsView: View {
                                 StatsDivider()
                                 
                                 HStack(spacing: 10) {
-                                    StatsBlock("TARGET", 75, false, false) {
+                                    StatsBlock("TARGET", blockHeightSmall, false, false) {
                                         StatsBlockText(formatSolveTime(secs: (currentSession as! CompSimSession).target, dp: 2), false, false, false, true)
                                     }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     
-                                    StatsBlock("REACHED", 75, false, false) {
+                                    StatsBlock("REACHED", blockHeightSmall, false, false) {
                                         StatsBlockText("\(reachedTargets)/\(compSimCount)", false, false, false, (bestSingle != nil))
                                     }
                                         .frame(minWidth: 0, maxWidth: .infinity)
@@ -507,7 +514,7 @@ struct StatsView: View {
                                 StatsDivider()
                                 
                                 HStack(spacing: 10) {
-                                    StatsBlock("CURRENT MO10 AO5", 75, false, false) {
+                                    StatsBlock("CURRENT MO10 AO5", blockHeightSmall, false, false) {
                                         if currentMeanOfTen != nil {
                                             StatsBlockText(formatSolveTime(secs: currentMeanOfTen!, penType: ((currentMeanOfTen == -1) ? .dnf : PenTypes.none)), false, false, false, true)
                                         } else {
@@ -516,7 +523,7 @@ struct StatsView: View {
                                     }
                                     .frame(minWidth: 0, maxWidth: .infinity)
                                     
-                                    StatsBlock("BEST MO10 AO5", 75, false, false) {
+                                    StatsBlock("BEST MO10 AO5", blockHeightSmall, false, false) {
                                         if bestMeanOfTen != nil {
                                             StatsBlockText(formatSolveTime(secs: bestMeanOfTen!, penType: ((bestMeanOfTen == -1) ? .dnf : PenTypes.none)), false, false, false, true)
                                         } else {
@@ -534,18 +541,19 @@ struct StatsView: View {
                             let timeTrendData = (compsim ? allCompsimAveragesByDate : timesByDateNoDNFs)
                             let timeDistributionData = (compsim ? allCompsimAveragesByTime : timesBySpeedNoDNFs)
                             
-                            StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 300), true, false) {
+                            StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 310), true, false) {
                                 
                                 TimeTrend(data: timeTrendData, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
                                     .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
                                     .padding(.horizontal, 12)
-                                    .offset(y: -5)
+                                    .offset(y: -4)
                                     .drawingGroup()
                             }
                             
-                            StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? 150 : 300), true, false) {
+                            StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? 150 : 310), true, false) {
                                 TimeDistribution(currentSession: $currentSession, solves: timeDistributionData)
                                     .drawingGroup()
+                                    .frame(height: 300)
                             }
                         }
                     }
