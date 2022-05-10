@@ -2,13 +2,14 @@ import SwiftUI
 
 
 enum gsKeys: String {
-    case inspection, freeze, timeDpWhenRunning, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats, scrambleSize, inspectionCountsDown
+    case inspection, freeze, timeDpWhenRunning, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats, scrambleSize, inspectionCountsDown, appZoom, forceAppZoom
 }
 
 extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
     public static var allCases: [UIImpactFeedbackGenerator.FeedbackStyle] = [.light, .medium, .heavy, .soft, .rigid]
     var localizedName: String { "\(self)" }
 }
+
 
 struct GeneralSettingsView: View {
     // timer settings
@@ -24,6 +25,8 @@ struct GeneralSettingsView: View {
     // accessibility
     @AppStorage(gsKeys.hapBool.rawValue) private var hapticFeedback: Bool = true
     @AppStorage(gsKeys.hapType.rawValue) private var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
+    @AppStorage(gsKeys.forceAppZoom.rawValue) private var forceAppZoom: Bool = false
+    @AppStorage(gsKeys.appZoom.rawValue) private var appZoom: Int = 0
     @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     @AppStorage(gsKeys.gestureDistance.rawValue) private var gestureActivationDistance: Double = 50
     
@@ -42,6 +45,16 @@ struct GeneralSettingsView: View {
         UIImpactFeedbackGenerator.FeedbackStyle.heavy: "Heavy",
         UIImpactFeedbackGenerator.FeedbackStyle.soft: "Soft",
         UIImpactFeedbackGenerator.FeedbackStyle.rigid: "Rigid",
+    ]
+    
+    let appZoomNames: [DynamicTypeSize: String] = [
+        DynamicTypeSize.xSmall: "Extra Small",
+        DynamicTypeSize.small: "Small",
+        DynamicTypeSize.medium: "Medium",
+        DynamicTypeSize.large: "Large (Default)",
+        DynamicTypeSize.xLarge: "Extra Large",
+        DynamicTypeSize.xxLarge: "Extra Extra Large",
+        DynamicTypeSize.xxxLarge: "Extra Extra Extra Large",
     ]
     
     var body: some View {
@@ -233,6 +246,38 @@ struct GeneralSettingsView: View {
                 }
                 
                 Divider()
+                
+                
+                
+                HStack {
+                    Toggle(isOn: $forceAppZoom) {
+                        Text("Override System Zoom")
+                            .font(.body.weight(.medium))
+                    }
+                }
+                .padding(.horizontal)
+                
+                
+                VStack (alignment: .leading) {
+                    HStack {
+                        Text("App Zoom")
+                            .font(.body.weight(.medium))
+
+                        Spacer()
+
+                        Picker("", selection: $appZoom) {
+                            ForEach(Array(DynamicTypeSize.allCases.prefix(7)), id: \.self) { mode in
+                                let _ = NSLog("\(DynamicTypeSize.allCases.prefix(7))")
+                                
+                                Text(appZoomNames[mode] ?? "Large (Default)")
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .accentColor(accentColour)
+                        .font(.body)
+                    }
+                    .padding(.horizontal)
+                }
                 
                 
                 VStack (alignment: .leading) {

@@ -207,5 +207,10 @@ struct MainTabsView: View {
         }
         .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
         .tint(accentColour)
+        .if(UserDefaults.standard.bool(forKey: gsKeys.forceAppZoom.rawValue)) { view in
+            view
+                .environment(\.dynamicTypeSize, DynamicTypeSize.allCases[UserDefaults.standard.integer(forKey: gsKeys.appZoom.rawValue)])
+//                .environment(\.dynamicTypeSize, DynamicTypeSize.allCases[7])
+        }
     }
 }
