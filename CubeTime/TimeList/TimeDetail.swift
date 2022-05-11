@@ -193,13 +193,14 @@ struct TimeDetailViewOnly: View {
                                 .padding(.leading)
                             
                             AsyncScrambleView(puzzle: puzzle_type.puzzle, scramble: scramble)
-                                .frame(height: puzzle_type.puzzle.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
-                                .padding(.horizontal, 32)
+//                                .frame(height: puzzle_type.puzzle.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
+//                                .padding(.horizontal, 32)
+                            
+                                .frame(width: UIScreen.screenWidth * 0.618, height: puzzle_type.puzzle.getKey() == "sq1" ? UIScreen.screenHeight/3 : nil)
+                        
                                 .padding(.bottom)
                                 .padding(.top, 12)
                         }
-                        
-//                        if !chtscramblesthatdontworkwithtnoodle.contains(puzzle_type.puzzle) || date > Date(timeIntervalSince1970: TimeInterval(1643278.400))
                     }
                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
                     
