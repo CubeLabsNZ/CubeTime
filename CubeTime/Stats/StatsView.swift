@@ -553,7 +553,7 @@ struct StatsView: View {
                             StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? 150 : 310), true, false) {
                                 TimeDistribution(currentSession: $currentSession, solves: timeDistributionData)
                                     .drawingGroup()
-                                    .frame(height: 300)
+                                    .frame(height: timeDistributionData.count < 4 ? 150 : 300)
                             }
                         }
                     }
