@@ -136,13 +136,14 @@ struct AppearanceSettingsView: View {
                         if !showThemeOptions {
                             Text("Customise the app theme and gradients.\nNote: this is separate from the accent colour.")
                                 .font(.footnote.weight(.medium))
+                                .lineSpacing(-4)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .foregroundColor(Color(uiColor: .systemGray))
                                 .multilineTextAlignment(.leading)
                                 .padding(.horizontal)
                                 .padding(.bottom, 12)
                                 .padding(.top, 10)
-                                .offset(x: 1, y: 1)
+//                                .offset(x: 1, y: 1)
                         } else {
                             VStack(alignment: .leading, spacing: 0) {
                                 /* add this switch back when dynamic gradient added
@@ -159,13 +160,14 @@ struct AppearanceSettingsView: View {
                                  */
                                 
                                 Text("By default, the gradient is static. Dynamic gradient coming soon!")
+                                    .lineSpacing(-4)
 //                                Text("By default, the gradient is dynamic and changes throughout the day. If turned off, the gradient will only be of static colours.")
                                     .font(.footnote.weight(.medium))
                                     .fixedSize(horizontal: false, vertical: true)
                                     .foregroundColor(Color(uiColor: .systemGray))
                                     .multilineTextAlignment(.leading)
-                                    .padding(.horizontal)
                                     .padding(.bottom, 12)
+                                    .offset(x: 1, y: 1)
                                 
                                 if staticGradient {
                                     LazyVGrid(columns: columns, spacing: 16) {
@@ -183,16 +185,13 @@ struct AppearanceSettingsView: View {
                                                         .font(.system(size: 15, weight: .black))
                                                         .foregroundColor(.white)
                                                 }
-                                                
-                                                    
                                             }
                                         }
                                     }
-                                    .padding(.horizontal)
                                     .padding(.bottom)
-
                                 }
                             }
+                            .padding(.horizontal)
                             .padding(.top, 8)
                         }
                     }
@@ -214,6 +213,7 @@ struct AppearanceSettingsView: View {
                        
                         Text("Turn on/off the glow effect on graphs.")
                             .font(.footnote.weight(.medium))
+                            .lineSpacing(-4)
                             .fixedSize(horizontal: false, vertical: true)
                             .foregroundColor(Color(uiColor: .systemGray))
                             .multilineTextAlignment(.leading)
@@ -234,6 +234,7 @@ struct AppearanceSettingsView: View {
                        
                         Text("Turn on/off the line animation for the time trend graph.")
                             .font(.footnote.weight(.medium))
+                            .lineSpacing(-4)
                             .fixedSize(horizontal: false, vertical: true)
                             .foregroundColor(Color(uiColor: .systemGray))
                             .multilineTextAlignment(.leading)

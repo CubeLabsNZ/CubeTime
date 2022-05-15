@@ -221,6 +221,7 @@ struct GeneralSettingsView: View {
                 
                 Text("Show scramble/statistics on the timer screen.")
                     .font(.footnote.weight(.medium))
+                    .lineSpacing(-4)
                     .fixedSize(horizontal: false, vertical: true)
                     .foregroundColor(Color(uiColor: .systemGray))
                     .multilineTextAlignment(.leading)

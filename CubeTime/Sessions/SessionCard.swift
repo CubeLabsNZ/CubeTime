@@ -70,10 +70,9 @@ struct SessionCard: View {
                             }
                             
                             
-                            VStack(alignment: .leading, spacing: 0) {
+                            VStack(alignment: .leading, spacing: -2) {
                                 Text(item.name ?? "Unknown session name")
                                     .font(.title2.weight(.bold))
-//                                    .font(.system(size: 22, weight: .bold, design: .default))
                                     .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                                 
                                 Group {
@@ -90,9 +89,8 @@ struct SessionCard: View {
                                         EmptyView()
                                     }
                                 }
-                                .font((item.pinned ? Font.subheadline : .callout).weight(item.pinned ? .medium : .regular))
+                                .font(.subheadline.weight(.medium))
                                 
-//                                .font(.system(size: item.pinned ? 15 : 16, weight: item.pinned ? .medium : .regular, design: .default))
                                 .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                                 .if(!item.pinned) { view in
                                     view.offset(y: -2)
