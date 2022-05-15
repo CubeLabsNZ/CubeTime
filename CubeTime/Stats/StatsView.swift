@@ -146,6 +146,7 @@ struct StatsBlockDetailText: View {
 
 struct StatsBlockSmallText: View {
     @Environment(\.colorScheme) var colourScheme
+    @ScaledMetric var spacing: CGFloat = -6
     
     var titles: [String]
     var data: [CalculatedAverage?]
@@ -163,7 +164,7 @@ struct StatsBlockSmallText: View {
         VStack(alignment: .leading, spacing: 4) {
             ForEach(Array(zip(titles.indices, titles)), id: \.0) { index, title in
                 HStack {
-                    VStack (alignment: .leading, spacing: -4) {
+                    VStack (alignment: .leading, spacing: spacing) {
                         Text(title)
                             .font(.footnote.weight(.medium))
                             .foregroundColor(Color(uiColor: .systemGray))
@@ -468,16 +469,16 @@ struct StatsView: View {
                                         StatsBlock("BEST AVG", blockHeightExtraLarge, false, true) {
                                             if bestCompsimAverage != nil {
                                                 StatsBlockText(formatSolveTime(secs: bestCompsimAverage?.average ?? 0, penType: bestCompsimAverage?.totalPen), false, true, true, true)
-                                                    .onTapGesture {
-                                                        if bestCompsimAverage?.totalPen != .dnf {
-                                                            presentedAvg = bestCompsimAverage
-                                                        }
-                                                    }
                                                 
                                                 StatsBlockDetailText(calculatedAverage: bestCompsimAverage!, colouredBlock: true)
 
                                             } else {
                                                 StatsBlockText("", false, false, false, false)
+                                            }
+                                        }
+                                        .onTapGesture {
+                                            if bestCompsimAverage?.totalPen != .dnf {
+                                                presentedAvg = bestCompsimAverage
                                             }
                                         }
                                     }
