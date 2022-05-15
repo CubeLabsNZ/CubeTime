@@ -171,10 +171,16 @@ struct MainTabsView: View {
                     .zIndex(1)
                     .ignoresSafeArea(.keyboard)
             }
-            .sheet(isPresented: $showOnboarding, onDismiss: { pageIndex = 0 }) {
+            .sheet(isPresented: $showOnboarding, onDismiss: {
+                pageIndex = 0
+                removeBrokenSolvegroups(managedObjectContext)
+            }) {
                 OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
             }
-            .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
+            .sheet(isPresented: $showUpdates, onDismiss: {
+                showUpdates = false
+                removeBrokenSolvegroups(managedObjectContext)
+            }) {
                 Updates(showUpdates: $showUpdates)
             }
             .onAppear(perform: checkForUpdate)

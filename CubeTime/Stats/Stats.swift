@@ -49,6 +49,8 @@ class Stats {
     private let currentSession: Sessions
     
     init (currentSession: Sessions) {
+        
+        
         self.currentSession = currentSession
         
         let sessionSolves = currentSession.solves!.allObjects as! [Solves]
@@ -471,6 +473,28 @@ extension Array {
     func chunked() -> [[Element]] {
         return stride(from: 0, to: count-1, by: 1).map {
             Array(self[$0 ..< Swift.min($0 + 2, count)])
+        }
+    }
+}
+
+func removeBrokenSolvegroups(_ moc: NSManagedObjectContext) {
+    let fetchRequest: NSFetchRequest<CompSimSession> = CompSimSession.fetchRequest()
+    
+    let objects = try! moc.fetch(fetchRequest)
+    
+    for object in objects {
+        let solveGroupArray = object.solvegroups!.array as! Array<CompSimSolveGroup>
+        
+        for solveGroup in solveGroupArray {
+            if solveGroup.solves!.array.count < 5 && solveGroup != solveGroupArray.last! {
+                #if DEBUG
+                print("to delete:")
+                print(solveGroup)
+                #endif
+                
+                moc.delete(solveGroup)
+                try! moc.save()
+            }
         }
     }
 }
