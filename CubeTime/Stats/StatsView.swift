@@ -217,6 +217,9 @@ struct StatsView: View {
     @ScaledMetric var blockHeightLarge = 160
     @ScaledMetric var blockHeightExtraLarge = 215
     
+    @ScaledMetric var blockHeightReachedTargets = 50
+    @ScaledMetric var offsetReachedTargets = 30
+    
     
     @Binding var currentSession: Sessions
     
@@ -498,11 +501,11 @@ struct StatsView: View {
                                 .padding(.horizontal)
                                 
                                 
-                                StatsBlock("REACHED TARGETS", compSimCount == 0 ? 150 : 50, true, false) {
+                                StatsBlock("REACHED TARGETS", compSimCount == 0 ? 150 : blockHeightReachedTargets, true, false) {
                                     if compSimCount != 0 {
                                         ReachedTargets(Float(reachedTargets)/Float(compSimCount))
                                             .padding(.horizontal, 12)
-                                            .offset(y: 30)
+                                            .offset(y: offsetReachedTargets)
                                     } else {
                                         Text("not enough solves to\ndisplay graph")
                                             .font(.system(size: 17, weight: .medium, design: .monospaced))

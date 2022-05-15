@@ -72,6 +72,8 @@ struct TabIcon: View {
 struct MainTabsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.scenePhase) var scenePhase
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
+    
     @Namespace private var namespace
     
     @StateObject var tabRouter: TabRouter = TabRouter()
@@ -183,6 +185,12 @@ struct MainTabsView: View {
             }) {
                 Updates(showUpdates: $showUpdates)
             }
+            .if(dynamicTypeSize != DynamicTypeSize.large) { view in
+                view
+                    .alert(isPresented: $showUpdates) {
+                        Alert(title: Text("DynamicType Detected"), message: Text("CubeTime only supports standard DyanmicType sizes. Accessibility DynamicType modes are currently not supported, so layouts may not be rendered correctly."), dismissButton: .default(Text("Got it!")))
+                    }
+            }
             .onAppear(perform: checkForUpdate)
             
             /// attempted shortcut menu :tear:
@@ -213,10 +221,5 @@ struct MainTabsView: View {
         }
         .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
         .tint(accentColour)
-        .if(UserDefaults.standard.bool(forKey: gsKeys.forceAppZoom.rawValue)) { view in
-            view
-                .environment(\.dynamicTypeSize, DynamicTypeSize.allCases[UserDefaults.standard.integer(forKey: gsKeys.appZoom.rawValue)])
-//                .environment(\.dynamicTypeSize, DynamicTypeSize.allCases[7])
-        }
     }
 }
