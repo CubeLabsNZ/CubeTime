@@ -11,6 +11,48 @@ extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
 }
 
 
+struct AppZoomWrapper: RawRepresentable, Identifiable, Hashable {
+    static let allCases = [DynamicTypeSize.xSmall,
+                           DynamicTypeSize.small,
+                           DynamicTypeSize.medium,
+                           DynamicTypeSize.large,
+                           DynamicTypeSize.xLarge,
+                           DynamicTypeSize.xxLarge,
+                           DynamicTypeSize.xxxLarge,
+    ]
+    
+    static let appZoomNames: [DynamicTypeSize: String] = [
+            DynamicTypeSize.xSmall: "Extra Small",
+            DynamicTypeSize.small: "Small",
+            DynamicTypeSize.medium: "Medium",
+            DynamicTypeSize.large: "Large (Default)",
+            DynamicTypeSize.xLarge: "Extra Large",
+            DynamicTypeSize.xxLarge: "Extra Extra Large",
+            DynamicTypeSize.xxxLarge: "Extra Extra Extra Large",
+    ]
+    
+    typealias RawValue = Int
+    
+    
+    let size: DynamicTypeSize
+    let name: String
+    
+    var rawValue: RawValue
+    
+    init(rawValue: RawValue) {
+        // Couldn't figure out a nice way to do this with guard let
+        self.rawValue = rawValue
+        self.size = Self.allCases[rawValue]
+        self.name = Self.appZoomNames[size]!
+    }
+    
+    
+    var id: Int {
+        return rawValue
+    }
+}
+
+
 struct GeneralSettingsView: View {
     // timer settings
     @AppStorage(gsKeys.inspection.rawValue) private var inspectionTime: Bool = false
@@ -26,7 +68,7 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.hapBool.rawValue) private var hapticFeedback: Bool = true
     @AppStorage(gsKeys.hapType.rawValue) private var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
     @AppStorage(gsKeys.forceAppZoom.rawValue) private var forceAppZoom: Bool = false
-    @AppStorage(gsKeys.appZoom.rawValue) private var appZoom: Int = 0
+    @AppStorage(gsKeys.appZoom.rawValue) private var appZoom: AppZoomWrapper = AppZoomWrapper(rawValue: 3)
     @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     @AppStorage(gsKeys.gestureDistance.rawValue) private var gestureActivationDistance: Double = 50
     
@@ -45,16 +87,6 @@ struct GeneralSettingsView: View {
         UIImpactFeedbackGenerator.FeedbackStyle.heavy: "Heavy",
         UIImpactFeedbackGenerator.FeedbackStyle.soft: "Soft",
         UIImpactFeedbackGenerator.FeedbackStyle.rigid: "Rigid",
-    ]
-    
-    let appZoomNames: [DynamicTypeSize: String] = [
-        DynamicTypeSize.xSmall: "Extra Small",
-        DynamicTypeSize.small: "Small",
-        DynamicTypeSize.medium: "Medium",
-        DynamicTypeSize.large: "Large (Default)",
-        DynamicTypeSize.xLarge: "Extra Large",
-        DynamicTypeSize.xxLarge: "Extra Extra Large",
-        DynamicTypeSize.xxxLarge: "Extra Extra Extra Large",
     ]
     
     var body: some View {
@@ -248,7 +280,7 @@ struct GeneralSettingsView: View {
                 Divider()
                 
                 
-                
+                /*
                 HStack {
                     Toggle(isOn: $forceAppZoom) {
                         Text("Override System Zoom")
@@ -266,10 +298,8 @@ struct GeneralSettingsView: View {
                         Spacer()
 
                         Picker("", selection: $appZoom) {
-                            ForEach(Array(DynamicTypeSize.allCases.prefix(7)), id: \.self) { mode in
-                                let _ = NSLog("\(DynamicTypeSize.allCases.prefix(7))")
-                                
-                                Text(appZoomNames[mode] ?? "Large (Default)")
+                            ForEach(0..<AppZoomWrapper.allCases.count, id: \.self) { mode in
+                                Text(AppZoomWrapper.appZoomNames[mode])
                             }
                         }
                         .pickerStyle(.menu)
@@ -278,6 +308,7 @@ struct GeneralSettingsView: View {
                     }
                     .padding(.horizontal)
                 }
+                 */
                 
                 
                 VStack (alignment: .leading) {

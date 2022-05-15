@@ -58,6 +58,7 @@ struct CubeTime: App {
         WindowGroup {
             MainTabsView(managedObjectContext: moc)
                 .environment(\.managedObjectContext, moc)
+//                .environment(\.dynamicTypeSize, UserDefaults.standard.object(forKey: gsKeys.appZoom.rawValue) as! DynamicTypeSize)
         }
 //        .onChange(of: phase) { newValue in
 //            if newValue == .active {

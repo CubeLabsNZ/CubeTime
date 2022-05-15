@@ -55,6 +55,7 @@ struct SettingsView: View {
                     .padding(.horizontal)
                 }
             }
+            .navigationViewStyle(StackNavigationViewStyle())
             .zIndex(1)
             .overlay(
                 SettingsDetail(currentCard: $currentCard, showOnboarding: $showOnboarding, namespace: namespace)
