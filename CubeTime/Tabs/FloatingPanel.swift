@@ -1,43 +1,24 @@
-//
-//  FloatingPanel.swift
-//  CubeTime
-//
-//  Created by Tim Xie on 24/04/22.
-//
-
 import SwiftUI
 
-struct FloatingPanel<Content: View>: View {
-    let content: Content
-    
-    init(@ViewBuilder content: () -> Content) {
-        self.content = content()
-    }
-        
-    var body: some View {
-        GeometryReader { proxy in
-            FloatingPanelChild(maxHeight: proxy.size.height, stages: [0, 50, 150, proxy.size.height/2, (proxy.size.height - 24)], content: content)
-        }
-    }
-}
 
-struct FloatingPanelChild<Content: View>: View {
+struct FloatingPanelChild: View {
     @State var height: CGFloat = 50
+    @Binding var stage: Int
     @State var isPressed: Bool = false
     private let minHeight: CGFloat = 0
     
-    let content: Content
-    
-    
     private var maxHeight: CGFloat
     var stages: [CGFloat]
+    let items: [AnyView]
     
+    // TODO use that one func for each tupleview type when making a real package
     
-    
-    init(maxHeight: CGFloat, stages: [CGFloat], content: Content) {
+    init<A: View, B: View, C: View, D: View, E: View>(currentStage: Binding<Int>, maxHeight: CGFloat, stages: [CGFloat], @ViewBuilder content: @escaping () -> TupleView<(A, B, C, D, E)>) {
         self.maxHeight = maxHeight
         self.stages = stages
-        self.content = content
+        self._stage = currentStage
+        let c = content().value
+        self.items = [AnyView(c.0), AnyView(c.1), AnyView(c.2), AnyView(c.3), AnyView(c.4)]
     }
     
     var body: some View {
@@ -59,15 +40,15 @@ struct FloatingPanelChild<Content: View>: View {
                        
                         
                         if height == stages[0] {
-                            
+                            items[0]
                         } else if height == stages[1] {
-                            
+                            items[1]
                         } else if height == stages[2] {
-                            
+                            items[2]
                         } else if height == stages[3] {
-                            
+                            items[3]
                         } else if height == stages[4] {
-                            content
+                            items[4]
                         } else {
                             EmptyView()
                         }
@@ -107,7 +88,7 @@ struct FloatingPanelChild<Content: View>: View {
                                     .onEnded() { value in
                                         withAnimation(.spring()) {
                                             self.isPressed = false
-                                            height = stages.nearest(to: height + value.predictedEndTranslation.height)!.element
+                                            (stage, height) = stages.nearest(to: height + value.predictedEndTranslation.height)!
                                         }
                                     }
                             )

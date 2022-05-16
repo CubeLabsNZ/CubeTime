@@ -481,7 +481,7 @@ class StopWatchManager: ObservableObject {
     // On stop: insert where time with plustwoforzolve > $0
     private var solves: [Solves]!
     // On stop: just append to list
-    private var solvesByDate: [Solves]!
+    @Published var solvesByDate: [Solves]!
     // Maybe use trickery to get object, maybe delete this array
     private var solvesNoDNFs: [Solves]!
     // On stop: just append if not dnf, remove if dnf

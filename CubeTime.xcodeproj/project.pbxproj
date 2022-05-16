@@ -39,7 +39,6 @@
 		23E81E71275D8DDA00B741E3 /* IESettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E70275D8DDA00B741E3 /* IESettings.swift */; };
 		23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E72275D8DEA00B741E3 /* AboutSettings.swift */; };
 		23E9B1DD28151B3A005804A0 /* Aiolos in Frameworks */ = {isa = PBXBuildFile; productRef = 23E9B1DC28151B3A005804A0 /* Aiolos */; };
-		23E9B1DF28151C0F005804A0 /* FloatingPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E9B1DE28151C0F005804A0 /* FloatingPanelViewController.swift */; };
 		23E9B1E128151CD5005804A0 /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E9B1E028151CD5005804A0 /* FloatingPanel.swift */; };
 		23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB8A1D2779B6D3000F6663 /* TimeBar.swift */; };
 		7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2B805D279422BD0006AEDD /* AppDelegate.swift */; };
@@ -48,6 +47,8 @@
 		7D5521DE279965B600B418BE /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5521DD2799657B00B418BE /* libiconv.tbd */; };
 		7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */; };
 		7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6159F82751B53E00DC9A4C /* TimeCard.swift */; };
+		7D655F3A2830E86A00F13F3C /* TimerHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D655F392830E86A00F13F3C /* TimerHeader.swift */; };
+		7D655F562831228300F13F3C /* PrevSolvesDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D655F552831228300F13F3C /* PrevSolvesDisplay.swift */; };
 		7D78FF8E276087AF008BB82E /* BottomTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78FF8D276087AF008BB82E /* BottomTabsView.swift */; };
 		7D7A9EC0274F38CD00C2E125 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EBF274F38CD00C2E125 /* StatsView.swift */; };
 		7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EC3274F392700C2E125 /* SessionsView.swift */; };
@@ -121,7 +122,6 @@
 		23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettings.swift; sourceTree = "<group>"; };
 		23E81E70275D8DDA00B741E3 /* IESettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IESettings.swift; sourceTree = "<group>"; };
 		23E81E72275D8DEA00B741E3 /* AboutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettings.swift; sourceTree = "<group>"; };
-		23E9B1DE28151C0F005804A0 /* FloatingPanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelViewController.swift; sourceTree = "<group>"; };
 		23E9B1E028151CD5005804A0 /* FloatingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanel.swift; sourceTree = "<group>"; };
 		23EB8A1D2779B6D3000F6663 /* TimeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBar.swift; sourceTree = "<group>"; };
 		7D2B805D279422BD0006AEDD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -130,6 +130,8 @@
 		7D5521DD2799657B00B418BE /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabsView.swift; sourceTree = "<group>"; };
 		7D6159F82751B53E00DC9A4C /* TimeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCard.swift; sourceTree = "<group>"; };
+		7D655F392830E86A00F13F3C /* TimerHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerHeader.swift; sourceTree = "<group>"; };
+		7D655F552831228300F13F3C /* PrevSolvesDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrevSolvesDisplay.swift; sourceTree = "<group>"; };
 		7D78FF8D276087AF008BB82E /* BottomTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomTabsView.swift; sourceTree = "<group>"; };
 		7D7A9EBF274F38CD00C2E125 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		7D7A9EC3274F392700C2E125 /* SessionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsView.swift; sourceTree = "<group>"; };
@@ -184,10 +186,12 @@
 			isa = PBXGroup;
 			children = (
 				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
+				7D655F392830E86A00F13F3C /* TimerHeader.swift */,
 				7D7DDF2227955AFF00362DE9 /* PenButton.swift */,
 				2359689227A367A0003ED9E1 /* StopwatchManager.swift */,
 				7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */,
 				7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */,
+				7D655F552831228300F13F3C /* PrevSolvesDisplay.swift */,
 			);
 			path = Timer;
 			sourceTree = "<group>";
@@ -197,7 +201,6 @@
 			children = (
 				7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */,
 				7D78FF8D276087AF008BB82E /* BottomTabsView.swift */,
-				23E9B1DE28151C0F005804A0 /* FloatingPanelViewController.swift */,
 				23E9B1E028151CD5005804A0 /* FloatingPanel.swift */,
 			);
 			path = Tabs;
@@ -486,7 +489,6 @@
 			files = (
 				7D8828FF280D48C100B671EF /* IEUtil.swift in Sources */,
 				23E9B1E128151CD5005804A0 /* FloatingPanel.swift in Sources */,
-				23E9B1DF28151C0F005804A0 /* FloatingPanelViewController.swift in Sources */,
 				23E81E71275D8DDA00B741E3 /* IESettings.swift in Sources */,
 				2397131F2791032300268DFA /* AveragePhases.swift in Sources */,
 				23DE3BE4274DDBE300254D29 /* Persistence.swift in Sources */,
@@ -515,8 +517,10 @@
 				7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */,
 				233FE7B6274F109600C6F1DF /* Helper.swift in Sources */,
 				7D7A9EC6274F396E00C2E125 /* SettingsView.swift in Sources */,
+				7D655F3A2830E86A00F13F3C /* TimerHeader.swift in Sources */,
 				23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */,
 				23034725278BD22600553A7D /* TimeDetail.swift in Sources */,
+				7D655F562831228300F13F3C /* PrevSolvesDisplay.swift in Sources */,
 				239C7E702781511300943AF2 /* Onboarding.swift in Sources */,
 				23CE093427A76D610013E227 /* SessionCard.swift in Sources */,
 				2337E6882767619D00438F43 /* StatsDetail.swift in Sources */,
@@ -612,6 +616,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};

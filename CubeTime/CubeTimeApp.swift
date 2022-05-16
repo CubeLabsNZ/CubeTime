@@ -6,7 +6,6 @@ import CoreData
 @main
 struct CubeTime: App {
     @Environment(\.scenePhase) var phase
-    @Environment(\.horizontalSizeClass) var hSizeClass
     
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -25,8 +24,6 @@ struct CubeTime: App {
     @State var showUpdates: Bool = false
     @State var pageIndex: Int = 0
     
-    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     
     init() {
         persistenceController = PersistenceController.shared
@@ -103,18 +100,15 @@ struct CubeTime: App {
         
         WindowGroup {
             VStack {
-                if horizontalSizeClass == .regular && verticalSizeClass == .regular {
-                    TimerView()
-                } else {
-                    MainTabsView()
-                }
+                // This is a Scene not a View so there is no size class
+                MainView()
             }
             .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
                 Updates(showUpdates: $showUpdates)
             }
             .sheet(isPresented: $showOnboarding, onDismiss: {
                 pageIndex = 0
-                if hSizeClass == .regular { /// FIX IN FUTURE: check for first time register and not just == 18 because can break :sob:
+                if false { /// FIX IN FUTURE: check for first time register and not just == 18 because can break :sob:
                     if UserDefaults.standard.integer(forKey: gsKeys.scrambleSize.rawValue) == 18 {
                         UserDefaults.standard.set(24, forKey: gsKeys.scrambleSize.rawValue)
                     }
@@ -127,5 +121,18 @@ struct CubeTime: App {
             .environmentObject(tabRouter)
         }
 
+    }
+}
+
+
+struct MainView: View {
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    var body: some View {
+        if horizontalSizeClass == .regular && verticalSizeClass == .regular {
+            TimerView(largePad: true)
+        } else {
+            MainTabsView()
+        }
     }
 }

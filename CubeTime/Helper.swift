@@ -4,6 +4,47 @@ import UIKit
 import Combine
 
 
+struct AppZoomWrapper: RawRepresentable, Identifiable {
+    static let allCases = [DynamicTypeSize.xSmall,
+                           DynamicTypeSize.small,
+                           DynamicTypeSize.medium,
+                           DynamicTypeSize.large,
+                           DynamicTypeSize.xLarge,
+                           DynamicTypeSize.xxLarge,
+                           DynamicTypeSize.xxxLarge,
+    ]
+    
+    static private let appZoomNames: [DynamicTypeSize: String] = [
+            DynamicTypeSize.xSmall: "Extra Small",
+            DynamicTypeSize.small: "Small",
+            DynamicTypeSize.medium: "Medium",
+            DynamicTypeSize.large: "Large (Default)",
+            DynamicTypeSize.xLarge: "Extra Large",
+            DynamicTypeSize.xxLarge: "Extra Extra Large",
+            DynamicTypeSize.xxxLarge: "Extra Extra Extra Large",
+    ]
+    
+    typealias RawValue = Int
+    
+    
+    let size: DynamicTypeSize
+    let name: String
+    
+    var rawValue: RawValue
+    
+    init(rawValue: RawValue) {
+        // Couldn't figure out a nice way to do this with guard let
+        self.rawValue = rawValue
+        self.size = Self.allCases[rawValue]
+        self.name = Self.appZoomNames[size]!
+    }
+    
+    
+    var id: Int {
+        return rawValue
+    }
+}
+
 
 extension CGSize {
     public init(_ svgdimen: OrgWorldcubeassociationTnoodleSvgliteDimension) {
