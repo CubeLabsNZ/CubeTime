@@ -119,7 +119,7 @@ struct AboutSettingsView: View {
                     Text("CubeTime.")
                         .font(.custom("RecursiveSansLnrSt-Regular", size: 30))
                         .padding(.top, 20)
-                    Text("VERSION \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)\n")
+                    Text("v\(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)\n")
                         .font(.subheadline.weight(.semibold))
                         .foregroundColor(Color(uiColor: .systemGray))
                 }
