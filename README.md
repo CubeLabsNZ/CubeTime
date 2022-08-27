@@ -148,4 +148,5 @@ Deleting a session will delete *all* your solves in that session, so be careful!
 You can customise almost all settings in the app and the appearance and themes.
 
 ## Some final stuff
+As we are using the official TNoodle scrambler library, please see our [transpiled tnoodle-lib-objc repo](https://github.com/CubeStuffs/tnoodle-lib-objc) for more information. 
 iPad and App Store are trademarks of Apple Inc., registered in the U.S. and other countries.
