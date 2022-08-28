@@ -3,16 +3,21 @@ import SwiftUI
 import SVGKit
 
 
-struct SVGView: UIViewRepresentable {
+struct AsyncScrambleSVGViewRepresentable: UIViewRepresentable {
     var svg: String
+    var width: CGFloat
+    var height: CGFloat
     
     func makeUIView(context: Context) -> SVGKFastImageView {
         let svgImage = SVGKImage(data: svg.data(using: .utf8))
+        svgImage!.scaleToFit(inside: CGSize(width: width, height: height))
         return SVGKFastImageView(svgkImage: svgImage!)!
     }
     
     func updateUIView(_ uiView: SVGKFastImageView, context: Context) {
-        uiView.image = SVGKImage(data: svg.data(using: .utf8))
+        let svgImage = SVGKImage(data: svg.data(using: .utf8))
+        svgImage?.scaleToFit(inside: CGSize(width: width, height: height))
+        uiView.image = svgImage
     }
 }
 
@@ -21,13 +26,16 @@ struct AsyncScrambleView: View {
     var puzzle: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
     var scramble: String
 
+    var width: CGFloat
+    var height: CGFloat
+    
     
     var body: some View {
         Group {
             if svg == "" {
                 ProgressView()
             } else {
-                SVGView(svg: svg)
+                AsyncScrambleSVGViewRepresentable(svg: svg, width: width, height: height)
                     .aspectRatio(contentMode: .fit)
             }
         }.task {
@@ -45,12 +53,17 @@ struct AsyncScrambleView: View {
 }
 
 
-struct TimerSVGView: UIViewRepresentable {
+struct DefaultScrambleSVGViewRepresentable: UIViewRepresentable {
     var svg: OrgWorldcubeassociationTnoodleSvgliteSvg
+    var width: CGFloat
+    var height: CGFloat
+    
     
     func makeUIView(context: Context) -> SVGKFastImageView {
         let svgstr = JavaUtilObjects.toString(withId: svg)
         let svgImage = SVGKImage(data: svgstr.data(using: .utf8))!
+        svgImage.scaleToFit(inside: CGSize(width: width, height: height))
+        
         
         return SVGKFastImageView(svgkImage: svgImage)!
     }
@@ -61,9 +74,12 @@ struct TimerSVGView: UIViewRepresentable {
 }
 
 
-struct TimerScrambleView: View {
+struct DefaultScrambleView: View {
     let svg: OrgWorldcubeassociationTnoodleSvgliteSvg?
+    let width: CGFloat
+    let height: CGFloat
+    
     var body: some View {
-        TimerSVGView(svg: svg!)
+        DefaultScrambleSVGViewRepresentable(svg: svg!, width: width, height: height)
     }
 }

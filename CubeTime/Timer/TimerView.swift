@@ -61,7 +61,6 @@ struct TimerView: View {
 //    @State var compSimTarget: String
 
     
-    private var scaleAmount: CGFloat
        
     
     init(pageIndex: Binding<Int>, currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext, hideTabBar: Binding<Bool>) {
@@ -73,27 +72,6 @@ struct TimerView: View {
         self._targetStr = State(initialValue: filteredStrFromTime((currentSession.wrappedValue as? CompSimSession)?.target))
         
         self._phaseCount = State(initialValue: Int((currentSession.wrappedValue as? MultiphaseSession)?.phase_count ?? 0))
-        
-        
-        
-        
-        self.scaleAmount = {
-            let type = Int(currentSession.wrappedValue.scramble_type)
-            
-            switch type {
-            case 2: return 0.86 // 4
-            case 3: return 0.68 // 5
-            case 4: return 0.58 // 6
-            case 5: return 0.5 // 7
-            case 6: return 0.48 // sq1
-            case 7: return  0.50 // mega
-            case 8: return 0.68 // pyra
-            case 9: return 0.48 // clock
-            case 10: return 0.60 // skewb
-            default:
-                return 1
-            }
-        }()
     }
     
     var body: some View {
@@ -349,6 +327,7 @@ struct TimerView: View {
                         Spacer()
                         
                         let maxWidth = geometry.size.width - 12 - UIScreen.screenWidth/2
+                        let uiScale = UIScreen.main.scale
                         
                                                 
                         ZStack {
@@ -364,15 +343,13 @@ struct TimerView: View {
                                         
                                         if let svg = stopWatchManager.scrambleSVG {
                                             if let scr = stopWatchManager.scrambleStr {
-                                                TimerScrambleView(svg: svg)
+                                                DefaultScrambleView(svg: svg, width: maxWidth / uiScale, height: 120 / uiScale)
                                                     .aspectRatio(contentMode: .fit)
+                                                    .padding(.all, 2)
                                                     .onTapGesture {
                                                         scrambleSheetStr = SheetStrWrapper(str: scr)
                                                     }
-    //                                                .onTapGesture { showDrawScrambleSheet = true }
                                                     .frame(width: maxWidth-4, height: 116)
-                                                    .scaleEffect(scaleAmount)
-                                                
                                                     .offset(x: 1, y: -2.5)
                                             }
                                         } else {
@@ -829,7 +806,7 @@ struct TimeScrambleDetail: View {
                 
                 
                 if let svg = svg {
-                    TimerScrambleView(svg: svg)
+                    DefaultScrambleView(svg: svg, width: UIScreen.screenWidth / UIScreen.main.scale, height: UIScreen.screenHeight / 3 / UIScreen.main.scale)
                         .aspectRatio(contentMode: .fit)
                         .padding()
                 } else {
