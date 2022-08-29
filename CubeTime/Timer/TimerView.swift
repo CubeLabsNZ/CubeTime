@@ -41,6 +41,8 @@ struct TimerView: View {
     
     @State private var phaseCount: Int
     
+    @State private var showSessionName: Bool = false
+    
     @State var hideStatusBar = true
     
     @State var algTrainerSubset = 0
@@ -173,37 +175,65 @@ struct TimerView: View {
             if !hideTabBar {
                 VStack {
                     HStack {
+                        // TOP INFO BAR
                         HStack {
-                            ZStack {
+                            // FIRST PART: ICON + SESSION NAME
+                            ZStack(alignment: .leading) {
                                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                                     .fill(Color(uiColor: .systemGray4))
-                                    .frame(width: 35, height: 35)
+                                    .frame(width: showSessionName ? nil : 35, height: 35)
                                     .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
-                                switch SessionTypes(rawValue: currentSession.session_type)! {
-                                case .standard:
-                                    Image(systemName: "timer.square")
-                                        .font(.system(size: 26, weight: .regular))
-                                case .algtrainer:
-                                    Image(systemName: "command.square")
-                                        .font(.system(size: 26, weight: .regular))
-                                case .multiphase:
-                                    Image(systemName: "square.stack")
-                                        .font(.system(size: 22, weight: .regular))
-                                case .playground:
-                                    Image(systemName: "square.on.square")
-                                        .font(.system(size: 22, weight: .regular))
-                                case .compsim:
-                                    Image(systemName: "globe.asia.australia")
-                                        .font(.system(size: 22, weight: .medium))
+                                
+                                HStack {
+                                    ZStack(alignment: .center) {
+                                        Rectangle()
+                                            .fill(Color.clear)
+                                            .frame(width: 35, height: 35)
+                                        
+                                        
+                                        Group {
+                                            switch SessionTypes(rawValue: currentSession.session_type)! {
+                                            case .standard:
+                                                Image(systemName: "timer.square")
+                                                    .font(.system(size: 26, weight: .regular))
+                                            case .algtrainer:
+                                                Image(systemName: "command.square")
+                                                    .font(.system(size: 26, weight: .regular))
+                                            case .multiphase:
+                                                Image(systemName: "square.stack")
+                                                    .font(.system(size: 22, weight: .regular))
+                                            case .playground:
+                                                Image(systemName: "square.on.square")
+                                                    .font(.system(size: 22, weight: .regular))
+                                            case .compsim:
+                                                Image(systemName: "globe.asia.australia")
+                                                    .font(.system(size: 22, weight: .medium))
+                                            }
+                                        }
+                                    }
+                                    
+                                    if showSessionName {
+                                        Text(currentSession.name ?? "Unknown Session Name")
+                                            .font(.system(size: 17, weight: .medium))
+                                            .padding(.trailing, 4)
+                                    }
+                                }
+                            }
+                            .onTapGesture {
+                                withAnimation(.spring()) {
+                                    showSessionName.toggle()
                                 }
                             }
                             
-                            // TOP BAR
+                            // SESSION TYPE NAME
+                            
                             switch SessionTypes(rawValue: currentSession.session_type)! {
                             case .standard:
-                                Text("STANDARD SESSION")
-                                    .font(.system(size: 17, weight: .medium))
-                                    .padding(.trailing)
+                                if !showSessionName {
+                                    Text("STANDARD SESSION")
+                                        .font(.system(size: 17, weight: .medium))
+                                        .padding(.trailing)
+                                }
                             case .algtrainer:
                                 Text("ALG TRAINER")
                                     .font(.system(size: 17, weight: .medium))
@@ -216,8 +246,10 @@ struct TimerView: View {
                                 .padding(.trailing)
                                 .accentColor(accentColour)
                             case .multiphase:
-                                Text("MULTIPHASE")
-                                    .font(.system(size: 17, weight: .medium))
+                                if !showSessionName {
+                                    Text("MULTIPHASE")
+                                        .font(.system(size: 17, weight: .medium))
+                                }
                                 
                                 HStack(spacing: 0) {
                                     Text("PHASES: ")
@@ -247,8 +279,10 @@ struct TimerView: View {
                                 .padding(.leading, 6)
                                 .padding(.trailing)
                             case .playground:
-                                Text("PLAYGROUND")
-                                    .font(.system(size: 17, weight: .medium))
+                                if !showSessionName {
+                                    Text("PLAYGROUND")
+                                        .font(.system(size: 17, weight: .medium))
+                                }
                                     
                                 Picker("", selection: $playgroundScrambleType) {
                                     ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
@@ -268,8 +302,10 @@ struct TimerView: View {
                                 .padding(.trailing)
                                 
                             case .compsim:
-                                Text("COMP SIM")
-                                    .font(.system(size: 17, weight: .medium))
+                                if !showSessionName {
+                                    Text("COMP SIM")
+                                        .font(.system(size: 17, weight: .medium))
+                                }
                                 
                                 let solveth: Int = stopWatchManager.currentSolveth!+1
                                 
