@@ -2,22 +2,14 @@ import Foundation
 import SwiftUI
 import SVGKit
 
-
-struct AsyncScrambleSVGViewRepresentable: UIViewRepresentable {
-    var svg: String
-    var width: CGFloat
-    var height: CGFloat
+// swiftui views
+struct DefaultScrambleView: View {
+    let svg: OrgWorldcubeassociationTnoodleSvgliteSvg?
+    let width: CGFloat
+    let height: CGFloat
     
-    func makeUIView(context: Context) -> SVGKFastImageView {
-        let svgImage = SVGKImage(data: svg.data(using: .utf8))
-        svgImage!.scaleToFit(inside: CGSize(width: width, height: height))
-        return SVGKFastImageView(svgkImage: svgImage!)!
-    }
-    
-    func updateUIView(_ uiView: SVGKFastImageView, context: Context) {
-        let svgImage = SVGKImage(data: svg.data(using: .utf8))
-        svgImage?.scaleToFit(inside: CGSize(width: width, height: height))
-        uiView.image = svgImage
+    var body: some View {
+        DefaultScrambleSVGViewRepresentable(svg: svg!, width: width, height: height)
     }
 }
 
@@ -52,7 +44,7 @@ struct AsyncScrambleView: View {
     }
 }
 
-
+// uikit wrappers
 struct DefaultScrambleSVGViewRepresentable: UIViewRepresentable {
     var svg: OrgWorldcubeassociationTnoodleSvgliteSvg
     var width: CGFloat
@@ -64,8 +56,14 @@ struct DefaultScrambleSVGViewRepresentable: UIViewRepresentable {
         let svgImage = SVGKImage(data: svgstr.data(using: .utf8))!
         svgImage.scaleToFit(inside: CGSize(width: width, height: height))
         
+        let imageView = SVGKFastImageView(svgkImage: svgImage)!
+//        imageView.backgroundColor = UIColor.green
+//        imageView.setContentHuggingPriority(.required, for: .horizontal)
+//        imageView.setContentHuggingPriority(.required, for: .vertical)
+//        imageView.frame(forAlignmentRect: CGRect(origin: .zero, size: CGSize(width: width, height: height)))
         
-        return SVGKFastImageView(svgkImage: svgImage)!
+        
+        return imageView
     }
     
     func updateUIView(_ uiView: SVGKFastImageView, context: Context) {
@@ -73,13 +71,20 @@ struct DefaultScrambleSVGViewRepresentable: UIViewRepresentable {
     }
 }
 
-
-struct DefaultScrambleView: View {
-    let svg: OrgWorldcubeassociationTnoodleSvgliteSvg?
-    let width: CGFloat
-    let height: CGFloat
+struct AsyncScrambleSVGViewRepresentable: UIViewRepresentable {
+    var svg: String
+    var width: CGFloat
+    var height: CGFloat
     
-    var body: some View {
-        DefaultScrambleSVGViewRepresentable(svg: svg!, width: width, height: height)
+    func makeUIView(context: Context) -> SVGKFastImageView {
+        let svgImage = SVGKImage(data: svg.data(using: .utf8))
+        svgImage!.scaleToFit(inside: CGSize(width: width, height: height))
+        return SVGKFastImageView(svgkImage: svgImage!)!
+    }
+    
+    func updateUIView(_ uiView: SVGKFastImageView, context: Context) {
+        let svgImage = SVGKImage(data: svg.data(using: .utf8))
+        svgImage?.scaleToFit(inside: CGSize(width: width, height: height))
+        uiView.image = svgImage
     }
 }

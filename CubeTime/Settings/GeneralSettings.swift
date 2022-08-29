@@ -257,7 +257,7 @@ struct GeneralSettingsView: View {
                 
                 if hapticFeedback {
                     HStack {
-                        Text("Haptic Mode")
+                        Text("Haptic Intensity")
                             .font(.body.weight(.medium))
                         
                         Spacer()

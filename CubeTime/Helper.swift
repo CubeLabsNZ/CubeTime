@@ -213,6 +213,25 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
 }
 
 
+/// device restriction function
+/// testing, includes simulator
+//let smallDeviceNames: [String] = ["x86_64", "iPhoneSE"]
+
+/// public
+let smallDeviceNames: [String] = ["iPhoneSE"]
+
+func getModelName() -> String {
+    var systemInfo = utsname()
+    uname(&systemInfo)
+    let machineMirror = Mirror(reflecting: systemInfo.machine)
+    return machineMirror.children.reduce("") { identifier, element in
+        guard let value = element.value as? Int8, value != 0 else {
+            return identifier
+        }
+        return identifier + String(UnicodeScalar(UInt8(value)))
+    }
+}
+
 
 /// as the default textfield does not dynamically adjust its width according to the text
 /// and instead is always set to the maximum width, this globalgeometrygetter is used

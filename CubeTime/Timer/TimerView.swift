@@ -127,9 +127,19 @@ struct TimerView: View {
                             }
                         }()
                     )
-                    .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 70 : 56))
-                    .modifier(DynamicText())
-                    .animation(Animation.spring(), value: stopWatchManager.mode == .running)
+                    // for smaller phones (iPhoneSE and test sim), disable animation to larger text
+                    // to prevent text clipping and other UI problems
+                    .if(!(smallDeviceNames.contains(getModelName()))) { view in
+                        view
+                            .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 70 : 56))
+                            .modifier(DynamicText())
+                            .animation(Animation.spring(), value: stopWatchManager.mode == .running)
+                    }
+                    .if(smallDeviceNames.contains(getModelName())) { view in
+                        view
+                            .font(.system(size: 54, weight: .bold, design: .monospaced))
+                            .modifier(DynamicText())
+                    }
                 
                 Spacer()
             }
@@ -156,7 +166,7 @@ struct TimerView: View {
                 }
                 
             }
-            .ignoresSafeArea(edges: .top)
+                .ignoresSafeArea(edges: .top)
             
             
             // VIEWS WHEN TIMER NOT RUNNING
@@ -321,50 +331,65 @@ struct TimerView: View {
                     Spacer()
                 }
                 
-                // GEO READER FOR BOTTOM TOOLS
-                GeometryReader { geometry in
-                    VStack {
-                        Spacer()
+                VStack {
+                    Spacer()
+                    
+                    // GEO READER FOR BOTTOM TOOLS
+                    GeometryReader { geometry in
                         
-                        let maxWidth = geometry.size.width - 12 - UIScreen.screenWidth/2
-                        let uiScale = UIScreen.main.scale
-                        
+                            
+                        let maxHeight: CGFloat = 120
+                        let maxWidth: CGFloat = geometry.size.width - 12 - UIScreen.screenWidth/2
                                                 
-                        ZStack {
+                        ZStack(alignment: .bottom) {
                             // SCRAMBLE VIEW
                             if showScramble {
                                 HStack {
                                     ZStack(alignment: .bottomLeading) {
                                         RoundedRectangle(cornerRadius: 16, style: .continuous)
                                             .fill(Color(uiColor: .systemGray5))
-                                            .frame(width: maxWidth, height: 120)
+                                            .frame(width: maxWidth, height: maxHeight)
                                         
-                                        // tried .overlay but the geometry becomes fixed and scaling doesn't work correctly
+                                        // this whole thing is magic
                                         
+                                        // i don't know why it works
+                                        // i don't know if or why passing in a width and height to uikit works
+                                        // using a really small value (width: 10) seems to force views into the frame?
+                                        // but using its ideal width/height does nothing
+                                        // frame does not set the size for the scrambleview (seems to work for just nxns)
+                                        // for for squan/mega/etc, the scramble is ridiculously large
+                                        
+                                        // it seems to do with uiviewrepresentable, and not being able to set master bounds
+                                        // from swiftui, as swiftui uses its own autolayout, essentially overriding any config
+                                        // of the bound sizes from within uikit itself
+                                        
+                                        // if you know how to fix this, please make a pull request
                                         if let svg = stopWatchManager.scrambleSVG {
                                             if let scr = stopWatchManager.scrambleStr {
-                                                DefaultScrambleView(svg: svg, width: maxWidth / uiScale, height: 120 / uiScale)
+                                                DefaultScrambleView(svg: svg, width: 10, height: 120 / 3) // i'm not touching this, it works
                                                     .aspectRatio(contentMode: .fit)
                                                     .padding(.all, 2)
+                                                    .frame(maxWidth: maxWidth - 4, maxHeight: 116)
+                                                    .offset(x: 1, y: -2.5)
+                                                
                                                     .onTapGesture {
                                                         scrambleSheetStr = SheetStrWrapper(str: scr)
                                                     }
-                                                    .frame(width: maxWidth-4, height: 116)
-                                                    .offset(x: 1, y: -2.5)
                                             }
                                         } else {
                                             ProgressView()
-                                                .frame(width: maxWidth-4, height: 116)
+                                                .frame(width: maxWidth - 4, height: maxHeight - 4)
                                         }
                                     }
+                                    .frame(maxWidth: maxWidth)
                                     
                                     Spacer()
                                 }
                             }
                             
-                            
                             // STATS
                             if showStats && SessionTypes(rawValue: currentSession.session_type)! != .compsim {
+                                // NORMAL STATS
                                 HStack {
                                     Spacer()
                                     
@@ -373,9 +398,9 @@ struct TimerView: View {
                                             .fill(Color(uiColor: .systemGray5))
                                             .frame(width: UIScreen.screenWidth/2, height: 120)
                                         
-                                        
                                         VStack(spacing: 6) {
                                             HStack(spacing: 0) {
+                                                // ao5
                                                 VStack(spacing: 0) {
                                                     Text("AO5")
                                                         .font(.system(size: 13, weight: .medium))
@@ -399,6 +424,7 @@ struct TimerView: View {
                                                     }
                                                 }
                                                 
+                                                // ao12
                                                 VStack(spacing: 0) {
                                                     Text("AO12")
                                                         .font(.system(size: 13, weight: .medium))
@@ -427,6 +453,7 @@ struct TimerView: View {
                                                 .frame(width: UIScreen.screenWidth/2 - 48)
                                             
                                             HStack(spacing: 0) {
+                                                // ao100
                                                 VStack(spacing: 0) {
                                                     Text("AO100")
                                                         .font(.system(size: 13, weight: .medium))
@@ -449,6 +476,7 @@ struct TimerView: View {
                                                     }
                                                 }
                                                 
+                                                // mean
                                                 VStack(spacing: 0) {
                                                     Text("MEAN")
                                                         .font(.system(size: 13, weight: .medium))
@@ -473,6 +501,7 @@ struct TimerView: View {
                                     .frame(width: UIScreen.screenWidth/2, height: 120)
                                 }
                             } else if showStats && SessionTypes(rawValue: currentSession.session_type)! == .compsim {
+                                // COMPSIM STATS
                                 HStack {
                                     Spacer()
                                     
@@ -484,6 +513,7 @@ struct TimerView: View {
                                         
                                         VStack(spacing: 6) {
                                             HStack {
+                                                // bpa
                                                 VStack(spacing: 0) {
                                                     Text("BPA")
                                                         .font(.system(size: 13, weight: .medium))
@@ -502,6 +532,7 @@ struct TimerView: View {
                                                 }
                                                 .frame(minWidth: 0, maxWidth: .infinity)
                                                 
+                                                // wpa
                                                 VStack(spacing: 0) {
                                                     Text("WPA")
                                                         .font(.system(size: 13, weight: .medium))
@@ -533,6 +564,7 @@ struct TimerView: View {
                                             Divider()
                                                 .frame(width: UIScreen.screenWidth/2 - 48)
                                             
+                                            // reach target
                                             VStack(spacing: 0) {
                                                 Text("TO REACH TARGET")
                                                     .font(.system(size: 13, weight: .medium))
@@ -569,9 +601,15 @@ struct TimerView: View {
                             }
                         }
                     }
+//                    .frame(idealWidth: UIScreen.screenWidth, maxWidth: UIScreen.screenWidth, idealHeight: 120, maxHeight: 120)
+    //                .safeAreaInset(edge: .bottom, spacing: 0) {Rectangle().fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : 12)}
+//                    .background(Color.pink)
+                    .padding(.horizontal)
+                    .frame(width: UIScreen.screenWidth, height: 120)
+//                    .padding(.bottom, SetValues.hasBottomBar ? 0 : 12)
+//                    .padding(.bottom, 12)
+                    .offset(x: 0, y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12))) // 50 for tab + 8 for padding + 16/0 for bottom bar gap
                 }
-                .padding(.horizontal)
-                .safeAreaInset(edge: .bottom, spacing: 0) {Rectangle().fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : 12)}
             }
             
             // MANUAL ENTRY FIELD
@@ -738,16 +776,6 @@ struct TimerView: View {
                     Spacer()
                 }
             }
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {
@@ -763,11 +791,7 @@ struct TimerView: View {
         }
         .sheet(item: $scrambleSheetStr) { str in
             TimeScrambleDetail(str.str, stopWatchManager.scrambleSVG)
-//            ScrambleDetail(str.str)
         }
-//        .sheet(isPresented: $showDrawScrambleSheet) {
-//            DiagramDetail(stopWatchManager.scrambleSVG)
-//        }
         .sheet(item: $presentedAvg) { item in
             StatsDetail(solves: item, session: currentSession)
         }

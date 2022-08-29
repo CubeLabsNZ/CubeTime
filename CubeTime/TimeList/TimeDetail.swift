@@ -193,10 +193,9 @@ struct TimeDetailViewOnly: View {
                                 .padding(.leading)
                             
                             GeometryReader { proxy in
-                                AsyncScrambleView(puzzle: puzzle_type.puzzle, scramble: scramble, width: proxy.size.width / UIScreen.main.scale, height: proxy.size.height / UIScreen.main.scale)
+                                AsyncScrambleView(puzzle: puzzle_type.puzzle, scramble: scramble, width: 10, height: 10)
                                     .position(x: proxy.frame(in: .local).midX, y: proxy.frame(in: .local).midY)
                             }
-                            .background(Color.red)
                             .frame(width: nil, height: UIScreen.screenHeight / 3.5)
                             .padding([.horizontal, .bottom])
                             .padding(.top, 12)
