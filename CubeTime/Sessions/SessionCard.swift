@@ -17,8 +17,10 @@ struct SessionCard: View {
     
     var body: some View {
         ZStack {
+            
+            
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color(uiColor: .systemGray5))
+                .fill(Color(uiColor: colourScheme == .dark ? .systemGray4 : .systemGray5))
                 .frame(height: item.pinned ? 110 : 65)
                 .zIndex(0)
             
@@ -29,6 +31,9 @@ struct SessionCard: View {
                 .offset(x: currentSession == item ? -((UIScreen.screenWidth - 16)/2) + 16 : 0)
             
                 .zIndex(1)
+            
+            
+        
             
             
             VStack {
@@ -73,6 +78,7 @@ struct SessionCard: View {
                             VStack(alignment: .leading, spacing: -2) {
                                 Text(item.name ?? "Unknown session name")
                                     .font(.title2.weight(.bold))
+//                                    .foregroundColor(currentSession == item ? accentColour : (colourScheme == .dark ? Color.white : Color.black))
                                     .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                                 
                                 Group {
@@ -90,8 +96,8 @@ struct SessionCard: View {
                                     }
                                 }
                                 .font(.subheadline.weight(.medium))
-                                
-                                .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
+                                    .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
+//                                .foregroundColor(currentSession == item ? accentColour : (colourScheme == .dark ? Color.white : Color.black))
                                 .if(!item.pinned) { view in
                                     view.offset(y: -2)
                                 }
@@ -116,6 +122,7 @@ struct SessionCard: View {
                             Image(puzzle_types[Int(item.scramble_type)].name)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
+//                                .foregroundColor(currentSession == item ? accentColour : (colourScheme == .dark ? Color.white : Color.black))
                                 .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                                 .padding(.vertical, 4)
                                 .padding(.trailing, 12)
@@ -123,6 +130,7 @@ struct SessionCard: View {
                             Image(puzzle_types[Int(item.scramble_type)].name)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
+//                                .foregroundColor(currentSession == item ? accentColour : (colourScheme == .dark ? Color.white : Color.black))
                                 .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                                 .padding(.trailing, 6)
                         }
@@ -141,9 +149,19 @@ struct SessionCard: View {
             .background(Color.clear)
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .zIndex(2)
+            
+            if currentSession == item {
+                HStack {
+                    Capsule()
+                        .fill(accentColour.opacity(0.6))
+                        .frame(width: 4, height: (item.pinned ? 110 : 65) * 0.6)
+                    
+                    Spacer()
+                }
+                .offset(x: 5.5)
+                .zIndex(3)
+            }
         }
-//        .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        
         .onTapGesture {
             withAnimation(.spring(response: 0.325)) {
                 currentSession = item
