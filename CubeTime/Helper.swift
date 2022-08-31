@@ -4,6 +4,12 @@ import UIKit
 import Combine
 
 
+// xor shortcut
+extension Bool {
+    static func ^ (l: Bool, r: Bool) -> Bool {
+        return l != r
+    }
+}
 
 extension CGSize {
     public init(_ svgdimen: OrgWorldcubeassociationTnoodleSvgliteDimension) {

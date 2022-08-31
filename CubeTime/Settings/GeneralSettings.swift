@@ -2,7 +2,7 @@ import SwiftUI
 
 
 enum gsKeys: String {
-    case inspection, freeze, timeDpWhenRunning, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats, scrambleSize, inspectionCountsDown, appZoom, forceAppZoom
+    case inspection, freeze, timeDpWhenRunning, showSessionName, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats, scrambleSize, inspectionCountsDown, appZoom, forceAppZoom
 }
 
 extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
@@ -59,6 +59,7 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.inspectionCountsDown.rawValue) private var insCountDown: Bool = false
     @AppStorage(gsKeys.freeze.rawValue) private var holdDownTime: Double = 0.5
     @AppStorage(gsKeys.timeDpWhenRunning.rawValue) private var timerDP: Int = 3
+    @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
     
     // timer tools
     @AppStorage(gsKeys.showScramble.rawValue) private var showScramble: Bool = true
@@ -116,32 +117,27 @@ struct GeneralSettingsView: View {
                     stopWatchManager.inspectionEnabled = newValue
                 }
                 
-                Divider()
+                
                 
                 if inspectionTime {
-                    HStack {
-                        Toggle(isOn: $insCountDown) {
-                            Text("Inspection Counts Down")
-                                .font(.body.weight(.medium))
-                        }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
-                        
+                    Toggle(isOn: $insCountDown) {
+                        Text("Inspection Counts Down")
+                            .font(.body.weight(.medium))
                     }
+                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
                     .padding(.horizontal)
                     .onChange(of: insCountDown) { newValue in
                         stopWatchManager.insCountDown = newValue
                     }
-                    
-                    Divider()
                 }
                 
+                Divider()
+                
                 VStack (alignment: .leading) {
-                    HStack {
-                        Stepper(value: $holdDownTime, in: 0.05...1.0, step: 0.05) {
-                            Text("Hold Down Time: ")
-                                .font(.body.weight(.medium))
-                            Text(String(format: "%.2fs", holdDownTime))
-                        }
+                    Stepper(value: $holdDownTime, in: 0.05...1.0, step: 0.05) {
+                        Text("Hold Down Time: ")
+                            .font(.body.weight(.medium))
+                        Text(String(format: "%.2fs", holdDownTime))
                     }
                     .padding(.horizontal)
                 }
@@ -149,10 +145,32 @@ struct GeneralSettingsView: View {
                 Divider()
                 
                 VStack (alignment: .leading) {
-                    HStack {
+                    Toggle(isOn: $showSessionName) {
+                        Text("Show Session Name")
+                            .font(.body.weight(.medium))
+                    }
+                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                    .padding(.horizontal)
+                }
+                
+                Text("Permanently show session name instead of session type in timer view. Pressing the session type icon will temporarily toggle in the timer view.")
+                    .font(.footnote.weight(.medium))
+                    .lineSpacing(-4)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .foregroundColor(Color(uiColor: .systemGray))
+                    .multilineTextAlignment(.leading)
+                    .padding(.horizontal)
+                    
+                
+                Divider()
+                
+                VStack (alignment: .leading) {
+                    HStack(alignment: .center) {
                         Text("Timer Update")
                             .font(.body.weight(.medium))
+                        
                         Spacer()
+                        
                         Picker("", selection: $timerDP) {
                             Text("Nothing")
                                 .tag(-1)
@@ -165,11 +183,16 @@ struct GeneralSettingsView: View {
                         .font(.body)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, 10)
                     .onChange(of: timerDP) { newValue in
                         stopWatchManager.timeDP = newValue
                     }
+                    .padding(.bottom, 12)
                 }
+                
+                
+                
+                
+                
             }
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
             
@@ -348,7 +371,7 @@ struct GeneralSettingsView: View {
                     
                 }
                 .padding(.horizontal)
-                .padding(.bottom, 10)
+                .padding(.bottom, 12)
                 
             }
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
@@ -384,7 +407,7 @@ struct GeneralSettingsView: View {
                     
                 }
                 .padding(.horizontal)
-                .padding(.bottom, 10)
+                .padding(.bottom, 12)
             }
             //            .modifier(settingsBlocks())
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))

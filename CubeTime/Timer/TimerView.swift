@@ -15,6 +15,8 @@ struct TimerView: View {
     @Environment(\.colorScheme) var colourScheme
     //@ObservedObject var currentSession: Sessions
    
+    @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
+    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @AppStorage("onboarding") var showOnboarding: Bool = true
     
@@ -41,7 +43,7 @@ struct TimerView: View {
     
     @State private var phaseCount: Int
     
-    @State private var showSessionName: Bool = false
+    @State private var toggleSessionName: Bool = false
     
     @State var hideStatusBar = true
     
@@ -181,7 +183,7 @@ struct TimerView: View {
                             ZStack(alignment: .leading) {
                                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                                     .fill(Color(uiColor: .systemGray4))
-                                    .frame(width: showSessionName ? nil : 35, height: 35)
+                                    .frame(width: (toggleSessionName ^ showSessionName) ? nil : 35, height: 35)
                                     .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
                                 
                                 HStack {
@@ -212,7 +214,7 @@ struct TimerView: View {
                                         }
                                     }
                                     
-                                    if showSessionName {
+                                    if (toggleSessionName ^ showSessionName) {
                                         Text(currentSession.name ?? "Unknown Session Name")
                                             .font(.system(size: 17, weight: .medium))
                                             .padding(.trailing, 4)
@@ -221,7 +223,7 @@ struct TimerView: View {
                             }
                             .onTapGesture {
                                 withAnimation(.spring()) {
-                                    showSessionName.toggle()
+                                    toggleSessionName.toggle()
                                 }
                             }
                             
@@ -229,7 +231,7 @@ struct TimerView: View {
                             
                             switch SessionTypes(rawValue: currentSession.session_type)! {
                             case .standard:
-                                if !showSessionName {
+                                if !(toggleSessionName ^ showSessionName) {
                                     Text("STANDARD SESSION")
                                         .font(.system(size: 17, weight: .medium))
                                         .padding(.trailing)
@@ -246,7 +248,7 @@ struct TimerView: View {
                                 .padding(.trailing)
                                 .accentColor(accentColour)
                             case .multiphase:
-                                if !showSessionName {
+                                if !(toggleSessionName ^ showSessionName) {
                                     Text("MULTIPHASE")
                                         .font(.system(size: 17, weight: .medium))
                                 }
@@ -279,7 +281,7 @@ struct TimerView: View {
                                 .padding(.leading, 6)
                                 .padding(.trailing)
                             case .playground:
-                                if !showSessionName {
+                                if !(toggleSessionName ^ showSessionName) {
                                     Text("PLAYGROUND")
                                         .font(.system(size: 17, weight: .medium))
                                 }
@@ -302,7 +304,7 @@ struct TimerView: View {
                                 .padding(.trailing)
                                 
                             case .compsim:
-                                if !showSessionName {
+                                if !(toggleSessionName ^ showSessionName) {
                                     Text("COMP SIM")
                                         .font(.system(size: 17, weight: .medium))
                                 }
