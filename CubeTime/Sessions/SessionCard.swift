@@ -154,7 +154,7 @@ struct SessionCard: View {
                 HStack {
                     Capsule()
                         .fill(accentColour.opacity(0.6))
-                        .frame(width: 4, height: (item.pinned ? 110 : 65) * 0.6)
+                        .frame(width: 4, height: (item.pinned ? 110 * 0.5 : 65 * 0.6))
                     
                     Spacer()
                 }
