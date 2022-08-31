@@ -150,9 +150,9 @@ struct SessionCard: View {
             }
         }
         
-        .sheet(isPresented: $customizing) {
-            CustomiseStandardSessionView(sessionItem: item)
-        }
+        
+        
+        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 16, style: .continuous))
         
         .contextMenu(menuItems: {
             ContextMenuButton(delay: false,
@@ -181,6 +181,9 @@ struct SessionCard: View {
         })
         .padding(.horizontal)
         
+        .sheet(isPresented: $customizing) {
+            CustomiseStandardSessionView(sessionItem: item)
+        }
         
         .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unknown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {

@@ -169,6 +169,7 @@ struct TimeBar: View {
                 }
             }
         }
+        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 10, style: .continuous))
         .contextMenu {
             Button (role: .destructive) {
                 managedObjectContext.delete(solvegroup)

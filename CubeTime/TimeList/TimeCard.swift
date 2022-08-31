@@ -102,6 +102,7 @@ struct TimeCard: View {
                 }
             }
         }
+        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 10, style: .continuous))
         .contextMenu {
 //            Button {
 //            } label: {
