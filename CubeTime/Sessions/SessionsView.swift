@@ -1110,9 +1110,13 @@ struct SessionsView: View {
         ],
         predicate: NSPredicate(format: "pinned == NO")
     ) var unPinnedSessions: FetchedResults<Sessions>
-    
-    
-    
+        
+    @FetchRequest(
+        entity: Sessions.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
+        ]
+    ) var allSessions: FetchedResults<Sessions>
     
     var body: some View {
         NavigationView {
@@ -1123,12 +1127,12 @@ struct SessionsView: View {
                 ScrollView {
                     VStack (spacing: 10) {
                         ForEach(pinnedSessions) { item in
-                            SessionCard(currentSession: $currentSession, item: item, numSessions: pinnedSessions.count + unPinnedSessions.count)
+                            SessionCard(currentSession: $currentSession, item: item, numSessions: pinnedSessions.count + unPinnedSessions.count, allSessions: allSessions)
                                 .environment(\.managedObjectContext, managedObjectContext)
                             
                         }
                         ForEach(unPinnedSessions) { item in
-                            SessionCard(currentSession: $currentSession, item: item, numSessions: pinnedSessions.count + unPinnedSessions.count)
+                            SessionCard(currentSession: $currentSession, item: item, numSessions: pinnedSessions.count + unPinnedSessions.count, allSessions: allSessions)
                                 .environment(\.managedObjectContext, managedObjectContext)
                             
                         }

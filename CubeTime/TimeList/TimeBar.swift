@@ -185,10 +185,8 @@ struct TimeBar: View {
             } label: {
                 Label {
                     Text("Delete Solve Group")
-                        .foregroundColor(Color.red)
                 } icon: {
                     Image(systemName: "trash")
-                        .foregroundColor(Color.green) /// FIX: colours not working
                 }
             }
             .disabled(current)

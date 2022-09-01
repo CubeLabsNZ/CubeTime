@@ -13,12 +13,12 @@ struct SessionCard: View {
     var item: Sessions
     var numSessions: Int
     
+    var allSessions: FetchedResults<Sessions>
+    
     @Namespace var namespace
     
     var body: some View {
         ZStack {
-            
-            
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color(uiColor: colourScheme == .dark ? .systemGray4 : .systemGray5))
                 .frame(height: item.pinned ? 110 : 65)
@@ -194,7 +194,7 @@ struct SessionCard: View {
             },
                               title: "Delete Session",
                               systemImage: "trash",
-                              disableButton: numSessions <= 1 || item == currentSession)
+                              disableButton: numSessions <= 1)
                 .foregroundColor(Color.red)
         })
         .padding(.horizontal)
@@ -205,10 +205,26 @@ struct SessionCard: View {
         
         .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unknown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
-                withAnimation(.spring()) {
-                    managedObjectContext.delete(item)
-                    try! managedObjectContext.save()
+                var next: Sessions? = nil
+                for item in allSessions {
+                    if item != currentSession {
+                        next = item
+                        break
+                    }
+                    print("########################################################################################### error")
                 }
+                
+                if let next = next {
+                    withAnimation(.spring()) {
+                        managedObjectContext.delete(item)
+                        try! managedObjectContext.save()
+                    }
+                    
+                    currentSession = next
+                }
+                
+                
+                
             }
             Button("Cancel", role: .cancel) {
                 
