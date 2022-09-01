@@ -539,6 +539,8 @@ class StopWatchManager: ObservableObject {
         solvesByDate.remove(object: solve)
         solvesNoDNFs.remove(object: solve)
         solvesNoDNFsbyDate.remove(object: solve)
+        timeListSolves.remove(object: solve)
+        timeListSolvesFiltered.remove(object: solve)
         managedObjectContext.delete(solve)
         try! managedObjectContext.save()
     }

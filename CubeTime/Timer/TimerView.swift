@@ -192,11 +192,8 @@ struct TimerView: View {
                             TimerHeader(targetFocused: $targetFocused)
                             PrevSolvesDisplay(count: 3)
                         }
-                        VStack {
-                            TimerHeader(targetFocused: $targetFocused)
-                            PrevSolvesDisplay()
-                        }
-                        Text("4")
+                        MainTabsView(largePad: true)
+                        MainTabsView(largePad: true)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }

@@ -10,7 +10,7 @@ enum Tab {
 }
 
 class TabRouter: ObservableObject {
-    @Published var currentTab: Tab = .timer
+    @Published var currentTab: Tab = .solves
     @Published var hideTabBar: Bool = false
 }
 
@@ -73,6 +73,8 @@ struct MainTabsView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.horizontalSizeClass) var hSizeClass
     @EnvironmentObject var tabRouter: TabRouter
+    
+    var largePad = false
 
     
     @Namespace private var namespace
@@ -103,7 +105,7 @@ struct MainTabsView: View {
                     SettingsView()
                 }
                 
-                BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
+                BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, largePad: largePad, namespace: namespace)
                     .zIndex(1)
                     .ignoresSafeArea(.keyboard)
             }

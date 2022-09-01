@@ -22,7 +22,6 @@ struct TimeListView: View {
     
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
-    @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.verticalSizeClass) var vSizeClass
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
@@ -43,16 +42,11 @@ struct TimeListView: View {
         if UIDevice.current.userInterfaceIdiom == .phone {
             return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
         } else {
-            if hSizeClass == .regular {
-                return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+            if windowSize!.width > UIScreen.screenWidth/2 {
+                return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
             } else {
-                if windowSize!.width > UIScreen.screenWidth/2 {
-                    return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
-                } else {
-                    return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
-                }
+                return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
             }
-
         }
     }
     

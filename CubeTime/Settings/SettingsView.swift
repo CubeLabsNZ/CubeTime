@@ -33,39 +33,22 @@ struct SettingsView: View {
                     Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
                         .ignoresSafeArea()
                     
-                    if hSizeClass == .regular {
-                        VStack (spacing: 16) {
-                            HStack (spacing: 16) {
-                                SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
-                                SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
-                                SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
-                                SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
-                            }
-                            
-                            Spacer()
+                    VStack (spacing: 16) {
+                        HStack (spacing: 16) {
+                            SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
+                            SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
                         }
-                        .navigationBarTitle("Settings")
-                        .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
-                        .padding(.vertical, 6)
-                        .padding(.horizontal)
-                    } else {
-                        VStack (spacing: 16) {
-                            HStack (spacing: 16) {
-                                SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
-                                SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
-                            }
-                            HStack (spacing: 16) {
-                                SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
-                                SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
-                            }
-                            
-                            Spacer()
+                        HStack (spacing: 16) {
+                            SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
+                            SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
                         }
-                        .navigationBarTitle("Settings")
-                        .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
-                        .padding(.vertical, 6)
-                        .padding(.horizontal)
+                        
+                        Spacer()
                     }
+                    .navigationBarTitle("Settings")
+                    .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                    .padding(.vertical, 6)
+                    .padding(.horizontal)
                 }
             }
             .navigationViewStyle(StackNavigationViewStyle())

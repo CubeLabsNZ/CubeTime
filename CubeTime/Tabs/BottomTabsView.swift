@@ -6,6 +6,7 @@ struct BottomTabsView: View {
     @Binding var hide: Bool
     @Binding var currentTab: Tab
     @Environment(\.horizontalSizeClass) var hSizeClass
+    var largePad = false
     
     var namespace: Namespace.ID
     
@@ -35,13 +36,16 @@ struct BottomTabsView: View {
                         
                         HStack {
                             HStack {
-                                TabIconWithBar(
-                                    currentTab: $currentTab,
-                                    assignedTab: .timer,
-                                    systemIconName: "stopwatch",
-                                    systemIconNameSelected: "stopwatch.fill",
-                                    namespace: namespace
-                                )
+                                
+                                if !largePad {
+                                    TabIconWithBar(
+                                        currentTab: $currentTab,
+                                        assignedTab: .timer,
+                                        systemIconName: "stopwatch",
+                                        systemIconNameSelected: "stopwatch.fill",
+                                        namespace: namespace
+                                    )
+                                }
                                                                     
                                 TabIconWithBar(
                                     currentTab: $currentTab,

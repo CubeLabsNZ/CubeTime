@@ -36,6 +36,7 @@ struct FloatingPanelChild: View {
                         
                        
                         items[stage]
+                            .frame(width: 360, height: height)
 //                        if height == stages[0] {
 //                            items[0]
 //                        } else if height == stages[1] {
