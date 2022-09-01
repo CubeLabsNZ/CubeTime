@@ -4,6 +4,7 @@ import SwiftUI
 struct FloatingPanelChild: View {
     @SceneStorage("CubeTime.FloatingPanel.height") private var height: Double = 50
     @Binding var stage: Int
+    @State var oldStage: Int
     @State var isPressed: Bool = false
     private let minHeight: CGFloat = 0
     
@@ -17,6 +18,7 @@ struct FloatingPanelChild: View {
         self.maxHeight = maxHeight
         self.stages = stages
         self._stage = currentStage
+        self._oldStage = State(initialValue: currentStage.wrappedValue)
         let c = content().value
         self.items = [AnyView(c.0), AnyView(c.1), AnyView(c.2), AnyView(c.3), AnyView(c.4)]
     }
@@ -33,7 +35,7 @@ struct FloatingPanelChild: View {
                             .cornerRadius(10, corners: [.topLeft, .topRight])
                         
                        
-                        items[stages.nearest(to: height)!.0]
+                        items[stage]
 //                        if height == stages[0] {
 //                            items[0]
 //                        } else if height == stages[1] {
@@ -75,6 +77,13 @@ struct FloatingPanelChild: View {
                                             height = minHeight
                                         } else {
                                             height = newh
+                                        }
+                                        let nearest = stages.nearest(to: height)!.0
+                                        if (nearest != oldStage) {
+                                            withAnimation {
+                                                stage = nearest
+                                            }
+                                            oldStage = nearest
                                         }
                                     }
                                 
