@@ -361,8 +361,11 @@ struct TimerView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                         .padding(.horizontal)
                         .padding(.top, SetValues.hasBottomBar ? 0 : hideTabBar ? nil : 8)
+                        .padding(.trailing, 32)
                         
-                        Spacer()
+                        if !(toggleSessionName ^ showSessionName) {
+                            Spacer()
+                        }
                     }
                     
                     
@@ -786,6 +789,7 @@ struct TimerView: View {
                             ProgressView()
                                 .frame(maxHeight: 35)
                                 .padding(.trailing)
+                                .padding(.top, SetValues.hasBottomBar ? 0 : hideTabBar ? nil : 8)
                             
                             Spacer()
                         }
