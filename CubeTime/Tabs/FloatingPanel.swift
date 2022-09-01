@@ -33,22 +33,20 @@ struct FloatingPanelChild: View {
                             .cornerRadius(10, corners: [.topLeft, .topRight])
                         
                        
-                        
-                        if height == stages[0] {
-                            items[0]
-                        } else if height == stages[1] {
-                            items[1]
-                        } else if height == stages[2] {
-                            items[2]
-                        } else if height == stages[3] {
-                            items[3]
-                        } else if height == stages[4] {
-                            items[4]
-                        } else {
-                            EmptyView()
-                        }
-                        
-                        
+                        items[stages.nearest(to: height)!.0]
+//                        if height == stages[0] {
+//                            items[0]
+//                        } else if height == stages[1] {
+//                            items[1]
+//                        } else if height == stages[2] {
+//                            items[2]
+//                        } else if height == stages[3] {
+//                            items[3]
+//                        } else if height == stages[4] {
+//                            items[4]
+//                        } else {
+//                            EmptyView()
+//                        }
                         
                         
                     }
