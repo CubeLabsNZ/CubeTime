@@ -604,9 +604,9 @@ struct TimerView: View {
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {
                 managedObjectContext.delete(detail.wrappedValue!)
+                stopWatchManager.delete(solve: detail.wrappedValue!)
                 detail.wrappedValue = nil
                 stopWatchManager.secondsElapsed = 0
-                try! managedObjectContext.save()
                 stopWatchManager.secondsStr = formatSolveTime(secs: 0)
             }
             Button("Cancel", role: .cancel) {

@@ -535,6 +535,22 @@ class StopWatchManager: ObservableObject {
     @Published var stateID = UUID() // TODO fix this god awful hack
     
     func delete(solve: Solves) {
+        // TODO check best AOs
+        var recalcAO100 = false
+        var recalcAO12 = false
+        var recalcAO5 = false
+        
+        if (solvesByDate.suffix(100).contains(solve)) {
+            recalcAO100 = true
+            if (solvesByDate.suffix(12).contains(solve)) {
+                recalcAO12 = true
+                if (solvesByDate.suffix(5).contains(solve)) {
+                    recalcAO5 = true
+                }
+            }
+        }
+        
+        
         solves.remove(object: solve)
         solvesByDate.remove(object: solve)
         solvesNoDNFs.remove(object: solve)
@@ -542,14 +558,51 @@ class StopWatchManager: ObservableObject {
         timeListSolves.remove(object: solve)
         timeListSolvesFiltered.remove(object: solve)
         managedObjectContext.delete(solve)
+        
+        if recalcAO100 {
+            self.currentAo100 = getCurrentAverageOf(100)
+            if recalcAO12 {
+                self.currentAo12 = getCurrentAverageOf(12)
+                if recalcAO5 {
+                    self.currentAo5 = getCurrentAverageOf(5)
+                }
+            }
+        }
+        
         try! managedObjectContext.save()
     }
     
     func changePen(solve: Solves, pen: PenTypes) {
+        // TODO check best AOs
         if solve.penalty != pen.rawValue {
+            var recalcAO100 = false
+            var recalcAO12 = false
+            var recalcAO5 = false
+            
+            if (solvesByDate.suffix(100).contains(solve)) {
+                recalcAO100 = true
+                if (solvesByDate.suffix(12).contains(solve)) {
+                    recalcAO12 = true
+                    if (solvesByDate.suffix(5).contains(solve)) {
+                        recalcAO5 = true
+                    }
+                }
+            }
             solve.penalty = pen.rawValue
             stateID = UUID() // I'm so sorry
-            // TODO recaulculate position
+            
+            // TODO recaulculate position in list
+            
+            if recalcAO100 {
+                self.currentAo100 = getCurrentAverageOf(100)
+                if recalcAO12 {
+                    self.currentAo12 = getCurrentAverageOf(12)
+                    if recalcAO5 {
+                        self.currentAo5 = getCurrentAverageOf(5)
+                    }
+                }
+            }
+            
             try! managedObjectContext.save()
         }
     }
@@ -592,6 +645,7 @@ class StopWatchManager: ObservableObject {
     func updateStats() {
         // TODO maybe make these async?
         
+        solvesByDate.append(solveItem)
         // These stats would require severe voodoo to not recalculate (TODO switch to voodoo), and are faily cheap
         self.currentAo5 = getCurrentAverageOf(5)
         self.currentAo12 = getCurrentAverageOf(12)
@@ -618,7 +672,6 @@ class StopWatchManager: ObservableObject {
             
             // TODO update comp sim and phases
         }
-        solvesByDate.append(solveItem)
         let greatersolveidx = solves.firstIndex(where: {timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve(solveItem)}) ?? solves.count
         solves.insert(solveItem, at: greatersolveidx)
         
@@ -638,6 +691,39 @@ class StopWatchManager: ObservableObject {
                 }
             } else {
                 bestAo5 = currentAo5
+            }
+        }
+        // todo make these a dict instead
+        if let currentAo12 = currentAo12 {
+            if let bestAo12 = bestAo12 {
+                // Surely there is a better way of this.
+                if (currentAo12.totalPen, bestAo12.totalPen) == (PenTypes.dnf, PenTypes.dnf) ||
+                    (currentAo12.totalPen, bestAo12.totalPen) == (PenTypes.none, PenTypes.none) {
+                    if currentAo12 < bestAo12 {
+                        self.bestAo12 = currentAo12
+                    }
+                } else if (currentAo12.totalPen, bestAo12.totalPen) == (PenTypes.none, PenTypes.dnf) {
+                    self.bestAo12 = currentAo12
+                }
+            } else {
+                bestAo12 = currentAo12
+            }
+        }
+        
+        // todo make these a dict instead
+        if let currentAo100 = currentAo100 {
+            if let bestAo100 = bestAo100 {
+                // Surely there is a better way of this.
+                if (currentAo100.totalPen, bestAo100.totalPen) == (PenTypes.dnf, PenTypes.dnf) ||
+                    (currentAo100.totalPen, bestAo100.totalPen) == (PenTypes.none, PenTypes.none) {
+                    if currentAo100 < bestAo100 {
+                        self.bestAo100 = currentAo100
+                    }
+                } else if (currentAo100.totalPen, bestAo100.totalPen) == (PenTypes.none, PenTypes.dnf) {
+                    self.bestAo100 = currentAo100
+                }
+            } else {
+                bestAo100 = currentAo100
             }
         }
         // TODO save to cache
