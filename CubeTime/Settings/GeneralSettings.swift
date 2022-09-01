@@ -2,7 +2,7 @@ import SwiftUI
 
 
 enum gsKeys: String {
-    case inspection, freeze, timeDpWhenRunning, showSessionName, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats, scrambleSize, inspectionCountsDown, appZoom, forceAppZoom
+    case inspection, freeze, showCancelInspection, timeDpWhenRunning, showSessionName, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats, scrambleSize, inspectionCountsDown, appZoom, forceAppZoom
 }
 
 extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
@@ -57,6 +57,7 @@ struct GeneralSettingsView: View {
     // timer settings
     @AppStorage(gsKeys.inspection.rawValue) private var inspectionTime: Bool = false
     @AppStorage(gsKeys.inspectionCountsDown.rawValue) private var insCountDown: Bool = false
+    @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
     @AppStorage(gsKeys.freeze.rawValue) private var holdDownTime: Double = 0.5
     @AppStorage(gsKeys.timeDpWhenRunning.rawValue) private var timerDP: Int = 3
     @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
@@ -129,6 +130,21 @@ struct GeneralSettingsView: View {
                     .onChange(of: insCountDown) { newValue in
                         stopWatchManager.insCountDown = newValue
                     }
+                    
+                    Toggle(isOn: $showCancelInspection) {
+                        Text("Show Cancel Inspection")
+                            .font(.body.weight(.medium))
+                    }
+                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                    .padding(.horizontal)
+                    
+                    Text("Display a cancel inspection button when inspecting.")
+                        .font(.footnote.weight(.medium))
+                        .lineSpacing(-4)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .foregroundColor(Color(uiColor: .systemGray))
+                        .multilineTextAlignment(.leading)
+                        .padding(.horizontal)
                 }
                 
                 Divider()
