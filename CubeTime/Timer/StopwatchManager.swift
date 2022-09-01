@@ -2,6 +2,21 @@ import Foundation
 import CoreData
 import SwiftUI
 
+
+
+extension Array where Element: Equatable {
+    
+    // Remove first collection element that is equal to the given `object`:
+    mutating func remove(object: Element) {
+        guard let index = firstIndex(of: object) else {return}
+        remove(at: index)
+    }
+    
+}
+
+
+
+
 let plustwotime = 15
 let dnftime = 17
 
@@ -517,9 +532,24 @@ class StopWatchManager: ObservableObject {
         }
     }
     
+    @Published var stateID = UUID() // TODO fix this god awful hack
+    
     func delete(solve: Solves) {
+        solves.remove(object: solve)
+        solvesByDate.remove(object: solve)
+        solvesNoDNFs.remove(object: solve)
+        solvesNoDNFsbyDate.remove(object: solve)
         managedObjectContext.delete(solve)
         try! managedObjectContext.save()
+    }
+    
+    func changePen(solve: Solves, pen: PenTypes) {
+        if solve.penalty != pen.rawValue {
+            solve.penalty = pen.rawValue
+            stateID = UUID() // I'm so sorry
+            // TODO recaulculate position
+            try! managedObjectContext.save()
+        }
     }
     
     func statsGetFromCache() {

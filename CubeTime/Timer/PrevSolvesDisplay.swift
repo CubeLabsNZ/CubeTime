@@ -9,9 +9,10 @@ import SwiftUI
 
 struct PrevSolvesDisplay: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
+    var count: Int?;
     var body: some View {
         HStack {
-            ForEach(stopWatchManager.solvesByDate.suffix(3), id: \.self) { solve in
+            ForEach((count != nil) ? stopWatchManager.solvesByDate.suffix(count!) : stopWatchManager.solvesByDate, id: \.self) { solve in
                 // TODO popup
                 TimeCard(solve: solve, currentSolve: .constant(nil), isSelectMode: .constant(false), selectedSolves: .constant([]))
             }

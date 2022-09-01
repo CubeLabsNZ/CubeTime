@@ -170,24 +170,6 @@ struct TimerView: View {
             }
             .ignoresSafeArea(edges: .top)
             
-            // IPAD BAR
-            
-            if largePad {
-                GeometryReader { proxy in
-                    FloatingPanelChild(currentStage: $floatingPanelStage, maxHeight: proxy.frame(in: .local).height, stages: [0, 50, 150, proxy.frame(in: .local).height/2, (proxy.frame(in: .local).height - 24)]) {
-                        EmptyView()
-                        TimerHeader(targetFocused: $targetFocused)
-                        VStack {
-                            TimerHeader(targetFocused: $targetFocused)
-                            PrevSolvesDisplay()
-                        }
-                        Text("3")
-                        Text("4")
-                    }
-                    .background(Color.blue)
-                }
-                .background(Color.red)
-            }
             
             // VIEWS WHEN TIMER NOT RUNNING
             if !tabRouter.hideTabBar {
@@ -200,9 +182,31 @@ struct TimerView: View {
                         }
                         Spacer()
                     }
+                } else {
+                    // IPAD BAR
+                    
+                    FloatingPanelChild(currentStage: $floatingPanelStage, maxHeight: UIScreen.screenHeight, stages: [0, 50, 150, UIScreen.screenHeight/2, ( UIScreen.screenHeight - 24)]) {
+                        EmptyView()
+                        TimerHeader(targetFocused: $targetFocused)
+                        VStack {
+                            TimerHeader(targetFocused: $targetFocused)
+                            PrevSolvesDisplay(count: 3)
+                        }
+                        VStack {
+                            TimerHeader(targetFocused: $targetFocused)
+                            PrevSolvesDisplay()
+                        }
+                        Text("4")
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
                 
                 //.offset(x: hSizeClass == .regular && orientation.orientation == .landscape ? 4 : 0, y: hSizeClass == .regular && orientation.orientation == .landscape ? 4 : 0)
+                
+             
+                
+                
+                
                 
                 // GEO READER FOR BOTTOM TOOLS
                 GeometryReader { geometry in
@@ -225,6 +229,7 @@ struct TimerView: View {
                                         
                                         if let svg = stopWatchManager.scrambleSVG {
                                             if let scr = stopWatchManager.scrambleStr {
+                                                let _ = NSLog("\(stopWatchManager.currentSession.scramble_type)")
                                                 TimerScrambleView(svg: svg)
                                                     .aspectRatio(contentMode: .fit)
                                                     .onTapGesture {
@@ -598,22 +603,6 @@ struct TimerView: View {
                     
                 }
             }
-
-            
-            
-            Button {
-                stopWatchManager.interruptInspection()
-            } label: {
-                Text("stop")
-            }
-            
-            
-            
-            
-            
-            
-            
-            
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {

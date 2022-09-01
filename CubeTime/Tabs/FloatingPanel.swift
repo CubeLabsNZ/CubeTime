@@ -2,7 +2,7 @@ import SwiftUI
 
 
 struct FloatingPanelChild: View {
-    @State var height: CGFloat = 50
+    @SceneStorage("CubeTime.FloatingPanel.height") private var height: Double = 50
     @Binding var stage: Int
     @State var isPressed: Bool = false
     private let minHeight: CGFloat = 0
@@ -22,11 +22,6 @@ struct FloatingPanelChild: View {
     }
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Color(uiColor: .systemGray6)
-                .ignoresSafeArea()
-            
-            HStack(alignment: .top) {
                 VStack(spacing: 0) {
                     ZStack {
                         Rectangle()
@@ -88,7 +83,9 @@ struct FloatingPanelChild: View {
                                     .onEnded() { value in
                                         withAnimation(.spring()) {
                                             self.isPressed = false
-                                            (stage, height) = stages.nearest(to: height + value.predictedEndTranslation.height)!
+                                            let n = stages.nearest(to: height + value.predictedEndTranslation.height)!
+                                            stage = n.0
+                                            height = Double(n.1)
                                         }
                                     }
                             )
@@ -102,9 +99,7 @@ struct FloatingPanelChild: View {
                 }
                 .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 0)
                 .padding(.horizontal)
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(width: 360)
     }
 }
 
