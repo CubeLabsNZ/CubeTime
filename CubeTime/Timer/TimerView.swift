@@ -280,7 +280,7 @@ struct TimerView: View {
                                                 }
                                                 .frame(minWidth: 0, maxWidth: .infinity)
                                                 .onTapGesture {
-                                                    if stopWatchManager.currentAo5 != nil && stopWatchManager.currentAo5?.totalPen != .dnf {
+                                                    if stopWatchManager.currentAo5 != nil {
                                                         presentedAvg = stopWatchManager.currentAo5
                                                     }
                                                 }
@@ -302,7 +302,7 @@ struct TimerView: View {
                                                 }
                                                 .frame(minWidth: 0, maxWidth: .infinity)
                                                 .onTapGesture {
-                                                    if stopWatchManager.currentAo12 != nil && stopWatchManager.currentAo12?.totalPen != .dnf {
+                                                    if stopWatchManager.currentAo12 != nil {
                                                         presentedAvg = stopWatchManager.currentAo12
                                                     }
                                                 }
@@ -330,7 +330,7 @@ struct TimerView: View {
                                                 }
                                                 .frame(minWidth: 0, maxWidth: .infinity)
                                                 .onTapGesture {
-                                                    if stopWatchManager.currentAo100 != nil && stopWatchManager.currentAo100?.totalPen != .dnf {
+                                                    if stopWatchManager.currentAo100 != nil {
                                                         presentedAvg = stopWatchManager.currentAo100
                                                     }
                                                 }

@@ -358,6 +358,10 @@ class StopWatchManager: ObservableObject {
         } else {
             secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
         }
+        
+        currentAo5 = getCurrentAverageOf(5)
+        currentAo12 = getCurrentAverageOf(12)
+        currentAo100 = getCurrentAverageOf(100)
     }
     
     func safeGetScramble() -> String {
