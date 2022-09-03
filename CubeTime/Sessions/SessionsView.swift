@@ -1092,27 +1092,13 @@ struct SessionsView: View {
     
     
     
-    // I know that this is bad
-    // I tried to use SectionedFetchRequest to no avail
-    // send a PR if you can make this good :)
     @FetchRequest(
         entity: Sessions.entity(),
         sortDescriptors: [
+            NSSortDescriptor(keyPath: \Sessions.pinned, ascending: false),
             NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
-        ],
-        predicate: NSPredicate(format: "pinned == YES")
-    ) var pinnedSessions: FetchedResults<Sessions>
-    
-    @FetchRequest(
-        entity: Sessions.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
-        ],
-        predicate: NSPredicate(format: "pinned == NO")
-    ) var unPinnedSessions: FetchedResults<Sessions>
-    
-    
-    
+        ]
+    ) var sessions: FetchedResults<Sessions>
     
     var body: some View {
         NavigationView {
@@ -1122,13 +1108,8 @@ struct SessionsView: View {
                 
                 ScrollView {
                     VStack (spacing: 10) {
-                        ForEach(pinnedSessions) { item in
-                            SessionCard(currentSession: $currentSession, item: item, numSessions: pinnedSessions.count + unPinnedSessions.count)
-                                .environment(\.managedObjectContext, managedObjectContext)
-                            
-                        }
-                        ForEach(unPinnedSessions) { item in
-                            SessionCard(currentSession: $currentSession, item: item, numSessions: pinnedSessions.count + unPinnedSessions.count)
+                        ForEach(sessions) { item in
+                            SessionCard(currentSession: $currentSession, item: item, numSessions: sessions.count, allSessions: sessions)
                                 .environment(\.managedObjectContext, managedObjectContext)
                             
                         }

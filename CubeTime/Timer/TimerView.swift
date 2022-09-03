@@ -15,6 +15,8 @@ struct TimerView: View {
     @Environment(\.colorScheme) var colourScheme
     //@ObservedObject var currentSession: Sessions
    
+    @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
+    
     @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
@@ -361,8 +363,11 @@ struct TimerView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                         .padding(.horizontal)
                         .padding(.top, SetValues.hasBottomBar ? 0 : hideTabBar ? nil : 8)
+                        .padding(.trailing, 32)
                         
-                        Spacer()
+                        if !(toggleSessionName ^ showSessionName) {
+                            Spacer()
+                        }
                     }
                     
                     
@@ -756,7 +761,6 @@ struct TimerView: View {
                 }
                 .offset(y: 45)
                 .ignoresSafeArea(edges: .all)
-
             }
             
             
@@ -786,6 +790,7 @@ struct TimerView: View {
                             ProgressView()
                                 .frame(maxHeight: 35)
                                 .padding(.trailing)
+                                .padding(.top, SetValues.hasBottomBar ? 0 : hideTabBar ? nil : 8)
                             
                             Spacer()
                         }
@@ -794,25 +799,26 @@ struct TimerView: View {
                 }
             }
 
-            if stopWatchManager.mode == .inspecting && stopWatchManager.inspectionSecs < 8 {
-                VStack {
-                    Group {
-                        Button(action: {
-                            stopWatchManager.interruptInspection()
-                        }, label: {
-                            Image(systemName: "minus.circle")
-                                .font(.system(size: 24, weight: .semibold, design: .rounded))
-                                .foregroundColor(Color.black)
-                        })
-                            .padding(3)
-                            .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
-                            .clipShape(Capsule())
+            if stopWatchManager.mode == .inspecting && showCancelInspection {
+                HStack(alignment: .center) {
+                    Spacer()
+                    
+                    HStack(spacing: 0) {
+                        PenaltyBar(90) {
+                            Button(action: {
+                                stopWatchManager.interruptInspection()
+                            }, label: {
+                                Text("Cancel")
+                                    .font(.system(size: 21, weight: .semibold, design: .rounded))
+                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                            })
+                        }
                     }
-                    .frame(height: UIScreen.screenHeight / 4)
-                        
                     
                     Spacer()
                 }
+                .offset(y: 45)
+                .ignoresSafeArea(edges: .all)
             }
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
