@@ -2,3 +2,4 @@
 *.orig
 /CubeTime.xcodeproj/xcuserdata
 /CubeTime.xcodeproj/project.xcworkspace/xcuserdata
+/CubeTime.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved # Conflicts between xcode versions
