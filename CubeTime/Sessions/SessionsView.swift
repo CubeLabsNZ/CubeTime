@@ -56,8 +56,126 @@ struct ContextMenuButton: View {
     }
 }
 
+struct EventPicker: View {
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
+    
+    @Binding var sessionEventType: Int32
+    
+    let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
+    
+    var body: some View {
+        HStack {
+            Text("Session Event")
+                .font(.body.weight(.medium))
+            
+            
+            Spacer()
+            
+            Picker("", selection: $sessionEventType) {
+                ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
+                    Text(element.name).tag(Int32(index))
+                        .font(.body)
+                }
+            }
+            .pickerStyle(.menu)
+            .accentColor(accentColour)
+            .font(.body)
+        }
+        .padding()
+        .frame(height: frameHeight)
+        .modifier(NewStandardSessionViewBlocks())
+        
+        
+        LazyVGrid(columns: sessionEventTypeColumns, spacing: 0) {
+            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                Button {
+                    sessionEventType = Int32(index)
+                } label: {
+                    ZStack {
+                        Image("circular-" + element.name)
+                        
+                        Circle()
+                            .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
+                            .frame(width: 54, height: 54)
+                            .offset(x: -0.2)
+                    }
+                }
+            }
+        }
+        .padding()
+        .frame(height: 180)
+        .modifier(NewStandardSessionViewBlocks())
+    }
+}
+
+struct SessionNameField: View {
+    @Binding var name: String
+    
+    var body: some View {
+        TextField("Session Name", text: $name)
+            .padding(12)
+            .font(.title2.weight(.semibold))
+            .multilineTextAlignment(TextAlignment.center)
+            .background(Color(uiColor: .systemGray5))
+            .cornerRadius(10)
+            .padding([.horizontal, .bottom])
+    }
+}
+
+struct PuzzleHeaderImage: View {
+    let imageName: String
+    var body: some View {
+        Image(imageName)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 100, height: 100)
+            .padding(.vertical)
+            .shadow(color: .black.opacity(0.24), radius: 12, x: 0, y: 4)
+    }
+}
+
+struct PinSessionToggle: View {
+    @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
+    @Binding var pinnedSession: Bool
+    var body: some View {
+        Toggle(isOn: $pinnedSession) {
+            Text("Pin Session?")
+                .font(.body.weight(.medium))
+        }
+        .tint(.yellow)
+        .padding()
+        .frame(height: frameHeight)
+        .modifier(NewStandardSessionViewBlocks())
+    }
+}
+
+struct CompSimTargetEntry: View {
+    @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
+    @Binding var targetStr: String
+    
+    var body: some View {
+        VStack (spacing: 0) {
+            HStack {
+                Text("Target")
+                    .font(.body.weight(.medium))
+                
+                Spacer()
+                
+                TextField("0.00", text: $targetStr)
+                    .multilineTextAlignment(.trailing)
+                    .modifier(TimeMaskTextField(text: $targetStr))
+            }
+            .padding()
+        }
+        .frame(height: frameHeight)
+        .modifier(NewStandardSessionViewBlocks())
+    }
+}
+
 /// **Customise Sessions **
 struct CustomiseStandardSessionView: View {
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
@@ -74,10 +192,6 @@ struct CustomiseStandardSessionView: View {
     
     @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
     @ScaledMetric(relativeTo: .title2) var bigFrameHeight: CGFloat = 220
-    
-    
-    
-    let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
     
     
     @State private var sessionEventType: Int32
@@ -105,41 +219,15 @@ struct CustomiseStandardSessionView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         VStack(alignment: .center, spacing: 0) {
-                            Image(puzzle_types[Int(sessionEventType)].name)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .padding(.top)
-                                .padding(.bottom)
-                                .shadow(color: .black.opacity(0.24), radius: 12, x: 0, y: 4)
+                            PuzzleHeaderImage(imageName: puzzle_types[Int(sessionEventType)].name)
                             
-                            
-                            TextField("Session Name", text: $name)
-                                .padding(12)
-                                .font(.title2.weight(.semibold))
-                                .multilineTextAlignment(TextAlignment.center)
-                                .background(Color(uiColor: .systemGray5))
-                                .cornerRadius(10)
-                                .padding([.horizontal, .bottom])
+                            SessionNameField(name: $name)
                         }
                         .frame(height: bigFrameHeight)
                         .modifier(NewStandardSessionViewBlocks())
                         
                         if sessionItem.session_type == SessionTypes.compsim.rawValue {
-                            VStack (spacing: 0) {
-                                HStack {
-                                    Text("Target")
-                                        .font(.body.weight(.medium))
-                                    
-                                    Spacer()
-                                    
-                                    TextField("0.00", text: $targetStr)
-                                        .multilineTextAlignment(.trailing)
-                                        .modifier(TimeMaskTextField(text: $targetStr))
-                                }
-                                .padding()
-                            }
-                            .frame(height: frameHeight)
-                            .modifier(NewStandardSessionViewBlocks())
+                            CompSimTargetEntry(targetStr: $targetStr)
                         }
                         
                         
@@ -167,45 +255,13 @@ struct CustomiseStandardSessionView: View {
                          */
                         
                         if sessionItem.session_type == SessionTypes.playground.rawValue {
-                            VStack (spacing: 0) {
-                                LazyVGrid(columns: sessionEventTypeColumns, spacing: 0) {
-                                    ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                                        Button {
-                                            sessionEventType = Int32(index)
-                                        } label: {
-                                            ZStack {
-                                                Image("circular-" + element.name)
-                                                
-                                                Circle()
-                                                    .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
-                                                    .frame(width: 54, height: 54)
-                                                    .offset(x: -0.2)
-                                            }
-                                        }
-                                    }
-                                }
-                                .padding()
-                            }
-                            .frame(height: 180)
-                            .modifier(NewStandardSessionViewBlocks())
+                            EventPicker(sessionEventType: $sessionEventType)
                         }
                         
                         
-                        VStack (spacing: 0) {
-                            HStack {
-                                Toggle(isOn: $pinnedSession) {
-                                    Text("Pin Session?")
-                                        .font(.body.weight(.medium))
-                                }
-                                .tint(.yellow)
-                            }
-                            .padding()
-                        }
-                        .frame(height: frameHeight)
-                        .modifier(NewStandardSessionViewBlocks())
+                        PinSessionToggle(pinnedSession: $pinnedSession)
                     }
                 }
-                .ignoresSafeArea(.keyboard)
                 .navigationBarTitle("Customise Session", displayMode: .inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -244,10 +300,75 @@ struct CustomiseStandardSessionView: View {
                 }
             }
         }
+        .accentColor(accentColour)
         .ignoresSafeArea(.keyboard)
     }
 }
 
+
+struct SessionTypeIconProps {
+    var size: CGFloat = 26
+    var leaPadding: CGFloat = 8
+    var traPadding: CGFloat = 4
+    var weight: Font.Weight = .regular
+}
+
+struct NewSessionTypeCard: View {
+    @Environment(\.colorScheme) var colourScheme
+    let name: String
+    let icon: String
+    let iconProps: SessionTypeIconProps
+    @Binding var show: Bool
+    
+    var body: some View {
+        
+        HStack {
+            Image(systemName: icon)
+                .font(.system(size: iconProps.size, weight: iconProps.weight))
+//                .symbolRenderingMode(.hierarchical)
+                .foregroundColor(colourScheme == .light ? .black : .white)
+                .padding(.leading, iconProps.leaPadding)
+                .padding(.trailing, iconProps.traPadding)
+                .padding(.vertical, 8)
+            Text(name)
+                .font(.body)
+                .foregroundColor(colourScheme == .light ? .black : .white)
+            Spacer()
+        }
+        .onTapGesture {
+            show = true
+        }
+    }
+}
+
+struct NewSessionTypeCardGroup<Content: View>: View {
+    @Environment(\.colorScheme) var colourScheme
+    let title: String
+    let content: () -> Content
+    
+    
+    @inlinable init(title: String, @ViewBuilder content: @escaping () -> Content) {
+        self.title = title
+        self.content = content
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(title)
+                .font(.system(size: 22, weight: .bold, design: .default))
+                .padding(.bottom, 8)
+                .padding(.leading, 4)
+            
+            VStack(spacing: 0) {
+                content()
+            }
+            .background(Color(uiColor: colourScheme == .dark ? .black : .systemGray6))
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .cornerRadius(10)
+        }
+        .padding(.horizontal)
+    }
+}
 
 /// **New sessions**
 struct NewSessionPopUpView: View {
@@ -261,13 +382,7 @@ struct NewSessionPopUpView: View {
     @State private var showNewMultiphaseView = false
     @State private var showNewPlaygroundView = false
     @State private var showNewCompsimView = false
-    
-    @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
-    @ScaledMetric(relativeTo: .title2) var bigFrameHeight: CGFloat = 220
 
-        
-    @State private var testBool = false
-    
     @Binding var currentSession: Sessions
     @Binding var showNewSessionPopUp: Bool
     
@@ -285,204 +400,38 @@ struct NewSessionPopUpView: View {
                     
                     
                     
-                    VStack(alignment: .leading, spacing: 0) {
-                        Group {
-                            Text("Normal Sessions")
-                                .font(.system(size: 22, weight: .bold, design: .default))
-                                .padding(.leading, 20)
-                                .padding(.bottom, 8)
+                    VStack(alignment: .leading, spacing: 48) {
+                        NewSessionTypeCardGroup(title: "Normal Sessions") {
                             
-                            HStack {
-                                Image(systemName: "timer.square")
-                                    .font(.system(size: 26, weight: .regular))
-                                    .foregroundColor(colourScheme == .light ? .black : .white)
-                                    .padding(.leading, 8)
-                                    .padding(.trailing, 4)
-                                    .padding(.top, 8)
-                                    .padding(.bottom, 8)
-                                Text("Standard Session")
-                                    .font(.body)
-                                    .foregroundColor(colourScheme == .light ? .black : .white)
-                                //.padding(10)
-                                Spacer()
-                            }
+                            NewSessionTypeCard(name: "Standard Session", icon: "timer.square", iconProps: SessionTypeIconProps(), show: $showNewStandardSessionView)
+                        
+                            Divider()
+                                .padding(.leading, 48)
                             
-                            .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
-                            .onTapGesture {
-                                showNewStandardSessionView = true
-                            }
-                            .cornerRadius(10, corners: .topRight)
-                            .cornerRadius(10, corners: .topLeft)
-                            .padding(.leading)
-                            .padding(.trailing)
+                            NewSessionTypeCard(name: "Multiphase", icon: "square.stack", iconProps: SessionTypeIconProps(size: 24, leaPadding: 10, traPadding: 6), show: $showNewMultiphaseView)
                             
+                            Divider()
+                                .padding(.leading, 48)
                             
-                            ZStack {
-                                Rectangle()
-                                    .fill(Color(uiColor: colourScheme == .dark ? .black : .systemGray6))
-                                    .frame(height: 1)
-                                    .padding(.leading)
-                                    .padding(.trailing)
-                                
-                                Divider()
-                                    .padding(.leading, 64)
-                                    .padding(.trailing)
-                            }
-                            
-                            
-                            /*
-                            HStack {
-                                Image(systemName: "command.square")
-                                    .font(.system(size: 26, weight: .regular))
-                                    .foregroundColor(colourScheme == .light ? .black : .white)
-                                //                                    .symbolRenderingMode(.hierarchical)
-                                    .padding(.leading, 8)
-                                    .padding(.trailing, 4)
-                                    .padding(.top, 8)
-                                    .padding(.bottom, 8)
-                                Text("Algorithm Trainer") // wip
-                                    .font(.body)
-                                    .foregroundColor(colourScheme == .light ? .black : .white)
-                                
-                                Spacer()
-                            }
-                            .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
-                                            .clipShape(Rectangle()))
-                            .onTapGesture {
-                                showNewAlgTrainerView = true
-                            }
-                            .padding(.leading)
-                            .padding(.trailing)
-                            
-                            
-                            ZStack {
-                                Rectangle()
-                                    .fill(Color(uiColor: colourScheme == .dark ? .black : .systemGray6))
-                                    .frame(height: 1)
-                                    .padding(.leading)
-                                    .padding(.trailing)
-                                Divider()
-                                    .padding(.leading, 64)
-                                    .padding(.trailing)
-                            }
-                             */
-                            
-                            /// alg trainer commented out for now
+                            NewSessionTypeCard(name: "Playground", icon: "square.on.square", iconProps: SessionTypeIconProps(size: 24), show: $showNewPlaygroundView)
                         }
                         
                         
-                        Group {
-                            HStack {
-                                Image(systemName: "square.stack")
-                                    .font(.system(size: 24, weight: .regular))
-                                    .foregroundColor(colourScheme == .light ? .black : .white)
-                                //                                .symbolRenderingMode(.hierarchical)
-                                    .padding(.leading, 10)
-                                    .padding(.trailing, 6)
-                                    .padding(.top, 8)
-                                    .padding(.bottom, 8)
-                                Text("Multiphase") // wip
-                                    .font(.body)
-                                    .foregroundColor(colourScheme == .light ? .black : .white)
-                                
-                                Spacer()
-                            }
-                            .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
-                                            .clipShape(Rectangle()))
-                            .onTapGesture {
-                                showNewMultiphaseView = true
-                            }
-                            .padding(.leading)
-                            .padding(.trailing)
+                        NewSessionTypeCardGroup(title: "Other Sessions") {
+//                            NewSessionTypeCard(name: "Algorithm Trainer", icon: "command.square", iconProps: SessionTypeIconProps(), show: $showNewAlgTrainerView)
+//
+//                            Divider()
+//                                .padding(.leading, 48)
                             
-                            
-                            ZStack {
-                                Rectangle()
-                                    .fill(Color(uiColor: colourScheme == .dark ? .black : .systemGray6))
-                                    .frame(height: 1)
-                                    .padding(.leading)
-                                    .padding(.trailing)
-                                
-                                Divider()
-                                    .padding(.leading, 64)
-                                    .padding(.trailing)
-                            }
-                            
-                            
-                            
-                            
-                            
-                            HStack {
-                                Image(systemName: "square.on.square")
-                                    .font(.system(size: 24, weight: .regular))
-                                    .foregroundColor(colourScheme == .light ? .black : .white)
-                                //                                .symbolRenderingMode(.hierarchical)
-                                    .padding(.leading, 8)
-                                    .padding(.trailing, 4)
-                                    .padding(.top, 8)
-                                    .padding(.bottom, 8)
-                                Text("Playground") // wip
-                                    .font(.body)
-                                    .foregroundColor(colourScheme == .light ? .black : .white)
-                                
-                                Spacer()
-                            }
-                            .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
-                            .onTapGesture {
-                                showNewPlaygroundView = true
-                            }
-                            .cornerRadius(10, corners: .bottomRight)
-                            .cornerRadius(10, corners: .bottomLeft)
-                            .padding(.horizontal)
-                            
-                            
-                            
-                            
-                            Text("Other Sessions")
-                                .font(.system(size: 22, weight: .bold, design: .default))
-                                .padding(.top, 48)
-                                .padding(.leading, 20)
-                                .padding(.bottom, 8)
-                             
-                             
-                             
-                            HStack {
-                                Image(systemName: "globe.asia.australia")
-                                    .font(.system(size: 26, weight: .medium))
-                                    .foregroundColor(colourScheme == .light ? .black : .white)
-                                //                                .symbolRenderingMode(.hierarchical)
-                                    .padding(.leading, 8)
-                                    .padding(.trailing, 4)
-                                    .padding(.top, 8)
-                                    .padding(.bottom, 8)
-                                Text("Comp Sim") // wip
-                                    .font(.body)
-                                    .foregroundColor(colourScheme == .light ? .black : .white)
-                                
-                                Spacer()
-                            }
-                            .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
-                                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
-                            .onTapGesture {
-                                showNewCompsimView = true
-                            }
-                            .padding(.leading)
-                            .padding(.trailing)
+                            NewSessionTypeCard(name: "Comp Sim", icon: "globe.asia.australia", iconProps: SessionTypeIconProps(weight: .medium), show: $showNewCompsimView)
                         }
                         
                         
                         
-                        NavigationLink("", destination: NewStandardSessionView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession, pinnedSession: false), isActive: $showNewStandardSessionView)
-                        
-                        /*
-                        NavigationLink("", destination: NewAlgTrainerView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession, pinnedSession: false), isActive: $showNewAlgTrainerView)
-                         */
-                        
-                        NavigationLink("", destination: NewMultiphaseView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession, pinnedSession: false), isActive: $showNewMultiphaseView)
-                        
-                        NavigationLink("", destination: NewPlaygroundView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession, pinnedSession: false), isActive: $showNewPlaygroundView)
-                        
-                        NavigationLink("", destination: NewCompsimView(showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession, pinnedSession: false), isActive: $showNewCompsimView)
+                        NavigationLink("", destination: NewSessionView(sessionType: SessionTypes.standard, typeName: "Standard", showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession), isActive: $showNewStandardSessionView)
+                        NavigationLink("", destination: NewSessionView(sessionType: SessionTypes.multiphase, typeName: "Multiphase", showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession), isActive: $showNewMultiphaseView)
+                        NavigationLink("", destination: NewSessionView(sessionType: SessionTypes.playground, typeName: "Playground", showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession), isActive: $showNewPlaygroundView)
+                        NavigationLink("", destination: NewSessionView(sessionType: SessionTypes.compsim, typeName: "Comp Sim", showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession), isActive: $showNewCompsimView)
                         
                         Spacer()
                         
@@ -520,23 +469,36 @@ struct NewSessionPopUpView: View {
     }
 }
 
-struct NewStandardSessionView: View {
+
+struct NewSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
+    let sessionType: SessionTypes
+    let typeName: String
     @Binding var showNewSessionPopUp: Bool
     @Binding var currentSession: Sessions
+    
+    // All sessions
     @State private var name: String = ""
+    @State var pinnedSession: Bool = false
+    
+    // Non-Playground
     @State private var sessionEventType: Int32 = 0
-    @State var pinnedSession: Bool
+    
+    // Multiphase
+    @State private var phaseCount: Int = 2
+    
+    // Comp sim
+    @State private var targetStr: String = ""
+    
     
     @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
     @ScaledMetric(relativeTo: .title2) var bigFrameHeight: CGFloat = 220
+    @ScaledMetric(relativeTo: .title2) var otherBigFrameHeight: CGFloat = 80
 
-    
-    let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
     
     var body: some View {
         ZStack {
@@ -546,535 +508,93 @@ struct NewStandardSessionView: View {
             ScrollView {
                 VStack (spacing: 16) {
                     VStack (alignment: .center, spacing: 0) {
-                        Image(puzzle_types[Int(sessionEventType)].name)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 100, height: 100)
-                            .padding(.top)
-                            .padding(.bottom)
-                            .shadow(color: .black.opacity(0.24), radius: 12, x: 0, y: 4)
-                        
-                        
-                        
-                        TextField("Session Name", text: $name)
-                            .padding(12)
-                            .font(.title2.weight(.semibold))
-                            .multilineTextAlignment(TextAlignment.center)
-                            .background(Color(uiColor: .systemGray5))
-                            .cornerRadius(10)
-                            .padding([.horizontal, .vertical])
-                    }
-                    .frame(height: bigFrameHeight)
-                    .modifier(NewStandardSessionViewBlocks())
-                    
-                    VStack (spacing: 0) {
-                        HStack {
-                            Text("Session Event")
-                                .font(.body.weight(.medium))
-                            
-                            
-                            Spacer()
-                            
-                            Picker("", selection: $sessionEventType) {
-                                ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
-                                    Text(element.name).tag(Int32(index))
-                                        .font(.body)
-                                }
-                            }
-                            .pickerStyle(.menu)
-                            .accentColor(accentColour)
-                            .font(.body)
+                        if sessionType != SessionTypes.playground {
+                            PuzzleHeaderImage(imageName: puzzle_types[Int(sessionEventType)].name)
                         }
-                        .padding()
-                    }
-                    .frame(height: frameHeight)
-                    .modifier(NewStandardSessionViewBlocks())
-                    
-                    
-                    VStack (spacing: 0) {
-                        LazyVGrid(columns: sessionEventTypeColumns, spacing: 0) {
-                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                                Button {
-                                    sessionEventType = Int32(index)
-                                } label: {
-                                    ZStack {
-                                        Image("circular-" + element.name)
-                                        
-                                        Circle()
-                                            .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
-                                            .frame(width: 54, height: 54)
-                                            .offset(x: -0.2)
-                                    }
-                                }
-                            }
+                        
+                        SessionNameField(name: $name)
+                        
+                        if let session_desc = session_descriptions[sessionType] {
+                            Text(session_desc)
+                                .multilineTextAlignment(.leading)
+                                .foregroundColor(Color(uiColor: .systemGray))
+                                .padding([.horizontal, .bottom])
                         }
-                        .padding()
                     }
-                    .frame(height: 180)
                     .modifier(NewStandardSessionViewBlocks())
+                    .if(sessionType == .standard) { view in
+                        view
+                            .frame(height: bigFrameHeight)
+                    }
+                    .if(sessionType != .standard) { view in
+                        view
+                            .frame(minHeight: otherBigFrameHeight)
+                    }
                     
-                    
-                    
-                    VStack (spacing: 0) {
-                        HStack {
-                            Toggle(isOn: $pinnedSession) {
-                                Text("Pin Session?")
+                    if sessionType == .multiphase {
+                        VStack (spacing: 0) {
+                            HStack(spacing: 0) {
+                                Text("Phases: ")
                                     .font(.body.weight(.medium))
+                                Text("\(phaseCount)")
+                                
+                                Spacer()
+                                
+                                Stepper("", value: $phaseCount, in: 2...8)
+                                
                             }
-                            .tint(.yellow)
-                        }
-                        .padding()
-                    }
-                    .frame(height: frameHeight)
-                    .modifier(NewStandardSessionViewBlocks())
-                    
-                    Spacer()
-                }
-            }
-            .ignoresSafeArea(.keyboard)
-            .navigationBarTitle("New Standard Session", displayMode: .inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        let sessionItem = Sessions(context: managedObjectContext)
-                        sessionItem.name = name
-                        sessionItem.pinned = pinnedSession
-                        sessionItem.scramble_type = sessionEventType
-                        try! managedObjectContext.save()
-                        currentSession = sessionItem
-                        showNewSessionPopUp = false
-                        currentSession = sessionItem
-                    } label: {
-                        Text("Create")
-                    }
-                    .disabled(self.name.isEmpty)
-                }
-            }
-        }
-        .ignoresSafeArea(.keyboard)
-    }
-}
-
-struct NewMultiphaseView: View {
-    @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
-    
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
-    
-    @State private var name: String = ""
-    @State private var sessionEventType: Int32 = 0
-    @State private var phaseCount: Int = 2
-    
-    @Binding var showNewSessionPopUp: Bool
-    @Binding var currentSession: Sessions
-    
-    @State var pinnedSession: Bool
-    
-    @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
-    @ScaledMetric(relativeTo: .title2) var bigFrameHeight: CGFloat = 80
-
-    
-//    init(showNewSessionPopUp: Binding<Bool>, currentSession: Binding<Bool>, pinnedSession: Bool) {
-//        self.showNewSessionPopUp
-//    }
-
-    let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
-    
-    var body: some View {
-        ZStack {
-            Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
-                .ignoresSafeArea()
-            
-            ScrollView {
-                VStack (spacing: 16) {
-                    
-                    VStack (alignment: .center, spacing: 0) {
-                        Image(puzzle_types[Int(sessionEventType)].name)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 100, height: 100)
-                            .padding(.top)
-                            .padding(.bottom)
-                            .shadow(color: .black.opacity(0.24), radius: 12, x: 0, y: 4)
-                        
-                        
-                        TextField("Session Name", text: $name)
-                            .padding(12)
-                            .font(.title2.weight(.semibold))
-                            .multilineTextAlignment(TextAlignment.center)
-                            .background(Color(uiColor: .systemGray5))
-                            .cornerRadius(10)
-                            .padding(.leading)
-                            .padding(.trailing)
-                            .padding(.bottom)
-                        
-                        Text("A multiphase session gives you the ability to breakdown your solves into sections, such as blindfolded solves or stages in a 3x3 solve.\n\nTo use, tap anywhere on the timer during a solve to record a phase lap. You can access your breakdown statistics in each time card.")
-                            .multilineTextAlignment(.leading)
-                            .foregroundColor(Color(uiColor: .systemGray))
-                            .padding(.horizontal)
-                            .padding(.bottom)
-                        
-                    }
-                    .frame(minHeight: bigFrameHeight)
-                    .modifier(NewStandardSessionViewBlocks())
-                    
-                    VStack (spacing: 0) {
-                        HStack(spacing: 0) {
-                            Text("Phases: ")
-                                .font(.body.weight(.medium))
-                            Text("\(phaseCount)")
-                            
-                            Spacer()
-                            
-                            Stepper("", value: $phaseCount, in: 2...8)
-                            
-                        }
-                        .padding()
-                    }
-                    .frame(height: frameHeight)
-                    .modifier(NewStandardSessionViewBlocks())
-                    
-                    
-                    VStack (spacing: 0) {
-                        HStack {
-                            Text("Session Event")
-                                .font(.body.weight(.medium))
-                            
-                            
-                            Spacer()
-                            
-                            Picker("", selection: $sessionEventType) {
-                                ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
-                                    Text(element.name).tag(Int32(index))
-                                }
-                            }
-                            .pickerStyle(.menu)
-                            .accentColor(accentColour)
-                            .font(.body)
-                        }
-                        .padding()
-                    }
-                    .frame(height: frameHeight)
-                    .modifier(NewStandardSessionViewBlocks())
-                    
-                    
-                    VStack (spacing: 0) {
-                        LazyVGrid(columns: sessionEventTypeColumns, spacing: 0) {
-                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                                Button {
-                                    sessionEventType = Int32(index)
-                                } label: {
-                                    ZStack {
-                                        Image("circular-" + element.name)
-                                        
-                                        Circle()
-                                            .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
-                                            .frame(width: 54, height: 54)
-                                            .offset(x: -0.2)
-                                    }
-                                }
-                            }
-                        }
-                        .padding()
-                    }
-                    .frame(height: 180)
-                    .modifier(NewStandardSessionViewBlocks())
-                    
-                    
-                    
-                    VStack (spacing: 0) {
-                        HStack {
-                            Toggle(isOn: $pinnedSession) {
-                                Text("Pin Session?")
-                                    .font(.body.weight(.medium))
-                            }
-                            .tint(.yellow)
-                        }
-                        .padding()
-                    }
-                    .frame(height: frameHeight)
-                    .modifier(NewStandardSessionViewBlocks())
-                    
-                    Spacer()
-                }
-            }
-            .ignoresSafeArea(.keyboard)
-            .navigationBarTitle("New Multiphase Session", displayMode: .inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        let sessionItem = MultiphaseSession(context: managedObjectContext)
-                        sessionItem.name = name
-                        sessionItem.pinned = pinnedSession
-                        sessionItem.phase_count = Int16(phaseCount)
-                        sessionItem.session_type = 2
-                        
-                        sessionItem.scramble_type = sessionEventType
-                        try! managedObjectContext.save()
-                        currentSession = sessionItem
-                        showNewSessionPopUp = false
-                        currentSession = sessionItem
-                    } label: {
-                        Text("Create")
-                    }
-                    .disabled(self.name.isEmpty)
-                }
-            }
-        }
-        .ignoresSafeArea(.keyboard)
-    }
-}
-
-struct NewPlaygroundView: View {
-    @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
-    
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
-    
-    @Binding var showNewSessionPopUp: Bool
-    @Binding var currentSession: Sessions
-    @State private var name: String = ""
-    @State private var sessionEventType: Int32 = 0
-    @State var pinnedSession: Bool
-    
-    @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
-    @ScaledMetric(relativeTo: .title2) var bigFrameHeight: CGFloat = 80
-
-    
-    var body: some View {
-        ZStack {
-            Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
-                .ignoresSafeArea()
-            
-            ScrollView {
-                VStack (spacing: 16) {
-                    
-                    VStack (alignment: .center, spacing: 0) {
-                        
-                        TextField("Session Name", text: $name)
-                            .padding(12)
-                            .font(.title2.weight(.semibold))
-                            .multilineTextAlignment(TextAlignment.center)
-                            .background(Color(uiColor: .systemGray5))
-                            .cornerRadius(10)
                             .padding()
-                        
-                        Text("A playground session allows you to quickly change the scramble type within a session without having to specify a scramble type for the whole session.")
-                            .multilineTextAlignment(.leading)
-                            .foregroundColor(Color(uiColor: .systemGray))
-                            .padding([.horizontal, .bottom])
-                    }
-                    .frame(minHeight: bigFrameHeight)
-                    .modifier(NewStandardSessionViewBlocks())
-                    
-                    
-                    VStack (spacing: 0) {
-                        HStack {
-                            Toggle(isOn: $pinnedSession) {
-                                Text("Pin Session?")
-                                    .font(.body.weight(.medium))
-                            }
-                            .tint(.yellow)
                         }
-                        .padding()
+                        .frame(height: frameHeight)
+                        .modifier(NewStandardSessionViewBlocks())
+                    } else if sessionType == .compsim {
+                        CompSimTargetEntry(targetStr: $targetStr)
                     }
-                    .frame(height: frameHeight)
-                    .modifier(NewStandardSessionViewBlocks())
+                    
+                    
+                    
+                    if sessionType != .playground {
+                        EventPicker(sessionEventType: $sessionEventType)
+                    }
+                    
+                    PinSessionToggle(pinnedSession: $pinnedSession)
                     
                     Spacer()
                 }
             }
-            .ignoresSafeArea(.keyboard)
-            .navigationBarTitle("New Playground Session", displayMode: .inline)
+//            .ignoresSafeArea(.keyboard)
+            .navigationBarTitle("New \(typeName) Session", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        let sessionItem = Sessions(context: managedObjectContext)
+                        let sessionItem = sessionTypeForID[sessionType, default: Sessions.self].init(context: managedObjectContext)
                         sessionItem.name = name
                         sessionItem.pinned = pinnedSession
+                        sessionItem.session_type = sessionType.rawValue
                         
-                        sessionItem.session_type = 3
-                        try! managedObjectContext.save()
-                        currentSession = sessionItem
-                        showNewSessionPopUp = false
-                        currentSession = sessionItem
-                        
-                    } label: {
-                        Text("Create")
-                    }
-                    .disabled(self.name.isEmpty)
-                }
-            }
-        }
-        .ignoresSafeArea(.keyboard)
-    }
-}
-
-struct NewCompsimView: View {
-    @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
-    
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
-    
-    @Binding var showNewSessionPopUp: Bool
-    @Binding var currentSession: Sessions
-    @State private var name: String = ""
-    @State private var targetStr: String = ""
-    @State private var sessionEventType: Int32 = 0
-    @State var pinnedSession: Bool
-    
-    @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
-    @ScaledMetric(relativeTo: .title2) var bigFrameHeight: CGFloat = 80
-
-    
-    let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
-    
-    var body: some View {
-        ZStack {
-            Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
-                .ignoresSafeArea()
-            
-            ScrollView {
-                VStack (spacing: 16) {
-                    
-                    VStack (alignment: .center, spacing: 0) {
-                        Image(puzzle_types[Int(sessionEventType)].name)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 100, height: 100)
-                            .padding(.top)
-                            .padding(.bottom)
-                            .shadow(color: .black.opacity(0.24), radius: 12, x: 0, y: 4)
-                        
-                        
-                        TextField("Session Name", text: $name)
-                            .padding(12)
-                            .font(.title2.weight(.semibold))
-                            .multilineTextAlignment(TextAlignment.center)
-                            .background(Color(uiColor: .systemGray5))
-                            .cornerRadius(10)
-                            .padding(.leading)
-                            .padding(.trailing)
-                            .padding(.bottom)
-                        
-                        Text("A comp sim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach.")
-                        /// todo: add ability to target your wca pb/some ranking/some official record
-                            .multilineTextAlignment(.leading)
-                            .foregroundColor(Color(uiColor: .systemGray))
-                            .padding(.horizontal)
-                            .padding(.bottom)
-                        
-                    }
-                    .frame(minHeight: bigFrameHeight)
-                    .modifier(NewStandardSessionViewBlocks())
-                    
-                    VStack (spacing: 0) {
-                        HStack {
-                            Text("Target")
-                                .font(.body.weight(.medium))
-                            
-                            Spacer()
-                            
-                            TextField("0.00", text: $targetStr)
-                                .multilineTextAlignment(.trailing)
-                                .modifier(TimeMaskTextField(text: $targetStr))
+                        if let sessionItem = sessionItem as? MultiphaseSession {
+                            sessionItem.phase_count = Int16(phaseCount)
+                        } else if let sessionItem = sessionItem as? CompSimSession {
+                            sessionItem.target = timeFromStr(targetStr)!
                         }
-                        .padding()
-                    }
-                    .frame(height: frameHeight)
-                    .modifier(NewStandardSessionViewBlocks())
-                    
-                    VStack (spacing: 0) {
-                        HStack {
-                            Text("Session Event")
-                                .font(.body.weight(.medium))
-                            
-                            
-                            Spacer()
-                            
-                            Picker("", selection: $sessionEventType) {
-                                ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
-                                    Text(element.name).tag(Int32(index))
-                                }
-                            }
-                            .pickerStyle(.menu)
-                            .accentColor(accentColour)
-                            .font(.body)
-                        }
-                        .padding()
-                    }
-                    .frame(height: frameHeight)
-                    .modifier(NewStandardSessionViewBlocks())
-                    
-                    
-                    VStack (spacing: 0) {
-                        LazyVGrid(columns: sessionEventTypeColumns, spacing: 0) {
-                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                                Button {
-                                    sessionEventType = Int32(index)
-                                } label: {
-                                    ZStack {
-                                        Image("circular-" + element.name)
-                                        
-                                        Circle()
-                                            .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
-                                            .frame(width: 54, height: 54)
-                                            .offset(x: -0.2)
-                                    }
-                                }
-                            }
-                        }
-                        .padding()
-                    }
-                    .frame(height: 180)
-                    .modifier(NewStandardSessionViewBlocks())
-                    
-                    
-                    
-                    VStack (spacing: 0) {
-                        HStack {
-                            Toggle(isOn: $pinnedSession) {
-                                Text("Pin Session?")
-                                    .font(.body.weight(.medium))
-                            }
-                            .tint(.yellow)
-                        }
-                        .padding()
-                    }
-                    .frame(height: frameHeight)
-                    .modifier(NewStandardSessionViewBlocks())
-                    
-                    Spacer()
-                }
-            }
-            .ignoresSafeArea(.keyboard)
-            .navigationBarTitle("New Comp Sim Session", displayMode: .inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        let sessionItem = CompSimSession(context: managedObjectContext)
-                        sessionItem.name = name
-                        sessionItem.pinned = pinnedSession
                         
-                        sessionItem.session_type = 4
+                        if sessionType != .playground {
+                            sessionItem.scramble_type = sessionEventType
+                        }
                         
-                        sessionItem.target = timeFromStr(targetStr)!
-                        
-                        sessionItem.scramble_type = sessionEventType
                         try! managedObjectContext.save()
                         currentSession = sessionItem
                         showNewSessionPopUp = false
                     } label: {
                         Text("Create")
                     }
-                    .disabled(self.name.isEmpty || self.targetStr.isEmpty)
+                    .disabled(name.isEmpty || (sessionType == .compsim && targetStr.isEmpty))
                 }
             }
         }
         .ignoresSafeArea(.keyboard)
     }
 }
-
 
 
 /// **Main session views**
@@ -1085,12 +605,7 @@ struct SessionsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
-    
-    
-    
     @State var showNewSessionPopUp = false
-    
-    
     
     @FetchRequest(
         entity: Sessions.entity(),
