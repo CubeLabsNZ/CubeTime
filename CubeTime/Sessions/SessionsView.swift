@@ -1109,7 +1109,7 @@ struct SessionsView: View {
                 ScrollView {
                     VStack (spacing: 10) {
                         ForEach(sessions) { item in
-                            SessionCard(currentSession: $currentSession, item: item, numSessions: sessions.count, allSessions: sessions)
+                            SessionCard(currentSession: $currentSession, item: item, allSessions: sessions)
                                 .environment(\.managedObjectContext, managedObjectContext)
                             
                         }
