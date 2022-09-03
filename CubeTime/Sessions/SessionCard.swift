@@ -7,12 +7,11 @@ struct SessionCard: View {
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
-    @Binding var currentSession: Sessions
     @State private var isShowingDeleteDialog = false
-    @State var customizing = false
-    var item: Sessions
-    var numSessions: Int
+    @State private var isShowingCustomizeDialog = false
     
+    @Binding var currentSession: Sessions
+    var item: Sessions
     var allSessions: FetchedResults<Sessions>
     
     @Namespace var namespace
@@ -174,7 +173,7 @@ struct SessionCard: View {
         
         .contextMenu(menuItems: {
             ContextMenuButton(delay: false,
-                              action: { customizing = true },
+                              action: { isShowingCustomizeDialog = true },
                               title: "Customise",
                               systemImage: "pencil", disableButton: false);
             
@@ -189,17 +188,16 @@ struct SessionCard: View {
                               systemImage: item.pinned ? "pin.slash" : "pin", disableButton: false);
             Divider()
             
-            ContextMenuButton(delay: true, action: {
-                isShowingDeleteDialog = true
-            },
+            ContextMenuButton(delay: true,
+                              action: { isShowingDeleteDialog = true },
                               title: "Delete Session",
                               systemImage: "trash",
-                              disableButton: numSessions <= 1)
+                              disableButton: allSessions.count <= 1)
                 .foregroundColor(Color.red)
         })
         .padding(.horizontal)
         
-        .sheet(isPresented: $customizing) {
+        .sheet(isPresented: $isShowingCustomizeDialog) {
             CustomiseStandardSessionView(sessionItem: item)
         }
         
@@ -228,9 +226,7 @@ struct SessionCard: View {
                 
                 
             }
-            Button("Cancel", role: .cancel) {
-                
-            }
+            Button("Cancel", role: .cancel) {}
         }
     }
 }
