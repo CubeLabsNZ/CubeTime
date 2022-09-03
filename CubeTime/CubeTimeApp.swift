@@ -30,6 +30,7 @@ struct CubeTime: App {
                 // timer settings
                 gsKeys.inspection.rawValue: false,
                 gsKeys.inspectionCountsDown.rawValue: false,
+                gsKeys.showCancelInspection.rawValue: true,
                 gsKeys.freeze.rawValue: 0.5,
                 gsKeys.timeDpWhenRunning.rawValue: 3,
                 gsKeys.showSessionName.rawValue: false,

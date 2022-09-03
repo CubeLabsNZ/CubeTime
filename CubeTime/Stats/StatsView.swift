@@ -71,50 +71,58 @@ struct StatsBlockText: View {
     
     var body: some View {
         VStack {
-            if !displayDetail {
-                Spacer()
-            }
-            
-            HStack {
-                if nilCondition {
-                    Text(displayText)
-                        .font(.largeTitle.weight(.bold))
-                        .frame(minWidth: 0, maxWidth: UIScreen.screenWidth/2 - 42, alignment: .leading)
-                        .modifier(DynamicText())
-                        .padding(.bottom, 2)
-                    
-                        .if(!colouredText) { view in
-                            view.foregroundColor(Color(uiColor: colouredBlock ? .white : (colourScheme == .light ? .black : .white)))
-                        }
-                        .if(colouredText) { view in
-                            view.gradientForeground(gradientSelected: gradientSelected)
-                        }
-                    
-                        
-                    
-                } else {
-                    VStack {
-                        Text("-")
-                            .font(.title.weight(.medium))
-                            .foregroundColor(Color(uiColor: .systemGray5))
-                            .padding(.top, 20)
-                        
-                        Spacer()
-                    }
-                }
+            VStack {
+    //            if !displayDetail {
+                    Spacer()
+    //            }
                 
-                Spacer()
+                HStack {
+                    if nilCondition {
+                        Text(displayText)
+                            .font(.largeTitle.weight(.bold))
+                            .frame(minWidth: 0, maxWidth: UIScreen.screenWidth/2 - 42, alignment: .leading)
+                            .modifier(DynamicText())
+                            .padding(.bottom, 2)
+                        
+                            .if(!colouredText) { view in
+                                view.foregroundColor(Color(uiColor: colouredBlock ? .white : (colourScheme == .light ? .black : .white)))
+                            }
+                            .if(colouredText) { view in
+                                view.gradientForeground(gradientSelected: gradientSelected)
+                            }
+                        
+                            
+                        
+                    } else {
+                        VStack {
+                            Text("-")
+                                .font(.title.weight(.medium))
+                                .foregroundColor(Color(uiColor: .systemGray5))
+                                .padding(.top, 20)
+                            
+                            Spacer()
+                        }
+                    }
+                    
+                    Spacer()
+                }
+                .frame(minWidth: 0, maxWidth: .infinity)
+    //            .offset(y: displayDetail ? 30 : 0)
+                
+    //            if displayDetail {
+    //                Spacer()
+    //            }
+                
             }
-            .frame(minWidth: 0, maxWidth: .infinity)
-            .offset(y: displayDetail ? 30 : 0)
+            .padding(.bottom, 4)
+            .padding(.leading, 12)
+//            .background(Color.red)
+            .frame(height: 75)
             
             if displayDetail {
                 Spacer()
             }
-            
         }
-        .padding(.bottom, 4)
-        .padding(.leading, 12)
     }
 }
 
@@ -146,8 +154,9 @@ struct StatsBlockDetailText: View {
 
 struct StatsBlockSmallText: View {
     @Environment(\.colorScheme) var colourScheme
-    @ScaledMetric var spacing: CGFloat = -6
-    
+    @ScaledMetric private var bigSpacing: CGFloat = 2
+    @ScaledMetric private var spacing: CGFloat = -6
+        
     var titles: [String]
     var data: [CalculatedAverage?]
     var checkDNF: Bool
@@ -161,7 +170,7 @@ struct StatsBlockSmallText: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: bigSpacing) {
             ForEach(Array(zip(titles.indices, titles)), id: \.0) { index, title in
                 HStack {
                     VStack (alignment: .leading, spacing: spacing) {
@@ -192,7 +201,7 @@ struct StatsBlockSmallText: View {
                 }
             }
         }
-        .padding(.top, 12)
+        .padding(.top, 16)
     }
 }
 
@@ -352,6 +361,7 @@ struct StatsView: View {
                                     StatsBlock("CURRENT STATS", blockHeightLarge, false, false) {
                                         StatsBlockSmallText(["AO5", "AO12", "AO100"], [currentAo5, currentAo12, currentAo100], $presentedAvg, false)
                                     }
+                                    .padding(.top, 2)
                                     .frame(minWidth: 0, maxWidth: .infinity)
                                     
                                     VStack(spacing: 10) {
