@@ -321,20 +321,21 @@ struct NewSessionTypeCard: View {
     @Binding var show: Bool
     
     var body: some View {
-        
         HStack {
             Image(systemName: icon)
                 .font(.system(size: iconProps.size, weight: iconProps.weight))
-//                .symbolRenderingMode(.hierarchical)
                 .foregroundColor(colourScheme == .light ? .black : .white)
                 .padding(.leading, iconProps.leaPadding)
                 .padding(.trailing, iconProps.traPadding)
                 .padding(.vertical, 8)
+            
             Text(name)
                 .font(.body)
                 .foregroundColor(colourScheme == .light ? .black : .white)
+            
             Spacer()
         }
+        .background(Color(uiColor: colourScheme == .dark ? .black : .systemGray6))
         .onTapGesture {
             show = true
         }
@@ -513,6 +514,9 @@ struct NewSessionView: View {
                         }
                         
                         SessionNameField(name: $name)
+                            .if(sessionType == SessionTypes.playground) { view in
+                                view.padding(.top)
+                            }
                         
                         if let session_desc = session_descriptions[sessionType] {
                             Text(session_desc)
@@ -522,17 +526,10 @@ struct NewSessionView: View {
                         }
                     }
                     .modifier(NewStandardSessionViewBlocks())
-                    .if(sessionType == .standard) { view in
-                        view
-                            .frame(height: bigFrameHeight)
-                    }
-                    .if(sessionType != .standard) { view in
-                        view
-                            .frame(minHeight: otherBigFrameHeight)
-                    }
+                    .frame(minHeight: otherBigFrameHeight)
                     
                     if sessionType == .multiphase {
-                        VStack (spacing: 0) {
+                        VStack(spacing: 0) {
                             HStack(spacing: 0) {
                                 Text("Phases: ")
                                     .font(.body.weight(.medium))
