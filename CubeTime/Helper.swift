@@ -4,6 +4,81 @@ import UIKit
 import Combine
 
 
+protocol RawGraphData {
+    var graphData: Double? { get }
+}
+
+extension CompSimSolveGroup: RawGraphData {
+    var graphData: Double? {
+        get {
+            return self.avg?.average
+        }
+    }
+    
+    var avg: CalculatedAverage? {
+        return StopWatchManager.calculateAverage(self.solves!.array as! [Solves], "Comp Sim Group", true)
+    }
+}
+
+extension Solves: Comparable, RawGraphData {
+    var timeIncPen: Double {
+        get {
+            return self.time + (self.penalty == PenTypes.plustwo.rawValue ? 2 : 0)
+        }
+    }
+    
+    var graphData: Double? {
+        get {
+            return timeIncPen
+        }
+    }
+    
+    public static func < (lhs: Solves, rhs: Solves) -> Bool {
+        return lhs.timeIncPen < rhs.timeIncPen
+    }
+
+    // I don't know if i need both but better safe than sorry
+    public static func > (lhs: Solves, rhs: Solves) -> Bool {
+        return lhs.timeIncPen > rhs.timeIncPen
+    }
+}
+
+
+extension RandomAccessCollection where Element : Comparable {
+    func insertionIndex(of value: Element) -> Index {
+        var slice : SubSequence = self[...]
+
+        while !slice.isEmpty {
+            let middle = slice.index(slice.startIndex, offsetBy: slice.count / 2)
+            if value < slice[middle] {
+                slice = slice[..<middle]
+            } else {
+                slice = slice[index(after: middle)...]
+            }
+        }
+        return slice.startIndex
+    }
+}
+
+
+
+extension RandomAccessCollection where Element : Solves {
+    func insertionIndexDate(solve value: Solves) -> Index {
+        var slice : SubSequence = self[...]
+
+        while !slice.isEmpty {
+            let middle = slice.index(slice.startIndex, offsetBy: slice.count / 2)
+            if value.date! < slice[middle].date! {
+                slice = slice[..<middle]
+            } else {
+                slice = slice[index(after: middle)...]
+            }
+        }
+        return slice.startIndex
+    }
+}
+
+
 struct AppZoomWrapper: RawRepresentable, Identifiable {
     static let allCases = [DynamicTypeSize.xSmall,
                            DynamicTypeSize.small,
@@ -218,7 +293,7 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
     let trimmedSolves: [Solves] = sorted.prefix(trim) + sorted.suffix(trim)
     
     return CalculatedAverage(
-        id: "Comp Sim",
+        name: "Comp Sim",
         average: sorted.dropFirst(trim).dropLast(trim)
                 .reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(3),
         accountedSolves: sorted,

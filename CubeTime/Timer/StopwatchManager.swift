@@ -350,7 +350,11 @@ class StopWatchManager: ObservableObject {
     }
     
     /// OTHER FUNCS
-    func changedPen() {
+    func changedPen(_ oldPen: PenTypes) {
+        if oldPen.rawValue == solveItem.penalty {
+            return
+        }
+        
         if PenTypes(rawValue: solveItem.penalty)! == .plustwo {
             withAnimation {
                 secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
@@ -358,6 +362,38 @@ class StopWatchManager: ObservableObject {
         } else {
             secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
         }
+
+        solves.remove(object: solveItem)
+        solves.insert(solveItem, at: solves.insertionIndex(of: solveItem))
+        
+        
+        if solveItem.penalty == PenTypes.dnf.rawValue {
+            solvesNoDNFsbyDate.append(solveItem)
+            solvesNoDNFs.insert(solveItem, at: solvesNoDNFs.insertionIndex(of: solveItem))
+        } else if oldPen == PenTypes.dnf {
+            assert(solvesNoDNFsbyDate.popLast() == solveItem)
+            solvesNoDNFs.remove(object: solveItem)
+        }
+        
+        
+        // TODO next update use optimised versions
+        if bestAo5?.accountedSolves?.contains(solveItem) ?? false {
+            bestAo5 = getBestMovingAverageOf(5)
+        }
+        if bestAo12?.accountedSolves?.contains(solveItem) ?? false {
+            bestAo12 = getBestMovingAverageOf(12)
+        }
+        if bestAo100?.accountedSolves?.contains(solveItem) ?? false {
+            bestAo100 = getBestMovingAverageOf(100)
+        }
+        
+        // TODO optimise
+        sessionMean = getSessionMean()
+        
+        
+        
+        changedTimeListSort()
+        bestSingle = getMin()
         
         currentAo5 = getCurrentAverageOf(5)
         currentAo12 = getCurrentAverageOf(12)
@@ -478,16 +514,12 @@ class StopWatchManager: ObservableObject {
     
     // For some reason calling sub function to initialize more doesn't work well, must use !
     
-        // raw values for graphs
-    @Published var timesByDateNoDNFs: [Double]!
-    @Published var timesBySpeedNoDNFs: [Double]!
-    
     // comp sim stats
     @Published var compSimCount: Int!
     @Published var reachedTargets: Int!
     
-    @Published var allCompsimAveragesByDate: [Double]! // has no dnfs!!
-    @Published var allCompsimAveragesByTime: [Double]!
+    @Published var allCompsimAveragesByDate: [CompSimSolveGroup]! // has no dnfs!!
+    @Published var allCompsimAveragesByTime: [CompSimSolveGroup]!
     
     @Published var bestCompsimAverage: CalculatedAverage?
     @Published var currentCompsimAverage: CalculatedAverage?
@@ -497,14 +529,18 @@ class StopWatchManager: ObservableObject {
     
     @Published var phases: [Double]?
     
+    
+    @Published var normalMedian: (Double?, Double?)
+    
+    
     // On stop: insert where time with plustwoforzolve > $0
     private var solves: [Solves]!
     // On stop: just append to list
     @Published var solvesByDate: [Solves]!
     // Maybe use trickery to get object, maybe delete this array
-    private var solvesNoDNFs: [Solves]!
+    @Published var solvesNoDNFs: [Solves]!
     // On stop: just append if not dnf, remove if dnf
-    private var solvesNoDNFsbyDate: [Solves]!
+    @Published var solvesNoDNFsbyDate: [Solves]!
     
     
     // Couple time list functions
@@ -559,9 +595,12 @@ class StopWatchManager: ObservableObject {
         solvesByDate.remove(object: solve)
         solvesNoDNFs.remove(object: solve)
         solvesNoDNFsbyDate.remove(object: solve)
-        timeListSolves.remove(object: solve)
-        timeListSolvesFiltered.remove(object: solve)
+        changedTimeListSort()
         managedObjectContext.delete(solve)
+        
+        if bestSingle == solve {
+            bestSingle = getMin()
+        }
         
         if recalcAO100 {
             self.currentAo100 = getCurrentAverageOf(100)
@@ -573,42 +612,54 @@ class StopWatchManager: ObservableObject {
             }
         }
         
+        self.bestAo5 = getBestMovingAverageOf(5)
+        self.bestAo12 = getBestMovingAverageOf(12)
+        self.bestAo100 = getBestMovingAverageOf(100)
+        
         try! managedObjectContext.save()
     }
     
     func changePen(solve: Solves, pen: PenTypes) {
         // TODO check best AOs
-        if solve.penalty != pen.rawValue {
-            var recalcAO100 = false
-            var recalcAO12 = false
-            var recalcAO5 = false
-            
-            if (solvesByDate.suffix(100).contains(solve)) {
-                recalcAO100 = true
-                if (solvesByDate.suffix(12).contains(solve)) {
-                    recalcAO12 = true
-                    if (solvesByDate.suffix(5).contains(solve)) {
-                        recalcAO5 = true
-                    }
-                }
-            }
-            solve.penalty = pen.rawValue
-            stateID = UUID() // I'm so sorry
-            
-            // TODO recaulculate position in list
-            
-            if recalcAO100 {
-                self.currentAo100 = getCurrentAverageOf(100)
-                if recalcAO12 {
-                    self.currentAo12 = getCurrentAverageOf(12)
-                    if recalcAO5 {
-                        self.currentAo5 = getCurrentAverageOf(5)
-                    }
-                }
-            }
-            
-            try! managedObjectContext.save()
+        if solve.penalty == pen.rawValue {
+            return
         }
+        let oldPen = PenTypes(rawValue: solve.penalty)!
+        
+        
+        solve.penalty = pen.rawValue
+        
+        solves.remove(object: solve)
+        solves.insert(solve, at: solves.insertionIndex(of: solve))
+        
+        
+        if solve.penalty == PenTypes.dnf.rawValue {
+            solvesNoDNFsbyDate.insert(solve, at: solvesNoDNFsbyDate.insertionIndexDate(solve: solve))
+            solvesNoDNFs.insert(solve, at: solvesNoDNFs.insertionIndex(of: solve))
+        } else if oldPen == PenTypes.dnf {
+            solvesNoDNFsbyDate.remove(object: solve)
+            solvesNoDNFs.remove(object: solve)
+        }
+        
+        
+        
+        if (solvesByDate.suffix(100).contains(solve)) {
+            self.currentAo100 = getCurrentAverageOf(100)
+            if (solvesByDate.suffix(12).contains(solve)) {
+                self.currentAo12 = getCurrentAverageOf(12)
+                if (solvesByDate.suffix(5).contains(solve)) {
+                    self.currentAo5 = getCurrentAverageOf(5)
+                }
+            }
+        }
+        
+        self.bestAo5 = getBestMovingAverageOf(5)
+        self.bestAo12 = getBestMovingAverageOf(12)
+        self.bestAo100 = getBestMovingAverageOf(100)
+        
+        stateID = UUID() // I'm so sorry
+        
+        try! managedObjectContext.save()
     }
     
     func statsGetFromCache() {
@@ -625,9 +676,6 @@ class StopWatchManager: ObservableObject {
         
         solvesNoDNFs = solves
         solvesNoDNFs.removeAll(where: { $0.penalty == PenTypes.dnf.rawValue })
-        
-        timesByDateNoDNFs = solvesNoDNFsbyDate.map { timeWithPlusTwoForSolve($0) }
-        timesBySpeedNoDNFs = solvesNoDNFs.map { timeWithPlusTwoForSolve($0) }
         
         
         bestAo5 = getBestMovingAverageOf(5)
@@ -664,11 +712,9 @@ class StopWatchManager: ObservableObject {
         if solveItem.penalty != PenTypes.dnf.rawValue { //TODO test if this really works with inspection
             sessionMean = ((sessionMean ?? 0) * Double(solvesNoDNFs.count) + timeWithPlusTwoForSolve(solveItem)) / Double(solvesNoDNFs.count + 1)
             solvesNoDNFsbyDate.append(solveItem)
-            timesByDateNoDNFs.append(timeWithPlusTwoForSolve(solveItem))
             
             let greatersolvenodnfidx = solvesNoDNFs.firstIndex(where: {timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve(solveItem)}) ?? solvesNoDNFs.count
             solvesNoDNFs.insert(solveItem, at: greatersolvenodnfidx)
-            timesBySpeedNoDNFs.insert(timeWithPlusTwoForSolve(solveItem), at: greatersolvenodnfidx) // TODO maybe map is fine for this? graphs take ages anyway
             
             if bestSingle == nil || timeWithPlusTwoForSolve(solveItem) < timeWithPlusTwoForSolve(bestSingle!) {
                 bestSingle = solveItem
@@ -682,52 +728,39 @@ class StopWatchManager: ObservableObject {
         changedTimeListSort()
         
         // todo make these a dict instead
-        if let currentAo5 = currentAo5 {
-            if let bestAo5 = bestAo5 {
-                // Surely there is a better way of this.
-                if (currentAo5.totalPen, bestAo5.totalPen) == (PenTypes.dnf, PenTypes.dnf) ||
-                    (currentAo5.totalPen, bestAo5.totalPen) == (PenTypes.none, PenTypes.none) {
-                    if currentAo5 < bestAo5 {
-                        self.bestAo5 = currentAo5
-                    }
-                } else if (currentAo5.totalPen, bestAo5.totalPen) == (PenTypes.none, PenTypes.dnf) {
-                    self.bestAo5 = currentAo5
-                }
-            } else {
-                bestAo5 = currentAo5
-            }
-        }
-        // todo make these a dict instead
-        if let currentAo12 = currentAo12 {
-            if let bestAo12 = bestAo12 {
-                // Surely there is a better way of this.
-                if (currentAo12.totalPen, bestAo12.totalPen) == (PenTypes.dnf, PenTypes.dnf) ||
-                    (currentAo12.totalPen, bestAo12.totalPen) == (PenTypes.none, PenTypes.none) {
-                    if currentAo12 < bestAo12 {
-                        self.bestAo12 = currentAo12
-                    }
-                } else if (currentAo12.totalPen, bestAo12.totalPen) == (PenTypes.none, PenTypes.dnf) {
-                    self.bestAo12 = currentAo12
-                }
-            } else {
-                bestAo12 = currentAo12
-            }
-        }
         
-        // todo make these a dict instead
+        if let currentAo5 = currentAo5 {
+            if bestAo5 == nil || ( // best is not set yet (and current is), or:
+                    (currentAo5.totalPen, bestAo5!.totalPen) == (PenTypes.dnf, PenTypes.dnf)
+                    || (currentAo5.totalPen, bestAo5!.totalPen) == (PenTypes.none, PenTypes.none)
+                    && currentAo5 < bestAo5! // current is less than current best, and total pen is the same, or:
+                )
+                || (currentAo5.totalPen, bestAo5!.totalPen) == (PenTypes.none, PenTypes.dnf) { // current is none and best is dnf
+                self.bestAo5 = currentAo5
+                self.bestAo5?.name = "Best ao5" // TODO unhardcode
+                NSLog("updated best ao5: \(self.bestAo5 == currentAo5)")
+            }
+        }
+        if let currentAo12 = currentAo12 {
+            if bestAo12 == nil || ( // best is not set yet (and current is), or:
+                    (currentAo12.totalPen, bestAo12!.totalPen) == (PenTypes.dnf, PenTypes.dnf)
+                    || (currentAo12.totalPen, bestAo12!.totalPen) == (PenTypes.none, PenTypes.none)
+                    && currentAo12 < bestAo12! // current is less than current best, and total pen is the same, or:
+                )
+                || (currentAo12.totalPen, bestAo12!.totalPen) == (PenTypes.none, PenTypes.dnf) { // current is none and best is dnf
+                self.bestAo12 = currentAo12
+                self.bestAo5?.name = "Best ao12" // TODO unhardcode
+            }
+        }
         if let currentAo100 = currentAo100 {
-            if let bestAo100 = bestAo100 {
-                // Surely there is a better way of this.
-                if (currentAo100.totalPen, bestAo100.totalPen) == (PenTypes.dnf, PenTypes.dnf) ||
-                    (currentAo100.totalPen, bestAo100.totalPen) == (PenTypes.none, PenTypes.none) {
-                    if currentAo100 < bestAo100 {
-                        self.bestAo100 = currentAo100
-                    }
-                } else if (currentAo100.totalPen, bestAo100.totalPen) == (PenTypes.none, PenTypes.dnf) {
-                    self.bestAo100 = currentAo100
-                }
-            } else {
-                bestAo100 = currentAo100
+            if bestAo100 == nil || ( // best is not set yet (and current is), or:
+                    (currentAo100.totalPen, bestAo100!.totalPen) == (PenTypes.dnf, PenTypes.dnf)
+                    || (currentAo100.totalPen, bestAo100!.totalPen) == (PenTypes.none, PenTypes.none)
+                    && currentAo100 < bestAo100! // current is less than current best, and total pen is the same, or:
+                )
+                || (currentAo100.totalPen, bestAo100!.totalPen) == (PenTypes.none, PenTypes.dnf) { // current is none and best is dnf
+                self.bestAo100 = currentAo100
+                self.bestAo5?.name = "Best ao100" // TODO unhardcode
             }
         }
         // TODO save to cache
@@ -735,7 +768,7 @@ class StopWatchManager: ObservableObject {
     
     
     // STATS FUNCTIONS
-    func calculateAverage(_ solves: [Solves], _ id: String, _ compsim: Bool) -> CalculatedAverage? {
+    static func calculateAverage(_ solves: [Solves], _ id: String, _ compsim: Bool) -> CalculatedAverage? {
         let cnt = solves.count
         
         if cnt < 5 {
@@ -755,7 +788,7 @@ class StopWatchManager: ObservableObject {
         
         if compsim {
             return CalculatedAverage(
-                id: "\(id)",
+                name: "\(id)",
                 average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
                 accountedSolves: solvesSorted.suffix(cnt),
                 totalPen: solvesSorted.suffix(cnt).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
@@ -763,7 +796,7 @@ class StopWatchManager: ObservableObject {
             )
         } else {
             return CalculatedAverage(
-                id: "\(id)\(cnt)",
+                name: "\(id)\(cnt)",
                 average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
                 accountedSolves: solvesSorted.suffix(cnt),
                 totalPen: solvesSorted.suffix(cnt).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
@@ -778,12 +811,10 @@ class StopWatchManager: ObservableObject {
         
         // Sort non DNFs or both DNFs by time
         if (pen0 != .dnf && pen1 != .dnf) || (pen0 == .dnf && pen1 == .dnf) {
-            return timeWithPlusTwoForSolve(solve0) > timeWithPlusTwoForSolve(solve1)
+            return timeWithPlusTwoForSolve(solve0) < timeWithPlusTwoForSolve(solve1)
         // Order non DNFs before DNFs
-        } else if pen0 == .dnf && pen1 != .dnf {
-            return true
         } else {
-            return false
+            return pen0 != .dnf && pen1 == .dnf
         }
     }
 
@@ -816,13 +847,11 @@ class StopWatchManager: ObservableObject {
             return (nil, nil)
         }
         
-        let solvesNoDNFsPlusTwoed = solvesNoDNFs.map({ timeWithPlusTwoForSolve($0) })
-        
-        let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solvesNoDNFsPlusTwoed))
+        let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solves))
         
         
         if cnt % 2 == 0 {
-            let median = Double((solvesNoDNFsPlusTwoed[cnt/2] + solvesNoDNFsPlusTwoed[(cnt/2)-1])/2)
+            let median = Double((solves[cnt/2].timeIncPen + solves[(cnt/2)-1].timeIncPen)/2)
             
             if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
                 
@@ -833,7 +862,7 @@ class StopWatchManager: ObservableObject {
             
             
         } else {
-            let median = Double(solvesNoDNFsPlusTwoed[(cnt/2)])
+            let median = Double(solves[(cnt/2)].timeIncPen)
             
             if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
                 
@@ -854,7 +883,7 @@ class StopWatchManager: ObservableObject {
             return nil
         }
         
-        return calculateAverage(solvesByDate.suffix(period), "Current ao", false)
+        return Self.calculateAverage(solvesByDate.suffix(period), "Current ao", false)
     }
     
     
@@ -869,28 +898,41 @@ class StopWatchManager: ObservableObject {
         
         var lowestAverage: Double?
         var lowestValues: [Solves]?
-        var trimmedSolves: [Solves]?
+        var lowsetTrimmedSolves: [Solves]?
+        var totalPen = PenTypes.none
+        var lowestTotalPen = PenTypes.none
         
         for i in period..<solves.count+1 {
             var solves = solvesByDate[i - period..<i]
             solves.sort(by: Self.sortWithDNFsLast)
             
-            trimmedSolves = solves.suffix(trim) + solves.prefix(trim)
+            let trimmedSolves = solves.suffix(trim) + solves.prefix(trim)
             
             let trimmed = solves.dropFirst(trim).dropLast(trim)
             
-            if trimmed.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) {
-                continue
-            }
-            let sum = trimmed.reduce(0, {$0 + timeWithPlusTwoForSolve($1)})
+//            if trimmed.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) {
+//                continue
+//            }
+            totalPen = trimmed.last!.penalty == PenTypes.dnf.rawValue ? PenTypes.dnf : PenTypes.none
+            let sum = trimmed.reduce(0, {$0 + $1.timeIncPen})
             
             let result = Double(sum) / Double(period-(trim*2))
-            if lowestAverage == nil || result < lowestAverage! {
+            if lowestAverage == nil
+                || (
+                    result < lowestAverage!
+                    && (
+                        (totalPen, lowestTotalPen) == (PenTypes.dnf, PenTypes.dnf)
+                        || (totalPen, lowestTotalPen) == (PenTypes.none, PenTypes.none)
+                    )
+                )
+                || (totalPen, lowestTotalPen) == (PenTypes.none, PenTypes.dnf) {
                 lowestValues = solvesByDate[i - period ..< i].sorted(by: {$0.date! > $1.date!})
                 lowestAverage = result
+                lowestTotalPen = totalPen
+                lowsetTrimmedSolves = Array(trimmedSolves)
             }
         }
-        return CalculatedAverage(id: "Best ao\(period)", average: lowestAverage, accountedSolves: lowestValues, totalPen: lowestValues == nil ? .dnf : .none, trimmedSolves: trimmedSolves)
+        return CalculatedAverage(name: "Best ao\(period)", average: lowestAverage, accountedSolves: lowestValues, totalPen: lowestTotalPen, trimmedSolves: lowsetTrimmedSolves)
     }
 
     
@@ -934,7 +976,7 @@ class StopWatchManager: ObservableObject {
                 if groupLastSolve.count != 5 {
                     return nil
                 } else {
-                    return calculateAverage(groupLastSolve, "Current Comp Sim", true)
+                    return Self.calculateAverage(groupLastSolve, "Current Comp Sim", true)
                 }
                 
             } else {
@@ -944,10 +986,10 @@ class StopWatchManager: ObservableObject {
                 
                 if lastInGroup.count == 5 {
                     
-                    return calculateAverage(lastInGroup, "Current Comp Sim", true)
+                    return Self.calculateAverage(lastInGroup, "Current Comp Sim", true)
                 } else {
                     
-                    return calculateAverage((groupLastTwoSolves.first!.solves!.array as! [Solves]), "Current Comp Sim", true)
+                    return Self.calculateAverage((groupLastTwoSolves.first!.solves!.array as! [Solves]), "Current Comp Sim", true)
                 }
             }
         } else {
@@ -973,7 +1015,7 @@ class StopWatchManager: ObservableObject {
                     if (solvegroup as AnyObject).solves!.array.count == 5 {
                         
                         
-                        let currentAvg = calculateAverage((solvegroup as AnyObject).solves!.array as! [Solves], "Best Comp Sim", true)
+                        let currentAvg = Self.calculateAverage((solvegroup as AnyObject).solves!.array as! [Solves], "Best Comp Sim", true)
                         
                         if currentAvg?.totalPen == .dnf {
                             continue
@@ -1132,8 +1174,8 @@ class StopWatchManager: ObservableObject {
 
 
 struct CalculatedAverage: Identifiable, Comparable/*, Equatable, Comparable*/ {
-    
-    let id: String
+    let id = UUID()
+    var name: String
 
     //    let discardedIndexes: [Int]
     let average: Double?
@@ -1161,7 +1203,7 @@ struct CalculatedAverage: Identifiable, Comparable/*, Equatable, Comparable*/ {
     }
 }
 
-
+@available(*, deprecated, message: "Please use solve.timeIncPen instead")
 func timeWithPlusTwoForSolve(_ solve: Solves) -> Double {
     return solve.time + (solve.penalty == PenTypes.plustwo.rawValue ? 2 : 0)
 }

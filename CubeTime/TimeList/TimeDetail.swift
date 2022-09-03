@@ -30,6 +30,10 @@ struct TimeDetail: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) { // Only show delete if called from timelist and not stats
                     Button {
+                        if currentSolve == nil {
+                            dismiss()
+                        }
+                        
                         currentSolve = nil
                         
                         withAnimation {

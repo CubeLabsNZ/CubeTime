@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-func getDivisions(data: [Double]) -> Array<(Double, Int)> {
+func getDivisions(data: [Solves]) -> Array<(Double, Int)> {
     let cnt: Int = data.count
     
     if cnt >= 4 {
@@ -21,12 +21,12 @@ func getDivisions(data: [Double]) -> Array<(Double, Int)> {
         
         let trim: Int = Int(ceil(Double(cnt) * 0.1))
         
-        let tc_data: ArraySlice<Double> = data[trim...cnt-trim-1]
+        let tc_data: ArraySlice<Solves> = data[trim...cnt-trim-1]
         
-        var fd: Double = tc_data.first!
-        let ld: Double = tc_data.last!
-        let ifd: Double = data[trim-1]
-        let ild: Double = data.suffix(trim).first!
+        var fd: Double = timeWithPlusTwoForSolve(tc_data.first!)
+        let ld: Double = timeWithPlusTwoForSolve(tc_data.last!)
+        let ifd: Double = timeWithPlusTwoForSolve(data[trim-1])
+        let ild: Double = timeWithPlusTwoForSolve(data.suffix(trim).first!)
         
         let div_incr: Double = (ld - fd) / Double(bars)
         
@@ -38,7 +38,7 @@ func getDivisions(data: [Double]) -> Array<(Double, Int)> {
             var tmpocc = 0
             
             for datum in Array(tc_data) {
-                if range ~= datum {
+                if range ~= datum.timeIncPen {
                     tmpocc += 1
                 }
             }
@@ -90,17 +90,14 @@ struct TimeDistribution: View {
     var data: Array<(Double, Int)>
     var max_height: CGFloat
     
-    let median: Double?
-    let medianPercentage: Double?
-    
-    init(stopWatchManager: StopWatchManager, solves: [Double]) {
+    init(solves: [Solves]) {
         self.count = solves.count
         self.data = getDivisions(data: solves)
         self.max_height = CGFloat(220 / Float(getMaxHeight(occurences: data.map { $0.1 })!))
-        
-        self.median = stopWatchManager.getNormalMedian().0
-        self.medianPercentage = stopWatchManager.getNormalMedian().1
     }
+    
+    
+    
     
     var body: some View {
         if count >= 4 {
@@ -126,7 +123,7 @@ struct TimeDistribution: View {
                     let medianxmax = (divs*CGFloat((count < 8 ? count : 8))+20)
                     let medianxmin = (divs+20)
                     
-                    let medianxloc = (medianxmax - medianxmin) * CGFloat(medianPercentage!) + medianxmin
+                    let medianxloc = (medianxmax - medianxmin) * CGFloat(stopWatchManager.normalMedian.1!) + medianxmin
                     
                     
                     Path { path in
@@ -176,7 +173,7 @@ struct TimeDistribution: View {
                             .font(.system(size: 12, weight: .bold, design: .default))
                             .foregroundColor(Color(uiColor: .systemGray))
                         
-                        Text(formatSolveTime(secs: median!))
+                        Text(formatSolveTime(secs: stopWatchManager.normalMedian.0!))
                             .font(.system(size: 12, weight: .bold, design: .monospaced))
                             .foregroundColor(Color(uiColor: .systemGray))
                     }

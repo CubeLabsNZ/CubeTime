@@ -20,8 +20,9 @@ struct PenaltyButton: View {
     
     var body: some View {
         Button(action: {
+            let oldPen = stopWatchManager.solveItem.penalty
             stopWatchManager.solveItem.penalty = penType.rawValue
-            stopWatchManager.changedPen()
+            stopWatchManager.changedPen(PenTypes(rawValue:oldPen)!)
             try! managedObjectContext.save()
             
         }, label: {

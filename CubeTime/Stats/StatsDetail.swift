@@ -35,7 +35,7 @@ struct StatsDetail: View {
         detailDateFormat.timeZone = TimeZone(secondsFromGMT: 0)
         detailDateFormat.dateFormat = "h:mm a, MM/dd/yy"
         
-        isCurrentCompSimAverage = solves.id == "Current Average"
+        isCurrentCompSimAverage = solves.name == "Current Average"
     }
     
     var body: some View {
@@ -201,7 +201,7 @@ struct StatsDetail: View {
                         }
                         .offset(y: -6)
                         .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle(solves.id == "Comp Sim Solve" ? "Comp Sim" : solves.id)
+                        .navigationTitle(solves.name == "Comp Sim Solve" ? "Comp Sim" : solves.name)
                         .toolbar {
                             ToolbarItem(placement: .navigationBarLeading) {
                                 Button {

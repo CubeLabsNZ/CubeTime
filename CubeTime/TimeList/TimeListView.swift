@@ -37,8 +37,6 @@ struct TimeListView: View {
                                 }).first?.frame.size
     
     private var columns: [GridItem] {
-        NSLog("\(UIScreen.screenWidth)")
-        NSLog("\(windowSize!.width)")
         if UIDevice.current.userInterfaceIdiom == .phone {
             return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
         } else {
