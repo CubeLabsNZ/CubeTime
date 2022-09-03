@@ -1,0 +1,41 @@
+{
+  "pins" : [
+    {
+      "identity" : "aiolos",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/IdeasOnCanvas/Aiolos",
+      "state" : {
+        "revision" : "fb9176dafaac5319a25bb2c48fbef1efcc1dc6da",
+        "version" : "1.9.1"
+      }
+    },
+    {
+      "identity" : "cocoalumberjack",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CocoaLumberjack/CocoaLumberjack.git",
+      "state" : {
+        "revision" : "80ada1f753b0d53d9b57c465936a7c4169375002",
+        "version" : "3.7.4"
+      }
+    },
+    {
+      "identity" : "svgkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SVGKit/SVGKit",
+      "state" : {
+        "branch" : "3.x",
+        "revision" : "e9bc636845fb4d6d5d8e25a9bd08e75c5cf92de9"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log.git",
+      "state" : {
+        "revision" : "5d66f7ba25daf4f94100e7022febf3c75e37a6c7",
+        "version" : "1.4.2"
+      }
+    }
+  ],
+  "version" : 2
+}
