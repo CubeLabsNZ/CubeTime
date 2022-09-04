@@ -35,10 +35,10 @@ class StopWatchManager: ObservableObject {
                 playgroundScrambleType = currentSession.scramble_type
             } else if let currentSession = currentSession as? MultiphaseSession {
                 self.phaseCount = Int(currentSession.phase_count)
-            } else {
-                rescramble()
-                tryUpdateCurrentSolveth()
             }
+            
+            rescramble()
+            tryUpdateCurrentSolveth()
             statsGetFromCache()
             UserDefaults.standard.set(currentSession.objectID.uriRepresentation(), forKey: "last_used_session")
         }
