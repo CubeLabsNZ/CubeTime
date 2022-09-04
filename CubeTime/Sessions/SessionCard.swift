@@ -222,7 +222,7 @@ struct SessionCard: View {
         .padding(.horizontal)
         
         .sheet(isPresented: $isShowingCustomizeDialog) {
-            CustomiseStandardSessionView(sessionItem: item)
+            CustomiseSessionView(sessionItem: item)
         }
         
         .confirmationDialog(String("Are you sure you want to delete \"\(name)\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {

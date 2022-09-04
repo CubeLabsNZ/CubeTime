@@ -12,7 +12,7 @@ struct FloatingPanelChild: View {
     var stages: [CGFloat]
     let items: [AnyView]
     
-    // TODO use that one func for each tupleview type when making a real package
+    #warning("TODO: use that one func for each tupleview type when making a real package")
     
     init<A: View, B: View, C: View, D: View, E: View>(currentStage: Binding<Int>, maxHeight: CGFloat, stages: [CGFloat], @ViewBuilder content: @escaping () -> TupleView<(A, B, C, D, E)>) {
         self.maxHeight = maxHeight

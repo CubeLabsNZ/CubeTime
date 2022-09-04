@@ -177,7 +177,8 @@ struct SettingsDetail: View {
                     .zIndex(0)
                 
                 ScrollView {
-                    switch currentCard!.name { // TODO use an enum for better i18n support
+                    #warning("TODO:  use an enum for better i18n support")
+                    switch currentCard!.name {
                     case "General":
                         GeneralSettingsView()
                     case "Appearance":

@@ -30,10 +30,10 @@ struct CubeTime: App {
         persistenceController = PersistenceController.shared
         let moc = persistenceController.container.viewContext
         
-        // TODO move to WM
+        #warning("TODO: move to WM")
         UIApplication.shared.isIdleTimerDisabled = true
         
-        // TODO move to SWM init
+        #warning("TODO: move to SWM init")
         
         let userDefaults = UserDefaults.standard
         
@@ -49,7 +49,7 @@ struct CubeTime: App {
             userDefaults.set(fetchedSession.objectID.uriRepresentation(), forKey: "last_used_session")
         } else {
             let objID = moc.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI!)!
-            fetchedSession = try! moc.existingObject(with: objID) as! Sessions // TODO better error handling
+            fetchedSession = try! moc.existingObject(with: objID) as! Sessions; #warning("TODO: better error handling")
         }
         
         // https://swiftui-lab.com/random-lessons/#data-10
@@ -110,11 +110,6 @@ struct CubeTime: App {
                 }
                 .sheet(isPresented: $showOnboarding, onDismiss: {
                     pageIndex = 0
-                    if false { /// FIX IN FUTURE: check for first time register and not just == 18 because can break :sob:
-                        if UserDefaults.standard.integer(forKey: gsKeys.scrambleSize.rawValue) == 18 {
-                            UserDefaults.standard.set(24, forKey: gsKeys.scrambleSize.rawValue)
-                        }
-                    }
                 }) {
                     OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
                 }

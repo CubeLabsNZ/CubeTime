@@ -436,7 +436,8 @@ struct StatsView: View {
                                     }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                 }
-                                .padding(.horizontal)  // TODO: check this, was .leading and .trailing, 10 in ipados branch
+                                .padding(.horizontal)
+                                #warning("TODO: check this, was .leading and .trailing, 10 in ipados branch")
                                 
                                 
                                 StatsBlock("REACHED TARGETS", stopWatchManager.compSimCount == 0 ? 150 : 50, true, false) {

@@ -57,9 +57,11 @@ struct TimeCard: View {
     
     var body: some View {
         ZStack {
+            #warning("TODO:  check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectangle")
             RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(isSelected ? Color(uiColor: .systemGray4) : colourScheme == .dark ? Color(uiColor: .systemGray6) : Color(uiColor: .systemBackground))
-                .frame(maxWidth: cardWidth, minHeight: cardHeight, maxHeight: cardHeight) /// todo check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectange
+                .frame(maxWidth: cardWidth, minHeight: cardHeight, maxHeight: cardHeight)
+
                 .onTapGesture {
                     if isSelectMode {
                         withAnimation {
