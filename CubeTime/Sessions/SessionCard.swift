@@ -192,7 +192,7 @@ struct SessionCard: View {
                               systemImage: item.pinned ? "pin.slash" : "pin", disableButton: false);
             Divider()
             
-            ContextMenuButton(delay: true,
+            ContextMenuButton(delay: false,
                               action: { isShowingDeleteDialog = true },
                               title: "Delete Session",
                               systemImage: "trash",
