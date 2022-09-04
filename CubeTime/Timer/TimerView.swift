@@ -603,7 +603,7 @@ struct TimerView: View {
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {
-                managedObjectContext.delete(detail.wrappedValue!)
+                managedObjectContext.delete(detail.wrappedValue!) // TODO maybe i can delete this line
                 stopWatchManager.delete(solve: detail.wrappedValue!)
                 detail.wrappedValue = nil
                 stopWatchManager.secondsElapsed = 0
@@ -621,7 +621,7 @@ struct TimerView: View {
 //            DiagramDetail(stopWatchManager.scrambleSVG)
 //        }
         .sheet(item: $presentedAvg) { item in
-            StatsDetail(solves: item, session: stopWatchManager.currentSession)
+            StatsDetail(solves: item, session: stopWatchManager.currentSession) // TODO use stopwatchamanger env object
         }
         .onReceive(stopWatchManager.$mode) { newMode in
             tabRouter.hideTabBar = newMode == .inspecting || newMode == .running

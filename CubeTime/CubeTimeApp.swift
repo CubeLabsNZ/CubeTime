@@ -129,7 +129,7 @@ struct MainView: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     var body: some View {
-        if horizontalSizeClass == .regular && verticalSizeClass == .regular {
+        if UIDevice.current.userInterfaceIdiom == .pad {
             TimerView(largePad: true)
         } else {
             MainTabsView()

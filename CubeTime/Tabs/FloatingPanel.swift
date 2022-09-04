@@ -2,7 +2,7 @@ import SwiftUI
 
 
 struct FloatingPanelChild: View {
-    @SceneStorage("CubeTime.FloatingPanel.height") private var height: Double = 50
+    @SceneStorage("CubeStuffs.FloatingPanel.height") private var height: Double = 50
     @Binding var stage: Int
     @State var oldStage: Int
     @State var isPressed: Bool = false

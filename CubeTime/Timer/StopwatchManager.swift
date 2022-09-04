@@ -368,24 +368,19 @@ class StopWatchManager: ObservableObject {
         
         
         if solveItem.penalty == PenTypes.dnf.rawValue {
-            solvesNoDNFsbyDate.append(solveItem)
-            solvesNoDNFs.insert(solveItem, at: solvesNoDNFs.insertionIndex(of: solveItem))
-        } else if oldPen == PenTypes.dnf {
             assert(solvesNoDNFsbyDate.popLast() == solveItem)
             solvesNoDNFs.remove(object: solveItem)
+        } else if oldPen == PenTypes.dnf {
+            solvesNoDNFsbyDate.append(solveItem)
+            solvesNoDNFs.insert(solveItem, at: solvesNoDNFs.insertionIndex(of: solveItem))
         }
         
         
         // TODO next update use optimised versions
-        if bestAo5?.accountedSolves?.contains(solveItem) ?? false {
-            bestAo5 = getBestMovingAverageOf(5)
-        }
-        if bestAo12?.accountedSolves?.contains(solveItem) ?? false {
-            bestAo12 = getBestMovingAverageOf(12)
-        }
-        if bestAo100?.accountedSolves?.contains(solveItem) ?? false {
-            bestAo100 = getBestMovingAverageOf(100)
-        }
+
+        bestAo5 = getBestMovingAverageOf(5)
+        bestAo12 = getBestMovingAverageOf(12)
+        bestAo100 = getBestMovingAverageOf(100)
         
         // TODO optimise
         sessionMean = getSessionMean()
@@ -480,6 +475,7 @@ class StopWatchManager: ObservableObject {
         didSet {
             NSLog("playgroundScrambleType didset")
             currentSession.scramble_type = playgroundScrambleType
+            try! managedObjectContext.save()
 //            self.nextScrambleStr = nil
             // TODO do not rescramble when setting to same scramble eg 3blnd -> 3oh
             rescramble()
@@ -546,7 +542,7 @@ class StopWatchManager: ObservableObject {
     // Couple time list functions
     private var timeListSolves: [Solves]!
     @Published var timeListSolvesFiltered: [Solves]!
-    @Published var timeListFilter = ""
+    @Published var timeListFilter = "" // TODO make this refilter automatically
     @Published var timeListAscending = false {
         didSet {
             changedTimeListSort()
@@ -596,11 +592,12 @@ class StopWatchManager: ObservableObject {
         solvesNoDNFs.remove(object: solve)
         solvesNoDNFsbyDate.remove(object: solve)
         changedTimeListSort()
-        managedObjectContext.delete(solve)
         
         if bestSingle == solve {
             bestSingle = getMin()
         }
+        
+        managedObjectContext.delete(solve)
         
         if recalcAO100 {
             self.currentAo100 = getCurrentAverageOf(100)
@@ -666,7 +663,7 @@ class StopWatchManager: ObservableObject {
         // Todo get from cache actually
         let sessionSolves = currentSession.solves!.allObjects as! [Solves]
         
-        solves = sessionSolves.sorted(by: {timeWithPlusTwoForSolve($0) < timeWithPlusTwoForSolve($1)})
+        solves = sessionSolves.sorted(by: {$0.timeIncPen < $1.timeIncPen})
         solvesByDate = sessionSolves.sorted(by: {$0.date! < $1.date!})
         
         changedTimeListSort()
@@ -703,8 +700,9 @@ class StopWatchManager: ObservableObject {
         self.currentAo12 = getCurrentAverageOf(12)
         self.currentAo100 = getCurrentAverageOf(100)
         
-        self.bpa = getWpaBpa().0
-        self.wpa = getWpaBpa().1
+        let bpawpa = getWpaBpa()
+        self.bpa = bpawpa.0
+        self.wpa = bpawpa.1
         
         self.timeNeededForTarget = getTimeNeededForTarget()
         
@@ -714,15 +712,15 @@ class StopWatchManager: ObservableObject {
             solvesNoDNFsbyDate.append(solveItem)
             
             let greatersolvenodnfidx = solvesNoDNFs.firstIndex(where: {timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve(solveItem)}) ?? solvesNoDNFs.count
-            solvesNoDNFs.insert(solveItem, at: greatersolvenodnfidx)
+            solvesNoDNFs.insert(solveItem, at: greatersolvenodnfidx) // TODO use own extension
             
-            if bestSingle == nil || timeWithPlusTwoForSolve(solveItem) < timeWithPlusTwoForSolve(bestSingle!) {
+            if bestSingle == nil || solveItem.timeIncPen < bestSingle!.timeIncPen {
                 bestSingle = solveItem
             }
             
             // TODO update comp sim and phases
         }
-        let greatersolveidx = solves.firstIndex(where: {timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve(solveItem)}) ?? solves.count
+        let greatersolveidx = solves.firstIndex(where: {$0.timeIncPen > solveItem.timeIncPen}) ?? solves.count
         solves.insert(solveItem, at: greatersolveidx)
         
         changedTimeListSort()
@@ -811,7 +809,7 @@ class StopWatchManager: ObservableObject {
         
         // Sort non DNFs or both DNFs by time
         if (pen0 != .dnf && pen1 != .dnf) || (pen0 == .dnf && pen1 == .dnf) {
-            return timeWithPlusTwoForSolve(solve0) < timeWithPlusTwoForSolve(solve1)
+            return solve0.timeIncPen < solve1.timeIncPen
         // Order non DNFs before DNFs
         } else {
             return pen0 != .dnf && pen1 == .dnf
@@ -1208,6 +1206,7 @@ func timeWithPlusTwoForSolve(_ solve: Solves) -> Double {
     return solve.time + (solve.penalty == PenTypes.plustwo.rawValue ? 2 : 0)
 }
 
+// TODO put this in Solve extensions
 func timeWithPlusTwo(_ time: Double, pen: PenTypes) -> Double {
     return time + (pen == PenTypes.plustwo ? 2 : 0)
 }
