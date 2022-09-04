@@ -13,8 +13,6 @@
 		2303472B278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2319F8B8276872F200644EB3 /* TimeTrend.swift */; };
 		2324160E2828F5AB0066B3C2 /* SessionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2324160D2828F5AB0066B3C2 /* SessionBar.swift */; };
-		2326435828C48F2600F6322E /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2326435728C48F2600F6322E /* SVGKit */; };
-		2326435A28C48F2600F6322E /* SVGKitSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2326435928C48F2600F6322E /* SVGKitSwift */; };
 		2326435D28C490A500F6322E /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435B28C490A500F6322E /* FloatingPanel.swift */; };
 		2326436028C4927600F6322E /* TimerHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435F28C4927600F6322E /* TimerHeader.swift */; };
 		2326436228C4929700F6322E /* PrevSolvesDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326436128C4929700F6322E /* PrevSolvesDisplay.swift */; };
@@ -42,6 +40,8 @@
 		23E81E6F275D8DCA00B741E3 /* AppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */; };
 		23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E72275D8DEA00B741E3 /* AboutSettings.swift */; };
 		23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB8A1D2779B6D3000F6663 /* TimeBar.swift */; };
+		23F7B19628C4BF7A00436F44 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 23F7B19528C4BF7A00436F44 /* SVGKit */; };
+		23F7B19828C4BF7A00436F44 /* SVGKitSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 23F7B19728C4BF7A00436F44 /* SVGKitSwift */; };
 		7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2B805D279422BD0006AEDD /* AppDelegate.swift */; };
 		7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */; };
 		7D5521DC2799657300B418BE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5521DB2799657300B418BE /* Security.framework */; };
@@ -146,8 +146,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2326435A28C48F2600F6322E /* SVGKitSwift in Frameworks */,
-				2326435828C48F2600F6322E /* SVGKit in Frameworks */,
+				23F7B19828C4BF7A00436F44 /* SVGKitSwift in Frameworks */,
+				23F7B19628C4BF7A00436F44 /* SVGKit in Frameworks */,
 				7D5521DE279965B600B418BE /* libiconv.tbd in Frameworks */,
 				7D5521DC2799657300B418BE /* Security.framework in Frameworks */,
 			);
@@ -356,8 +356,8 @@
 			);
 			name = CubeTime;
 			packageProductDependencies = (
-				2326435728C48F2600F6322E /* SVGKit */,
-				2326435928C48F2600F6322E /* SVGKitSwift */,
+				23F7B19528C4BF7A00436F44 /* SVGKit */,
+				23F7B19728C4BF7A00436F44 /* SVGKitSwift */,
 			);
 			productName = txmer;
 			productReference = 23DE3BD7274DDBE200254D29 /* CubeTime.app */;
@@ -432,7 +432,7 @@
 			);
 			mainGroup = 23DE3BCE274DDBE200254D29;
 			packageReferences = (
-				2326435628C48F2600F6322E /* XCRemoteSwiftPackageReference "SVGKit" */,
+				23F7B19428C4BF7A00436F44 /* XCRemoteSwiftPackageReference "SVGKit" */,
 			);
 			productRefGroup = 23DE3BD8274DDBE200254D29 /* Products */;
 			projectDirPath = "";
@@ -918,7 +918,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2326435628C48F2600F6322E /* XCRemoteSwiftPackageReference "SVGKit" */ = {
+		23F7B19428C4BF7A00436F44 /* XCRemoteSwiftPackageReference "SVGKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SVGKit/SVGKit";
 			requirement = {
@@ -929,14 +929,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2326435728C48F2600F6322E /* SVGKit */ = {
+		23F7B19528C4BF7A00436F44 /* SVGKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2326435628C48F2600F6322E /* XCRemoteSwiftPackageReference "SVGKit" */;
+			package = 23F7B19428C4BF7A00436F44 /* XCRemoteSwiftPackageReference "SVGKit" */;
 			productName = SVGKit;
 		};
-		2326435928C48F2600F6322E /* SVGKitSwift */ = {
+		23F7B19728C4BF7A00436F44 /* SVGKitSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2326435628C48F2600F6322E /* XCRemoteSwiftPackageReference "SVGKit" */;
+			package = 23F7B19428C4BF7A00436F44 /* XCRemoteSwiftPackageReference "SVGKit" */;
 			productName = SVGKitSwift;
 		};
 /* End XCSwiftPackageProductDependency section */

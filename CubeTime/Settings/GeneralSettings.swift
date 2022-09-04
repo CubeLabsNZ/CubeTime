@@ -148,16 +148,19 @@ struct GeneralSettingsView: View {
                         
                         Spacer()
                         
-                        Picker("", selection: $timerDP) {
-                            Text("Nothing")
-                                .tag(-1)
-                            ForEach(0...3, id: \.self) {
-                                Text("\($0) d.p")
+                        Menu {
+                            Picker("", selection: $timerDP) {
+                                Text("Nothing")
+                                    .tag(-1)
+                                ForEach(0...3, id: \.self) {
+                                    Text("\($0) d.p")
+                                }
                             }
+                        } label: {
+                            Text(timerDP == -1 ? "Nothing" : "\(timerDP) d.p")
+                                .font(.body)
                         }
-                        .pickerStyle(.menu)
                         .accentColor(accentColour)
-                        .font(.body)
                     }
                     .padding(.horizontal)
                     .onChange(of: timerDP) { newValue in
@@ -262,14 +265,19 @@ struct GeneralSettingsView: View {
                         
                         Spacer()
                         
-                        Picker("", selection: $feedbackType) {
-                            ForEach(Array(UIImpactFeedbackGenerator.FeedbackStyle.allCases), id: \.self) { mode in
-                                Text(hapticNames[mode]!)
+                        
+                        
+                        Menu {
+                            Picker("", selection: $feedbackType) {
+                                ForEach(Array(UIImpactFeedbackGenerator.FeedbackStyle.allCases), id: \.self) { mode in
+                                    Text(hapticNames[mode]!)
+                                }
                             }
+                        } label: {
+                            Text(hapticNames[feedbackType]!)
+                                .font(.body)
                         }
-                        .pickerStyle(.menu)
                         .accentColor(accentColour)
-                        .font(.body)
                     }
                     .padding(.horizontal)
                     .onChange(of: feedbackType) { newValue in
@@ -371,17 +379,18 @@ struct GeneralSettingsView: View {
                     
                     Spacer()
                     
-                    Picker("", selection: $displayDP) {
-                        ForEach(2...3, id: \.self) {
-                            Text("\($0) d.p")
-                                .tag($0)
+                    Menu {
+                        Picker("", selection: $displayDP) {
+                            ForEach(2...3, id: \.self) {
+                                Text("\($0) d.p")
+                                    .tag($0)
+                            }
                         }
+                    } label: {
+                        Text("\(displayDP) d.p")
+                            .font(.body)
                     }
-                    .pickerStyle(.menu)
-                    .font(.body)
                     .accentColor(accentColour)
-                    .foregroundColor(accentColour)
-                    
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 12)

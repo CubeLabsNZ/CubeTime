@@ -423,15 +423,19 @@ struct EventPicker: View {
             
             Spacer()
             
-            Picker("", selection: $sessionEventType) {
-                ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
-                    Text(element.name).tag(Int32(index))
-                        .font(.body)
+            Menu {
+                Picker("", selection: $sessionEventType) {
+                    ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
+                        Text(element.name).tag(Int32(index))
+                            .font(.body)
+                    }
                 }
+            } label: {
+                Text(puzzle_types[Int(sessionEventType)].name)
+                    .font(.body)
             }
-            .pickerStyle(.menu)
             .accentColor(accentColour)
-            .font(.body)
+            
         }
         .padding()
         .frame(height: frameHeight)
