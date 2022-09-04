@@ -793,6 +793,7 @@ class StopWatchManager: ObservableObject {
         }
         
         let solvesSorted: [Solves] = solves.sorted(by: Self.sortWithDNFsLast)
+        let isDNF = solvesSorted[solvesSorted.endIndex.advanced(by: -(trim + 1))].penalty == PenTypes.dnf.rawValue
         let solvesTrimmed: [Solves] = solvesSorted.prefix(trim) + solvesSorted.suffix(trim)
         
         if compsim {
@@ -800,7 +801,7 @@ class StopWatchManager: ObservableObject {
                 name: "\(id)",
                 average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
                 accountedSolves: solvesSorted.suffix(cnt),
-                totalPen: solvesSorted.suffix(cnt).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
+                totalPen: isDNF ? .dnf : .none,
                 trimmedSolves: solvesTrimmed
             )
         } else {
@@ -808,7 +809,7 @@ class StopWatchManager: ObservableObject {
                 name: "\(id)\(cnt)",
                 average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
                 accountedSolves: solvesSorted.suffix(cnt),
-                totalPen: solvesSorted.suffix(cnt).filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
+                totalPen: isDNF ? .dnf : .none,
                 trimmedSolves: solvesTrimmed
             )
         }
