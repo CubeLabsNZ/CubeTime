@@ -830,10 +830,13 @@ class StopWatchManager: ObservableObject {
     
     /// NORMAL SESSION FUNCTIONS
     func getMin() -> Solves? {
-        if solvesNoDNFs.count == 0 {
+        if let solve = solvesNoDNFs.first {
+            return solve
+        } else if let solve = solves.first {
+            return solve
+        } else {
             return nil
         }
-        return solvesNoDNFs[0]
     }
     
     func getSessionMean() -> Double? {
