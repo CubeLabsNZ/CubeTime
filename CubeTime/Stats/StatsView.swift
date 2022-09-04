@@ -166,14 +166,12 @@ struct StatsBlockSmallText: View {
         
     var titles: [String]
     var data: [CalculatedAverage?]
-    var checkDNF: Bool
     @Binding var presentedAvg: CalculatedAverage?
     
-    init(_ titles: [String], _ data: [CalculatedAverage?], _ presentedAvg: Binding<CalculatedAverage?>, _ checkDNF: Bool) {
+    init(_ titles: [String], _ data: [CalculatedAverage?], _ presentedAvg: Binding<CalculatedAverage?>) {
         self.titles = titles
         self.data = data
         self._presentedAvg = presentedAvg
-        self.checkDNF = checkDNF
     }
     
     var body: some View {
@@ -202,7 +200,7 @@ struct StatsBlockSmallText: View {
                 .padding(.leading, 12)
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    if data[index] != nil && (!checkDNF || (data[index]?.totalPen != .dnf)) {
+                    if data[index] != nil {
                         presentedAvg = data[index]
                     }
                 }
@@ -318,7 +316,7 @@ struct StatsView: View {
                             if !compsim {
                                 HStack(spacing: 10) {
                                     StatsBlock("CURRENT STATS", blockHeightLarge, false, false) {
-                                        StatsBlockSmallText(["AO5", "AO12", "AO100"], [stopWatchManager.currentAo5, stopWatchManager.currentAo12, stopWatchManager.currentAo100], $presentedAvg, false)
+                                        StatsBlockSmallText(["AO5", "AO12", "AO100"], [stopWatchManager.currentAo5, stopWatchManager.currentAo12, stopWatchManager.currentAo100], $presentedAvg)
                                     }
                                     .padding(.top, 2)
                                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -357,7 +355,7 @@ struct StatsView: View {
                                         }
                                         
                                         StatsBlock("BEST STATS", blockHeightMedium, false, false) {
-                                            StatsBlockSmallText(["AO12", "AO100"], [stopWatchManager.bestAo12, stopWatchManager.bestAo100], $presentedAvg, true)
+                                            StatsBlockSmallText(["AO12", "AO100"], [stopWatchManager.bestAo12, stopWatchManager.bestAo100], $presentedAvg)
                                         }
                                     }
                                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -372,8 +370,8 @@ struct StatsView: View {
                                         }
                                     }
                                     .onTapGesture {
-                                        if stopWatchManager.bestAo5 != nil && stopWatchManager.bestAo5?.totalPen != .dnf {
-                                            presentedAvg = stopWatchManager.bestAo5
+                                        if let bestAo5 = stopWatchManager.bestAo5 {
+                                            presentedAvg = bestAo5
                                         }
                                     }
                                     .frame(minWidth: 0, maxWidth: .infinity)
