@@ -30,8 +30,13 @@ enum stopWatchMode {
 class StopWatchManager: ObservableObject {
     @Published var currentSession: Sessions {
         didSet {
-            tryUpdateCurrentSolveth()
-            rescramble()
+            if currentSession.session_type == SessionTypes.playground.rawValue {
+                NSLog("sesion is play, setting scramble to \(currentSession.scramble_type)")
+                playgroundScrambleType = currentSession.scramble_type
+            } else {
+                rescramble()
+                tryUpdateCurrentSolveth()
+            }
             statsGetFromCache()
             UserDefaults.standard.set(currentSession.objectID.uriRepresentation(), forKey: "last_used_session")
         }
@@ -476,10 +481,9 @@ class StopWatchManager: ObservableObject {
     
     @Published var playgroundScrambleType: Int32 {
         didSet {
-            NSLog("playgroundScrambleType didset")
+            NSLog("playgroundScrambleType didset to \(playgroundScrambleType)")
             currentSession.scramble_type = playgroundScrambleType
             try! managedObjectContext.save()
-//            self.nextScrambleStr = nil
             // TODO do not rescramble when setting to same scramble eg 3blnd -> 3oh
             rescramble()
         }

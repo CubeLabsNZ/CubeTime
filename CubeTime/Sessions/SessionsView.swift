@@ -285,8 +285,11 @@ struct CustomiseStandardSessionView: View {
                             }
                             
                             if sessionItem.session_type == SessionTypes.playground.rawValue {
-                                sessionItem.scramble_type = Int32(sessionEventType)
-                                stopWatchManager.rescramble()
+                                if sessionItem == stopWatchManager.currentSession {
+                                    stopWatchManager.playgroundScrambleType = sessionEventType
+                                } else {
+                                    sessionItem.scramble_type = sessionEventType
+                                }
                             }
                             
                             try! managedObjectContext.save()
@@ -612,6 +615,7 @@ struct SessionsView: View {
     ) var sessions: FetchedResults<Sessions>
     
     var body: some View {
+        let _ = NSLog("\(sessions.map({$0.scramble_type}))")
         NavigationView {
             ZStack {
                 Color(uiColor: colourScheme == .light ? .systemGray6 : .black)

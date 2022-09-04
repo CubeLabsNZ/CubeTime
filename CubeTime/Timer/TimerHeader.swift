@@ -101,7 +101,7 @@ struct TimerHeader: View {
                     
                 Picker("", selection: $stopWatchManager.playgroundScrambleType) {
                     ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                        Text(element.name).tag(index)
+                        Text(element.name).tag(Int32(index))
                             .font(.system(size: 15, weight: .regular))
                     }
                 }
