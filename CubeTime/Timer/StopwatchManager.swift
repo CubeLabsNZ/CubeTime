@@ -610,6 +610,8 @@ class StopWatchManager: ObservableObject {
         
         managedObjectContext.delete(solve)
         
+        bestSingle = getMin() // Get min is super fast anyway
+        
         if recalcAO100 {
             self.currentAo100 = getCurrentAverageOf(100)
             if recalcAO12 {
@@ -649,7 +651,7 @@ class StopWatchManager: ObservableObject {
             solvesNoDNFs.remove(object: solve)
         }
         
-        
+        bestSingle = getMin()
         
         if (solvesByDate.suffix(100).contains(solve)) {
             self.currentAo100 = getCurrentAverageOf(100)
