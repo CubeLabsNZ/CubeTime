@@ -11,7 +11,7 @@ struct TimeCard: View {
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
-    @StateObject var solve: Solves // Must be stateobject so that stopwatchmanager can send objectwillsend
+    var solve: Solves
     
     let formattedTime: String
     let pen: PenTypes
@@ -47,7 +47,7 @@ struct TimeCard: View {
     
     
     init(solve: Solves, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<[Solves]>) {
-        self._solve = StateObject(wrappedValue: solve)
+        self.solve = solve
         self.formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
         self.pen = PenTypes(rawValue: solve.penalty)!
         self._currentSolve = currentSolve
