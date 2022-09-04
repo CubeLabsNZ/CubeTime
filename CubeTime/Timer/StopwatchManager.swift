@@ -726,15 +726,13 @@ class StopWatchManager: ObservableObject {
             
             let greatersolvenodnfidx = solvesNoDNFs.firstIndex(where: {timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve(solveItem)}) ?? solvesNoDNFs.count
             solvesNoDNFs.insert(solveItem, at: greatersolvenodnfidx) // TODO use own extension
-            
-            if bestSingle == nil || solveItem.timeIncPen < bestSingle!.timeIncPen {
-                bestSingle = solveItem
-            }
-            
+                        
             // TODO update comp sim and phases
         }
         let greatersolveidx = solves.firstIndex(where: {$0.timeIncPen > solveItem.timeIncPen}) ?? solves.count
         solves.insert(solveItem, at: greatersolveidx)
+        
+        bestSingle = getMin()
         
         changedTimeListSort()
         
