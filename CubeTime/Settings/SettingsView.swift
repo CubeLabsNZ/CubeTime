@@ -18,7 +18,6 @@ struct SettingsView: View {
     @State var currentCard: SettingsCardInfo?
     
     @Environment(\.colorScheme) var colourScheme
-    @Environment(\.horizontalSizeClass) var hSizeClass
     
     
     @Namespace var namespace
@@ -71,7 +70,6 @@ struct SettingsCard: View {
     var namespace: Namespace.ID
     
     @Environment(\.colorScheme) var colourScheme
-    @Environment(\.horizontalSizeClass) var hSizeClass
     
     
     var body: some View {
@@ -179,7 +177,8 @@ struct SettingsDetail: View {
                     .zIndex(0)
                 
                 ScrollView {
-                    switch currentCard!.name { // TODO use an enum for better i18n support
+                    #warning("TODO:  use an enum for better i18n support")
+                    switch currentCard!.name {
                     case "General":
                         GeneralSettingsView()
                     case "Appearance":

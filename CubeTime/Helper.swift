@@ -280,7 +280,7 @@ extension View {
 
 func formatSolveTime(secs: Double, dp: Int) -> String {
     if secs < 60 {
-        return String(format: "%.\(dp)f", secs) // TODO set DP
+        return String(format: "%.\(dp)f", secs); #warning("TODO: set DP")
     } else {
         let mins: Int = Int((secs / 60).rounded(.down))
         let secs = secs.truncatingRemainder(dividingBy: 60)
@@ -296,7 +296,7 @@ func formatSolveTime(secs: Double, penType: PenTypes? = PenTypes.none) -> String
     let dp = UserDefaults.standard.integer(forKey: gsKeys.displayDP.rawValue)
     let secsfmt = penType == .plustwo ? ".\(dp)f+" : ".\(dp)f"
     if secs < 60 {
-        return String(format: "%\(secsfmt)", secs) // TODO set DP
+        return String(format: "%\(secsfmt)", secs); #warning("TODO: set DP")
     } else {
         let mins: Int = Int((secs / 60).rounded(.down))
         let secs = secs.truncatingRemainder(dividingBy: 60)
@@ -311,7 +311,7 @@ func formatLegendTime(secs: Double, dp: Int) -> String {
     if secs < 10 {
         return String(format: "%.\(dp)f", secs) // dp = 1
     } else if secs < 60 {
-        return String(format: "%.\(dp-1)f", secs) // TODO set DP
+        return String(format: "%.\(dp-1)f", secs); #warning("TODO: set DP")
     } else if secs < 600 {
         let mins: Int = Int((secs / 60).rounded(.down))
         let secs = Int(secs.truncatingRemainder(dividingBy: 60))
@@ -323,7 +323,7 @@ func formatLegendTime(secs: Double, dp: Int) -> String {
 }
 
 
-// Todo make good
+#warning("TODO: make good")
 func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAverage? {
     
     let trim = 1
@@ -466,8 +466,7 @@ let puzzle_types: [PuzzleType] = [
 ]
 
 
-
-// TODO convert to TextFieldStyle
+#warning("TODO: convert to TextFieldStyle")
 struct TimeMaskTextField: ViewModifier {
     @Binding var text: String
     
@@ -622,4 +621,67 @@ class CustomGradientColours {
 }
 
 
+
+
+/// **SESSIONS HELPER STUFFS**
+
+struct SessionTypeIconProps {
+    var size: CGFloat = 26
+    var leaPadding: CGFloat = 8
+    var traPadding: CGFloat = 4
+    var weight: Font.Weight = .regular
+}
+
+struct NewStandardSessionViewBlocks: ViewModifier {
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    func body(content: Content) -> some View {
+        content
+            .background(colorScheme == .light ? Color.white : Color(uiColor: .systemGray6))
+            .cornerRadius(10)
+            .padding(.horizontal)
+    }
+}
+
+
+struct ContextMenuButton: View {
+    var delay: Bool
+    var action: () -> Void
+    var title: String
+    var systemImage: String? = nil
+    var disableButton: Bool? = nil
+    
+    init(delay: Bool, action: @escaping () -> Void, title: String, systemImage: String?, disableButton: Bool?) {
+        self.delay = delay
+        self.action = action
+        self.title = title
+        self.systemImage = systemImage
+        self.disableButton = disableButton
+    }
+    
+    var body: some View {
+        Button(role: title == "Delete Session" ? .destructive : nil, action: delayedAction) {
+            HStack {
+                Text(title)
+                if image != nil {
+                    Image(uiImage: image!)
+                }
+            }
+        }.disabled(disableButton ?? false)
+    }
+    
+    private var image: UIImage? {
+        if let systemName = systemImage {
+            let config = UIImage.SymbolConfiguration(font: .preferredFont(forTextStyle: .body), scale: .medium)
+            
+            return UIImage(systemName: systemName, withConfiguration: config)
+        } else {
+            return nil
+        }
+    }
+    private func delayedAction() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + (delay ? 0.9 : 0)) {
+            self.action()
+        }
+    }
+}
 

@@ -705,7 +705,7 @@
 					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/lib",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.5;
 				OTHER_LDFLAGS = (
 					"-ltnoodle",
 					"-ljre_core",
@@ -718,7 +718,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "CubeTime/3rdparty-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -762,7 +762,7 @@
 					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/lib",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.5;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ltnoodle",
@@ -776,7 +776,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "CubeTime/3rdparty-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

@@ -69,7 +69,6 @@ struct TimeDetailViewOnly: View {
     @Environment(\.presentationMode) var presentation
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
-    @Environment(\.horizontalSizeClass) var hSizeClass
     
     private let titleDateFormat: DateFormatter
     

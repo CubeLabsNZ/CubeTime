@@ -14,7 +14,6 @@ struct TimerView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
-    @Environment(\.horizontalSizeClass) var hSizeClass
    
     @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
     
@@ -78,8 +77,8 @@ struct TimerView: View {
     
     
     @State var floatingPanelStage: Int = 3
+    #warning("TODO: find a way to not use an initialiser")
     
-    // TODO find a way to not use an initializer
     init(largePad: Bool = false) {
         self.largePad = largePad
     }
@@ -183,12 +182,14 @@ struct TimerView: View {
             // VIEWS WHEN TIMER NOT RUNNING
             if !tabRouter.hideTabBar {
                 if !largePad {
-                    // TODO fix
+                    #warning("TODO: fix")
                     VStack {
                         HStack {
                             TimerHeader(targetFocused: $targetFocused)
+                            
                             Spacer()
                         }
+                        
                         Spacer()
                     }
                 } else {
@@ -459,8 +460,10 @@ struct TimerView: View {
                                                     }
                                                 }
                                             }
-                                            .padding(.bottom, 6) // TODO check if this is right
+                                            .padding(.bottom, 6)
                                             .padding(.horizontal, 4)
+                                            #warning("TODO: check if this is right")
+                                            
                                         }
                                         .frame(width: windowSize!.width/2, height: 120)
                                     }
@@ -477,7 +480,6 @@ struct TimerView: View {
 //                    .padding(.bottom, 12)
                     .offset(x: 0, y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12))) // 50 for tab + 8 for padding + 16/0 for bottom bar gap
                 }
-                // GEO READER FOR BOTTOM TOOLS
             }
             
             // MANUAL ENTRY FIELD
@@ -648,7 +650,7 @@ struct TimerView: View {
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {
-                managedObjectContext.delete(detail.wrappedValue!) // TODO maybe i can delete this line
+                managedObjectContext.delete(detail.wrappedValue!); #warning("TODO: delete this line?")
                 stopWatchManager.delete(solve: detail.wrappedValue!)
                 detail.wrappedValue = nil
                 stopWatchManager.secondsElapsed = 0
@@ -660,20 +662,18 @@ struct TimerView: View {
         }
         .sheet(item: $scrambleSheetStr) { str in
             TimeScrambleDetail(str.str, stopWatchManager.scrambleSVG)
-//            ScrambleDetail(str.str)
         }
-//        .sheet(isPresented: $showDrawScrambleSheet) {
-//            DiagramDetail(stopWatchManager.scrambleSVG)
-//        }
         .sheet(item: $presentedAvg) { item in
-            StatsDetail(solves: item, session: stopWatchManager.currentSession) // TODO use stopwatchamanger env object
+            StatsDetail(solves: item, session: stopWatchManager.currentSession); #warning("TODO: use SWM env object")
         }
         .onReceive(stopWatchManager.$mode) { newMode in
             tabRouter.hideTabBar = newMode == .inspecting || newMode == .running
             hideStatusBar = newMode == .inspecting || newMode == .running
         }
-        .statusBar(hidden: hideStatusBar) /// TODO MAKE SO ANIMATION IS ASYMMETRIC WITH VALUES OF THE OTHER ANIMATIONS
+        .statusBar(hidden: hideStatusBar)
         .ignoresSafeArea(.keyboard)
+        
+        #warning("TODO: make animation asymmetric?")
     }
 }
 

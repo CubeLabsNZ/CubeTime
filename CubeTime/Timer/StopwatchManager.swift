@@ -85,7 +85,6 @@ class StopWatchManager: ObservableObject {
         secondsStr = formatSolveTime(secs: 0)
         statsGetFromCache()
         calculateFeedbackStyle()
-//        scrambler.initSq1()
         self.rescramble()
         
         tryUpdateCurrentSolveth()
@@ -384,13 +383,13 @@ class StopWatchManager: ObservableObject {
         }
         
         
-        // TODO next update use optimised versions
+        #warning("TODO: next update use optimised versions")
 
         bestAo5 = getBestMovingAverageOf(5)
         bestAo12 = getBestMovingAverageOf(12)
         bestAo100 = getBestMovingAverageOf(100)
         
-        // TODO optimise
+        #warning("TODO:  optimise")
         sessionMean = getSessionMean()
         
         
@@ -431,7 +430,7 @@ class StopWatchManager: ObservableObject {
 
             /// This absolutely is not best practice, but I couldn't find another way to do it
             /// **PLEASE** file a PR or issue if you know of a better way
-            /// TODO make this not actually continue the scramble ... . .
+            #warning("TODO:  make this not actually continue the scramble")
             if scrTypeAtWorkStart == self.currentSession.scramble_type {
                 DispatchQueue.main.async {
                     self.scrambleStr = scramble
@@ -472,7 +471,7 @@ class StopWatchManager: ObservableObject {
         prevDownStoppedTimer = false
 
         if solveItem != nil {
-            // todo
+            #warning("TODO")
             showDeleteSolveConfirmation = true
         }
     }
@@ -484,7 +483,7 @@ class StopWatchManager: ObservableObject {
             NSLog("playgroundScrambleType didset to \(playgroundScrambleType)")
             currentSession.scramble_type = playgroundScrambleType
             try! managedObjectContext.save()
-            // TODO do not rescramble when setting to same scramble eg 3blnd -> 3oh
+            #warning("TODO:  do not rescramble when setting to same scramble eg 3blnd -> 3oh")
             rescramble()
         }
     }
@@ -579,10 +578,12 @@ class StopWatchManager: ObservableObject {
         }
     }
     
-    @Published var stateID = UUID() // TODO fix this god awful hack
+    #warning("TODO:  fix this god awful hack")
+    @Published var stateID = UUID()
+    
     
     func delete(solve: Solves) {
-        // TODO check best AOs
+        #warning("TODO:  check best AOs")
         var recalcAO100 = false
         var recalcAO12 = false
         var recalcAO5 = false
@@ -630,7 +631,7 @@ class StopWatchManager: ObservableObject {
     }
     
     func changePen(solve: Solves, pen: PenTypes) {
-        // TODO check best AOs
+        #warning("TODO:  check best AOs")
         if solve.penalty == pen.rawValue {
             return
         }
@@ -673,7 +674,7 @@ class StopWatchManager: ObservableObject {
     }
     
     func statsGetFromCache() {
-        // Todo get from cache actually
+        #warning("TODO:  get from cache actually")
         let sessionSolves = currentSession.solves!.allObjects as! [Solves]
         
         solves = sessionSolves.sorted(by: {$0.timeIncPen < $1.timeIncPen})
@@ -705,7 +706,7 @@ class StopWatchManager: ObservableObject {
     }
     
     func updateStats() {
-        // TODO maybe make these async?
+        #warning("TODO:  maybe make these async?")
         
         solvesByDate.append(solveItem)
         // These stats would require severe voodoo to not recalculate (TODO switch to voodoo), and are faily cheap
@@ -725,9 +726,10 @@ class StopWatchManager: ObservableObject {
             solvesNoDNFsbyDate.append(solveItem)
             
             let greatersolvenodnfidx = solvesNoDNFs.firstIndex(where: {timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve(solveItem)}) ?? solvesNoDNFs.count
-            solvesNoDNFs.insert(solveItem, at: greatersolvenodnfidx) // TODO use own extension
-                        
-            // TODO update comp sim and phases
+            solvesNoDNFs.insert(solveItem, at: greatersolvenodnfidx)
+            #warning("TODO:  use own extension")
+            
+            #warning("TODO:  update comp sim and phases")
         }
         let greatersolveidx = solves.firstIndex(where: {$0.timeIncPen > solveItem.timeIncPen}) ?? solves.count
         solves.insert(solveItem, at: greatersolveidx)
@@ -736,7 +738,7 @@ class StopWatchManager: ObservableObject {
         
         changedTimeListSort()
         
-        // todo make these a dict instead
+        #warning("TODO:  make these a dict instead")
         
         if let currentAo5 = currentAo5 {
             if bestAo5 == nil || ( // best is not set yet (and current is), or:
@@ -746,7 +748,8 @@ class StopWatchManager: ObservableObject {
                 )
                 || (currentAo5.totalPen, bestAo5!.totalPen) == (PenTypes.none, PenTypes.dnf) { // current is none and best is dnf
                 self.bestAo5 = currentAo5
-                self.bestAo5?.name = "Best ao5" // TODO unhardcode
+                self.bestAo5?.name = "Best ao5"
+                #warning("TODO:  unhardcode")
                 NSLog("updated best ao5: \(self.bestAo5 == currentAo5)")
             }
         }
@@ -758,7 +761,8 @@ class StopWatchManager: ObservableObject {
                 )
                 || (currentAo12.totalPen, bestAo12!.totalPen) == (PenTypes.none, PenTypes.dnf) { // current is none and best is dnf
                 self.bestAo12 = currentAo12
-                self.bestAo5?.name = "Best ao12" // TODO unhardcode
+                self.bestAo5?.name = "Best ao12"
+                #warning("TODO:  unhardcode")
             }
         }
         if let currentAo100 = currentAo100 {
@@ -769,10 +773,11 @@ class StopWatchManager: ObservableObject {
                 )
                 || (currentAo100.totalPen, bestAo100!.totalPen) == (PenTypes.none, PenTypes.dnf) { // current is none and best is dnf
                 self.bestAo100 = currentAo100
-                self.bestAo5?.name = "Best ao100" // TODO unhardcode
+                self.bestAo5?.name = "Best ao100"
+                #warning("TODO:  unhardcode")
             }
         }
-        // TODO save to cache
+        #warning("TODO:  save to cache")
     }
     
     
@@ -1197,7 +1202,7 @@ struct CalculatedAverage: Identifiable, Comparable/*, Equatable, Comparable*/ {
     let trimmedSolves: [Solves]?
     
     static func < (lhs: CalculatedAverage, rhs: CalculatedAverage) -> Bool {
-        // TODO merge with that one sort function
+        #warning("TODO:  merge with that one sort function")
         if lhs.totalPen == .dnf && rhs.totalPen != .dnf {
             return true
         } else if lhs.totalPen != .dnf && rhs.totalPen == .dnf {
@@ -1216,12 +1221,12 @@ struct CalculatedAverage: Identifiable, Comparable/*, Equatable, Comparable*/ {
     }
 }
 
-@available(*, deprecated, message: "Please use solve.timeIncPen instead")
+@available(*, deprecated, message: "Use solve.timeIncPen instead.")
 func timeWithPlusTwoForSolve(_ solve: Solves) -> Double {
     return solve.time + (solve.penalty == PenTypes.plustwo.rawValue ? 2 : 0)
 }
 
-// TODO put this in Solve extensions
+#warning("TODO:  put this in Solve extensions")
 func timeWithPlusTwo(_ time: Double, pen: PenTypes) -> Double {
     return time + (pen == PenTypes.plustwo ? 2 : 0)
 }

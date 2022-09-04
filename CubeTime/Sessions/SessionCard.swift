@@ -185,8 +185,9 @@ struct SessionCard: View {
         }
         .onTapGesture {
             withAnimation(.spring(response: 0.325)) {
-                NSLog("setting current session to session with scramble type of \(item.scramble_type)")
-                stopWatchManager.currentSession = item
+                if stopWatchManager.currentSession != item {
+                    stopWatchManager.currentSession = item
+                }
             }
         }
         
@@ -221,7 +222,7 @@ struct SessionCard: View {
         .padding(.horizontal)
         
         .sheet(isPresented: $isShowingCustomizeDialog) {
-            CustomiseStandardSessionView(sessionItem: item)
+            CustomiseSessionView(sessionItem: item)
         }
         
         .confirmationDialog(String("Are you sure you want to delete \"\(name)\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
