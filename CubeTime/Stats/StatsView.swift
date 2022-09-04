@@ -113,8 +113,6 @@ struct StatsBlockText: View {
                     Spacer()
                 }
                 .frame(minWidth: 0, maxWidth: .infinity)
-                
-                Spacer()
             }
             .padding(.bottom, 4)
             .padding(.leading, 12)

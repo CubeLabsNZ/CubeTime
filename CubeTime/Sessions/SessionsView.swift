@@ -230,30 +230,6 @@ struct CustomiseStandardSessionView: View {
                             CompSimTargetEntry(targetStr: $targetStr)
                         }
                         
-                        
-                        /// TEMPORARITLY REMOVED MODIFYING PHASES IN STANDARD MULTIPHASE SESSION
-                        
-                        
-                        /*
-                        if sessionItem.session_type == SessionTypes.multiphase.rawValue {
-                            VStack (spacing: 0) {
-                                HStack(spacing: 0) {
-                                    Text("Phases: ")
-                                        .font(.body.weight(.medium))
-                                    Text("\(phaseCount)")
-                                    
-                                    Spacer()
-                                    
-                                    Stepper("", value: $phaseCount, in: 2...8)
-                                    
-                                }
-                                .padding()
-                            }
-                            .frame(height: frameHeight)
-                            .modifier(NewStandardSessionViewBlocks())
-                        }
-                         */
-                        
                         if sessionItem.session_type == SessionTypes.playground.rawValue {
                             EventPicker(sessionEventType: $sessionEventType)
                         }

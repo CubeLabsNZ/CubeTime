@@ -85,7 +85,6 @@ class StopWatchManager: ObservableObject {
         secondsStr = formatSolveTime(secs: 0)
         statsGetFromCache()
         calculateFeedbackStyle()
-//        scrambler.initSq1()
         self.rescramble()
         
         tryUpdateCurrentSolveth()

@@ -80,10 +80,6 @@ struct MainTabsView: View {
     @Namespace private var namespace
     
     
-    
-    @State var hideTabBar = false
-    
-    
     @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
     @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
@@ -105,7 +101,7 @@ struct MainTabsView: View {
                     SettingsView()
                 }
                 
-                BottomTabsView(hide: $hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
+                BottomTabsView(hide: $tabRouter.hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
                     .zIndex(1)
                     .ignoresSafeArea(.keyboard)
             }
