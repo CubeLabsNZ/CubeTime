@@ -63,6 +63,8 @@ struct StatsBlockText: View {
     let displayDetail: Bool
     let nilCondition: Bool
     
+    @ScaledMetric private var blockHeightSmall = 75
+    
     private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
                                 (scene as? UIWindowScene)?.keyWindow
                             }).first?.frame.size
@@ -78,9 +80,7 @@ struct StatsBlockText: View {
     var body: some View {
         VStack {
             VStack {
-    //            if !displayDetail {
-                    Spacer()
-    //            }
+                Spacer()
                 
                 HStack {
                     if nilCondition {
@@ -113,17 +113,14 @@ struct StatsBlockText: View {
                     Spacer()
                 }
                 .frame(minWidth: 0, maxWidth: .infinity)
-    //            .offset(y: displayDetail ? 30 : 0)
                 
-    //            if displayDetail {
-    //                Spacer()
-    //            }
-                
+                Spacer()
             }
             .padding(.bottom, 4)
             .padding(.leading, 12)
+            .frame(height: blockHeightSmall)
 //            .background(Color.red)
-            .frame(height: 75)
+            
             
             if displayDetail {
                 Spacer()
