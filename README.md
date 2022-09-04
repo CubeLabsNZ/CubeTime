@@ -48,7 +48,6 @@
 ### App Features
 - Built-in system haptics, and able to be changed to your liking
 
-
 - All the basic timing functionalities, and fully customisable:
    * Customisable hold down time
    * Inspection time
@@ -56,7 +55,6 @@
    * Intuitive gestures for quick and easy access to actions
      * Customisable gestures
      * Customisable gesture activation distance
-
 
 - Easy to use session support
   * featuring many modes, including:
@@ -67,12 +65,10 @@
     * Comp Sim
   * pinnable sessions for easy access
 
-
 - Simple card design for viewing your times
   * Searchable times, along with quick and easy to use sort functionality - to sort your times by date or by speed
   * Batch select times for deletion, adding penalties, or to export or move to a different session
   * Adding comments for special solves
-
 
 - Extensive statistics and solve analysis:
   * Visual graphs for your sessions
@@ -82,16 +78,15 @@
   * Inspection time tracking and analysis
   * Total time spent solving
 
-
 - Other tools, including special ones for Comp Sim, such as:
   * calculating your bpa and wpa
   * calculating time needed to secure certain averages
 
-  
-   
+     
 ### Upcoming Features
 
-You can check the [Todo list](https://github.com/CubeStuffs/CubeTime/projects/1) in this repo, for a list of all the planned features, but here's an outline:
+You can view our [Todo List for this repo](https://github.com/orgs/CubeStuffs/projects/3) for a list of all our upcoming features. You can add suggestions in the 'Needs Triage' column. 
+Here's an outline of some of the major upcoming features
 - iPad® support, including:
   * Keyboard shortcuts
   * Trackpad support
@@ -101,7 +96,7 @@ You can check the [Todo list](https://github.com/CubeStuffs/CubeTime/projects/1)
 - Audio analysis for pauses during solves
 - Support for bluetooth cubes
 - Support for stackmats
-- Draw scramble functionality, along with a native implementation of a scrambler built from scatch
+- ~~Draw scramble functionality, along with a native implementation of a scrambler built from scatch~~
 - Importing sessions and solves from common timers, such as ChaoTimer and csTimer
 - Easy to use export to save your sessions
 
