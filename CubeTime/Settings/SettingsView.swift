@@ -40,7 +40,7 @@ struct SettingsView: View {
                         }
                         HStack (spacing: 16) {
                             SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
-                            SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
+//                            SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
                         }
                         
                         Spacer()
@@ -175,7 +175,8 @@ struct SettingsDetail: View {
                     case "Appearance":
                         AppearanceSettingsView()
                     case "Import &\nExport":
-                        ImportExportSettingsView()
+                        EmptyView()
+//                        ImportExportSettingsView()
                     case "Help &\nAbout Us":
                         AboutSettingsView()
                     default:
