@@ -33,6 +33,8 @@ class StopWatchManager: ObservableObject {
             if currentSession.session_type == SessionTypes.playground.rawValue {
                 NSLog("sesion is play, setting scramble to \(currentSession.scramble_type)")
                 playgroundScrambleType = currentSession.scramble_type
+            } else if let currentSession = currentSession as? MultiphaseSession {
+                self.phaseCount = Int(currentSession.phase_count)
             } else {
                 rescramble()
                 tryUpdateCurrentSolveth()
@@ -605,13 +607,10 @@ class StopWatchManager: ObservableObject {
         solvesNoDNFsbyDate.remove(object: solve)
         changedTimeListSort()
         
-        if bestSingle == solve {
-            bestSingle = getMin()
-        }
-        
         managedObjectContext.delete(solve)
         
         bestSingle = getMin() // Get min is super fast anyway
+        phases = getAveragePhases()
         
         if recalcAO100 {
             self.currentAo100 = getCurrentAverageOf(100)
@@ -653,6 +652,7 @@ class StopWatchManager: ObservableObject {
         }
         
         bestSingle = getMin()
+        phases = getAveragePhases()
         
         if (solvesByDate.suffix(100).contains(solve)) {
             self.currentAo100 = getCurrentAverageOf(100)
@@ -698,6 +698,7 @@ class StopWatchManager: ObservableObject {
         currentAo100 = getCurrentAverageOf(100)
         
         bestSingle = getMin()
+        phases = getAveragePhases()
         sessionMean = getSessionMean()
     }
     
@@ -735,6 +736,8 @@ class StopWatchManager: ObservableObject {
         solves.insert(solveItem, at: greatersolveidx)
         
         bestSingle = getMin()
+        #warning("TODO:  use optimize this with mean magic")
+        phases = getAveragePhases()
         
         changedTimeListSort()
         
