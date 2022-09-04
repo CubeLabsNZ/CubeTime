@@ -549,7 +549,11 @@ class StopWatchManager: ObservableObject {
     // Couple time list functions
     private var timeListSolves: [Solves]!
     @Published var timeListSolvesFiltered: [Solves]!
-    @Published var timeListFilter = "" // TODO make this refilter automatically
+    @Published var timeListFilter = "" {
+        didSet {
+            filterTimeList()
+        }
+    }
     @Published var timeListAscending = false {
         didSet {
             changedTimeListSort()
