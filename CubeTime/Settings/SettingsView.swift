@@ -18,7 +18,6 @@ struct SettingsView: View {
     @State var currentCard: SettingsCardInfo?
     
     @Environment(\.colorScheme) var colourScheme
-    @Environment(\.horizontalSizeClass) var hSizeClass
     
     
     @Namespace var namespace
@@ -71,7 +70,6 @@ struct SettingsCard: View {
     var namespace: Namespace.ID
     
     @Environment(\.colorScheme) var colourScheme
-    @Environment(\.horizontalSizeClass) var hSizeClass
     
     
     var body: some View {

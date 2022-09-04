@@ -23,7 +23,6 @@ struct TimeListView: View {
     
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
-    @Environment(\.verticalSizeClass) var vSizeClass
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     

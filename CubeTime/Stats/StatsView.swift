@@ -214,7 +214,6 @@ struct StatsBlockSmallText: View {
 
 struct StatsDivider: View {
     @Environment(\.colorScheme) var colourScheme
-    @Environment(\.horizontalSizeClass) var hSizeClass
     
     private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
                                 (scene as? UIWindowScene)?.keyWindow
@@ -222,7 +221,7 @@ struct StatsDivider: View {
 
     var body: some View {
         Divider()
-            .frame(width: windowSize!.width/(hSizeClass == .regular ? 4 : 2))
+            .frame(width: windowSize!.width / 2)
             .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
     }
 }
@@ -232,7 +231,6 @@ struct StatsView: View {
     @Environment(\.colorScheme) var colourScheme
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
-    @Environment(\.horizontalSizeClass) var hSizeClass
     
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     
@@ -278,34 +276,6 @@ struct StatsView: View {
                 
                 ScrollView {
                     VStack (spacing: 0) {
-                        
-                        #if DEBUG
-                        Button {
-                            for _ in 0..<1000 {
-                                let solveItem: Solves!
-
-                                solveItem = Solves(context: managedObjectContext)
-                                solveItem.date = Date()
-                                solveItem.session = stopWatchManager.currentSession
-                                solveItem.scramble = "R U R' F' D D' D F B B "
-                                solveItem.scramble_type = 1
-                                solveItem.scramble_subtype = 0
-                                solveItem.time = Double.random(in: 6..<11)
-                                
-                                do {
-                                    try managedObjectContext.save()
-                                } catch {
-                                    if let error = error as NSError? {
-                                        fatalError("Unresolved error \(error), \(error.userInfo)")
-                                    }
-                                }
-                            }
-                        } label: {
-                            Text("sdfsdf")
-                        }
-                        #endif
-                        
-                        
                         SessionBar(name: stopWatchManager.currentSession.name!, session: stopWatchManager.currentSession)
                             .padding(.top, -6)
                             .padding(.horizontal)

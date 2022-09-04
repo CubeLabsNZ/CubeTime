@@ -14,7 +14,6 @@ struct TimerView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
-    @Environment(\.horizontalSizeClass) var hSizeClass
    
     @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
     
@@ -187,8 +186,10 @@ struct TimerView: View {
                     VStack {
                         HStack {
                             TimerHeader(targetFocused: $targetFocused)
+                            
                             Spacer()
                         }
+                        
                         Spacer()
                     }
                 } else {
@@ -477,7 +478,6 @@ struct TimerView: View {
 //                    .padding(.bottom, 12)
                     .offset(x: 0, y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12))) // 50 for tab + 8 for padding + 16/0 for bottom bar gap
                 }
-                // GEO READER FOR BOTTOM TOOLS
             }
             
             // MANUAL ENTRY FIELD

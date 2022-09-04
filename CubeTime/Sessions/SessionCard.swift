@@ -185,7 +185,9 @@ struct SessionCard: View {
         }
         .onTapGesture {
             withAnimation(.spring(response: 0.325)) {
-                stopWatchManager.currentSession = item
+                if stopWatchManager.currentSession != item {
+                    stopWatchManager.currentSession = item
+                }
             }
         }
         

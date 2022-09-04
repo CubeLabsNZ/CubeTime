@@ -72,7 +72,6 @@ struct TabIcon: View {
 struct MainTabsView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
-    @Environment(\.horizontalSizeClass) var hSizeClass
     @EnvironmentObject var tabRouter: TabRouter
     
     var largePad = false
@@ -110,33 +109,6 @@ struct MainTabsView: View {
                     .zIndex(1)
                     .ignoresSafeArea(.keyboard)
             }
-            
-            
-            /// attempted shortcut menu :tear:
-//            .onChange(of: scenePhase) { newValue in
-//                if newValue == .active {
-//                    if let shortcutItem = shortcutItem {
-//                        print("HERE")
-//                        print(shortcutItem.type)
-//
-//                        tabRouter.currentTab = {
-//                            switch shortcutItem.type {
-//                            case "timer":
-//                                return .timer
-//                            case "timelist":
-//                                return .solves
-//                            case "stats":
-//                                return .stats
-//                            case "sessions":
-//                                return .sessions
-//                            default:
-//                                return .timer
-//                            }
-//                        }()
-//                    }
-//                }
-//            }
-             
         }
         .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
         .tint(accentColour)
