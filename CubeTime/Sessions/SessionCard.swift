@@ -185,6 +185,7 @@ struct SessionCard: View {
         }
         .onTapGesture {
             withAnimation(.spring(response: 0.325)) {
+                NSLog("setting current session to session with scramble type of \(item.scramble_type)")
                 stopWatchManager.currentSession = item
             }
         }
