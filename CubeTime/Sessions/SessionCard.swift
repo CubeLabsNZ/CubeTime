@@ -16,21 +16,39 @@ struct SessionCard: View {
     var item: Sessions
     var allSessions: FetchedResults<Sessions>
     
+    let pinned: Bool
+    let session_type: SessionTypes
+    let name: String
+    let scramble_type: Int
+    let solveCount: Int
+    
     @Namespace var namespace
+    
+    init (currentSession: Binding<Sessions>, item: Sessions, allSessions: FetchedResults<Sessions>) {
+        self._currentSession = currentSession
+        self.item = item
+        self.allSessions = allSessions
+        
+        // Copy out the things so that it won't change to null coalesced defaults on deletion
+        self.pinned = item.pinned
+        self.session_type = SessionTypes(rawValue: item.session_type)!
+        self.name = item.name ?? "Unknown session name"
+        self.scramble_type = Int(item.scramble_type)
+        self.solveCount = item.solves?.count ?? -1
+    }
     
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color(uiColor: colourScheme == .dark ? .systemGray4 : .systemGray5))
-                .frame(height: item.pinned ? 110 : 65)
+                .frame(height: pinned ? 110 : 65)
                 .zIndex(0)
             
             
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(colourScheme == .dark ? Color(uiColor: .systemGray6) : Color.white)
-                .frame(width: currentSession == item ? 16 : UIScreen.screenWidth - 32, height: item.pinned ? 110 : 65)
+                .frame(width: currentSession == item ? 16 : UIScreen.screenWidth - 32, height: pinned ? 110 : 65)
                 .offset(x: currentSession == item ? -((UIScreen.screenWidth - 16)/2) + 16 : 0)
-            
                 .zIndex(1)
             
             
@@ -42,14 +60,14 @@ struct SessionCard: View {
                     VStack(alignment: .leading) {
                         HStack(alignment: .center, spacing: 0) {
                             ZStack {
-                                if SessionTypes(rawValue: item.session_type)! != .standard {
+                                if session_type != .standard {
                                     RoundedRectangle(cornerRadius: 10, style: .continuous)
                                         .fill(accentColour.opacity(0.33))
                                         .frame(width: 40, height: 40)
                                         .padding(.trailing, 12)
                                 }
                                 
-                                switch SessionTypes(rawValue: item.session_type)! {
+                                switch session_type {
                                 case .algtrainer:
                                     Image(systemName: "command.square")
                                         .font(.system(size: 26, weight: .semibold))
@@ -77,21 +95,21 @@ struct SessionCard: View {
                             
                             
                             VStack(alignment: .leading, spacing: -2) {
-                                Text(item.name ?? "Unknown session name")
+                                Text(name)
                                     .font(.title2.weight(.bold))
 //                                    .foregroundColor(currentSession == item ? accentColour : (colourScheme == .dark ? Color.white : Color.black))
                                     .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
                                 
                                 Group {
-                                    switch SessionTypes(rawValue: item.session_type)! {
+                                    switch session_type {
                                     case .standard:
-                                        Text(puzzle_types[Int(item.scramble_type)].name)
+                                        Text(puzzle_types[scramble_type].name)
                                     case .playground:
                                         Text("Playground")
                                     case .multiphase:
-                                        Text("Multiphase - \(puzzle_types[Int(item.scramble_type)].name)")
+                                        Text("Multiphase - \(puzzle_types[scramble_type].name)")
                                     case .compsim:
-                                        Text("Comp Sim - \(puzzle_types[Int(item.scramble_type)].name)")
+                                        Text("Comp Sim - \(puzzle_types[scramble_type].name)")
                                     default:
                                         EmptyView()
                                     }
@@ -99,15 +117,15 @@ struct SessionCard: View {
                                 .font(.subheadline.weight(.medium))
                                     .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
 //                                .foregroundColor(currentSession == item ? accentColour : (colourScheme == .dark ? Color.white : Color.black))
-                                .if(!item.pinned) { view in
+                                .if(!pinned) { view in
                                     view.offset(y: -2)
                                 }
                             }
                         }
                         
-                        if item.pinned {
+                        if pinned {
                             Spacer()
-                            Text("\(item.solves?.count ?? -1) Solves")
+                            Text("\(solveCount) Solves")
                                 .font(.subheadline.weight(.bold))
 //                                .font(.system(size: 15, weight: .bold, design: .default))
                                 .foregroundColor(Color(uiColor: .systemGray))
@@ -118,9 +136,9 @@ struct SessionCard: View {
                     
                     Spacer()
                     
-                    if item.session_type != SessionTypes.playground.rawValue {
+                    if session_type != .playground {
                         if item.pinned {
-                            Image(puzzle_types[Int(item.scramble_type)].name)
+                            Image(puzzle_types[scramble_type].name)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
 //                                .foregroundColor(currentSession == item ? accentColour : (colourScheme == .dark ? Color.white : Color.black))
@@ -128,7 +146,7 @@ struct SessionCard: View {
                                 .padding(.vertical, 4)
                                 .padding(.trailing, 12)
                         } else {
-                            Image(puzzle_types[Int(item.scramble_type)].name)
+                            Image(puzzle_types[scramble_type].name)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
 //                                .foregroundColor(currentSession == item ? accentColour : (colourScheme == .dark ? Color.white : Color.black))
@@ -140,12 +158,11 @@ struct SessionCard: View {
                     
                 }
                 .padding(.leading)
-                .padding(.trailing, item.pinned ? 6 : 4)
-                .padding(.top, item.pinned ? 12 : 8)
-                .padding(.bottom, item.pinned ? 12 : 8)
+                .padding(.trailing, pinned ? 6 : 4)
+                .padding(.vertical,  pinned ? 12 : 8)
             }
             
-            .frame(height: item.pinned ? 110 : 65)
+            .frame(height: pinned ? 110 : 65)
             
             .background(Color.clear)
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
@@ -155,7 +172,7 @@ struct SessionCard: View {
                 HStack {
                     Capsule()
                         .fill(accentColour.opacity(0.6))
-                        .frame(width: 4, height: (item.pinned ? 110 * 0.5 : 65 * 0.6))
+                        .frame(width: 4, height: (pinned ? 110 * 0.5 : 65 * 0.6))
                     
                     Spacer()
                 }
@@ -205,7 +222,7 @@ struct SessionCard: View {
             CustomiseStandardSessionView(sessionItem: item)
         }
         
-        .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unknown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
+        .confirmationDialog(String("Are you sure you want to delete \"\(name)\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
                 if item == currentSession {
                     var next: Sessions? = nil
