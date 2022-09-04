@@ -9,8 +9,8 @@ let sessionTypeForID: [SessionTypes: Sessions.Type] = [
     .compsim: CompSimSession.self
 ]
 
-let session_descriptions: [SessionTypes: String] = [
-    .multiphase: "A multiphase session gives you the ability to breakdown your solves into sections, such as blindfolded solves or stages in a 3x3 solve.\n\nTo use, tap anywhere on the timer during a solve to record a phase lap. You can access your breakdown statistics in each time card.",
+let sessionDescriptions: [SessionTypes: String] = [
+    .multiphase: "A multiphase session gives you the ability to breakdown your solves into sections, such as memo/exec stages in blindfolded solving or stages in 3x3 solves.\n\nTap anywhere on the timer during a solve to record a phase lap. You can access your breakdown statistics in each time card and view overall statistics in the Stats view.",
     .playground: "A playground session allows you to quickly change the scramble type within a session without having to specify a scramble type for the whole session.",
     .compsim: "A comp sim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach."
 ]

@@ -518,7 +518,7 @@ struct NewSessionView: View {
                                 view.padding(.top)
                             }
                         
-                        if let session_desc = session_descriptions[sessionType] {
+                        if let session_desc = sessionDescriptions[sessionType] {
                             Text(session_desc)
                                 .multilineTextAlignment(.leading)
                                 .foregroundColor(Color(uiColor: .systemGray))
