@@ -12,7 +12,6 @@ struct SessionCard: View {
     @State private var isShowingDeleteDialog = false
     @State private var isShowingCustomizeDialog = false
     
-    @Binding var currentSession: Sessions
     var item: Sessions
     var allSessions: FetchedResults<Sessions>
     
@@ -22,10 +21,13 @@ struct SessionCard: View {
     let scramble_type: Int
     let solveCount: Int
     
+    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
+                                (scene as? UIWindowScene)?.keyWindow
+                            }).first?.frame.size
+    
     @Namespace var namespace
     
-    init (currentSession: Binding<Sessions>, item: Sessions, allSessions: FetchedResults<Sessions>) {
-        self._currentSession = currentSession
+    init (item: Sessions, allSessions: FetchedResults<Sessions>) {
         self.item = item
         self.allSessions = allSessions
         
@@ -47,8 +49,9 @@ struct SessionCard: View {
             
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(colourScheme == .dark ? Color(uiColor: .systemGray6) : Color.white)
-                .frame(width: currentSession == item ? 16 : UIScreen.screenWidth - 32, height: pinned ? 110 : 65)
-                .offset(x: currentSession == item ? -((UIScreen.screenWidth - 16)/2) + 16 : 0)
+                .frame(width: stopWatchManager.currentSession == item ? 16 : windowSize!.width - 32, height: item.pinned ? 110 : 65)
+                .offset(x: stopWatchManager.currentSession == item ? -((windowSize!.width - 16)/2) + 16 : 0)
+            
                 .zIndex(1)
             
             
@@ -132,7 +135,7 @@ struct SessionCard: View {
                                 .padding(.bottom, 4)
                         }
                     }
-                    .offset(x: currentSession == item ? 10 : 0)
+                    .offset(x: stopWatchManager.currentSession == item ? 10 : 0)
                     
                     Spacer()
                     
@@ -168,7 +171,7 @@ struct SessionCard: View {
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .zIndex(2)
             
-            if currentSession == item {
+            if stopWatchManager.currentSession == item {
                 HStack {
                     Capsule()
                         .fill(accentColour.opacity(0.6))
@@ -182,9 +185,7 @@ struct SessionCard: View {
         }
         .onTapGesture {
             withAnimation(.spring(response: 0.325)) {
-                currentSession = item
-                UserDefaults.standard.set(item.objectID.uriRepresentation(), forKey: "last_used_session") // TODO what was i thinking move this logic into SessionsView
-                stopWatchManager.changeCurrentSession(item)
+                stopWatchManager.currentSession = item
             }
         }
         
@@ -224,10 +225,10 @@ struct SessionCard: View {
         
         .confirmationDialog(String("Are you sure you want to delete \"\(name)\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
-                if item == currentSession {
+                if item == stopWatchManager.currentSession {
                     var next: Sessions? = nil
                     for item in allSessions {
-                        if item != currentSession {
+                        if item != stopWatchManager.currentSession {
                             next = item
                             break
                         }
@@ -238,10 +239,8 @@ struct SessionCard: View {
                     
                     if let next = next {
                         withAnimation {
-                            currentSession = next
+                            stopWatchManager.currentSession = next
                         }
-                        UserDefaults.standard.set(next.objectID.uriRepresentation(), forKey: "last_used_session") // TODO what was i thinking move this logic into SessionsView
-                        stopWatchManager.changeCurrentSession(next)
                         
                     }
                 }

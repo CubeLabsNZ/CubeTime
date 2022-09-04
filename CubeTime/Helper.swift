@@ -22,6 +22,122 @@ extension Bool {
         return l != r
     }
 }
+protocol RawGraphData {
+    var graphData: Double? { get }
+}
+
+extension CompSimSolveGroup: RawGraphData {
+    var graphData: Double? {
+        get {
+            return self.avg?.average
+        }
+    }
+    
+    var avg: CalculatedAverage? {
+        return StopWatchManager.calculateAverage(self.solves!.array as! [Solves], "Comp Sim Group", true)
+    }
+}
+
+extension Solves: Comparable, RawGraphData {
+    var timeIncPen: Double {
+        get {
+            return self.time + (self.penalty == PenTypes.plustwo.rawValue ? 2 : 0)
+        }
+    }
+    
+    var graphData: Double? {
+        get {
+            return timeIncPen
+        }
+    }
+    
+    public static func < (lhs: Solves, rhs: Solves) -> Bool {
+        return lhs.timeIncPen < rhs.timeIncPen
+    }
+
+    // I don't know if i need both but better safe than sorry
+    public static func > (lhs: Solves, rhs: Solves) -> Bool {
+        return lhs.timeIncPen > rhs.timeIncPen
+    }
+}
+
+
+extension RandomAccessCollection where Element : Comparable {
+    func insertionIndex(of value: Element) -> Index {
+        var slice : SubSequence = self[...]
+
+        while !slice.isEmpty {
+            let middle = slice.index(slice.startIndex, offsetBy: slice.count / 2)
+            if value < slice[middle] {
+                slice = slice[..<middle]
+            } else {
+                slice = slice[index(after: middle)...]
+            }
+        }
+        return slice.startIndex
+    }
+}
+
+
+
+extension RandomAccessCollection where Element : Solves {
+    func insertionIndexDate(solve value: Solves) -> Index {
+        var slice : SubSequence = self[...]
+
+        while !slice.isEmpty {
+            let middle = slice.index(slice.startIndex, offsetBy: slice.count / 2)
+            if value.date! < slice[middle].date! {
+                slice = slice[..<middle]
+            } else {
+                slice = slice[index(after: middle)...]
+            }
+        }
+        return slice.startIndex
+    }
+}
+
+
+struct AppZoomWrapper: RawRepresentable, Identifiable {
+    static let allCases = [DynamicTypeSize.xSmall,
+                           DynamicTypeSize.small,
+                           DynamicTypeSize.medium,
+                           DynamicTypeSize.large,
+                           DynamicTypeSize.xLarge,
+                           DynamicTypeSize.xxLarge,
+                           DynamicTypeSize.xxxLarge,
+    ]
+    
+    static private let appZoomNames: [DynamicTypeSize: String] = [
+            DynamicTypeSize.xSmall: "Extra Small",
+            DynamicTypeSize.small: "Small",
+            DynamicTypeSize.medium: "Medium",
+            DynamicTypeSize.large: "Large (Default)",
+            DynamicTypeSize.xLarge: "Extra Large",
+            DynamicTypeSize.xxLarge: "Extra Extra Large",
+            DynamicTypeSize.xxxLarge: "Extra Extra Extra Large",
+    ]
+    
+    typealias RawValue = Int
+    
+    
+    let size: DynamicTypeSize
+    let name: String
+    
+    var rawValue: RawValue
+    
+    init(rawValue: RawValue) {
+        // Couldn't figure out a nice way to do this with guard let
+        self.rawValue = rawValue
+        self.size = Self.allCases[rawValue]
+        self.name = Self.appZoomNames[size]!
+    }
+    
+    
+    var id: Int {
+        return rawValue
+    }
+}
+
 
 extension CGSize {
     public init(_ svgdimen: OrgWorldcubeassociationTnoodleSvgliteDimension) {
@@ -207,6 +323,7 @@ func formatLegendTime(secs: Double, dp: Int) -> String {
 }
 
 
+// Todo make good
 func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAverage? {
     
     let trim = 1
@@ -217,11 +334,11 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
         return nil
     }
     
-    let sorted = solves.sorted(by: Stats.sortWithDNFsLast)
+    let sorted = solves.sorted(by: StopWatchManager.sortWithDNFsLast)
     let trimmedSolves: [Solves] = sorted.prefix(trim) + sorted.suffix(trim)
     
     return CalculatedAverage(
-        id: "Comp Sim",
+        name: "Comp Sim",
         average: sorted.dropFirst(trim).dropLast(trim)
                 .reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(3),
         accountedSolves: sorted,
@@ -503,3 +620,6 @@ class CustomGradientColours {
         [Color(0x3f248f), Color(0x702f86)], // dark blue-purple
     ]
 }
+
+
+

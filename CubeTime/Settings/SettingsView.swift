@@ -16,9 +16,11 @@ struct AnimatingFontSizeV2: AnimatableModifier {
 
 struct SettingsView: View {
     @State var currentCard: SettingsCardInfo?
-    //    @Binding var hideTabBar: Bool
+    
     @Environment(\.colorScheme) var colourScheme
-    @Binding var showOnboarding: Bool
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    
+    
     @Namespace var namespace
     
     
@@ -39,7 +41,7 @@ struct SettingsView: View {
                         /* bring this back (the 4 grid) once importexport added
                         HStack (spacing: 16) {
                             SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
-                            SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
+//                            SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
                         }
                          */
                         
@@ -49,7 +51,6 @@ struct SettingsView: View {
                         Spacer()
                     }
                     .navigationBarTitle("Settings")
-                    
                     .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
                     .padding(.vertical, 6)
                     .padding(.horizontal)
@@ -58,7 +59,7 @@ struct SettingsView: View {
             .navigationViewStyle(StackNavigationViewStyle())
             .zIndex(1)
             .overlay(
-                SettingsDetail(currentCard: $currentCard, showOnboarding: $showOnboarding, namespace: namespace)
+                SettingsDetail(currentCard: $currentCard, namespace: namespace)
             )
         }
     }
@@ -70,6 +71,8 @@ struct SettingsCard: View {
     var namespace: Namespace.ID
     
     @Environment(\.colorScheme) var colourScheme
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    
     
     var body: some View {
         // this if statement is temporary for when there are only 3 blocks
@@ -164,7 +167,6 @@ struct SettingsCard: View {
 
 struct SettingsDetail: View {
     @Binding var currentCard: SettingsCardInfo?
-    @Binding var showOnboarding: Bool
     @Environment(\.colorScheme) var colourScheme
     
     var namespace: Namespace.ID
@@ -182,8 +184,11 @@ struct SettingsDetail: View {
                         GeneralSettingsView()
                     case "Appearance":
                         AppearanceSettingsView()
+                    case "Import &\nExport":
+                        EmptyView()
+//                        ImportExportSettingsView()
                     case "Help &\nAbout Us":
-                        AboutSettingsView(showOnboarding: showOnboarding)
+                        AboutSettingsView()
                     default:
                         EmptyView()
                     }

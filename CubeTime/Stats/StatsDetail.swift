@@ -17,6 +17,10 @@ struct StatsDetail: View {
     
     private let isCurrentCompSimAverage: Bool
     
+    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
+                                (scene as? UIWindowScene)?.keyWindow
+                            }).first?.frame.size
+    
 //    let dateFormatter = DateFormatter()
 //    dateFormatter.dateFormat = "h:mm a, MM/dd/yyyy"
     
@@ -31,7 +35,7 @@ struct StatsDetail: View {
         detailDateFormat.timeZone = TimeZone(secondsFromGMT: 0)
         detailDateFormat.dateFormat = "h:mm a, MM/dd/yy"
         
-        isCurrentCompSimAverage = solves.id == "Current Average"
+        isCurrentCompSimAverage = solves.name == "Current Average"
     }
     
     var body: some View {
@@ -42,7 +46,7 @@ struct StatsDetail: View {
                 
                 if solves.average != nil || isCurrentCompSimAverage {
                     if let solveToShow = solveToShow {
-                        NavigationLink("", destination: TimeDetailViewOnly(solve: solveToShow, currentSolve: nil, timeListManager: nil), isActive: $showSolve)
+                        NavigationLink("", destination: TimeDetailViewOnly(solve: solveToShow, currentSolve: nil), isActive: $showSolve)
                     }
                     ScrollView {
                         VStack (spacing: 12) {
@@ -132,6 +136,8 @@ struct StatsDetail: View {
                                                         .font(.callout.monospaced())
                                                 }
                                                 
+                                                Text(solve.scramble ?? "Failed to load scramble")
+                                                    .font(.system(size: solve.scramble_type == 7 ? ((windowSize!.width-32) / (42.00) * 1.42) : 16, weight: .regular, design: .monospaced))
                                                 
                                                 Spacer()
                                             }
@@ -152,7 +158,7 @@ struct StatsDetail: View {
                         }
                         .offset(y: -6)
                         .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle(solves.id == "Comp Sim Solve" ? "Comp Sim" : solves.id)
+                        .navigationTitle(solves.name == "Comp Sim Solve" ? "Comp Sim" : solves.name)
                         .toolbar {
                             ToolbarItem(placement: .navigationBarLeading) {
                                 Button {

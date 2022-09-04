@@ -384,7 +384,6 @@ struct NewSessionPopUpView: View {
     @State private var showNewPlaygroundView = false
     @State private var showNewCompsimView = false
 
-    @Binding var currentSession: Sessions
     @Binding var showNewSessionPopUp: Bool
     
     
@@ -429,10 +428,10 @@ struct NewSessionPopUpView: View {
                         
                         
                         
-                        NavigationLink("", destination: NewSessionView(sessionType: SessionTypes.standard, typeName: "Standard", showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession), isActive: $showNewStandardSessionView)
-                        NavigationLink("", destination: NewSessionView(sessionType: SessionTypes.multiphase, typeName: "Multiphase", showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession), isActive: $showNewMultiphaseView)
-                        NavigationLink("", destination: NewSessionView(sessionType: SessionTypes.playground, typeName: "Playground", showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession), isActive: $showNewPlaygroundView)
-                        NavigationLink("", destination: NewSessionView(sessionType: SessionTypes.compsim, typeName: "Comp Sim", showNewSessionPopUp: $showNewSessionPopUp, currentSession: $currentSession), isActive: $showNewCompsimView)
+                        NavigationLink("", destination: NewSessionView(sessionType: SessionTypes.standard, typeName: "Standard", showNewSessionPopUp: $showNewSessionPopUp), isActive: $showNewStandardSessionView)
+                        NavigationLink("", destination: NewSessionView(sessionType: SessionTypes.multiphase, typeName: "Multiphase", showNewSessionPopUp: $showNewSessionPopUp), isActive: $showNewMultiphaseView)
+                        NavigationLink("", destination: NewSessionView(sessionType: SessionTypes.playground, typeName: "Playground", showNewSessionPopUp: $showNewSessionPopUp), isActive: $showNewPlaygroundView)
+                        NavigationLink("", destination: NewSessionView(sessionType: SessionTypes.compsim, typeName: "Comp Sim", showNewSessionPopUp: $showNewSessionPopUp), isActive: $showNewCompsimView)
                         
                         Spacer()
                         
@@ -475,12 +474,13 @@ struct NewSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     let sessionType: SessionTypes
     let typeName: String
     @Binding var showNewSessionPopUp: Bool
-    @Binding var currentSession: Sessions
     
     // All sessions
     @State private var name: String = ""
@@ -580,7 +580,7 @@ struct NewSessionView: View {
                         }
                         
                         try! managedObjectContext.save()
-                        currentSession = sessionItem
+                        stopWatchManager.currentSession = sessionItem
                         showNewSessionPopUp = false
                     } label: {
                         Text("Create")
@@ -598,7 +598,6 @@ struct NewSessionView: View {
 struct SessionsView: View {
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
-    @Binding var currentSession: Sessions
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
@@ -621,9 +620,7 @@ struct SessionsView: View {
                 ScrollView {
                     VStack (spacing: 10) {
                         ForEach(sessions) { item in
-                            SessionCard(currentSession: $currentSession, item: item, allSessions: sessions)
-                                .environment(\.managedObjectContext, managedObjectContext)
-                            
+                            SessionCard(item: item, allSessions: sessions)
                         }
                     }
                 }
@@ -648,7 +645,7 @@ struct SessionsView: View {
                         .controlSize(.small)
                         .background(.ultraThinMaterial, in: Capsule())
                         .sheet(isPresented: $showNewSessionPopUp) {
-                            NewSessionPopUpView(currentSession: $currentSession, showNewSessionPopUp: $showNewSessionPopUp)
+                            NewSessionPopUpView(showNewSessionPopUp: $showNewSessionPopUp)
                                 .environment(\.managedObjectContext, managedObjectContext)
                         }
                         .padding(.leading)

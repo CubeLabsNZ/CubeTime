@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-func getDivisions(data: [Double]) -> Array<(Double, Int)> {
+func getDivisions(data: [Solves]) -> Array<(Double, Int)> {
     let cnt: Int = data.count
     
     if cnt >= 4 {
@@ -16,22 +16,24 @@ func getDivisions(data: [Double]) -> Array<(Double, Int)> {
         }
         
         let trim: Int = Int(ceil(Double(cnt) * 0.1))
-        let tc_data: ArraySlice<Double> = data[trim ... (cnt-trim - 1)]
-        var increments: [Double: Int] = [:]
-
-        var fd: Double = tc_data.first!
-        let ld: Double = tc_data.last!
-        let ifd: Double = data[trim - 1]
-        let ild: Double = data.suffix(trim).first!
+        
+        let tc_data: ArraySlice<Solves> = data[trim...cnt-trim-1]
+        
+        var fd: Double = timeWithPlusTwoForSolve(tc_data.first!)
+        let ld: Double = timeWithPlusTwoForSolve(tc_data.last!)
+        let ifd: Double = timeWithPlusTwoForSolve(data[trim-1])
+        let ild: Double = timeWithPlusTwoForSolve(data.suffix(trim).first!)
         
         let div_incr: Double = (ld - fd) / Double(bars)
+        
+        var increments: [Double: Int] = [:]
         
         for i in 0..<bars {
             let range: Range<Double> = fd ..< (fd + div_incr + (i == bars-1 ? (ild - ld)/2 : 0))
             var tmpocc = 0
             
             for datum in Array(tc_data) {
-                if range ~= datum {
+                if range ~= datum.timeIncPen {
                     tmpocc += 1
                 }
             }
@@ -75,31 +77,20 @@ struct TimeDistribution: View {
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
 
-    
-    @Binding var currentSession: Sessions
-    
+    @EnvironmentObject var stopWatchManager: StopWatchManager
     
     var count: Int
     var data: Array<(Double, Int)>
     var max_height: CGFloat
     
-    let stats: Stats
-    
-    let median: Double?
-    let medianPercentage: Double?
-    
-    init(currentSession: Binding<Sessions>, solves: [Double]) {
-        self._currentSession = currentSession
-        stats = Stats(currentSession: currentSession.wrappedValue)
-        
-        
+    init(solves: [Solves]) {
         self.count = solves.count
         self.data = getDivisions(data: solves)
         self.max_height = CGFloat(220 / Float(getMaxHeight(occurences: data.map { $0.1 })!))
-        
-        self.median = stats.getNormalMedian().0
-        self.medianPercentage = stats.getNormalMedian().1
     }
+    
+    
+    
     
     var body: some View {
         if count >= 4 {
@@ -125,7 +116,7 @@ struct TimeDistribution: View {
                     let medianxmax = (divs*CGFloat((count < 8 ? count : 8))+20)
                     let medianxmin = (divs+20)
                     
-                    let medianxloc = (medianxmax - medianxmin) * CGFloat(medianPercentage!) + medianxmin
+                    let medianxloc = (medianxmax - medianxmin) * CGFloat(stopWatchManager.normalMedian.1!) + medianxmin
                     
                     
                     Path { path in
@@ -175,7 +166,7 @@ struct TimeDistribution: View {
                             .font(.system(size: 11, weight: .bold, design: .default))
                             .foregroundColor(Color(uiColor: .systemGray))
                         
-                        Text(formatSolveTime(secs: median!))
+                        Text(formatSolveTime(secs: stopWatchManager.normalMedian.0!))
                             .font(.system(size: 11, weight: .bold, design: .monospaced))
                             .foregroundColor(Color(uiColor: .systemGray))
                     }

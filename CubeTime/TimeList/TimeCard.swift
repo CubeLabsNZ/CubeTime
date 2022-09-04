@@ -7,13 +7,14 @@ struct TimeCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
-    let solve: Solves
-    let timeListManager: TimeListManager
+    @StateObject var solve: Solves // Must be stateobject so that stopwatchmanager can send objectwillsend
     
-    @State var formattedTime: String
-    @State var pen: PenTypes
+    let formattedTime: String
+    let pen: PenTypes
     
     @Binding var currentSolve: Solves?
     @Binding var isSelectMode: Bool
@@ -21,8 +22,6 @@ struct TimeCard: View {
     @Binding var selectedSolves: [Solves]
     
     @State var isSelected = false
-    
-    @EnvironmentObject var stopWatchManager: StopWatchManager
     
     @Environment(\.sizeCategory) var sizeCategory
     
@@ -47,11 +46,10 @@ struct TimeCard: View {
     }
     
     
-    init(solve: Solves, timeListManager: TimeListManager, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<[Solves]>) {
-        self.solve = solve
-        self.timeListManager = timeListManager
-        self._formattedTime = State(initialValue: formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!))
-        self._pen = State(initialValue: PenTypes(rawValue: solve.penalty)!)
+    init(solve: Solves, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<[Solves]>) {
+        self._solve = StateObject(wrappedValue: solve)
+        self.formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+        self.pen = PenTypes(rawValue: solve.penalty)!
         self._currentSolve = currentSolve
         self._isSelectMode = isSelectMode
         self._selectedSolves = selectedSolves
@@ -112,28 +110,19 @@ struct TimeCard: View {
 //            Divider()
             
             Button {
-                pen = .none
-                self.solve.penalty = pen.rawValue
-                formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
-                try! managedObjectContext.save()
+                stopWatchManager.changePen(solve: self.solve, pen: .none)
             } label: {
                 Label("No Penalty", systemImage: "checkmark.circle")
             }
             
             Button {
-                pen = .plustwo
-                self.solve.penalty = pen.rawValue
-                formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
-                try! managedObjectContext.save()
+                stopWatchManager.changePen(solve: self.solve, pen: .plustwo)
             } label: {
                 Label("+2", image: "+2.label")
             }
             
             Button {
-                pen = .dnf
-                self.solve.penalty = pen.rawValue
-                formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
-                try! managedObjectContext.save()
+                stopWatchManager.changePen(solve: self.solve, pen: .dnf)
             } label: {
                 Label("DNF", systemImage: "xmark.circle")
             }
@@ -146,7 +135,7 @@ struct TimeCard: View {
                 stopWatchManager.tryUpdateCurrentSolveth()
                 
                 withAnimation {
-                    timeListManager.delete(solve)
+                    stopWatchManager.delete(solve: solve)
                 }
             } label: {
                 Label {

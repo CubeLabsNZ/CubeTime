@@ -12,7 +12,6 @@ struct TimeBar: View {
     @Environment(\.colorScheme) var colourScheme
     
     let solvegroup: CompSimSolveGroup
-    let timeListManager: TimeListManager
     
     @State var calculatedAverage: CalculatedAverage?
     
@@ -27,12 +26,10 @@ struct TimeBar: View {
     
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
-    init(solvegroup: CompSimSolveGroup, timeListManager: TimeListManager, currentCalculatedAverage: Binding<CalculatedAverage?>, isSelectMode: Binding<Bool>/*, selectedSolves: Binding<[Solves]>*/, current: Bool) {
+    init(solvegroup: CompSimSolveGroup, currentCalculatedAverage: Binding<CalculatedAverage?>, isSelectMode: Binding<Bool>, current: Bool) {
         self.solvegroup = solvegroup
-        self.timeListManager = timeListManager
         self._currentCalculatedAverage = currentCalculatedAverage
         self._isSelectMode = isSelectMode
-//        self._selectedSolvegroups = selectedSolves
         self.current = current
     }
     
@@ -47,7 +44,7 @@ struct TimeBar: View {
                         
                     } else if solvegroup.solves!.count < 5 {
                         // Current average
-                        currentCalculatedAverage = CalculatedAverage(id: "Current Average", average: nil, accountedSolves: (solvegroup.solves!.array as! [Solves]), totalPen: .none, trimmedSolves: [])
+                        currentCalculatedAverage = CalculatedAverage(name: "Current Average", average: nil, accountedSolves: (solvegroup.solves!.array as! [Solves]), totalPen: .none, trimmedSolves: [])
                     } else {
                         currentCalculatedAverage = calculatedAverage
                     }
@@ -175,7 +172,8 @@ struct TimeBar: View {
                 managedObjectContext.delete(solvegroup)
                 try! managedObjectContext.save()
                 
-                timeListManager.refilter() /// and delete this im using this temporarily to update
+                
+                // timeListManager.refilter() /// and delete this im using this temporarily to update
                 
                 /* enable when sort works
                 withAnimation {

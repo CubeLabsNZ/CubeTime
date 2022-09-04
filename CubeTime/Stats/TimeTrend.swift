@@ -395,6 +395,10 @@ class ChartData: ObservableObject, Identifiable {
     init<N: BinaryFloatingPoint>(points:[N]) {
         self.points = points.map{("", Double($0))}
     }
+    // TODO: what is this
+    init<N: RawGraphData>(data:[N]) {
+        self.points = data.compactMap{$0.graphData == nil ? nil : ("", $0.graphData!)}
+    }
     init<N: BinaryInteger>(values:[(String,N)]){
         self.points = values.map{($0.0, Double($0.1))}
         self.valuesGiven = true
@@ -484,6 +488,12 @@ struct Line: View {
             .onAppear {
                 self.showFull = true
             }
+//            .onAppear {
+//                withAnimation(.easeInOut(duration: graphAnimation ? 1.2 : 0)) {
+//                    self.showFull = true
+//                }
+//            }
+//            .onDisappear { self.showFull = false }
     }
 }
 
@@ -584,7 +594,7 @@ struct Legend: View {
 }
 
 
-struct TimeTrend: View {
+struct TimeTrend<N: RawGraphData>: View {
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
     
@@ -598,8 +608,8 @@ struct TimeTrend: View {
     @State private var currentDataNumber: Double = 0
     @State private var hideHorizontalLines: Bool = false
     
-    init(data: [Double], title: String? = nil, legend: String? = nil, style: ChartStyle) {
-        self.data = ChartData(points: data)
+    init(data: [N], title: String? = nil, legend: String? = nil, style: ChartStyle) {
+        self.data = ChartData(data: data)
         self.title = title
         self.legend = legend
         self.style = style

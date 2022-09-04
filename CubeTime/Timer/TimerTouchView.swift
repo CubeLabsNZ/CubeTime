@@ -3,13 +3,13 @@ import SwiftUI
 import UIKit
 
 
-class TimerUIView: UIView {    
+class TimerUIView: UIViewController {
     let stopWatchManager: StopWatchManager
 
         
-    required init(frame: CGRect, stopWatchManager: StopWatchManager) {
+    required init(stopWatchManager: StopWatchManager) {
         self.stopWatchManager = stopWatchManager
-        super.init(frame: frame)
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -26,6 +26,52 @@ class TimerUIView: UIView {
         super.touchesEnded(touches, with: event)
         stopWatchManager.touchUp()
     }
+    
+    
+    // iPad keyboard support
+    
+    private let userHoldTime: Double = UserDefaults.standard.double(forKey: gsKeys.freeze.rawValue)
+    
+    private var isLongPress = false
+    private var taskTimerReady: DispatchWorkItem?
+    
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        guard let key = presses.first?.key else { return }
+
+        if key.keyCode == .keyboardSpacebar {
+            stopWatchManager.touchDown()
+            NSLog("Pressed space, touch down")
+            let newTaskTimerReady = DispatchWorkItem {
+                NSLog("Pressed space for long press start - islongpress = true")
+                self.stopWatchManager.longPressStart()
+                self.isLongPress = true
+            }
+            taskTimerReady = newTaskTimerReady
+            DispatchQueue.main.asyncAfter(deadline: .now() + userHoldTime, execute: newTaskTimerReady)
+        } else {
+            super.pressesBegan(presses, with: event)
+        }
+    }
+    
+    override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        guard let key = presses.first?.key else { return }
+        
+        if key.keyCode == .keyboardSpacebar {
+            NSLog("Press ended space")
+            taskTimerReady?.cancel()
+            if isLongPress {
+                NSLog("was long press")
+                stopWatchManager.longPressEnd()
+                isLongPress = false
+            } else {
+                NSLog("was short press")
+                stopWatchManager.touchUp()
+            }
+        } else {
+            super.pressesBegan(presses, with: event)
+        }
+    }
+      
 }
 
 /*
@@ -98,7 +144,7 @@ final class InspectionTouchView: UIViewRepresentable {
 
 // Must be final class - see
 // https://github.com/mediweb/UIViewRepresentableBug
-final class TimerTouchView: UIViewRepresentable {
+final class TimerTouchView: UIViewControllerRepresentable {
     
     @ObservedObject var stopWatchManager: StopWatchManager
     
@@ -110,8 +156,8 @@ final class TimerTouchView: UIViewRepresentable {
     }
     
     
-    func makeUIView(context: UIViewRepresentableContext<TimerTouchView>) -> TimerUIView {
-        let v = TimerUIView(frame: .zero, stopWatchManager: stopWatchManager)
+    func makeUIViewController(context: UIViewControllerRepresentableContext<TimerTouchView>) -> TimerUIView {
+        let v = TimerUIView(stopWatchManager: stopWatchManager)
         
         let longPressGesture = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.longPress))
         longPressGesture.allowableMovement = gestureThreshold
@@ -125,17 +171,17 @@ final class TimerTouchView: UIViewRepresentable {
             gesture.direction = direction
             gesture.require(toFail: longPressGesture)
                         
-            v.addGestureRecognizer(gesture)
+            v.view.addGestureRecognizer(gesture)
         }
         
        
-        v.addGestureRecognizer(longPressGesture)
+        v.view.addGestureRecognizer(longPressGesture)
         
         
         return v
     }
     
-    func updateUIView(_ uiView: TimerUIView, context: UIViewRepresentableContext<TimerTouchView>) {
+    func updateUIViewController(_ uiView: TimerUIView, context: UIViewControllerRepresentableContext<TimerTouchView>) {
         /*
         if stopWatchManager.scrambleStr == nil {
             for gesture in uiView.gestureRecognizers! {

@@ -13,7 +13,8 @@ struct SheetStrWrapper: Identifiable {
 struct TimerView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
-    //@ObservedObject var currentSession: Sessions
+    
+    @Environment(\.horizontalSizeClass) var hSizeClass
    
     @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
     
@@ -31,26 +32,16 @@ struct TimerView: View {
     
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
-    @Binding var hideTabBar: Bool
-    
-    @Binding var currentSession: Sessions
-    
-    @Binding var pageIndex: Int
-    
-    @State private var targetStr: String
-    
     @State private var manualInputTime: String = ""
     
     @State private var showInputField: Bool = false
     
-    @State private var phaseCount: Int
     
     @State private var toggleSessionName: Bool = false
     
     @State var hideStatusBar = true
     
     @State var algTrainerSubset = 0
-    @State var playgroundScrambleType: Int
     
     @State private var presentedAvg: CalculatedAverage?
     
@@ -58,26 +49,39 @@ struct TimerView: View {
     @State private var showDrawScrambleSheet: Bool = false
     
     
-    @State private var textRect = CGRect()
+    @EnvironmentObject var tabRouter: TabRouter
+    
     
     @FocusState private var targetFocused: Bool
     
     @FocusState private var manualInputFocused: Bool
-    
-//    @State var compSimTarget: String
 
+    let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
+                        (scene as? UIWindowScene)?.keyWindow
+                    }).first?.frame.size
+
+    var largePad: Bool
     
-       
     
-    init(pageIndex: Binding<Int>, currentSession: Binding<Sessions>, managedObjectContext: NSManagedObjectContext, hideTabBar: Binding<Bool>) {
-        self._pageIndex = pageIndex
-        self._currentSession = currentSession
-        self._hideTabBar = hideTabBar
-        self._playgroundScrambleType = State(initialValue: Int(currentSession.wrappedValue.scramble_type))
-        
-        self._targetStr = State(initialValue: filteredStrFromTime((currentSession.wrappedValue as? CompSimSession)?.target))
-        
-        self._phaseCount = State(initialValue: Int((currentSession.wrappedValue as? MultiphaseSession)?.phase_count ?? 0))
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    @State var floatingPanelStage: Int = 3
+    
+    // TODO find a way to not use an initializer
+    init(largePad: Bool = false) {
+        self.largePad = largePad
     }
     
     var body: some View {
@@ -116,6 +120,7 @@ struct TimerView: View {
                 }
             }
             
+            // TIMER TEXT / INSPECTION
             VStack {
                 Spacer()
                 
@@ -176,202 +181,30 @@ struct TimerView: View {
             
             
             // VIEWS WHEN TIMER NOT RUNNING
-            if !hideTabBar {
-                VStack {
-                    HStack {
-                        // TOP INFO BAR
+            if !tabRouter.hideTabBar {
+                if !largePad {
+                    // TODO fix
+                    VStack {
                         HStack {
-                            // FIRST PART: ICON + SESSION NAME
-                            ZStack(alignment: .leading) {
-                                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                    .fill(Color(uiColor: .systemGray4))
-                                    .frame(width: (toggleSessionName ^ showSessionName) ? nil : 35, height: 35)
-                                    .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
-                                
-                                HStack {
-                                    ZStack(alignment: .center) {
-                                        Rectangle()
-                                            .fill(Color.clear)
-                                            .frame(width: 35, height: 35)
-                                        
-                                        
-                                        Group {
-                                            switch SessionTypes(rawValue: currentSession.session_type)! {
-                                            case .standard:
-                                                Image(systemName: "timer.square")
-                                                    .font(.system(size: 26, weight: .regular))
-                                            case .algtrainer:
-                                                Image(systemName: "command.square")
-                                                    .font(.system(size: 26, weight: .regular))
-                                            case .multiphase:
-                                                Image(systemName: "square.stack")
-                                                    .font(.system(size: 22, weight: .regular))
-                                            case .playground:
-                                                Image(systemName: "square.on.square")
-                                                    .font(.system(size: 22, weight: .regular))
-                                            case .compsim:
-                                                Image(systemName: "globe.asia.australia")
-                                                    .font(.system(size: 22, weight: .medium))
-                                            }
-                                        }
-                                    }
-                                    
-                                    if (toggleSessionName ^ showSessionName) {
-                                        Text(currentSession.name ?? "Unknown Session Name")
-                                            .font(.system(size: 17, weight: .medium))
-                                            .padding(.trailing, 4)
-                                    }
-                                }
-                            }
-                            .onTapGesture {
-                                withAnimation(.spring()) {
-                                    toggleSessionName.toggle()
-                                }
-                            }
-                            
-                            // SESSION TYPE NAME
-                            
-                            switch SessionTypes(rawValue: currentSession.session_type)! {
-                            case .standard:
-                                if !(toggleSessionName ^ showSessionName) {
-                                    Text("STANDARD SESSION")
-                                        .font(.system(size: 17, weight: .medium))
-                                        .padding(.trailing)
-                                }
-                            case .algtrainer:
-                                Text("ALG TRAINER")
-                                    .font(.system(size: 17, weight: .medium))
-                                Picker("", selection: $algTrainerSubset) {
-                                    Text("EG-1")
-                                        .font(.system(size: 15, weight: .regular))
-                                }
-                                .pickerStyle(.menu)
-                                .padding(.leading, 6)
-                                .padding(.trailing)
-                                .accentColor(accentColour)
-                            case .multiphase:
-                                if !(toggleSessionName ^ showSessionName) {
-                                    Text("MULTIPHASE")
-                                        .font(.system(size: 17, weight: .medium))
-                                }
-                                
-                                HStack(spacing: 0) {
-                                    Text("PHASES: ")
-                                        .font(.system(size: 15, weight: .regular))
-                                    
-                                    Text("\(phaseCount)")
-                                        .font(.system(size: 15, weight: .regular))
-                                    
-                                    /// TEMPORARILY REMOVED THE PICKER UNTIL MULTIPHASE PLAYGROUND IS ADDED - MIGRATE TO THERE
-                                    
-                                    /*
-                                    Picker("", selection: $phaseCount) {
-                                        ForEach((2...8), id: \.self) { phase in
-                                            Text("\(phase)").tag(phase)
-                                                .font(.system(size: 15, weight: .regular))
-                                        }
-                                    }
-                                    .pickerStyle(.menu)
-                                    .frame(width: 8)
-                                    .onChange(of: phaseCount) { newValue in
-                                        (currentSession as! MultiphaseSession).phase_count = Int16(phaseCount)
-    
-                                        try! managedObjectContext.save()
-                                    }
-                                     */
-                                }
-                                .padding(.leading, 6)
-                                .padding(.trailing)
-                            case .playground:
-                                if !(toggleSessionName ^ showSessionName) {
-                                    Text("PLAYGROUND")
-                                        .font(.system(size: 17, weight: .medium))
-                                }
-                                    
-                                Picker("", selection: $playgroundScrambleType) {
-                                    ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                                        Text(element.name).tag(index)
-                                            .font(.system(size: 15, weight: .regular))
-                                    }
-                                }
-                                .accentColor(accentColour)
-                                .pickerStyle(.menu)
-                                .onChange(of: playgroundScrambleType) { newValue in
-                                    currentSession.scramble_type = Int32(newValue)
-//                                    stopWatchManager.nextScrambleStr = nil
-                                    stopWatchManager.rescramble()
-                                    // TODO do not rescramble when setting to same scramble eg 3blnd -> 3oh
-                                }
-                                .padding(.leading, 6)
-                                .padding(.trailing)
-                                
-                            case .compsim:
-                                if !(toggleSessionName ^ showSessionName) {
-                                    Text("COMP SIM")
-                                        .font(.system(size: 17, weight: .medium))
-                                }
-                                
-                                let solveth: Int = stopWatchManager.currentSolveth!+1
-                                
-                                Text("SOLVE \(solveth == 6 ? 1 : solveth)")
-                                    .font(.system(size: 15, weight: .regular))
-                                    .padding(.horizontal, 2)
-                                
-                                Divider()
-                                    .padding(.vertical, 4)
-                                
-                                HStack (spacing: 10) {
-                                    Image(systemName: "target")
-                                        .font(.system(size: 15))
-                                        .foregroundColor(accentColour)
-                                    
-                                    ZStack {
-                                        Text(targetStr == "" ? "0.00" : targetStr)
-                                            .background(GlobalGeometryGetter(rect: $textRect))
-                                            .layoutPriority(1)
-                                            .opacity(0)
-                                        
-                                        
-                                        TextField("0.00", text: $targetStr)
-                                            .font(.system(size: 17, weight: .regular))
-                                            .frame(width: textRect.width + CGFloat(targetStr.count > 6 ? 12 : 6))
-                                            .submitLabel(.done)
-                                            .focused($targetFocused)
-                                            .multilineTextAlignment(.leading)
-                                            .tint(accentColour)
-                                            .modifier(TimeMaskTextField(text: $targetStr, onReceiveAlso: { text in
-                                                if let time = timeFromStr(text) {
-                                                    (currentSession as! CompSimSession).target = time
-                                                    
-                                                    try! managedObjectContext.save()
-                                                }
-                                            }))
-                                            .padding(.trailing, 4)
-                                    }
-                                }
-                                .padding(.leading, 6)
-                                .padding(.trailing, 12)
-                                .foregroundColor(accentColour)
-                                
-                                
-    //                            TextField(compSimTarget, text: $compSimTarget)
-    //                                .keyboardType(.decimalPad)
-                            }
-                        }
-                        .background(Color(uiColor: .systemGray5))
-                        .frame(height: 35)
-                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                        .padding(.horizontal)
-                        .padding(.top, SetValues.hasBottomBar ? 0 : hideTabBar ? nil : 8)
-                        .padding(.trailing, 32)
-                        
-                        if !(toggleSessionName ^ showSessionName) {
+                            TimerHeader(targetFocused: $targetFocused)
                             Spacer()
                         }
+                        Spacer()
                     }
+                } else {
+                    // IPAD BAR
                     
-                    
-                    Spacer()
+                    FloatingPanelChild(currentStage: $floatingPanelStage, maxHeight: UIScreen.screenHeight, stages: [0, 50, 150, UIScreen.screenHeight/2, ( UIScreen.screenHeight - 24)]) {
+                        EmptyView()
+                        TimerHeader(targetFocused: $targetFocused)
+                        VStack {
+                            TimerHeader(targetFocused: $targetFocused)
+                            PrevSolvesDisplay(count: 3)
+                        }
+                        MainTabsView(largePad: true)
+                        MainTabsView(largePad: true)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
                 
                 VStack {
@@ -431,8 +264,7 @@ struct TimerView: View {
                             }
                             
                             // STATS
-                            if showStats && SessionTypes(rawValue: currentSession.session_type)! != .compsim {
-                                // NORMAL STATS
+                            if showStats && SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! != .compsim {
                                 HStack {
                                     Spacer()
                                     
@@ -462,7 +294,7 @@ struct TimerView: View {
                                                 }
                                                 .frame(minWidth: 0, maxWidth: .infinity)
                                                 .onTapGesture {
-                                                    if stopWatchManager.currentAo5 != nil && stopWatchManager.currentAo5?.totalPen != .dnf {
+                                                    if stopWatchManager.currentAo5 != nil {
                                                         presentedAvg = stopWatchManager.currentAo5
                                                     }
                                                 }
@@ -485,7 +317,7 @@ struct TimerView: View {
                                                 }
                                                 .frame(minWidth: 0, maxWidth: .infinity)
                                                 .onTapGesture {
-                                                    if stopWatchManager.currentAo12 != nil && stopWatchManager.currentAo12?.totalPen != .dnf {
+                                                    if stopWatchManager.currentAo12 != nil {
                                                         presentedAvg = stopWatchManager.currentAo12
                                                     }
                                                 }
@@ -514,7 +346,7 @@ struct TimerView: View {
                                                 }
                                                 .frame(minWidth: 0, maxWidth: .infinity)
                                                 .onTapGesture {
-                                                    if stopWatchManager.currentAo100 != nil && stopWatchManager.currentAo100?.totalPen != .dnf {
+                                                    if stopWatchManager.currentAo100 != nil {
                                                         presentedAvg = stopWatchManager.currentAo100
                                                     }
                                                 }
@@ -543,8 +375,7 @@ struct TimerView: View {
                                     }
                                     .frame(width: UIScreen.screenWidth/2, height: 120)
                                 }
-                            } else if showStats && SessionTypes(rawValue: currentSession.session_type)! == .compsim {
-                                // COMPSIM STATS
+                            } else if showStats && SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! == .compsim {
                                 HStack {
                                     Spacer()
                                     
@@ -622,24 +453,17 @@ struct TimerView: View {
                                                             .font(.system(size: 22, weight: .bold))
                                                             .modifier(DynamicText())
                                                     } else {
-                                                        Text("≤"+formatSolveTime(secs: timeNeededForTarget))
-                                                            .font(.system(size: 24, weight: .bold))
-                                                            .modifier(DynamicText())
+                                                        Text("...")
+                                                            .font(.system(size: 24, weight: .medium, design: .default))
+                                                            .foregroundColor(Color(uiColor: .systemGray))
                                                     }
-                                                    
-                                                    
-                                                    
-                                                } else {
-                                                    Text("...")
-                                                        .font(.system(size: 24, weight: .medium, design: .default))
-                                                        .foregroundColor(Color(uiColor: .systemGray))
                                                 }
                                             }
-                                            .padding(.bottom, 6)
+                                            .padding(.bottom, 6) // TODO check if this is right
+                                            .padding(.horizontal, 4)
                                         }
-                                        .padding(.horizontal, 4)
+                                        .frame(width: windowSize!.width/2, height: 120)
                                     }
-                                    .frame(width: UIScreen.screenWidth/2, height: 120)
                                 }
                             }
                         }
@@ -653,6 +477,7 @@ struct TimerView: View {
 //                    .padding(.bottom, 12)
                     .offset(x: 0, y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12))) // 50 for tab + 8 for padding + 16/0 for bottom bar gap
                 }
+                // GEO READER FOR BOTTOM TOOLS
             }
             
             // MANUAL ENTRY FIELD
@@ -665,7 +490,7 @@ struct TimerView: View {
                         
                         TextField("0.00", text: $manualInputTime)
                             .focused($manualInputFocused)
-                            .frame(maxWidth: UIScreen.screenWidth-32)
+                            .frame(maxWidth: windowSize!.width-32)
                             .font(.system(size: 56, weight: .bold, design: .monospaced))
                             .multilineTextAlignment(.center)
                             .foregroundColor(stopWatchManager.timerColour)
@@ -707,7 +532,7 @@ struct TimerView: View {
                             }
                         }
                         
-                        if currentSession.session_type != 2 {
+                        if stopWatchManager.currentSession.session_type != 2 {
                             if !stopWatchManager.nilSolve {
                                 if !manualInputFocused && stopWatchManager.scrambleStr != nil {
                                     Rectangle()
@@ -768,9 +593,9 @@ struct TimerView: View {
                 if let scr = stopWatchManager.scrambleStr {
                     VStack {
                         Text(scr)
-                            .font(.system(size: currentSession.scramble_type == 7 ? (UIScreen.screenWidth) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
+                            .font(.system(size: stopWatchManager.currentSession.scramble_type == 7 ? (windowSize!.width) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
                             .frame(maxHeight: UIScreen.screenHeight/3)
-                            .multilineTextAlignment(currentSession.scramble_type == 7 ? .leading : .center)
+                            .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
                             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
                             .onTapGesture {
                                 scrambleSheetStr = SheetStrWrapper(str: scr)
@@ -779,7 +604,7 @@ struct TimerView: View {
                         Spacer()
                     }
                     .padding(.horizontal)
-                    .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+                    .offset(y: largePad ? 0 : 35 + (SetValues.hasBottomBar ? 0 : 8))
                 
                     
                 } else {
@@ -790,7 +615,7 @@ struct TimerView: View {
                             ProgressView()
                                 .frame(maxHeight: 35)
                                 .padding(.trailing)
-                                .padding(.top, SetValues.hasBottomBar ? 0 : hideTabBar ? nil : 8)
+                                .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
                             
                             Spacer()
                         }
@@ -823,10 +648,10 @@ struct TimerView: View {
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {
-                managedObjectContext.delete(detail.wrappedValue!)
+                managedObjectContext.delete(detail.wrappedValue!) // TODO maybe i can delete this line
+                stopWatchManager.delete(solve: detail.wrappedValue!)
                 detail.wrappedValue = nil
                 stopWatchManager.secondsElapsed = 0
-                try! managedObjectContext.save()
                 stopWatchManager.secondsStr = formatSolveTime(secs: 0)
             }
             Button("Cancel", role: .cancel) {
@@ -835,12 +660,16 @@ struct TimerView: View {
         }
         .sheet(item: $scrambleSheetStr) { str in
             TimeScrambleDetail(str.str, stopWatchManager.scrambleSVG)
+//            ScrambleDetail(str.str)
         }
+//        .sheet(isPresented: $showDrawScrambleSheet) {
+//            DiagramDetail(stopWatchManager.scrambleSVG)
+//        }
         .sheet(item: $presentedAvg) { item in
-            StatsDetail(solves: item, session: currentSession)
+            StatsDetail(solves: item, session: stopWatchManager.currentSession) // TODO use stopwatchamanger env object
         }
         .onReceive(stopWatchManager.$mode) { newMode in
-            hideTabBar = newMode == .inspecting || newMode == .running
+            tabRouter.hideTabBar = newMode == .inspecting || newMode == .running
             hideStatusBar = newMode == .inspecting || newMode == .running
         }
         .statusBar(hidden: hideStatusBar) /// TODO MAKE SO ANIMATION IS ASYMMETRIC WITH VALUES OF THE OTHER ANIMATIONS

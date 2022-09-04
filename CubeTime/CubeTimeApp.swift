@@ -6,6 +6,7 @@ import CoreData
 @main
 struct CubeTime: App {
     @Environment(\.scenePhase) var phase
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
@@ -13,18 +14,61 @@ struct CubeTime: App {
     var shortcutItem: UIApplicationShortcutItem?
      */
     
+    @AppStorage("onboarding") var showOnboarding: Bool = true
     
     let persistenceController: PersistenceController
     private let moc: NSManagedObjectContext
     
+    @StateObject var stopWatchManager: StopWatchManager
+    @StateObject var tabRouter: TabRouter = TabRouter()
+    @State var showUpdates: Bool = false
+    @State var pageIndex: Int = 0
+    
+    
     init() {
         persistenceController = PersistenceController.shared
-        moc = persistenceController.container.viewContext
+        let moc = persistenceController.container.viewContext
         
-        
+        // TODO move to WM
         UIApplication.shared.isIdleTimerDisabled = true
         
+        // TODO move to SWM init
+        
         let userDefaults = UserDefaults.standard
+        
+        let lastUsedSessionURI = userDefaults.url(forKey: "last_used_session")
+        let fetchedSession: Sessions
+        
+        if lastUsedSessionURI == nil {
+            fetchedSession = Sessions(context: moc)
+            fetchedSession.scramble_type = 1
+            fetchedSession.session_type = SessionTypes.playground.rawValue
+            fetchedSession.name = "Default Session"
+            try! moc.save()
+            userDefaults.set(fetchedSession.objectID.uriRepresentation(), forKey: "last_used_session")
+        } else {
+            let objID = moc.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI!)!
+            fetchedSession = try! moc.existingObject(with: objID) as! Sessions // TODO better error handling
+        }
+        
+        // https://swiftui-lab.com/random-lessons/#data-10
+        self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: fetchedSession, managedObjectContext: moc))
+        
+        self.moc = moc
+        
+        let newVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String)
+    
+        let currentVersion = userDefaults.string(forKey: "currentVersion")
+        
+        if currentVersion == newVersion {
+            print("same")
+        } else {
+            if !showOnboarding {
+                showUpdates = true
+            }
+            userDefaults.set(newVersion, forKey: "currentVersion")
+        }
+                
         userDefaults.register(
             defaults: [
                 // timer settings
@@ -54,18 +98,70 @@ struct CubeTime: App {
                 asKeys.graphGlow.rawValue: true,
             ]
         )
+        
+        
+    }
+    
+    func checkForUpdate() {
+        let newVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String)
+        
+        let currentVersion = UserDefaults.standard.string(forKey: "currentVersion")
+        
+        if currentVersion == newVersion {
+            //            print("same")
+        } else {
+            if !showOnboarding {
+                showUpdates = true
+            }
+            UserDefaults.standard.set(newVersion, forKey: "currentVersion")
+        }
     }
     
     var body: some Scene {
+        
         WindowGroup {
-            MainTabsView(managedObjectContext: moc)
-                .environment(\.managedObjectContext, moc)
-//                .environment(\.dynamicTypeSize, UserDefaults.standard.object(forKey: gsKeys.appZoom.rawValue) as! DynamicTypeSize)
+            VStack {
+                // This is a Scene not a View so there is no size class
+                MainView()
+            }
+            .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
+                Updates(showUpdates: $showUpdates)
+            }
+            .sheet(isPresented: $showOnboarding, onDismiss: {
+                pageIndex = 0
+                if false { /// FIX IN FUTURE: check for first time register and not just == 18 because can break :sob:
+                    if UserDefaults.standard.integer(forKey: gsKeys.scrambleSize.rawValue) == 18 {
+                        UserDefaults.standard.set(24, forKey: gsKeys.scrambleSize.rawValue)
+                    }
+                }
+            }) {
+                OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
+            }
+            // TODO; FIX
+            .if(dynamicTypeSize != DynamicTypeSize.large) { view in
+                view
+                    .alert(isPresented: $showUpdates) {
+                        Alert(title: Text("DynamicType Detected"), message: Text("CubeTime only supports standard DyanmicType sizes. Accessibility DynamicType modes are currently not supported, so layouts may not be rendered correctly."), dismissButton: .default(Text("Got it!")))
+                    }
+            }
+            .onAppear(perform: checkForUpdate)
+            .environment(\.managedObjectContext, moc)
+            .environmentObject(stopWatchManager)
+            .environmentObject(tabRouter)
         }
-//        .onChange(of: phase) { newValue in
-//            if newValue == .active {
-//                print(appDelegate.shortcutItem)
-//            }
-//        }
+
+    }
+}
+
+
+struct MainView: View {
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    var body: some View {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            TimerView(largePad: true)
+        } else {
+            MainTabsView()
+        }
     }
 }
