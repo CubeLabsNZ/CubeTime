@@ -5,6 +5,8 @@ struct SessionCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     @State private var isShowingDeleteDialog = false
@@ -164,6 +166,8 @@ struct SessionCard: View {
         .onTapGesture {
             withAnimation(.spring(response: 0.325)) {
                 currentSession = item
+                UserDefaults.standard.set(item.objectID.uriRepresentation(), forKey: "last_used_session") // TODO what was i thinking move this logic into SessionsView
+                stopWatchManager.changeCurrentSession(item)
             }
         }
         
@@ -203,28 +207,32 @@ struct SessionCard: View {
         
         .confirmationDialog(String("Are you sure you want to delete \"\(item.name ?? "Unknown session name")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
-                var next: Sessions? = nil
-                for item in allSessions {
-                    if item != currentSession {
-                        next = item
-                        break
-                    }
-                    /// **this should theoretically never happen, as the deletion option will be disabled if solves <= 1**
-                    print("error: cannot find next session to replace current session")
-                    
-                }
-                
-                if let next = next {
-                    withAnimation(.spring()) {
-                        managedObjectContext.delete(item)
-                        try! managedObjectContext.save()
+                if item == currentSession {
+                    var next: Sessions? = nil
+                    for item in allSessions {
+                        if item != currentSession {
+                            next = item
+                            break
+                        }
+                        /// **this should theoretically never happen, as the deletion option will be disabled if solves <= 1**
+                        print("error: cannot find next session to replace current session")
+                        
                     }
                     
-                    currentSession = next
+                    if let next = next {
+                        withAnimation {
+                            currentSession = next
+                        }
+                        UserDefaults.standard.set(next.objectID.uriRepresentation(), forKey: "last_used_session") // TODO what was i thinking move this logic into SessionsView
+                        stopWatchManager.changeCurrentSession(next)
+                        
+                    }
                 }
                 
-                
-                
+                withAnimation(.spring()) {
+                    managedObjectContext.delete(item)
+                    try! managedObjectContext.save()
+                }
             }
             Button("Cancel", role: .cancel) {}
         }
