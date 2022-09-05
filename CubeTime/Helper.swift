@@ -685,3 +685,14 @@ struct ContextMenuButton: View {
     }
 }
 
+struct CloseButton: View {
+    @Environment(\.colorScheme) var colourScheme
+    
+    var body: some View {
+        Image(systemName: "xmark.circle.fill")
+            .font(.system(size: 26, weight: .semibold))
+            .symbolRenderingMode(.hierarchical)
+            .foregroundStyle(.secondary)
+            .foregroundStyle(colourScheme == .light ? .black : .white)
+    }
+}

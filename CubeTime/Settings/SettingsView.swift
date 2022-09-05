@@ -240,11 +240,7 @@ struct SettingsDetail: View {
                         HStack {
                             Spacer()
                             
-                            Image(systemName: "xmark.circle.fill")
-                                .font(.system(size: 26, weight: .semibold))
-                                .symbolRenderingMode(.hierarchical)
-                                .foregroundStyle(.secondary)
-                                .foregroundStyle(colourScheme == .light ? .black : .white)
+                            CloseButton()
                                 .padding([.horizontal, .bottom])
                                 .padding(.top, 8)
                                 .onTapGesture {

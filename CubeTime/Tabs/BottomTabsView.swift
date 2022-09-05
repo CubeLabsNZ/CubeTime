@@ -77,7 +77,7 @@ struct BottomTabsView: View {
                                 height: 50,
                                 alignment: .leading
                             )
-                            .background(Color(uiColor: .systemGray4).clipShape(RoundedRectangle(cornerRadius:12)))
+                            .background(Color(uiColor: .systemGray4).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
                             .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 3.5)
                             .animation(.spring(), value: self.currentTab)
                             

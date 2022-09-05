@@ -44,6 +44,9 @@ struct GeneralSettingsView: View {
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
+    @State private var showFontSizeOptions: Bool = false
+    @State private var showPreview: Bool = false
+    
     let hapticNames: [UIImpactFeedbackGenerator.FeedbackStyle: String] = [
         UIImpactFeedbackGenerator.FeedbackStyle.light: "Light",
         UIImpactFeedbackGenerator.FeedbackStyle.medium: "Medium",
@@ -222,7 +225,7 @@ struct GeneralSettingsView: View {
                     stopWatchManager.inspectionEnabled = newValue
                 }
                 
-                Text("Show scramble/statistics on the timer screen.")
+                Text("Show draw scramble or statistics on the timer screen.")
                     .font(.footnote.weight(.medium))
                     .lineSpacing(-4)
                     .fixedSize(horizontal: false, vertical: true)
@@ -247,7 +250,7 @@ struct GeneralSettingsView: View {
                 
                 
                 HStack {
-                    Toggle(isOn: $hapticFeedback) {
+                    Toggle(isOn: $hapticFeedback.animation(.spring())) {
                         Text("Haptic Feedback")
                             .font(.body.weight(.medium))
                     }
@@ -319,18 +322,97 @@ struct GeneralSettingsView: View {
                 }
                  */
                 
-                
-                VStack (alignment: .leading) {
-                    HStack {
-                        Stepper(value: $scrambleSize, in: 15...36, step: 1) {
-                            Text("Scramble Size: ")
+                VStack(alignment: .leading, spacing: 0) {
+                    VStack {
+                        HStack(alignment: .center) {
+                            Text("Interface Font Sizes")
                                 .font(.body.weight(.medium))
-                            Text("\(scrambleSize)")
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .font(.footnote.weight(.bold))
+                                .foregroundColor(Color(uiColor: .systemGray3))
+                                .rotationEffect(.degrees(showFontSizeOptions ? 90 : 0))
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            withAnimation(.spring()) {
+                                showFontSizeOptions.toggle()
+                            }
+                            
+                        }
+                        
+                        HStack {
+                            Text("Customise font sizing and styles.")
+                                .font(.footnote.weight(.medium))
+                                .lineSpacing(-4)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .foregroundColor(Color(uiColor: .systemGray))
+                                .multilineTextAlignment(.leading)
+//                                .padding(.bottom, 12)
+                            
+                            Spacer()
                         }
                     }
                     .padding(.horizontal)
+                    
+                    if showFontSizeOptions {
+                        VStack (alignment: .leading, spacing: 0) {
+                            HStack {
+                                Stepper(value: $scrambleSize, in: 15...36, step: 1) {
+                                    Text("Scramble Size: ")
+                                        .font(.body.weight(.medium))
+                                    Text("\(scrambleSize)")
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                        .padding(.top, 10)
+                        
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Preview")
+                                .font(.footnote.weight(.medium))
+                                .lineSpacing(-4)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .foregroundColor(Color(uiColor: .systemGray))
+                                .multilineTextAlignment(.leading)
+                                .padding(.horizontal)
+                            
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .fill(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
+                                
+                                VStack(spacing: 0) {
+                                    Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
+                                        .font(.system(size: CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
+                                        .padding(16)
+                                    
+                                    HStack {
+                                        Spacer()
+                                        
+                                        Text("Tap for Fullscreen Preview")
+                                            .font(.footnote.weight(.medium))
+                                            .lineSpacing(-4)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                            .foregroundColor(Color(uiColor: .systemGray))
+                                            .multilineTextAlignment(.leading)
+                                            .padding([.trailing, .bottom], 8)
+                                    }
+                                }
+                            }
+                            .frame(minHeight: 100)
+                            .onTapGesture {
+                                showPreview = true
+                            }
+                            .fullScreenCover(isPresented: $showPreview) {
+                                TimerPreview()
+                            }
+                            .padding(.horizontal)
+                            .padding(.bottom, 10)
+                        }
+                    }
                 }
-                
                 
                 Divider()
                 
@@ -395,7 +477,6 @@ struct GeneralSettingsView: View {
                 .padding(.horizontal)
                 .padding(.bottom, 12)
             }
-            //            .modifier(settingsBlocks())
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
             
             
@@ -405,5 +486,72 @@ struct GeneralSettingsView: View {
         }
         .padding(.horizontal)
         
+    }
+}
+
+struct TimerPreview: View {
+    @Environment(\.colorScheme) var colourScheme
+    @Environment(\.presentationMode) var presentationMode
+    @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
+    
+    
+    var body: some View {
+        ZStack {
+            // BACKGROUND COLOUR
+            Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+                .ignoresSafeArea()
+            
+            VStack {
+                Spacer()
+                
+                Text("0.000")
+                    .foregroundColor(Color(uiColor: .systemGray))
+                    .if(!(smallDeviceNames.contains(getModelName()))) { view in
+                        view
+                            .font(.system(size: 56, weight: .bold, design: .monospaced))
+                    }
+                    .if(smallDeviceNames.contains(getModelName())) { view in
+                        view
+                            .font(.system(size: 54, weight: .bold, design: .monospaced))
+                    }
+                
+                Spacer()
+            }
+            .ignoresSafeArea(edges: .all)
+            
+            
+            VStack {
+                HStack {
+                    TimerHeader(previewMode: true)
+                    
+                    Spacer()
+                    
+                    Stepper("", value: $scrambleSize, in: 15...36, step: 1)
+                        .frame(width: 85, height: 30)
+                        .padding(.trailing, 8)
+                    
+                    CloseButton()
+                        .onTapGesture {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                        .padding(0)
+                }
+                
+                Spacer()
+            }
+            .padding(.horizontal)
+            
+            VStack {
+                Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
+                    .font(.system(size: CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
+                    .frame(maxHeight: UIScreen.screenHeight/3)
+                    .multilineTextAlignment(.center)
+                    
+                
+                Spacer()
+            }
+            .padding(.horizontal)
+            .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+        }
     }
 }

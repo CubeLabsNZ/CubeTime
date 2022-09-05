@@ -149,7 +149,7 @@ struct StatsDetail: View {
                                 }
                                 .padding(.bottom)
                             }
-                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
+                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
                             .padding(.top, -10)
                             .padding(.horizontal)
                         }

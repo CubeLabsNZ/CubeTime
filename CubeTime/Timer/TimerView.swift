@@ -185,7 +185,7 @@ struct TimerView: View {
                     #warning("TODO: fix")
                     VStack {
                         HStack {
-                            TimerHeader(targetFocused: $targetFocused)
+                            TimerHeader(targetFocused: $targetFocused, previewMode: false)
                             
                             Spacer()
                         }
@@ -197,9 +197,9 @@ struct TimerView: View {
                     
                     FloatingPanelChild(currentStage: $floatingPanelStage, maxHeight: UIScreen.screenHeight, stages: [0, 50, 150, UIScreen.screenHeight/2, ( UIScreen.screenHeight - 24)]) {
                         EmptyView()
-                        TimerHeader(targetFocused: $targetFocused)
+                        TimerHeader(targetFocused: $targetFocused, previewMode: false)
                         VStack {
-                            TimerHeader(targetFocused: $targetFocused)
+                            TimerHeader(targetFocused: $targetFocused, previewMode: false)
                             PrevSolvesDisplay(count: 3)
                         }
                         MainTabsView(largePad: true)

@@ -143,7 +143,6 @@ struct AppearanceSettingsView: View {
                                 .padding(.horizontal)
                                 .padding(.bottom, 12)
                                 .padding(.top, 10)
-//                                .offset(x: 1, y: 1)
                         } else {
                             VStack(alignment: .leading, spacing: 0) {
                                 /* add this switch back when dynamic gradient added
@@ -160,14 +159,13 @@ struct AppearanceSettingsView: View {
                                  */
                                 
                                 Text("By default, the gradient is static. Dynamic gradient coming soon!")
+                                    .font(.footnote.weight(.medium))
                                     .lineSpacing(-4)
 //                                Text("By default, the gradient is dynamic and changes throughout the day. If turned off, the gradient will only be of static colours.")
-                                    .font(.footnote.weight(.medium))
                                     .fixedSize(horizontal: false, vertical: true)
                                     .foregroundColor(Color(uiColor: .systemGray))
                                     .multilineTextAlignment(.leading)
                                     .padding(.bottom, 12)
-                                    .offset(x: 1, y: 1)
                                 
                                 if staticGradient {
                                     LazyVGrid(columns: columns, spacing: 16) {
@@ -192,7 +190,7 @@ struct AppearanceSettingsView: View {
                                 }
                             }
                             .padding(.horizontal)
-                            .padding(.top, 8)
+                            .padding(.top, 10)
                         }
                     }
                     

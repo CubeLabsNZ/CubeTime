@@ -41,13 +41,8 @@ struct OnboardingView: View {
                         dismiss()
                         showOnboarding = false
                     } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 26, weight: .semibold))
-                            .symbolRenderingMode(.hierarchical)
-                            .foregroundStyle(.secondary)
-                            .foregroundStyle(colourScheme == .light ? .black : .white)
-                            .padding(.top)
-                            .padding(.trailing)
+                        CloseButton()
+                            .padding([.top, .trailing])
                     }
                 }
                 

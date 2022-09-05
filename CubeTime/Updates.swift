@@ -123,11 +123,7 @@ struct Updates: View {
                         dismiss()
                         showUpdates = false
                     } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.title3.weight(.bold))
-                            .symbolRenderingMode(.hierarchical)
-                            .foregroundStyle(.secondary)
-                            .foregroundStyle(colourScheme == .light ? .black : .white)
+                        CloseButton()
                     }
                 }
             }
