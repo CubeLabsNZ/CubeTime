@@ -22,6 +22,7 @@ let updatesList: [String: [String?]] = [
                 –   fixed launch crash on iPod 7th Gen
         """,
         """
+        –   swapped around delete and copy button in individual solve cards
         –   added ability to delete currently selected session
         -   added multiphase details to solve copy
         -   improved various timing-related functions

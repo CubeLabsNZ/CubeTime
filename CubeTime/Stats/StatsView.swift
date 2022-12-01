@@ -112,8 +112,6 @@ struct StatsView: View {
                                 StatsDivider()
                                 
                                 if SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! == .multiphase {
-                                    StatsDivider()
-                                    
                                     StatsBlock("AVERAGE PHASES", stopWatchManager.solvesNoDNFs.count == 0 ? 150 : nil, true, false) {
                                         
                                         if stopWatchManager.solvesNoDNFsbyDate.count > 0 {
