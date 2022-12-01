@@ -56,6 +56,7 @@ class StopWatchManager: ObservableObject {
     var inspectionAlertType: Int = UserDefaults.standard.integer(forKey: gsKeys.inspectionAlertType.rawValue)
     var timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
     var insCountDown: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionCountsDown.rawValue)
+    var showPrevTime: Bool = UserDefaults.standard.bool(forKey: gsKeys.showPrevTime.rawValue)
 
     
     var feedbackStyle: UIImpactFeedbackGenerator?
@@ -650,6 +651,11 @@ class StopWatchManager: ObservableObject {
         self.bestAo100 = getBestMovingAverageOf(100)
         
         try! managedObjectContext.save()
+        
+        self.secondsStr = formatSolveTime(secs: showPrevTime ? (self.solvesByDate.last?.time ?? 0) : 0)
+        
+        
+        print("delete called")
     }
     
     func changePen(solve: Solves, pen: PenTypes) {

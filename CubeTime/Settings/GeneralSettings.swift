@@ -8,9 +8,10 @@ enum gsKeys: String {
          showSessionName,
          hapBool, hapType,
          gestureDistance,
-         displayDP,
          showScramble, showStats,
-         scrambleSize, appZoom, forceAppZoom
+         scrambleSize, appZoom, forceAppZoom,
+         showPrevTime,
+         displayDP
 }
 
 extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
@@ -46,8 +47,12 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     @AppStorage(gsKeys.gestureDistance.rawValue) private var gestureActivationDistance: Double = 50
     
+    // show previous time after delete
+    @AppStorage(gsKeys.showPrevTime.rawValue) private var showPrevTime: Bool = false
+    
     // statistics
     @AppStorage(gsKeys.displayDP.rawValue) private var displayDP: Int = 3
+    
     
         
     @Environment(\.colorScheme) var colourScheme
@@ -80,84 +85,89 @@ struct GeneralSettingsView: View {
                 }
                 .padding([.horizontal, .top], 10)
                 
-                HStack {
-                    Toggle(isOn: $inspectionTime) {
-                        Text("Inspection Time")
-                            .font(.body.weight(.medium))
-                    }
-                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
-                    
-                }
-                .padding(.horizontal)
-                .onChange(of: inspectionTime) { newValue in
-                    stopWatchManager.inspectionEnabled = newValue
-                }
-                
-                
-                
-                if inspectionTime {
-                    Toggle(isOn: $insCountDown) {
-                        Text("Inspection Counts Down")
-                            .font(.body.weight(.medium))
-                    }
-                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
-                    .padding(.horizontal)
-                    .onChange(of: insCountDown) { newValue in
-                        stopWatchManager.insCountDown = newValue
-                    }
-                    
-                    Toggle(isOn: $showCancelInspection) {
-                        Text("Show Cancel Inspection")
-                            .font(.body.weight(.medium))
-                    }
-                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
-                    .padding(.horizontal)
-                    
-                    Text("Display a cancel inspection button when inspecting.")
-                        .font(.footnote.weight(.medium))
-                        .lineSpacing(-4)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .foregroundColor(Color(uiColor: .systemGray))
-                        .multilineTextAlignment(.leading)
-                        .padding(.horizontal)
-                    
-                    
-                    Toggle(isOn: $inspectionAlert) {
-                        Text("Inpsection Alert")
-                            .font(.body.weight(.medium))
-                    }
-                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
-                    .padding(.horizontal)
-                    .onChange(of: inspectionAlert) { newValue in
-                        stopWatchManager.inspectionAlert = newValue
-                    }
-                    
-                    Text("Play an audible alert when 8 or 12 seconds is reached.")
-                        .font(.footnote.weight(.medium))
-                        .lineSpacing(-4)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .foregroundColor(Color(uiColor: .systemGray))
-                        .multilineTextAlignment(.leading)
-                        .padding(.horizontal)
-                    
+                Group {
                     HStack {
-                        Text("Inspection Alert Type")
-                            .font(.body.weight(.medium))
-                        
-                        Spacer()
-                        
-                        Picker("", selection: $inspectionAlertType) {
-                            Text("Voice").tag(0)
-                            Text("Boop").tag(1)
+                        Toggle(isOn: $inspectionTime) {
+                            Text("Inspection Time")
+                                .font(.body.weight(.medium))
                         }
-                        .frame(maxWidth: 120)
-                        .pickerStyle(.segmented)
-                        .onChange(of: inspectionAlertType) { newValue in
-                            stopWatchManager.inspectionAlertType = newValue
-                        }
+                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        
                     }
                     .padding(.horizontal)
+                    .onChange(of: inspectionTime) { newValue in
+                        stopWatchManager.inspectionEnabled = newValue
+                    }
+                    
+                    
+                   
+                    if inspectionTime {
+                        Toggle(isOn: $insCountDown) {
+                            Text("Inspection Counts Down")
+                                .font(.body.weight(.medium))
+                        }
+                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .padding(.horizontal)
+                        .onChange(of: insCountDown) { newValue in
+                            stopWatchManager.insCountDown = newValue
+                        }
+                        
+                        Toggle(isOn: $showCancelInspection) {
+                            Text("Show Cancel Inspection")
+                                .font(.body.weight(.medium))
+                        }
+                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .padding(.horizontal)
+                        
+                        Text("Display a cancel inspection button when inspecting.")
+                            .font(.footnote.weight(.medium))
+                            .lineSpacing(-4)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .foregroundColor(Color(uiColor: .systemGray))
+                            .multilineTextAlignment(.leading)
+                            .padding(.horizontal)
+                        
+                        
+                        Toggle(isOn: $inspectionAlert) {
+                            Text("Inpsection Alert")
+                                .font(.body.weight(.medium))
+                        }
+                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .padding(.horizontal)
+                        .onChange(of: inspectionAlert) { newValue in
+                            stopWatchManager.inspectionAlert = newValue
+                        }
+                        
+                        Text("Play an audible alert when 8 or 12 seconds is reached.")
+                            .font(.footnote.weight(.medium))
+                            .lineSpacing(-4)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .foregroundColor(Color(uiColor: .systemGray))
+                            .multilineTextAlignment(.leading)
+                            .padding(.horizontal)
+                        
+                        HStack {
+                            Text("Inspection Alert Type")
+                                .font(.body.weight(.medium))
+                            
+                            Spacer()
+                            
+                            Picker("", selection: $inspectionAlertType) {
+                                Text("Voice").tag(0)
+                                Text("Boop").tag(1)
+                            }
+                            .frame(maxWidth: 120)
+                            .pickerStyle(.segmented)
+                            .onChange(of: inspectionAlertType) { newValue in
+                                stopWatchManager.inspectionAlertType = newValue
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
                 }
+                
+                
+                
                 
                 Divider()
                 
@@ -172,25 +182,55 @@ struct GeneralSettingsView: View {
                 
                 Divider()
                 
-                VStack (alignment: .leading) {
-                    Toggle(isOn: $showSessionName) {
-                        Text("Show Session Name")
-                            .font(.body.weight(.medium))
+                Group {
+                    VStack (alignment: .leading) {
+                        Toggle(isOn: $showSessionName) {
+                            Text("Show Session Name")
+                                .font(.body.weight(.medium))
+                        }
+                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .padding(.horizontal)
                     }
-                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
-                    .padding(.horizontal)
+                    
+                    Text("Permanently show session name instead of session type in timer view. Pressing the session type icon will temporarily toggle in the timer view.")
+                        .font(.footnote.weight(.medium))
+                        .lineSpacing(-4)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .foregroundColor(Color(uiColor: .systemGray))
+                        .multilineTextAlignment(.leading)
+                        .padding(.horizontal)
                 }
                 
-                Text("Permanently show session name instead of session type in timer view. Pressing the session type icon will temporarily toggle in the timer view.")
-                    .font(.footnote.weight(.medium))
-                    .lineSpacing(-4)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .foregroundColor(Color(uiColor: .systemGray))
-                    .multilineTextAlignment(.leading)
-                    .padding(.horizontal)
                     
                 
                 Divider()
+                
+                Group {
+                    VStack (alignment: .leading) {
+                        Toggle(isOn: $showPrevTime) {
+                            Text("Show Previous Time")
+                                .font(.body.weight(.medium))
+                        }
+                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .padding(.horizontal)
+                        .onChange(of: showPrevTime) { newValue in
+                            stopWatchManager.showPrevTime = newValue
+                        }
+                    }
+                    
+                    Text("Show the previous time after a solve is deleted by swipe gesture. With this option off, the default time of 0.00 or 0.000 will be shown instead.")
+                        .font(.footnote.weight(.medium))
+                        .lineSpacing(-4)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .foregroundColor(Color(uiColor: .systemGray))
+                        .multilineTextAlignment(.leading)
+                        .padding(.horizontal)
+                }
+                
+                
+                
+                Divider()
+                
                 
                 VStack (alignment: .leading) {
                     HStack(alignment: .center) {

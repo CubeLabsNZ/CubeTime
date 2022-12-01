@@ -27,6 +27,8 @@ struct TimerView: View {
     
     @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     
+    @AppStorage(gsKeys.showPrevTime.rawValue) private var showPrevTime: Bool = false
+    
     
     
     @EnvironmentObject var stopWatchManager: StopWatchManager
@@ -654,7 +656,10 @@ struct TimerView: View {
                 stopWatchManager.delete(solve: detail.wrappedValue!)
                 detail.wrappedValue = nil
                 stopWatchManager.secondsElapsed = 0
-                stopWatchManager.secondsStr = formatSolveTime(secs: 0)
+//                stopWatchManager.secondsStr = formatSolveTime(secs: 0)
+                stopWatchManager.secondsStr = formatSolveTime(secs: showPrevTime
+                                                              ? (stopWatchManager.solvesByDate.last?.time ?? 0)
+                                                              : 0)
             }
             Button("Cancel", role: .cancel) {
                 

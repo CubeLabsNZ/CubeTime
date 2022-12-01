@@ -90,6 +90,9 @@ struct CubeTime: App {
                 gsKeys.scrambleSize.rawValue: 18,
                 gsKeys.gestureDistance.rawValue: 50,
                 
+                // show previous time afte solve deleted
+                gsKeys.showPrevTime.rawValue: false,
+                
                 // statistics
                 gsKeys.displayDP.rawValue: 3,
                 
