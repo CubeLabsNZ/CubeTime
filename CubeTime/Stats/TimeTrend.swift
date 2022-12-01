@@ -396,11 +396,12 @@ class ChartData: ObservableObject, Identifiable {
         self.points = points.map{("", Double($0))}
     }
     
-    #warning("TODO: : what is this")
+//    #warning("TODO: : what is this")
+//
+//    init<N: RawGraphData>(data:[N]) {
+//        self.points = data.compactMap{$0.graphData == nil ? nil : ("", $0.graphData!)}
+//    }
     
-    init<N: RawGraphData>(data:[N]) {
-        self.points = data.compactMap{$0.graphData == nil ? nil : ("", $0.graphData!)}
-    }
     init<N: BinaryInteger>(values:[(String,N)]){
         self.points = values.map{($0.0, Double($0.1))}
         self.valuesGiven = true
@@ -596,7 +597,7 @@ struct Legend: View {
 }
 
 
-struct TimeTrend<N: RawGraphData>: View {
+struct TimeTrend: View {
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
     
@@ -610,8 +611,8 @@ struct TimeTrend<N: RawGraphData>: View {
     @State private var currentDataNumber: Double = 0
     @State private var hideHorizontalLines: Bool = false
     
-    init(data: [N], title: String? = nil, legend: String? = nil, style: ChartStyle) {
-        self.data = ChartData(data: data)
+    init(data: [Double], title: String? = nil, legend: String? = nil, style: ChartStyle) {
+        self.data = ChartData(points: data)
         self.title = title
         self.legend = legend
         self.style = style

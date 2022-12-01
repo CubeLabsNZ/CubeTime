@@ -482,17 +482,14 @@ struct StatsView: View {
                             
                             let allCompsimAveragesByDate: [CalculatedAverage] = stopWatchManager.getBestCompsimAverageAndArrayOfCompsimAverages().1
                             
-                            /*
                             let timeTrendData = (compsim
                                                  ? allCompsimAveragesByDate.map { $0.average! }
                                                  : stopWatchManager.solvesNoDNFsbyDate.map { timeWithPlusTwoForSolve($0) })
-                             */
                             
                             let timeDistributionData = (compsim
                                                         ? allCompsimAveragesByDate.map{ $0.average! }.sorted(by: <)
                                                         : stopWatchManager.solvesNoDNFs.map { timeWithPlusTwoForSolve($0) })
                             
-                            /*
                             StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 310), true, false) {
                                 
                                 TimeTrend(data: timeTrendData, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
@@ -501,8 +498,8 @@ struct StatsView: View {
                                     .offset(y: -4)
                                     .drawingGroup()
                             }
-                            */
                              
+                            
                             StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? 150 : 310), true, false) {
                                 TimeDistribution(solves: timeDistributionData)
                                     .drawingGroup()
