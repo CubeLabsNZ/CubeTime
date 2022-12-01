@@ -84,10 +84,9 @@ struct LicensesPopUpView: View {
                 }
             }
             .listStyle(.insetGrouped)
-            .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Licenses")
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         dismiss()
                     } label: {
@@ -104,10 +103,11 @@ struct AboutSettingsView: View {
     @AppStorage("onboarding") var showOnboarding = false
     @State var showLicenses = false
     @ScaledMetric(relativeTo: .largeTitle) var iconSize: CGFloat = 60
+    private let versionString: String = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
     
     var body: some View {
-        VStack (alignment: .leading, spacing: 0) {
-            HStack(alignment: .center) {
+        VStack (alignment: .leading, spacing: 2) {
+            HStack(alignment: .bottom) {
                 Image("about-icon")
                     .resizable()
                     .frame(width: iconSize, height: iconSize)
@@ -115,16 +115,18 @@ struct AboutSettingsView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     .padding(.trailing, 6)
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 0) {
                     Text("CubeTime.")
                         .font(.custom("RecursiveSansLnrSt-Regular", size: 30))
-                        .padding(.top, 20)
-                    Text("v\(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)\n")
+                    
+                    Text("v" + versionString)
                         .font(.subheadline.weight(.semibold))
                         .foregroundColor(Color(uiColor: .systemGray))
                 }
-                .padding(.bottom, 12)
             }
+            .frame(height: iconSize)
+            .padding(.bottom, 12)
+            
             
             Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\nClick below for more info on source licenses and our privacy policy:")
                 .multilineTextAlignment(.leading)
@@ -132,10 +134,10 @@ struct AboutSettingsView: View {
             Button("Open licenses") {
                 showLicenses = true
             }
-                        
-            Text("\nThis project is made possible by speedcube.co.nz!\nGo support them and buy your cubes from https://www.speedcube.co.nz/ \n")
             
-            Text("You can support us directly by donating to us on Ko-Fi!")
+            Text("\nThis project is made possible by [speedcube.co.nz](https://www.speedcube.co.nz/).\nShow some support by buying your cubes from them!\n")
+            
+            Text("Support us directly by donating on Ko-Fi!")
             
             Button {
                 guard let kofiLink = URL(string: "https://ko-fi.com/cubetime"),
@@ -146,15 +148,19 @@ struct AboutSettingsView: View {
                                           options: [:],
                 completionHandler: nil)
             } label: {
-                Image("kofiButton")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: UIScreen.screenWidth*0.65)
+                HStack {
+                    Spacer()
+                    
+                    Image("kofiButton")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: UIScreen.screenWidth * 0.618)
+                    
+                    Spacer()
+                }
             }
-            .padding(.top, 2)
             
-            
-            Text("\nYou can also see the full feature list on our github page!\nhttps://github.com/CubeStuffs/CubeTime")
+            Text("\nIf you run into any issues, please visit our GitHub page and submit an issue! \nhttps://github.com/CubeStuffs/CubeTime/Issues")
             
             Text("\nIf you need a refresher on the primary features, you can see the welcome page again.")
             Button("Show welcome page") {
