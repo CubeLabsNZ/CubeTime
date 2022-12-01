@@ -1,6 +1,7 @@
 import Foundation
 import CoreData
 import SwiftUI
+import AVKit
 
 
 
@@ -49,6 +50,7 @@ class StopWatchManager: ObservableObject {
     var hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
     var hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
     var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
+    var inspectionAlert: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionAlert.rawValue)
     var timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
     var insCountDown: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionCountsDown.rawValue)
 
@@ -72,6 +74,10 @@ class StopWatchManager: ObservableObject {
     @Published var timerColour: Color = TimerTextColours.timerDefaultColour
     
     @Published var solveItem: Solves!
+    
+    
+    private var audioPlayer: AVAudioPlayer!
+    private var sound: String?
     
     
     var penType: PenTypes = .none
@@ -141,10 +147,28 @@ class StopWatchManager: ObservableObject {
             } else {
                 self.secondsStr = String(inspectionSecs)
             }
+            
             if inspectionSecs == plustwotime {
                 penType = .plustwo
             } else if inspectionSecs == dnftime {
                 penType = .dnf
+            }
+            
+            if inspectionSecs == 8 {
+                print(inspectionAlert)
+            }
+            
+            if inspectionAlert && (inspectionSecs == 8 || inspectionSecs == 12) {
+                if inspectionSecs == 8 {
+                    self.sound = Bundle.main.path(forResource: "8sec-audio", ofType: "wav")
+                } else if inspectionSecs == 12 {
+                    self.sound = Bundle.main.path(forResource: "12sec-audio", ofType: "wav")
+                }
+                
+                DispatchQueue.main.async {
+                    self.audioPlayer = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: sound!))
+                    self.audioPlayer.play()
+                }
             }
         }
     }
