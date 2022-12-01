@@ -4,6 +4,7 @@ import SwiftUI
 enum gsKeys: String {
     case freeze,
          inspection, inspectionCountsDown, showCancelInspection, inspectionAlert, inspectionAlertType,
+         inputMode,
          timeDpWhenRunning,
          showSessionName,
          hapBool, hapType,
@@ -12,6 +13,12 @@ enum gsKeys: String {
          scrambleSize, appZoom, forceAppZoom,
          showPrevTime,
          displayDP
+}
+
+enum InputMode: String, Codable, CaseIterable {
+    case timer = "Timer"
+    case typing = "Typing"
+    /*, stackmat, smartcube, virtual*/
 }
 
 extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
@@ -30,6 +37,8 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
     @AppStorage(gsKeys.inspectionAlert.rawValue) private var inspectionAlert: Bool = true
     @AppStorage(gsKeys.inspectionAlertType.rawValue) private var inspectionAlertType: Int = 0
+    
+    @AppStorage(gsKeys.inputMode.rawValue) private var inputMode: InputMode = InputMode.timer
     
     @AppStorage(gsKeys.freeze.rawValue) private var holdDownTime: Double = 0.5
     @AppStorage(gsKeys.timeDpWhenRunning.rawValue) private var timerDP: Int = 3
@@ -180,87 +189,73 @@ struct GeneralSettingsView: View {
                     .padding(.horizontal)
                 }
                 
-                Divider()
                 
-                Group {
-                    VStack (alignment: .leading) {
-                        Toggle(isOn: $showSessionName) {
-                            Text("Show Session Name")
-                                .font(.body.weight(.medium))
-                        }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
-                        .padding(.horizontal)
-                    }
-                    
-                    Text("Permanently show session name instead of session type in timer view. Pressing the session type icon will temporarily toggle in the timer view.")
-                        .font(.footnote.weight(.medium))
-                        .lineSpacing(-4)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .foregroundColor(Color(uiColor: .systemGray))
-                        .multilineTextAlignment(.leading)
-                        .padding(.horizontal)
-                }
-                
-                    
-                
-                Divider()
-                
-                Group {
-                    VStack (alignment: .leading) {
-                        Toggle(isOn: $showPrevTime) {
-                            Text("Show Previous Time")
-                                .font(.body.weight(.medium))
-                        }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
-                        .padding(.horizontal)
-                        .onChange(of: showPrevTime) { newValue in
-                            stopWatchManager.showPrevTime = newValue
-                        }
-                    }
-                    
-                    Text("Show the previous time after a solve is deleted by swipe gesture. With this option off, the default time of 0.00 or 0.000 will be shown instead.")
-                        .font(.footnote.weight(.medium))
-                        .lineSpacing(-4)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .foregroundColor(Color(uiColor: .systemGray))
-                        .multilineTextAlignment(.leading)
-                        .padding(.horizontal)
-                }
                 
                 
                 
                 Divider()
+                
+                
+                
+                
                 
                 
                 VStack (alignment: .leading) {
-                    HStack(alignment: .center) {
-                        Text("Timer Update")
+                    HStack {
+                        Text("Timer Mode")
                             .font(.body.weight(.medium))
                         
                         Spacer()
                         
+                        
+                        
                         Menu {
-                            Picker("", selection: $timerDP) {
-                                Text("Nothing")
-                                    .tag(-1)
-                                ForEach(0...3, id: \.self) {
-                                    Text("\($0) d.p")
+                            Picker("", selection: $inputMode) {
+                                ForEach(Array(InputMode.allCases), id: \.self) { mode in
+                                    Text(mode.rawValue)
                                 }
                             }
                         } label: {
-                            Text(timerDP == -1 ? "Nothing" : "\(timerDP) d.p")
-                                .font(.body)
+                            Text(inputMode.rawValue)
                                 .frame(width: 100, alignment: .trailing)
+                                .font(.body)
                         }
-                        .frame(width: 100, alignment: .trailing)
                         .accentColor(accentColour)
                     }
-                    .padding(.horizontal)
-                    .onChange(of: timerDP) { newValue in
-                        stopWatchManager.timeDP = newValue
+                    
+                    if inputMode == .timer {
+                        HStack(alignment: .center) {
+                            Text("Timer Update")
+                                .font(.body.weight(.medium))
+                            
+                            Spacer()
+                            
+                            Menu {
+                                Picker("", selection: $timerDP) {
+                                    Text("Nothing")
+                                        .tag(-1)
+                                    ForEach(0...3, id: \.self) {
+                                        Text("\($0) d.p")
+                                    }
+                                }
+                            } label: {
+                                Text(timerDP == -1 ? "None" : "\(timerDP) d.p")
+                                    .font(.body)
+                                    .frame(width: 100, alignment: .trailing)
+                            }
+                            .accentColor(accentColour)
+                        }
+                        .onChange(of: timerDP) { newValue in
+                            stopWatchManager.timeDP = newValue
+                        }
                     }
-                    .padding(.bottom, 12)
                 }
+                .padding(.horizontal)
+                .padding(.bottom, 12)
+                
+                
+                
+               
                 
                 
                 
@@ -326,59 +321,80 @@ struct GeneralSettingsView: View {
             }
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
             
-            VStack {
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            VStack(alignment: .leading) {
                 HStack {
-                    Image(systemName: "eye")
+                    Image(systemName: "rectangle.and.pencil.and.ellipsis")
                         .font(Font.system(.subheadline, design: .rounded).weight(.bold))
                         .foregroundColor(accentColour)
-                    Text("Accessibility")
+                    Text("Timer Interface")
                         .font(Font.system(.body, design: .rounded).weight(.bold))
                     
                     Spacer()
                 }
                 .padding([.horizontal, .top], 10)
                 
-                
-                HStack {
-                    Toggle(isOn: $hapticFeedback) {
-                        Text("Haptic Feedback")
-                            .font(.body.weight(.medium))
-                    }
-                }
-                .padding(.horizontal)
-                .onChange(of: hapticFeedback) { newValue in
-                    stopWatchManager.hapticEnabled = newValue
-                    stopWatchManager.calculateFeedbackStyle()
-                }
-                
-                if hapticFeedback {
-                    HStack {
-                        Text("Haptic Intensity")
-                            .font(.body.weight(.medium))
-                        
-                        Spacer()
-                        
-                        
-                        
-                        Menu {
-                            Picker("", selection: $feedbackType) {
-                                ForEach(Array(UIImpactFeedbackGenerator.FeedbackStyle.allCases), id: \.self) { mode in
-                                    Text(hapticNames[mode]!)
-                                }
-                            }
-                        } label: {
-                            Text(hapticNames[feedbackType]!)
-                                .frame(width: 100, alignment: .trailing)
-                                .font(.body)
+                Group {
+                    VStack (alignment: .leading) {
+                        Toggle(isOn: $showSessionName) {
+                            Text("Show Session Name")
+                                .font(.body.weight(.medium))
                         }
-                        .accentColor(accentColour)
+                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
-                    .onChange(of: feedbackType) { newValue in
-                        stopWatchManager.hapticType = newValue.rawValue
-                        stopWatchManager.calculateFeedbackStyle()
-                    }
+                    
+                    Text("Permanently show session name instead of session type in timer view. Pressing the session type icon will temporarily toggle in the timer view.")
+                        .font(.footnote.weight(.medium))
+                        .lineSpacing(-4)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .foregroundColor(Color(uiColor: .systemGray))
+                        .multilineTextAlignment(.leading)
+                        .padding(.horizontal)
                 }
+                
+                    
+                
+                Divider()
+                
+                
+                Group {
+                    VStack (alignment: .leading) {
+                        Toggle(isOn: $showPrevTime) {
+                            Text("Show Previous Time")
+                                .font(.body.weight(.medium))
+                        }
+                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .padding(.horizontal)
+                        .onChange(of: showPrevTime) { newValue in
+                            stopWatchManager.showPrevTime = newValue
+                        }
+                    }
+                    
+                    Text("Show the previous time after a solve is deleted by swipe gesture. With this option off, the default time of 0.00 or 0.000 will be shown instead.")
+                        .font(.footnote.weight(.medium))
+                        .lineSpacing(-4)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .foregroundColor(Color(uiColor: .systemGray))
+                        .multilineTextAlignment(.leading)
+                        .padding(.horizontal)
+                }
+                
+                
+                
                 
                 Divider()
                 
@@ -503,7 +519,86 @@ struct GeneralSettingsView: View {
                         }
                     }
                 }
+                .padding(.bottom, 12)
                 
+                
+                
+                
+                
+            }
+            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            VStack {
+                HStack {
+                    Image(systemName: "eye")
+                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
+                        .foregroundColor(accentColour)
+                    Text("Accessibility")
+                        .font(Font.system(.body, design: .rounded).weight(.bold))
+                    
+                    Spacer()
+                }
+                .padding([.horizontal, .top], 10)
+                
+                
+                HStack {
+                    Toggle(isOn: $hapticFeedback) {
+                        Text("Haptic Feedback")
+                            .font(.body.weight(.medium))
+                    }
+                }
+                .padding(.horizontal)
+                .onChange(of: hapticFeedback) { newValue in
+                    stopWatchManager.hapticEnabled = newValue
+                    stopWatchManager.calculateFeedbackStyle()
+                }
+                
+                if hapticFeedback {
+                    HStack {
+                        Text("Haptic Intensity")
+                            .font(.body.weight(.medium))
+                        
+                        Spacer()
+                        
+                        
+                        
+                        Menu {
+                            Picker("", selection: $feedbackType) {
+                                ForEach(Array(UIImpactFeedbackGenerator.FeedbackStyle.allCases), id: \.self) { mode in
+                                    Text(hapticNames[mode]!)
+                                }
+                            }
+                        } label: {
+                            Text(hapticNames[feedbackType]!)
+                                .frame(width: 100, alignment: .trailing)
+                                .font(.body)
+                        }
+                        .accentColor(accentColour)
+                    }
+                    .padding(.horizontal)
+                    .onChange(of: feedbackType) { newValue in
+                        stopWatchManager.hapticType = newValue.rawValue
+                        stopWatchManager.calculateFeedbackStyle()
+                    }
+                }
+                
+               
                 Divider()
                 
                 
