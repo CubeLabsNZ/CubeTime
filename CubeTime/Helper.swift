@@ -3,7 +3,7 @@ import SwiftUI
 import UIKit
 import Combine
 
-
+// MARK: - GLOBAL LETS
 let sessionTypeForID: [SessionTypes: Sessions.Type] = [
     .multiphase: MultiphaseSession.self,
     .compsim: CompSimSession.self
@@ -15,17 +15,93 @@ let sessionDescriptions: [SessionTypes: String] = [
     .compsim: "A comp sim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach."
 ]
 
+// set small device names
+let smallDeviceNames: [String] = ["iPhoneSE"]
 
+// legacy scramble support :sob:
+let chtscramblesthatdontworkwithtnoodle: [OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry] = [.SIX, .SEVEN, .SKEWB]
+                    
+// all puzzle type identifier names
+#warning("TODO: fix snake case")
+let puzzle_types: [PuzzleType] = [
+    PuzzleType(name: "2x2", puzzle: .TWO),
+    PuzzleType(name: "3x3", puzzle: .THREE),
+    PuzzleType(name: "4x4", puzzle: .FOUR_FAST),
+    PuzzleType(name: "5x5", puzzle: .FIVE),
+    PuzzleType(name: "6x6", puzzle: .SIX),
+    PuzzleType(name: "7x7", puzzle: .SEVEN),
+    PuzzleType(name: "Square-1", puzzle: .SQ1),
+    PuzzleType(name: "Megaminx", puzzle: .MEGA),
+    PuzzleType(name: "Pyraminx", puzzle: .PYRA),
+    PuzzleType(name: "Clock", puzzle: .CLOCK),
+    PuzzleType(name: "Skewb", puzzle: .SKEWB),
+    
+    // One hand
+    PuzzleType(name: "3x3 OH", puzzle: .THREE),
+    
+    // Blind
+    PuzzleType(name: "3x3 BLD", puzzle: .THREE),
+    PuzzleType(name: "4x4 BLD", puzzle: .FOUR_FAST),
+    PuzzleType(name: "5x5 BLD", puzzle: .FIVE),
+]
+
+
+
+// MARK: - PROTOCOLS
+protocol RawGraphData {
+    var graphData: Double? { get }
+}
+
+
+
+// MARK: - EXTENSIONS
 // xor shortcut
 extension Bool {
     static func ^ (l: Bool, r: Bool) -> Bool {
         return l != r
     }
 }
-protocol RawGraphData {
-    var graphData: Double? { get }
+
+#warning("TODO: fix these, combine")
+// get device type extension
+public extension UIDevice {
+    static let modelName: String = {
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let identifier = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+        
+        return identifier
+    }()
 }
 
+/// device restriction function
+/// testing, includes simulator
+//let smallDeviceNames: [String] = ["x86_64", "iPhoneSE"]
+
+func getModelName() -> String {
+    var systemInfo = utsname()
+    uname(&systemInfo)
+    let machineMirror = Mirror(reflecting: systemInfo.machine)
+    return machineMirror.children.reduce("") { identifier, element in
+        guard let value = element.value as? Int8, value != 0 else {
+            return identifier
+        }
+        return identifier + String(UnicodeScalar(UInt8(value)))
+    }
+}
+
+// screen sizes
+extension UIScreen {
+   static let screenWidth = UIScreen.main.bounds.size.width
+   static let screenHeight = UIScreen.main.bounds.size.height
+   static let screenSize = UIScreen.main.bounds.size
+}
+
+// solve related extensions
 extension CompSimSolveGroup: RawGraphData {
     var graphData: Double? {
         get {
@@ -61,7 +137,7 @@ extension Solves: Comparable, RawGraphData {
     }
 }
 
-
+// other
 extension RandomAccessCollection where Element : Comparable {
     func insertionIndex(of value: Element) -> Index {
         var slice : SubSequence = self[...]
@@ -77,8 +153,6 @@ extension RandomAccessCollection where Element : Comparable {
         return slice.startIndex
     }
 }
-
-
 
 extension RandomAccessCollection where Element : Solves {
     func insertionIndexDate(solve value: Solves) -> Index {
@@ -96,7 +170,61 @@ extension RandomAccessCollection where Element : Solves {
     }
 }
 
+// sizing + image dim
+extension CGSize {
+    public init(_ svgdimen: OrgWorldcubeassociationTnoodleSvgliteDimension) {
+        self.init(width: Int(svgdimen.getWidth()), height: Int(svgdimen.getHeight()))
+    }
+}
 
+extension OrgWorldcubeassociationTnoodleSvgliteDimension {
+    public convenience init(_ cgsize: CGSize) {
+        self.init(int: jint(cgsize.width), with: jint(cgsize.height))
+    }
+}
+
+// view scaled font 
+@available(iOS 15, *)
+extension View {
+    func scaledCustomFont(name: String, size: CGFloat, sf: Bool, weight: Font.Weight?) -> some View {
+        return self.modifier(ScaledCustomFont(name: name, size: size, sf: sf, weight: weight))
+    }
+}
+
+// view struct extensions
+// source: https://www.avanderlee.com/swiftui/conditional-view-modifier/
+extension View {
+    /// Applies the given transform if the given condition evaluates to `true`.
+    /// - Parameters:
+    ///   - condition: The condition to evaluate.
+    ///   - transform: The transform to apply to the source `View`.
+    /// - Returns: Either the original `View` or the modified `View` if the condition is `true`.
+    @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
+    }
+}
+
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners))
+    }
+}
+
+// gradient view extension
+extension View {
+    public func gradientForeground(gradientSelected: Int) -> some View {
+        self.overlay(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
+            .mask(self)
+    }
+}
+
+
+
+// MARK: - STRUCTS
 struct AppZoomWrapper: RawRepresentable, Identifiable {
     static let allCases = [DynamicTypeSize.xSmall,
                            DynamicTypeSize.small,
@@ -138,93 +266,7 @@ struct AppZoomWrapper: RawRepresentable, Identifiable {
     }
 }
 
-
-extension CGSize {
-    public init(_ svgdimen: OrgWorldcubeassociationTnoodleSvgliteDimension) {
-        self.init(width: Int(svgdimen.getWidth()), height: Int(svgdimen.getHeight()))
-    }
-}
-
-extension OrgWorldcubeassociationTnoodleSvgliteDimension {
-    public convenience init(_ cgsize: CGSize) {
-        self.init(int: jint(cgsize.width), with: jint(cgsize.height))
-    }
-}
-
-
-public extension UIDevice {
-    static let modelName: String = {
-        var systemInfo = utsname()
-        uname(&systemInfo)
-        let machineMirror = Mirror(reflecting: systemInfo.machine)
-        let identifier = machineMirror.children.reduce("") { identifier, element in
-            guard let value = element.value as? Int8, value != 0 else { return identifier }
-            return identifier + String(UnicodeScalar(UInt8(value)))
-        }
-        
-        return identifier
-    }()
-}
-
-
-extension UIColor {
-    func colorsEqual (_ rhs: UIColor) -> Bool {
-        var sred: CGFloat = 0
-        var sgreen: CGFloat = 0
-        var sblue: CGFloat = 0
-        
-        var rred: CGFloat = 0
-        var rgreen: CGFloat = 0
-        var rblue: CGFloat = 0
-        
-
-        self.getRed(&sred, green: &sgreen, blue: &sblue, alpha: nil)
-        rhs.getRed(&rred, green: &rgreen, blue: &rblue, alpha: nil)
-
-        return (Int(sred*255), Int(sgreen*255), Int(sblue*255)) == (Int(rred*255), Int(rgreen*255), Int(rblue*255))
-    }
-}
-
-
-extension Color: RawRepresentable {
-    public typealias RawValue = String
-    init(_ hex: UInt) {
-        self.init(
-            red: Double((hex >> 16) & 0xff) / 255,
-            green: Double((hex >> 08) & 0xff) / 255,
-            blue: Double((hex >> 00) & 0xff) / 255
-        )
-    }
-    
-    public init(rawValue: RawValue) {
-        try! self.init(uiColor: NSKeyedUnarchiver.unarchivedObject(ofClass: UIColor.self, from: Data(base64Encoded: rawValue)!)!)
-    }
-
-    public var rawValue: RawValue {
-        return try! NSKeyedArchiver.archivedData(withRootObject: UIColor(self), requiringSecureCoding: false).base64EncodedString()
-    }
-}
-
-extension UIScreen {
-   static let screenWidth = UIScreen.main.bounds.size.width
-   static let screenHeight = UIScreen.main.bounds.size.height
-   static let screenSize = UIScreen.main.bounds.size
-}
-
-enum PenTypes: Int16 {
-    case none
-    case plustwo
-    case dnf
-}
-
-enum SessionTypes: Int16 {
-    case standard
-    case algtrainer
-    case multiphase
-    case playground
-    case compsim
-}
-
+// all main font structs
 struct DynamicText: ViewModifier {
     func body(content: Content) -> some View {
         content
@@ -233,7 +275,6 @@ struct DynamicText: ViewModifier {
             .lineLimit(1)
     }
 }
-
 
 struct AnimatingFontSize: AnimatableModifier {
     var fontSize: CGFloat
@@ -248,7 +289,6 @@ struct AnimatingFontSize: AnimatableModifier {
             .font(.system(size: self.fontSize, weight: .bold, design: .monospaced))
     }
 }
-
 
 @available(iOS 15, *)
 struct ScaledCustomFont: ViewModifier {
@@ -269,15 +309,67 @@ struct ScaledCustomFont: ViewModifier {
     }
 }
 
-@available(iOS 15, *)
-extension View {
-    func scaledCustomFont(name: String, size: CGFloat, sf: Bool, weight: Font.Weight?) -> some View {
-        return self.modifier(ScaledCustomFont(name: name, size: size, sf: sf, weight: weight))
+// global geometry reader structs
+/// as the default textfield does not dynamically adjust its width according to the text
+/// and instead is always set to the maximum width, this globalgeometrygetter is used
+/// for the target input field on the timer view to change its width dynamically.
+
+// source: https://stackoverflow.com/a/56729880/3902590
+struct GlobalGeometryGetter: View {
+    @Binding var rect: CGRect
+
+    var body: some View {
+        return GeometryReader { geometry in
+            self.makeView(geometry: geometry)
+        }
     }
+
+    func makeView(geometry: GeometryProxy) -> some View {
+        DispatchQueue.main.async {
+            self.rect = geometry.frame(in: .global)
+        }
+
+        return Rectangle().fill(Color.clear)
+    }
+}
+
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}
+
+// puzzletype wrapper
+struct PuzzleType {
+    let name: String
+    let puzzle: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
 }
 
 
 
+// MARK: - ENUMS
+enum PenTypes: Int16 {
+    case none
+    case plustwo
+    case dnf
+}
+
+enum SessionTypes: Int16 {
+    case standard
+    case algtrainer
+    case multiphase
+    case playground
+    case compsim
+}
+
+
+
+// MARK: - FUNCS
+// all formatting funcs
 func formatSolveTime(secs: Double, dp: Int) -> String {
     if secs < 60 {
         return String(format: "%.\(dp)f", secs); #warning("TODO: set DP")
@@ -305,9 +397,7 @@ func formatSolveTime(secs: Double, penType: PenTypes? = PenTypes.none) -> String
     }
 }
 
-
 func formatLegendTime(secs: Double, dp: Int) -> String {
-    
     if secs < 10 {
         return String(format: "%.\(dp)f", secs) // dp = 1
     } else if secs < 60 {
@@ -322,8 +412,8 @@ func formatLegendTime(secs: Double, dp: Int) -> String {
     }
 }
 
-
-#warning("TODO: make good")
+// stats funcs
+#warning("TODO: make good AND MOVE TO STOPWATCHMANAGER? or don't define here atleast")
 func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAverage? {
     
     let trim = 1
@@ -348,128 +438,28 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
 }
 
 
-/// device restriction function
-/// testing, includes simulator
-//let smallDeviceNames: [String] = ["x86_64", "iPhoneSE"]
 
-/// public
-let smallDeviceNames: [String] = ["iPhoneSE"]
-
-func getModelName() -> String {
-    var systemInfo = utsname()
-    uname(&systemInfo)
-    let machineMirror = Mirror(reflecting: systemInfo.machine)
-    return machineMirror.children.reduce("") { identifier, element in
-        guard let value = element.value as? Int8, value != 0 else {
-            return identifier
-        }
-        return identifier + String(UnicodeScalar(UInt8(value)))
-    }
+// MARK: - MANUAL ENTRY FUNCS + VIEW MODIFIERS
+// formatting funcs
+@inline(__always) func filteredStrFromTime(_ time: Double?) -> String {
+    return time == nil ? "" : formatSolveTime(secs: time!, dp: 2)
 }
 
-
-/// as the default textfield does not dynamically adjust its width according to the text
-/// and instead is always set to the maximum width, this globalgeometrygetter is used
-/// for the target input field on the timer view to change its width dynamically.
-
-// source: https://stackoverflow.com/a/56729880/3902590
-struct GlobalGeometryGetter: View {
-    @Binding var rect: CGRect
-
-    var body: some View {
-        return GeometryReader { geometry in
-            self.makeView(geometry: geometry)
-        }
+func timeFromStr(_ formattedTime: String) -> Double? {
+    if formattedTime.isEmpty {
+        return nil
     }
-
-    func makeView(geometry: GeometryProxy) -> some View {
-        DispatchQueue.main.async {
-            self.rect = geometry.frame(in: .global)
-        }
-
-        return Rectangle().fill(Color.clear)
-    }
-}
-
-
-
-// source: https://www.avanderlee.com/swiftui/conditional-view-modifier/
-extension View {
-    /// Applies the given transform if the given condition evaluates to `true`.
-    /// - Parameters:
-    ///   - condition: The condition to evaluate.
-    ///   - transform: The transform to apply to the source `View`.
-    /// - Returns: Either the original `View` or the modified `View` if the condition is `true`.
-    @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
-        if condition {
-            transform(self)
-        } else {
-            self
-        }
-    }
-}
-
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(RoundedCorner(radius: radius, corners: corners))
-    }
-}
-
-struct RoundedCorner: Shape {
+    let separated = formattedTime.components(separatedBy: ":")
+    let mins: UInt = separated.count > 1 ? UInt(separated[0])! : 0
+    let secs: Double = Double(separated.last!) ?? 0
     
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
-    
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        return Path(path.cgPath)
-    }
+    return Double(mins) * 60 + secs
 }
 
-extension View {
-    public func gradientForeground(gradientSelected: Int) -> some View {
-        self.overlay(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
-            .mask(self)
-    }
-}
-
-
-struct PuzzleType {
-    let name: String
-    let puzzle: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
-}
-
-
-let chtscramblesthatdontworkwithtnoodle: [OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry] = [.SIX, .SEVEN, .SKEWB]
-                    
-
-let puzzle_types: [PuzzleType] = [
-    PuzzleType(name: "2x2", puzzle: .TWO),
-    PuzzleType(name: "3x3", puzzle: .THREE),
-    PuzzleType(name: "4x4", puzzle: .FOUR_FAST),
-    PuzzleType(name: "5x5", puzzle: .FIVE),
-    PuzzleType(name: "6x6", puzzle: .SIX),
-    PuzzleType(name: "7x7", puzzle: .SEVEN),
-    PuzzleType(name: "Square-1", puzzle: .SQ1),
-    PuzzleType(name: "Megaminx", puzzle: .MEGA),
-    PuzzleType(name: "Pyraminx", puzzle: .PYRA),
-    PuzzleType(name: "Clock", puzzle: .CLOCK),
-    PuzzleType(name: "Skewb", puzzle: .SKEWB),
-    
-    // One hand
-    PuzzleType(name: "3x3 OH", puzzle: .THREE),
-    
-    // Blind
-    PuzzleType(name: "3x3 BLD", puzzle: .THREE),
-    PuzzleType(name: "4x4 BLD", puzzle: .FOUR_FAST),
-    PuzzleType(name: "5x5 BLD", puzzle: .FIVE),
-]
-
-
+// manual entry mask
 #warning("TODO: convert to TextFieldStyle")
 struct TimeMaskTextField: ViewModifier {
     @Binding var text: String
-    
     @State var userDotted = false
     
     var onReceiveAlso: ((String) -> Void)?
@@ -488,7 +478,6 @@ struct TimeMaskTextField: ViewModifier {
         
         let dotCount = text.filter({ $0 == "."}).count
         
-        
         // Let the user dot if the text is more than 1, less than six (0.xx.) and there are 2 dots where the last was just entered
         if text == "." || ( text.count > 1 && text.count < 6 && text.last! == "." && dotCount < 3 ) {
             userDotted = true
@@ -498,8 +487,6 @@ struct TimeMaskTextField: ViewModifier {
         
         
         if userDotted {
-            
-            
             var removedfirstdot = !(dotCount == 2)
             
             filtered = String(
@@ -526,7 +513,6 @@ struct TimeMaskTextField: ViewModifier {
             
             
             filtered = String(filtered[from..<to])
-            
         } else {
             filtered = String(
                 text.filter { $0.isNumber } // Remove a non numbers
@@ -547,21 +533,10 @@ struct TimeMaskTextField: ViewModifier {
     }
 }
 
-@inline(__always) func filteredStrFromTime(_ time: Double?) -> String {
-    return time == nil ? "" : formatSolveTime(secs: time!, dp: 2)
-}
 
-func timeFromStr(_ formattedTime: String) -> Double? {
-    if formattedTime.isEmpty {
-        return nil
-    }
-    let separated = formattedTime.components(separatedBy: ":")
-    let mins: UInt = separated.count > 1 ? UInt(separated[0])! : 0
-    let secs: Double = Double(separated.last!) ?? 0
-    
-    return Double(mins) * 60 + secs
-}
 
+// MARK: - MAIN TIMER STATIC VALUES
+#warning("TODO: merge this with tabrouter")
 class SetValues {
     static let hasBottomBar = ((UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.bottom)! > 0
 }
@@ -578,14 +553,47 @@ class InspectionColours {
     static let eightColour: Color = Color(red: 234/255, green: 224/255, blue: 182/255)
     static let twelveColour: Color = Color(red: 234/255, green: 212/255, blue: 182/255)
     static let penaltyColour: Color = Color(red: 234/255, green: 194/255, blue: 192/255)
+}
+
+
+
+// MARK: - COLOURS AND GRADIENTS
+// colour extensions
+extension UIColor {
+    func colorsEqual (_ rhs: UIColor) -> Bool {
+        var sred: CGFloat = 0
+        var sgreen: CGFloat = 0
+        var sblue: CGFloat = 0
+        
+        var rred: CGFloat = 0
+        var rgreen: CGFloat = 0
+        var rblue: CGFloat = 0
+        
+
+        self.getRed(&sred, green: &sgreen, blue: &sblue, alpha: nil)
+        rhs.getRed(&rred, green: &rgreen, blue: &rblue, alpha: nil)
+
+        return (Int(sred*255), Int(sgreen*255), Int(sblue*255)) == (Int(rred*255), Int(rgreen*255), Int(rblue*255))
+    }
+}
+
+extension Color: RawRepresentable {
+    public typealias RawValue = String
+    init(_ hex: UInt) {
+        self.init(
+            red: Double((hex >> 16) & 0xff) / 255,
+            green: Double((hex >> 08) & 0xff) / 255,
+            blue: Double((hex >> 00) & 0xff) / 255
+        )
+    }
     
-//    static let eightColour = 0xeae0b6
-//    static let twelveColour = 0xead4b6
-//    static let penaltyColour = 0xeac2c0
-    
-//    static let eightColour = Color(0xeae0b6)
-//    static let twelveColour = Color(0xead4b6)
-//    static let penaltyColour = Color(0xeac2c0)
+    public init(rawValue: RawValue) {
+        try! self.init(uiColor: NSKeyedUnarchiver.unarchivedObject(ofClass: UIColor.self, from: Data(base64Encoded: rawValue)!)!)
+    }
+
+    public var rawValue: RawValue {
+        return try! NSKeyedArchiver.archivedData(withRootObject: UIColor(self), requiringSecureCoding: false).base64EncodedString()
+    }
 }
 
 func getGradient(gradientArray: [[Color]], gradientSelected: Int?) -> LinearGradient {
@@ -622,9 +630,8 @@ class CustomGradientColours {
 
 
 
-
-/// **SESSIONS HELPER STUFFS**
-
+// MARK: - SESSION HELPERS, VIEWMODIFIERS AND STRUCTS
+// session type icon
 struct SessionTypeIconProps {
     var size: CGFloat = 26
     var leaPadding: CGFloat = 8
@@ -632,6 +639,7 @@ struct SessionTypeIconProps {
     var weight: Font.Weight = .regular
 }
 
+// rounded viewblock modifier
 struct NewStandardSessionViewBlocks: ViewModifier {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     func body(content: Content) -> some View {
@@ -642,7 +650,7 @@ struct NewStandardSessionViewBlocks: ViewModifier {
     }
 }
 
-
+// delayed context menu animation
 struct ContextMenuButton: View {
     var delay: Bool
     var action: () -> Void
@@ -685,6 +693,10 @@ struct ContextMenuButton: View {
     }
 }
 
+
+
+// MARK: - OTHER GLOBAL VIEWS
+// global close button view
 struct CloseButton: View {
     @Environment(\.colorScheme) var colourScheme
     

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-func getDivisions(data: [Solves]) -> Array<(Double, Int)> {
+func getDivisions(data: [Double]) -> Array<(Double, Int)> {
     let cnt: Int = data.count
     
     if cnt >= 4 {
@@ -17,23 +17,24 @@ func getDivisions(data: [Solves]) -> Array<(Double, Int)> {
         
         let trim: Int = Int(ceil(Double(cnt) * 0.1))
         
-        let tc_data: ArraySlice<Solves> = data[trim...cnt-trim-1]
+        let tc_data: ArraySlice<Double> = data[trim ... (cnt-trim - 1)]
+        var increments: [Double: Int] = [:]
         
-        var fd: Double = timeWithPlusTwoForSolve(tc_data.first!)
-        let ld: Double = timeWithPlusTwoForSolve(tc_data.last!)
-        let ifd: Double = timeWithPlusTwoForSolve(data[trim-1])
-        let ild: Double = timeWithPlusTwoForSolve(data.suffix(trim).first!)
+        var fd: Double = tc_data.first!
+        let ld: Double = tc_data.last!
+        let ifd: Double = data[trim - 1]
+        let ild: Double = data.suffix(trim).first!
         
         let div_incr: Double = (ld - fd) / Double(bars)
         
-        var increments: [Double: Int] = [:]
+        
         
         for i in 0..<bars {
             let range: Range<Double> = fd ..< (fd + div_incr + (i == bars-1 ? (ild - ld)/2 : 0))
             var tmpocc = 0
             
             for datum in Array(tc_data) {
-                if range ~= datum.timeIncPen {
+                if range ~= datum {
                     tmpocc += 1
                 }
             }
@@ -83,7 +84,7 @@ struct TimeDistribution: View {
     var data: Array<(Double, Int)>
     var max_height: CGFloat
     
-    init(solves: [Solves]) {
+    init(solves: [Double]) {
         self.count = solves.count
         self.data = getDivisions(data: solves)
         self.max_height = CGFloat(220 / Float(getMaxHeight(occurences: data.map { $0.1 })!))

@@ -2,7 +2,15 @@ import SwiftUI
 
 
 enum gsKeys: String {
-    case inspection, freeze, showCancelInspection, timeDpWhenRunning, showSessionName, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats, scrambleSize, inspectionCountsDown, appZoom, forceAppZoom
+    case freeze,
+         inspection, inspectionCountsDown, showCancelInspection, inspectionAlert, inspectionAlertType,
+         timeDpWhenRunning,
+         showSessionName,
+         hapBool, hapType,
+         gestureDistance,
+         displayDP,
+         showScramble, showStats,
+         scrambleSize, appZoom, forceAppZoom
 }
 
 extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
@@ -19,6 +27,9 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.inspection.rawValue) private var inspectionTime: Bool = false
     @AppStorage(gsKeys.inspectionCountsDown.rawValue) private var insCountDown: Bool = false
     @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
+    @AppStorage(gsKeys.inspectionAlert.rawValue) private var inspectionAlert: Bool = true
+    @AppStorage(gsKeys.inspectionAlertType.rawValue) private var inspectionAlertType: Int = 0
+    
     @AppStorage(gsKeys.freeze.rawValue) private var holdDownTime: Double = 0.5
     @AppStorage(gsKeys.timeDpWhenRunning.rawValue) private var timerDP: Int = 3
     @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
@@ -57,7 +68,7 @@ struct GeneralSettingsView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            VStack {
+            VStack(alignment: .leading) {
                 HStack {
                     Image(systemName: "timer")
                         .font(Font.system(.subheadline, design: .rounded).weight(.bold))
@@ -70,7 +81,7 @@ struct GeneralSettingsView: View {
                 .padding([.horizontal, .top], 10)
                 
                 HStack {
-                    Toggle(isOn: $inspectionTime.animation(.spring())) {
+                    Toggle(isOn: $inspectionTime) {
                         Text("Inspection Time")
                             .font(.body.weight(.medium))
                     }
@@ -109,6 +120,43 @@ struct GeneralSettingsView: View {
                         .foregroundColor(Color(uiColor: .systemGray))
                         .multilineTextAlignment(.leading)
                         .padding(.horizontal)
+                    
+                    
+                    Toggle(isOn: $inspectionAlert) {
+                        Text("Inpsection Alert")
+                            .font(.body.weight(.medium))
+                    }
+                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                    .padding(.horizontal)
+                    .onChange(of: inspectionAlert) { newValue in
+                        stopWatchManager.inspectionAlert = newValue
+                    }
+                    
+                    Text("Play an audible alert when 8 or 12 seconds is reached.")
+                        .font(.footnote.weight(.medium))
+                        .lineSpacing(-4)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .foregroundColor(Color(uiColor: .systemGray))
+                        .multilineTextAlignment(.leading)
+                        .padding(.horizontal)
+                    
+                    HStack {
+                        Text("Inspection Alert Type")
+                            .font(.body.weight(.medium))
+                        
+                        Spacer()
+                        
+                        Picker("", selection: $inspectionAlertType) {
+                            Text("Voice").tag(0)
+                            Text("Boop").tag(1)
+                        }
+                        .frame(maxWidth: 120)
+                        .pickerStyle(.segmented)
+                        .onChange(of: inspectionAlertType) { newValue in
+                            stopWatchManager.inspectionAlertType = newValue
+                        }
+                    }
+                    .padding(.horizontal)
                 }
                 
                 Divider()
@@ -250,7 +298,7 @@ struct GeneralSettingsView: View {
                 
                 
                 HStack {
-                    Toggle(isOn: $hapticFeedback.animation(.spring())) {
+                    Toggle(isOn: $hapticFeedback) {
                         Text("Haptic Feedback")
                             .font(.body.weight(.medium))
                     }
@@ -337,10 +385,7 @@ struct GeneralSettingsView: View {
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            withAnimation(.spring()) {
-                                showFontSizeOptions.toggle()
-                            }
-                            
+                            showFontSizeOptions.toggle()
                         }
                         
                         HStack {

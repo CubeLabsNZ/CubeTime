@@ -2,6 +2,9 @@ import Foundation
 import CoreData
 import SwiftUI
 
+import AVKit
+import AVFoundation
+
 
 
 extension Array where Element: Equatable {
@@ -49,6 +52,8 @@ class StopWatchManager: ObservableObject {
     var hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
     var hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
     var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
+    var inspectionAlert: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionAlert.rawValue)
+    var inspectionAlertType: Int = UserDefaults.standard.integer(forKey: gsKeys.inspectionAlertType.rawValue)
     var timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
     var insCountDown: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionCountsDown.rawValue)
 
@@ -72,6 +77,11 @@ class StopWatchManager: ObservableObject {
     @Published var timerColour: Color = TimerTextColours.timerDefaultColour
     
     @Published var solveItem: Solves!
+    
+    private let inspectionAlert_8: AVAudioPlayer! = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "8sec-audio", ofType: "wav")!))
+    private let inspectionAlert_12: AVAudioPlayer! = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "12sec-audio", ofType: "wav")!))
+    
+    private let systemSoundID: SystemSoundID = 1057
     
     
     var penType: PenTypes = .none
@@ -141,10 +151,23 @@ class StopWatchManager: ObservableObject {
             } else {
                 self.secondsStr = String(inspectionSecs)
             }
+            
             if inspectionSecs == plustwotime {
                 penType = .plustwo
             } else if inspectionSecs == dnftime {
                 penType = .dnf
+            }
+            
+            if inspectionAlert && (inspectionSecs == 8 || inspectionSecs == 12) {
+                if inspectionAlertType == 1 {
+                    AudioServicesPlaySystemSound(systemSoundID)
+                } else {
+                    if inspectionSecs == 8 {
+                        inspectionAlert_8.play()
+                    } else {
+                        inspectionAlert_12.play()
+                    }
+                }
             }
         }
     }
@@ -700,6 +723,16 @@ class StopWatchManager: ObservableObject {
         bestSingle = getMin()
         phases = getAveragePhases()
         sessionMean = getSessionMean()
+        
+        normalMedian = getNormalMedian()
+        compSimCount = getNumberOfAverages()
+        reachedTargets = getReachedTargets()
+        
+        currentCompsimAverage = getCurrentCompsimAverage()
+        bestCompsimAverage = getBestCompsimAverageAndArrayOfCompsimAverages().0
+        
+        currentMeanOfTen = getCurrentMeanOfTen()
+        bestMeanOfTen = getBestMeanOfTen()
     }
     
     func saveCache() {
@@ -868,7 +901,7 @@ class StopWatchManager: ObservableObject {
             return (nil, nil)
         }
         
-        let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solves))
+        let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solvesNoDNFs.map { timeWithPlusTwoForSolve($0) }))
         
         
         if cnt % 2 == 0 {

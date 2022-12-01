@@ -71,6 +71,9 @@ struct CubeTime: App {
                 gsKeys.inspection.rawValue: false,
                 gsKeys.inspectionCountsDown.rawValue: false,
                 gsKeys.showCancelInspection.rawValue: true,
+                gsKeys.inspectionAlert.rawValue: true,
+                gsKeys.inspectionAlertType.rawValue: 0,
+                
                 gsKeys.freeze.rawValue: 0.5,
                 gsKeys.timeDpWhenRunning.rawValue: 3,
                 gsKeys.showSessionName.rawValue: false,
@@ -94,14 +97,11 @@ struct CubeTime: App {
                 asKeys.graphGlow.rawValue: true,
             ]
         )
-        
-        
     }
     
     
     
     var body: some Scene {
-        
         WindowGroup {
             MainTabsView()
                 .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
