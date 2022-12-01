@@ -381,7 +381,7 @@ struct StatsView: View {
                                         }
                                         
                                         StatsBlock("AVERAGES", blockHeightSmall, false, false) {
-                                            StatsBlockText("\(stopWatchManager.compSimCount)", false, false, false, true)
+                                            StatsBlockText(String(describing: stopWatchManager.compSimCount!), false, false, false, true)
                                         }
                                     }
                                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -430,7 +430,9 @@ struct StatsView: View {
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     
                                     StatsBlock("REACHED", blockHeightSmall, false, false) {
-                                        StatsBlockText("\(stopWatchManager.reachedTargets)/\(stopWatchManager.compSimCount)", false, false, false, (stopWatchManager.bestSingle != nil))
+                                       
+                                        
+                                        StatsBlockText(String(describing: stopWatchManager.reachedTargets!) + "/" + String(describing: stopWatchManager.compSimCount!), false, false, false, (stopWatchManager.bestSingle != nil))
                                     }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                 }
@@ -478,10 +480,19 @@ struct StatsView: View {
                                 StatsDivider()
                             }
                             
-                            /* TODO: FIX THIS
-                            let timeTrendData = (compsim ? allCompsimAveragesByDate : timesByDateNoDNFs)
-                            let timeDistributionData = (compsim ? allCompsimAveragesByTime : timesBySpeedNoDNFs)
+                            let allCompsimAveragesByDate: [CalculatedAverage] = stopWatchManager.getBestCompsimAverageAndArrayOfCompsimAverages().1
                             
+                            /*
+                            let timeTrendData = (compsim
+                                                 ? allCompsimAveragesByDate.map { $0.average! }
+                                                 : stopWatchManager.solvesNoDNFsbyDate.map { timeWithPlusTwoForSolve($0) })
+                             */
+                            
+                            let timeDistributionData = (compsim
+                                                        ? allCompsimAveragesByDate.map{ $0.average! }.sorted(by: <)
+                                                        : stopWatchManager.solvesNoDNFs.map { timeWithPlusTwoForSolve($0) })
+                            
+                            /*
                             StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 310), true, false) {
                                 
                                 TimeTrend(data: timeTrendData, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
@@ -490,13 +501,13 @@ struct StatsView: View {
                                     .offset(y: -4)
                                     .drawingGroup()
                             }
-                            
+                            */
+                             
                             StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? 150 : 310), true, false) {
-                                TimeDistribution(currentSession: $currentSession, solves: timeDistributionData)
+                                TimeDistribution(solves: timeDistributionData)
                                     .drawingGroup()
                                     .frame(height: timeDistributionData.count < 4 ? 150 : 300)
                             }
-                             */
                         }
                         .frame(minWidth: 0, maxWidth: .infinity)
                     }

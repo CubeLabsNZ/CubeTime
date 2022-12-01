@@ -723,6 +723,16 @@ class StopWatchManager: ObservableObject {
         bestSingle = getMin()
         phases = getAveragePhases()
         sessionMean = getSessionMean()
+        
+        normalMedian = getNormalMedian()
+        compSimCount = getNumberOfAverages()
+        reachedTargets = getReachedTargets()
+        
+        currentCompsimAverage = getCurrentCompsimAverage()
+        bestCompsimAverage = getBestCompsimAverageAndArrayOfCompsimAverages().0
+        
+        currentMeanOfTen = getCurrentMeanOfTen()
+        bestMeanOfTen = getBestMeanOfTen()
     }
     
     func saveCache() {
@@ -891,7 +901,7 @@ class StopWatchManager: ObservableObject {
             return (nil, nil)
         }
         
-        let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solves))
+        let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solvesNoDNFs.map { timeWithPlusTwoForSolve($0) }))
         
         
         if cnt % 2 == 0 {
