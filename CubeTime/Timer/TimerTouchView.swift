@@ -143,8 +143,11 @@ final class InspectionTouchView: UIViewRepresentable {
 
 
 
+<<<<<<< HEAD
 // Must be final class - see
 // https://github.com/mediweb/UIViewRepresentableBug
+=======
+>>>>>>> 2fe1baac11ac7e6112f2ed15d9ce480e8a406365
 struct TimerTouchView: UIViewControllerRepresentable {
     
     @ObservedObject var stopWatchManager: StopWatchManager
