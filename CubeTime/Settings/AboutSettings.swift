@@ -1,20 +1,21 @@
 import SwiftUI
 
 
-enum ProjectLicense {
-    case cubetime
-    case tnoodle
-    case chartview
-    case svgkit
-    case icons
-    case recursivefont
-    case privacypolicy
+enum ProjectLicense: String {
+    case cubetime = "CubeTime"
+    case tnoodle = "TNoodle"
+    case chartview = "ChartView"
+    case svgkit = "SVGKit"
+    case icons = "WCA Icons (Cubing Icons & Fonts)"
+    case recursivefont = "Recursive Font"
+    case privacypolicy = "CubeTime Privacy Policy"
 }
 
 
 struct LicensePopUpView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var projectLicense: ProjectLicense?
+    
     var body: some View {
         ScrollView {
             switch projectLicense {
@@ -36,6 +37,8 @@ struct LicensePopUpView: View {
                 Text("Could not get license for project")
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitle(projectLicense?.rawValue ?? "")
     }
 }
 
@@ -53,31 +56,31 @@ struct LicensesPopUpView: View {
                 NavigationLink("", destination: LicensePopUpView(projectLicense: $projectLicense), isActive: $showLicense)
                 
                 List {
-                    Button("CubeTime") {
+                    Button(ProjectLicense.cubetime.rawValue) {
                         projectLicense = .cubetime
                         showLicense = true
                     }
-                    Button("tnoodle") {
+                    Button(ProjectLicense.tnoodle.rawValue) {
                         projectLicense = .tnoodle
                         showLicense = true
                     }
-                    Button("ChartView") {
+                    Button(ProjectLicense.chartview.rawValue) {
                         projectLicense = .chartview
                         showLicense = true
                     }
-                    Button("SVGKit") {
+                    Button(ProjectLicense.svgkit.rawValue) {
                         projectLicense = .svgkit
                         showLicense = true
                     }
-                    Button("WCA Icons (Cubing Icons and Fonts)") {
+                    Button(ProjectLicense.icons.rawValue) {
                         projectLicense = .icons
                         showLicense = true
                     }
-                    Button("Recursive Font") {
+                    Button(ProjectLicense.recursivefont.rawValue) {
                         projectLicense = .recursivefont
                         showLicense = true
                     }
-                    Button("Privacy Policy") {
+                    Button(ProjectLicense.privacypolicy.rawValue) {
                         projectLicense = .privacypolicy
                         showLicense = true
                     }
