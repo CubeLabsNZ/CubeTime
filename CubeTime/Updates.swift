@@ -20,13 +20,14 @@ let updatesList: [String: [String?]] = [
         -   added multiphase details to solve copy
         -   improved various timing-related functions
         -   added ability to stop inspection
-        -   various interface changes throughout
         -   fixed stretched scramble image on smaller devices
         -   fixed time distribution graph labels
         -   fixed multiphase stats UI
         -   improved user accessibility
         –   added inspection alerts
         –   added ability to switch between voice based or beep based alerts
+        –   added ability to toggle session name in timer view
+        -   various interface changes throughout
         """
     ],
     "1.2.1": [
