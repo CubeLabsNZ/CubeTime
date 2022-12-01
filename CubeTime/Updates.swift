@@ -9,12 +9,17 @@ import SwiftUI
 
 // [bugFixes, majorAdditions, minorAdditions]
 let updatesList: [String: [String?]] = [
-    "1.3": [
+    "2.0": [
         nil,
         """
         -   dynamic type support!
             -   all major UI elements now conform to Apple's DyanmicType accessbility font sizes
             -   this is the first version, if you do notice anything out of place, please open an issue and tag it with 'DynamicType' on our Github page. Thanks!
+        –   changed java compatibility layer
+            –   up to 20x faster scramble generation
+            –   up to 50x less memory usage
+                –   fixed OOM crashes on older phones
+                –   fixed launch crash on iPod 7th Gen
         """,
         """
         -   added multiphase details to solve copy
