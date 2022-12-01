@@ -253,7 +253,6 @@ struct GeneralSettingsView: View {
                                 .frame(width: 100, alignment: .trailing)
                         }
                         .frame(width: 100, alignment: .trailing)
-                        .background(Color.red)
                         .accentColor(accentColour)
                     }
                     .padding(.horizontal)
@@ -429,7 +428,9 @@ struct GeneralSettingsView: View {
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            showFontSizeOptions.toggle()
+                            withAnimation(.spring()) {
+                                showFontSizeOptions.toggle()
+                            }
                         }
                         
                         HStack {
