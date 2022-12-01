@@ -20,6 +20,7 @@ class TimerUIView: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         UIApplication.shared.isIdleTimerDisabled = true
+        #warning("TODO: make this actually work: impelemnt in swm (possibly remove in application delegate")
         stopWatchManager.touchDown()
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -144,7 +145,7 @@ final class InspectionTouchView: UIViewRepresentable {
 
 // Must be final class - see
 // https://github.com/mediweb/UIViewRepresentableBug
-final class TimerTouchView: UIViewControllerRepresentable {
+struct TimerTouchView: UIViewControllerRepresentable {
     
     @ObservedObject var stopWatchManager: StopWatchManager
     

@@ -23,6 +23,8 @@
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
 		239C7E702781511300943AF2 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239C7E6F2781511300943AF2 /* Onboarding.swift */; };
+		23AB6480293609500049993B /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 23AB647F293609500049993B /* SVGKit */; };
+		23AB648429385D310049993B /* NewSessionModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AB648329385D310049993B /* NewSessionModalView.swift */; };
 		23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA845F2783EBA1003901FB /* ReachedTargets.swift */; };
 		23CE093427A76D610013E227 /* SessionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CE093327A76D610013E227 /* SessionCard.swift */; };
 		23D01FE327A4AA5D0019FCE5 /* Splash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */; };
@@ -40,8 +42,6 @@
 		23E81E6F275D8DCA00B741E3 /* AppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */; };
 		23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E72275D8DEA00B741E3 /* AboutSettings.swift */; };
 		23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB8A1D2779B6D3000F6663 /* TimeBar.swift */; };
-		23F7B19628C4BF7A00436F44 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 23F7B19528C4BF7A00436F44 /* SVGKit */; };
-		23F7B19828C4BF7A00436F44 /* SVGKitSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 23F7B19728C4BF7A00436F44 /* SVGKitSwift */; };
 		7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2B805D279422BD0006AEDD /* AppDelegate.swift */; };
 		7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */; };
 		7D5521DC2799657300B418BE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5521DB2799657300B418BE /* Security.framework */; };
@@ -104,6 +104,7 @@
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
 		2397131E2791032300268DFA /* AveragePhases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AveragePhases.swift; sourceTree = "<group>"; };
 		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
+		23AB648329385D310049993B /* NewSessionModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSessionModalView.swift; sourceTree = "<group>"; };
 		23CA845F2783EBA1003901FB /* ReachedTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachedTargets.swift; sourceTree = "<group>"; };
 		23CE093327A76D610013E227 /* SessionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCard.swift; sourceTree = "<group>"; };
 		23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Splash.storyboard; sourceTree = "<group>"; };
@@ -146,8 +147,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				23F7B19828C4BF7A00436F44 /* SVGKitSwift in Frameworks */,
-				23F7B19628C4BF7A00436F44 /* SVGKit in Frameworks */,
+				23AB6480293609500049993B /* SVGKit in Frameworks */,
 				7D5521DE279965B600B418BE /* libiconv.tbd in Frameworks */,
 				7D5521DC2799657300B418BE /* Security.framework in Frameworks */,
 			);
@@ -217,6 +217,7 @@
 			isa = PBXGroup;
 			children = (
 				7D7A9EC3274F392700C2E125 /* SessionsView.swift */,
+				23AB648329385D310049993B /* NewSessionModalView.swift */,
 				23CE093327A76D610013E227 /* SessionCard.swift */,
 			);
 			path = Sessions;
@@ -356,8 +357,7 @@
 			);
 			name = CubeTime;
 			packageProductDependencies = (
-				23F7B19528C4BF7A00436F44 /* SVGKit */,
-				23F7B19728C4BF7A00436F44 /* SVGKitSwift */,
+				23AB647F293609500049993B /* SVGKit */,
 			);
 			productName = txmer;
 			productReference = 23DE3BD7274DDBE200254D29 /* CubeTime.app */;
@@ -432,7 +432,7 @@
 			);
 			mainGroup = 23DE3BCE274DDBE200254D29;
 			packageReferences = (
-				23F7B19428C4BF7A00436F44 /* XCRemoteSwiftPackageReference "SVGKit" */,
+				23AB647E293609500049993B /* XCRemoteSwiftPackageReference "SVGKit" */,
 			);
 			productRefGroup = 23DE3BD8274DDBE200254D29 /* Products */;
 			projectDirPath = "";
@@ -514,6 +514,7 @@
 				23034725278BD22600553A7D /* TimeDetail.swift in Sources */,
 				2326436228C4929700F6322E /* PrevSolvesDisplay.swift in Sources */,
 				239C7E702781511300943AF2 /* Onboarding.swift in Sources */,
+				23AB648429385D310049993B /* NewSessionModalView.swift in Sources */,
 				23CE093427A76D610013E227 /* SessionCard.swift in Sources */,
 				2337E6882767619D00438F43 /* StatsDetail.swift in Sources */,
 			);
@@ -705,7 +706,7 @@
 					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/lib",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.3;
 				OTHER_LDFLAGS = (
 					"-ltnoodle",
 					"-ljre_core",
@@ -762,7 +763,7 @@
 					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/lib",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.3;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ltnoodle",
@@ -918,26 +919,21 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		23F7B19428C4BF7A00436F44 /* XCRemoteSwiftPackageReference "SVGKit" */ = {
+		23AB647E293609500049993B /* XCRemoteSwiftPackageReference "SVGKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SVGKit/SVGKit";
 			requirement = {
-				kind = exactVersion;
-				version = 3.0.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		23F7B19528C4BF7A00436F44 /* SVGKit */ = {
+		23AB647F293609500049993B /* SVGKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 23F7B19428C4BF7A00436F44 /* XCRemoteSwiftPackageReference "SVGKit" */;
+			package = 23AB647E293609500049993B /* XCRemoteSwiftPackageReference "SVGKit" */;
 			productName = SVGKit;
-		};
-		23F7B19728C4BF7A00436F44 /* SVGKitSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 23F7B19428C4BF7A00436F44 /* XCRemoteSwiftPackageReference "SVGKit" */;
-			productName = SVGKitSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 

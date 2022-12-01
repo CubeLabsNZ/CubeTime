@@ -17,6 +17,7 @@ let updatesList: [String: [String?]] = [
             -   this is the first version, if you do notice anything out of place, please open an issue and tag it with 'DynamicType' on our Github page. Thanks!
         """,
         """
+        –   added ability to delete currently selected session
         -   added multiphase details to solve copy
         -   improved various timing-related functions
         -   added ability to stop inspection

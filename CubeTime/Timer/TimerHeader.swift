@@ -125,7 +125,7 @@ struct TimerHeader: View {
                         Text("PLAYGROUND")
                             .font(.system(size: 17, weight: .medium))
                     }
-                        
+                    
                     Picker("", selection: $stopWatchManager.playgroundScrambleType) {
                         ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
                             Text(element.name).tag(Int32(index))
@@ -136,6 +136,7 @@ struct TimerHeader: View {
                     .pickerStyle(.menu)
                     .padding(.leading, 6)
                     .padding(.trailing)
+                    .fixedSize()
                     
                 case .compsim:
                     if !(toggleSessionName ^ showSessionName) {
