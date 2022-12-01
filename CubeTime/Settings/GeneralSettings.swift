@@ -250,7 +250,10 @@ struct GeneralSettingsView: View {
                         } label: {
                             Text(timerDP == -1 ? "Nothing" : "\(timerDP) d.p")
                                 .font(.body)
+                                .frame(width: 100, alignment: .trailing)
                         }
+                        .frame(width: 100, alignment: .trailing)
+                        .background(Color.red)
                         .accentColor(accentColour)
                     }
                     .padding(.horizontal)
@@ -366,6 +369,7 @@ struct GeneralSettingsView: View {
                             }
                         } label: {
                             Text(hapticNames[feedbackType]!)
+                                .frame(width: 100, alignment: .trailing)
                                 .font(.body)
                         }
                         .accentColor(accentColour)
@@ -556,6 +560,7 @@ struct GeneralSettingsView: View {
                     } label: {
                         Text("\(displayDP) d.p")
                             .font(.body)
+                            .frame(width: 100, alignment: .trailing)
                     }
                     .accentColor(accentColour)
                 }
