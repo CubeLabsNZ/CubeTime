@@ -2,7 +2,15 @@ import SwiftUI
 
 
 enum gsKeys: String {
-    case inspection, freeze, showCancelInspection, inspectionAlert, timeDpWhenRunning, showSessionName, hapBool, hapType, gestureDistance, displayDP, showScramble, showStats, scrambleSize, inspectionCountsDown, appZoom, forceAppZoom
+    case freeze,
+         inspection, inspectionCountsDown, showCancelInspection, inspectionAlert, inspectionAlertType,
+         timeDpWhenRunning,
+         showSessionName,
+         hapBool, hapType,
+         gestureDistance,
+         displayDP,
+         showScramble, showStats,
+         scrambleSize, appZoom, forceAppZoom
 }
 
 extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
@@ -20,6 +28,7 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.inspectionCountsDown.rawValue) private var insCountDown: Bool = false
     @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
     @AppStorage(gsKeys.inspectionAlert.rawValue) private var inspectionAlert: Bool = true
+    @AppStorage(gsKeys.inspectionAlertType.rawValue) private var inspectionAlertType: Int = 0
     
     @AppStorage(gsKeys.freeze.rawValue) private var holdDownTime: Double = 0.5
     @AppStorage(gsKeys.timeDpWhenRunning.rawValue) private var timerDP: Int = 3
@@ -130,6 +139,24 @@ struct GeneralSettingsView: View {
                         .foregroundColor(Color(uiColor: .systemGray))
                         .multilineTextAlignment(.leading)
                         .padding(.horizontal)
+                    
+                    HStack {
+                        Text("Inspection Alert Type")
+                            .font(.body.weight(.medium))
+                        
+                        Spacer()
+                        
+                        Picker("", selection: $inspectionAlertType) {
+                            Text("Voice").tag(0)
+                            Text("Boop").tag(1)
+                        }
+                        .frame(maxWidth: 120)
+                        .pickerStyle(.segmented)
+                        .onChange(of: inspectionAlertType) { newValue in
+                            stopWatchManager.inspectionAlertType = newValue
+                        }
+                    }
+                    .padding(.horizontal)
                 }
                 
                 Divider()

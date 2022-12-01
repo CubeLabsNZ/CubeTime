@@ -72,6 +72,7 @@ struct CubeTime: App {
                 gsKeys.inspectionCountsDown.rawValue: false,
                 gsKeys.showCancelInspection.rawValue: true,
                 gsKeys.inspectionAlert.rawValue: true,
+                gsKeys.inspectionAlertType.rawValue: 0,
                 
                 gsKeys.freeze.rawValue: 0.5,
                 gsKeys.timeDpWhenRunning.rawValue: 3,

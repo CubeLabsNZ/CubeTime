@@ -25,6 +25,8 @@ let updatesList: [String: [String?]] = [
         -   fixed time distribution graph labels
         -   fixed multiphase stats UI
         -   improved user accessibility
+        –   added inspection alerts
+        –   added ability to switch between voice based or beep based alerts
         """
     ],
     "1.2.1": [

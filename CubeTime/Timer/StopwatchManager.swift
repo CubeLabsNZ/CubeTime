@@ -1,7 +1,9 @@
 import Foundation
 import CoreData
 import SwiftUI
+
 import AVKit
+import AVFoundation
 
 
 
@@ -51,6 +53,7 @@ class StopWatchManager: ObservableObject {
     var hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
     var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
     var inspectionAlert: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionAlert.rawValue)
+    var inspectionAlertType: Int = UserDefaults.standard.integer(forKey: gsKeys.inspectionAlertType.rawValue)
     var timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
     var insCountDown: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionCountsDown.rawValue)
 
@@ -75,9 +78,10 @@ class StopWatchManager: ObservableObject {
     
     @Published var solveItem: Solves!
     
+    private let inspectionAlert_8: AVAudioPlayer! = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "8sec-audio", ofType: "wav")!))
+    private let inspectionAlert_12: AVAudioPlayer! = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "12sec-audio", ofType: "wav")!))
     
-    private var audioPlayer: AVAudioPlayer!
-    private var sound: String?
+    private let systemSoundID: SystemSoundID = 1057
     
     
     var penType: PenTypes = .none
@@ -154,20 +158,15 @@ class StopWatchManager: ObservableObject {
                 penType = .dnf
             }
             
-            if inspectionSecs == 8 {
-                print(inspectionAlert)
-            }
-            
             if inspectionAlert && (inspectionSecs == 8 || inspectionSecs == 12) {
-                if inspectionSecs == 8 {
-                    self.sound = Bundle.main.path(forResource: "8sec-audio", ofType: "wav")
-                } else if inspectionSecs == 12 {
-                    self.sound = Bundle.main.path(forResource: "12sec-audio", ofType: "wav")
-                }
-                
-                DispatchQueue.main.async {
-                    self.audioPlayer = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: sound!))
-                    self.audioPlayer.play()
+                if inspectionAlertType == 1 {
+                    AudioServicesPlaySystemSound(systemSoundID)
+                } else {
+                    if inspectionSecs == 8 {
+                        inspectionAlert_8.play()
+                    } else {
+                        inspectionAlert_12.play()
+                    }
                 }
             }
         }
