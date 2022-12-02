@@ -336,6 +336,8 @@ struct EventPicker: View {
             } label: {
                 Text(puzzle_types[Int(sessionEventType)].name)
                     .font(.body)
+                    .frame(maxWidth: 120, alignment: .trailing)
+
             }
             .accentColor(accentColour)
             

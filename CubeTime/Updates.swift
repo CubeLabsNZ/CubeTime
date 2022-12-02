@@ -24,6 +24,7 @@ let updatesList: [String: [String?]] = [
             –   you can switch to entering times by typing instead of a timer in General Settings > Timer Settings > Timer Mode > Typing
         """,
         """
+        –   show +2 and DNF time in brackets
         –   swapped around delete and copy button in individual solve cards
         –   added ability to delete currently selected session
         -   added multiphase details to solve copy

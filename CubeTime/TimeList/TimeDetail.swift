@@ -183,7 +183,26 @@ struct TimeDetailViewOnly: View {
                         Text(time)
                             .font(.largeTitle.weight(.bold))
                         
-                        Spacer()
+                        switch solve.penalty {
+                        case PenTypes.dnf.rawValue:
+                            let rawTime = formatSolveTime(secs: solve.time)
+                            Text("(\(rawTime))")
+                                .font(.largeTitle.weight(.bold))
+                            
+                            Spacer()
+                            
+                        case PenTypes.plustwo.rawValue:
+                            Spacer()
+                            
+                            let addedTime = formatSolveTime(secs: (solve.time + 2))
+                            Text("(\(addedTime))")
+                                .font(.title3.weight(.semibold))
+                                .foregroundColor(Color(uiColor: .systemGray))
+                                .padding(.leading)
+                        default:
+                            Spacer()
+                        }
+                        
                     }
                     .padding(.horizontal)
                     .padding(.top)
