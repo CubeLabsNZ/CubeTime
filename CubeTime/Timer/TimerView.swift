@@ -31,6 +31,10 @@ struct TimerView: View {
     
     
     
+    @AppStorage(gsKeys.inputMode.rawValue) private var inputMode: InputMode = .timer
+    
+    
+    
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
     @State private var manualInputTime: String = ""
@@ -52,6 +56,8 @@ struct TimerView: View {
     
     @EnvironmentObject var tabRouter: TabRouter
     
+    @State private var justManuallyInput: Bool = false
+    @State private var showManualInputFormattedText: Bool = false
     
     @FocusState private var targetFocused: Bool
     
@@ -152,33 +158,47 @@ struct TimerView: View {
                             .font(.system(size: 54, weight: .bold, design: .monospaced))
                             .modifier(DynamicText())
                     }
+                    
                 
                 Spacer()
             }
             .ignoresSafeArea(edges: .all)
             
-            // TOUCH (GESTURE) RECOGNISER
-            GeometryReader { geometry in
-                ZStack {
-                    
-                    TimerTouchView(stopWatchManager: stopWatchManager)
-                        .frame(width: geometry.size.width, height: geometry.size.height)
-                        .environmentObject(stopWatchManager)
-                                        
-                    if targetFocused || manualInputFocused /*|| (!manualInputFocused && showInputField)*/ {
-//                        Color.clear.contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
-                        /// ^ this receives tap gesture but gesture is transferred to timertouchview below...
-                        Color.white.opacity(0.000001) // workaround for now
-                            .onTapGesture {
-                                targetFocused = false
-                                manualInputFocused = false
-                                showInputField = false
-                            }
+            
+            switch inputMode {
+            // ONLY USE GESTURE RECOGNISER WHEN INPUTMODE SET TO TIMER
+            case .timer:
+                // TOUCH (GESTURE) RECOGNISER
+                GeometryReader { geometry in
+                    ZStack {
+                        TimerTouchView(stopWatchManager: stopWatchManager)
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .environmentObject(stopWatchManager)
+                                            
+                        if targetFocused || manualInputFocused /*|| (!manualInputFocused && showInputField)*/ {
+    //                        Color.clear.contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
+                            /// ^ this receives tap gesture but gesture is transferred to timertouchview below...
+                            Color.white.opacity(0.000001) // workaround for now
+                                .onTapGesture {
+                                    targetFocused = false
+                                    manualInputFocused = false
+                                    showInputField = false
+                                }
+                        }
                     }
+                    
                 }
-                
-            }
                 .ignoresSafeArea(edges: .top)
+                
+            // FOR TYPING, DISPLAY INPUT BOX ALWAYS; USE GESTURE TO ESCAPE FOCUS
+            case .typing:
+                Color.white.opacity(0.000001)
+                    .onTapGesture {
+                        manualInputFocused = false
+                    }
+            }
+            
+           
             
             
             // VIEWS WHEN TIMER NOT RUNNING
@@ -239,8 +259,7 @@ struct TimerView: View {
                                         // for for squan/mega/etc, the scramble is ridiculously large
                                         
                                         // it seems to do with uiviewrepresentable, and not being able to set master bounds
-                                        // from swiftui, as swiftui uses its own autolayout, essentially overriding any config
-                                        // of the bound sizes from within uikit itself
+                                        // from swiftui, as swiftui uses its own autolayout, essentially overriding any config of the bound sizes from within uikit itself
                                         
                                         // if you know how to fix this, please make a pull request
                                         if let svg = stopWatchManager.scrambleSVG {
@@ -485,23 +504,39 @@ struct TimerView: View {
             }
             
             // MANUAL ENTRY FIELD
-            if showInputField {
+            if inputMode == .typing || showInputField {
                 VStack {
                     Spacer()
                     
                     HStack {
                         Spacer()
                         
-                        TextField("0.00", text: $manualInputTime)
-                            .focused($manualInputFocused)
-                            .frame(maxWidth: windowSize!.width-32)
-                            .font(.system(size: 56, weight: .bold, design: .monospaced))
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(stopWatchManager.timerColour)
-                            .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
-                            .modifier(DynamicText())
-                            .modifier(TimeMaskTextField(text: $manualInputTime))
-                            
+                        if !showManualInputFormattedText {
+                            TextField("0.00", text: $manualInputTime)
+                                .focused($manualInputFocused)
+                                .frame(maxWidth: windowSize!.width-32)
+                                .font(.system(size: 56, weight: .bold, design: .monospaced))
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(stopWatchManager.timerColour)
+                                .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
+                                .modifier(DynamicText())
+                                .modifier(TimeMaskTextField(text: $manualInputTime))
+                        } else {
+                            Rectangle()
+                                .fill(Color.white.opacity(0.000001))
+                                .frame(maxWidth: windowSize!.width-32)
+                                .onTapGesture {
+                                    print("tapped")
+                                    showManualInputFormattedText = false
+                                    manualInputFocused = true
+                                    
+                                 
+                                    if justManuallyInput {
+                                        manualInputTime = ""
+                                        justManuallyInput = false
+                                    }
+                                }
+                        }
                         
                         Spacer()
                     }
@@ -510,13 +545,11 @@ struct TimerView: View {
                     Spacer()
                 }
                 .ignoresSafeArea(edges: .all)
-                
-
             }
             
             
             // PENALTY BAR
-            if stopWatchManager.showPenOptions {
+            if inputMode == .typing || stopWatchManager.showPenOptions {
                 HStack(alignment: .center) {
                     Spacer()
                     
@@ -537,50 +570,74 @@ struct TimerView: View {
                         }
                         
                         if stopWatchManager.currentSession.session_type != 2 {
-                            if !stopWatchManager.nilSolve {
-                                if !manualInputFocused && stopWatchManager.scrambleStr != nil {
-                                    Rectangle()
-                                        .fill(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
-                                        .frame(width: 1.5, height: 20)
-                                        .padding(.horizontal, 12)
+                            // IF USING TIMER MODE, ONE-TIME INPUT
+                            if inputMode == .timer {
+                                // only show divider if one-time entry
+                                if !stopWatchManager.nilSolve {
+                                    if !manualInputFocused && stopWatchManager.scrambleStr != nil {
+                                        Rectangle()
+                                            .fill(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
+                                            .frame(width: 1.5, height: 20)
+                                            .padding(.horizontal, 12)
+                                    }
                                 }
-                            }
-                            
-                            if stopWatchManager.scrambleStr != nil {
-                                PenaltyBar(manualInputFocused ? 68 : 34) {
-                                    Button(action: {
-                                        if manualInputFocused {
-                                            if manualInputTime != "" {
-                                                stopWatchManager.stop(timeFromStr(manualInputTime))
+                                
+                                if stopWatchManager.scrambleStr != nil {
+                                    PenaltyBar(manualInputFocused ? 68 : 34) {
+                                        Button(action: {
+                                            // IF CURRENT MODE = INPUT
+                                            if manualInputFocused {
+                                                if manualInputTime != "" {
+                                                    // record entered time time
+                                                    stopWatchManager.stop(timeFromStr(manualInputTime))
+                                                    
+                                                    // remove focus and reset time
+                                                    showInputField = false
+                                                    manualInputFocused = false
+                                                    manualInputTime = ""
+                                                }
+                                            } else {
+                                                showInputField = true
                                                 
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                                    manualInputFocused = true
+                                                }
                                                 
-                                                showInputField = false
-                                                
-                                                
-                                                manualInputFocused = false
-
                                                 manualInputTime = ""
+                                                
                                             }
-                                        } else {
-                                            showInputField = true
-                                            
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                                                manualInputFocused = true
+                                        }, label: {
+                                            if manualInputFocused {
+                                                Text("Done")
+                                                    .font(.system(size: 21, weight: .semibold, design: .rounded))
+                                            } else {
+                                                Image(systemName: "plus.circle")
+                                                    .font(.system(size: 24, weight: .semibold, design: .rounded))
                                             }
+                                        })
+                                            .disabled(manualInputFocused ? (manualInputTime == "") : false)
+                                    }
+                                }
+                            } else if inputMode == .typing && !justManuallyInput {
+                                if manualInputTime != "" {
+                                    PenaltyBar(68) {
+                                        
+                                        Button {
+                                            stopWatchManager.stop(timeFromStr(manualInputTime))
                                             
-                                            manualInputTime = ""
+                                            // remove focus and reset time
+                                            manualInputFocused = false
+                                            justManuallyInput = true
                                             
-                                        }
-                                    }, label: {
-                                        if manualInputFocused {
+                                            stopWatchManager.displayPenOptions()
+                                            
+                                            showManualInputFormattedText = true
+                                            
+                                        } label: {
                                             Text("Done")
                                                 .font(.system(size: 21, weight: .semibold, design: .rounded))
-                                        } else {
-                                            Image(systemName: "plus.circle")
-                                                .font(.system(size: 24, weight: .semibold, design: .rounded))
                                         }
-                                    })
-                                        .disabled(manualInputFocused ? (manualInputTime == "") : false)
+                                    }
                                 }
                             }
                         }

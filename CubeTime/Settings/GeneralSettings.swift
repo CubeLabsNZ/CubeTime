@@ -232,7 +232,7 @@ struct GeneralSettingsView: View {
                             
                             Menu {
                                 Picker("", selection: $timerDP) {
-                                    Text("Nothing")
+                                    Text("None")
                                         .tag(-1)
                                     ForEach(0...3, id: \.self) {
                                         Text("\($0) d.p")
