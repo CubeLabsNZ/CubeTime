@@ -133,8 +133,8 @@ struct CubeTime: App {
 
 struct MainView: View {
     var body: some View {
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            TimerView(largePad: true)
+        if UIDevice.deviceIsPad {
+            TimerView()
         } else {
             MainTabsView()
         }

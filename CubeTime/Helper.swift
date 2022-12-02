@@ -76,6 +76,21 @@ public extension UIDevice {
         
         return identifier
     }()
+    
+    
+    static var deviceIsPad: Bool {
+        UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad
+    }
+    
+    static var windowSize: CGSize? {
+        UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
+                            (scene as? UIWindowScene)?.keyWindow
+        }).first?.frame.size
+    }
+    
+    static var deviceOrientation: UIDeviceOrientation {
+        UIDevice.current.orientation
+    }
 }
 
 /// device restriction function

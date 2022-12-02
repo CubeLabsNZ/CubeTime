@@ -411,6 +411,7 @@ struct TimeDetailViewOnly: View {
                     }
                     .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
                     .padding(.horizontal)
+                    .padding(.bottom)
                 }
                 .offset(y: -6)
                 .navigationBarTitle("", displayMode: .inline)

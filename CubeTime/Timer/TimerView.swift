@@ -12,85 +12,60 @@ struct SheetStrWrapper: Identifiable {
 
 
 struct TimerView: View {
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var tabRouter: TabRouter
+    
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
-   
-    @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
-    
-    @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
-    
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    // GET USER DEFAULTS
     @AppStorage("onboarding") var showOnboarding: Bool = true
-    
+    @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
+    @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @AppStorage(gsKeys.showScramble.rawValue) private var showScramble: Bool = true
     @AppStorage(gsKeys.showStats.rawValue) private var showStats: Bool = true
-    
     @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
-    
     @AppStorage(gsKeys.showPrevTime.rawValue) private var showPrevTime: Bool = false
-    
-    
-    
     @AppStorage(gsKeys.inputMode.rawValue) private var inputMode: InputMode = .timer
     
+    // FOCUS STATES
+    @FocusState private var targetFocused: Bool
+    @FocusState private var manualInputFocused: Bool
     
-    
-    @EnvironmentObject var stopWatchManager: StopWatchManager
-    
+    // STATES
     @State private var manualInputTime: String = ""
-    
     @State private var showInputField: Bool = false
-    
-    
     @State private var toggleSessionName: Bool = false
     
-    @State var hideStatusBar = true
-    
-    @State var algTrainerSubset = 0
-    
     @State private var presentedAvg: CalculatedAverage?
-    
     @State private var scrambleSheetStr: SheetStrWrapper? = nil
     @State private var showDrawScrambleSheet: Bool = false
-    
-    
-    @EnvironmentObject var tabRouter: TabRouter
     
     @State private var justManuallyInput: Bool = false
     @State private var showManualInputFormattedText: Bool = false
     
-    @FocusState private var targetFocused: Bool
-    
-    @FocusState private var manualInputFocused: Bool
+    @State var hideStatusBar = true
+    @State var algTrainerSubset = 0
 
+    
+    // iPAD SPECIFIC
+    @State var floatingPanelStage: Int = 3
+    
     let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
                         (scene as? UIWindowScene)?.keyWindow
                     }).first?.frame.size
 
-    var largePad: Bool
+    let deviceIsPad: Bool = UIDevice.deviceIsPad
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    @State var floatingPanelStage: Int = 3
     #warning("TODO: find a way to not use an initialiser")
     
-    init(largePad: Bool = false) {
-        self.largePad = largePad
-    }
+    
+    
+    
+    
     
     var body: some View {
         ZStack {
@@ -204,31 +179,37 @@ struct TimerView: View {
             
             // VIEWS WHEN TIMER NOT RUNNING
             if !tabRouter.hideTabBar {
-                if !largePad {
-                    #warning("TODO: fix")
-                    VStack {
-                        HStack {
+                VStack {
+                    HStack {
+                        if !deviceIsPad {
                             TimerHeader(targetFocused: $targetFocused, previewMode: false)
-                            
-                            Spacer()
+                        } else {
+                            FloatingPanel(
+                                currentStage: $floatingPanelStage,
+                                maxHeight: UIScreen.screenHeight,
+                                stages: [0, 50, 120, ( UIScreen.screenHeight - 24)]) {
+                                    EmptyView()
+                                    
+                                    TimerHeader(targetFocused: $targetFocused, previewMode: false)
+                                    
+//                                    EmptyView()
+                                    VStack {
+                                        TimerHeader(targetFocused: $targetFocused, previewMode: false)
+                                        
+                                        PrevSolvesDisplay(count: 3)
+                                    }
+                                    
+                                    EmptyView()
+        //                            MainTabsView(deviceIsPad: true)
+                                }
+                                .padding()
                         }
+                        
                         
                         Spacer()
                     }
-                } else {
-                    // IPAD BAR
                     
-                    FloatingPanelChild(currentStage: $floatingPanelStage, maxHeight: UIScreen.screenHeight, stages: [0, 50, 150, UIScreen.screenHeight/2, ( UIScreen.screenHeight - 24)]) {
-                        EmptyView()
-                        TimerHeader(targetFocused: $targetFocused, previewMode: false)
-                        VStack {
-                            TimerHeader(targetFocused: $targetFocused, previewMode: false)
-                            PrevSolvesDisplay(count: 3)
-                        }
-                        MainTabsView(largePad: true)
-                        MainTabsView(largePad: true)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    Spacer()
                 }
                 
                 VStack {
@@ -671,7 +652,7 @@ struct TimerView: View {
                         Spacer()
                     }
                     .padding(.horizontal)
-                    .offset(y: largePad ? 0 : 35 + (SetValues.hasBottomBar ? 0 : 8))
+                    .offset(y: deviceIsPad ? 0 : 35 + (SetValues.hasBottomBar ? 0 : 8))
                 
                     
                 } else {

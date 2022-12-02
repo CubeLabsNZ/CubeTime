@@ -74,8 +74,12 @@ struct MainTabsView: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @EnvironmentObject var tabRouter: TabRouter
     
-    var largePad = false
+    var deviceIsPad: Bool 
 
+    
+    init(deviceIsPad: Bool = false) {
+        self.deviceIsPad = deviceIsPad
+    }
     
     @Namespace private var namespace
     
