@@ -23,6 +23,7 @@
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
 		239C7E702781511300943AF2 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239C7E6F2781511300943AF2 /* Onboarding.swift */; };
+		23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */; };
 		23AB6480293609500049993B /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 23AB647F293609500049993B /* SVGKit */; };
 		23AB648429385D310049993B /* NewSessionModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AB648329385D310049993B /* NewSessionModalView.swift */; };
 		23AB648C293867EA0049993B /* 12sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648A293867EA0049993B /* 12sec-audio.wav */; };
@@ -156,6 +157,7 @@
 				23AB6480293609500049993B /* SVGKit in Frameworks */,
 				7D5521DE279965B600B418BE /* libiconv.tbd in Frameworks */,
 				7D5521DC2799657300B418BE /* Security.framework in Frameworks */,
+				23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,6 +385,7 @@
 			name = CubeTime;
 			packageProductDependencies = (
 				23AB647F293609500049993B /* SVGKit */,
+				23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */,
 			);
 			productName = txmer;
 			productReference = 23DE3BD7274DDBE200254D29 /* CubeTime.app */;
@@ -458,6 +461,7 @@
 			mainGroup = 23DE3BCE274DDBE200254D29;
 			packageReferences = (
 				23AB647E293609500049993B /* XCRemoteSwiftPackageReference "SVGKit" */,
+				23A1CDBB29399FE000F0895D /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */,
 			);
 			productRefGroup = 23DE3BD8274DDBE200254D29 /* Products */;
 			projectDirPath = "";
@@ -947,6 +951,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		23A1CDBB29399FE000F0895D /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftfulThinking/SwiftfulLoadingIndicators";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.4;
+			};
+		};
 		23AB647E293609500049993B /* XCRemoteSwiftPackageReference "SVGKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SVGKit/SVGKit";
@@ -958,6 +970,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 23A1CDBB29399FE000F0895D /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */;
+			productName = SwiftfulLoadingIndicators;
+		};
 		23AB647F293609500049993B /* SVGKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 23AB647E293609500049993B /* XCRemoteSwiftPackageReference "SVGKit" */;

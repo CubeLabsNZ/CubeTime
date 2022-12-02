@@ -2,6 +2,7 @@ import CoreData
 import SwiftUI
 import CoreGraphics
 import Combine
+import SwiftfulLoadingIndicators
 
 
 struct SheetStrWrapper: Identifiable {
@@ -275,8 +276,13 @@ struct TimerView: View {
                                                     }
                                             }
                                         } else {
+                                            LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
+                                                .frame(width: maxWidth - 4, height: maxHeight - 4)
+                                            
+                                            /*
                                             ProgressView()
                                                 .frame(width: maxWidth - 4, height: maxHeight - 4)
+                                             */
                                         }
                                     }
                                     .frame(maxWidth: maxWidth)
@@ -673,7 +679,7 @@ struct TimerView: View {
                         Spacer()
                         
                         VStack {
-                            ProgressView()
+                            LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
                                 .frame(maxHeight: 35)
                                 .padding(.trailing)
                                 .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
@@ -769,7 +775,9 @@ struct TimeScrambleDetail: View {
                         .aspectRatio(contentMode: .fit)
                         .padding()
                 } else {
-                    ProgressView()
+                    LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .medium, speed: .normal)
+                    
+//                    ProgressView()
                 }
             }
             .navigationTitle("Scramble")

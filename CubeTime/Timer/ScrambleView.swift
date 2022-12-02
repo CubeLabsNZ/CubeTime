@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import SVGKit
+import SwiftfulLoadingIndicators
 
 // swiftui views
 struct DefaultScrambleView: View {
@@ -25,7 +26,9 @@ struct AsyncScrambleView: View {
     var body: some View {
         Group {
             if svg == "" {
-                ProgressView()
+                #warning("weird bug, full circle initially...")
+                LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .medium, speed: .fast)
+//                ProgressView()
             } else {
                 AsyncScrambleSVGViewRepresentable(svg: svg, width: width, height: height)
                     .aspectRatio(contentMode: .fit)

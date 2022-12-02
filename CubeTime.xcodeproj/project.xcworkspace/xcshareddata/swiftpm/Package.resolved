@@ -27,6 +27,15 @@
           "revision": "6fe203dc33195667ce1759bf0182975e4653ba1c",
           "version": "1.4.4"
         }
+      },
+      {
+        "package": "SwiftfulLoadingIndicators",
+        "repositoryURL": "https://github.com/SwiftfulThinking/SwiftfulLoadingIndicators",
+        "state": {
+          "branch": null,
+          "revision": "85858c0246dcd781228301f9928519f75ce89758",
+          "version": "0.0.4"
+        }
       }
     ]
   },
