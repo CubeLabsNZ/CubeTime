@@ -5,7 +5,7 @@ import SwiftfulLoadingIndicators
 
 // swiftui views
 struct DefaultScrambleView: View {
-    let svg: OrgWorldcubeassociationTnoodleSvgliteSvg?
+    let svg: String?
     let width: CGFloat
     let height: CGFloat
     
@@ -16,7 +16,7 @@ struct DefaultScrambleView: View {
 
 struct AsyncScrambleView: View {
     @State var svg = ""
-    var puzzle: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
+    var puzzle: Int
     var scramble: String
 
     var width: CGFloat
@@ -39,7 +39,24 @@ struct AsyncScrambleView: View {
                 NSLog("ismainthread \(Thread.isMainThread)")
                 #endif
                 
-                return JavaUtilObjects.toString(withId: puzzle.getScrambler().drawScramble(with: scramble, with: nil))
+                var isolate: OpaquePointer? = nil
+                var thread: OpaquePointer? = nil
+                
+                
+                
+                graal_create_isolate(nil, &isolate, &thread)
+                
+                var svg: String!
+                
+                
+                scramble.withCString { s in
+                    let buffer = UnsafeMutablePointer<Int8>(mutating: s) // https://github.com/CubeStuffs/tnoodle-lib-native/issues/2
+                    svg = String(cString: Main__drawScramble__cebd98ae40477cd5c997c10733315758f3be6fe4(thread, 0, buffer))
+                }
+                
+                graal_tear_down_isolate(thread);
+                
+                return svg
             }
             let result = await task.result
             svg = try! result.get()
@@ -49,14 +66,13 @@ struct AsyncScrambleView: View {
 
 // uikit wrappers
 struct DefaultScrambleSVGViewRepresentable: UIViewRepresentable {
-    var svg: OrgWorldcubeassociationTnoodleSvgliteSvg
+    var svg: String
     var width: CGFloat
     var height: CGFloat
     
     
     func makeUIView(context: Context) -> SVGKFastImageView {
-        let svgstr = JavaUtilObjects.toString(withId: svg)
-        let svgImage = SVGKImage(data: svgstr.data(using: .utf8))!
+        let svgImage = SVGKImage(data: svg.data(using: .utf8))!
         svgImage.scaleToFit(inside: CGSize(width: width, height: height))
         
         let imageView = SVGKFastImageView(svgkImage: svgImage)!

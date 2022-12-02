@@ -60,6 +60,8 @@
 		7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7DDF2227955AFF00362DE9 /* PenButton.swift */; };
 		7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E2011275DD52600ADF01D /* Licenses.swift */; };
 		7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */; };
+		AF7F0C012939EC8E005AECDC /* lib-scrambles.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		AF7F0C022939EC9D005AECDC /* lib-scrambles.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +88,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				AF7F0C012939EC8E005AECDC /* lib-scrambles.dylib in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -147,6 +150,7 @@
 		7D7DDF2227955AFF00362DE9 /* PenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenButton.swift; sourceTree = "<group>"; };
 		7D7E2011275DD52600ADF01D /* Licenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Licenses.swift; sourceTree = "<group>"; };
 		7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleView.swift; sourceTree = "<group>"; };
+		AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "lib-scrambles.dylib"; path = "CubeTime/3rdparty/tnoodle-lib/lib/lib-scrambles.dylib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,8 +158,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+                AF7F0C022939EC9D005AECDC /* lib-scrambles.dylib in Frameworks */,
 				23AB6480293609500049993B /* SVGKit in Frameworks */,
-				7D5521DE279965B600B418BE /* libiconv.tbd in Frameworks */,
 				7D5521DC2799657300B418BE /* Security.framework in Frameworks */,
 				23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */,
 			);
@@ -252,6 +256,7 @@
 		23DE3BCE274DDBE200254D29 = {
 			isa = PBXGroup;
 			children = (
+				AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */,
 				23DE3BD9274DDBE200254D29 /* CubeTime */,
 				23DE3BEF274DDBE400254D29 /* CubeTimeTests */,
 				23DE3BF9274DDBE400254D29 /* CubeTimeUITests */,
@@ -716,10 +721,7 @@
 				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/include",
-					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/include",
-				);
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/include";
 				INFOPLIST_FILE = CubeTime/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CubeTime;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -733,19 +735,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/lib",
-					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/lib";
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 2.0;
-				OTHER_LDFLAGS = (
-					"-ltnoodle",
-					"-ljre_core",
-					"-ljre_security",
-					"-ljre_net",
-					"-ljre_util",
-				);
+                MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.cubetime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -773,10 +765,7 @@
 				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/include",
-					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/include",
-				);
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/include";
 				INFOPLIST_FILE = CubeTime/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CubeTime;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -790,20 +779,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/lib",
-					"$(PROJECT_DIR)/CubeTime/3rdparty/j2objc/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/lib";
 				LLVM_LTO = YES_THIN;
 				MARKETING_VERSION = 2.0;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-ltnoodle",
-					"-ljre_core",
-					"-ljre_security",
-					"-ljre_net",
-					"-ljre_util",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.cubetime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
