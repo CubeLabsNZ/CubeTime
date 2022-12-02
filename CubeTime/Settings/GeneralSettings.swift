@@ -287,11 +287,6 @@ struct GeneralSettingsView: View {
                     
                 }
                 .padding(.horizontal)
-                .onChange(of: inspectionTime) { newValue in
-                    stopWatchManager.inspectionEnabled = newValue
-                }
-                
-                Divider()
                 
                 
                 HStack {
@@ -299,16 +294,13 @@ struct GeneralSettingsView: View {
                         Text("Show stats on timer")
                             .font(.body.weight(.medium))
                     }
-                    .onChange(of: showStats) { newValue in
-                        stopWatchManager.updateStats()
-                    }
+//                    .onChange(of: showStats) { newValue in
+//                        stopWatchManager.updateStats()
+//                    }
                     .toggleStyle(SwitchToggleStyle(tint: accentColour))
                     
                 }
                 .padding(.horizontal)
-                .onChange(of: inspectionTime) { newValue in
-                    stopWatchManager.inspectionEnabled = newValue
-                }
                 
                 Text("Show draw scramble or statistics on the timer screen.")
                     .font(.footnote.weight(.medium))

@@ -10,7 +10,7 @@ enum Tab {
 }
 
 class TabRouter: ObservableObject {
-    @Published var currentTab: Tab = .solves
+    @Published var currentTab: Tab = .timer
     @Published var hideTabBar: Bool = false
 }
 
@@ -74,9 +74,8 @@ struct MainTabsView: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @EnvironmentObject var tabRouter: TabRouter
     
-    var deviceIsPad: Bool 
+    var deviceIsPad: Bool
 
-    
     init(deviceIsPad: Bool = false) {
         self.deviceIsPad = deviceIsPad
     }
