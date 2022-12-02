@@ -171,24 +171,58 @@ struct TimeListView: View {
                 
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {
-                        if isSelectMode {
-                            Button {
-                                isSelectMode = false
-                                for object in selectedSolves {
-                                    withAnimation {
-                                        stopWatchManager.delete(solve: object)
+                        #warning("MAKE THIS PICKER MENU")
+                        if isSelectMode && (selectedSolves.count != 0) {
+                            Menu {
+                                Menu {
+                                    Button("Move to a Normal Session") {
+                                        print("1 tapped")
+                                    }
+                                    
+                                    Button("Move to a Playground Session") {
+                                        print("2 tapped")
+                                    }
+                                } label: {
+                                    HStack {
+                                        Text("Move")
+                                        
+                                        Image(systemName: "arrow.right")
                                     }
                                 }
-                                selectedSolves.removeAll()
+                                
+                                Button {
+                                    copySolve(solves: selectedSolves)
+                                    
+                                    selectedSolves.removeAll()
+                                } label: {
+                                    HStack {
+                                        Text("Copy to Clipboard")
+                                        
+                                        Image(systemName: "doc.on.doc")
+                                    }
+                                }
+                                
+                                Button(role: .destructive) {
+                                    isSelectMode = false
+                                    for object in selectedSolves {
+                                        withAnimation {
+                                            stopWatchManager.delete(solve: object)
+                                        }
+                                    }
+                                    
+                                    selectedSolves.removeAll()
+                                } label: {
+                                    HStack {
+                                        Text("Delete")
+                                        
+                                        Image(systemName: "trash")
+                                    }
+                                }
                             } label: {
-                                Text("Delete Solves")
-                                    .font(.subheadline.weight(.medium))
-                                    .foregroundColor(Color.red)
+                                Image(systemName: "ellipsis.circle")
+                                    .font(.body.weight(.medium))
+                                    .foregroundColor(.accentColor)
                             }
-                            .tint(.red)
-                            .buttonStyle(.bordered)
-                            .clipShape(Capsule())
-                            .controlSize(.small)
                         }
                     }
                     
@@ -200,14 +234,25 @@ struct TimeListView: View {
                                     selectedSolves.removeAll()
                                 } label: {
                                     Text("Cancel")
+                                        .font(.subheadline.weight(.medium))
+                                        .foregroundColor(Color(uiColor: .systemGray))
                                 }
+                                .tint(Color(uiColor: .systemGray))
+                                .buttonStyle(.bordered)
+                                .clipShape(Capsule())
+                                .controlSize(.small)
                             } else {
                                 Button {
                                     isSelectMode = true
                                 } label: {
-                                    Image(systemName: "ellipsis.circle")
-                                        .font(.body.weight(.medium))
+                                    Text("Select")
+                                        .font(.subheadline.weight(.medium))
+                                        .foregroundColor(Color.accentColor)
                                 }
+                                .tint(.accentColor)
+                                .buttonStyle(.bordered)
+                                .clipShape(Capsule())
+                                .controlSize(.small)
                             }
                         }
                     }
