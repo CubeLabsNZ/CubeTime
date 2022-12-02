@@ -703,7 +703,7 @@ struct CloseButton: View {
     
     var body: some View {
         Image(systemName: "xmark.circle.fill")
-            .font(.system(size: 26, weight: .semibold))
+            .font(.system(size: 24, weight: .medium))
             .symbolRenderingMode(.hierarchical)
             .foregroundStyle(.secondary)
             .foregroundStyle(colourScheme == .light ? .black : .white)

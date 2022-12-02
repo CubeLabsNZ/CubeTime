@@ -128,22 +128,21 @@ struct AppearanceSettingsView: View {
                             withAnimation(.spring()) {
                                 showThemeOptions.toggle()
                             }
-                            
                         }
                         .padding(.horizontal)
                         
                         
-                        if !showThemeOptions {
-                            Text("Customise the app theme and gradients.\nNote: this is separate from the accent colour.")
-                                .font(.footnote.weight(.medium))
-                                .lineSpacing(-4)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .foregroundColor(Color(uiColor: .systemGray))
-                                .multilineTextAlignment(.leading)
-                                .padding(.horizontal)
-                                .padding(.bottom, 12)
-                                .padding(.top, 10)
-                        } else {
+                        Text("Customise the app theme and gradients.\nNote: separate from the accent colour.")
+                            .font(.footnote.weight(.medium))
+                            .lineSpacing(-4)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .foregroundColor(Color(uiColor: .systemGray))
+                            .multilineTextAlignment(.leading)
+                            .padding(.horizontal)
+                            .padding(.bottom, 12)
+                            .padding(.top, 10)
+                        
+                        if showThemeOptions {
                             VStack(alignment: .leading, spacing: 0) {
                                 /* add this switch back when dynamic gradient added
                                 HStack {
@@ -158,6 +157,7 @@ struct AppearanceSettingsView: View {
                                 .padding(.bottom, 10)
                                  */
                                 
+                                /*
                                 Text("By default, the gradient is static. Dynamic gradient coming soon!")
                                     .font(.footnote.weight(.medium))
                                     .lineSpacing(-4)
@@ -166,6 +166,7 @@ struct AppearanceSettingsView: View {
                                     .foregroundColor(Color(uiColor: .systemGray))
                                     .multilineTextAlignment(.leading)
                                     .padding(.bottom, 12)
+                                 */
                                 
                                 if staticGradient {
                                     LazyVGrid(columns: columns, spacing: 16) {

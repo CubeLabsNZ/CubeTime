@@ -9,22 +9,32 @@ import SwiftUI
 
 // [bugFixes, majorAdditions, minorAdditions]
 let updatesList: [String: [String?]] = [
-    "1.3": [
+    "2.0": [
         nil,
         """
         -   dynamic type support!
             -   all major UI elements now conform to Apple's DyanmicType accessbility font sizes
             -   this is the first version, if you do notice anything out of place, please open an issue and tag it with 'DynamicType' on our Github page. Thanks!
+        –   changed java compatibility layer
+            –   up to 20x faster scramble generation
+            –   up to 50x less memory usage
+                –   fixed OOM crashes on older phones
+                –   fixed launch crash on iPod 7th Gen
         """,
         """
+        –   swapped around delete and copy button in individual solve cards
+        –   added ability to delete currently selected session
         -   added multiphase details to solve copy
         -   improved various timing-related functions
         -   added ability to stop inspection
-        -   various interface changes throughout
         -   fixed stretched scramble image on smaller devices
         -   fixed time distribution graph labels
         -   fixed multiphase stats UI
         -   improved user accessibility
+        –   added inspection alerts
+        –   added ability to switch between voice based or beep based alerts
+        –   added ability to toggle session name in timer view
+        -   various interface changes throughout
         """
     ],
     "1.2.1": [
