@@ -19,30 +19,31 @@ let sessionDescriptions: [SessionTypes: String] = [
 let smallDeviceNames: [String] = ["iPhoneSE"]
 
 // legacy scramble support :sob:
-let chtscramblesthatdontworkwithtnoodle: [OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry] = [.SIX, .SEVEN, .SKEWB]
+
+//let chtscramblesthatdontworkwithtnoodle: [OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry] = [.SIX, .SEVEN, .SKEWB]
                     
 // all puzzle type identifier names
 #warning("TODO: fix snake case")
 let puzzle_types: [PuzzleType] = [
-    PuzzleType(name: "2x2", puzzle: .TWO),
-    PuzzleType(name: "3x3", puzzle: .THREE),
-    PuzzleType(name: "4x4", puzzle: .FOUR_FAST),
-    PuzzleType(name: "5x5", puzzle: .FIVE),
-    PuzzleType(name: "6x6", puzzle: .SIX),
-    PuzzleType(name: "7x7", puzzle: .SEVEN),
-    PuzzleType(name: "Square-1", puzzle: .SQ1),
-    PuzzleType(name: "Megaminx", puzzle: .MEGA),
-    PuzzleType(name: "Pyraminx", puzzle: .PYRA),
-    PuzzleType(name: "Clock", puzzle: .CLOCK),
-    PuzzleType(name: "Skewb", puzzle: .SKEWB),
+    PuzzleType(name: "2x2"),
+    PuzzleType(name: "3x3"),
+    PuzzleType(name: "4x4"),
+    PuzzleType(name: "5x5"),
+    PuzzleType(name: "6x6"),
+    PuzzleType(name: "7x7"),
+    PuzzleType(name: "Square-1"),
+    PuzzleType(name: "Megaminx"),
+    PuzzleType(name: "Pyraminx"),
+    PuzzleType(name: "Clock"),
+    PuzzleType(name: "Skewb"),
     
     // One hand
-    PuzzleType(name: "3x3 OH", puzzle: .THREE),
+    PuzzleType(name: "3x3 OH"),
     
     // Blind
-    PuzzleType(name: "3x3 BLD", puzzle: .THREE),
-    PuzzleType(name: "4x4 BLD", puzzle: .FOUR_FAST),
-    PuzzleType(name: "5x5 BLD", puzzle: .FIVE),
+    PuzzleType(name: "3x3 BLD"),
+    PuzzleType(name: "4x4 BLD"),
+    PuzzleType(name: "5x5 BLD"),
 ]
 
 
@@ -171,17 +172,17 @@ extension RandomAccessCollection where Element : Solves {
 }
 
 // sizing + image dim
-extension CGSize {
-    public init(_ svgdimen: OrgWorldcubeassociationTnoodleSvgliteDimension) {
-        self.init(width: Int(svgdimen.getWidth()), height: Int(svgdimen.getHeight()))
-    }
-}
-
-extension OrgWorldcubeassociationTnoodleSvgliteDimension {
-    public convenience init(_ cgsize: CGSize) {
-        self.init(int: jint(cgsize.width), with: jint(cgsize.height))
-    }
-}
+//extension CGSize {
+//    public init(_ svgdimen: OrgWorldcubeassociationTnoodleSvgliteDimension) {
+//        self.init(width: Int(svgdimen.getWidth()), height: Int(svgdimen.getHeight()))
+//    }
+//}
+//
+//extension OrgWorldcubeassociationTnoodleSvgliteDimension {
+//    public convenience init(_ cgsize: CGSize) {
+//        self.init(int: jint(cgsize.width), with: jint(cgsize.height))
+//    }
+//}
 
 // view scaled font 
 @available(iOS 15, *)
@@ -346,7 +347,7 @@ struct RoundedCorner: Shape {
 // puzzletype wrapper
 struct PuzzleType {
     let name: String
-    let puzzle: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
+//    let puzzle: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
 }
 
 

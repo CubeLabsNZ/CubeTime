@@ -57,7 +57,7 @@ class StopWatchManager: ObservableObject {
     
     
     @Published var scrambleStr: String? = nil
-    @Published var scrambleSVG: OrgWorldcubeassociationTnoodleSvgliteSvg? = nil
+    @Published var scrambleSVG: String? = nil
     var prevScrambleStr: String! = nil
     
     @Published var secondsStr = ""
@@ -405,7 +405,17 @@ class StopWatchManager: ObservableObject {
     }
     
     func safeGetScramble() -> String {
-        return puzzle_types[Int(currentSession.scramble_type)].puzzle.getScrambler().generateScramble()
+        var isolate: OpaquePointer? = nil
+        var thread: OpaquePointer? = nil
+        
+        
+        graal_create_isolate(nil, &isolate, &thread)
+                
+        let s = String(cString: Main__scramble__8cc9b1b9fc68e86e29ebd3d92826e7c1144862e9(thread, 0))
+        
+        graal_tear_down_isolate(thread);
+            
+        return s
     }
     
     var scrambleWorkItem: DispatchWorkItem?
@@ -439,7 +449,22 @@ class StopWatchManager: ObservableObject {
                     self.timerColour = TimerTextColours.timerDefaultColour
                 }
                 
-                let svg = puzzle_types[Int(self.currentSession.scramble_type)].puzzle.getScrambler().drawScramble(with: scramble, with: nil)
+                var isolate: OpaquePointer? = nil
+                var thread: OpaquePointer? = nil
+                
+                
+                
+                graal_create_isolate(nil, &isolate, &thread)
+                
+                var svg: String!
+                
+                scramble.withCString { s in
+                    let buffer = UnsafeMutablePointer<Int8>(mutating: s) // https://github.com/CubeStuffs/tnoodle-lib-native/issues/2
+                    svg = String(cString: Main__drawScramble__cebd98ae40477cd5c997c10733315758f3be6fe4(thread, 0, buffer))
+                }
+                
+                graal_tear_down_isolate(thread);
+                
             
                 DispatchQueue.main.async {
                     self.scrambleSVG = svg

@@ -683,10 +683,10 @@ struct TimeScrambleDetail: View {
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
     var scramble: String
-    var svg: OrgWorldcubeassociationTnoodleSvgliteSvg?
+    var svg: String?
     @State var windowedScrambleSize: Int = UserDefaults.standard.integer(forKey: gsKeys.scrambleSize.rawValue)
     
-    init(_ scramble: String, _ svg: OrgWorldcubeassociationTnoodleSvgliteSvg?) {
+    init(_ scramble: String, _ svg: String?) {
         self.scramble = scramble
         self.svg = svg
     }

@@ -97,6 +97,7 @@ struct TimeDetailViewOnly: View {
     
     
     init(solve: Solves, currentSolve: Binding<Solves?>?){
+        NSLog("Initi")
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
         self.time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
@@ -174,7 +175,9 @@ struct TimeDetailViewOnly: View {
                         Divider()
                             .padding(.leading)
                         
-                        let brokenScramble: Bool = chtscramblesthatdontworkwithtnoodle.contains(puzzle_type.puzzle) && (date < Date(timeIntervalSince1970: TimeInterval(1643760000)))
+                        // TODO check result instead != nil instead
+                        
+                        let brokenScramble: Bool = true // chtscramblesthatdontworkwithtnoodle.contains(puzzle_type.puzzle) && (date < Date(timeIntervalSince1970: TimeInterval(1643760000)))
                         
                         Group {
                             if puzzle_type.name == "Megaminx" {
@@ -195,7 +198,7 @@ struct TimeDetailViewOnly: View {
                                 .padding(.leading)
                             
                             GeometryReader { proxy in
-                                AsyncScrambleView(puzzle: puzzle_type.puzzle, scramble: scramble, width: 10, height: 10)
+                                AsyncScrambleView(puzzle: 0, scramble: scramble, width: 10, height: 10)
                                     .position(x: proxy.frame(in: .local).midX, y: proxy.frame(in: .local).midY)
                             }
                             .frame(width: nil, height: UIScreen.screenHeight / 3.5)
