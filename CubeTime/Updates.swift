@@ -20,6 +20,8 @@ let updatesList: [String: [String?]] = [
             –   up to 50x less memory usage
                 –   fixed OOM crashes on older phones
                 –   fixed launch crash on iPod 7th Gen
+        –   added manual entry mode
+            –   you can switch to entering times by typing instead of a timer in General Settings > Timer Settings > Timer Mode > Typing
         """,
         """
         –   swapped around delete and copy button in individual solve cards
