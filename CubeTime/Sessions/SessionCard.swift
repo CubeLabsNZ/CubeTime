@@ -2,6 +2,8 @@ import SwiftUI
 import Foundation
 
 struct SessionCard: View {
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
@@ -20,10 +22,6 @@ struct SessionCard: View {
     let name: String
     let scramble_type: Int
     let solveCount: Int
-    
-    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
-                                (scene as? UIWindowScene)?.keyWindow
-                            }).first?.frame.size
     
     @Namespace var namespace
     
@@ -49,8 +47,8 @@ struct SessionCard: View {
             
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(colourScheme == .dark ? Color(uiColor: .systemGray6) : Color.white)
-                .frame(width: stopWatchManager.currentSession == item ? 16 : windowSize!.width - 32, height: item.pinned ? 110 : 65)
-                .offset(x: stopWatchManager.currentSession == item ? -((windowSize!.width - 16)/2) + 16 : 0)
+                .frame(width: stopWatchManager.currentSession == item ? 16 : globalGeometrySize.width - 32, height: item.pinned ? 110 : 65)
+                .offset(x: stopWatchManager.currentSession == item ? -((globalGeometrySize.width - 16)/2) + 16 : 0)
             
                 .zIndex(1)
             

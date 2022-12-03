@@ -70,15 +70,11 @@ struct TabIcon: View {
 
 
 struct MainTabsView: View {
+    @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @EnvironmentObject var tabRouter: TabRouter
     
-    var useExtendedView: Bool
-    
-    init(useExtendedView: Bool = false) {
-        self.useExtendedView = useExtendedView
-    }
     
     @Namespace private var namespace
     
@@ -92,8 +88,10 @@ struct MainTabsView: View {
             ZStack {
                 switch tabRouter.currentTab {
                 case .timer:
-                    TimerView()
-                        .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
+                    if !(UIDevice.deviceIsPad && (globalGeometrySize.width > globalGeometrySize.height)) {
+                        TimerView()
+                            .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
+                    }
                 case .solves:
                     TimeListView()
                 case .stats:
@@ -107,7 +105,7 @@ struct MainTabsView: View {
                 BottomTabsView(hide: $tabRouter.hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
                     .zIndex(1)
                     .ignoresSafeArea(.keyboard)
-                    .if(UIDevice.useExtendedView) { view in
+                    .if(UIDevice.deviceIsPad && (globalGeometrySize.width > globalGeometrySize.height)) { view in
                         view.padding(.bottom)
                     }
             }

@@ -18,9 +18,6 @@ struct StatsDetail: View {
     
     private let isCurrentCompSimAverage: Bool
     
-    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
-                                (scene as? UIWindowScene)?.keyWindow
-                            }).first?.frame.size
     
 //    let dateFormatter = DateFormatter()
 //    dateFormatter.dateFormat = "h:mm a, MM/dd/yyyy"

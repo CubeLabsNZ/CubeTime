@@ -131,11 +131,6 @@ struct TimeDetailViewOnly: View {
     let scramble: String
     let phases: Array<Double>?
     
-    
-    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
-                                (scene as? UIWindowScene)?.keyWindow
-                            }).first?.frame.size
-    
     @Binding var currentSolve: Solves?
     
     @State private var userComment: String
@@ -245,7 +240,7 @@ struct TimeDetailViewOnly: View {
                         Group {
                             if puzzle_type.name == "Megaminx" {
                                 Text(scramble.dropLast())
-                                    .font(.system(size: (windowSize!.width-32) / (42.00) * 1.44, weight: .regular, design: .monospaced))
+                                    .font(.system(size: (globalGeometrySize.width-32) / (42.00) * 1.44, weight: .regular, design: .monospaced))
                             } else {
                                 Text(scramble)
                                     .font(.callout.monospaced())

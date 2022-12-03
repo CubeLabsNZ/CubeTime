@@ -25,10 +25,6 @@ struct StatsView: View {
     @State var presentedAvg: CalculatedAverage? = nil
     @State var showBestSinglePopup = false
     
-    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
-                                (scene as? UIWindowScene)?.keyWindow
-                            }).first?.frame.size
-   
     
     var body: some View {
         NavigationView {

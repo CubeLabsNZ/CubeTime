@@ -1,10 +1,11 @@
 import SwiftUI
 
 struct BottomTabsView: View {
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+    
     @Binding var hide: Bool
     @Binding var currentTab: Tab
     
-    var useExtendedView: Bool = UIDevice.useExtendedView
     
     var namespace: Namespace.ID
     
@@ -34,7 +35,7 @@ struct BottomTabsView: View {
                         
                         HStack {
                             HStack {
-                                if !useExtendedView {
+                                if !(UIDevice.deviceIsPad && (globalGeometrySize.width > globalGeometrySize.height)) {
                                     TabIconWithBar(
                                         currentTab: $currentTab,
                                         assignedTab: .timer,

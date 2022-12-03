@@ -3,7 +3,9 @@ import SwiftUI
 
 struct FloatingPanel: View {
 //    @SceneStorage("CubeStuffs.FloatingPanel.height") private var height: Double = 50
-    @State private var height: Double = 50
+    @State private var height: Double = 35
+    
+    @Environment(\.colorScheme) private var colourScheme
     
     @Binding var stage: Int
     
@@ -39,10 +41,9 @@ struct FloatingPanel: View {
             ZStack(alignment: .topLeading) {
                 Rectangle()
                     .fill(Color.white.opacity(0.6))
-                    .background(Color.pink)
-//                    .background(.ultraThinMaterial)
+                    .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
                     .frame(width: 360, height: height)
-                    .cornerRadius(10, corners: [.topLeft, .topRight])
+                    .cornerRadius(8, corners: [.topLeft, .topRight])
                 
                 // view
                 items[stage]
@@ -59,7 +60,7 @@ struct FloatingPanel: View {
                 Rectangle()
                     .fill(Color.white)
                     .frame(width: 360, height: 18)
-                    .cornerRadius(10, corners: height == 0 ? .allCorners : [.bottomLeft, .bottomRight])
+                    .cornerRadius(8, corners: height == 0 ? .allCorners : [.bottomLeft, .bottomRight])
                 
                     .gesture(
                         DragGesture(minimumDistance: 0)
