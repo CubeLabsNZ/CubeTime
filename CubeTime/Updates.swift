@@ -16,13 +16,18 @@ let updatesList: [String: [String?]] = [
             -   all major UI elements now conform to Apple's DyanmicType accessbility font sizes
             -   this is the first version, if you do notice anything out of place, please open an issue and tag it with 'DynamicType' on our Github page. Thanks!
         –   changed java compatibility layer
-            -   Rotations added for blind scrambles
-            –   up to 20x faster scramble generation
-            –   up to 50x less memory usage
+            –   30x faster scramble generation
+            –   20x less memory usage
                 –   fixed OOM crashes on older phones
                 –   fixed launch crash on iPod 7th Gen
+        –   added manual entry mode
+            –   you can switch to entering times by typing instead of a timer in General Settings > Timer Settings > Timer Mode > Typing
+        -   added rotations added for blind scrambles
         """,
         """
+        –   more solve selection functions:
+            –   copy multiple solves
+        –   show +2 and DNF time in brackets
         –   swapped around delete and copy button in individual solve cards
         –   added ability to delete currently selected session
         -   added multiphase details to solve copy

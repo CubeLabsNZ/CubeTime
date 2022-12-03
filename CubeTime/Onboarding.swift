@@ -311,6 +311,8 @@ struct PageFive: View {
 }
 
 struct PageSix: View {
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+    
     @Binding var pageIndex: Int
     var body: some View {
         ScrollView {
@@ -410,7 +412,7 @@ struct PageSix: View {
                         }
                     }
                 }
-                .frame(maxWidth: UIScreen.screenWidth - 32)
+                .frame(maxWidth: globalGeometrySize.width - 32)
                 .padding(.horizontal, 32)
                 .padding(.top, 18)
                 

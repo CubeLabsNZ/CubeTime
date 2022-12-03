@@ -12,7 +12,9 @@ struct PrevSolvesDisplay: View {
     var count: Int?;
     var body: some View {
         HStack {
-            ForEach((count != nil) ? stopWatchManager.solvesByDate.suffix(count!) : stopWatchManager.solvesByDate, id: \.self) { solve in
+            ForEach((count != nil)
+                    ? stopWatchManager.solvesByDate.suffix(count!).reversed()
+                    : stopWatchManager.solvesByDate.reversed(), id: \.self) { solve in
                 #warning("TODO:  popup")
                 TimeCard(solve: solve, currentSolve: .constant(nil), isSelectMode: .constant(false), selectedSolves: .constant([]))
             }

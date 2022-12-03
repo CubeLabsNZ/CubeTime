@@ -65,6 +65,8 @@ struct SettingsView: View {
 }
 
 struct SettingsCard: View {
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+    
     @Binding var currentCard: SettingsCardInfo?
     var info: SettingsCardInfo
     var namespace: Namespace.ID
@@ -86,7 +88,7 @@ struct SettingsCard: View {
                     RoundedRectangle(cornerRadius: 16, style: .continuous)
                         .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
                         .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
-                        .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+                        .frame(height: globalGeometrySize.height/3.5, alignment: .center)
                         .shadow(color: .black.opacity(0.1), radius: 8, x: 3, y: 3)
                     
                     VStack {
@@ -116,7 +118,7 @@ struct SettingsCard: View {
                             Spacer()
                         }
                     }
-                    .frame(height: UIScreen.screenHeight/3.5, alignment: .center)
+                    .frame(height: globalGeometrySize.height/3.5, alignment: .center)
                 }
             }
             .buttonStyle(CardButtonStyle())
@@ -130,7 +132,7 @@ struct SettingsCard: View {
                     RoundedRectangle(cornerRadius: 16, style: .continuous)
                         .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
                         .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
-                        .frame(height: UIScreen.screenHeight/7, alignment: .center)
+                        .frame(height: globalGeometrySize.height/7, alignment: .center)
                         .shadow(color: .black.opacity(0.1), radius: 8, x: 3, y: 3)
                     
                     VStack {
@@ -155,7 +157,7 @@ struct SettingsCard: View {
                         
                         Spacer()
                     }
-                    .frame(height: UIScreen.screenHeight/7, alignment: .center)
+                    .frame(height: globalGeometrySize.height/7, alignment: .center)
                 }
             }
             .buttonStyle(CardButtonStyle())
@@ -164,6 +166,8 @@ struct SettingsCard: View {
 }
 
 struct SettingsDetail: View {
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+    
     @Binding var currentCard: SettingsCardInfo?
     @Environment(\.colorScheme) var colourScheme
     
@@ -195,7 +199,7 @@ struct SettingsDetail: View {
                 .safeAreaInset(edge: .top, spacing: 0) {
                     RoundedRectangle(cornerRadius: 16, style: .continuous)
                         .fill(Color.clear)
-                        .frame(maxHeight: UIScreen.screenHeight / 7)
+                        .frame(maxHeight: globalGeometrySize.height / 7)
                         .padding(.bottom)
                 }
                 .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
@@ -230,7 +234,7 @@ struct SettingsDetail: View {
                         }
                     }
                     .ignoresSafeArea()
-                    .frame(maxHeight: UIScreen.screenHeight / 7)
+                    .frame(maxHeight: globalGeometrySize.height / 7)
                     
                     Spacer()
                 }

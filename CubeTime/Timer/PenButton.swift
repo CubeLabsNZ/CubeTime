@@ -37,7 +37,7 @@ struct PenaltyButton: View {
                     
             }
         })
-            .padding(2)
+        .padding(2)
         .disabled(canType)
     }
 }

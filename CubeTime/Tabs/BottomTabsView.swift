@@ -4,6 +4,8 @@ struct BottomTabsView: View {
     @Binding var hide: Bool
     @Binding var currentTab: Tab
     
+    var useExtendedView: Bool = UIDevice.useExtendedView
+    
     var namespace: Namespace.ID
     
     var body: some View {
@@ -32,16 +34,16 @@ struct BottomTabsView: View {
                         
                         HStack {
                             HStack {
-                                TabIconWithBar(
-                                    currentTab: $currentTab,
-                                    assignedTab: .timer,
-                                    systemIconName: "stopwatch",
-                                    systemIconNameSelected: "stopwatch.fill",
-                                    namespace: namespace
-                                )
-                                
-//                                Spacer()
-                                
+                                if !useExtendedView {
+                                    TabIconWithBar(
+                                        currentTab: $currentTab,
+                                        assignedTab: .timer,
+                                        systemIconName: "stopwatch",
+                                        systemIconNameSelected: "stopwatch.fill",
+                                        namespace: namespace
+                                    )
+                                }
+                                                               
                                 TabIconWithBar(
                                     currentTab: $currentTab,
                                     assignedTab: .solves,
@@ -49,8 +51,6 @@ struct BottomTabsView: View {
                                     systemIconNameSelected: "hourglass.tophalf.filled",
                                     namespace: namespace
                                 )
-                                
-//                                Spacer()
                                 
                                 TabIconWithBar(
                                     currentTab: $currentTab,
@@ -60,9 +60,6 @@ struct BottomTabsView: View {
                                     namespace: namespace
                                 )
                                 
-                                
-//                                Spacer()
-                                
                                 TabIconWithBar(
                                     currentTab: $currentTab,
                                     assignedTab: .sessions,
@@ -70,7 +67,6 @@ struct BottomTabsView: View {
                                     systemIconNameSelected: "line.3.horizontal.circle.fill",
                                     namespace: namespace
                                 )
-//                                    .padding(.trailing, 14)
                             }
                             .frame(
                                 width: nil,

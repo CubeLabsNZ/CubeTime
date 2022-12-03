@@ -74,8 +74,11 @@ struct MainTabsView: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @EnvironmentObject var tabRouter: TabRouter
     
-    var largePad = false
-
+    var useExtendedView: Bool
+    
+    init(useExtendedView: Bool = false) {
+        self.useExtendedView = useExtendedView
+    }
     
     @Namespace private var namespace
     
@@ -104,6 +107,9 @@ struct MainTabsView: View {
                 BottomTabsView(hide: $tabRouter.hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
                     .zIndex(1)
                     .ignoresSafeArea(.keyboard)
+                    .if(UIDevice.useExtendedView) { view in
+                        view.padding(.bottom)
+                    }
             }
         }
         .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)

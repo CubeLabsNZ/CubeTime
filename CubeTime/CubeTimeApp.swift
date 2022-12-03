@@ -55,6 +55,7 @@ struct CubeTime: App {
         // https://swiftui-lab.com/random-lessons/#data-10
         self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: fetchedSession, managedObjectContext: moc))
         
+        
         self.moc = moc
         
         
@@ -106,7 +107,7 @@ struct CubeTime: App {
     
     var body: some Scene {
         WindowGroup {
-            MainTabsView()
+            MainView()
                 .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
                     let _ = NSLog("SDHFLKDF")
                     Updates(showUpdates: $showUpdates)
@@ -125,18 +126,49 @@ struct CubeTime: App {
                 .environment(\.managedObjectContext, moc)
                 .environmentObject(stopWatchManager)
                 .environmentObject(tabRouter)
+//                .onAppear {
+//                    self.deviceManager.deviceOrientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation
+//                }
         }
 
     }
 }
 
 
+private struct GlobalGeometrySize: EnvironmentKey {
+    static let defaultValue: CGSize = UIScreen.main.bounds.size
+}
+
+extension EnvironmentValues {
+    var globalGeometrySize: CGSize {
+        get {
+            self[GlobalGeometrySize.self]
+            
+        }
+        set {
+            self[GlobalGeometrySize.self] = newValue
+            
+        }
+    }
+}
+
 struct MainView: View {
+    @StateObject var tabRouter: TabRouter = TabRouter()
+        
     var body: some View {
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            TimerView(largePad: true)
-        } else {
-            MainTabsView()
+        GeometryReader { geo in
+            let _ = NSLog("height: \(geo.size.height)")
+            let _ = NSLog("width: \(geo.size.width)")
+            
+            if UIDevice.deviceIsPad && geo.size.width > geo.size.height {
+                TimerView()
+                    .environment(\.globalGeometrySize, geo.size)
+                    .environmentObject(tabRouter)
+            } else {
+                MainTabsView()
+                    .environment(\.globalGeometrySize, geo.size)
+                    .environmentObject(tabRouter)
+            }
         }
     }
 }

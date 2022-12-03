@@ -129,9 +129,25 @@ struct TimeCard: View {
                 Label("DNF", systemImage: "xmark.circle")
             }
             
+            
             Divider()
             
-            Button (role: .destructive) {
+            
+            Button {
+                copySolve(solve: solve)
+            } label: {
+                Label {
+                    Text("Copy Solve")
+                } icon: {
+                    Image(systemName: "doc.on.doc")
+                }
+            }
+            
+            
+            Divider()
+            
+            
+            Button(role: .destructive) {
                 managedObjectContext.delete(solve)
                 try! managedObjectContext.save()
                 stopWatchManager.tryUpdateCurrentSolveth()
@@ -142,10 +158,8 @@ struct TimeCard: View {
             } label: {
                 Label {
                     Text("Delete Solve")
-                        .foregroundColor(Color.red)
                 } icon: {
                     Image(systemName: "trash")
-                        .foregroundColor(Color.green) /// FIX: colours not working
                 }
             }
         }

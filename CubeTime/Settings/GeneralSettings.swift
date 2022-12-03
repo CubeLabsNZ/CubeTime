@@ -232,7 +232,7 @@ struct GeneralSettingsView: View {
                             
                             Menu {
                                 Picker("", selection: $timerDP) {
-                                    Text("Nothing")
+                                    Text("None")
                                         .tag(-1)
                                     ForEach(0...3, id: \.self) {
                                         Text("\($0) d.p")
@@ -287,11 +287,6 @@ struct GeneralSettingsView: View {
                     
                 }
                 .padding(.horizontal)
-                .onChange(of: inspectionTime) { newValue in
-                    stopWatchManager.inspectionEnabled = newValue
-                }
-                
-                Divider()
                 
                 
                 HStack {
@@ -299,16 +294,13 @@ struct GeneralSettingsView: View {
                         Text("Show stats on timer")
                             .font(.body.weight(.medium))
                     }
-                    .onChange(of: showStats) { newValue in
-                        stopWatchManager.updateStats()
-                    }
+//                    .onChange(of: showStats) { newValue in
+//                        stopWatchManager.updateStats()
+//                    }
                     .toggleStyle(SwitchToggleStyle(tint: accentColour))
                     
                 }
                 .padding(.horizontal)
-                .onChange(of: inspectionTime) { newValue in
-                    stopWatchManager.inspectionEnabled = newValue
-                }
                 
                 Text("Show draw scramble or statistics on the timer screen.")
                     .font(.footnote.weight(.medium))
@@ -678,6 +670,8 @@ struct GeneralSettingsView: View {
 struct TimerPreview: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+    
     @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     
     
@@ -709,6 +703,7 @@ struct TimerPreview: View {
             VStack {
                 HStack {
                     TimerHeader(previewMode: true)
+                        .padding(.trailing, 24)
                     
                     Spacer()
                     
@@ -730,7 +725,7 @@ struct TimerPreview: View {
             VStack {
                 Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
                     .font(.system(size: CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
-                    .frame(maxHeight: UIScreen.screenHeight/3)
+                    .frame(maxHeight: globalGeometrySize.height/3)
                     .multilineTextAlignment(.center)
                     
                 

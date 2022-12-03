@@ -192,10 +192,5 @@ struct TimerHeader: View {
         .frame(height: 35)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
-        .if(!previewMode) { view in
-            view
-                .padding(.horizontal)
-        }
-        .padding(.trailing, 24)
     }
 }
