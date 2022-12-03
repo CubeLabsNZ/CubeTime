@@ -16,6 +16,7 @@ let updatesList: [String: [String?]] = [
             -   all major UI elements now conform to Apple's DyanmicType accessbility font sizes
             -   this is the first version, if you do notice anything out of place, please open an issue and tag it with 'DynamicType' on our Github page. Thanks!
         –   changed java compatibility layer
+            -   Rotations added for blind scrambles
             –   up to 20x faster scramble generation
             –   up to 50x less memory usage
                 –   fixed OOM crashes on older phones
