@@ -23,7 +23,7 @@ struct SessionsView: View {
         let _ = NSLog("\(sessions.map({$0.scramble_type}))")
         NavigationView {
             ZStack {
-                Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+                Color.getBackgroundColour(colourScheme)
                     .ignoresSafeArea()
                 
                 ScrollView {
@@ -112,7 +112,7 @@ struct CustomiseSessionView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+                Color.getBackgroundColour(colourScheme)
                     .ignoresSafeArea()
                 
                 ScrollView {
@@ -218,7 +218,7 @@ struct NewSessionView: View {
     
     var body: some View {
         ZStack {
-            Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+            Color.getBackgroundColour(colourScheme)
                 .ignoresSafeArea()
             
             ScrollView {

@@ -35,7 +35,7 @@ struct BottomTabsView: View {
                         
                         HStack {
                             HStack {
-                                if !(UIDevice.deviceIsPad && (globalGeometrySize.width > globalGeometrySize.height)) {
+                                if !(UIDevice.deviceIsPad && (UIDevice.deviceIsLandscape(globalGeometrySize))) {
                                     TabIconWithBar(
                                         currentTab: $currentTab,
                                         assignedTab: .timer,

@@ -88,7 +88,7 @@ struct MainTabsView: View {
             ZStack {
                 switch tabRouter.currentTab {
                 case .timer:
-                    if !(UIDevice.deviceIsPad && (globalGeometrySize.width > globalGeometrySize.height)) {
+                    if !(UIDevice.deviceIsPad && (UIDevice.deviceIsLandscape(globalGeometrySize))) {
                         TimerView()
                             .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
                     }
@@ -105,7 +105,7 @@ struct MainTabsView: View {
                 BottomTabsView(hide: $tabRouter.hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
                     .zIndex(1)
                     .ignoresSafeArea(.keyboard)
-                    .if(UIDevice.deviceIsPad && (globalGeometrySize.width > globalGeometrySize.height)) { view in
+                    .if(UIDevice.deviceIsPad && (UIDevice.deviceIsLandscape(globalGeometrySize))) { view in
                         view.padding(.bottom)
                     }
             }

@@ -65,7 +65,7 @@ struct TimerView: View {
     var body: some View {
         ZStack {
             // BACKGROUND COLOUR
-            Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+            Color.getBackgroundColour(colourScheme)
                 .ignoresSafeArea()
     
             // SCRAMBLE
@@ -177,46 +177,40 @@ struct TimerView: View {
             if !tabRouter.hideTabBar {
                 VStack {
                     HStack {
-                        if !(UIDevice.deviceIsPad && (globalGeometrySize.width > globalGeometrySize.height)) {
+                        if !(UIDevice.deviceIsPad && (UIDevice.deviceIsLandscape(globalGeometrySize))) {
                             TimerHeader(targetFocused: $targetFocused, previewMode: false)
                                 .padding(.leading)
                                 .padding(.trailing, 24)
                         } else {
                             FloatingPanel(
                                 currentStage: $floatingPanelStage,
-                                maxHeight: (globalGeometrySize.height - 80),
-                                stages: [0, 35, 125, (globalGeometrySize.height - 80)],
+                                maxHeight: (globalGeometrySize.height - 24),
+                                stages: [0, 35, 125, (globalGeometrySize.height - 24)],
                                 content: {
                                     EmptyView()
                                     
                                     TimerHeader(targetFocused: $targetFocused, previewMode: false)
                                     
-//                                    EmptyView()
                                     VStack(alignment: .leading, spacing: 0) {
                                         TimerHeader(targetFocused: $targetFocused, previewMode: false)
-                                            .padding(.bottom, 8)
                                         
                                         PrevSolvesDisplay(count: 3)
-                                            .padding(.horizontal)
-                                        
-                                        Spacer()
+                                            .padding()
                                     }
                                     
-//                                    EmptyView()
                                     VStack(alignment: .leading, spacing: 0) {
                                         TimerHeader(targetFocused: $targetFocused, previewMode: false)
                                             .padding(.bottom)
                                         
                                         MainTabsView()
-                                            .frame(maxHeight: globalGeometrySize.height - 80 - 35 - 16*2)
                                     }
                                 }
                              )
                             .ignoresSafeArea(.keyboard)
                             .frame(width: 360)
-                            .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 0)
                             .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
-                            .padding(.leading)
+                            .padding(.leading, 24)
+                            .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 0)
                         }
                         
                         
@@ -519,7 +513,7 @@ struct TimerView: View {
                                 .font(.system(size: 56, weight: .bold, design: .monospaced))
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(stopWatchManager.timerColour)
-                                .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
+                                .background(Color.getBackgroundColour(colourScheme))
                                 .modifier(DynamicText())
                                 .modifier(TimeMaskTextField(text: $manualInputTime))
                         } else {
@@ -653,7 +647,7 @@ struct TimerView: View {
             
             // SCRAMBLE
             if stopWatchManager.mode == .stopped {
-                if floatingPanelStage > 1 {
+                if UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) && floatingPanelStage > 1 {
                     HStack {
                         Spacer()
                         
@@ -661,7 +655,7 @@ struct TimerView: View {
                             VStack {
                                 Text(scr)
                                     .font(.system(size: stopWatchManager.currentSession.scramble_type == 7 ? (globalGeometrySize.width) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
-                                    .frame(maxWidth: globalGeometrySize.width - 400, maxHeight: globalGeometrySize.height/3)
+                                    .frame(maxWidth: globalGeometrySize.width - 440, maxHeight: globalGeometrySize.height/3)
                                     .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
                                     .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
                                     .onTapGesture {
@@ -671,7 +665,7 @@ struct TimerView: View {
                                 Spacer()
                             }
                             .padding(.horizontal)
-                            .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+                            .offset(y: 55 + (SetValues.hasBottomBar ? 0 : 8))
                         } else {
                             HStack {
                                 Spacer()
@@ -703,7 +697,7 @@ struct TimerView: View {
                             Spacer()
                         }
                         .padding(.horizontal)
-                        .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+                        .offset(y: 55 + (SetValues.hasBottomBar ? 0 : 8))
                     } else {
                         HStack {
                             Spacer()
