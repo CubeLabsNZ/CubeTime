@@ -50,127 +50,173 @@ struct TimerView: View {
     @State var algTrainerSubset = 0
 
     
+    // iPAD SPECIFIC
+    @State var floatingPanelStage: Int = 1
+    
+
+    
+    #warning("TODO: find a way to not use an initialiser")
+    
+    
+
+    
+    
+    
     var body: some View {
         GeometryReader { geo in
-            ZStack {
-                // BACKGROUND COLOUR
-                Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
-                    .ignoresSafeArea()
-                
-                // SCRAMBLE
-                if stopWatchManager.mode == .inspecting {
-                    if colourScheme == .light {
-                        switch stopWatchManager.inspectionSecs {
-                        case 8..<12:
-                            InspectionColours.eightColour
-                                .ignoresSafeArea()
-                        case 12..<15:
-                            InspectionColours.twelveColour
-                                .ignoresSafeArea()
-                        case let x where x >= 15: InspectionColours.penaltyColour
-                                .ignoresSafeArea()
-                        default:
-                            EmptyView()
-                        }
-                    }
-                    
-                    if stopWatchManager.inspectionSecs >= 17 {
-                        Text("DNF")
-                            .font(.system(size: 22, weight: .semibold, design: .rounded))
-                            .foregroundColor(colourScheme == .light ? .black : nil)
-                            .offset(y: 45)
-                    } else if stopWatchManager.inspectionSecs >= 15 {
-                        Text("+2")
-                            .font(.system(size: 22, weight: .semibold, design: .rounded))
-                            .foregroundColor(colourScheme == .light ? .black : nil)
-                            .offset(y: 45)
+            // BACKGROUND COLOUR
+            Color.getBackgroundColour(colourScheme)
+                .ignoresSafeArea()
+            
+            // SCRAMBLE
+            if stopWatchManager.mode == .inspecting {
+                if colourScheme == .light {
+                    switch stopWatchManager.inspectionSecs {
+                    case 8..<12:
+                        InspectionColours.eightColour
+                            .ignoresSafeArea()
+                    case 12..<15:
+                        InspectionColours.twelveColour
+                            .ignoresSafeArea()
+                    case let x where x >= 15: InspectionColours.penaltyColour
+                            .ignoresSafeArea()
+                    default:
+                        EmptyView()
                     }
                 }
                 
-                // TIMER TEXT / INSPECTION
-                VStack {
-                    Spacer()
-                    
-                    Text(stopWatchManager.secondsStr)
-                        .foregroundColor({
-                            if stopWatchManager.mode == .inspecting && colourScheme == .dark && stopWatchManager.timerColour == TimerTextColours.timerDefaultColour {
-                                switch stopWatchManager.inspectionSecs {
-                                case ..<8: return TimerTextColours.timerDefaultColour
-                                case 8..<12: return Color(uiColor: .systemYellow)
-                                case 12..<15: return Color(uiColor: .systemOrange)
-                                default: return Color(uiColor: .systemRed)
-                                }
-                            } else {
-                                return stopWatchManager.timerColour
-                            }
-                        }()
-                        )
-                    // for smaller phones (iPhoneSE and test sim), disable animation to larger text
-                    // to prevent text clipping and other UI problems
-                        .if(!(smallDeviceNames.contains(getModelName()))) { view in
-                            view
-                                .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 70 : 56))
-                                .modifier(DynamicText())
-                                .animation(Animation.spring(), value: stopWatchManager.mode == .running)
-                        }
-                        .if(smallDeviceNames.contains(getModelName())) { view in
-                            view
-                                .font(.system(size: 54, weight: .bold, design: .monospaced))
-                                .modifier(DynamicText())
-                        }
-                    
-                    
-                    Spacer()
+                if stopWatchManager.inspectionSecs >= 17 {
+                    Text("DNF")
+                        .font(.system(size: 22, weight: .semibold, design: .rounded))
+                        .foregroundColor(colourScheme == .light ? .black : nil)
+                        .offset(y: 45)
+                } else if stopWatchManager.inspectionSecs >= 15 {
+                    Text("+2")
+                        .font(.system(size: 22, weight: .semibold, design: .rounded))
+                        .foregroundColor(colourScheme == .light ? .black : nil)
+                        .offset(y: 45)
                 }
-                .ignoresSafeArea(edges: .all)
-                .ignoresSafeArea(.keyboard)
+            }
+            
+            // TIMER TEXT / INSPECTION
+            VStack {
+                Spacer()
                 
-                
-                switch inputMode {
-                    // ONLY USE GESTURE RECOGNISER WHEN INPUTMODE SET TO TIMER
-                case .timer:
-                    // TOUCH (GESTURE) RECOGNISER
-                    GeometryReader { geometry in
-                        ZStack {
-                            TimerTouchView(stopWatchManager: stopWatchManager)
-                                .frame(width: geometry.size.width, height: geometry.size.height)
-                                .environmentObject(stopWatchManager)
-                            
-                            if targetFocused || manualInputFocused /*|| (!manualInputFocused && showInputField)*/ {
-                                //                        Color.clear.contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
-                                /// ^ this receives tap gesture but gesture is transferred to timertouchview below...
-                                Color.white.opacity(0.000001) // workaround for now
-                                    .onTapGesture {
-                                        targetFocused = false
-                                        manualInputFocused = false
-                                        showInputField = false
-                                    }
+                Text(stopWatchManager.secondsStr)
+                    .foregroundColor({
+                        if stopWatchManager.mode == .inspecting && colourScheme == .dark && stopWatchManager.timerColour == TimerTextColours.timerDefaultColour {
+                            switch stopWatchManager.inspectionSecs {
+                            case ..<8: return TimerTextColours.timerDefaultColour
+                            case 8..<12: return Color(uiColor: .systemYellow)
+                            case 12..<15: return Color(uiColor: .systemOrange)
+                            default: return Color(uiColor: .systemRed)
                             }
+                        } else {
+                            return stopWatchManager.timerColour
                         }
+                    }()
+                    )
+                // for smaller phones (iPhoneSE and test sim), disable animation to larger text
+                // to prevent text clipping and other UI problems
+                    .if(!(smallDeviceNames.contains(getModelName()))) { view in
+                        view
+                            .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 70 : 56))
+                            .modifier(DynamicText())
+                            .animation(Animation.spring(), value: stopWatchManager.mode == .running)
+                    }
+                    .if(smallDeviceNames.contains(getModelName())) { view in
+                        view
+                            .font(.system(size: 54, weight: .bold, design: .monospaced))
+                            .modifier(DynamicText())
+                    }
+                
+                
+                Spacer()
+            }
+            .ignoresSafeArea(edges: .all)
+            .ignoresSafeArea(.keyboard)
+            
+            
+            switch inputMode {
+                // ONLY USE GESTURE RECOGNISER WHEN INPUTMODE SET TO TIMER
+            case .timer:
+                // TOUCH (GESTURE) RECOGNISER
+                GeometryReader { geometry in
+                    ZStack {
+                        TimerTouchView(stopWatchManager: stopWatchManager)
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .environmentObject(stopWatchManager)
                         
-                    }
-                    .ignoresSafeArea(edges: .top)
-                    
-                    // FOR TYPING, DISPLAY INPUT BOX ALWAYS; USE GESTURE TO ESCAPE FOCUS
-                case .typing:
-                    Color.white.opacity(0.000001)
-                        .onTapGesture {
-                            manualInputFocused = false
+                        if targetFocused || manualInputFocused /*|| (!manualInputFocused && showInputField)*/ {
+                            //                        Color.clear.contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
+                            /// ^ this receives tap gesture but gesture is transferred to timertouchview below...
+                            Color.white.opacity(0.000001) // workaround for now
+                                .onTapGesture {
+                                    targetFocused = false
+                                    manualInputFocused = false
+                                    showInputField = false
+                                }
                         }
+                    }
+                    
                 }
+                .ignoresSafeArea(edges: .top)
                 
-                
-                
-                
-                // VIEWS WHEN TIMER NOT RUNNING
-                if !tabRouter.hideTabBar {
-                    VStack {
-                        HStack {
+                // FOR TYPING, DISPLAY INPUT BOX ALWAYS; USE GESTURE TO ESCAPE FOCUS
+            case .typing:
+                Color.white.opacity(0.000001)
+                    .onTapGesture {
+                        manualInputFocused = false
+                    }
+            }
+            
+            
+            
+            
+            // VIEWS WHEN TIMER NOT RUNNING
+            if !tabRouter.hideTabBar {
+                VStack {
+                    HStack {
+                        if !(UIDevice.deviceIsPad && (UIDevice.deviceIsLandscape(globalGeometrySize))) {
                             TimerHeader(targetFocused: $targetFocused, previewMode: false)
                                 .padding(.leading)
                                 .padding(.trailing, 24)
-                            
-                            Spacer()
+                        } else {
+                            FloatingPanel(
+                                currentStage: $floatingPanelStage,
+                                maxHeight: (globalGeometrySize.height - 24),
+                                stages: [0, 50, 130, (globalGeometrySize.height - 24)],
+                                content: {
+                                    EmptyView()
+                                    
+                                    TimerHeader(targetFocused: $targetFocused, previewMode: false)
+                                        .padding(.horizontal)
+                                        .padding(.top, 8)
+                                    
+                                    VStack(alignment: .leading, spacing: 12) {
+                                        TimerHeader(targetFocused: $targetFocused, previewMode: false)
+                                        
+                                        PrevSolvesDisplay(count: 3)
+                                    }
+                                    .padding()
+                                    
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        TimerHeader(targetFocused: $targetFocused, previewMode: false)
+                                            .padding()
+                                        //                                            .padding(.bottom)
+                                        
+                                        MainTabsView()
+                                    }
+                                }
+                            )
+                            .ignoresSafeArea(.keyboard)
+                            .frame(width: 360)
+                            .padding(.top, SetValues.hasBottomBar
+                                     ? 0
+                                     : tabRouter.hideTabBar
+                                     ? nil
+                                     : 8)
+                            .padding(.leading, 24)
                         }
                         
                         Spacer()
@@ -469,7 +515,7 @@ struct TimerView: View {
                                     .font(.system(size: 56, weight: .bold, design: .monospaced))
                                     .multilineTextAlignment(.center)
                                     .foregroundColor(stopWatchManager.timerColour)
-                                    .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
+                                    .background(Color.getBackgroundColour(colourScheme))
                                     .modifier(DynamicText())
                                     .modifier(TimeMaskTextField(text: $manualInputTime))
                             } else {
@@ -593,6 +639,50 @@ struct TimerView: View {
                                 }
                             }
                         }
+                    }
+                    
+                    Spacer()
+                }
+                    .offset(y: 45)
+                    .ignoresSafeArea(edges: .all)
+            }
+            
+            
+            // SCRAMBLE
+            if stopWatchManager.mode == .stopped {
+                if UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) && floatingPanelStage > 1 {
+                    HStack {
+                        Spacer()
+                        
+                        if let scr = stopWatchManager.scrambleStr {
+                            VStack {
+                                Text(scr)
+                                    .font(.system(size: stopWatchManager.currentSession.scramble_type == 7 ? (globalGeometrySize.width) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
+                                    .frame(maxWidth: globalGeometrySize.width - 440, maxHeight: globalGeometrySize.height/3)
+                                    .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
+                                    .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+                                    .onTapGesture {
+                                        scrambleSheetStr = SheetStrWrapper(str: scr)
+                                    }
+                                
+                                Spacer()
+                            }
+                            .padding(.horizontal)
+                            .offset(y: 55 + (SetValues.hasBottomBar ? 0 : 8))
+                        } else {
+                            HStack {
+                                Spacer()
+                                
+                                VStack {
+                                    LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
+                                        .frame(maxHeight: 35)
+                                        .padding(.trailing)
+                                        .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+                                    
+                                    Spacer()
+                                }
+                            }
+                        }
                         
                         Spacer()
                     }
@@ -617,7 +707,7 @@ struct TimerView: View {
                             Spacer()
                         }
                         .padding(.horizontal)
-                        .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+                        .offset(y: 55 + (SetValues.hasBottomBar ? 0 : 8))
                     } else {
                         HStack {
                             Spacer()
@@ -664,7 +754,7 @@ struct TimerView: View {
                 stopWatchManager.delete(solve: detail.wrappedValue!)
                 detail.wrappedValue = nil
                 stopWatchManager.secondsElapsed = 0
-//                stopWatchManager.secondsStr = formatSolveTime(secs: 0)
+                //                stopWatchManager.secondsStr = formatSolveTime(secs: 0)
                 stopWatchManager.secondsStr = formatSolveTime(secs: showPrevTime
                                                               ? (stopWatchManager.solvesByDate.last?.time ?? 0)
                                                               : 0)
@@ -685,9 +775,6 @@ struct TimerView: View {
         }
         .statusBar(hidden: hideStatusBar)
         .ignoresSafeArea(.keyboard)
-        
-        
-        #warning("TODO: make animation asymmetric?")
     }
 }
 

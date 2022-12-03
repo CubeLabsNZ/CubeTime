@@ -82,6 +82,10 @@ public extension UIDevice {
     static var deviceIsPad: Bool {
         UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad
     }
+    
+    static func deviceIsLandscape(_ geo: CGSize) -> Bool {
+        return geo.width > geo.height
+    }
 }
 
 /// device restriction function
@@ -101,6 +105,7 @@ func getModelName() -> String {
 }
 
 // screen sizes
+@available(*, deprecated, message: "Use global geometry env variable instead.")
 extension UIScreen {
    static let screenWidth = UIScreen.main.bounds.size.width
    static let screenHeight = UIScreen.main.bounds.size.height
@@ -630,10 +635,17 @@ class TimerTextColours {
     static let timerLoadingColor: Color = Color(uiColor: .systemGray)
 }
 
+@available(*, deprecated, message: "Use Color.InspectionColour.<Colour>")
 class InspectionColours {
     static let eightColour: Color = Color(red: 234/255, green: 224/255, blue: 182/255)
     static let twelveColour: Color = Color(red: 234/255, green: 212/255, blue: 182/255)
     static let penaltyColour: Color = Color(red: 234/255, green: 194/255, blue: 192/255)
+}
+
+extension Color {
+    static func getBackgroundColour(_ env: ColorScheme) -> Color {
+        return Color(uiColor: env == .light ? .systemGray6 : .black)
+    }
 }
 
 

@@ -479,7 +479,7 @@ struct GeneralSettingsView: View {
                             
                             ZStack {
                                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                    .fill(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
+                                    .fill(Color.getBackgroundColour(colourScheme))
                                 
                                 VStack(spacing: 0) {
                                     Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
@@ -678,7 +678,7 @@ struct TimerPreview: View {
     var body: some View {
         ZStack {
             // BACKGROUND COLOUR
-            Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+            Color.getBackgroundColour(colourScheme)
                 .ignoresSafeArea()
             
             VStack {

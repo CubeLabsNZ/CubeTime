@@ -29,7 +29,7 @@ struct SettingsView: View {
         ZStack {
             NavigationView {
                 ZStack {
-                    Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+                    Color.getBackgroundColour(colourScheme)
                         .ignoresSafeArea()
                     
                     VStack(spacing: 16) {
@@ -176,7 +176,7 @@ struct SettingsDetail: View {
     var body: some View {
         if currentCard != nil {
             ZStack {
-                Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+                Color.getBackgroundColour(colourScheme)
                     .ignoresSafeArea()
                     .zIndex(0)
                 

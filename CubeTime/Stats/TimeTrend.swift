@@ -620,15 +620,13 @@ struct TimeTrend: View {
     
     var body: some View {
         if data.points.map({ $0.1 }).count > 1 {
-            GeometryReader{ geometry in
+            GeometryReader { geometry in
                 VStack(alignment: .leading, spacing: 8) {
-                    ZStack{
-                        GeometryReader{ reader in
+                    ZStack {
+                        GeometryReader { reader in
                             withAnimation(.easeOut(duration: 1.2)) {
-                                Legend(data: self.data,
-                                       frame: .constant(reader.frame(in: .local)))
+                                Legend(data: self.data, frame: .constant(reader.frame(in: .local)))
                                     .transition(.opacity)
-//                                    .animation(Animation.easeOut(duration: 1.2))
                             }
                             
                             

@@ -164,7 +164,7 @@ struct TimeDetailViewOnly: View {
     
     var body: some View {
         ZStack {
-            Color(uiColor: colourScheme == .light ? .systemGray6 : .black)
+            Color.getBackgroundColour(colourScheme)
                 .ignoresSafeArea()
             
             ScrollView {

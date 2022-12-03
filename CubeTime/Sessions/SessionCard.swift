@@ -22,10 +22,11 @@ struct SessionCard: View {
     let name: String
     let scramble_type: Int
     let solveCount: Int
+    let parentGeo: GeometryProxy
     
     @Namespace var namespace
     
-    init (item: Sessions, allSessions: FetchedResults<Sessions>) {
+    init (item: Sessions, allSessions: FetchedResults<Sessions>, parentGeo: GeometryProxy) {
         self.item = item
         self.allSessions = allSessions
         
@@ -35,6 +36,8 @@ struct SessionCard: View {
         self.name = item.name ?? "Unknown session name"
         self.scramble_type = Int(item.scramble_type)
         self.solveCount = item.solves?.count ?? -1
+        
+        self.parentGeo = parentGeo
     }
     
     var body: some View {
@@ -47,8 +50,12 @@ struct SessionCard: View {
             
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(colourScheme == .dark ? Color(uiColor: .systemGray6) : Color.white)
-                .frame(width: stopWatchManager.currentSession == item ? 16 : globalGeometrySize.width - 32, height: item.pinned ? 110 : 65)
-                .offset(x: stopWatchManager.currentSession == item ? -((globalGeometrySize.width - 16)/2) + 16 : 0)
+                .frame(width: stopWatchManager.currentSession == item
+                       ? 16
+                       : parentGeo.size.width - 32, height: item.pinned ? 110 : 65)
+                .offset(x: stopWatchManager.currentSession == item
+                        ? -((parentGeo.size.width - 16)/2) + 16
+                        : 0)
             
                 .zIndex(1)
             

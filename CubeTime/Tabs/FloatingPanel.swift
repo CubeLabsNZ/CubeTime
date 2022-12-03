@@ -3,7 +3,7 @@ import SwiftUI
 
 struct FloatingPanel: View {
 //    @SceneStorage("CubeStuffs.FloatingPanel.height") private var height: Double = 50
-    @State private var height: Double = 35
+    @State private var height: Double
     
     @Environment(\.colorScheme) private var colourScheme
     
@@ -30,6 +30,8 @@ struct FloatingPanel: View {
             
         self._stage = currentStage
         self._oldStage = State(initialValue: currentStage.wrappedValue)
+        
+        self._height = State(initialValue: stages[currentStage.wrappedValue])
             
         let c = content().value
             
@@ -37,17 +39,17 @@ struct FloatingPanel: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(spacing: 0) {
             ZStack(alignment: .topLeading) {
                 Rectangle()
-                    .fill(Color.white.opacity(0.6))
-                    .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
+                    .fill(Color.getBackgroundColour(colourScheme))
                     .frame(width: 360, height: height)
                     .cornerRadius(8, corners: [.topLeft, .topRight])
+                    .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 0)
                 
                 // view
                 items[stage]
-                    .frame(height: height)
+                    .frame(height: height, alignment: .topLeading)
             }
             
             
