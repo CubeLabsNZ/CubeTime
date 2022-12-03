@@ -75,8 +75,10 @@ struct MainTabsView: View {
     @EnvironmentObject var tabRouter: TabRouter
     
     var useExtendedView: Bool
-
-    init(useExtendedView: Bool = false) {
+    var globalGeo: CGSize
+    
+    init(globalGeo: CGSize, useExtendedView: Bool = false) {
+        self.globalGeo = globalGeo
         self.useExtendedView = useExtendedView
     }
     
@@ -92,7 +94,7 @@ struct MainTabsView: View {
             ZStack {
                 switch tabRouter.currentTab {
                 case .timer:
-                    TimerView()
+                    TimerView(globalGeo: globalGeo)
                         .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
                 case .solves:
                     TimeListView()

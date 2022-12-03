@@ -58,6 +58,7 @@ struct TimerView: View {
 
     let useExtendedView: Bool = UIDevice.useExtendedView
     
+    var globalGeo: CGSize
     
     
     #warning("TODO: find a way to not use an initialiser")
