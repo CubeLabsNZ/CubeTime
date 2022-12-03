@@ -15,7 +15,7 @@ struct DefaultScrambleView: View {
 
 struct AsyncScrambleView: View {
     @State var svg = ""
-    var puzzle: Int
+    var puzzle: Int32
     var scramble: String
 
     var width: CGFloat
@@ -47,8 +47,7 @@ struct AsyncScrambleView: View {
                 
                 
                 scramble.withCString { s in
-                    let buffer = UnsafeMutablePointer<Int8>(mutating: s) // https://github.com/CubeStuffs/tnoodle-lib-native/issues/2
-                    svg = String(cString: Main__drawScramble__cebd98ae40477cd5c997c10733315758f3be6fe4(thread, 0, buffer))
+                    svg = String(cString: tnoodle_lib_draw_scramble(thread, puzzle, s))
                 }
                 
                 graal_tear_down_isolate(thread);

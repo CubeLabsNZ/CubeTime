@@ -435,7 +435,7 @@ class StopWatchManager: ObservableObject {
         
         graal_create_isolate(nil, &isolate, &thread)
                 
-        let s = String(cString: Main__scramble__8cc9b1b9fc68e86e29ebd3d92826e7c1144862e9(thread, 0))
+        let s = String(cString: tnoodle_lib_scramble(thread, currentSession.scramble_type))
         
         graal_tear_down_isolate(thread);
             
@@ -464,9 +464,7 @@ class StopWatchManager: ObservableObject {
             let scrTypeAtWorkStart = self.currentSession.scramble_type
             let scramble = self.safeGetScramble()
 
-            /// This absolutely is not best practice, but I couldn't find another way to do it
-            /// **PLEASE** file a PR or issue if you know of a better way
-            #warning("TODO:  make this not actually continue the scramble")
+            #warning("TODO switch to mutex or something")
             if scrTypeAtWorkStart == self.currentSession.scramble_type {
                 DispatchQueue.main.async {
                     self.scrambleStr = scramble
@@ -483,8 +481,7 @@ class StopWatchManager: ObservableObject {
                 var svg: String!
                 
                 scramble.withCString { s in
-                    let buffer = UnsafeMutablePointer<Int8>(mutating: s) // https://github.com/CubeStuffs/tnoodle-lib-native/issues/2
-                    svg = String(cString: Main__drawScramble__cebd98ae40477cd5c997c10733315758f3be6fe4(thread, 0, buffer))
+                    svg = String(cString: tnoodle_lib_draw_scramble(thread, scrTypeAtWorkStart, s))
                 }
                 
                 graal_tear_down_isolate(thread);
@@ -493,6 +490,8 @@ class StopWatchManager: ObservableObject {
                 DispatchQueue.main.async {
                     self.scrambleSVG = svg
                 }
+            } else {
+                self.scrambleWorkItem?.cancel()
             }
         }
         scrambleWorkItem = newWorkItem
