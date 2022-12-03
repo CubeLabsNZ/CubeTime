@@ -435,7 +435,7 @@ class StopWatchManager: ObservableObject {
         
         graal_create_isolate(nil, &isolate, &thread)
                 
-        let s = String(cString: Main__scramble__8cc9b1b9fc68e86e29ebd3d92826e7c1144862e9(thread, 0))
+        let s = String(cString: Main__scramble__8cc9b1b9fc68e86e29ebd3d92826e7c1144862e9(thread, 1))
         
         graal_tear_down_isolate(thread);
             
@@ -484,7 +484,7 @@ class StopWatchManager: ObservableObject {
                 
                 scramble.withCString { s in
                     let buffer = UnsafeMutablePointer<Int8>(mutating: s) // https://github.com/CubeStuffs/tnoodle-lib-native/issues/2
-                    svg = String(cString: Main__drawScramble__cebd98ae40477cd5c997c10733315758f3be6fe4(thread, 0, buffer))
+                    svg = String(cString: Main__drawScramble__cebd98ae40477cd5c997c10733315758f3be6fe4(thread, 1, buffer))
                 }
                 
                 graal_tear_down_isolate(thread);

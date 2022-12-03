@@ -51,7 +51,7 @@ struct AsyncScrambleView: View {
                 
                 scramble.withCString { s in
                     let buffer = UnsafeMutablePointer<Int8>(mutating: s) // https://github.com/CubeStuffs/tnoodle-lib-native/issues/2
-                    svg = String(cString: Main__drawScramble__cebd98ae40477cd5c997c10733315758f3be6fe4(thread, 0, buffer))
+                    svg = String(cString: Main__drawScramble__cebd98ae40477cd5c997c10733315758f3be6fe4(thread, 2, buffer))
                 }
                 
                 graal_tear_down_isolate(thread);

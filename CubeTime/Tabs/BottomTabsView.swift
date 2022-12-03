@@ -4,7 +4,7 @@ struct BottomTabsView: View {
     @Binding var hide: Bool
     @Binding var currentTab: Tab
     
-    var deviceIsPad: Bool = false
+    var deviceIsPad: Bool = UIDevice.deviceIsPad
     
     var namespace: Namespace.ID
     

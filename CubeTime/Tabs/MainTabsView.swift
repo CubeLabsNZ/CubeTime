@@ -10,7 +10,7 @@ enum Tab {
 }
 
 class TabRouter: ObservableObject {
-    @Published var currentTab: Tab = .timer
+    @Published var currentTab: Tab = .solves
     @Published var hideTabBar: Bool = false
 }
 
@@ -107,6 +107,9 @@ struct MainTabsView: View {
                 BottomTabsView(hide: $tabRouter.hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
                     .zIndex(1)
                     .ignoresSafeArea(.keyboard)
+                    .if(UIDevice.deviceIsPad) { view in
+                        view.padding(.bottom)
+                    }
             }
         }
         .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)

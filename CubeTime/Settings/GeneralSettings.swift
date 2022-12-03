@@ -701,6 +701,7 @@ struct TimerPreview: View {
             VStack {
                 HStack {
                     TimerHeader(previewMode: true)
+                        .padding(.trailing, 24)
                     
                     Spacer()
                     

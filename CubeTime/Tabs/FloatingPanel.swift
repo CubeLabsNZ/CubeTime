@@ -35,20 +35,23 @@ struct FloatingPanel: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            ZStack {
+            ZStack(alignment: .topLeading) {
                 Rectangle()
                     .fill(Color.white.opacity(0.6))
-                    .background(.ultraThinMaterial)
+                    .background(Color.pink)
+//                    .background(.ultraThinMaterial)
                     .frame(width: 360, height: height)
                     .cornerRadius(10, corners: [.topLeft, .topRight])
                 
-                
+                // view
                 items[stage]
-                    .frame(width: 360, height: height)
-                    .padding(.horizontal)
+                    .frame(height: height)
             }
+                            .ignoresSafeArea(.keyboard)
+            
             
             Divider()
+                            .ignoresSafeArea(.keyboard)
                 .frame(width: height == 0 ? 0 : 360)
             
             
@@ -64,6 +67,9 @@ struct FloatingPanel: View {
                             .onChanged { value in
                                 self.isPressed = true
                                 // Just follow touch within bounds
+                                
+                                print(height)
+                                
                                 let newh = height + value.translation.height
                                 if newh > maxHeight {
                                     height = maxHeight
@@ -96,9 +102,9 @@ struct FloatingPanel: View {
                     .scaleEffect(isPressed ? 1.12 : 1.00)
                     .frame(width: 36, height: 6)
             }
+                            .ignoresSafeArea(.keyboard)
         }
-        .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 0)
-        .padding()
+                            .ignoresSafeArea(.keyboard)
         .frame(width: 360)
     }
 }

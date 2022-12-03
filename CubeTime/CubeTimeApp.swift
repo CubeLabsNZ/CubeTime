@@ -106,7 +106,7 @@ struct CubeTime: App {
     
     var body: some Scene {
         WindowGroup {
-            MainTabsView()
+            MainView()
                 .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
                     let _ = NSLog("SDHFLKDF")
                     Updates(showUpdates: $showUpdates)
@@ -132,11 +132,16 @@ struct CubeTime: App {
 
 
 struct MainView: View {
+    @StateObject var tabRouter: TabRouter = TabRouter()
+    
+    
     var body: some View {
         if UIDevice.deviceIsPad {
             TimerView()
+                .environmentObject(tabRouter)
         } else {
             MainTabsView()
+                .environmentObject(tabRouter)
         }
     }
 }

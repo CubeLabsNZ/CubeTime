@@ -50,7 +50,7 @@ struct TimerView: View {
 
     
     // iPAD SPECIFIC
-    @State var floatingPanelStage: Int = 3
+    @State var floatingPanelStage: Int = 2
     
     let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
                         (scene as? UIWindowScene)?.keyWindow
@@ -139,6 +139,7 @@ struct TimerView: View {
                 Spacer()
             }
             .ignoresSafeArea(edges: .all)
+            .ignoresSafeArea(.keyboard)
             
             
             switch inputMode {
@@ -183,26 +184,47 @@ struct TimerView: View {
                     HStack {
                         if !deviceIsPad {
                             TimerHeader(targetFocused: $targetFocused, previewMode: false)
+                                .padding(.leading)
+                                .padding(.trailing, 24)
                         } else {
                             FloatingPanel(
                                 currentStage: $floatingPanelStage,
-                                maxHeight: UIScreen.screenHeight,
-                                stages: [0, 50, 120, ( UIScreen.screenHeight - 24)]) {
+                                maxHeight: (UIScreen.screenHeight - 80),
+                                stages: [0, 50, 125, (UIScreen.screenHeight - 80)],
+                                content: {
                                     EmptyView()
                                     
                                     TimerHeader(targetFocused: $targetFocused, previewMode: false)
                                     
 //                                    EmptyView()
-                                    VStack {
+                                    VStack(alignment: .leading, spacing: 0) {
                                         TimerHeader(targetFocused: $targetFocused, previewMode: false)
+                                            .padding(.top)
+                                            .padding(.bottom, 8)
                                         
                                         PrevSolvesDisplay(count: 3)
+                                        
+                                        Spacer()
                                     }
+                                    .padding(.horizontal)
                                     
-                                    EmptyView()
-        //                            MainTabsView(deviceIsPad: true)
+//                                    EmptyView()
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        TimerHeader(targetFocused: $targetFocused, previewMode: false)
+                                            .padding(.horizontal)
+                                            .padding(.vertical)
+                                        
+                                        MainTabsView(deviceIsPad: true)
+                                            .frame(maxHeight: UIScreen.screenHeight - 80 - 35 - 16*2)
+                                        
+                                    }
                                 }
-                                .padding()
+                            )
+                            .ignoresSafeArea(.keyboard)
+                            .frame(width: 360)
+                            .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 0)
+                            .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+                            .padding(.leading)
                         }
                         
                         
