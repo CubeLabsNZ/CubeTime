@@ -78,9 +78,6 @@ struct StatsBlockText: View {
     
     @ScaledMetric private var blockHeightSmall = 75
     
-    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
-                                (scene as? UIWindowScene)?.keyWindow
-                            }).first?.frame.size
     
     init(_ displayText: String, _ colouredText: Bool, _ colouredBlock: Bool, _ displayDetail: Bool, _ nilCondition: Bool) {
         self.displayText = displayText
@@ -219,6 +216,8 @@ struct StatsBlockSmallText: View {
 }
 
 struct StatsDivider: View {
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+
     @Environment(\.colorScheme) var colourScheme
     
     private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
@@ -227,7 +226,7 @@ struct StatsDivider: View {
 
     var body: some View {
         Divider()
-            .frame(width: windowSize!.width / 2)
+            .frame(width: globalGeometrySize.width / 2)
             .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
     }
 }

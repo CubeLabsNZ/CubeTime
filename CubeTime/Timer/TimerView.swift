@@ -51,14 +51,9 @@ struct TimerView: View {
 
     
     // iPAD SPECIFIC
-    @State var floatingPanelStage: Int = 2
+    @State var floatingPanelStage: Int = 1
     
-    let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
-                        (scene as? UIWindowScene)?.keyWindow
-                    }).first?.frame.size
 
-    let useExtendedView: Bool = UIDevice.useExtendedView
-    
     
     #warning("TODO: find a way to not use an initialiser")
     
@@ -182,7 +177,7 @@ struct TimerView: View {
             if !tabRouter.hideTabBar {
                 VStack {
                     HStack {
-                        if !useExtendedView {
+                        if !(UIDevice.deviceIsPad && (globalGeometrySize.width > globalGeometrySize.height)) {
                             TimerHeader(targetFocused: $targetFocused, previewMode: false)
                                 .padding(.leading)
                                 .padding(.trailing, 24)
@@ -190,35 +185,30 @@ struct TimerView: View {
                             FloatingPanel(
                                 currentStage: $floatingPanelStage,
                                 maxHeight: (globalGeometrySize.height - 80),
-                                stages: [0, 50, 125, (globalGeometrySize.height - 80)],
+                                stages: [0, 35, 125, (globalGeometrySize.height - 80)],
                                 content: {
                                     EmptyView()
                                     
                                     TimerHeader(targetFocused: $targetFocused, previewMode: false)
-                                        .padding(.horizontal)
                                     
 //                                    EmptyView()
                                     VStack(alignment: .leading, spacing: 0) {
                                         TimerHeader(targetFocused: $targetFocused, previewMode: false)
-                                            .padding(.top)
                                             .padding(.bottom, 8)
                                         
                                         PrevSolvesDisplay(count: 3)
+                                            .padding(.horizontal)
                                         
                                         Spacer()
                                     }
-                                    .padding(.horizontal)
                                     
 //                                    EmptyView()
                                     VStack(alignment: .leading, spacing: 0) {
                                         TimerHeader(targetFocused: $targetFocused, previewMode: false)
-                                            .padding(.horizontal)
-                                            .padding(.vertical)
+                                            .padding(.bottom)
                                         
-                                        MainTabsView(useExtendedView: true)
-//                                            .frame(maxHeight: globalGeometrySize.height - 80 - 35 - 16*2)
-                                            .frame(maxHeight: 500)
-                                        
+                                        MainTabsView()
+                                            .frame(maxHeight: globalGeometrySize.height - 80 - 35 - 16*2)
                                     }
                                 }
                              )
@@ -497,7 +487,7 @@ struct TimerView: View {
                                             #warning("TODO: check if this is right")
                                             
                                         }
-                                        .frame(width: windowSize!.width/2, height: 120)
+                                        .frame(width: globalGeometrySize.width/2, height: 120)
                                     }
                                 }
                             }
@@ -525,7 +515,7 @@ struct TimerView: View {
                         if !showManualInputFormattedText {
                             TextField("0.00", text: $manualInputTime)
                                 .focused($manualInputFocused)
-                                .frame(maxWidth: windowSize!.width-32)
+                                .frame(maxWidth: globalGeometrySize.width-32)
                                 .font(.system(size: 56, weight: .bold, design: .monospaced))
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(stopWatchManager.timerColour)
@@ -535,7 +525,7 @@ struct TimerView: View {
                         } else {
                             Rectangle()
                                 .fill(Color.white.opacity(0.000001))
-                                .frame(maxWidth: windowSize!.width-32)
+                                .frame(maxWidth: globalGeometrySize.width-32)
                                 .onTapGesture {
                                     print("tapped")
                                     showManualInputFormattedText = false
@@ -661,39 +651,80 @@ struct TimerView: View {
             }
             
             
+            // SCRAMBLE
             if stopWatchManager.mode == .stopped {
-                if let scr = stopWatchManager.scrambleStr {
-                    VStack {
-                        Text(scr)
-                            .font(.system(size: stopWatchManager.currentSession.scramble_type == 7 ? (windowSize!.width) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
-                            .frame(maxHeight: globalGeometrySize.height/3)
-                            .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
-                            .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
-                            .onTapGesture {
-                                scrambleSheetStr = SheetStrWrapper(str: scr)
-                            }
-                        
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                    .offset(y: useExtendedView ? 0 : 35 + (SetValues.hasBottomBar ? 0 : 8))
-                
-                    
-                } else {
+                if floatingPanelStage > 1 {
                     HStack {
                         Spacer()
                         
+                        if let scr = stopWatchManager.scrambleStr {
+                            VStack {
+                                Text(scr)
+                                    .font(.system(size: stopWatchManager.currentSession.scramble_type == 7 ? (globalGeometrySize.width) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
+                                    .frame(maxWidth: globalGeometrySize.width - 400, maxHeight: globalGeometrySize.height/3)
+                                    .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
+                                    .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+                                    .onTapGesture {
+                                        scrambleSheetStr = SheetStrWrapper(str: scr)
+                                    }
+                                
+                                Spacer()
+                            }
+                            .padding(.horizontal)
+                            .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+                        } else {
+                            HStack {
+                                Spacer()
+                                
+                                VStack {
+                                    LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
+                                        .frame(maxHeight: 35)
+                                        .padding(.trailing)
+                                        .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+                                    
+                                    Spacer()
+                                }
+                            }
+                            
+                        }
+                    }
+                } else {
+                    if let scr = stopWatchManager.scrambleStr {
                         VStack {
-                            LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
-                                .frame(maxHeight: 35)
-                                .padding(.trailing)
-                                .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+                            Text(scr)
+                                .font(.system(size: stopWatchManager.currentSession.scramble_type == 7 ? (globalGeometrySize.width) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
+                                .frame(maxHeight: globalGeometrySize.height/3)
+                                .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
+                                .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+                                .onTapGesture {
+                                    scrambleSheetStr = SheetStrWrapper(str: scr)
+                                }
                             
                             Spacer()
                         }
+                        .padding(.horizontal)
+                        .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+                    } else {
+                        HStack {
+                            Spacer()
+                            
+                            VStack {
+                                LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
+                                    .frame(maxHeight: 35)
+                                    .padding(.trailing)
+                                    .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+                                
+                                Spacer()
+                            }
+                        }
+                        
                     }
-                    
                 }
+                
+                
+                
+                
+                
             }
 
             if stopWatchManager.mode == .inspecting && showCancelInspection {

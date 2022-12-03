@@ -42,16 +42,13 @@ struct TimeListView: View {
         }
     }
     
-    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
-                                    (scene as? UIWindowScene)?.keyWindow
-                                }).first?.frame.size
     
     /* TODO: COMBINE THIS WITH THE ABOVE
     private var columns: [GridItem] {
         if UIDevice.current.userInterfaceIdiom == .phone {
             return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
         } else {
-            if windowSize!.width > globalGeometrySize.width/2 {
+            if globalGeometrySize.width > globalGeometrySize.width/2 {
                 return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
             } else {
                 return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
