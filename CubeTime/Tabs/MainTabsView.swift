@@ -10,20 +10,34 @@ enum Tab {
 }
 
 class TabRouter: ObservableObject {
-    @Published var currentTab: Tab = .solves
+    @Published var currentTab: Tab = .timer {
+        didSet {
+            if currentTab == .timer {
+                padExpandState = 0
+            }
+        }
+    }
     @Published var hideTabBar: Bool = false
+    @Published var padExpandState: Int = 0 {
+        didSet {
+            if padExpandState == 1 && currentTab == .timer {
+                currentTab = .solves
+            }
+        }
+    }
 }
 
 struct TabIconWithBar: View {
     @Binding var currentTab: Tab
     let assignedTab: Tab
     let systemIconName: String
-    var systemIconNameSelected: String
+    let systemIconNameSelected: String
+    let pad: Bool
     var namespace: Namespace.ID
     
     var body: some View {
         ZStack {
-            VStack {
+            VHStack(vertical: !pad) {
                 Spacer()
                 if currentTab == assignedTab {
                     Color.primary
@@ -40,7 +54,7 @@ struct TabIconWithBar: View {
                 }
             }
             
-            TabIcon(currentTab: $currentTab, assignedTab: assignedTab, systemIconName: systemIconName, systemIconNameSelected: systemIconNameSelected)
+            TabIcon(currentTab: $currentTab, assignedTab: assignedTab, systemIconName: systemIconName, systemIconNameSelected: systemIconNameSelected, pad: pad)
         }
     }
 }
@@ -50,7 +64,8 @@ struct TabIcon: View {
     @Binding var currentTab: Tab
     let assignedTab: Tab
     let systemIconName: String
-    var systemIconNameSelected: String
+    let systemIconNameSelected: String
+    let pad: Bool
     var body: some View {
         Image(
             systemName:
@@ -76,7 +91,6 @@ struct MainTabsView: View {
     @EnvironmentObject var tabRouter: TabRouter
     
     
-    @Namespace private var namespace
     
     
     @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
@@ -88,10 +102,8 @@ struct MainTabsView: View {
             ZStack {
                 switch tabRouter.currentTab {
                 case .timer:
-                    if !(UIDevice.deviceIsPad && (globalGeometrySize.width > globalGeometrySize.height)) {
-                        TimerView()
-                            .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
-                    }
+                    TimerView()
+                        .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
                 case .solves:
                     TimeListView()
                 case .stats:
@@ -102,12 +114,11 @@ struct MainTabsView: View {
                     SettingsView()
                 }
                 
-                BottomTabsView(hide: $tabRouter.hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
-                    .zIndex(1)
-                    .ignoresSafeArea(.keyboard)
-                    .if(UIDevice.deviceIsPad && (globalGeometrySize.width > globalGeometrySize.height)) { view in
-                        view.padding(.bottom)
-                    }
+                if !tabRouter.hideTabBar {
+                    BottomTabsView(currentTab: $tabRouter.currentTab)
+                        .frame(maxHeight: .infinity, alignment: .bottom)
+                        .offset(y: -38)
+                }
             }
         }
         .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)

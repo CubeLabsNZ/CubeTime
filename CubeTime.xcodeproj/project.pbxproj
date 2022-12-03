@@ -59,6 +59,7 @@
 		7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7DDF2227955AFF00362DE9 /* PenButton.swift */; };
 		7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E2011275DD52600ADF01D /* Licenses.swift */; };
 		7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */; };
+		AF7D7806293B1E85003A2A11 /* PadSideBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7D7805293B1E85003A2A11 /* PadSideBar.swift */; };
 		AF7F0C012939EC8E005AECDC /* lib-scrambles.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		AF7F0C022939EC9D005AECDC /* lib-scrambles.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */; };
 /* End PBXBuildFile section */
@@ -149,6 +150,7 @@
 		7D7DDF2227955AFF00362DE9 /* PenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenButton.swift; sourceTree = "<group>"; };
 		7D7E2011275DD52600ADF01D /* Licenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Licenses.swift; sourceTree = "<group>"; };
 		7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleView.swift; sourceTree = "<group>"; };
+		AF7D7805293B1E85003A2A11 /* PadSideBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadSideBar.swift; sourceTree = "<group>"; };
 		AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "lib-scrambles.dylib"; path = "CubeTime/3rdparty/tnoodle-lib/lib/lib-scrambles.dylib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -298,6 +300,7 @@
 				23E81E75275D917000B741E3 /* Stats */,
 				23E81E6D275D8DB500B741E3 /* Settings */,
 				23DE3BE0274DDBE300254D29 /* Preview Content */,
+				AF7D7805293B1E85003A2A11 /* PadSideBar.swift */,
 			);
 			path = CubeTime;
 			sourceTree = "<group>";
@@ -543,6 +546,7 @@
 				2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */,
 				7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */,
 				233FE7B6274F109600C6F1DF /* Helper.swift in Sources */,
+				AF7D7806293B1E85003A2A11 /* PadSideBar.swift in Sources */,
 				7D7A9EC6274F396E00C2E125 /* SettingsView.swift in Sources */,
 				2326436028C4927600F6322E /* TimerHeader.swift in Sources */,
 				23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */,

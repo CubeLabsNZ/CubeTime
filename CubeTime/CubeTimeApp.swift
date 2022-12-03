@@ -161,7 +161,7 @@ struct MainView: View {
             let _ = NSLog("width: \(geo.size.width)")
             
             if UIDevice.deviceIsPad && geo.size.width > geo.size.height {
-                TimerView()
+                PadMainView()
                     .environment(\.globalGeometrySize, geo.size)
                     .environmentObject(tabRouter)
             } else {
