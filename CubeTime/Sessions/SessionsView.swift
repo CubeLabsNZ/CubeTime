@@ -27,9 +27,11 @@ struct SessionsView: View {
                     .ignoresSafeArea()
                 
                 ScrollView {
-                    VStack (spacing: 10) {
-                        ForEach(sessions) { item in
-                            SessionCard(item: item, allSessions: sessions)
+                    GeometryReader { geo in
+                        VStack (spacing: 10) {
+                            ForEach(sessions) { item in
+                                SessionCard(item: item, allSessions: sessions, parentGeo: geo)
+                            }
                         }
                     }
                 }
