@@ -2,6 +2,7 @@ import SwiftUI
  
 struct StatsDetail: View {
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
    
@@ -130,7 +131,7 @@ struct StatsDetail: View {
                                                 
                                                 if solve.scramble_type == 7 {
                                                     Text(solve.scramble ?? "Failed to load scramble")
-                                                        .font(.system(size: ((UIScreen.screenWidth-32) / (42.00) * 1.42), weight: .regular, design: .monospaced))
+                                                        .font(.system(size: ((globalGeometrySize.width-32) / (42.00) * 1.42), weight: .regular, design: .monospaced))
                                                 } else {
                                                     Text(solve.scramble ?? "Failed to load scramble")
                                                         .font(.callout.monospaced())

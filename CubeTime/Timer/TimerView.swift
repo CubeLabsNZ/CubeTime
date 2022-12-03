@@ -17,6 +17,7 @@ struct TimerView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
+    @Environment(\.globalGeometrySize) var globalGeometrySize
     
     // GET USER DEFAULTS
     @AppStorage("onboarding") var showOnboarding: Bool = true
@@ -57,8 +58,6 @@ struct TimerView: View {
                     }).first?.frame.size
 
     let useExtendedView: Bool = UIDevice.useExtendedView
-    
-    var globalGeo: CGSize
     
     
     #warning("TODO: find a way to not use an initialiser")
@@ -190,12 +189,13 @@ struct TimerView: View {
                         } else {
                             FloatingPanel(
                                 currentStage: $floatingPanelStage,
-                                maxHeight: (UIScreen.screenHeight - 80),
-                                stages: [0, 50, 125, (UIScreen.screenHeight - 80)],
+                                maxHeight: (globalGeometrySize.height - 80),
+                                stages: [0, 50, 125, (globalGeometrySize.height - 80)],
                                 content: {
                                     EmptyView()
                                     
                                     TimerHeader(targetFocused: $targetFocused, previewMode: false)
+                                        .padding(.horizontal)
                                     
 //                                    EmptyView()
                                     VStack(alignment: .leading, spacing: 0) {
@@ -216,11 +216,12 @@ struct TimerView: View {
                                             .padding(.vertical)
                                         
                                         MainTabsView(useExtendedView: true)
-                                            .frame(maxHeight: UIScreen.screenHeight - 80 - 35 - 16*2)
+//                                            .frame(maxHeight: globalGeometrySize.height - 80 - 35 - 16*2)
+                                            .frame(maxHeight: 500)
                                         
                                     }
                                 }
-                            )
+                             )
                             .ignoresSafeArea(.keyboard)
                             .frame(width: 360)
                             .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 0)
@@ -243,7 +244,7 @@ struct TimerView: View {
                         
                             
                         let maxHeight: CGFloat = 120
-                        let maxWidth: CGFloat = geometry.size.width - 12 - UIScreen.screenWidth/2
+                        let maxWidth: CGFloat = geometry.size.width - 12 - globalGeometrySize.width/2
                                                 
                         ZStack(alignment: .bottom) {
                             // SCRAMBLE VIEW
@@ -303,7 +304,7 @@ struct TimerView: View {
                                     ZStack {
                                         RoundedRectangle(cornerRadius: 16, style: .continuous)
                                             .fill(Color(uiColor: .systemGray5))
-                                            .frame(width: UIScreen.screenWidth/2, height: 120)
+                                            .frame(width: globalGeometrySize.width/2, height: 120)
                                         
                                         VStack(spacing: 6) {
                                             HStack(spacing: 0) {
@@ -315,7 +316,7 @@ struct TimerView: View {
                                                     if let currentAo5 = stopWatchManager.currentAo5 {
                                                         Text(formatSolveTime(secs: currentAo5.average!, penType: currentAo5.totalPen))
                                                             .font(.system(size: 24, weight: .bold))
-                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                            .frame(maxWidth: globalGeometrySize.width/4-8)
                                                             .modifier(DynamicText())
                                                     } else {
                                                         Text("-")
@@ -339,7 +340,7 @@ struct TimerView: View {
                                                     if let currentAo12 = stopWatchManager.currentAo12 {
                                                         Text(formatSolveTime(secs: currentAo12.average!, penType: currentAo12.totalPen))
                                                             .font(.system(size: 24, weight: .bold))
-                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                            .frame(maxWidth: globalGeometrySize.width/4-8)
                                                             .modifier(DynamicText())
                                                     } else {
                                                         Text("-")
@@ -357,7 +358,7 @@ struct TimerView: View {
                                             .padding(.top, 6)
                                             
                                             Divider()
-                                                .frame(width: UIScreen.screenWidth/2 - 48)
+                                                .frame(width: globalGeometrySize.width/2 - 48)
                                             
                                             HStack(spacing: 0) {
                                                 // ao100
@@ -368,7 +369,7 @@ struct TimerView: View {
                                                     if let currentAo100 = stopWatchManager.currentAo100 {
                                                         Text(formatSolveTime(secs: currentAo100.average!, penType: currentAo100.totalPen))
                                                             .font(.system(size: 24, weight: .bold))
-                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                            .frame(maxWidth: globalGeometrySize.width/4-8)
                                                             .modifier(DynamicText())
                                                     } else {
                                                         Text("-")
@@ -391,7 +392,7 @@ struct TimerView: View {
                                                     if let sessionMean = stopWatchManager.sessionMean {
                                                         Text(formatSolveTime(secs: sessionMean))
                                                             .font(.system(size: 24, weight: .bold))
-                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                            .frame(maxWidth: globalGeometrySize.width/4-8)
                                                             .modifier(DynamicText())
                                                     } else {
                                                         Text("-")
@@ -405,7 +406,7 @@ struct TimerView: View {
                                         }
                                         .padding(.horizontal, 4)
                                     }
-                                    .frame(width: UIScreen.screenWidth/2, height: 120)
+                                    .frame(width: globalGeometrySize.width/2, height: 120)
                                 }
                             } else if showStats && SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! == .compsim {
                                 HStack {
@@ -414,7 +415,7 @@ struct TimerView: View {
                                     ZStack {
                                         RoundedRectangle(cornerRadius: 16, style: .continuous)
                                             .fill(Color(uiColor: .systemGray5))
-                                            .frame(width: UIScreen.screenWidth/2, height: 120)
+                                            .frame(width: globalGeometrySize.width/2, height: 120)
                                         
                                         
                                         VStack(spacing: 6) {
@@ -427,7 +428,7 @@ struct TimerView: View {
                                                     if let bpa = stopWatchManager.bpa {
                                                         Text(formatSolveTime(secs: bpa))
                                                             .font(.system(size: 24, weight: .bold))
-                                                            .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                            .frame(maxWidth: globalGeometrySize.width/4-8)
                                                             .modifier(DynamicText())
                                                     } else {
                                                         Text("...")
@@ -451,7 +452,7 @@ struct TimerView: View {
                                                         } else {
                                                             Text(formatSolveTime(secs: wpa))
                                                                 .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: UIScreen.screenWidth/4-8)
+                                                                .frame(maxWidth: globalGeometrySize.width/4-8)
                                                                 .modifier(DynamicText())
                                                         }
                                                         
@@ -468,7 +469,7 @@ struct TimerView: View {
                                             .padding(.top, 6)
                                             
                                             Divider()
-                                                .frame(width: UIScreen.screenWidth/2 - 48)
+                                                .frame(width: globalGeometrySize.width/2 - 48)
                                             
                                             // reach target
                                             VStack(spacing: 0) {
@@ -502,11 +503,11 @@ struct TimerView: View {
                             }
                         }
                     }
-//                    .frame(idealWidth: UIScreen.screenWidth, maxWidth: UIScreen.screenWidth, idealHeight: 120, maxHeight: 120)
+//                    .frame(idealWidth: globalGeometrySize.width, maxWidth: globalGeometrySize.width, idealHeight: 120, maxHeight: 120)
     //                .safeAreaInset(edge: .bottom, spacing: 0) {Rectangle().fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : 12)}
 //                    .background(Color.pink)
                     .padding(.horizontal)
-                    .frame(width: UIScreen.screenWidth, height: 120)
+                    .frame(width: globalGeometrySize.width, height: 120)
 //                    .padding(.bottom, SetValues.hasBottomBar ? 0 : 12)
 //                    .padding(.bottom, 12)
                     .offset(x: 0, y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12))) // 50 for tab + 8 for padding + 16/0 for bottom bar gap
@@ -665,7 +666,7 @@ struct TimerView: View {
                     VStack {
                         Text(scr)
                             .font(.system(size: stopWatchManager.currentSession.scramble_type == 7 ? (windowSize!.width) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
-                            .frame(maxHeight: UIScreen.screenHeight/3)
+                            .frame(maxHeight: globalGeometrySize.height/3)
                             .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
                             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
                             .onTapGesture {
@@ -752,6 +753,7 @@ struct TimerView: View {
 
 
 struct TimeScrambleDetail: View {
+    @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.dismiss) var dismiss
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
@@ -776,7 +778,7 @@ struct TimeScrambleDetail: View {
                 
                 
                 if let svg = svg {
-                    DefaultScrambleView(svg: svg, width: UIScreen.screenWidth / UIScreen.main.scale, height: UIScreen.screenHeight / 3 / UIScreen.main.scale)
+                    DefaultScrambleView(svg: svg, width: globalGeometrySize.width / UIScreen.main.scale, height: globalGeometrySize.height / 3 / UIScreen.main.scale)
                         .aspectRatio(contentMode: .fit)
                         .padding()
                 } else {

@@ -2,7 +2,8 @@ import SwiftUI
 
 
 struct FloatingPanel: View {
-    @SceneStorage("CubeStuffs.FloatingPanel.height") private var height: Double = 50
+//    @SceneStorage("CubeStuffs.FloatingPanel.height") private var height: Double = 50
+    @State private var height: Double = 50
     
     @Binding var stage: Int
     
@@ -47,11 +48,9 @@ struct FloatingPanel: View {
                 items[stage]
                     .frame(height: height)
             }
-                            .ignoresSafeArea(.keyboard)
             
             
             Divider()
-                            .ignoresSafeArea(.keyboard)
                 .frame(width: height == 0 ? 0 : 360)
             
             
@@ -102,9 +101,7 @@ struct FloatingPanel: View {
                     .scaleEffect(isPressed ? 1.12 : 1.00)
                     .frame(width: 36, height: 6)
             }
-                            .ignoresSafeArea(.keyboard)
         }
-                            .ignoresSafeArea(.keyboard)
         .frame(width: 360)
     }
 }

@@ -110,6 +110,7 @@ struct TimeDetailViewOnly: View {
     @Environment(\.presentationMode) var presentation
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
+    @Environment(\.globalGeometrySize) var globalGeometrySize
     
     @EnvironmentObject var stopWatchManager: StopWatchManager
 
@@ -260,10 +261,10 @@ struct TimeDetailViewOnly: View {
                                 .padding(.leading)
                             
                             GeometryReader { proxy in
-                                AsyncScrambleView(puzzle: 0, scramble: scramble, width: 10, height: 10)
+                                AsyncScrambleView(puzzle: solve.scramble_type, scramble: scramble, width: 10, height: 10)
                                     .position(x: proxy.frame(in: .local).midX, y: proxy.frame(in: .local).midY)
                             }
-                            .frame(width: nil, height: UIScreen.screenHeight / 3.5)
+                            .frame(width: nil, height: globalGeometrySize.height / 3.5)
                             .padding([.horizontal, .bottom])
                             .padding(.top, 12)
                         }

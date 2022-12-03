@@ -103,6 +103,8 @@ struct LicensesPopUpView: View {
 }
 
 struct AboutSettingsView: View {
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+    
     @AppStorage("onboarding") var showOnboarding = false
     @State var showLicenses = false
     @ScaledMetric(relativeTo: .largeTitle) var iconSize: CGFloat = 60
@@ -157,7 +159,7 @@ struct AboutSettingsView: View {
                     Image("kofiButton")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: UIScreen.screenWidth * 0.618)
+                        .frame(width: globalGeometrySize.width * 0.618)
                     
                     Spacer()
                 }

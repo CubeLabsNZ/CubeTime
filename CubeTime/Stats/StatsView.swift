@@ -4,6 +4,8 @@ import CoreData
 struct StatsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+    
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
     
@@ -254,7 +256,7 @@ struct StatsView: View {
                             StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 310), true, false) {
                                 
                                 TimeTrend(data: timeTrendData, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
-                                    .frame(width: UIScreen.screenWidth - (2 * 16) - (2 * 12))
+                                    .frame(width: globalGeometrySize.width - (2 * 16) - (2 * 12))
                                     .padding(.horizontal, 12)
                                     .offset(y: -4)
                                     .drawingGroup()

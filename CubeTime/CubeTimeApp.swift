@@ -135,22 +135,38 @@ struct CubeTime: App {
 }
 
 
+private struct GlobalGeometrySize: EnvironmentKey {
+    static let defaultValue: CGSize = UIScreen.main.bounds.size
+}
+
+extension EnvironmentValues {
+    var globalGeometrySize: CGSize {
+        get {
+            self[GlobalGeometrySize.self]
+            
+        }
+        set {
+            self[GlobalGeometrySize.self] = newValue
+            
+        }
+    }
+}
+
 struct MainView: View {
     @StateObject var tabRouter: TabRouter = TabRouter()
         
     var body: some View {
-        let _ = print("Ui: \(UIScreen.screenWidth)")
-        let _ = print("Ui: \(UIScreen.screenHeight)")
-        
         GeometryReader { geo in
-            let _ = print("geo: \(UIScreen.screenWidth)")
-            let _ = print("geo: \(UIScreen.screenHeight)")
+            let _ = NSLog("height: \(geo.size.height)")
+            let _ = NSLog("width: \(geo.size.width)")
             
             if UIDevice.deviceIsPad && geo.size.width > geo.size.height {
-                TimerView(globalGeo: geo.size)
+                TimerView()
+                    .environment(\.globalGeometrySize, geo.size)
                     .environmentObject(tabRouter)
             } else {
-                MainTabsView(globalGeo: geo.size)
+                MainTabsView()
+                    .environment(\.globalGeometrySize, geo.size)
                     .environmentObject(tabRouter)
             }
         }

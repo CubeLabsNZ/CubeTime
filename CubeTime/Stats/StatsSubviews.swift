@@ -67,6 +67,7 @@ struct StatsBlock<Content: View>: View {
 
 struct StatsBlockText: View {
     @Environment(\.colorScheme) var colourScheme
+    @Environment(\.globalGeometrySize) var globalGeometrySize
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     
     let displayText: String
@@ -98,7 +99,7 @@ struct StatsBlockText: View {
                     if nilCondition {
                         Text(displayText)
                             .font(.largeTitle.weight(.bold))
-                            .frame(minWidth: 0, maxWidth: UIScreen.screenWidth/2 - 42, alignment: .leading)
+                            .frame(minWidth: 0, maxWidth: globalGeometrySize.width/2 - 42, alignment: .leading)
                             .modifier(DynamicText())
                             .padding(.bottom, 2)
                         

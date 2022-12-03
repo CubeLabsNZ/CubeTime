@@ -670,6 +670,8 @@ struct GeneralSettingsView: View {
 struct TimerPreview: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+    
     @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     
     
@@ -723,7 +725,7 @@ struct TimerPreview: View {
             VStack {
                 Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
                     .font(.system(size: CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
-                    .frame(maxHeight: UIScreen.screenHeight/3)
+                    .frame(maxHeight: globalGeometrySize.height/3)
                     .multilineTextAlignment(.center)
                     
                 

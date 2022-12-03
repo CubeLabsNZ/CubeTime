@@ -5,6 +5,7 @@ import Combine
 struct NewSessionModalView: View {
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colourScheme
     
@@ -26,7 +27,7 @@ struct NewSessionModalView: View {
                         Text("Add New Session")
                             .font(.system(size: 34, weight: .bold, design: .default))
                             .padding(.bottom, 8)
-                            .padding(.top, UIScreen.screenHeight/12)
+                            .padding(.top, globalGeometrySize.height/12)
                     }
                     
                     

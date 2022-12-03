@@ -51,7 +51,7 @@ struct TimeListView: View {
         if UIDevice.current.userInterfaceIdiom == .phone {
             return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
         } else {
-            if windowSize!.width > UIScreen.screenWidth/2 {
+            if windowSize!.width > globalGeometrySize.width/2 {
                 return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
             } else {
                 return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
