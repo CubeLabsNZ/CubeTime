@@ -4,7 +4,7 @@ struct BottomTabsView: View {
     @Binding var hide: Bool
     @Binding var currentTab: Tab
     
-    var deviceIsPad: Bool = UIDevice.deviceIsPad
+    var useExtendedView: Bool = UIDevice.useExtendedView
     
     var namespace: Namespace.ID
     
@@ -34,7 +34,7 @@ struct BottomTabsView: View {
                         
                         HStack {
                             HStack {
-                                if !deviceIsPad {
+                                if !useExtendedView {
                                     TabIconWithBar(
                                         currentTab: $currentTab,
                                         assignedTab: .timer,

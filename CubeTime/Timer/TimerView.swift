@@ -56,7 +56,7 @@ struct TimerView: View {
                         (scene as? UIWindowScene)?.keyWindow
                     }).first?.frame.size
 
-    let deviceIsPad: Bool = UIDevice.deviceIsPad
+    let useExtendedView: Bool = UIDevice.useExtendedView
     
     
     
@@ -182,7 +182,7 @@ struct TimerView: View {
             if !tabRouter.hideTabBar {
                 VStack {
                     HStack {
-                        if !deviceIsPad {
+                        if !useExtendedView {
                             TimerHeader(targetFocused: $targetFocused, previewMode: false)
                                 .padding(.leading)
                                 .padding(.trailing, 24)
@@ -214,7 +214,7 @@ struct TimerView: View {
                                             .padding(.horizontal)
                                             .padding(.vertical)
                                         
-                                        MainTabsView(deviceIsPad: true)
+                                        MainTabsView(useExtendedView: true)
                                             .frame(maxHeight: UIScreen.screenHeight - 80 - 35 - 16*2)
                                         
                                     }
@@ -674,7 +674,7 @@ struct TimerView: View {
                         Spacer()
                     }
                     .padding(.horizontal)
-                    .offset(y: deviceIsPad ? 0 : 35 + (SetValues.hasBottomBar ? 0 : 8))
+                    .offset(y: useExtendedView ? 0 : 35 + (SetValues.hasBottomBar ? 0 : 8))
                 
                     
                 } else {
@@ -743,6 +743,7 @@ struct TimerView: View {
         }
         .statusBar(hidden: hideStatusBar)
         .ignoresSafeArea(.keyboard)
+        
         
         #warning("TODO: make animation asymmetric?")
     }

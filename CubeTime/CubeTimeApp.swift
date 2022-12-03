@@ -20,6 +20,7 @@ struct CubeTime: App {
     private let moc: NSManagedObjectContext
     
     @StateObject var stopWatchManager: StopWatchManager
+    @StateObject var deviceManager: DeviceManager = DeviceManager()
     @StateObject var tabRouter: TabRouter = TabRouter()
     
     @State var showUpdates: Bool = false
@@ -54,6 +55,7 @@ struct CubeTime: App {
         
         // https://swiftui-lab.com/random-lessons/#data-10
         self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: fetchedSession, managedObjectContext: moc))
+        
         
         self.moc = moc
         
@@ -124,7 +126,11 @@ struct CubeTime: App {
                 }
                 .environment(\.managedObjectContext, moc)
                 .environmentObject(stopWatchManager)
+                .environmentObject(deviceManager)
                 .environmentObject(tabRouter)
+//                .onAppear {
+//                    self.deviceManager.deviceOrientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation
+//                }
         }
 
     }
@@ -132,16 +138,18 @@ struct CubeTime: App {
 
 
 struct MainView: View {
+    @EnvironmentObject var deviceManager: DeviceManager
     @StateObject var tabRouter: TabRouter = TabRouter()
-    
-    
+        
     var body: some View {
-        if UIDevice.deviceIsPad {
-            TimerView()
-                .environmentObject(tabRouter)
-        } else {
-            MainTabsView()
-                .environmentObject(tabRouter)
+        GeometryReader { geo in
+            if UIDevice.deviceIsPad && geo.size.width > geo.size.height {
+                TimerView()
+                    .environmentObject(tabRouter)
+            } else {
+                MainTabsView()
+                    .environmentObject(tabRouter)
+            }
         }
     }
 }

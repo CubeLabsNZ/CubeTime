@@ -21,6 +21,7 @@
 		2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2359689227A367A0003ED9E1 /* StopwatchManager.swift */; };
 		235CDA0327A786D800F48C89 /* Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235CDA0227A786D800F48C89 /* Updates.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
+		238ECE91293AE98300683586 /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238ECE90293AE98300683586 /* DeviceManager.swift */; };
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
 		239C7E702781511300943AF2 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239C7E6F2781511300943AF2 /* Onboarding.swift */; };
 		23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */; };
@@ -108,6 +109,7 @@
 		2359689227A367A0003ED9E1 /* StopwatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchManager.swift; sourceTree = "<group>"; };
 		235CDA0227A786D800F48C89 /* Updates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updates.swift; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
+		238ECE90293AE98300683586 /* DeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DeviceManager.swift; path = CubeTime/DeviceManager.swift; sourceTree = SOURCE_ROOT; };
 		2397131E2791032300268DFA /* AveragePhases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AveragePhases.swift; sourceTree = "<group>"; };
 		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		23AB648329385D310049993B /* NewSessionModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSessionModalView.swift; sourceTree = "<group>"; };
@@ -286,6 +288,7 @@
 				235CDA0227A786D800F48C89 /* Updates.swift */,
 				233FE7B5274F109600C6F1DF /* Helper.swift */,
 				2324160D2828F5AB0066B3C2 /* SessionBar.swift */,
+				238ECE90293AE98300683586 /* DeviceManager.swift */,
 				23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */,
 				7D7C45C42751DE2C0073885C /* 3rdparty-Bridging-Header.h */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
@@ -546,6 +549,7 @@
 				7D7A9EC6274F396E00C2E125 /* SettingsView.swift in Sources */,
 				2326436028C4927600F6322E /* TimerHeader.swift in Sources */,
 				23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */,
+				238ECE91293AE98300683586 /* DeviceManager.swift in Sources */,
 				23034725278BD22600553A7D /* TimeDetail.swift in Sources */,
 				2326436228C4929700F6322E /* PrevSolvesDisplay.swift in Sources */,
 				239C7E702781511300943AF2 /* Onboarding.swift in Sources */,

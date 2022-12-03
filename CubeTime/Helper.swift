@@ -92,6 +92,10 @@ public extension UIDevice {
     static var deviceOrientation: UIDeviceOrientation {
         UIDevice.current.orientation
     }
+    
+    static var useExtendedView: Bool {
+        self.deviceIsPad && (self.deviceOrientation == .landscapeLeft || self.deviceOrientation == .landscapeRight)
+    }
 }
 
 /// device restriction function

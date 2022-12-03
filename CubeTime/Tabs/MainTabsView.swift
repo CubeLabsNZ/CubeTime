@@ -74,10 +74,10 @@ struct MainTabsView: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @EnvironmentObject var tabRouter: TabRouter
     
-    var deviceIsPad: Bool
+    var useExtendedView: Bool
 
-    init(deviceIsPad: Bool = false) {
-        self.deviceIsPad = deviceIsPad
+    init(useExtendedView: Bool = false) {
+        self.useExtendedView = useExtendedView
     }
     
     @Namespace private var namespace
@@ -107,7 +107,7 @@ struct MainTabsView: View {
                 BottomTabsView(hide: $tabRouter.hideTabBar, currentTab: $tabRouter.currentTab, namespace: namespace)
                     .zIndex(1)
                     .ignoresSafeArea(.keyboard)
-                    .if(UIDevice.deviceIsPad) { view in
+                    .if(UIDevice.useExtendedView) { view in
                         view.padding(.bottom)
                     }
             }
