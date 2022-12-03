@@ -69,7 +69,7 @@ struct StatsView: View {
                                     }
                                     .padding(.horizontal)
                                     
-                                    StatsDivider()
+                                    StatsDivider(parentGeo: geo)
                                     
                                     HStack(spacing: 10) {
                                         VStack (spacing: 10) {
@@ -108,7 +108,7 @@ struct StatsView: View {
                                     }
                                     .padding(.horizontal)
                                     
-                                    StatsDivider()
+                                    StatsDivider(parentGeo: geo)
                                     
                                     if SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! == .multiphase {
                                         StatsBlock("AVERAGE PHASES", stopWatchManager.solvesNoDNFs.count == 0 ? 150 : nil, true, false) {
@@ -182,7 +182,7 @@ struct StatsView: View {
                                     }
                                     .padding(.horizontal)
                                     
-                                    StatsDivider()
+                                    StatsDivider(parentGeo: geo)
                                     
                                     HStack(spacing: 10) {
                                         StatsBlock("TARGET", blockHeightSmall, false, false) {
@@ -213,7 +213,7 @@ struct StatsView: View {
                                         }
                                     }
                                     
-                                    StatsDivider()
+                                    StatsDivider(parentGeo: geo)
                                     
                                     HStack(spacing: 10) {
                                         StatsBlock("CURRENT MO10 AO5", blockHeightSmall, false, false) {
@@ -237,7 +237,7 @@ struct StatsView: View {
                                     }
                                     .padding(.horizontal)
                                     
-                                    StatsDivider()
+                                    StatsDivider(parentGeo: geo)
                                 }
                                 
                                 let allCompsimAveragesByDate: [CalculatedAverage] = stopWatchManager.getBestCompsimAverageAndArrayOfCompsimAverages().1
@@ -252,7 +252,7 @@ struct StatsView: View {
                                 
                                 StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 310), true, false) {
                                     TimeTrend(data: timeTrendData, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
-                                        .frame(width: geo.size.width - (2 * 16) - (2 * 12))
+//                                        .frame(width: geo.size.width)
                                         .padding(.horizontal, 12)
                                         .offset(y: -4)
                                         .drawingGroup()

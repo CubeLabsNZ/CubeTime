@@ -185,22 +185,25 @@ struct TimerView: View {
                             FloatingPanel(
                                 currentStage: $floatingPanelStage,
                                 maxHeight: (globalGeometrySize.height - 24),
-                                stages: [0, 35, 125, (globalGeometrySize.height - 24)],
+                                stages: [0, 50, 130, (globalGeometrySize.height - 24)],
                                 content: {
                                     EmptyView()
                                     
                                     TimerHeader(targetFocused: $targetFocused, previewMode: false)
+                                        .padding(.horizontal)
+                                        .padding(.top, 8)
                                     
-                                    VStack(alignment: .leading, spacing: 0) {
+                                    VStack(alignment: .leading, spacing: 12) {
                                         TimerHeader(targetFocused: $targetFocused, previewMode: false)
                                         
                                         PrevSolvesDisplay(count: 3)
-                                            .padding()
                                     }
+                                    .padding()
                                     
                                     VStack(alignment: .leading, spacing: 0) {
                                         TimerHeader(targetFocused: $targetFocused, previewMode: false)
-                                            .padding(.bottom)
+                                            .padding()
+//                                            .padding(.bottom)
                                         
                                         MainTabsView()
                                     }
@@ -208,9 +211,12 @@ struct TimerView: View {
                              )
                             .ignoresSafeArea(.keyboard)
                             .frame(width: 360)
-                            .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+                            .padding(.top, SetValues.hasBottomBar
+                                     ? 0
+                                     : tabRouter.hideTabBar
+                                        ? nil
+                                        : 8)
                             .padding(.leading, 24)
-                            .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 0)
                         }
                         
                         

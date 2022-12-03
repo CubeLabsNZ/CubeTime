@@ -105,6 +105,7 @@ func getModelName() -> String {
 }
 
 // screen sizes
+@available(*, deprecated, message: "Use global geometry env variable instead.")
 extension UIScreen {
    static let screenWidth = UIScreen.main.bounds.size.width
    static let screenHeight = UIScreen.main.bounds.size.height

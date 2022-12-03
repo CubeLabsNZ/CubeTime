@@ -216,9 +216,9 @@ struct StatsBlockSmallText: View {
 }
 
 struct StatsDivider: View {
-    @Environment(\.globalGeometrySize) var globalGeometrySize
-
     @Environment(\.colorScheme) var colourScheme
+    
+    let parentGeo: GeometryProxy
     
     private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
                                 (scene as? UIWindowScene)?.keyWindow
@@ -226,7 +226,7 @@ struct StatsDivider: View {
 
     var body: some View {
         Divider()
-            .frame(width: globalGeometrySize.width / 2)
+            .frame(width: parentGeo.size.width / 2)
             .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
     }
 }

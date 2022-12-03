@@ -157,10 +157,7 @@ struct MainView: View {
         
     var body: some View {
         GeometryReader { geo in
-            let _ = NSLog("height: \(geo.size.height)")
-            let _ = NSLog("width: \(geo.size.width)")
-            
-            if UIDevice.deviceIsPad && geo.size.width > geo.size.height {
+            if UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(geo.size) {
                 TimerView()
                     .environment(\.globalGeometrySize, geo.size)
                     .environmentObject(tabRouter)

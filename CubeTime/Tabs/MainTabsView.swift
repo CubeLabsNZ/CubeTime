@@ -32,7 +32,6 @@ struct TabIconWithBar: View {
                         .matchedGeometryEffect(id: "underline", in: namespace, properties: .frame)
                         .shadow(color: .black.opacity(0.6), radius: 6, x: 0, y: 2)
                         .offset(y: -48)
-                    //                                                .padding(.leading, 14)
                 } else {
                     Color.clear
                         .frame(width: 32, height: 2)

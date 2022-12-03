@@ -45,6 +45,7 @@ struct FloatingPanel: View {
                     .fill(Color.getBackgroundColour(colourScheme))
                     .frame(width: 360, height: height)
                     .cornerRadius(8, corners: [.topLeft, .topRight])
+                    .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 0)
                 
                 // view
                 items[stage]
