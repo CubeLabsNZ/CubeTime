@@ -76,40 +76,56 @@ struct TimerBackgroundColor: View {
     }
 }
 
+
+enum TimerTool {
+    case drawScramble
+    case stats
+}
+
 struct BottomTools: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
-
-    
-    var timerSize: CGSize
     @Binding var scrambleSheetStr: SheetStrWrapper?
 
     
+    let toolType: TimerTool
+    let maxHeight: CGFloat
+    let maxWidth: CGFloat
+    
+    init(toolType: TimerTool, parentGeo: CGSize, scrambleSheetStr: Binding<SheetStrWrapper?>) {
+        self._scrambleSheetStr = scrambleSheetStr
+        self.toolType = toolType
+        self.maxHeight = 120
+        self.maxWidth = (parentGeo.width - 32) / 2 - 12
+    }
+    
+    
     var body: some View {
-        let maxHeight: CGFloat = 120
-        let maxWidth: CGFloat = timerSize.width / 2 - 12
-        
-        HStack {
+        switch toolType {
+        case .drawScramble:
             ZStack(alignment: .bottomLeading) {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color(uiColor: .systemGray5))
+                    .frame(width: maxWidth, height: maxHeight)
+                
                 if let svg = stopWatchManager.scrambleSVG {
                     if let scr = stopWatchManager.scrambleStr {
-                        
                         SVGView(string: svg)
+                            .padding(2)
+                            .frame(width: maxWidth, height: maxHeight)
                             .aspectRatio(contentMode: .fit)
-                            .padding(.all, 2)
-                        
                             .onTapGesture {
                                 scrambleSheetStr = SheetStrWrapper(str: scr)
                             }
                     }
                 } else {
                     LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
+                        .frame(width: maxWidth, height: maxHeight, alignment: .center)
                 }
             }
-            .background(Color.red)
             .frame(width: maxWidth, height: maxHeight)
-            .background(Color(uiColor: .systemGray5).clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous)))
             
-            Spacer()
+        case .stats:
+            EmptyView()
         }
     }
 }
@@ -301,7 +317,7 @@ struct TimerView: View {
             }
             
             if stopWatchManager.mode == .stopped {
-                BottomTools(timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr)
+                BottomTools(toolType: .drawScramble, parentGeo: geo.size, scrambleSheetStr: $scrambleSheetStr)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                     .padding(.horizontal)
                     .offset(x: 0, y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12))) // 50 for tab + 8 for padding + 16/0 for bottom bar gap
