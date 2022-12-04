@@ -17,6 +17,8 @@ struct TimerTime: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
     @Environment(\.colorScheme) var colourScheme
     
+    let font: CTFontDescriptor
+    
     func getTimerColor() -> Color {
         if stopWatchManager.mode == .inspecting && colourScheme == .dark && stopWatchManager.timerColour == Color.Timer.normal {
             switch stopWatchManager.inspectionSecs {
@@ -38,12 +40,12 @@ struct TimerTime: View {
         // to prevent text clipping and other UI problems
             .if(!(smallDeviceNames.contains(getModelName()))) { view in
                 view
-                    .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 70 : 56))
+                    .modifier(AnimatingFontSize(font: font, fontSize: stopWatchManager.mode == .running ? 70 : 56))
                     .animation(Animation.spring(), value: stopWatchManager.mode == .running)
             }
             .if(smallDeviceNames.contains(getModelName())) { view in
                 view
-                    .font(.system(size: 54, weight: .bold, design: .monospaced))
+                    .font(Font(CTFontCreateWithFontDescriptor(font, 54, nil)))
             }
     }
 }
@@ -199,6 +201,10 @@ struct TimerView: View {
     @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     @AppStorage(gsKeys.showPrevTime.rawValue) private var showPrevTime: Bool = false
     @AppStorage(gsKeys.inputMode.rawValue) private var inputMode: InputMode = .timer
+    @AppStorage(asKeys.fontWeight.rawValue) private var fontWeight: Double = 300
+    @AppStorage(asKeys.fontCasual.rawValue) private var fontCasual: Double = 0.5
+    @AppStorage(asKeys.fontCursive.rawValue) private var fontCursive: Bool = false
+
     
     // FOCUS STATES
     @FocusState private var targetFocused: Bool
@@ -227,9 +233,28 @@ struct TimerView: View {
     
     #warning("TODO: find a way to not use an initialiser")
     
-    
+    func getFont() -> (Font, CTFontDescriptor) {
+            // weight, casual, cursive
+        let variations = [2003265652: fontWeight, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
+        let variationsTimer = [2003265652: fontWeight + 200, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
+        
+        let ctFontDesc = CTFontDescriptorCreateWithAttributes([
+            kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
+            kCTFontVariationAttribute: variations
+        ] as! CFDictionary)
+        
+        let ctFontDescTimer = CTFontDescriptorCreateWithAttributes([
+            kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
+            kCTFontVariationAttribute: variationsTimer
+        ] as! CFDictionary)
+        
+        let ctFont = CTFontCreateWithFontDescriptor(ctFontDesc, stopWatchManager.currentSession.scramble_type == 7 ? (globalGeometrySize.width) / (42.00) * 1.44 : CGFloat(scrambleSize), nil)
+
+        return (Font(ctFont), ctFontDescTimer)
+    }
     
     var body: some View {
+        let fonts = getFont()
         GeometryReader { geo in
             TimerBackgroundColor()
                 .ignoresSafeArea(.all)
@@ -338,7 +363,7 @@ struct TimerView: View {
                 if let scr = stopWatchManager.scrambleStr {
                     Group {
                         Text(scr)
-                            .font(.system(size: stopWatchManager.currentSession.scramble_type == 7 ? (globalGeometrySize.width) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
+                            .font(fonts.0)
                             .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
                             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
                             .frame(maxWidth: .infinity, maxHeight: globalGeometrySize.height/3)

@@ -9,7 +9,7 @@ struct settingsBlocks: ViewModifier {
 }
 
 enum asKeys: String {
-    case accentColour, overrideDM, dmBool, staticGradient, gradientSelected, graphGlow, graphAnimation
+    case accentColour, overrideDM, dmBool, staticGradient, gradientSelected, graphGlow, graphAnimation, fontWeight, fontCasual, fontCursive
 }
 
 
@@ -34,7 +34,9 @@ struct AppearanceSettingsView: View {
     @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
     
     
-    
+    @AppStorage(asKeys.fontWeight.rawValue) private var fontWeight: Double = 300
+    @AppStorage(asKeys.fontCasual.rawValue) private var fontCasual: Double = 0.5
+    @AppStorage(asKeys.fontCursive.rawValue) private var fontCursive: Bool = false
     
     
     
@@ -283,6 +285,109 @@ struct AppearanceSettingsView: View {
                 }
             }
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            
+            
+            let font = { () -> Font in
+                
+                
+                
+//                let uiFont = UIFont(name: "RecursiveSansLinearLightMonospace-Regular", size: 16.0)!
+//                let ctFont = CTFontCreateWithName(uiFont.fontName as CFString, 16.0, nil)
+//                print(uiFont.fontName)
+                
+                // weight, casual, cursive
+                let variations = [2003265652: fontWeight, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
+                
+                let ctFontDesc = CTFontDescriptorCreateWithAttributes([
+                    kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
+                    kCTFontVariationAttribute: variations
+                ] as! CFDictionary)
+                
+                let ctFont = CTFontCreateWithFontDescriptor(ctFontDesc, 32, nil)
+                
+                return Font(ctFont)
+            }()
+            
+            VStack {
+                HStack {
+                    Image(systemName: "textformat.size.larger")
+                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
+                        .foregroundColor(accentColour)
+                    Text("Font Settings")
+                        .font(Font.system(.body, design: .rounded).weight(.bold))
+                    
+                    Spacer()
+                }
+                .padding([.horizontal, .top], 10)
+                .padding(.bottom)
+                
+                VStack(spacing: 0) {
+                    
+                    Text("Demonstration 24:10.51")
+                        .font(font)
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("Font Weight")
+                            .font(.body.weight(.medium))
+                            .padding(.bottom, 4)
+                        
+                        HStack {
+                            Text("MIN")
+                                .font(Font.system(.footnote, design: .rounded))
+                                .foregroundColor(Color(uiColor: .systemGray2))
+                            
+                            Slider(value: $fontWeight, in: 300...800, step: 1.0)
+                                .padding(.horizontal, 4)
+                            
+                            Text("MAX")
+                                .font(Font.system(.footnote, design: .rounded))
+                                .foregroundColor(Color(uiColor: .systemGray2))
+                            
+                        }
+                        
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 12)
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("Font Casualness")
+                            .font(.body.weight(.medium))
+                            .padding(.bottom, 4)
+                        
+                        HStack {
+                            Text("MIN")
+                                .font(Font.system(.footnote, design: .rounded))
+                                .foregroundColor(Color(uiColor: .systemGray2))
+                            
+                            Slider(value: $fontCasual, in: 0...1, step: 0.01)
+                                .padding(.horizontal, 4)
+                            
+                            Text("MAX")
+                                .font(Font.system(.footnote, design: .rounded))
+                                .foregroundColor(Color(uiColor: .systemGray2))
+                            
+                        }
+                        
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 12)
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        HStack {
+                            Toggle(isOn: $fontCursive) {
+                                Text("Cursive Font")
+                                    .font(.body.weight(.medium))
+                            }
+                                .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        }
+                        .padding(.horizontal)
+                        .padding(.bottom, 12)
+                    }
+                }
+            }
+            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            
+            
         }
         .padding(.horizontal)
         .preferredColorScheme(overrideSystemAppearance ? darkMode ? .dark : .light : nil)

@@ -60,6 +60,9 @@
 		7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E2011275DD52600ADF01D /* Licenses.swift */; };
 		7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */; };
 		AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */ = {isa = PBXBuildFile; productRef = AF7697DB293C1EFA00FF1C50 /* SVGView */; };
+		AF7697DE293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */; };
+		AF7697DF293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */; };
+		AF7697E0293C5A9D00FF1C50 /* RecMonoVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */; };
 		AF7D7806293B1E85003A2A11 /* PadSideBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7D7805293B1E85003A2A11 /* PadSideBar.swift */; };
 		AF7F0C012939EC8E005AECDC /* lib-scrambles.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		AF7F0C022939EC9D005AECDC /* lib-scrambles.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */; };
@@ -151,6 +154,7 @@
 		7D7DDF2227955AFF00362DE9 /* PenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenButton.swift; sourceTree = "<group>"; };
 		7D7E2011275DD52600ADF01D /* Licenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Licenses.swift; sourceTree = "<group>"; };
 		7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleView.swift; sourceTree = "<group>"; };
+		AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RecMonoVariable.ttf; sourceTree = "<group>"; };
 		AF7D7805293B1E85003A2A11 /* PadSideBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadSideBar.swift; sourceTree = "<group>"; };
 		AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "lib-scrambles.dylib"; path = "CubeTime/3rdparty/tnoodle-lib/lib/lib-scrambles.dylib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -188,6 +192,7 @@
 		23034727278C31AE00553A7D /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */,
 				23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */,
 			);
 			path = Fonts;
@@ -495,6 +500,7 @@
 				23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */,
 				23AB648C293867EA0049993B /* 12sec-audio.wav in Resources */,
 				23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */,
+				AF7697DE293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */,
 				23D01FE327A4AA5D0019FCE5 /* Splash.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -503,6 +509,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF7697DF293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */,
 				2303472A278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -511,6 +518,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF7697E0293C5A9D00FF1C50 /* RecMonoVariable.ttf in Resources */,
 				2303472B278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

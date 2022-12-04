@@ -288,6 +288,7 @@ struct DynamicText: ViewModifier {
 }
 
 struct AnimatingFontSize: AnimatableModifier {
+    let font: CTFontDescriptor
     var fontSize: CGFloat
 
     var animatableData: CGFloat {
@@ -297,7 +298,7 @@ struct AnimatingFontSize: AnimatableModifier {
 
     func body(content: Self.Content) -> some View {
         content
-            .font(.system(size: self.fontSize, weight: .bold, design: .monospaced))
+            .font(Font(CTFontCreateWithFontDescriptor(font, fontSize, nil)))
     }
 }
 
