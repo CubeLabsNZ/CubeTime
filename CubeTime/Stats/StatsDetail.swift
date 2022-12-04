@@ -128,14 +128,18 @@ struct StatsDetail: View {
                                                 
                                                 if solve.scramble_type == 7 {
                                                     Text(solve.scramble ?? "Failed to load scramble")
-                                                        .font(.system(size: ((globalGeometrySize.width-32) / (42.00) * 1.42), weight: .regular, design: .monospaced))
+                                                        .fixedSize(horizontal: true, vertical: false)
+                                                        .multilineTextAlignment(.leading)
+                                                        // WORKAROUND
+                                                        .minimumScaleFactor(0.00001)
+                                                        .scaledToFit()
                                                 } else {
                                                     Text(solve.scramble ?? "Failed to load scramble")
-                                                        .font(.callout.monospaced())
                                                 }
                                                 
                                                 Spacer()
                                             }
+                                            .font(.callout.monospaced())
                                             .padding(.horizontal)
                                             .padding(.bottom, (index != solves.accountedSolves!.indices.last!) ? 8 : 0)
                                         }

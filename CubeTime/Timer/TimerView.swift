@@ -386,12 +386,20 @@ struct ScrambleText: View {
     var timerSize: CGSize
     @Binding var scrambleSheetStr: SheetStrWrapper?
     
+    
     var body: some View {
+        let mega: Bool = stopWatchManager.currentSession.scramble_type == 7
+        
         Text(scr)
             .font(font)
-            .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
+            .fixedSize(horizontal: mega, vertical: false)
+            .multilineTextAlignment(mega ? .leading : .center)
             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
-            .frame(maxWidth: .infinity, maxHeight: timerSize.height/3)
+            // WORKAROUND
+            .if(mega) { view in
+                view.minimumScaleFactor(0.00001).scaledToFit()
+            }
+            .frame(maxWidth: timerSize.width, maxHeight: timerSize.height/3)
             .onTapGesture {
                 scrambleSheetStr = SheetStrWrapper(str: scr)
             }
@@ -466,7 +474,7 @@ struct TimerView: View {
             kCTFontVariationAttribute: variationsTimer
         ] as! CFDictionary)
         
-        let ctFont = CTFontCreateWithFontDescriptor(ctFontDesc, stopWatchManager.currentSession.scramble_type == 7 ? (globalGeometrySize.width) / (42.00) * 1.44 : CGFloat(scrambleSize), nil)
+        let ctFont = CTFontCreateWithFontDescriptor(ctFontDesc, CGFloat(scrambleSize), nil)
 
         return (Font(ctFont), ctFontDescTimer)
     }

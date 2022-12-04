@@ -240,13 +240,17 @@ struct TimeDetailViewOnly: View {
                             
                             Group {
                                 if puzzle_type.name == "Megaminx" {
-                                    Text(scramble.dropLast())
-                                        .font(.system(size: (globalGeometrySize.width-32) / (42.00) * 1.44, weight: .regular, design: .monospaced))
+                                    Text(scramble)
+                                        .fixedSize(horizontal: true, vertical: false)
+                                        .multilineTextAlignment(.leading)
+                                        // WORKAROUND
+                                        .minimumScaleFactor(0.00001)
+                                        .scaledToFit()
                                 } else {
                                     Text(scramble)
-                                        .font(.callout.monospaced())
                                 }
                             }
+                            .font(.callout.monospaced())
                             .foregroundColor(colourScheme == .light ? .black : .white)
                             .padding([.horizontal], 12)
                             
