@@ -735,54 +735,58 @@ struct TimeScrambleDetail: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                ScrollView {
-                    Text(scramble)
-                        .font(.system(size: CGFloat(windowedScrambleSize), weight: .semibold, design: .monospaced))
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                }
-                
-                
-                if let svg = svg {
-                    SVGView(string: svg)
-                        .aspectRatio(contentMode: .fit)
-                        .padding()
-                } else {
-                    LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .medium, speed: .normal)
+            GeometryReader { geo in
+                VStack {
+                    ScrollView {
+                        Text(scramble)
+                            .font(.system(size: CGFloat(windowedScrambleSize), weight: .semibold, design: .monospaced))
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                    }
                     
-//                    ProgressView()
-                }
-            }
-            .navigationTitle("Scramble")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    HStack(alignment: .bottom) {
-                        Button {
-                            windowedScrambleSize = max(windowedScrambleSize - 1, 1)
-                        } label: {
-                            Image(systemName: "textformat.size.smaller")
-                                .font(.system(size: 17, weight: .medium, design: .rounded))
-                                .foregroundColor(accentColour)
-                        }
+                    
+                    if let svg = svg {
+                        SVGView(string: svg)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxWidth: 300)
+                            .padding(.horizontal, geo.size.width * 0.1)
+                            .padding(.vertical)
+                    } else {
+                        LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .medium, speed: .normal)
                         
-                        
-                        Button {
-                            windowedScrambleSize += 1
-                        } label: {
-                            Image(systemName: "textformat.size.larger")
-                                .font(.system(size: 17, weight: .medium, design: .rounded))
-                                .foregroundColor(accentColour)
-                        }
+    //                    ProgressView()
                     }
                 }
-                
-                ToolbarItem(placement: .confirmationAction) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Text("Done")
+                .navigationTitle("Scramble")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        HStack(alignment: .bottom) {
+                            Button {
+                                windowedScrambleSize = max(windowedScrambleSize - 1, 1)
+                            } label: {
+                                Image(systemName: "textformat.size.smaller")
+                                    .font(.system(size: 17, weight: .medium, design: .rounded))
+                                    .foregroundColor(accentColour)
+                            }
+                            
+                            
+                            Button {
+                                windowedScrambleSize += 1
+                            } label: {
+                                Image(systemName: "textformat.size.larger")
+                                    .font(.system(size: 17, weight: .medium, design: .rounded))
+                                    .foregroundColor(accentColour)
+                            }
+                        }
+                    }
+                    
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Text("Done")
+                        }
                     }
                 }
             }

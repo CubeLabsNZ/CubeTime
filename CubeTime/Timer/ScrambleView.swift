@@ -1,28 +1,14 @@
 import Foundation
 import SwiftUI
 import SVGKit
+import SVGView
 import SwiftfulLoadingIndicators
 
-// swiftui views
-struct DefaultScrambleView: View {
-    let svg: String?
-    let width: CGFloat
-    let height: CGFloat
-    
-    var body: some View {
-        DefaultScrambleSVGViewRepresentable(svg: svg!, width: width, height: height)
-    }
-}
-
-struct AsyncScrambleView: View {
+struct AsyncSVGView: View {
     @State var svg = ""
     var puzzle: Int32
     var scramble: String
 
-    var width: CGFloat
-    var height: CGFloat
-    
-    
     var body: some View {
         Group {
             if svg == "" {
@@ -30,10 +16,12 @@ struct AsyncScrambleView: View {
                 LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .medium, speed: .fast)
 //                ProgressView()
             } else {
-                AsyncScrambleSVGViewRepresentable(svg: svg, width: width, height: height)
+                SVGView(string: svg)
+//                AsyncScrambleSVGViewRepresentable(svg: svg, width: width, height: height)
                     .aspectRatio(contentMode: .fit)
             }
-        }.task {
+        }
+        .task {
             let task = Task.detached(priority: .userInitiated) { () -> String in
                 #if DEBUG
                 NSLog("ismainthread \(Thread.isMainThread)")
@@ -63,6 +51,7 @@ struct AsyncScrambleView: View {
     }
 }
 
+@available(*, deprecated, message: "USE SVGVIEW")
 // uikit wrappers
 struct DefaultScrambleSVGViewRepresentable: UIViewRepresentable {
     var svg: String

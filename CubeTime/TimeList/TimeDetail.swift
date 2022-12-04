@@ -167,177 +167,114 @@ struct TimeDetailViewOnly: View {
             Color.getBackgroundColour(colourScheme)
                 .ignoresSafeArea()
             
-            ScrollView {
-                VStack (spacing: 12) {
-                    HStack {
-                        Text(time)
-                            .font(.largeTitle.weight(.bold))
-                        
-                        switch solve.penalty {
-                        case PenTypes.dnf.rawValue:
-                            let rawTime = formatSolveTime(secs: solve.time)
-                            Text("(\(rawTime))")
+            GeometryReader { geo in
+                ScrollView {
+                    VStack (spacing: 12) {
+                        HStack {
+                            Text(time)
                                 .font(.largeTitle.weight(.bold))
                             
-                            Spacer()
-                            
-                        case PenTypes.plustwo.rawValue:
-                            Spacer()
-                            
-                            let addedTime = formatSolveTime(secs: (solve.time + 2))
-                            Text("(\(addedTime))")
-                                .font(.title3.weight(.semibold))
-                                .foregroundColor(Color(uiColor: .systemGray))
-                                .padding(.leading)
-                        default:
-                            Spacer()
-                        }
-                        
-                    }
-                    .padding(.horizontal)
-                    .padding(.top)
-                    
-                    HStack {
-                        Text(date, formatter: titleDateFormat)
-                            .font(.title2.weight(.semibold))
-                            .foregroundColor(Color(uiColor: .systemGray))
-                        
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                    .padding(.top, -10)
-                    
-                    VStack {
-                        HStack {
-                            Image(puzzle_type.name)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 32, height: 32)
+                            switch solve.penalty {
+                            case PenTypes.dnf.rawValue:
+                                let rawTime = formatSolveTime(secs: solve.time)
+                                Text("(\(rawTime))")
+                                    .font(.largeTitle.weight(.bold))
                                 
-                                .padding(.leading, 2)
-                                .padding(.trailing, 4)
+                                Spacer()
+                                
+                            case PenTypes.plustwo.rawValue:
+                                Spacer()
+                                
+                                let addedTime = formatSolveTime(secs: (solve.time + 2))
+                                Text("(\(addedTime))")
+                                    .font(.title3.weight(.semibold))
+                                    .foregroundColor(Color(uiColor: .systemGray))
+                                    .padding(.leading)
+                            default:
+                                Spacer()
+                            }
                             
-                            Text(puzzle_type.name)
-                                .font(.body.weight(.semibold))
+                        }
+                        .padding(.horizontal)
+                        .padding(.top)
+                        
+                        HStack {
+                            Text(date, formatter: titleDateFormat)
+                                .font(.title2.weight(.semibold))
+                                .foregroundColor(Color(uiColor: .systemGray))
                             
                             Spacer()
-                            
-                            Text((["2x2", "3x3", "Square-1", "Pyraminx", "Skewb", "3x3 OH", "3x3 BLD"].contains(puzzle_type.name)) ? "RANDOM STATE" : "RANDOM MOVES")
-                                .font(.footnote.weight(.semibold))
-                                .offset(y: 2)
                         }
-                        .padding(.leading, 12)
-                        .padding(.trailing)
-                        .padding(.top, 12)
+                        .padding(.horizontal)
+                        .padding(.top, -10)
                         
-                        Divider()
-                            .padding(.leading)
-                        
-                        // TODO check result instead != nil instead
-                        
-                        let brokenScramble: Bool = true // chtscramblesthatdontworkwithtnoodle.contains(puzzle_type.puzzle) && (date < Date(timeIntervalSince1970: TimeInterval(1643760000)))
-                        
-                        Group {
-                            if puzzle_type.name == "Megaminx" {
-                                Text(scramble.dropLast())
-                                    .font(.system(size: (globalGeometrySize.width-32) / (42.00) * 1.44, weight: .regular, design: .monospaced))
-                            } else {
-                                Text(scramble)
-                                    .font(.callout.monospaced())
+                        VStack {
+                            HStack {
+                                Image(puzzle_type.name)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 32, height: 32)
+                                    
+                                    .padding(.leading, 2)
+                                    .padding(.trailing, 4)
+                                
+                                Text(puzzle_type.name)
+                                    .font(.body.weight(.semibold))
+                                
+                                Spacer()
+                                
+                                Text((["2x2", "3x3", "Square-1", "Pyraminx", "Skewb", "3x3 OH", "3x3 BLD"].contains(puzzle_type.name)) ? "RANDOM STATE" : "RANDOM MOVES")
+                                    .font(.footnote.weight(.semibold))
+                                    .offset(y: 2)
                             }
-                        }
-                        .foregroundColor(colourScheme == .light ? .black : .white)
-                        .padding([.horizontal], 12)
-                        .padding(.bottom, brokenScramble ? 12 : 0)
-                        
-                        
-                        if !(brokenScramble) {
+                            .padding(.leading, 12)
+                            .padding(.trailing)
+                            .padding(.top, 12)
+                            
                             Divider()
                                 .padding(.leading)
                             
-                            GeometryReader { proxy in
-                                AsyncScrambleView(puzzle: solve.scramble_type, scramble: scramble, width: 10, height: 10)
-                                    .position(x: proxy.frame(in: .local).midX, y: proxy.frame(in: .local).midY)
-                            }
-                            .frame(width: nil, height: globalGeometrySize.height / 3.5)
-                            .padding([.horizontal, .bottom])
-                            .padding(.top, 12)
-                        }
-                    }
-                    .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
-                    
-                    .padding(.top, -10)
-                    .padding(.horizontal)
-                    
-                    VStack {
-                        HStack {
-                            Image(systemName: "square.text.square.fill")
-                                .symbolRenderingMode(.hierarchical)
-                                .font(.system(size: 30, weight: .semibold))
-                                .foregroundColor(colourScheme == .light ? .black : .white)
+                            // TODO check result instead != nil instead
                             
-                            Text("Comment")
-                                .font(.body.weight(.semibold))
-                                .foregroundColor(colourScheme == .light ? .black : .white)
+    //                        let brokenScramble: Bool = chtscramblesthatdontworkwithtnoodle.contains(puzzle_type.puzzle) && (date < Date(timeIntervalSince1970: TimeInterval(1643760000)))
                             
-                            Spacer()
-                            
-                        }
-                        .padding(.leading, 12)
-                        .padding(.trailing)
-                        .padding(.top, 12)
-                        
-                        Divider()
-                            .padding(.leading)
-                        
-                        ZStack {
-                            TextEditor(text: $userComment)
-                                .focused($commentFocus)
-                                .padding(.horizontal)
-                                .padding(.bottom, 12)
-                                .onChange(of: userComment) { newValue in
-                                    solve.comment = newValue
+                            Group {
+                                if puzzle_type.name == "Megaminx" {
+                                    Text(scramble.dropLast())
+                                        .font(.system(size: (globalGeometrySize.width-32) / (42.00) * 1.44, weight: .regular, design: .monospaced))
+                                } else {
+                                    Text(scramble)
+                                        .font(.callout.monospaced())
                                 }
-                                .toolbar {
-                                    ToolbarItemGroup(placement: .keyboard) {
-                                        HStack {
-                                            Spacer()
-                                            
-                                            
-                                            Button("Comment") {
-                                                commentFocus = false
-                                            }
-                                        }
-                                    }
-                                }
-                            
-                            if userComment == "" {
-                                Text("Comment something...")
-                                    .foregroundColor(Color(uiColor: .systemGray2))
-                                    .padding(.vertical, 10)
-                                    .offset(y: -4)
-                                    .onTapGesture {
-                                        commentFocus = true
-                                    }
                             }
+                            .foregroundColor(colourScheme == .light ? .black : .white)
+                            .padding([.horizontal], 12)
                             
-                            Text(userComment)
-                                .opacity(0)
-                                .padding([.horizontal, .bottom])
+                            
+                            
+                            Divider()
+                                .padding(.leading)
+                            
+                            AsyncSVGView(puzzle: solve.scramble_type, scramble: scramble)
+                                .frame(maxWidth: 300)
+                                .padding(.bottom)
+                                .padding(.horizontal, geo.size.width * 0.1)
+                                .padding(.top, 12)
+                            
                         }
-                    }
-                    .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
-                    .padding(.horizontal)
-                    
-                    if let phases = self.phases {
+                        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
+                        
+                        .padding(.top, -10)
+                        .padding(.horizontal)
+                        
                         VStack {
                             HStack {
-                                Image(systemName: "square.stack.3d.up.fill")
+                                Image(systemName: "square.text.square.fill")
                                     .symbolRenderingMode(.hierarchical)
-                                    .font(.system(size: 26, weight: .semibold))
+                                    .font(.system(size: 30, weight: .semibold))
                                     .foregroundColor(colourScheme == .light ? .black : .white)
                                 
-                                Text("Multiphase Breakdown")
+                                Text("Comment")
                                     .font(.body.weight(.semibold))
                                     .foregroundColor(colourScheme == .light ? .black : .white)
                                 
@@ -351,72 +288,132 @@ struct TimeDetailViewOnly: View {
                             Divider()
                                 .padding(.leading)
                             
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                ForEach(Array(zip(phases.indices, phases)), id: \.0) { index, phase in
-                                    
-                                    HStack {
-                                        if index == 0 {
-                                            Image(systemName: "\(index+1).circle")
-                                                .font(.body.weight(.medium))
-                                            
-                                            Text("+"+formatSolveTime(secs: phase))
-                                        } else {
-                                            if index < phases.count {
-                                                let phaseDifference = phases[index] - phases[index-1]
+                            ZStack {
+                                TextEditor(text: $userComment)
+                                    .focused($commentFocus)
+                                    .padding(.horizontal)
+                                    .padding(.bottom, 12)
+                                    .onChange(of: userComment) { newValue in
+                                        solve.comment = newValue
+                                    }
+                                    .toolbar {
+                                        ToolbarItemGroup(placement: .keyboard) {
+                                            HStack {
+                                                Spacer()
                                                 
+                                                
+                                                Button("Comment") {
+                                                    commentFocus = false
+                                                }
+                                            }
+                                        }
+                                    }
+                                
+                                if userComment == "" {
+                                    Text("Comment something...")
+                                        .foregroundColor(Color(uiColor: .systemGray2))
+                                        .padding(.vertical, 10)
+                                        .offset(y: -4)
+                                        .onTapGesture {
+                                            commentFocus = true
+                                        }
+                                }
+                                
+                                Text(userComment)
+                                    .opacity(0)
+                                    .padding([.horizontal, .bottom])
+                            }
+                        }
+                        .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
+                        .padding(.horizontal)
+                        
+                        if let phases = self.phases {
+                            VStack {
+                                HStack {
+                                    Image(systemName: "square.stack.3d.up.fill")
+                                        .symbolRenderingMode(.hierarchical)
+                                        .font(.system(size: 26, weight: .semibold))
+                                        .foregroundColor(colourScheme == .light ? .black : .white)
+                                    
+                                    Text("Multiphase Breakdown")
+                                        .font(.body.weight(.semibold))
+                                        .foregroundColor(colourScheme == .light ? .black : .white)
+                                    
+                                    Spacer()
+                                    
+                                }
+                                .padding(.leading, 12)
+                                .padding(.trailing)
+                                .padding(.top, 12)
+                                
+                                Divider()
+                                    .padding(.leading)
+                                
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    ForEach(Array(zip(phases.indices, phases)), id: \.0) { index, phase in
+                                        
+                                        HStack {
+                                            if index == 0 {
                                                 Image(systemName: "\(index+1).circle")
                                                     .font(.body.weight(.medium))
                                                 
-                                                Text("+"+formatSolveTime(secs: phaseDifference))
+                                                Text("+"+formatSolveTime(secs: phase))
+                                            } else {
+                                                if index < phases.count {
+                                                    let phaseDifference = phases[index] - phases[index-1]
+                                                    
+                                                    Image(systemName: "\(index+1).circle")
+                                                        .font(.body.weight(.medium))
+                                                    
+                                                    Text("+"+formatSolveTime(secs: phaseDifference))
+                                                }
                                             }
+                                            
+                                            Spacer()
+                                            
+                                            Text("("+formatSolveTime(secs: phase)+")")
+                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                .font(.body)
                                         }
-                                        
-                                        Spacer()
-                                        
-                                        Text("("+formatSolveTime(secs: phase)+")")
-                                            .foregroundColor(Color(uiColor: .systemGray))
-                                            .font(.body)
                                     }
                                 }
+                                .padding([.bottom, .horizontal], 12)
                             }
-                            .padding([.bottom, .horizontal], 12)
+                            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
+                            .padding(.trailing)
+                            .padding(.leading)
+                        }
+                        
+                        
+                        Button {
+                            if currentSolve == nil {
+                                dismiss()
+                            }
+
+                            currentSolve = nil
+
+                            withAnimation {
+                                stopWatchManager.delete(solve: solve)
+                            }
+                        } label: {
+                            HStack {
+                                Text("Delete Solve")
+                                    .font(.body.weight(.medium))
+                                    .foregroundColor(Color.red)
+                                    .padding([.leading, .vertical], 14)
+                                
+                                Spacer()
+                            }
                         }
                         .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
-                        .padding(.trailing)
-                        .padding(.leading)
+                        .padding(.horizontal)
+                        .padding(.bottom)
                     }
-                    
-                    
-                    Button {
-                        if currentSolve == nil {
-                            dismiss()
-                        }
-
-                        currentSolve = nil
-
-                        withAnimation {
-                            stopWatchManager.delete(solve: solve)
-                        }
-                    } label: {
-                        HStack {
-                            Text("Delete Solve")
-                                .font(.body.weight(.medium))
-                                .foregroundColor(Color.red)
-                                .padding([.leading, .vertical], 14)
-                            
-                            Spacer()
-                        }
-                    }
-                    .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius:10)))
-                    .padding(.horizontal)
-                    .padding(.bottom)
+                    .offset(y: -6)
+                    .navigationBarTitle("", displayMode: .inline)
                 }
-                .offset(y: -6)
-                .navigationBarTitle("", displayMode: .inline)
-                
             }
         }
-        
     }
 }
