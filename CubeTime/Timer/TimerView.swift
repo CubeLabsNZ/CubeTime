@@ -33,7 +33,14 @@ struct TimerTime: View {
     }
     
     var body: some View {
-        Text(stopWatchManager.secondsStr)
+        Text(stopWatchManager.secondsStr
+             + (stopWatchManager.mode == .inspecting
+                ? ((stopWatchManager.inspectionSecs >= 17
+                    ? "(DNF)"
+                    : (stopWatchManager.inspectionSecs >= 15
+                       ? "(+2)"
+                       : "")))
+                : ""))
             .foregroundColor(getTimerColor())
             .modifier(DynamicText())
         // for smaller phones (iPhoneSE and test sim), disable animation to larger text
@@ -102,7 +109,7 @@ struct BottomTools: View {
         self._presentedAvg = presentedAvg ?? Binding.constant(nil)
         self.toolType = toolType
         self.maxHeight = 120
-        self.maxWidth = min(((parentGeo.width - 32) / 2 - 12), 170)
+        self.maxWidth = min(((parentGeo.width - 32) / 2), 170)
     }
     
     
@@ -503,23 +510,14 @@ struct TimerView: View {
                     TimerTime(font: fonts.1)
                         .allowsHitTesting(false)
                         
-                    if stopWatchManager.mode == .inspecting {
-                        if stopWatchManager.inspectionSecs >= 15 {
-                            Text(stopWatchManager.inspectionSecs >= 17 ? "DNF" : "+2")
-                                .font(.system(size: 22, weight: .semibold, design: .rounded))
-                                .allowsHitTesting(false)
-                        }
-                        
-                        if showCancelInspection {
-                            PenaltyBar(90) {
-                                Button {
-                                    stopWatchManager.interruptInspection()
-                                } label: {
-                                    Text("Cancel")
-                                        .font(.system(size: 21, weight: .semibold, design: .rounded))
-                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                }
-                                .zIndex(100)
+                    if stopWatchManager.mode == .inspecting && showCancelInspection {
+                        PenaltyBar(90) {
+                            Button {
+                                stopWatchManager.interruptInspection()
+                            } label: {
+                                Text("Cancel")
+                                    .font(.system(size: 21, weight: .semibold, design: .rounded))
+                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
                             }
                         }
                     }

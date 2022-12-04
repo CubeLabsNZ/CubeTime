@@ -22,52 +22,52 @@ struct SessionsView: View {
     var body: some View {
         let _ = NSLog("\(sessions.map({$0.scramble_type}))")
         NavigationView {
-            ZStack {
-                Color.getBackgroundColour(colourScheme)
-                    .ignoresSafeArea()
-                
-                ScrollView {
-                    GeometryReader { geo in
+            GeometryReader { geo in
+                ZStack {
+                    Color.getBackgroundColour(colourScheme)
+                        .ignoresSafeArea()
+                    
+                    ScrollView {
                         VStack (spacing: 10) {
                             ForEach(sessions) { item in
                                 SessionCard(item: item, allSessions: sessions, parentGeo: geo)
                             }
                         }
                     }
-                }
-                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top, 64).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
-                
-                VStack {
-                    Spacer()
-                    HStack {
-                        Button {
-                            showNewSessionPopUp = true
-                        } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.title2.weight(.semibold))
-                                .padding(.leading, -5)
-                            Text("New Session")
-                                .font(.headline.weight(.medium))
-                                .padding(.leading, -2)
-                        }
-                        .shadow(color: .black.opacity(0.12), radius: 10, x: 0, y: 3)
-                        .overlay(Capsule().stroke(Color.black.opacity(0.05), lineWidth: 0.5))
-                        .buttonStyle(.bordered)
-                        .controlSize(.small)
-                        .background(.ultraThinMaterial, in: Capsule())
-                        .sheet(isPresented: $showNewSessionPopUp) {
-                            NewSessionModalView(showNewSessionPopUp: $showNewSessionPopUp)
-                                .environment(\.managedObjectContext, managedObjectContext)
-                        }
-                        .padding(.leading)
-                        .padding(.bottom, 8)
-                        
+                    .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top, 64).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                    
+                    VStack {
                         Spacer()
+                        HStack {
+                            Button {
+                                showNewSessionPopUp = true
+                            } label: {
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.title2.weight(.semibold))
+                                    .padding(.leading, -5)
+                                Text("New Session")
+                                    .font(.headline.weight(.medium))
+                                    .padding(.leading, -2)
+                            }
+                            .shadow(color: .black.opacity(0.12), radius: 10, x: 0, y: 3)
+                            .overlay(Capsule().stroke(Color.black.opacity(0.05), lineWidth: 0.5))
+                            .buttonStyle(.bordered)
+                            .controlSize(.small)
+                            .background(.ultraThinMaterial, in: Capsule())
+                            .sheet(isPresented: $showNewSessionPopUp) {
+                                NewSessionModalView(showNewSessionPopUp: $showNewSessionPopUp)
+                                    .environment(\.managedObjectContext, managedObjectContext)
+                            }
+                            .padding(.leading)
+                            .padding(.bottom, 8)
+                            
+                            Spacer()
+                        }
                     }
+                    .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
                 }
-                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                .navigationTitle("Your Sessions")
             }
-            .navigationTitle("Your Sessions")
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

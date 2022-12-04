@@ -116,7 +116,7 @@ struct MainTabsView: View {
                 if !tabRouter.hideTabBar {
                     BottomTabsView(currentTab: $tabRouter.currentTab)
                         .frame(maxHeight: .infinity, alignment: .bottom)
-                        .offset(y: -38)
+                        .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : nil)
                 }
             }
         }
