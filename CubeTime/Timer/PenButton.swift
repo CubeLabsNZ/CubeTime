@@ -9,8 +9,8 @@ import SwiftUI
 
 struct PenaltyButton: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
-    @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
+    @Environment(\.managedObjectContext) private var managedObjectContext
+    @Environment(\.colorScheme) private var colourScheme
     
     let penType: PenTypes
     let penSymbol: String
@@ -34,7 +34,6 @@ struct PenaltyButton: View {
                 Image(systemName: penSymbol)
                     .font(.system(size: 24, weight: .semibold, design: .rounded))
                     .foregroundColor(colour)
-                    
             }
         })
         .padding(2)

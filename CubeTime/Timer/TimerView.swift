@@ -174,7 +174,6 @@ struct PadFloatingView: View {
                  : tabRouter.hideTabBar
                     ? nil
                     : 8)
-        .padding(.leading, 24)
     }
 }
 
@@ -234,21 +233,9 @@ struct TimerView: View {
             TimerBackgroundColor()
                 .ignoresSafeArea(.all)
             
-            if stopWatchManager.mode == .inspecting && stopWatchManager.inspectionSecs >= 15  {
-                Text(stopWatchManager.inspectionSecs >= 17 ? "DNF" : "+2")
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
-                    .offset(y: 45)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            }
-            
-            if  !((inputMode == .typing || showInputField) && !showManualInputFormattedText)  {
-                TimerTime()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                    .ignoresSafeArea(edges: .all)
-            }
             
             if inputMode == .typing || targetFocused || manualInputFocused {
-                Color.white.opacity(0.00000001)
+                Color.white.opacity(0.000001)
                     .onTapGesture {
                         if inputMode == .timer {
                             manualInputFocused = false
@@ -269,9 +256,39 @@ struct TimerView: View {
                             }
                         }
                     }
-            }
-            else {
+            } else {
                 TimerTouchView(stopWatchManager: stopWatchManager)
+            }
+            
+            
+            if !((inputMode == .typing || showInputField) && !showManualInputFormattedText) {
+                VStack(alignment: .center, spacing: 0) {
+                    TimerTime()
+                        .allowsHitTesting(false)
+                        
+                    if stopWatchManager.mode == .inspecting {
+                        if stopWatchManager.inspectionSecs >= 15 {
+                            Text(stopWatchManager.inspectionSecs >= 17 ? "DNF" : "+2")
+                                .font(.system(size: 22, weight: .semibold, design: .rounded))
+                                .allowsHitTesting(false)
+                        }
+                        
+                        if showCancelInspection {
+                            PenaltyBar(90) {
+                                Button {
+                                    stopWatchManager.interruptInspection()
+                                } label: {
+                                    Text("Cancel")
+                                        .font(.system(size: 21, weight: .semibold, design: .rounded))
+                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                }
+                                .zIndex(100)
+                            }
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .ignoresSafeArea(edges: .all)
             }
             
             
@@ -304,7 +321,9 @@ struct TimerView: View {
                     } else {
                         TimerHeader(targetFocused: $targetFocused, previewMode: false)
                     }
+                    
                     Spacer()
+                    
                     LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
                         .frame(maxHeight: 35)
                         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
@@ -320,7 +339,7 @@ struct TimerView: View {
                         Text(scr)
                             .font(.system(size: stopWatchManager.currentSession.scramble_type == 7 ? (globalGeometrySize.width) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
                             .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
-                            .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+                            .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
                             .frame(maxWidth: .infinity, maxHeight: globalGeometrySize.height/3)
                             .onTapGesture {
                                 scrambleSheetStr = SheetStrWrapper(str: scr)
@@ -333,9 +352,9 @@ struct TimerView: View {
                 }
             }
             
-            if inputMode == .typing || stopWatchManager.showPenOptions {
+            
+            if stopWatchManager.scrambleStr != nil && (inputMode == .typing || stopWatchManager.showPenOptions) {
                 HStack {
-                    
                     let showPlus = stopWatchManager.currentSession.session_type != SessionTypes.multiphase.rawValue && !justManuallyInput && (inputMode != .typing || manualInputTime != "")
                     
                     if stopWatchManager.solveItem != nil && !manualInputFocused {
@@ -363,10 +382,9 @@ struct TimerView: View {
                     
                     
                     if showPlus {
-                        
                         if inputMode == .timer {
                             PenaltyBar(manualInputFocused ? 68 : 34) {
-                                Button() {
+                                Button {
                                     // IF CURRENT MODE = INPUT
                                     if manualInputFocused {
                                         if manualInputTime != "" {
@@ -400,9 +418,7 @@ struct TimerView: View {
                                 .disabled(manualInputFocused ? (manualInputTime == "") : false)
                             }
                         } else if inputMode == .typing {
-                            
                             PenaltyBar(68) {
-                                
                                 Button {
                                     stopWatchManager.stop(timeFromStr(manualInputTime))
                                     

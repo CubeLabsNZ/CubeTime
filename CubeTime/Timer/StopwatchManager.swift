@@ -685,8 +685,7 @@ extension StopWatchManager {
 
     
     func displayPenOptions() {
-        
-        if solveItem != nil {
+        if solveItem != nil && scrambleStr != nil {
             timerColour = TimerTextColours.timerDefaultColour
         }
         prevDownStoppedTimer = false
