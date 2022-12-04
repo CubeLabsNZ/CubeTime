@@ -10,7 +10,7 @@ enum gsKeys: String {
          hapBool, hapType,
          gestureDistance,
          showScramble, showStats,
-         scrambleSize, appZoom, forceAppZoom,
+         appZoom, forceAppZoom,
          showPrevTime,
          displayDP
 }
@@ -53,7 +53,6 @@ struct GeneralSettingsView: View {
     @AppStorage(gsKeys.hapType.rawValue) private var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
     @AppStorage(gsKeys.forceAppZoom.rawValue) private var forceAppZoom: Bool = false
     @AppStorage(gsKeys.appZoom.rawValue) private var appZoom: AppZoomWrapper = AppZoomWrapper(rawValue: 3)
-    @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     @AppStorage(gsKeys.gestureDistance.rawValue) private var gestureActivationDistance: Double = 50
     
     // show previous time after delete
@@ -69,8 +68,6 @@ struct GeneralSettingsView: View {
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     
-    @State private var showFontSizeOptions: Bool = false
-    @State private var showPreview: Bool = false
     
     let hapticNames: [UIImpactFeedbackGenerator.FeedbackStyle: String] = [
         UIImpactFeedbackGenerator.FeedbackStyle.light: "Light",
@@ -421,97 +418,7 @@ struct GeneralSettingsView: View {
                 }
                  */
                 
-                VStack(alignment: .leading, spacing: 0) {
-                    VStack {
-                        HStack(alignment: .center) {
-                            Text("Interface Font Sizes")
-                                .font(.body.weight(.medium))
-                            
-                            Spacer()
-                            
-                            Image(systemName: "chevron.right")
-                                .font(.footnote.weight(.bold))
-                                .foregroundColor(Color(uiColor: .systemGray3))
-                                .rotationEffect(.degrees(showFontSizeOptions ? 90 : 0))
-                        }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            withAnimation(.spring()) {
-                                showFontSizeOptions.toggle()
-                            }
-                        }
-                        
-                        HStack {
-                            Text("Customise font sizing and styles.")
-                                .font(.footnote.weight(.medium))
-                                .lineSpacing(-4)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .foregroundColor(Color(uiColor: .systemGray))
-                                .multilineTextAlignment(.leading)
-//                                .padding(.bottom, 12)
-                            
-                            Spacer()
-                        }
-                    }
-                    .padding(.horizontal)
-                    
-                    if showFontSizeOptions {
-                        VStack (alignment: .leading, spacing: 0) {
-                            HStack {
-                                Stepper(value: $scrambleSize, in: 15...36, step: 1) {
-                                    Text("Scramble Size: ")
-                                        .font(.body.weight(.medium))
-                                    Text("\(scrambleSize)")
-                                }
-                            }
-                            .padding(.horizontal)
-                        }
-                        .padding(.top, 10)
-                        
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text("Preview")
-                                .font(.footnote.weight(.medium))
-                                .lineSpacing(-4)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .foregroundColor(Color(uiColor: .systemGray))
-                                .multilineTextAlignment(.leading)
-                                .padding(.horizontal)
-                            
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                    .fill(Color.getBackgroundColour(colourScheme))
-                                
-                                VStack(spacing: 0) {
-                                    Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
-                                        .font(.system(size: CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
-                                        .padding(16)
-                                    
-                                    HStack {
-                                        Spacer()
-                                        
-                                        Text("Tap for Fullscreen Preview")
-                                            .font(.footnote.weight(.medium))
-                                            .lineSpacing(-4)
-                                            .fixedSize(horizontal: false, vertical: true)
-                                            .foregroundColor(Color(uiColor: .systemGray))
-                                            .multilineTextAlignment(.leading)
-                                            .padding([.trailing, .bottom], 8)
-                                    }
-                                }
-                            }
-                            .frame(minHeight: 100)
-                            .onTapGesture {
-                                showPreview = true
-                            }
-                            .fullScreenCover(isPresented: $showPreview) {
-                                TimerPreview()
-                            }
-                            .padding(.horizontal)
-                            .padding(.bottom, 10)
-                        }
-                    }
-                }
-                .padding(.bottom, 12)
+                
                 
                 
                 
@@ -672,7 +579,7 @@ struct TimerPreview: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.globalGeometrySize) var globalGeometrySize
     
-    @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
+    @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     
     
     var body: some View {
