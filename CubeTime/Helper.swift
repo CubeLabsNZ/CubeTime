@@ -553,7 +553,8 @@ struct TimeMaskTextField: ViewModifier {
     func body(content: Content) -> some View {
         content
             .keyboardType(text.count > 2 ? .numberPad : .decimalPad)
-            .onReceive(Just(text)) { newValue in
+            .onChange(of: text) { newValue in
+                let _ = NSLog("Onrecieve, text: \(text)")
                 refilter()
                 
                 onReceiveAlso?(text)
