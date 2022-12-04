@@ -23,8 +23,10 @@ let updatesList: [String: [String?]] = [
         –   added manual entry mode
             –   you can switch to entering times by typing instead of a timer in General Settings > Timer Settings > Timer Mode > Typing
         -   added rotations added for blind scrambles
+        –   using WCA-complient random state 4x4 scrambles
         """,
         """
+        –   using more modern SVG renderer, faster draw scrambles
         –   more solve selection functions:
             –   copy multiple solves
         –   show +2 and DNF time in brackets
