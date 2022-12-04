@@ -157,15 +157,24 @@ struct MainView: View {
         
     var body: some View {
         GeometryReader { geo in
-            if UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(geo.size) {
-                PadMainView()
-                    .environment(\.globalGeometrySize, geo.size)
-                    .environmentObject(tabRouter)
-            } else {
-                MainTabsView()
-                    .environment(\.globalGeometrySize, geo.size)
-                    .environmentObject(tabRouter)
+            Group {
+                if UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(geo.size) {
+                    if padFloatingLayout {
+                        TimerView()
+                            .onAppear {
+                                if tabRouter.currentTab == .timer {
+                                    tabRouter.currentTab = .solves
+                                }
+                            }
+                    } else {
+                        PadMainView()
+                    }
+                } else {
+                    MainTabsView()
+                }
             }
+            .environment(\.globalGeometrySize, geo.size)
+            .environmentObject(tabRouter)
         }
     }
 }

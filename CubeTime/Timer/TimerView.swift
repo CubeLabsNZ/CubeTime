@@ -128,6 +128,59 @@ struct BottomTools: View {
     }
 }
 
+
+
+struct PadFloatingView: View {
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+    @EnvironmentObject var tabRouter: TabRouter
+    
+    
+    @Binding var floatingPanelStage: Int
+    var targetFocused: FocusState<Bool>.Binding
+    
+    var body: some View {
+        
+        FloatingPanel(
+            currentStage: $floatingPanelStage,
+            maxHeight: (globalGeometrySize.height - 24),
+            stages: [0, 50, 130, (globalGeometrySize.height - 24)],
+            content: {
+                EmptyView()
+                
+                TimerHeader(targetFocused: targetFocused, previewMode: false)
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                
+                VStack(alignment: .leading, spacing: 12) {
+                    TimerHeader(targetFocused: targetFocused, previewMode: false)
+                    
+                    PrevSolvesDisplay(count: 3)
+                }
+                .padding()
+                
+                VStack(alignment: .leading, spacing: 0) {
+                    TimerHeader(targetFocused: targetFocused, previewMode: false)
+                        .padding()
+//                                            .padding(.bottom)
+                    
+                    MainTabsView()
+                }
+            }
+         )
+        .ignoresSafeArea(.keyboard)
+        .frame(width: 360)
+        .padding(.top, SetValues.hasBottomBar
+                 ? 0
+                 : tabRouter.hideTabBar
+                    ? nil
+                    : 8)
+        .padding(.leading, 24)
+    }
+}
+
+let padFloatingLayout = true
+
+
 struct TimerView: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
     @EnvironmentObject var tabRouter: TabRouter
@@ -194,7 +247,6 @@ struct TimerView: View {
                     .ignoresSafeArea(edges: .all)
             }
             
-            let _ = NSLog("\(targetFocused) \(manualInputFocused)")
             if inputMode == .typing || targetFocused || manualInputFocused {
                 Color.white.opacity(0.00000001)
                     .onTapGesture {
@@ -247,7 +299,11 @@ struct TimerView: View {
                 
                 
                 HStack(spacing: 6) {
-                    TimerHeader(targetFocused: $targetFocused, previewMode: false)
+                    if padFloatingLayout && UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) {
+                        PadFloatingView(floatingPanelStage: $floatingPanelStage, targetFocused: $targetFocused)
+                    } else {
+                        TimerHeader(targetFocused: $targetFocused, previewMode: false)
+                    }
                     Spacer()
                     LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
                         .frame(maxHeight: 35)
@@ -270,6 +326,7 @@ struct TimerView: View {
                                 scrambleSheetStr = SheetStrWrapper(str: scr)
                             }
                             .padding(.horizontal)
+                            .padding(.leading, floatingPanelStage > 1 ? 400 : 0)
                             .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
                     }
                     .frame(maxHeight: .infinity, alignment: .top)
