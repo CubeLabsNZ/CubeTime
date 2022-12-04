@@ -453,7 +453,7 @@ struct TimerView: View {
     @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
     @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
-    @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
+    @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     @AppStorage(gsKeys.showPrevTime.rawValue) private var showPrevTime: Bool = false
     @AppStorage(gsKeys.inputMode.rawValue) private var inputMode: InputMode = .timer
 
@@ -721,7 +721,7 @@ struct TimeScrambleDetail: View {
     
     var scramble: String
     var svg: String?
-    @State var windowedScrambleSize: Int = UserDefaults.standard.integer(forKey: gsKeys.scrambleSize.rawValue)
+    @State var windowedScrambleSize: Int = UserDefaults.standard.integer(forKey: asKeys.scrambleSize.rawValue)
     
     init(_ scramble: String, _ svg: String?) {
         self.scramble = scramble

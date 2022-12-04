@@ -79,7 +79,7 @@ class StopWatchManager: ObservableObject {
     var fontWeight: Double = UserDefaults.standard.double(forKey: asKeys.fontWeight.rawValue)
     var fontCasual: Double = UserDefaults.standard.double(forKey: asKeys.fontCasual.rawValue)
     var fontCursive: Bool = UserDefaults.standard.bool(forKey: asKeys.fontCursive.rawValue)
-    var scrambleSize: Int = UserDefaults.standard.integer(forKey: gsKeys.scrambleSize.rawValue)
+    var scrambleSize: Int = UserDefaults.standard.integer(forKey: asKeys.scrambleSize.rawValue)
 
     
     

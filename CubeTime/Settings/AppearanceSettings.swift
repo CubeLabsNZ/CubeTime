@@ -9,14 +9,16 @@ struct settingsBlocks: ViewModifier {
 }
 
 enum asKeys: String {
-    case accentColour, overrideDM, dmBool, staticGradient, gradientSelected, graphGlow, graphAnimation, fontWeight, fontCasual, fontCursive
+    case accentColour, overrideDM, dmBool, staticGradient, gradientSelected, graphGlow, graphAnimation, scrambleSize, fontWeight, fontCasual, fontCursive
 }
 
 
 struct AppearanceSettingsView: View {
     @Environment(\.colorScheme) var colourScheme
     
-    @State var showThemeOptions: Bool = false
+    @State private var showThemeOptions: Bool = false
+    @State private var showFontSizeOptions: Bool = false
+    @State private var showPreview: Bool = false
     
     let accentColours: [Color] = [.cyan, .blue, .indigo, .purple, .red]
     
@@ -34,6 +36,7 @@ struct AppearanceSettingsView: View {
     @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
     
     
+    @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     @AppStorage(asKeys.fontWeight.rawValue) private var fontWeight: Double = 516.0
     @AppStorage(asKeys.fontCasual.rawValue) private var fontCasual: Double = 0.0
     @AppStorage(asKeys.fontCursive.rawValue) private var fontCursive: Bool = false
@@ -288,27 +291,6 @@ struct AppearanceSettingsView: View {
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
             
             
-            let font = { () -> Font in
-                
-                
-                
-//                let uiFont = UIFont(name: "RecursiveSansLinearLightMonospace-Regular", size: 16.0)!
-//                let ctFont = CTFontCreateWithName(uiFont.fontName as CFString, 16.0, nil)
-//                print(uiFont.fontName)
-                
-                // weight, casual, cursive
-                let variations = [2003265652: fontWeight, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
-                
-                let ctFontDesc = CTFontDescriptorCreateWithAttributes([
-                    kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
-                    kCTFontVariationAttribute: variations
-                ] as! CFDictionary)
-                
-                let ctFont = CTFontCreateWithFontDescriptor(ctFontDesc, 32, nil)
-                
-                return Font(ctFont)
-            }()
-            
             VStack {
                 HStack {
                     Image(systemName: "textformat")
@@ -322,11 +304,63 @@ struct AppearanceSettingsView: View {
                 .padding([.horizontal, .top], 10)
                 .padding(.bottom)
                 
+                
+                VStack (alignment: .leading, spacing: 0) {
+                    HStack {
+                        Stepper(value: $scrambleSize, in: 15...36, step: 1) {
+                            Text("Scramble Size: ")
+                                .font(.body.weight(.medium))
+                            Text("\(scrambleSize)")
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+                
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Preview")
+                        .font(.footnote.weight(.medium))
+                        .lineSpacing(-4)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .foregroundColor(Color(uiColor: .systemGray))
+                        .multilineTextAlignment(.leading)
+                        .padding(.horizontal)
+                    
+                    
+                    VStack {
+                        Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
+                            .font(stopWatchManager.ctFont)
+                            .padding()
+                        
+                        
+                        Text("Tap for Fullscreen Preview")
+                            .font(.footnote.weight(.medium))
+                            .lineSpacing(-4)
+                            .foregroundColor(Color(uiColor: .systemGray))
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .padding([.trailing, .bottom], 8)
+                        
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(Color.getBackgroundColour(colourScheme))
+                    )
+                    .onTapGesture {
+                        showPreview = true
+                    }
+                    .fullScreenCover(isPresented: $showPreview) {
+                        TimerPreview()
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 10)
+                }
+                  
+                
+                
+                
+                
                 VStack(spacing: 0) {
-                    
-                    Text("Demonstration 24:10.51")
-                        .font(font)
-                    
                     VStack(alignment: .leading, spacing: 0) {
                         Text("Font Weight")
                             .font(.body.weight(.medium))
@@ -404,5 +438,68 @@ struct AppearanceSettingsView: View {
         }
         .padding(.horizontal)
         .preferredColorScheme(overrideSystemAppearance ? darkMode ? .dark : .light : nil)
+            .onChange(of: scrambleSize) { newValue in
+                stopWatchManager.scrambleSize = newValue
+                stopWatchManager.updateFont()
+            }
+    }
+}
+
+
+struct TimerPreview: View {
+    @EnvironmentObject var stopwatchManager: StopWatchManager
+    @Environment(\.colorScheme) var colourScheme
+    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+    
+    @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
+    
+    
+    var body: some View {
+        ZStack {
+            // BACKGROUND COLOUR
+            Color.getBackgroundColour(colourScheme)
+                .ignoresSafeArea()
+            
+            Text("0.000")
+                .foregroundColor(Color(uiColor: .systemGray))
+                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescTimer,
+                                                          smallDeviceNames.contains(getModelName()) ? 54 : 56
+                                                          , nil)))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .ignoresSafeArea(edges: .all)
+            
+            
+            HStack {
+                TimerHeader(previewMode: true)
+                    .padding(.trailing, 24)
+                
+                Spacer()
+                
+                Stepper("", value: $scrambleSize, in: 15...36, step: 1)
+                    .frame(width: 85, height: 30)
+                    .padding(.trailing, 8)
+                
+                CloseButton()
+                    .onTapGesture {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    .padding(0)
+            }
+            .frame(maxHeight: .infinity, alignment: .top)
+            .padding(.horizontal)
+            
+            VStack {
+                Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
+                    .font(stopwatchManager.ctFont)
+                    .frame(maxHeight: globalGeometrySize.height/3)
+                    .multilineTextAlignment(.center)
+                    
+                
+                Spacer()
+            }
+            .padding(.horizontal)
+            .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+        }
     }
 }

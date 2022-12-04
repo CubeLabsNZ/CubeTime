@@ -88,7 +88,6 @@ struct CubeTime: App {
                 gsKeys.hapType.rawValue: UIImpactFeedbackGenerator.FeedbackStyle.rigid.rawValue,
                 gsKeys.forceAppZoom.rawValue: false,
                 gsKeys.appZoom.rawValue: 3,
-                gsKeys.scrambleSize.rawValue: 18,
                 gsKeys.gestureDistance.rawValue: 50,
                 
                 // show previous time afte solve deleted
@@ -100,6 +99,7 @@ struct CubeTime: App {
                 // colours
                 asKeys.graphGlow.rawValue: true,
                 
+                asKeys.scrambleSize.rawValue: 18,
                 asKeys.fontWeight.rawValue: 516.0,
                 asKeys.fontCasual.rawValue: 0.0,
             ]
