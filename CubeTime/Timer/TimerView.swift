@@ -289,7 +289,7 @@ struct TimerView: View {
             
             if !((inputMode == .typing || showInputField) && !showManualInputFormattedText) {
                 VStack(alignment: .center, spacing: 0) {
-                    TimerTime()
+                    TimerTime(font: fonts.1)
                         .allowsHitTesting(false)
                         
                     if stopWatchManager.mode == .inspecting {
