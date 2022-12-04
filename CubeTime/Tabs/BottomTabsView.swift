@@ -39,14 +39,16 @@ struct BottomTabsView: View {
         GeometryReader { geometry in
             VHStack(vertical: pad) {
                 VHStack(vertical: pad) {
-                    TabIconWithBar(
-                        currentTab: $currentTab,
-                        assignedTab: .timer,
-                        systemIconName: "stopwatch",
-                        systemIconNameSelected: "stopwatch.fill",
-                        pad: pad,
-                        namespace: namespace
-                    )
+                    if !(UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) && padFloatingLayout) {
+                        TabIconWithBar(
+                            currentTab: $currentTab,
+                            assignedTab: .timer,
+                            systemIconName: "stopwatch",
+                            systemIconNameSelected: "stopwatch.fill",
+                            pad: pad,
+                            namespace: namespace
+                        )
+                    }
                                                    
                     TabIconWithBar(
                         currentTab: $currentTab,
