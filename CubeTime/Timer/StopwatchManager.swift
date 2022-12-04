@@ -5,23 +5,21 @@ import SwiftUI
 import AVKit
 import AVFoundation
 
-
-
 extension Array where Element: Equatable {
-    
     // Remove first collection element that is equal to the given `object`:
     mutating func remove(object: Element) {
         guard let index = firstIndex(of: object) else {return}
         remove(at: index)
     }
     
+    
+    func chunked() -> [[Element]] {
+        return stride(from: 0, to: count-1, by: 1).map {
+            Array(self[$0 ..< Swift.min($0 + 2, count)])
+        }
+    }
 }
 
-
-
-
-let plustwotime = 15
-let dnftime = 17
 
 
 enum stopWatchMode {
@@ -30,7 +28,60 @@ enum stopWatchMode {
     case inspecting
 }
 
+
+struct CalculatedAverage: Identifiable, Comparable/*, Equatable, Comparable*/ {
+    let id = UUID()
+    var name: String
+
+    //    let discardedIndexes: [Int]
+    let average: Double?
+    let accountedSolves: [Solves]?
+    let totalPen: PenTypes
+    let trimmedSolves: [Solves]?
+    
+    static func < (lhs: CalculatedAverage, rhs: CalculatedAverage) -> Bool {
+        #warning("TODO:  merge with that one sort function")
+        if lhs.totalPen == .dnf && rhs.totalPen != .dnf {
+            return true
+        } else if lhs.totalPen != .dnf && rhs.totalPen == .dnf {
+            return false
+        } else {
+            if let lhsa = lhs.average {
+                if let rhsa = rhs.average {
+//                    return timeWithPlusTwo(lhsa, pen: lhs.totalPen) < timeWithPlusTwo(rhsa, pen: rhs.totalPen)
+                    return lhsa < rhsa
+                } else {
+                    return true
+                }
+            } else {
+                return false
+            }
+        }
+    }
+}
+
+
+
+// MARK: --
+// MARK: SWM
 class StopWatchManager: ObservableObject {
+    let managedObjectContext: NSManagedObjectContext
+    
+    // MARK: get user defaults
+    var hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
+    var hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
+    var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
+    var inspectionAlert: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionAlert.rawValue)
+    var inspectionAlertType: Int = UserDefaults.standard.integer(forKey: gsKeys.inspectionAlertType.rawValue)
+    var timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
+    var insCountDown: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionCountsDown.rawValue)
+    var showPrevTime: Bool = UserDefaults.standard.bool(forKey: gsKeys.showPrevTime.rawValue)
+    
+    
+    
+    // MARK: published variables
+    @Published var timerColour: Color = TimerTextColours.timerDefaultColour
+    
     @Published var currentSession: Sessions {
         didSet {
             if currentSession.session_type == SessionTypes.playground.rawValue {
@@ -46,46 +97,161 @@ class StopWatchManager: ObservableObject {
             UserDefaults.standard.set(currentSession.objectID.uriRepresentation(), forKey: "last_used_session")
         }
     }
-    let managedObjectContext: NSManagedObjectContext
-    
-    
-    var hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
-    var hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
-    var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
-    var inspectionAlert: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionAlert.rawValue)
-    var inspectionAlertType: Int = UserDefaults.standard.integer(forKey: gsKeys.inspectionAlertType.rawValue)
-    var timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
-    var insCountDown: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionCountsDown.rawValue)
-    var showPrevTime: Bool = UserDefaults.standard.bool(forKey: gsKeys.showPrevTime.rawValue)
-
-    
-    var feedbackStyle: UIImpactFeedbackGenerator?
-    
     
     @Published var scrambleStr: String? = nil
     @Published var scrambleSVG: String? = nil
-    var prevScrambleStr: String! = nil
     
     @Published var secondsStr = ""
-    var secondsElapsed = 0.0
-    
+    @Published var inspectionSecs = 0
     
     @Published var mode: stopWatchMode = .stopped
+    
     @Published var showDeleteSolveConfirmation = false
     @Published var showPenOptions = false
+    
     @Published var currentSolveth: Int?
-    @Published var inspectionSecs = 0
-    @Published var timerColour: Color = TimerTextColours.timerDefaultColour
     
     @Published var solveItem: Solves!
     
+    
+    var feedbackStyle: UIImpactFeedbackGenerator?
+    var secondsElapsed = 0.0
+    var penType: PenTypes = .none
+
+    
+    
+    // MARK: scrambler
+    private var scrambleWorkItem: DispatchWorkItem?
+    
+    
+    
+    // MARK: private
+    private var prevScrambleStr: String! = nil
+    private let plusTwoTime: Int = 15
+    private let dnfTime: Int = 17
+    
+    
+    // MARK: timer
+    private var timer: Timer?
+    private var timerStartTime: Date?
+    
+    private var justInspected = false
+    
+    var prevDownStoppedTimer = false
+    var canGesture: Bool = true
+    
+    
+    // MARK: multiphase
+    private var currentMPCount: Int = 1
+    var phaseTimes: [Double] = []
+    
+    
+    
+    
+    #warning("TODO: remove")
+    var nilSolve: Bool = true
+    
+    
+    
+    
+    
+    // MARK: stats
+    @Published var playgroundScrambleType: Int32 {
+        didSet {
+            NSLog("playgroundScrambleType didset to \(playgroundScrambleType)")
+            currentSession.scramble_type = playgroundScrambleType
+            try! managedObjectContext.save()
+            #warning("TODO:  do not rescramble when setting to same scramble eg 3blnd -> 3oh")
+            rescramble()
+        }
+    }
+    @Published var targetStr: String
+    @Published var phaseCount: Int
+    
+    // STATS
+    
+    // Stats used on timer
+    @Published var currentAo5: CalculatedAverage?
+    @Published var currentAo12: CalculatedAverage?
+    @Published var currentAo100: CalculatedAverage?
+    
+    @Published var sessionMean: Double?
+    
+    @Published var bpa: Double?
+    @Published var wpa: Double?
+    
+    @Published var timeNeededForTarget: Double?
+    
+    // Stats not on timer
+    @Published var bestAo5: CalculatedAverage?
+    @Published var bestAo12: CalculatedAverage?
+    @Published var bestAo100: CalculatedAverage?
+    
+    
+    // other block calculations
+    @Published var bestSingle: Solves?
+    
+    
+    // For some reason calling sub function to initialize more doesn't work well, must use !
+    
+    // comp sim stats
+    @Published var compSimCount: Int!
+    @Published var reachedTargets: Int!
+    
+    @Published var allCompsimAveragesByDate: [CompSimSolveGroup]! // has no dnfs!!
+    @Published var allCompsimAveragesByTime: [CompSimSolveGroup]!
+    
+    @Published var bestCompsimAverage: CalculatedAverage?
+    @Published var currentCompsimAverage: CalculatedAverage?
+    
+    @Published var currentMeanOfTen: Double?
+    @Published var bestMeanOfTen: Double?
+    
+    @Published var phases: [Double]?
+    
+    
+    @Published var normalMedian: (Double?, Double?)
+    
+    
+    // On stop: insert where time with plustwoforzolve > $0
+    private var solves: [Solves]!
+    // On stop: just append to list
+    @Published var solvesByDate: [Solves]!
+    // Maybe use trickery to get object, maybe delete this array
+    @Published var solvesNoDNFs: [Solves]!
+    // On stop: just append if not dnf, remove if dnf
+    @Published var solvesNoDNFsbyDate: [Solves]!
+    
+    
+    // Couple time list functions
+    private var timeListSolves: [Solves]!
+    @Published var timeListSolvesFiltered: [Solves]!
+    @Published var timeListFilter = "" {
+        didSet {
+            filterTimeList()
+        }
+    }
+    @Published var timeListAscending = false {
+        didSet {
+            changedTimeListSort()
+        }
+    }
+    @Published var timeListSortBy: SortBy = .date {
+        didSet {
+            changedTimeListSort()
+        }
+    }
+    
+    #warning("TODO:  fix this god awful hack")
+    @Published var stateID = UUID()
+    
+    
+    // MARK: inspection alert audio
     private let inspectionAlert_8: AVAudioPlayer! = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "8sec-audio", ofType: "wav")!))
     private let inspectionAlert_12: AVAudioPlayer! = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "12sec-audio", ofType: "wav")!))
-    
     private let systemSoundID: SystemSoundID = 1057
     
     
-    var penType: PenTypes = .none
     
     
     init (currentSession: Sessions, managedObjectContext: NSManagedObjectContext) {
@@ -101,39 +267,9 @@ class StopWatchManager: ObservableObject {
         self.rescramble()
         
         tryUpdateCurrentSolveth()
-        print("initialised")
-    }
-
-    func calculateFeedbackStyle() {
-        self.feedbackStyle = hapticEnabled ? UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!) : nil
+        print("swm initialised")
     }
     
-    func tryUpdateCurrentSolveth() {
-        if let currentSession = currentSession as? CompSimSession {
-            if currentSession.solvegroups!.count > 0 {
-                currentSolveth = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup).solves!.count
-            } else {
-                currentSolveth = 0
-            }
-        }
-    }
-    
-
-    var timer: Timer?
-    
-    private var timerStartTime: Date?
-    
-    
-    var prevDownStoppedTimer = false
-    var justInspected = false
-    
-    // multiphase temporary variables
-    var currentMPCount: Int = 1
-    var phaseTimes: [Double] = []
-    
-    var canGesture: Bool = true
-    
-    var nilSolve: Bool = true
     
     func startInspection() {
         timer?.invalidate()
@@ -153,9 +289,9 @@ class StopWatchManager: ObservableObject {
                 self.secondsStr = String(inspectionSecs)
             }
             
-            if inspectionSecs == plustwotime {
+            if inspectionSecs == self.plusTwoTime {
                 penType = .plustwo
-            } else if inspectionSecs == dnftime {
+            } else if inspectionSecs == self.dnfTime {
                 penType = .dnf
             }
             
@@ -272,10 +408,6 @@ class StopWatchManager: ObservableObject {
         updateStats()
     }
     
-    func lap() {
-        phaseTimes.append(-timerStartTime!.timeIntervalSinceNow)
-    }
-    
     
     func touchDown() {
         #if DEBUG
@@ -381,53 +513,12 @@ class StopWatchManager: ObservableObject {
         
         prevDownStoppedTimer = false
     }
-    
-    /// OTHER FUNCS
-    func changedPen(_ oldPen: PenTypes) {
-        if oldPen.rawValue == solveItem.penalty {
-            return
-        }
-        
-        if PenTypes(rawValue: solveItem.penalty)! == .plustwo {
-            withAnimation {
-                secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
-            }
-        } else {
-            secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
-        }
+}
 
-        solves.remove(object: solveItem)
-        solves.insert(solveItem, at: solves.insertionIndex(of: solveItem))
-        
-        
-        if solveItem.penalty == PenTypes.dnf.rawValue {
-            assert(solvesNoDNFsbyDate.popLast() == solveItem)
-            solvesNoDNFs.remove(object: solveItem)
-        } else if oldPen == PenTypes.dnf {
-            solvesNoDNFsbyDate.append(solveItem)
-            solvesNoDNFs.insert(solveItem, at: solvesNoDNFs.insertionIndex(of: solveItem))
-        }
-        
-        
-        #warning("TODO: next update use optimised versions")
 
-        bestAo5 = getBestMovingAverageOf(5)
-        bestAo12 = getBestMovingAverageOf(12)
-        bestAo100 = getBestMovingAverageOf(100)
-        
-        #warning("TODO:  optimise")
-        sessionMean = getSessionMean()
-        
-        
-        
-        changedTimeListSort()
-        bestSingle = getMin()
-        
-        currentAo5 = getCurrentAverageOf(5)
-        currentAo12 = getCurrentAverageOf(12)
-        currentAo100 = getCurrentAverageOf(100)
-    }
-    
+
+// MARK: - SWM: SCRAMBLER
+extension StopWatchManager {
     func safeGetScramble() -> String {
         var isolate: OpaquePointer? = nil
         var thread: OpaquePointer? = nil
@@ -442,7 +533,6 @@ class StopWatchManager: ObservableObject {
         return s
     }
     
-    var scrambleWorkItem: DispatchWorkItem?
     
     func rescramble() {
         #if DEBUG
@@ -497,6 +587,102 @@ class StopWatchManager: ObservableObject {
         scrambleWorkItem = newWorkItem
         DispatchQueue.global(qos: .userInitiated).async(execute: newWorkItem)
     }
+}
+
+
+
+// MARK: - SWM: PENALTY
+extension StopWatchManager {
+    func changedPen(_ oldPen: PenTypes) {
+        if oldPen.rawValue == solveItem.penalty {
+            return
+        }
+        
+        if PenTypes(rawValue: solveItem.penalty)! == .plustwo {
+            withAnimation {
+                secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
+            }
+        } else {
+            secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
+        }
+        
+        solves.remove(object: solveItem)
+        solves.insert(solveItem, at: solves.insertionIndex(of: solveItem))
+        
+        
+        if solveItem.penalty == PenTypes.dnf.rawValue {
+            assert(solvesNoDNFsbyDate.popLast() == solveItem)
+            solvesNoDNFs.remove(object: solveItem)
+        } else if oldPen == PenTypes.dnf {
+            solvesNoDNFsbyDate.append(solveItem)
+            solvesNoDNFs.insert(solveItem, at: solvesNoDNFs.insertionIndex(of: solveItem))
+        }
+        
+        
+#warning("TODO: next update use optimised versions")
+        
+        bestAo5 = getBestMovingAverageOf(5)
+        bestAo12 = getBestMovingAverageOf(12)
+        bestAo100 = getBestMovingAverageOf(100)
+        
+#warning("TODO:  optimise")
+        sessionMean = getSessionMean()
+        
+        
+        
+        changedTimeListSort()
+        bestSingle = getMin()
+        
+        currentAo5 = getCurrentAverageOf(5)
+        currentAo12 = getCurrentAverageOf(12)
+        currentAo100 = getCurrentAverageOf(100)
+    }
+    
+    
+    func changePen(solve: Solves, pen: PenTypes) {
+        #warning("TODO:  check best AOs")
+        if solve.penalty == pen.rawValue {
+            return
+        }
+        let oldPen = PenTypes(rawValue: solve.penalty)!
+        
+        
+        solve.penalty = pen.rawValue
+        
+        solves.remove(object: solve)
+        solves.insert(solve, at: solves.insertionIndex(of: solve))
+        
+        
+        if solve.penalty == PenTypes.dnf.rawValue {
+            solvesNoDNFsbyDate.insert(solve, at: solvesNoDNFsbyDate.insertionIndexDate(solve: solve))
+            solvesNoDNFs.insert(solve, at: solvesNoDNFs.insertionIndex(of: solve))
+        } else if oldPen == PenTypes.dnf {
+            solvesNoDNFsbyDate.remove(object: solve)
+            solvesNoDNFs.remove(object: solve)
+        }
+        
+        bestSingle = getMin()
+        phases = getAveragePhases()
+        
+        if (solvesByDate.suffix(100).contains(solve)) {
+            self.currentAo100 = getCurrentAverageOf(100)
+            if (solvesByDate.suffix(12).contains(solve)) {
+                self.currentAo12 = getCurrentAverageOf(12)
+                if (solvesByDate.suffix(5).contains(solve)) {
+                    self.currentAo5 = getCurrentAverageOf(5)
+                }
+            }
+        }
+        
+        self.bestAo5 = getBestMovingAverageOf(5)
+        self.bestAo12 = getBestMovingAverageOf(12)
+        self.bestAo100 = getBestMovingAverageOf(100)
+        
+        stateID = UUID() // I'm so sorry
+        
+        try! managedObjectContext.save()
+    }
+
     
     func displayPenOptions() {
         
@@ -509,8 +695,8 @@ class StopWatchManager: ObservableObject {
             showPenOptions = true
             nilSolve = (solveItem == nil)
         }
-        
     }
+    
     
     func askToDelete() {
         withAnimation {
@@ -519,106 +705,236 @@ class StopWatchManager: ObservableObject {
         
         timerColour = TimerTextColours.timerDefaultColour
         prevDownStoppedTimer = false
-
+        
         if solveItem != nil {
             #warning("TODO")
             showDeleteSolveConfirmation = true
         }
     }
+}
+
+
+
+// MARK: - SWM: FEEDBACK MANAGER
+extension StopWatchManager {
+    func calculateFeedbackStyle() {
+        self.feedbackStyle = hapticEnabled ? UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!) : nil
+    }
+}
+
+
+
+// MARK: - SWM: MULTIPHASE & COMPSIM
+extension StopWatchManager {
+    // multiphase
+    func lap() {
+        phaseTimes.append(-timerStartTime!.timeIntervalSinceNow)
+    }
     
-    // Other stuff
-    
-    @Published var playgroundScrambleType: Int32 {
-        didSet {
-            NSLog("playgroundScrambleType didset to \(playgroundScrambleType)")
-            currentSession.scramble_type = playgroundScrambleType
-            try! managedObjectContext.save()
-            #warning("TODO:  do not rescramble when setting to same scramble eg 3blnd -> 3oh")
-            rescramble()
+    // compsim
+    func tryUpdateCurrentSolveth() {
+        if let currentSession = currentSession as? CompSimSession {
+            if currentSession.solvegroups!.count > 0 {
+                currentSolveth = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup).solves!.count
+            } else {
+                currentSolveth = 0
+            }
         }
     }
-    @Published var targetStr: String
-    @Published var phaseCount: Int
-    
-    // STATS
-    
-    // Stats used on timer
-    @Published var currentAo5: CalculatedAverage?
-    @Published var currentAo12: CalculatedAverage?
-    @Published var currentAo100: CalculatedAverage?
-    
-    @Published var sessionMean: Double?
-    
-    @Published var bpa: Double?
-    @Published var wpa: Double?
-    
-    @Published var timeNeededForTarget: Double?
-    
-    // Stats not on timer
-    @Published var bestAo5: CalculatedAverage?
-    @Published var bestAo12: CalculatedAverage?
-    @Published var bestAo100: CalculatedAverage?
-    
-    
-    // other block calculations
-    @Published var bestSingle: Solves?
-    
-    
-    // For some reason calling sub function to initialize more doesn't work well, must use !
-    
-    // comp sim stats
-    @Published var compSimCount: Int!
-    @Published var reachedTargets: Int!
-    
-    @Published var allCompsimAveragesByDate: [CompSimSolveGroup]! // has no dnfs!!
-    @Published var allCompsimAveragesByTime: [CompSimSolveGroup]!
-    
-    @Published var bestCompsimAverage: CalculatedAverage?
-    @Published var currentCompsimAverage: CalculatedAverage?
-    
-    @Published var currentMeanOfTen: Double?
-    @Published var bestMeanOfTen: Double?
-    
-    @Published var phases: [Double]?
-    
-    
-    @Published var normalMedian: (Double?, Double?)
-    
-    
-    // On stop: insert where time with plustwoforzolve > $0
-    private var solves: [Solves]!
-    // On stop: just append to list
-    @Published var solvesByDate: [Solves]!
-    // Maybe use trickery to get object, maybe delete this array
-    @Published var solvesNoDNFs: [Solves]!
-    // On stop: just append if not dnf, remove if dnf
-    @Published var solvesNoDNFsbyDate: [Solves]!
-    
-    
-    // Couple time list functions
-    private var timeListSolves: [Solves]!
-    @Published var timeListSolvesFiltered: [Solves]!
-    @Published var timeListFilter = "" {
-        didSet {
-            filterTimeList()
+}
+
+
+
+
+
+// MARK: - STATS
+extension StopWatchManager {
+    static func calculateAverage(_ solves: [Solves], _ id: String, _ compsim: Bool) -> CalculatedAverage? {
+        let cnt = solves.count
+        
+        if cnt < 5 {
+            return nil
         }
-    }
-    @Published var timeListAscending = false {
-        didSet {
-            changedTimeListSort()
+        
+        var trim: Int {
+            if cnt <= 12 {
+                return 1
+            } else {
+                return Int(Double(cnt) * 0.05)
+            }
         }
-    }
-    @Published var timeListSortBy: SortBy = .date {
-        didSet {
-            changedTimeListSort()
+        
+        let solvesSorted: [Solves] = solves.sorted(by: Self.sortWithDNFsLast)
+        let isDNF = solvesSorted[solvesSorted.endIndex.advanced(by: -(trim + 1))].penalty == PenTypes.dnf.rawValue
+        let solvesTrimmed: [Solves] = solvesSorted.prefix(trim) + solvesSorted.suffix(trim)
+        
+        if compsim {
+            return CalculatedAverage(
+                name: "\(id)",
+                average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
+                accountedSolves: solvesSorted.suffix(cnt),
+                totalPen: isDNF ? .dnf : .none,
+                trimmedSolves: solvesTrimmed
+            )
+        } else {
+            return CalculatedAverage(
+                name: "\(id)\(cnt)",
+                average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
+                accountedSolves: solvesSorted.suffix(cnt),
+                totalPen: isDNF ? .dnf : .none,
+                trimmedSolves: solvesTrimmed
+            )
         }
     }
     
+    
+    static func sortWithDNFsLast(_ solve0: Solves, _ solve1: Solves) -> Bool {
+        let pen0 = PenTypes(rawValue: solve0.penalty)!
+        let pen1 = PenTypes(rawValue: solve1.penalty)!
+        
+        // Sort non DNFs or both DNFs by time
+        if (pen0 != .dnf && pen1 != .dnf) || (pen0 == .dnf && pen1 == .dnf) {
+            return solve0.timeIncPen < solve1.timeIncPen
+        // Order non DNFs before DNFs
+        } else {
+            return pen0 != .dnf && pen1 == .dnf
+        }
+    }
+
+}
+
+
+
+// MARK: - STATS: STANDARD STATS FUNCS
+extension StopWatchManager {
+    func getMin() -> Solves? {
+        if let solve = solvesNoDNFs.first {
+            return solve
+        } else if let solve = solves.first {
+            return solve
+        } else {
+            return nil
+        }
+    }
+    
+    
+    func getSessionMean() -> Double? {
+        if solvesNoDNFs.count == 0 {
+            return nil
+        }
+        let sum = solvesNoDNFs.reduce(0, {$0 + timeWithPlusTwoForSolve($1) })
+        return sum / Double(solvesNoDNFs.count)
+    }
+    
+    
+    func getNumberOfSolves() -> Int {
+        return solves.count
+    }
+    
+    
+    func getNormalMedian() -> (Double?, Double?) {
+        let cnt = solvesNoDNFs.count
+        
+        if cnt == 0 {
+            return (nil, nil)
+        }
+        
+        let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solvesNoDNFs.map { timeWithPlusTwoForSolve($0) }))
+        
+        
+        if cnt % 2 == 0 {
+            let median = Double((solves[cnt/2].timeIncPen + solves[(cnt/2)-1].timeIncPen)/2)
+            
+            if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
+                
+                return (median, ((median-truncatedMin)/(truncatedMax-truncatedMin)))
+            }
+            
+            return (median, nil)
+            
+            
+        } else {
+            let median = Double(solves[(cnt/2)].timeIncPen)
+            
+            if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
+                
+                
+                return (median, ((median-truncatedMin)/(truncatedMax-truncatedMin)))
+            }
+            
+            return (median, nil)
+        }
+    }
+    
+    
+    func getCurrentAverageOf(_ period: Int) -> CalculatedAverage? {
+        if solvesByDate.count < period {
+            return nil
+        }
+        
+        return Self.calculateAverage(solvesByDate.suffix(period), "Current ao", false)
+    }
+    
+    
+    func getBestMovingAverageOf(_ period: Int) -> CalculatedAverage? {
+        precondition(period > 1)
+        if solvesByDate.count < period {
+            return nil
+        }
+        
+        let trim = period >= 100 ? 5 : 1
+        
+        
+        var lowestAverage: Double?
+        var lowestValues: [Solves]?
+        var lowsetTrimmedSolves: [Solves]?
+        var totalPen = PenTypes.none
+        var lowestTotalPen = PenTypes.none
+        
+        for i in period..<solves.count+1 {
+            var solves = solvesByDate[i - period..<i]
+            solves.sort(by: Self.sortWithDNFsLast)
+            
+            let trimmedSolves = solves.suffix(trim) + solves.prefix(trim)
+            
+            let trimmed = solves.dropFirst(trim).dropLast(trim)
+            
+//            if trimmed.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) {
+//                continue
+//            }
+            totalPen = trimmed.last!.penalty == PenTypes.dnf.rawValue ? PenTypes.dnf : PenTypes.none
+            let sum = trimmed.reduce(0, {$0 + $1.timeIncPen})
+            
+            let result = Double(sum) / Double(period-(trim*2))
+            if lowestAverage == nil
+                || (
+                    result < lowestAverage!
+                    && (
+                        (totalPen, lowestTotalPen) == (PenTypes.dnf, PenTypes.dnf)
+                        || (totalPen, lowestTotalPen) == (PenTypes.none, PenTypes.none)
+                    )
+                )
+                || (totalPen, lowestTotalPen) == (PenTypes.none, PenTypes.dnf) {
+                lowestValues = solvesByDate[i - period ..< i].sorted(by: {$0.date! > $1.date!})
+                lowestAverage = result
+                lowestTotalPen = totalPen
+                lowsetTrimmedSolves = Array(trimmedSolves)
+            }
+        }
+        return CalculatedAverage(name: "Best ao\(period)", average: lowestAverage, accountedSolves: lowestValues, totalPen: lowestTotalPen, trimmedSolves: lowsetTrimmedSolves)
+    }
+}
+
+
+
+// MARK: - STATS: CACHE STATS
+extension StopWatchManager {
     func changedTimeListSort() {
         let s: [Solves] = timeListSortBy == .date ? solvesByDate : solves
         timeListSolves = timeListAscending ? s : s.reversed()
         filterTimeList()
     }
+    
     
     func filterTimeList() {
         if timeListFilter.isEmpty {
@@ -627,9 +943,6 @@ class StopWatchManager: ObservableObject {
             timeListSolvesFiltered = timeListSolves.filter{ formatSolveTime(secs: $0.time).hasPrefix(timeListFilter) }
         }
     }
-    
-    #warning("TODO:  fix this god awful hack")
-    @Published var stateID = UUID()
     
     
     func delete(solve: Solves) {
@@ -682,50 +995,7 @@ class StopWatchManager: ObservableObject {
         print("delete called")
     }
     
-    func changePen(solve: Solves, pen: PenTypes) {
-        #warning("TODO:  check best AOs")
-        if solve.penalty == pen.rawValue {
-            return
-        }
-        let oldPen = PenTypes(rawValue: solve.penalty)!
         
-        
-        solve.penalty = pen.rawValue
-        
-        solves.remove(object: solve)
-        solves.insert(solve, at: solves.insertionIndex(of: solve))
-        
-        
-        if solve.penalty == PenTypes.dnf.rawValue {
-            solvesNoDNFsbyDate.insert(solve, at: solvesNoDNFsbyDate.insertionIndexDate(solve: solve))
-            solvesNoDNFs.insert(solve, at: solvesNoDNFs.insertionIndex(of: solve))
-        } else if oldPen == PenTypes.dnf {
-            solvesNoDNFsbyDate.remove(object: solve)
-            solvesNoDNFs.remove(object: solve)
-        }
-        
-        bestSingle = getMin()
-        phases = getAveragePhases()
-        
-        if (solvesByDate.suffix(100).contains(solve)) {
-            self.currentAo100 = getCurrentAverageOf(100)
-            if (solvesByDate.suffix(12).contains(solve)) {
-                self.currentAo12 = getCurrentAverageOf(12)
-                if (solvesByDate.suffix(5).contains(solve)) {
-                    self.currentAo5 = getCurrentAverageOf(5)
-                }
-            }
-        }
-        
-        self.bestAo5 = getBestMovingAverageOf(5)
-        self.bestAo12 = getBestMovingAverageOf(12)
-        self.bestAo100 = getBestMovingAverageOf(100)
-        
-        stateID = UUID() // I'm so sorry
-        
-        try! managedObjectContext.save()
-    }
-    
     func statsGetFromCache() {
         #warning("TODO:  get from cache actually")
         let sessionSolves = currentSession.solves!.allObjects as! [Solves]
@@ -765,9 +1035,11 @@ class StopWatchManager: ObservableObject {
         bestMeanOfTen = getBestMeanOfTen()
     }
     
+    
     func saveCache() {
         
     }
+    
     
     func updateStats() {
         #warning("TODO:  maybe make these async?")
@@ -845,189 +1117,49 @@ class StopWatchManager: ObservableObject {
         }
         #warning("TODO:  save to cache")
     }
-    
-    
-    // STATS FUNCTIONS
-    static func calculateAverage(_ solves: [Solves], _ id: String, _ compsim: Bool) -> CalculatedAverage? {
-        let cnt = solves.count
-        
-        if cnt < 5 {
-            return nil
-        }
-        
-        var trim: Int {
-            if cnt <= 12 {
-                return 1
-            } else {
-                return Int(Double(cnt) * 0.05)
-            }
-        }
-        
-        let solvesSorted: [Solves] = solves.sorted(by: Self.sortWithDNFsLast)
-        let isDNF = solvesSorted[solvesSorted.endIndex.advanced(by: -(trim + 1))].penalty == PenTypes.dnf.rawValue
-        let solvesTrimmed: [Solves] = solvesSorted.prefix(trim) + solvesSorted.suffix(trim)
-        
-        if compsim {
-            return CalculatedAverage(
-                name: "\(id)",
-                average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
-                accountedSolves: solvesSorted.suffix(cnt),
-                totalPen: isDNF ? .dnf : .none,
-                trimmedSolves: solvesTrimmed
-            )
-        } else {
-            return CalculatedAverage(
-                name: "\(id)\(cnt)",
-                average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
-                accountedSolves: solvesSorted.suffix(cnt),
-                totalPen: isDNF ? .dnf : .none,
-                trimmedSolves: solvesTrimmed
-            )
-        }
-    }
-    
-    static func sortWithDNFsLast(_ solve0: Solves, _ solve1: Solves) -> Bool {
-        let pen0 = PenTypes(rawValue: solve0.penalty)!
-        let pen1 = PenTypes(rawValue: solve1.penalty)!
-        
-        // Sort non DNFs or both DNFs by time
-        if (pen0 != .dnf && pen1 != .dnf) || (pen0 == .dnf && pen1 == .dnf) {
-            return solve0.timeIncPen < solve1.timeIncPen
-        // Order non DNFs before DNFs
-        } else {
-            return pen0 != .dnf && pen1 == .dnf
-        }
-    }
+}
 
-    
-    /// NORMAL SESSION FUNCTIONS
-    func getMin() -> Solves? {
-        if let solve = solvesNoDNFs.first {
-            return solve
-        } else if let solve = solves.first {
-            return solve
-        } else {
-            return nil
-        }
-    }
-    
-    func getSessionMean() -> Double? {
-        if solvesNoDNFs.count == 0 {
-            return nil
-        }
-        let sum = solvesNoDNFs.reduce(0, {$0 + timeWithPlusTwoForSolve($1) })
-        return sum / Double(solvesNoDNFs.count)
-    }
-    
-    func getNumberOfSolves() -> Int {
-        return solves.count
-    }
-    
-    
-    func getNormalMedian() -> (Double?, Double?) {
-        let cnt = solvesNoDNFs.count
-        
-        if cnt == 0 {
-            return (nil, nil)
-        }
-        
-        let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solvesNoDNFs.map { timeWithPlusTwoForSolve($0) }))
-        
-        
-        if cnt % 2 == 0 {
-            let median = Double((solves[cnt/2].timeIncPen + solves[(cnt/2)-1].timeIncPen)/2)
-            
-            if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
-                
-                return (median, ((median-truncatedMin)/(truncatedMax-truncatedMin)))
-            }
-            
-            return (median, nil)
-            
-            
-        } else {
-            let median = Double(solves[(cnt/2)].timeIncPen)
-            
-            if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
-                
-                
-                return (median, ((median-truncatedMin)/(truncatedMax-truncatedMin)))
-            }
-            
-            return (median, nil)
-        }
-    }
-    
-    
-    
-    /// AVERAGE FUNCTIONS
-    
-    func getCurrentAverageOf(_ period: Int) -> CalculatedAverage? {
-        if solvesByDate.count < period {
-            return nil
-        }
-        
-        return Self.calculateAverage(solvesByDate.suffix(period), "Current ao", false)
-    }
-    
-    
-    func getBestMovingAverageOf(_ period: Int) -> CalculatedAverage? {
-        precondition(period > 1)
-        if solvesByDate.count < period {
-            return nil
-        }
-        
-        let trim = period >= 100 ? 5 : 1
-        
-        
-        var lowestAverage: Double?
-        var lowestValues: [Solves]?
-        var lowsetTrimmedSolves: [Solves]?
-        var totalPen = PenTypes.none
-        var lowestTotalPen = PenTypes.none
-        
-        for i in period..<solves.count+1 {
-            var solves = solvesByDate[i - period..<i]
-            solves.sort(by: Self.sortWithDNFsLast)
-            
-            let trimmedSolves = solves.suffix(trim) + solves.prefix(trim)
-            
-            let trimmed = solves.dropFirst(trim).dropLast(trim)
-            
-//            if trimmed.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) {
-//                continue
-//            }
-            totalPen = trimmed.last!.penalty == PenTypes.dnf.rawValue ? PenTypes.dnf : PenTypes.none
-            let sum = trimmed.reduce(0, {$0 + $1.timeIncPen})
-            
-            let result = Double(sum) / Double(period-(trim*2))
-            if lowestAverage == nil
-                || (
-                    result < lowestAverage!
-                    && (
-                        (totalPen, lowestTotalPen) == (PenTypes.dnf, PenTypes.dnf)
-                        || (totalPen, lowestTotalPen) == (PenTypes.none, PenTypes.none)
-                    )
-                )
-                || (totalPen, lowestTotalPen) == (PenTypes.none, PenTypes.dnf) {
-                lowestValues = solvesByDate[i - period ..< i].sorted(by: {$0.date! > $1.date!})
-                lowestAverage = result
-                lowestTotalPen = totalPen
-                lowsetTrimmedSolves = Array(trimmedSolves)
-            }
-        }
-        return CalculatedAverage(name: "Best ao\(period)", average: lowestAverage, accountedSolves: lowestValues, totalPen: lowestTotalPen, trimmedSolves: lowsetTrimmedSolves)
-    }
 
-    
-    
-    
-    /// COMP SIM STUFF
-    
+
+// MARK: - STATS: MULTIPHASE
+extension StopWatchManager {
+    func getAveragePhases() -> [Double]? {
+        if let multiphaseSession = currentSession as? MultiphaseSession {
+            let times = (solvesNoDNFs as! [MultiphaseSolve]).map({ $0.phases! })
+            
+            
+            var summedPhases = [Double](repeating: 0, count: Int(phaseCount))
+                        
+            
+            for phase in times {
+                var paddedPhase = phase
+                paddedPhase.insert(0, at: 0)
+                
+                let mappedPhase = paddedPhase.chunked().map { $0[1] - $0[0] }
+                
+               
+                for i in 0..<Int(phaseCount) {
+                    summedPhases[i] += mappedPhase[i]
+                }
+            }
+           
+            
+            return summedPhases.map({ $0 / Double(solvesNoDNFs.count) })
+        } else {
+            return nil
+        }
+    }
+}
+
+
+
+// MARK: - STATS: COMPSIM
+extension StopWatchManager {
     func getNumberOfAverages() -> Int {
         return (solves.count / 5)
     }
         
+    
     func getReachedTargets() -> Int {
         var reached = 0
         
@@ -1128,7 +1260,6 @@ class StopWatchManager: ObservableObject {
     }
     
     
-    
     func getCurrentMeanOfTen() -> Double? { // returned calculated average has averages as solves
         if currentSession is CompSimSession {
             let averages = getBestCompsimAverageAndArrayOfCompsimAverages().1
@@ -1147,6 +1278,7 @@ class StopWatchManager: ObservableObject {
         
         return nil
     }
+    
     
     func getBestMeanOfTen() -> Double? {
         if currentSession is CompSimSession {
@@ -1178,34 +1310,7 @@ class StopWatchManager: ObservableObject {
         
         return nil
     }
-    
-    func getAveragePhases() -> [Double]? {
-        if let multiphaseSession = currentSession as? MultiphaseSession {
-            let times = (solvesNoDNFs as! [MultiphaseSolve]).map({ $0.phases! })
-            
-            
-            var summedPhases = [Double](repeating: 0, count: Int(phaseCount))
-                        
-            
-            for phase in times {
-                var paddedPhase = phase
-                paddedPhase.insert(0, at: 0)
-                
-                let mappedPhase = paddedPhase.chunked().map { $0[1] - $0[0] }
-                
-               
-                for i in 0..<Int(phaseCount) {
-                    summedPhases[i] += mappedPhase[i]
-                }
-            }
-           
-            
-            return summedPhases.map({ $0 / Double(solvesNoDNFs.count) })
-        } else {
-            return nil
-        }
-    }
-    
+        
     
     func getWpaBpa() -> (Double?, Double?) {
         if let compsimSession = currentSession as? CompSimSession {
@@ -1229,6 +1334,7 @@ class StopWatchManager: ObservableObject {
         
         return (nil, nil)
     }
+    
     
     func getTimeNeededForTarget() -> Double? {
         if let compsimSession = currentSession as? CompSimSession {
@@ -1257,50 +1363,11 @@ class StopWatchManager: ObservableObject {
 }
 
 
-struct CalculatedAverage: Identifiable, Comparable/*, Equatable, Comparable*/ {
-    let id = UUID()
-    var name: String
 
-    //    let discardedIndexes: [Int]
-    let average: Double?
-    let accountedSolves: [Solves]?
-    let totalPen: PenTypes
-    let trimmedSolves: [Solves]?
-    
-    static func < (lhs: CalculatedAverage, rhs: CalculatedAverage) -> Bool {
-        #warning("TODO:  merge with that one sort function")
-        if lhs.totalPen == .dnf && rhs.totalPen != .dnf {
-            return true
-        } else if lhs.totalPen != .dnf && rhs.totalPen == .dnf {
-            return false
-        } else {
-            if let lhsa = lhs.average {
-                if let rhsa = rhs.average {
-                    return timeWithPlusTwo(lhsa, pen: lhs.totalPen) < timeWithPlusTwo(rhsa, pen: rhs.totalPen)
-                } else {
-                    return true
-                }
-            } else {
-                return false
-            }
-        }
-    }
-}
+
+
 
 @available(*, deprecated, message: "Use solve.timeIncPen instead.")
 func timeWithPlusTwoForSolve(_ solve: Solves) -> Double {
     return solve.time + (solve.penalty == PenTypes.plustwo.rawValue ? 2 : 0)
-}
-
-#warning("TODO:  put this in Solve extensions")
-func timeWithPlusTwo(_ time: Double, pen: PenTypes) -> Double {
-    return time + (pen == PenTypes.plustwo ? 2 : 0)
-}
-
-extension Array {
-    func chunked() -> [[Element]] {
-        return stride(from: 0, to: count-1, by: 1).map {
-            Array(self[$0 ..< Swift.min($0 + 2, count)])
-        }
-    }
 }

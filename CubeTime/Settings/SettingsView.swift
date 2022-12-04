@@ -175,88 +175,90 @@ struct SettingsDetail: View {
     
     var body: some View {
         if currentCard != nil {
-            ZStack {
-                Color.getBackgroundColour(colourScheme)
-                    .ignoresSafeArea()
-                    .zIndex(0)
-                
-                ScrollView {
-                    #warning("TODO:  use an enum for better i18n support")
-                    switch currentCard!.name {
-                    case "General":
-                        GeneralSettingsView()
-                    case "Appearance":
-                        AppearanceSettingsView()
-                    case "Import &\nExport":
-                        EmptyView()
-//                        ImportExportSettingsView()
-                    case "Help &\nAbout Us":
-                        AboutSettingsView()
-                    default:
-                        EmptyView()
+            GeometryReader { geo in
+                ZStack {
+                    Color.getBackgroundColour(colourScheme)
+                        .ignoresSafeArea()
+                        .zIndex(0)
+                    
+                    ScrollView {
+                        #warning("TODO:  use an enum for better i18n support")
+                        switch currentCard!.name {
+                        case "General":
+                            GeneralSettingsView()
+                        case "Appearance":
+                            AppearanceSettingsView()
+                        case "Import &\nExport":
+                            EmptyView()
+    //                        ImportExportSettingsView()
+                        case "Help &\nAbout Us":
+                            AboutSettingsView(parentGeo: geo)
+                        default:
+                            EmptyView()
+                        }
                     }
-                }
-                .safeAreaInset(edge: .top, spacing: 0) {
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .fill(Color.clear)
-                        .frame(maxHeight: globalGeometrySize.height / 7)
-                        .padding(.bottom)
-                }
-                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
-
-                VStack {
-                    ZStack {
+                    .safeAreaInset(edge: .top, spacing: 0) {
                         RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
-                            .matchedGeometryEffect(id: "bg " + currentCard!.name, in: namespace)
-                            .ignoresSafeArea()
-                            .shadow(color: .black.opacity(0.16), radius: 8, x: 0, y: 3)
-                        VStack {
-                            Spacer()
-                            
-                            HStack(alignment: .center) {
-                                Text(currentCard!.name)
-                                    .matchedGeometryEffect(id: currentCard!.name, in: namespace)
-                                    .minimumScaleFactor(0.75)
-//                                    .lineLimit(1)
-                                    .lineLimit(currentCard!.name == "Appearance" ? 1 : 2)
-                                    .allowsTightening(true)
-                                    .font(.title2.weight(.bold))
-                                
+                            .fill(Color.clear)
+                            .frame(maxHeight: globalGeometrySize.height / 7)
+                            .padding(.bottom)
+                    }
+                    .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
 
+                    VStack {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
+                                .matchedGeometryEffect(id: "bg " + currentCard!.name, in: namespace)
+                                .ignoresSafeArea()
+                                .shadow(color: .black.opacity(0.16), radius: 8, x: 0, y: 3)
+                            VStack {
                                 Spacer()
                                 
-                                Image(systemName: currentCard!.icon)
-                                    .matchedGeometryEffect(id: currentCard!.icon, in: namespace)
-                                    .font(currentCard!.iconStyle)
-                            }
-                            .padding()
-                        }
-                    }
-                    .ignoresSafeArea()
-                    .frame(maxHeight: globalGeometrySize.height / 7)
-                    
-                    Spacer()
-                }
-                .zIndex(1)
-                .overlay(
-                    VStack {
-                        HStack {
-                            Spacer()
-                            
-                            CloseButton()
-                                .padding([.horizontal, .bottom])
-                                .padding(.top, 8)
-                                .onTapGesture {
-                                    withAnimation(.spring(response: 0.5)) {
-                                        currentCard = nil
-                                    }
+                                HStack(alignment: .center) {
+                                    Text(currentCard!.name)
+                                        .matchedGeometryEffect(id: currentCard!.name, in: namespace)
+                                        .minimumScaleFactor(0.75)
+    //                                    .lineLimit(1)
+                                        .lineLimit(currentCard!.name == "Appearance" ? 1 : 2)
+                                        .allowsTightening(true)
+                                        .font(.title2.weight(.bold))
                                     
+
+                                    Spacer()
+                                    
+                                    Image(systemName: currentCard!.icon)
+                                        .matchedGeometryEffect(id: currentCard!.icon, in: namespace)
+                                        .font(currentCard!.iconStyle)
                                 }
+                                .padding()
+                            }
                         }
+                        .ignoresSafeArea()
+                        .frame(maxHeight: globalGeometrySize.height / 7)
+                        
                         Spacer()
                     }
-                )
+                    .zIndex(1)
+                    .overlay(
+                        VStack {
+                            HStack {
+                                Spacer()
+                                
+                                CloseButton()
+                                    .padding([.horizontal, .bottom])
+                                    .padding(.top, 8)
+                                    .onTapGesture {
+                                        withAnimation(.spring(response: 0.5)) {
+                                            currentCard = nil
+                                        }
+                                        
+                                    }
+                            }
+                            Spacer()
+                        }
+                    )
+                }
             }
         }
     }

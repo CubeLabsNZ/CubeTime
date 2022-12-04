@@ -103,11 +103,10 @@ struct LicensesPopUpView: View {
 }
 
 struct AboutSettingsView: View {
-    @Environment(\.globalGeometrySize) var globalGeometrySize
-    
     @AppStorage("onboarding") var showOnboarding = false
     @State var showLicenses = false
     @ScaledMetric(relativeTo: .largeTitle) var iconSize: CGFloat = 60
+    let parentGeo: GeometryProxy
     private let versionString: String = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
     
     var body: some View {
@@ -159,7 +158,7 @@ struct AboutSettingsView: View {
                     Image("kofiButton")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: globalGeometrySize.width * 0.618)
+                        .frame(width: parentGeo.size.width * 0.618)
                     
                     Spacer()
                 }
