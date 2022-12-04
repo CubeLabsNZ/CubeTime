@@ -80,7 +80,7 @@ class StopWatchManager: ObservableObject {
     
     
     // MARK: published variables
-    @Published var timerColour: Color = TimerTextColours.timerDefaultColour
+    @Published var timerColour: Color = Color.Timer.normal
     
     @Published var currentSession: Sessions {
         didSet {
@@ -414,7 +414,7 @@ class StopWatchManager: ObservableObject {
         NSLog("touch down")
         #endif
         if mode != .stopped || scrambleStr != nil || prevDownStoppedTimer {
-            timerColour = TimerTextColours.timerHeldDownColour
+            timerColour = Color.Timer.heldDown
         }
         
         if mode == .running {
@@ -451,14 +451,14 @@ class StopWatchManager: ObservableObject {
         NSLog("touchup")
         #endif
         if mode != .stopped || scrambleStr != nil {
-            timerColour = TimerTextColours.timerDefaultColour
+            timerColour = Color.Timer.normal
             
             if inspectionEnabled && mode == .stopped && !prevDownStoppedTimer {
                 startInspection()
                 justInspected = true
             }
         } else if prevDownStoppedTimer && scrambleStr == nil {
-            timerColour = TimerTextColours.timerLoadingColor
+            timerColour = Color.Timer.loading
         }
         
         
@@ -481,7 +481,7 @@ class StopWatchManager: ObservableObject {
             NSLog("timer can start")
             #endif
             
-            timerColour = TimerTextColours.timerCanStartColour
+            timerColour = Color.Timer.canStart
             feedbackStyle?.impactOccurred()
         }
     }
@@ -491,9 +491,9 @@ class StopWatchManager: ObservableObject {
         NSLog("long press end")
         #endif
         if mode != .stopped || scrambleStr != nil {
-            timerColour = TimerTextColours.timerDefaultColour
+            timerColour = Color.Timer.normal
         } else if prevDownStoppedTimer && scrambleStr == nil {
-            timerColour = TimerTextColours.timerLoadingColor
+            timerColour = Color.Timer.loading
         }
         
         withAnimation {
@@ -542,7 +542,7 @@ extension StopWatchManager {
         prevScrambleStr = scrambleStr
         scrambleStr = nil
         if mode == .stopped {
-            self.timerColour = TimerTextColours.timerLoadingColor
+            self.timerColour = Color.Timer.loading
         }
         scrambleSVG = nil
         let newWorkItem = DispatchWorkItem {
@@ -558,7 +558,7 @@ extension StopWatchManager {
             if scrTypeAtWorkStart == self.currentSession.scramble_type {
                 DispatchQueue.main.async {
                     self.scrambleStr = scramble
-                    self.timerColour = TimerTextColours.timerDefaultColour
+                    self.timerColour = Color.Timer.normal
                 }
                 
                 var isolate: OpaquePointer? = nil
@@ -686,7 +686,7 @@ extension StopWatchManager {
     
     func displayPenOptions() {
         if solveItem != nil && scrambleStr != nil {
-            timerColour = TimerTextColours.timerDefaultColour
+            timerColour = Color.Timer.normal
         }
         prevDownStoppedTimer = false
         
@@ -702,7 +702,7 @@ extension StopWatchManager {
             showPenOptions = false
         }
         
-        timerColour = TimerTextColours.timerDefaultColour
+        timerColour = Color.Timer.normal
         prevDownStoppedTimer = false
         
         if solveItem != nil {

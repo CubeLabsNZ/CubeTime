@@ -627,24 +627,22 @@ class SetValues {
     static let hasBottomBar = ((UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.bottom)! > 0
 }
 
-class TimerTextColours {
-    static let timerDefaultColour: Color = Color.primary
-    static let timerDefaultColourDarkMode: Color = Color.primary
-    static let timerHeldDownColour: Color = Color.red
-    static let timerCanStartColour: Color = Color.green
-    static let timerLoadingColor: Color = Color(uiColor: .systemGray)
-}
-
-@available(*, deprecated, message: "Use Color.InspectionColour.<Colour>")
-class InspectionColours {
-    static let eightColour: Color = Color(red: 234/255, green: 224/255, blue: 182/255)
-    static let twelveColour: Color = Color(red: 234/255, green: 212/255, blue: 182/255)
-    static let penaltyColour: Color = Color(red: 234/255, green: 194/255, blue: 192/255)
-}
-
 extension Color {
     static func getBackgroundColour(_ env: ColorScheme) -> Color {
         return Color(uiColor: env == .light ? .systemGray6 : .black)
+    }
+    
+    struct Timer {
+        static let normal: Color = Color.primary
+        static let heldDown: Color = Color.red
+        static let canStart: Color = Color.green
+        static let loading: Color = Color(uiColor: .systemGray)
+    }
+    
+    struct Inspection {
+        static let eight: Color = Color(red: 234/255, green: 224/255, blue: 182/255)
+        static let twelve: Color = Color(red: 234/255, green: 212/255, blue: 182/255)
+        static let penalty: Color = Color(red: 234/255, green: 194/255, blue: 192/255)
     }
 }
 

@@ -223,7 +223,7 @@ struct TimerTouchView: UIViewControllerRepresentable {
                     stopWatchManager.feedbackStyle?.impactOccurred()
                     stopWatchManager.displayPenOptions()
                 } else {
-                    stopWatchManager.timerColour = TimerTextColours.timerDefaultColour
+                    stopWatchManager.timerColour = Color.Timer.normal
                 }
                 
             case .left:
@@ -231,15 +231,15 @@ struct TimerTouchView: UIViewControllerRepresentable {
                     stopWatchManager.feedbackStyle?.impactOccurred()
                     stopWatchManager.askToDelete()
                 } else {
-                    stopWatchManager.timerColour = TimerTextColours.timerDefaultColour
+                    stopWatchManager.timerColour = Color.Timer.normal
                 }
             case .right:
                 stopWatchManager.feedbackStyle?.impactOccurred()
-                stopWatchManager.timerColour = TimerTextColours.timerDefaultColour
+                stopWatchManager.timerColour = Color.Timer.normal
                 stopWatchManager.prevDownStoppedTimer = false
                 stopWatchManager.rescramble()
             default:
-                stopWatchManager.timerColour = TimerTextColours.timerDefaultColour
+                stopWatchManager.timerColour = Color.Timer.normal
             }
         }
     }

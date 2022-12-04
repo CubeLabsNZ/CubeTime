@@ -18,9 +18,9 @@ struct TimerTime: View {
     @Environment(\.colorScheme) var colourScheme
     
     func getTimerColor() -> Color {
-        if stopWatchManager.mode == .inspecting && colourScheme == .dark && stopWatchManager.timerColour == TimerTextColours.timerDefaultColour {
+        if stopWatchManager.mode == .inspecting && colourScheme == .dark && stopWatchManager.timerColour == Color.Timer.normal {
             switch stopWatchManager.inspectionSecs {
-            case ..<8: return TimerTextColours.timerDefaultColour
+            case ..<8: return Color.Timer.normal
             case 8..<12: return Color(uiColor: .systemYellow)
             case 12..<15: return Color(uiColor: .systemOrange)
             default: return Color(uiColor: .systemRed)
@@ -58,12 +58,13 @@ struct TimerBackgroundColor: View {
         if stopWatchManager.mode == .inspecting && colourScheme == .light {
             switch stopWatchManager.inspectionSecs {
             case 8..<12:
-                InspectionColours.eightColour
+                Color.Inspection.eight
                     .ignoresSafeArea()
             case 12..<15:
-                InspectionColours.twelveColour
+                Color.Inspection.twelve
                     .ignoresSafeArea()
-            case let x where x >= 15: InspectionColours.penaltyColour
+            case let x where x >= 15:
+                Color.Inspection.penalty
                     .ignoresSafeArea()
             default:
                 Color.getBackgroundColour(colourScheme)
