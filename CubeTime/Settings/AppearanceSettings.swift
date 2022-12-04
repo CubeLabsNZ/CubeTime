@@ -42,6 +42,7 @@ struct AppearanceSettingsView: View {
     @AppStorage(asKeys.fontCursive.rawValue) private var fontCursive: Bool = false
     
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
     
     var body: some View {
         VStack(spacing: 16) {
@@ -290,27 +291,6 @@ struct AppearanceSettingsView: View {
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
             
             
-            let font = { () -> Font in
-                
-                
-                
-//                let uiFont = UIFont(name: "RecursiveSansLinearLightMonospace-Regular", size: 16.0)!
-//                let ctFont = CTFontCreateWithName(uiFont.fontName as CFString, 16.0, nil)
-//                print(uiFont.fontName)
-                
-                // weight, casual, cursive
-                let variations = [2003265652: fontWeight, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
-                
-                let ctFontDesc = CTFontDescriptorCreateWithAttributes([
-                    kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
-                    kCTFontVariationAttribute: variations
-                ] as! CFDictionary)
-                
-                let ctFont = CTFontCreateWithFontDescriptor(ctFontDesc, CGFloat(scrambleSize), nil)
-                
-                return Font(ctFont)
-            }()
-            
             VStack {
                 HStack {
                     Image(systemName: "textformat")
@@ -348,7 +328,7 @@ struct AppearanceSettingsView: View {
                     
                     VStack {
                         Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
-                            .font(font)
+                            .font(stopWatchManager.ctFont)
                             .padding()
                         
                         
@@ -403,6 +383,10 @@ struct AppearanceSettingsView: View {
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 12)
+                    .onChange(of: fontWeight) { newValue in
+                        stopWatchManager.fontWeight = newValue
+                        stopWatchManager.updateFont()
+                    }
                     
                     VStack(alignment: .leading, spacing: 0) {
                         Text("Font Casualness")
@@ -426,6 +410,10 @@ struct AppearanceSettingsView: View {
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 12)
+                    .onChange(of: fontCasual) { newValue in
+                        stopWatchManager.fontCasual = newValue
+                        stopWatchManager.updateFont()
+                    }
                     
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
@@ -438,6 +426,10 @@ struct AppearanceSettingsView: View {
                         .padding(.horizontal)
                         .padding(.bottom, 12)
                     }
+                    .onChange(of: fontCursive) { newValue in
+                        stopWatchManager.fontCursive = newValue
+                        stopWatchManager.updateFont()
+                    }
                 }
             }
             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
@@ -446,5 +438,68 @@ struct AppearanceSettingsView: View {
         }
         .padding(.horizontal)
         .preferredColorScheme(overrideSystemAppearance ? darkMode ? .dark : .light : nil)
+            .onChange(of: scrambleSize) { newValue in
+                stopWatchManager.scrambleSize = newValue
+                stopWatchManager.updateFont()
+            }
+    }
+}
+
+
+struct TimerPreview: View {
+    @EnvironmentObject var stopwatchManager: StopWatchManager
+    @Environment(\.colorScheme) var colourScheme
+    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+    
+    @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
+    
+    
+    var body: some View {
+        ZStack {
+            // BACKGROUND COLOUR
+            Color.getBackgroundColour(colourScheme)
+                .ignoresSafeArea()
+            
+            Text("0.000")
+                .foregroundColor(Color(uiColor: .systemGray))
+                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescTimer,
+                                                          smallDeviceNames.contains(getModelName()) ? 54 : 56
+                                                          , nil)))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .ignoresSafeArea(edges: .all)
+            
+            
+            HStack {
+                TimerHeader(previewMode: true)
+                    .padding(.trailing, 24)
+                
+                Spacer()
+                
+                Stepper("", value: $scrambleSize, in: 15...36, step: 1)
+                    .frame(width: 85, height: 30)
+                    .padding(.trailing, 8)
+                
+                CloseButton()
+                    .onTapGesture {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    .padding(0)
+            }
+            .frame(maxHeight: .infinity, alignment: .top)
+            .padding(.horizontal)
+            
+            VStack {
+                Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
+                    .font(stopwatchManager.ctFont)
+                    .frame(maxHeight: globalGeometrySize.height/3)
+                    .multilineTextAlignment(.center)
+                    
+                
+                Spacer()
+            }
+            .padding(.horizontal)
+            .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+        }
     }
 }
