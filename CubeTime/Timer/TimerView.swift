@@ -407,7 +407,7 @@ struct PadFloatingView: View {
     }
 }
 
-let padFloatingLayout = true
+let padFloatingLayout = false
 
 
 struct ScrambleText: View {
@@ -487,6 +487,8 @@ struct TimerView: View {
     
     
     var body: some View {
+        let _ = Self._printChanges()
+        
         GeometryReader { geo in
             TimerBackgroundColor()
                 .ignoresSafeArea(.all)
@@ -563,7 +565,7 @@ struct TimerView: View {
                 // 50 for tab + 8 for padding + 16/0 for bottom bar gap
                 
                 
-                
+                /*
                 HStack(alignment: .top, spacing: 6) {
                     if padFloatingLayout && UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) {
                         PadFloatingView(floatingPanelStage: $floatingPanelStage, targetFocused: $targetFocused)
@@ -587,6 +589,7 @@ struct TimerView: View {
                     ScrambleText(scr: scr, floatingPanelStage: floatingPanelStage, timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr)
                         .frame(maxHeight: .infinity, alignment: .top)
                 }
+                 */
             }
             
             

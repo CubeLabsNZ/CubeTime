@@ -156,7 +156,13 @@ extension EnvironmentValues {
 }
 
 struct MainView: View {
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
     @StateObject var tabRouter: TabRouter = TabRouter()
+    
+    
+    @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
+    @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
+
         
     var body: some View {
         GeometryReader { geo in
@@ -176,6 +182,8 @@ struct MainView: View {
                     MainTabsView()
                 }
             }
+            .tint(accentColour)
+            .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
             .environment(\.globalGeometrySize, geo.size)
             .environmentObject(tabRouter)
         }

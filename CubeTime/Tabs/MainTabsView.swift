@@ -88,14 +88,7 @@ struct MainTabsView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @EnvironmentObject var tabRouter: TabRouter
-    
-    
-    
-    
-    @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
-    @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
-    
+        
     var body: some View {
         VStack {
             ZStack {
@@ -120,7 +113,5 @@ struct MainTabsView: View {
                 }
             }
         }
-        .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
-        .tint(accentColour)
     }
 }
