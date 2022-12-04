@@ -310,7 +310,7 @@ struct AppearanceSettingsView: View {
             
             VStack {
                 HStack {
-                    Image(systemName: "textformat.size.larger")
+                    Image(systemName: "textformat")
                         .font(Font.system(.subheadline, design: .rounded).weight(.bold))
                         .foregroundColor(accentColour)
                     Text("Font Settings")

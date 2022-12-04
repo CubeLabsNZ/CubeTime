@@ -341,7 +341,7 @@ struct TimerView: View {
                     .offset(x: 0, y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12))) // 50 for tab + 8 for padding + 16/0 for bottom bar gap
                 
                 
-                HStack(spacing: 6) {
+                HStack(alignment: .top, spacing: 6) {
                     if padFloatingLayout && UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) {
                         PadFloatingView(floatingPanelStage: $floatingPanelStage, targetFocused: $targetFocused)
                     } else {
