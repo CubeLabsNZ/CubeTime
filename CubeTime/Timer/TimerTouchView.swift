@@ -34,12 +34,16 @@ class TimerUIView: UIViewController {
     private let userHoldTime: Double = UserDefaults.standard.double(forKey: gsKeys.freeze.rawValue)
     
     private var isLongPress = false
+    private var keyDownThatStopped: UIKeyboardHIDUsage? = nil
     private var taskTimerReady: DispatchWorkItem?
     
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         guard let key = presses.first?.key else { return }
 
-        if key.keyCode == .keyboardSpacebar {
+        if stopWatchManager.mode == .running {
+            keyDownThatStopped = key.keyCode
+            stopWatchManager.touchDown()
+        } else if key.keyCode == .keyboardSpacebar {
             stopWatchManager.touchDown()
             NSLog("Pressed space, touch down")
             let newTaskTimerReady = DispatchWorkItem {
@@ -57,7 +61,10 @@ class TimerUIView: UIViewController {
     override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         guard let key = presses.first?.key else { return }
         
-        if key.keyCode == .keyboardSpacebar {
+        if keyDownThatStopped == key.keyCode {
+            keyDownThatStopped = nil
+            stopWatchManager.touchUp() // In case any key previously stopped
+        } else if keyDownThatStopped == nil && key.keyCode == .keyboardSpacebar {
             NSLog("Press ended space")
             taskTimerReady?.cancel()
             if isLongPress {
