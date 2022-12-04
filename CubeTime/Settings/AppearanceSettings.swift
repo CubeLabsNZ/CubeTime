@@ -34,8 +34,8 @@ struct AppearanceSettingsView: View {
     @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
     
     
-    @AppStorage(asKeys.fontWeight.rawValue) private var fontWeight: Double = 300
-    @AppStorage(asKeys.fontCasual.rawValue) private var fontCasual: Double = 0.5
+    @AppStorage(asKeys.fontWeight.rawValue) private var fontWeight: Double = 516.0
+    @AppStorage(asKeys.fontCasual.rawValue) private var fontCasual: Double = 0.0
     @AppStorage(asKeys.fontCursive.rawValue) private var fontCursive: Bool = false
     
     

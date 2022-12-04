@@ -80,23 +80,29 @@ struct TimerBackgroundColor: View {
 
 enum TimerTool {
     case drawScramble
-    case stats
+    case statsCompsim
+    case statsStandard
 }
 
 struct BottomTools: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
     @Binding var scrambleSheetStr: SheetStrWrapper?
+    @Binding var presentedAvg: CalculatedAverage?
 
     
     let toolType: TimerTool
     let maxHeight: CGFloat
     let maxWidth: CGFloat
     
-    init(toolType: TimerTool, parentGeo: CGSize, scrambleSheetStr: Binding<SheetStrWrapper?>) {
-        self._scrambleSheetStr = scrambleSheetStr
+    init(toolType: TimerTool,
+         parentGeo: CGSize,
+         scrambleSheetStr: Binding<SheetStrWrapper?>?=nil,
+         presentedAvg: Binding<CalculatedAverage?>?=nil) {
+        self._scrambleSheetStr = scrambleSheetStr ?? Binding.constant(nil)
+        self._presentedAvg = presentedAvg ?? Binding.constant(nil)
         self.toolType = toolType
         self.maxHeight = 120
-        self.maxWidth = (parentGeo.width - 32) / 2 - 12
+        self.maxWidth = min(((parentGeo.width - 32) / 2 - 12), 170)
     }
     
     
@@ -113,6 +119,7 @@ struct BottomTools: View {
                         SVGView(string: svg)
                             .padding(2)
                             .frame(width: maxWidth, height: maxHeight)
+                            .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
                             .aspectRatio(contentMode: .fit)
                             .onTapGesture {
                                 scrambleSheetStr = SheetStrWrapper(str: scr)
@@ -125,8 +132,190 @@ struct BottomTools: View {
             }
             .frame(width: maxWidth, height: maxHeight)
             
-        case .stats:
-            EmptyView()
+            
+        case .statsStandard:
+                VStack(spacing: 6) {
+                    HStack(spacing: 0) {
+                        // ao5
+                        VStack(spacing: 0) {
+                            Text("AO5")
+                                .font(.system(size: 13, weight: .medium))
+                            
+                            if let currentAo5 = stopWatchManager.currentAo5 {
+                                Text(formatSolveTime(secs: currentAo5.average!, penType: currentAo5.totalPen))
+                                    .font(.system(size: 24, weight: .bold))
+                                    .frame(maxWidth: maxWidth/2-8)
+                                    .modifier(DynamicText())
+                            } else {
+                                Text("-")
+                                    .font(.system(size: 24, weight: .medium, design: .default))
+                                    .foregroundColor(Color(uiColor: .systemGray))
+                            }
+                            
+                        }
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        .onTapGesture {
+                            if stopWatchManager.currentAo5 != nil {
+                                presentedAvg = stopWatchManager.currentAo5
+                            }
+                        }
+                        
+                        // ao12
+                        VStack(spacing: 0) {
+                            Text("AO12")
+                                .font(.system(size: 13, weight: .medium))
+                            
+                            if let currentAo12 = stopWatchManager.currentAo12 {
+                                Text(formatSolveTime(secs: currentAo12.average!, penType: currentAo12.totalPen))
+                                    .font(.system(size: 24, weight: .bold))
+                                    .frame(maxWidth: maxWidth/2-8)
+                                    .modifier(DynamicText())
+                            } else {
+                                Text("-")
+                                    .font(.system(size: 24, weight: .medium, design: .default))
+                                    .foregroundColor(Color(uiColor: .systemGray))
+                            }
+                        }
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        .onTapGesture {
+                            if stopWatchManager.currentAo12 != nil {
+                                presentedAvg = stopWatchManager.currentAo12
+                            }
+                        }
+                    }
+                    
+                    Divider()
+                        .frame(width: maxWidth - 48)
+                    
+                    HStack(spacing: 0) {
+                        // ao100
+                        VStack(spacing: 0) {
+                            Text("AO100")
+                                .font(.system(size: 13, weight: .medium))
+                            
+                            if let currentAo100 = stopWatchManager.currentAo100 {
+                                Text(formatSolveTime(secs: currentAo100.average!, penType: currentAo100.totalPen))
+                                    .font(.system(size: 24, weight: .bold))
+                                    .frame(maxWidth: maxWidth/2-8)
+                                    .modifier(DynamicText())
+                            } else {
+                                Text("-")
+                                    .font(.system(size: 24, weight: .medium, design: .default))
+                                    .foregroundColor(Color(uiColor: .systemGray))
+                            }
+                        }
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        .onTapGesture {
+                            if stopWatchManager.currentAo100 != nil {
+                                presentedAvg = stopWatchManager.currentAo100
+                            }
+                        }
+                        
+                        // mean
+                        VStack(spacing: 0) {
+                            Text("MEAN")
+                                .font(.system(size: 13, weight: .medium))
+                            
+                            if let sessionMean = stopWatchManager.sessionMean {
+                                Text(formatSolveTime(secs: sessionMean))
+                                    .font(.system(size: 24, weight: .bold))
+                                    .frame(maxWidth: maxWidth/2-8)
+                                    .modifier(DynamicText())
+                            } else {
+                                Text("-")
+                                    .font(.system(size: 24, weight: .medium, design: .default))
+                                    .foregroundColor(Color(uiColor: .systemGray))
+                            }
+                        }
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                    }
+                }
+                .frame(width: maxWidth, height: maxHeight)
+                .background(RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .fill(Color(uiColor: .systemGray5)))
+            
+        
+            
+            
+            
+        case .statsCompsim:
+            VStack(spacing: 6) {
+                HStack {
+                    // bpa
+                    VStack(spacing: 0) {
+                        Text("BPA")
+                            .font(.system(size: 13, weight: .medium))
+                        
+                        if let bpa = stopWatchManager.bpa {
+                            Text(formatSolveTime(secs: bpa))
+                                .font(.system(size: 24, weight: .bold))
+                                .frame(maxWidth: maxWidth/2-8)
+                                .modifier(DynamicText())
+                        } else {
+                            Text("...")
+                                .font(.system(size: 24, weight: .medium, design: .default))
+                                .foregroundColor(Color(uiColor: .systemGray))
+                        }
+                        
+                    }
+                    .frame(minWidth: 0, maxWidth: .infinity)
+                    
+                    // wpa
+                    VStack(spacing: 0) {
+                        Text("WPA")
+                            .font(.system(size: 13, weight: .medium))
+                        
+                        if let wpa = stopWatchManager.wpa {
+                            if wpa == -1 {
+                                Text("DNF")
+                                    .font(.system(size: 24, weight: .bold))
+                                    .modifier(DynamicText())
+                            } else {
+                                Text(formatSolveTime(secs: wpa))
+                                    .font(.system(size: 24, weight: .bold))
+                                    .frame(maxWidth: maxWidth/2-8)
+                                    .modifier(DynamicText())
+                            }
+                            
+                            
+                            
+                        } else {
+                            Text("...")
+                                .font(.system(size: 24, weight: .medium, design: .default))
+                                .foregroundColor(Color(uiColor: .systemGray))
+                        }
+                    }
+                    .frame(minWidth: 0, maxWidth: .infinity)
+                }
+                
+                Divider()
+                    .frame(width: maxWidth - 48)
+                
+                // reach target
+                VStack(spacing: 0) {
+                    Text("TO REACH TARGET")
+                        .font(.system(size: 13, weight: .medium))
+                    
+                    if let timeNeededForTarget = stopWatchManager.timeNeededForTarget {
+                        if timeNeededForTarget == -1 {
+                            Text("Not Possible")
+                                .font(.system(size: 22, weight: .bold))
+                                .modifier(DynamicText())
+                        } else if timeNeededForTarget == -2 {
+                            Text("Guaranteed")
+                                .font(.system(size: 22, weight: .bold))
+                                .modifier(DynamicText())
+                        } else {
+                            Text("...")
+                                .font(.system(size: 24, weight: .medium, design: .default))
+                                .foregroundColor(Color(uiColor: .systemGray))
+                        }
+                    }
+                }
+            }
+            .frame(width: maxWidth, height: maxHeight)
+            .background(RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .fill(Color(uiColor: .systemGray5)))
         }
     }
 }
@@ -164,7 +353,6 @@ struct PadFloatingView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     TimerHeader(targetFocused: targetFocused, previewMode: false)
                         .padding()
-//                                            .padding(.bottom)
                     
                     MainTabsView()
                 }
@@ -224,8 +412,8 @@ struct TimerView: View {
     @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     @AppStorage(gsKeys.showPrevTime.rawValue) private var showPrevTime: Bool = false
     @AppStorage(gsKeys.inputMode.rawValue) private var inputMode: InputMode = .timer
-    @AppStorage(asKeys.fontWeight.rawValue) private var fontWeight: Double = 300
-    @AppStorage(asKeys.fontCasual.rawValue) private var fontCasual: Double = 0.5
+    @AppStorage(asKeys.fontWeight.rawValue) private var fontWeight: Double = 516.0
+    @AppStorage(asKeys.fontCasual.rawValue) private var fontCasual: Double = 0.0
     @AppStorage(asKeys.fontCursive.rawValue) private var fontCursive: Bool = false
 
     
@@ -358,10 +546,29 @@ struct TimerView: View {
             }
             
             if stopWatchManager.mode == .stopped {
-                BottomTools(toolType: .drawScramble, parentGeo: geo.size, scrambleSheetStr: $scrambleSheetStr)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                    .padding(.horizontal)
-                    .offset(x: 0, y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12))) // 50 for tab + 8 for padding + 16/0 for bottom bar gap
+                HStack(alignment: .bottom) {
+                    if showScramble {
+                        BottomTools(toolType: .drawScramble, parentGeo: geo.size, scrambleSheetStr: $scrambleSheetStr)
+                    }
+                    
+                    if !UIDevice.deviceIsPad && showScramble && showStats {
+                        Spacer()
+                    }
+                    
+                    if showStats {
+                        BottomTools(toolType: SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! != .compsim
+                                    ? .statsStandard
+                                    : .statsCompsim,
+                                    parentGeo: geo.size,
+                                    presentedAvg: $presentedAvg)
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                .offset(y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12)))
+                .padding(.horizontal)
+                
+                // 50 for tab + 8 for padding + 16/0 for bottom bar gap
+                
                 
                 
                 HStack(alignment: .top, spacing: 6) {

@@ -99,6 +99,9 @@ struct CubeTime: App {
                 
                 // colours
                 asKeys.graphGlow.rawValue: true,
+                
+                asKeys.fontWeight.rawValue: 516.0,
+                asKeys.fontCasual.rawValue: 0.0,
             ]
         )
     }
