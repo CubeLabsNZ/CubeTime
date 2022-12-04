@@ -183,6 +183,29 @@ struct PadFloatingView: View {
 let padFloatingLayout = true
 
 
+struct ScrambleText: View {
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    let scr: String
+    let font: Font
+    var floatingPanelStage: Int
+    var timerSize: CGSize
+    @Binding var scrambleSheetStr: SheetStrWrapper?
+    
+    var body: some View {
+        Text(scr)
+            .font(font)
+            .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
+            .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
+            .frame(maxWidth: .infinity, maxHeight: timerSize.height/3)
+            .onTapGesture {
+                scrambleSheetStr = SheetStrWrapper(str: scr)
+            }
+            .padding(.horizontal)
+            .padding(.leading, floatingPanelStage > 1 ? 400 : 0)
+            .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+    }
+}
+
 struct TimerView: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
     @EnvironmentObject var tabRouter: TabRouter
@@ -361,20 +384,8 @@ struct TimerView: View {
                 
                 
                 if let scr = stopWatchManager.scrambleStr {
-                    Group {
-                        Text(scr)
-                            .font(fonts.0)
-                            .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
-                            .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
-                            .frame(maxWidth: .infinity, maxHeight: globalGeometrySize.height/3)
-                            .onTapGesture {
-                                scrambleSheetStr = SheetStrWrapper(str: scr)
-                            }
-                            .padding(.horizontal)
-                            .padding(.leading, floatingPanelStage > 1 ? 400 : 0)
-                            .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
-                    }
-                    .frame(maxHeight: .infinity, alignment: .top)
+                    ScrambleText(scr: scr, font: fonts.0, floatingPanelStage: floatingPanelStage, timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr)
+                        .frame(maxHeight: .infinity, alignment: .top)
                 }
             }
             
