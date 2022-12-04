@@ -76,7 +76,11 @@ class StopWatchManager: ObservableObject {
     var timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
     var insCountDown: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionCountsDown.rawValue)
     var showPrevTime: Bool = UserDefaults.standard.bool(forKey: gsKeys.showPrevTime.rawValue)
-    
+    var fontWeight: Double = UserDefaults.standard.double(forKey: asKeys.fontWeight.rawValue)
+    var fontCasual: Double = UserDefaults.standard.double(forKey: asKeys.fontCasual.rawValue)
+    var fontCursive: Bool = UserDefaults.standard.bool(forKey: asKeys.fontCursive.rawValue)
+    var scrambleSize: Int = UserDefaults.standard.integer(forKey: gsKeys.scrambleSize.rawValue)
+
     
     
     // MARK: published variables
@@ -113,6 +117,9 @@ class StopWatchManager: ObservableObject {
     
     @Published var solveItem: Solves!
     
+    
+    @Published var ctFont: Font!
+    @Published var ctFontDescTimer: CTFontDescriptor!
     
     var feedbackStyle: UIImpactFeedbackGenerator?
     var secondsElapsed = 0.0
@@ -265,6 +272,8 @@ class StopWatchManager: ObservableObject {
         statsGetFromCache()
         calculateFeedbackStyle()
         self.rescramble()
+        
+        updateFont()
         
         tryUpdateCurrentSolveth()
         print("swm initialised")
@@ -468,7 +477,7 @@ class StopWatchManager: ObservableObject {
             }
         }
         prevDownStoppedTimer = false
-}
+    }
     
     
     func longPressStart() {
@@ -515,6 +524,28 @@ class StopWatchManager: ObservableObject {
     }
 }
 
+
+
+// MARK: - SWM: FONTS
+extension StopWatchManager {
+    func updateFont() {
+            // weight, casual, cursive
+        let variations = [2003265652: fontWeight, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
+        let variationsTimer = [2003265652: fontWeight + 200, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
+        
+        let ctFontDesc = CTFontDescriptorCreateWithAttributes([
+            kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
+            kCTFontVariationAttribute: variations
+        ] as! CFDictionary)
+        
+        ctFontDescTimer = CTFontDescriptorCreateWithAttributes([
+            kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
+            kCTFontVariationAttribute: variationsTimer
+        ] as! CFDictionary)
+        
+        ctFont = Font(CTFontCreateWithFontDescriptor(ctFontDesc, CGFloat(scrambleSize), nil))
+    }
+}
 
 
 // MARK: - SWM: SCRAMBLER

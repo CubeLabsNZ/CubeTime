@@ -16,9 +16,7 @@ struct SheetStrWrapper: Identifiable {
 struct TimerTime: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
     @Environment(\.colorScheme) var colourScheme
-    
-    let font: CTFontDescriptor
-    
+        
     func getTimerColor() -> Color {
         if stopWatchManager.mode == .inspecting && colourScheme == .dark && stopWatchManager.timerColour == Color.Timer.normal {
             switch stopWatchManager.inspectionSecs {
@@ -47,12 +45,12 @@ struct TimerTime: View {
         // to prevent text clipping and other UI problems
             .if(!(smallDeviceNames.contains(getModelName()))) { view in
                 view
-                    .modifier(AnimatingFontSize(font: font, fontSize: stopWatchManager.mode == .running ? 70 : 56))
+                    .modifier(AnimatingFontSize(font: stopWatchManager.ctFontDescTimer, fontSize: stopWatchManager.mode == .running ? 70 : 56))
                     .animation(Animation.spring(), value: stopWatchManager.mode == .running)
             }
             .if(smallDeviceNames.contains(getModelName())) { view in
                 view
-                    .font(Font(CTFontCreateWithFontDescriptor(font, 54, nil)))
+                    .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDescTimer, 54, nil)))
             }
     }
 }
@@ -92,6 +90,40 @@ enum TimerTool {
 }
 
 struct BottomTools: View {
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @AppStorage(gsKeys.showScramble.rawValue) private var showScramble: Bool = true
+    @AppStorage(gsKeys.showStats.rawValue) private var showStats: Bool = true
+    
+    let timerSize: CGSize
+    @Binding var scrambleSheetStr: SheetStrWrapper?
+    @Binding var presentedAvg: CalculatedAverage?
+    
+    
+    var body: some View {
+        HStack(alignment: .bottom) {
+            if showScramble {
+                BottomTool(toolType: .drawScramble, parentGeo: timerSize, scrambleSheetStr: $scrambleSheetStr)
+            }
+            
+            if !UIDevice.deviceIsPad && showScramble && showStats {
+                Spacer()
+            }
+            
+            if showStats {
+                BottomTool(toolType: SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! != .compsim
+                            ? .statsStandard
+                            : .statsCompsim,
+                            parentGeo: timerSize,
+                            presentedAvg: $presentedAvg)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+        .offset(y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12)))
+        .padding(.horizontal)
+    }
+}
+
+struct BottomTool: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
     @Binding var scrambleSheetStr: SheetStrWrapper?
     @Binding var presentedAvg: CalculatedAverage?
@@ -381,14 +413,13 @@ let padFloatingLayout = true
 struct ScrambleText: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
     let scr: String
-    let font: Font
     var floatingPanelStage: Int
     var timerSize: CGSize
     @Binding var scrambleSheetStr: SheetStrWrapper?
     
     var body: some View {
         Text(scr)
-            .font(font)
+            .font(stopWatchManager.ctFont)
             .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
             .frame(maxWidth: .infinity, maxHeight: timerSize.height/3)
@@ -414,14 +445,9 @@ struct TimerView: View {
     @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
     @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
-    @AppStorage(gsKeys.showScramble.rawValue) private var showScramble: Bool = true
-    @AppStorage(gsKeys.showStats.rawValue) private var showStats: Bool = true
     @AppStorage(gsKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     @AppStorage(gsKeys.showPrevTime.rawValue) private var showPrevTime: Bool = false
     @AppStorage(gsKeys.inputMode.rawValue) private var inputMode: InputMode = .timer
-    @AppStorage(asKeys.fontWeight.rawValue) private var fontWeight: Double = 516.0
-    @AppStorage(asKeys.fontCasual.rawValue) private var fontCasual: Double = 0.0
-    @AppStorage(asKeys.fontCursive.rawValue) private var fontCursive: Bool = false
 
     
     // FOCUS STATES
@@ -451,28 +477,7 @@ struct TimerView: View {
     
     #warning("TODO: find a way to not use an initialiser")
     
-    func getFont() -> (Font, CTFontDescriptor) {
-            // weight, casual, cursive
-        let variations = [2003265652: fontWeight, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
-        let variationsTimer = [2003265652: fontWeight + 200, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
-        
-        let ctFontDesc = CTFontDescriptorCreateWithAttributes([
-            kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
-            kCTFontVariationAttribute: variations
-        ] as! CFDictionary)
-        
-        let ctFontDescTimer = CTFontDescriptorCreateWithAttributes([
-            kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
-            kCTFontVariationAttribute: variationsTimer
-        ] as! CFDictionary)
-        
-        let ctFont = CTFontCreateWithFontDescriptor(ctFontDesc, stopWatchManager.currentSession.scramble_type == 7 ? (globalGeometrySize.width) / (42.00) * 1.44 : CGFloat(scrambleSize), nil)
-
-        return (Font(ctFont), ctFontDescTimer)
-    }
-    
     var body: some View {
-        let fonts = getFont()
         GeometryReader { geo in
             TimerBackgroundColor()
                 .ignoresSafeArea(.all)
@@ -507,7 +512,7 @@ struct TimerView: View {
             
             if !((inputMode == .typing || showInputField) && !showManualInputFormattedText) {
                 VStack(alignment: .center, spacing: 0) {
-                    TimerTime(font: fonts.1)
+                    TimerTime()
                         .allowsHitTesting(false)
                         
                     if stopWatchManager.mode == .inspecting && showCancelInspection {
@@ -544,26 +549,7 @@ struct TimerView: View {
             }
             
             if stopWatchManager.mode == .stopped {
-                HStack(alignment: .bottom) {
-                    if showScramble {
-                        BottomTools(toolType: .drawScramble, parentGeo: geo.size, scrambleSheetStr: $scrambleSheetStr)
-                    }
-                    
-                    if !UIDevice.deviceIsPad && showScramble && showStats {
-                        Spacer()
-                    }
-                    
-                    if showStats {
-                        BottomTools(toolType: SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! != .compsim
-                                    ? .statsStandard
-                                    : .statsCompsim,
-                                    parentGeo: geo.size,
-                                    presentedAvg: $presentedAvg)
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-                .offset(y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12)))
-                .padding(.horizontal)
+                BottomTools(timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr, presentedAvg: $presentedAvg)
                 
                 // 50 for tab + 8 for padding + 16/0 for bottom bar gap
                 
@@ -589,7 +575,7 @@ struct TimerView: View {
                 
                 
                 if let scr = stopWatchManager.scrambleStr {
-                    ScrambleText(scr: scr, font: fonts.0, floatingPanelStage: floatingPanelStage, timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr)
+                    ScrambleText(scr: scr, floatingPanelStage: floatingPanelStage, timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr)
                         .frame(maxHeight: .infinity, alignment: .top)
                 }
             }

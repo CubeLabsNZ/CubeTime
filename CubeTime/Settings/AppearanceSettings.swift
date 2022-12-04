@@ -39,6 +39,7 @@ struct AppearanceSettingsView: View {
     @AppStorage(asKeys.fontCursive.rawValue) private var fontCursive: Bool = false
     
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
     
     var body: some View {
         VStack(spacing: 16) {
@@ -348,6 +349,10 @@ struct AppearanceSettingsView: View {
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 12)
+                    .onChange(of: fontWeight) { newValue in
+                        stopWatchManager.fontWeight = newValue
+                        stopWatchManager.updateFont()
+                    }
                     
                     VStack(alignment: .leading, spacing: 0) {
                         Text("Font Casualness")
@@ -371,6 +376,10 @@ struct AppearanceSettingsView: View {
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 12)
+                    .onChange(of: fontCasual) { newValue in
+                        stopWatchManager.fontCasual = newValue
+                        stopWatchManager.updateFont()
+                    }
                     
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
@@ -382,6 +391,10 @@ struct AppearanceSettingsView: View {
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 12)
+                    }
+                    .onChange(of: fontCursive) { newValue in
+                        stopWatchManager.fontCursive = newValue
+                        stopWatchManager.updateFont()
                     }
                 }
             }
