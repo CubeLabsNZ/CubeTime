@@ -3,6 +3,7 @@ import SwiftUI
 import CoreGraphics
 import Combine
 import SwiftfulLoadingIndicators
+import SVGView
 
 
 struct SheetStrWrapper: Identifiable {
@@ -10,6 +11,106 @@ struct SheetStrWrapper: Identifiable {
     let str: String
 }
 
+
+
+struct TimerTime: View {
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @Environment(\.colorScheme) var colourScheme
+    
+    func getTimerColor() -> Color {
+        if stopWatchManager.mode == .inspecting && colourScheme == .dark && stopWatchManager.timerColour == TimerTextColours.timerDefaultColour {
+            switch stopWatchManager.inspectionSecs {
+            case ..<8: return TimerTextColours.timerDefaultColour
+            case 8..<12: return Color(uiColor: .systemYellow)
+            case 12..<15: return Color(uiColor: .systemOrange)
+            default: return Color(uiColor: .systemRed)
+            }
+        } else {
+            return stopWatchManager.timerColour
+        }
+    }
+    
+    var body: some View {
+        Text(stopWatchManager.secondsStr)
+            .foregroundColor(getTimerColor())
+            .modifier(DynamicText())
+        // for smaller phones (iPhoneSE and test sim), disable animation to larger text
+        // to prevent text clipping and other UI problems
+            .if(!(smallDeviceNames.contains(getModelName()))) { view in
+                view
+                    .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 70 : 56))
+                    .animation(Animation.spring(), value: stopWatchManager.mode == .running)
+            }
+            .if(smallDeviceNames.contains(getModelName())) { view in
+                view
+                    .font(.system(size: 54, weight: .bold, design: .monospaced))
+            }
+    }
+}
+
+
+struct TimerBackgroundColor: View {
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
+    @Environment(\.colorScheme) var colourScheme
+    
+    var body: some View {
+        if stopWatchManager.mode == .inspecting && colourScheme == .light {
+            switch stopWatchManager.inspectionSecs {
+            case 8..<12:
+                InspectionColours.eightColour
+                    .ignoresSafeArea()
+            case 12..<15:
+                InspectionColours.twelveColour
+                    .ignoresSafeArea()
+            case let x where x >= 15: InspectionColours.penaltyColour
+                    .ignoresSafeArea()
+            default:
+                Color.getBackgroundColour(colourScheme)
+            }
+        } else {
+            Color.getBackgroundColour(colourScheme)
+        }
+    }
+}
+
+struct BottomTools: View {
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+
+    
+    var timerSize: CGSize
+    @Binding var scrambleSheetStr: SheetStrWrapper?
+
+    
+    var body: some View {
+        let maxHeight: CGFloat = 120
+        let maxWidth: CGFloat = timerSize.width / 2 - 12
+        
+        HStack {
+            ZStack(alignment: .bottomLeading) {
+                if let svg = stopWatchManager.scrambleSVG {
+                    if let scr = stopWatchManager.scrambleStr {
+                        
+                        SVGView(string: svg)
+                            .aspectRatio(contentMode: .fit)
+                            .padding(.all, 2)
+                        
+                            .onTapGesture {
+                                scrambleSheetStr = SheetStrWrapper(str: scr)
+                            }
+                    }
+                } else {
+                    LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
+                }
+            }
+            .background(Color.red)
+            .frame(width: maxWidth, height: maxHeight)
+            .background(Color(uiColor: .systemGray5).clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous)))
+            
+            Spacer()
+        }
+    }
+}
 
 struct TimerView: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
@@ -58,695 +159,203 @@ struct TimerView: View {
     #warning("TODO: find a way to not use an initialiser")
     
     
-
-    
-    
     
     var body: some View {
         GeometryReader { geo in
-            // BACKGROUND COLOUR
-            Color.getBackgroundColour(colourScheme)
-                .ignoresSafeArea()
+            TimerBackgroundColor()
+                .ignoresSafeArea(.all)
             
-            // SCRAMBLE
-            if stopWatchManager.mode == .inspecting {
-                if colourScheme == .light {
-                    switch stopWatchManager.inspectionSecs {
-                    case 8..<12:
-                        InspectionColours.eightColour
-                            .ignoresSafeArea()
-                    case 12..<15:
-                        InspectionColours.twelveColour
-                            .ignoresSafeArea()
-                    case let x where x >= 15: InspectionColours.penaltyColour
-                            .ignoresSafeArea()
-                    default:
-                        EmptyView()
-                    }
-                }
-                
-                if stopWatchManager.inspectionSecs >= 17 {
-                    Text("DNF")
-                        .font(.system(size: 22, weight: .semibold, design: .rounded))
-                        .foregroundColor(colourScheme == .light ? .black : nil)
-                        .offset(y: 45)
-                } else if stopWatchManager.inspectionSecs >= 15 {
-                    Text("+2")
-                        .font(.system(size: 22, weight: .semibold, design: .rounded))
-                        .foregroundColor(colourScheme == .light ? .black : nil)
-                        .offset(y: 45)
-                }
-            }
-            
-            // TIMER TEXT / INSPECTION
-            VStack {
-                Spacer()
-                
-                Text(stopWatchManager.secondsStr)
-                    .foregroundColor({
-                        if stopWatchManager.mode == .inspecting && colourScheme == .dark && stopWatchManager.timerColour == TimerTextColours.timerDefaultColour {
-                            switch stopWatchManager.inspectionSecs {
-                            case ..<8: return TimerTextColours.timerDefaultColour
-                            case 8..<12: return Color(uiColor: .systemYellow)
-                            case 12..<15: return Color(uiColor: .systemOrange)
-                            default: return Color(uiColor: .systemRed)
-                            }
-                        } else {
-                            return stopWatchManager.timerColour
-                        }
-                    }()
-                    )
-                // for smaller phones (iPhoneSE and test sim), disable animation to larger text
-                // to prevent text clipping and other UI problems
-                    .if(!(smallDeviceNames.contains(getModelName()))) { view in
-                        view
-                            .modifier(AnimatingFontSize(fontSize: stopWatchManager.mode == .running ? 70 : 56))
-                            .modifier(DynamicText())
-                            .animation(Animation.spring(), value: stopWatchManager.mode == .running)
-                    }
-                    .if(smallDeviceNames.contains(getModelName())) { view in
-                        view
-                            .font(.system(size: 54, weight: .bold, design: .monospaced))
-                            .modifier(DynamicText())
-                    }
-                
-                
-                Spacer()
-            }
-            .ignoresSafeArea(edges: .all)
-            .ignoresSafeArea(.keyboard)
-            
-            
-            switch inputMode {
-                // ONLY USE GESTURE RECOGNISER WHEN INPUTMODE SET TO TIMER
-            case .timer:
-                // TOUCH (GESTURE) RECOGNISER
-                GeometryReader { geometry in
-                    ZStack {
-                        TimerTouchView(stopWatchManager: stopWatchManager)
-                            .frame(width: geometry.size.width, height: geometry.size.height)
-                            .environmentObject(stopWatchManager)
-                        
-                        if targetFocused || manualInputFocused /*|| (!manualInputFocused && showInputField)*/ {
-                            //                        Color.clear.contentShape(Path(CGRect(origin: .zero, size: geometry.size)))
-                            /// ^ this receives tap gesture but gesture is transferred to timertouchview below...
-                            Color.white.opacity(0.000001) // workaround for now
-                                .onTapGesture {
-                                    targetFocused = false
-                                    manualInputFocused = false
-                                    showInputField = false
-                                }
-                        }
-                    }
-                    
-                }
-                .ignoresSafeArea(edges: .top)
-                
-                // FOR TYPING, DISPLAY INPUT BOX ALWAYS; USE GESTURE TO ESCAPE FOCUS
-            case .typing:
-                Color.white.opacity(0.000001)
-                    .onTapGesture {
-                        manualInputFocused = false
-                    }
-            }
-            
-            
-            
-            
-            // VIEWS WHEN TIMER NOT RUNNING
-            if !tabRouter.hideTabBar {
-                VStack {
-                    HStack {
-                        if !(UIDevice.deviceIsPad && (UIDevice.deviceIsLandscape(globalGeometrySize))) {
-                            TimerHeader(targetFocused: $targetFocused, previewMode: false)
-                                .padding(.leading)
-                                .padding(.trailing, 24)
-                        } else {
-                            FloatingPanel(
-                                currentStage: $floatingPanelStage,
-                                maxHeight: (globalGeometrySize.height - 24),
-                                stages: [0, 50, 130, (globalGeometrySize.height - 24)],
-                                content: {
-                                    EmptyView()
-                                    
-                                    TimerHeader(targetFocused: $targetFocused, previewMode: false)
-                                        .padding(.horizontal)
-                                        .padding(.top, 8)
-                                    
-                                    VStack(alignment: .leading, spacing: 12) {
-                                        TimerHeader(targetFocused: $targetFocused, previewMode: false)
-                                        
-                                        PrevSolvesDisplay(count: 3)
-                                    }
-                                    .padding()
-                                    
-                                    VStack(alignment: .leading, spacing: 0) {
-                                        TimerHeader(targetFocused: $targetFocused, previewMode: false)
-                                            .padding()
-                                        //                                            .padding(.bottom)
-                                        
-                                        MainTabsView()
-                                    }
-                                }
-                            )
-                            .ignoresSafeArea(.keyboard)
-                            .frame(width: 360)
-                            .padding(.top, SetValues.hasBottomBar
-                                     ? 0
-                                     : tabRouter.hideTabBar
-                                     ? nil
-                                     : 8)
-                            .padding(.leading, 24)
-                        }
-                        
-                        Spacer()
-                    }
-                    
-                    VStack {
-                        Spacer()
-                        
-                        // GEO READER FOR BOTTOM TOOLS
-                        GeometryReader { geometry in
-                            
-                            
-                            let maxHeight: CGFloat = 120
-                            let maxWidth: CGFloat = geometry.size.width - 12 - geo.size.width/2
-                            
-                            ZStack(alignment: .bottom) {
-                                // SCRAMBLE VIEW
-                                if showScramble {
-                                    HStack {
-                                        ZStack(alignment: .bottomLeading) {
-                                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                                .fill(Color(uiColor: .systemGray5))
-                                                .frame(width: maxWidth, height: maxHeight)
-                                            
-                                            // this whole thing is magic
-                                            
-                                            // i don't know why it works
-                                            // i don't know if or why passing in a width and height to uikit works
-                                            // using a really small value (width: 10) seems to force views into the frame?
-                                            // but using its ideal width/height does nothing
-                                            // frame does not set the size for the scrambleview (seems to work for just nxns)
-                                            // for for squan/mega/etc, the scramble is ridiculously large
-                                            
-                                            // it seems to do with uiviewrepresentable, and not being able to set master bounds
-                                            // from swiftui, as swiftui uses its own autolayout, essentially overriding any config of the bound sizes from within uikit itself
-                                            
-                                            // if you know how to fix this, please make a pull request
-                                            if let svg = stopWatchManager.scrambleSVG {
-                                                if let scr = stopWatchManager.scrambleStr {
-                                                    DefaultScrambleView(svg: svg, width: 10, height: 120 / 3) // i'm not touching this, it works
-                                                        .aspectRatio(contentMode: .fit)
-                                                        .padding(.all, 2)
-                                                        .frame(maxWidth: maxWidth - 4, maxHeight: 116)
-                                                        .offset(x: 1, y: -2.5)
-                                                    
-                                                        .onTapGesture {
-                                                            scrambleSheetStr = SheetStrWrapper(str: scr)
-                                                        }
-                                                }
-                                            } else {
-                                                LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
-                                                    .frame(width: maxWidth - 4, height: maxHeight - 4)
-                                                
-                                                /*
-                                                 ProgressView()
-                                                 .frame(width: maxWidth - 4, height: maxHeight - 4)
-                                                 */
-                                            }
-                                        }
-                                        .frame(maxWidth: maxWidth)
-                                        
-                                        Spacer()
-                                    }
-                                }
-                                
-                                // STATS
-                                if showStats && SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! != .compsim {
-                                    HStack {
-                                        Spacer()
-                                        
-                                        ZStack {
-                                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                                .fill(Color(uiColor: .systemGray5))
-                                                .frame(width: geo.size.width/2, height: 120)
-                                            
-                                            VStack(spacing: 6) {
-                                                HStack(spacing: 0) {
-                                                    // ao5
-                                                    VStack(spacing: 0) {
-                                                        Text("AO5")
-                                                            .font(.system(size: 13, weight: .medium))
-                                                        
-                                                        if let currentAo5 = stopWatchManager.currentAo5 {
-                                                            Text(formatSolveTime(secs: currentAo5.average!, penType: currentAo5.totalPen))
-                                                                .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: geo.size.width/4-8)
-                                                                .modifier(DynamicText())
-                                                        } else {
-                                                            Text("-")
-                                                                .font(.system(size: 24, weight: .medium, design: .default))
-                                                                .foregroundColor(Color(uiColor: .systemGray))
-                                                        }
-                                                        
-                                                    }
-                                                    .frame(minWidth: 0, maxWidth: .infinity)
-                                                    .onTapGesture {
-                                                        if stopWatchManager.currentAo5 != nil {
-                                                            presentedAvg = stopWatchManager.currentAo5
-                                                        }
-                                                    }
-                                                    
-                                                    // ao12
-                                                    VStack(spacing: 0) {
-                                                        Text("AO12")
-                                                            .font(.system(size: 13, weight: .medium))
-                                                        
-                                                        if let currentAo12 = stopWatchManager.currentAo12 {
-                                                            Text(formatSolveTime(secs: currentAo12.average!, penType: currentAo12.totalPen))
-                                                                .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: geo.size.width/4-8)
-                                                                .modifier(DynamicText())
-                                                        } else {
-                                                            Text("-")
-                                                                .font(.system(size: 24, weight: .medium, design: .default))
-                                                                .foregroundColor(Color(uiColor: .systemGray))
-                                                        }
-                                                    }
-                                                    .frame(minWidth: 0, maxWidth: .infinity)
-                                                    .onTapGesture {
-                                                        if stopWatchManager.currentAo12 != nil {
-                                                            presentedAvg = stopWatchManager.currentAo12
-                                                        }
-                                                    }
-                                                }
-                                                .padding(.top, 6)
-                                                
-                                                Divider()
-                                                    .frame(width: geo.size.width/2 - 48)
-                                                
-                                                HStack(spacing: 0) {
-                                                    // ao100
-                                                    VStack(spacing: 0) {
-                                                        Text("AO100")
-                                                            .font(.system(size: 13, weight: .medium))
-                                                        
-                                                        if let currentAo100 = stopWatchManager.currentAo100 {
-                                                            Text(formatSolveTime(secs: currentAo100.average!, penType: currentAo100.totalPen))
-                                                                .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: geo.size.width/4-8)
-                                                                .modifier(DynamicText())
-                                                        } else {
-                                                            Text("-")
-                                                                .font(.system(size: 24, weight: .medium, design: .default))
-                                                                .foregroundColor(Color(uiColor: .systemGray))
-                                                        }
-                                                    }
-                                                    .frame(minWidth: 0, maxWidth: .infinity)
-                                                    .onTapGesture {
-                                                        if stopWatchManager.currentAo100 != nil {
-                                                            presentedAvg = stopWatchManager.currentAo100
-                                                        }
-                                                    }
-                                                    
-                                                    // mean
-                                                    VStack(spacing: 0) {
-                                                        Text("MEAN")
-                                                            .font(.system(size: 13, weight: .medium))
-                                                        
-                                                        if let sessionMean = stopWatchManager.sessionMean {
-                                                            Text(formatSolveTime(secs: sessionMean))
-                                                                .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: geo.size.width/4-8)
-                                                                .modifier(DynamicText())
-                                                        } else {
-                                                            Text("-")
-                                                                .font(.system(size: 24, weight: .medium, design: .default))
-                                                                .foregroundColor(Color(uiColor: .systemGray))
-                                                        }
-                                                    }
-                                                    .frame(minWidth: 0, maxWidth: .infinity)
-                                                }
-                                                .padding(.bottom, 6)
-                                            }
-                                            .padding(.horizontal, 4)
-                                        }
-                                        .frame(width: geo.size.width/2, height: 120)
-                                    }
-                                } else if showStats && SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! == .compsim {
-                                    HStack {
-                                        Spacer()
-                                        
-                                        ZStack {
-                                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                                .fill(Color(uiColor: .systemGray5))
-                                                .frame(width: geo.size.width/2, height: 120)
-                                            
-                                            
-                                            VStack(spacing: 6) {
-                                                HStack {
-                                                    // bpa
-                                                    VStack(spacing: 0) {
-                                                        Text("BPA")
-                                                            .font(.system(size: 13, weight: .medium))
-                                                        
-                                                        if let bpa = stopWatchManager.bpa {
-                                                            Text(formatSolveTime(secs: bpa))
-                                                                .font(.system(size: 24, weight: .bold))
-                                                                .frame(maxWidth: geo.size.width/4-8)
-                                                                .modifier(DynamicText())
-                                                        } else {
-                                                            Text("...")
-                                                                .font(.system(size: 24, weight: .medium, design: .default))
-                                                                .foregroundColor(Color(uiColor: .systemGray))
-                                                        }
-                                                        
-                                                    }
-                                                    .frame(minWidth: 0, maxWidth: .infinity)
-                                                    
-                                                    // wpa
-                                                    VStack(spacing: 0) {
-                                                        Text("WPA")
-                                                            .font(.system(size: 13, weight: .medium))
-                                                        
-                                                        if let wpa = stopWatchManager.wpa {
-                                                            if wpa == -1 {
-                                                                Text("DNF")
-                                                                    .font(.system(size: 24, weight: .bold))
-                                                                    .modifier(DynamicText())
-                                                            } else {
-                                                                Text(formatSolveTime(secs: wpa))
-                                                                    .font(.system(size: 24, weight: .bold))
-                                                                    .frame(maxWidth: geo.size.width/4-8)
-                                                                    .modifier(DynamicText())
-                                                            }
-                                                            
-                                                            
-                                                            
-                                                        } else {
-                                                            Text("...")
-                                                                .font(.system(size: 24, weight: .medium, design: .default))
-                                                                .foregroundColor(Color(uiColor: .systemGray))
-                                                        }
-                                                    }
-                                                    .frame(minWidth: 0, maxWidth: .infinity)
-                                                }
-                                                .padding(.top, 6)
-                                                
-                                                Divider()
-                                                    .frame(width: geo.size.width/2 - 48)
-                                                
-                                                // reach target
-                                                VStack(spacing: 0) {
-                                                    Text("TO REACH TARGET")
-                                                        .font(.system(size: 13, weight: .medium))
-                                                    
-                                                    if let timeNeededForTarget = stopWatchManager.timeNeededForTarget {
-                                                        if timeNeededForTarget == -1 {
-                                                            Text("Not Possible")
-                                                                .font(.system(size: 22, weight: .bold))
-                                                                .modifier(DynamicText())
-                                                        } else if timeNeededForTarget == -2 {
-                                                            Text("Guaranteed")
-                                                                .font(.system(size: 22, weight: .bold))
-                                                                .modifier(DynamicText())
-                                                        } else {
-                                                            Text("...")
-                                                                .font(.system(size: 24, weight: .medium, design: .default))
-                                                                .foregroundColor(Color(uiColor: .systemGray))
-                                                        }
-                                                    }
-                                                }
-                                                .padding(.bottom, 6)
-                                                .padding(.horizontal, 4)
-#warning("TODO: check if this is right")
-                                                
-                                            }
-                                            .frame(width: geo.size.width/2, height: 120)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        //                    .frame(idealWidth: geo.size.width, maxWidth: geo.size.width, idealHeight: 120, maxHeight: 120)
-                        //                .safeAreaInset(edge: .bottom, spacing: 0) {Rectangle().fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : 12)}
-                        //                    .background(Color.pink)
-                        .padding(.horizontal)
-                        .frame(width: geo.size.width, height: 120)
-                        //                    .padding(.bottom, SetValues.hasBottomBar ? 0 : 12)
-                        //                    .padding(.bottom, 12)
-                        .offset(x: 0, y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12))) // 50 for tab + 8 for padding + 16/0 for bottom bar gap
-                    }
-                }
-                
-                // MANUAL ENTRY FIELD
-                if inputMode == .typing || showInputField {
-                    VStack {
-                        Spacer()
-                        
-                        HStack {
-                            Spacer()
-                            
-                            if !showManualInputFormattedText {
-                                TextField("0.00", text: $manualInputTime)
-                                    .focused($manualInputFocused)
-                                    .frame(maxWidth: geo.size.width-32)
-                                    .font(.system(size: 56, weight: .bold, design: .monospaced))
-                                    .multilineTextAlignment(.center)
-                                    .foregroundColor(stopWatchManager.timerColour)
-                                    .background(Color.getBackgroundColour(colourScheme))
-                                    .modifier(DynamicText())
-                                    .modifier(TimeMaskTextField(text: $manualInputTime))
-                            } else {
-                                Rectangle()
-                                    .fill(Color.white.opacity(0.000001))
-                                    .frame(maxWidth: geo.size.width-32)
-                                    .onTapGesture {
-                                        print("tapped")
-                                        showManualInputFormattedText = false
-                                        manualInputFocused = true
-                                        
-                                        
-                                        if justManuallyInput {
-                                            manualInputTime = ""
-                                            justManuallyInput = false
-                                        }
-                                    }
-                            }
-                            
-                            Spacer()
-                        }
-                        
-                        
-                        Spacer()
-                    }
-                    .ignoresSafeArea(edges: .all)
-                }
-                
-                
-                // PENALTY BAR
-                if inputMode == .typing || stopWatchManager.showPenOptions {
-                    HStack(alignment: .center) {
-                        Spacer()
-                        
-                        HStack(spacing: 0) {
-                            if !stopWatchManager.nilSolve {
-                                if !manualInputFocused {
-                                    PenaltyBar(122) {
-                                        HStack(spacing: 12) {
-                                            PenaltyButton(penType: .plustwo, penSymbol: "+2", imageSymbol: true, canType: false, colour: Color.yellow)
-                                            
-                                            PenaltyButton(penType: .dnf, penSymbol: "xmark.circle", imageSymbol: false, canType: false, colour: Color.red)
-                                            
-                                            PenaltyButton(penType: .none, penSymbol: "checkmark.circle", imageSymbol: false, canType: false, colour: Color.green)
-                                        }
-                                        .offset(x: 1.5) // to future me who will refactor this, i've spent countless minutes trying to centre it in the bar and it just will not
-                                    }
-                                }
-                            }
-                            
-                            if stopWatchManager.currentSession.session_type != 2 {
-                                // IF USING TIMER MODE, ONE-TIME INPUT
-                                if inputMode == .timer {
-                                    // only show divider if one-time entry
-                                    if !stopWatchManager.nilSolve {
-                                        if !manualInputFocused && stopWatchManager.scrambleStr != nil {
-                                            Rectangle()
-                                                .fill(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
-                                                .frame(width: 1.5, height: 20)
-                                                .padding(.horizontal, 12)
-                                        }
-                                    }
-                                    
-                                    if stopWatchManager.scrambleStr != nil {
-                                        PenaltyBar(manualInputFocused ? 68 : 34) {
-                                            Button(action: {
-                                                // IF CURRENT MODE = INPUT
-                                                if manualInputFocused {
-                                                    if manualInputTime != "" {
-                                                        // record entered time time
-                                                        stopWatchManager.stop(timeFromStr(manualInputTime))
-                                                        
-                                                        // remove focus and reset time
-                                                        showInputField = false
-                                                        manualInputFocused = false
-                                                        manualInputTime = ""
-                                                    }
-                                                } else {
-                                                    showInputField = true
-                                                    
-                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                                                        manualInputFocused = true
-                                                    }
-                                                    
-                                                    manualInputTime = ""
-                                                    
-                                                }
-                                            }, label: {
-                                                if manualInputFocused {
-                                                    Text("Done")
-                                                        .font(.system(size: 21, weight: .semibold, design: .rounded))
-                                                } else {
-                                                    Image(systemName: "plus.circle")
-                                                        .font(.system(size: 24, weight: .semibold, design: .rounded))
-                                                }
-                                            })
-                                            .disabled(manualInputFocused ? (manualInputTime == "") : false)
-                                        }
-                                    }
-                                } else if inputMode == .typing && !justManuallyInput {
-                                    if manualInputTime != "" {
-                                        PenaltyBar(68) {
-                                            
-                                            Button {
-                                                stopWatchManager.stop(timeFromStr(manualInputTime))
-                                                
-                                                // remove focus and reset time
-                                                manualInputFocused = false
-                                                justManuallyInput = true
-                                                
-                                                stopWatchManager.displayPenOptions()
-                                                
-                                                showManualInputFormattedText = true
-                                                
-                                            } label: {
-                                                Text("Done")
-                                                    .font(.system(size: 21, weight: .semibold, design: .rounded))
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    Spacer()
-                }
+            if stopWatchManager.mode == .inspecting && stopWatchManager.inspectionSecs >= 15  {
+                Text(stopWatchManager.inspectionSecs >= 17 ? "DNF" : "+2")
+                    .font(.system(size: 22, weight: .semibold, design: .rounded))
                     .offset(y: 45)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            }
+            
+            if  !((inputMode == .typing || showInputField) && !showManualInputFormattedText)  {
+                TimerTime()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .ignoresSafeArea(edges: .all)
             }
             
-            
-            // SCRAMBLE
-            if stopWatchManager.mode == .stopped {
-                if UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) && floatingPanelStage > 1 {
-                    HStack {
-                        Spacer()
-                        
-                        if let scr = stopWatchManager.scrambleStr {
-                            VStack {
-                                Text(scr)
-                                    .font(.system(size: stopWatchManager.currentSession.scramble_type == 7 ? (globalGeometrySize.width) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
-                                    .frame(maxWidth: globalGeometrySize.width - 440, maxHeight: globalGeometrySize.height/3)
-                                    .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
-                                    .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
-                                    .onTapGesture {
-                                        scrambleSheetStr = SheetStrWrapper(str: scr)
-                                    }
+            let _ = NSLog("\(targetFocused) \(manualInputFocused)")
+            if inputMode == .typing || targetFocused || manualInputFocused {
+                Color.white.opacity(0.00000001)
+                    .onTapGesture {
+                        if inputMode == .timer {
+                            manualInputFocused = false
+                            targetFocused = false
+                            showInputField = false
+                        } else {
+                            if showManualInputFormattedText {
+                                showManualInputFormattedText = false
+                                manualInputFocused = true
                                 
-                                Spacer()
+                             
+                                if justManuallyInput {
+                                    manualInputTime = ""
+                                    justManuallyInput = false
+                                }
+                            } else {
+                                manualInputFocused = false
+                            }
+                        }
+                    }
+            }
+            else {
+                TimerTouchView(stopWatchManager: stopWatchManager)
+            }
+            
+            
+            if (inputMode == .typing || showInputField) && !showManualInputFormattedText {
+                Group {
+                    TextField("0.00", text: $manualInputTime)
+                        .focused($manualInputFocused)
+                        .frame(maxWidth: geo.size.width-32)
+                        .font(.system(size: 56, weight: .bold, design: .monospaced))
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(stopWatchManager.timerColour)
+                        .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
+                        .modifier(DynamicText())
+                        .modifier(TimeMaskTextField(text: $manualInputTime))
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .ignoresSafeArea(edges: .all)
+            }
+            
+            if stopWatchManager.mode == .stopped {
+                BottomTools(timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                    .padding(.horizontal)
+                    .offset(x: 0, y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12))) // 50 for tab + 8 for padding + 16/0 for bottom bar gap
+                
+                
+                HStack(spacing: 6) {
+                    TimerHeader(targetFocused: $targetFocused, previewMode: false)
+                    Spacer()
+                    LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
+                        .frame(maxHeight: 35)
+                        .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+                        .opacity(stopWatchManager.scrambleStr == nil ? 1 : 0)
+                }
+                .padding(.horizontal)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                
+                
+                
+                if let scr = stopWatchManager.scrambleStr {
+                    Group {
+                        Text(scr)
+                            .font(.system(size: stopWatchManager.currentSession.scramble_type == 7 ? (globalGeometrySize.width) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
+                            .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
+                            .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
+                            .frame(maxWidth: .infinity, maxHeight: globalGeometrySize.height/3)
+                            .onTapGesture {
+                                scrambleSheetStr = SheetStrWrapper(str: scr)
                             }
                             .padding(.horizontal)
-                            .offset(y: 55 + (SetValues.hasBottomBar ? 0 : 8))
-                        } else {
-                            HStack {
-                                Spacer()
-                                
-                                VStack {
-                                    LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
-                                        .frame(maxHeight: 35)
-                                        .padding(.trailing)
-                                        .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
-                                    
-                                    Spacer()
-                                }
-                            }
-                        }
-                        
-                        Spacer()
+                            .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
                     }
-                    .offset(y: 45)
-                    .ignoresSafeArea(edges: .all)
-                }
-                
-                
-                // SCRAMBLE
-                if stopWatchManager.mode == .stopped {
-                    if let scr = stopWatchManager.scrambleStr {
-                        VStack {
-                            Text(scr)
-                                .font(.system(size: stopWatchManager.currentSession.scramble_type == 7 ? (geo.size.width) / (42.00) * 1.44 : CGFloat(scrambleSize), weight: .semibold, design: .monospaced))
-                                .frame(maxHeight: geo.size.height/3)
-                                .multilineTextAlignment(stopWatchManager.currentSession.scramble_type == 7 ? .leading : .center)
-                                .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.25)), removal: .opacity.animation(.easeIn(duration: 0.1))))
-                                .onTapGesture {
-                                    scrambleSheetStr = SheetStrWrapper(str: scr)
-                                }
-                            
-                            Spacer()
-                        }
-                        .padding(.horizontal)
-                        .offset(y: 55 + (SetValues.hasBottomBar ? 0 : 8))
-                    } else {
-                        HStack {
-                            Spacer()
-                            
-                            VStack {
-                                LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
-                                    .frame(maxHeight: 35)
-                                    .padding(.trailing)
-                                    .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
-                                
-                                Spacer()
-                            }
-                        }
-                        
-                    }
-                }
-                
-                if stopWatchManager.mode == .inspecting && showCancelInspection {
-                    HStack(alignment: .center) {
-                        Spacer()
-                        
-                        HStack(spacing: 0) {
-                            PenaltyBar(90) {
-                                Button(action: {
-                                    stopWatchManager.interruptInspection()
-                                }, label: {
-                                    Text("Cancel")
-                                        .font(.system(size: 21, weight: .semibold, design: .rounded))
-                                        .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                                })
-                            }
-                        }
-                        
-                        Spacer()
-                    }
-                    .offset(y: 45)
-                    .ignoresSafeArea(edges: .all)
+                    .frame(maxHeight: .infinity, alignment: .top)
                 }
             }
+            
+            if inputMode == .typing || stopWatchManager.showPenOptions {
+                HStack {
+                    
+                    let showPlus = stopWatchManager.currentSession.session_type != SessionTypes.multiphase.rawValue && !justManuallyInput && (inputMode != .typing || manualInputTime != "")
+                    
+                    if stopWatchManager.solveItem != nil && !manualInputFocused {
+                        PenaltyBar(122) {
+                            HStack {
+                                PenaltyButton(penType: .plustwo, penSymbol: "+2", imageSymbol: true, canType: false, colour: Color.yellow)
+                                
+                                PenaltyButton(penType: .dnf, penSymbol: "xmark.circle", imageSymbol: false, canType: false, colour: Color.red)
+                                    .frame(maxWidth: .infinity)
+                                
+                                PenaltyButton(penType: .none, penSymbol: "checkmark.circle", imageSymbol: false, canType: false, colour: Color.green)
+                            }
+                            // I don't know why there has to be uneven padding :(
+                            .padding(.leading, 4)
+                            .padding(.trailing, 1)
+                        }
+                        
+                        if showPlus {
+                            Rectangle()
+                                .fill(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
+                                .frame(width: 1.5, height: 20)
+                                .padding(.horizontal, 12)
+                        }
+                    }
+                    
+                    
+                    if showPlus {
+                        
+                        if inputMode == .timer {
+                            PenaltyBar(manualInputFocused ? 68 : 34) {
+                                Button() {
+                                    // IF CURRENT MODE = INPUT
+                                    if manualInputFocused {
+                                        if manualInputTime != "" {
+                                            // record entered time time
+                                            stopWatchManager.stop(timeFromStr(manualInputTime))
+                                            
+                                            // remove focus and reset time
+                                            showInputField = false
+                                            manualInputFocused = false
+                                            manualInputTime = ""
+                                        }
+                                    } else {
+                                        showInputField = true
+                                        
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                            manualInputFocused = true
+                                        }
+                                        
+                                        manualInputTime = ""
+                                        
+                                    }
+                                } label: {
+                                    if manualInputFocused {
+                                        Text("Done")
+                                            .font(.system(size: 21, weight: .semibold, design: .rounded))
+                                    } else {
+                                        Image(systemName: "plus.circle")
+                                            .font(.system(size: 24, weight: .semibold, design: .rounded))
+                                    }
+                                }
+                                .disabled(manualInputFocused ? (manualInputTime == "") : false)
+                            }
+                        } else if inputMode == .typing {
+                            
+                            PenaltyBar(68) {
+                                
+                                Button {
+                                    stopWatchManager.stop(timeFromStr(manualInputTime))
+                                    
+                                    // remove focus and reset time
+                                    manualInputFocused = false
+                                    justManuallyInput = true
+                                    
+                                    stopWatchManager.displayPenOptions()
+                                    
+                                    showManualInputFormattedText = true
+                                    
+                                } label: {
+                                    Text("Done")
+                                        .font(.system(size: 21, weight: .semibold, design: .rounded))
+                                }
+                            }
+                        }
+                    }
+                }
+                .disabled(stopWatchManager.scrambleStr == nil)
+                .ignoresSafeArea(edges: .all)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .offset(y: 45)
+            }
+            
+            
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {
@@ -805,7 +414,7 @@ struct TimeScrambleDetail: View {
                 
                 
                 if let svg = svg {
-                    DefaultScrambleView(svg: svg, width: globalGeometrySize.width / UIScreen.main.scale, height: globalGeometrySize.height / 3 / UIScreen.main.scale)
+                    SVGView(string: svg)
                         .aspectRatio(contentMode: .fit)
                         .padding()
                 } else {
@@ -838,7 +447,7 @@ struct TimeScrambleDetail: View {
                     }
                 }
                 
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .confirmationAction) {
                     Button {
                         dismiss()
                     } label: {

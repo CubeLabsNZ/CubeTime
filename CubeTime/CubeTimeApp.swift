@@ -159,6 +159,9 @@ struct MainView: View {
         GeometryReader { geo in
             if UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(geo.size) {
                 PadMainView()
+                    .environment(\.globalGeometrySize, geo.size)
+                    .environmentObject(tabRouter)
+            } else {
                 MainTabsView()
                     .environment(\.globalGeometrySize, geo.size)
                     .environmentObject(tabRouter)

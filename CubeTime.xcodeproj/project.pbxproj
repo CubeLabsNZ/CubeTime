@@ -59,6 +59,7 @@
 		7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7DDF2227955AFF00362DE9 /* PenButton.swift */; };
 		7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E2011275DD52600ADF01D /* Licenses.swift */; };
 		7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */; };
+		AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */ = {isa = PBXBuildFile; productRef = AF7697DB293C1EFA00FF1C50 /* SVGView */; };
 		AF7D7806293B1E85003A2A11 /* PadSideBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7D7805293B1E85003A2A11 /* PadSideBar.swift */; };
 		AF7F0C012939EC8E005AECDC /* lib-scrambles.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		AF7F0C022939EC9D005AECDC /* lib-scrambles.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */; };
@@ -160,6 +161,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF7F0C022939EC9D005AECDC /* lib-scrambles.dylib in Frameworks */,
+				AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */,
 				23AB6480293609500049993B /* SVGKit in Frameworks */,
 				7D5521DC2799657300B418BE /* Security.framework in Frameworks */,
 				23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */,
@@ -393,6 +395,7 @@
 			packageProductDependencies = (
 				23AB647F293609500049993B /* SVGKit */,
 				23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */,
+				AF7697DB293C1EFA00FF1C50 /* SVGView */,
 			);
 			productName = txmer;
 			productReference = 23DE3BD7274DDBE200254D29 /* CubeTime.app */;
@@ -469,6 +472,7 @@
 			packageReferences = (
 				23AB647E293609500049993B /* XCRemoteSwiftPackageReference "SVGKit" */,
 				23A1CDBB29399FE000F0895D /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */,
+				AF7697DA293C1EFA00FF1C50 /* XCRemoteSwiftPackageReference "SVGView" */,
 			);
 			productRefGroup = 23DE3BD8274DDBE200254D29 /* Products */;
 			projectDirPath = "";
@@ -951,6 +955,14 @@
 				minimumVersion = 3.0.0;
 			};
 		};
+		AF7697DA293C1EFA00FF1C50 /* XCRemoteSwiftPackageReference "SVGView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/SVGView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -963,6 +975,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 23AB647E293609500049993B /* XCRemoteSwiftPackageReference "SVGKit" */;
 			productName = SVGKit;
+		};
+		AF7697DB293C1EFA00FF1C50 /* SVGView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AF7697DA293C1EFA00FF1C50 /* XCRemoteSwiftPackageReference "SVGView" */;
+			productName = SVGView;
 		};
 /* End XCSwiftPackageProductDependency section */
 
