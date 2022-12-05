@@ -17,7 +17,7 @@ struct TimerTime: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
     @Environment(\.colorScheme) var colourScheme
         
-    func getTimerColor() -> Color {
+    @inlinable func getTimerColor() -> Color {
         if stopWatchManager.mode == .inspecting && colourScheme == .dark && stopWatchManager.timerColour == Color.Timer.normal {
             switch stopWatchManager.inspectionSecs {
             case ..<8: return Color.Timer.normal
@@ -43,14 +43,13 @@ struct TimerTime: View {
             .modifier(DynamicText())
         // for smaller phones (iPhoneSE and test sim), disable animation to larger text
         // to prevent text clipping and other UI problems
-            .if(!(smallDeviceNames.contains(getModelName()))) { view in
-                view
+            .ifelse (stopWatchManager.isSmallDevice) { view in
+                return view
+                    .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDescTimer, 54, nil)))
+            } elseDo: { view in
+                return view
                     .modifier(AnimatingFontSize(font: stopWatchManager.ctFontDescTimer, fontSize: stopWatchManager.mode == .running ? 70 : 56))
                     .animation(Animation.spring(), value: stopWatchManager.mode == .running)
-            }
-            .if(smallDeviceNames.contains(getModelName())) { view in
-                view
-                    .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDescTimer, 54, nil)))
             }
     }
 }
@@ -397,6 +396,7 @@ struct PadFloatingView: View {
                 }
             }
          )
+        .transition(.identity)
         .ignoresSafeArea(.keyboard)
         .ignoresSafeArea(.container, edges: .top)
         .ignoresSafeArea(.container, edges: .bottom)

@@ -99,12 +99,10 @@ public extension UIDevice {
 func getModelName() -> String {
     var systemInfo = utsname()
     uname(&systemInfo)
-    let machineMirror = Mirror(reflecting: systemInfo.machine)
-    return machineMirror.children.reduce("") { identifier, element in
-        guard let value = element.value as? Int8, value != 0 else {
-            return identifier
+    return withUnsafePointer(to: systemInfo.machine) {
+        $0.withMemoryRebound(to: UInt8.self, capacity: MemoryLayout.size(ofValue: $0)) {
+            return String(cString: $0)
         }
-        return identifier + String(UnicodeScalar(UInt8(value)))
     }
 }
 
@@ -219,6 +217,15 @@ extension View {
             self
         }
     }
+    
+    
+    @inlinable @ViewBuilder func `ifelse`<Content: View, ContentElse: View>(_ condition: Bool, transform: (Self) -> Content, elseDo: (Self) -> ContentElse) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            elseDo(self)
+        }
+    }
 }
 
 extension View {
@@ -281,7 +288,7 @@ struct AppZoomWrapper: RawRepresentable, Identifiable {
 
 // all main font structs
 struct DynamicText: ViewModifier {
-    func body(content: Content) -> some View {
+    @inlinable func body(content: Content) -> some View {
         content
             .scaledToFill()
             .minimumScaleFactor(0.5)
@@ -293,12 +300,12 @@ struct AnimatingFontSize: AnimatableModifier {
     let font: CTFontDescriptor
     var fontSize: CGFloat
 
-    var animatableData: CGFloat {
+    @inlinable var animatableData: CGFloat {
         get { fontSize }
         set { fontSize = newValue }
     }
 
-    func body(content: Self.Content) -> some View {
+    @inlinable func body(content: Self.Content) -> some View {
         content
             .font(Font(CTFontCreateWithFontDescriptor(font, fontSize, nil)))
     }
@@ -366,7 +373,7 @@ struct PuzzleType {
 
 
 // MARK: - ENUMS
-enum PenTypes: Int16 {
+enum PenTypes: Int16, Hashable {
     case none
     case plustwo
     case dnf

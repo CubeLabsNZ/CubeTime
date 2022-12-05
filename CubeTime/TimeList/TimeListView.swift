@@ -254,13 +254,12 @@ struct TimeListView: View {
                 }
                 .safeAreaInset(safeArea: .tabBar)
             }
-            .if (stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue) { view in
-                view
-                    .searchable(text: $stopWatchManager.timeListFilter, placement: .navigationBarDrawer)
-            }
+//            .if (stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue) { view in
+//                view
+//                    .searchable(text: $stopWatchManager.timeListFilter, placement: .navigationBarDrawer)
+//            }
             
         }
-        .accentColor(accentColour)
         .navigationViewStyle(StackNavigationViewStyle())
         .sheet(item: $solve) { item in
             TimeDetail(solve: item, currentSolve: $solve)
