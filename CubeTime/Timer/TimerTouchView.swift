@@ -168,21 +168,17 @@ struct TimerTouchView: UIViewControllerRepresentable {
         longPressGesture.allowableMovement = gestureThreshold
         longPressGesture.minimumPressDuration = userHoldTime
         
-        //        longPressGesture.requiresExclusiveTouchType = ?
         
         
-//        for direction in [UISwipeGestureRecognizer.Direction.up, UISwipeGestureRecognizer.Direction.down, UISwipeGestureRecognizer.Direction.left, UISwipeGestureRecognizer.Direction.right] {
-//            let gesture = UISwipeGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.swipe))
-//            gesture.direction = direction
-//            gesture.require(toFail: longPressGesture)
-//
-//            v.view.addGestureRecognizer(gesture)
-//        }
         
+    
         let panGestureRecognizer = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.pan))
         panGestureRecognizer.allowedScrollTypesMask = .all
         panGestureRecognizer.maximumNumberOfTouches = 1
+        panGestureRecognizer.require(toFail: longPressGesture)
         v.view.addGestureRecognizer(panGestureRecognizer)
+        
+        
         
        
         v.view.addGestureRecognizer(longPressGesture)
@@ -228,6 +224,7 @@ struct TimerTouchView: UIViewControllerRepresentable {
             }
         }
         
+        /*
         @objc func swipe(_ gestureRecognizer: UISwipeGestureRecognizer) {
             switch gestureRecognizer.direction {
             case .down:
@@ -254,6 +251,7 @@ struct TimerTouchView: UIViewControllerRepresentable {
                 stopWatchManager.timerColour = Color.Timer.normal
             }
         }
+        */
         
         @objc func pan(_ gestureRecogniser: UIPanGestureRecognizer) {
             if gestureRecogniser.state != .cancelled {
