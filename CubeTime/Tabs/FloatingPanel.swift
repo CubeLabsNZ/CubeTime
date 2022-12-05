@@ -2,7 +2,7 @@ import SwiftUI
 
 
 struct FloatingPanel: View {
-//    @SceneStorage("CubeStuffs.FloatingPanel.height") private var height: Double = 50
+    //    @SceneStorage("CubeStuffs.FloatingPanel.height") private var height: Double = 50
     @State private var height: Double
     
     @Environment(\.colorScheme) private var colourScheme
@@ -18,91 +18,95 @@ struct FloatingPanel: View {
     var stages: [CGFloat]
     let items: [AnyView]
     
-    #warning("TODO: use that one func for each tupleview type when making a real package")
+#warning("TODO: use that one func for each tupleview type when making a real package")
     
     init<A: View, B: View, C: View, D: View>(
         currentStage: Binding<Int>,
         maxHeight: CGFloat,
         stages: [CGFloat],
         @ViewBuilder content: @escaping () -> TupleView<(A, B, C, D)>) {
-        self.maxHeight = maxHeight
-        self.stages = stages
+            self.maxHeight = maxHeight
+            self.stages = stages
             
-        self._stage = currentStage
-        self._oldStage = State(initialValue: currentStage.wrappedValue)
-        
-        self._height = State(initialValue: stages[currentStage.wrappedValue])
+            self._stage = currentStage
+            self._oldStage = State(initialValue: currentStage.wrappedValue)
             
-        let c = content().value
+            self._height = State(initialValue: stages[currentStage.wrappedValue])
             
-        self.items = [AnyView(c.0), AnyView(c.1), AnyView(c.2), AnyView(c.3)]
-    }
+            let c = content().value
+            
+            self.items = [AnyView(c.0), AnyView(c.1), AnyView(c.2), AnyView(c.3)]
+        }
     
     var body: some View {
-        VStack(spacing: 0) {
+        ZStack(alignment: .topLeading) {
+            ZStack(alignment: .bottom) {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(Color.getBackgroundColour(colourScheme))
+                    .frame(width: 360, height: height + 18)
+                    .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 0)
+                
+                ZStack {
+                    Capsule()
+                        .fill(Color(uiColor: isPressed ? .systemGray4 : .systemGray5))
+                        .scaleEffect(isPressed ? 1.12 : 1.00)
+                        .frame(width: 36, height: 6)
+                }
+                .frame(width: 360, height: 18, alignment: .center)
+                .background(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(Color.getBackgroundColour(colourScheme))
+                        .frame(width: 360, height: 18)
+                )
+                .zIndex(100)
+                .gesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged { value in
+                            self.isPressed = true
+                            // Just follow touch within bounds
+                            
+                            let newh = height + value.translation.height
+                            if newh > maxHeight {
+                                height = maxHeight
+                            } else if newh < minHeight {
+                                height = minHeight
+                            } else {
+                                height = newh
+                            }
+                            let nearest = stages.nearest(to: height)!.0
+                            if (nearest != oldStage) {
+                                withAnimation {
+                                    stage = nearest
+                                }
+                                oldStage = nearest
+                            }
+                        }
+                    
+                        .onEnded() { value in
+                            withAnimation(.spring()) {
+                                self.isPressed = false
+                                let n = stages.nearest(to: height + value.predictedEndTranslation.height)!
+                                stage = n.0
+                                height = Double(n.1)
+                            }
+                        }
+                )
+            }
+            .frame(width: 360, height: height + 18)
+            
+            
+            
             ZStack(alignment: .topLeading) {
                 Rectangle()
                     .fill(Color.getBackgroundColour(colourScheme))
                     .frame(width: 360, height: height)
                     .cornerRadius(8, corners: [.topLeft, .topRight])
-                    .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 0)
-                
+
                 // view
                 items[stage]
                     .frame(height: height, alignment: .topLeading)
-            }
-            
-            
-            Divider()
-                .frame(width: height == 0 ? 0 : 360)
-            
-            
-            // Dragger
-            ZStack {
-                Rectangle()
-                    .fill(Color.white)
-                    .frame(width: 360, height: 18)
-                    .cornerRadius(8, corners: height == 0 ? .allCorners : [.bottomLeft, .bottomRight])
-                
-                    .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                self.isPressed = true
-                                // Just follow touch within bounds
-                                
-                                print(height)
-                                
-                                let newh = height + value.translation.height
-                                if newh > maxHeight {
-                                    height = maxHeight
-                                } else if newh < minHeight {
-                                    height = minHeight
-                                } else {
-                                    height = newh
-                                }
-                                let nearest = stages.nearest(to: height)!.0
-                                if (nearest != oldStage) {
-                                    withAnimation {
-                                        stage = nearest
-                                    }
-                                    oldStage = nearest
-                                }
-                            }
-                        
-                            .onEnded() { value in
-                                withAnimation(.spring()) {
-                                    self.isPressed = false
-                                    let n = stages.nearest(to: height + value.predictedEndTranslation.height)!
-                                    stage = n.0
-                                    height = Double(n.1)
-                                }
-                            }
-                    )
-                
-                Capsule()
-                    .fill(Color(uiColor: isPressed ? .systemGray4 : .systemGray5))
-                    .scaleEffect(isPressed ? 1.12 : 1.00)
-                    .frame(width: 36, height: 6)
+                    .clipped()
+                    .animation(.none, value: stage)
             }
         }
         .frame(width: 360)

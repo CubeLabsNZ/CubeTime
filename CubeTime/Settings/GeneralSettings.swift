@@ -152,23 +152,34 @@ struct GeneralSettingsView: View {
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
                         
-                        HStack {
-                            Text("Inspection Alert Type")
-                                .font(.body.weight(.medium))
-                            
-                            Spacer()
-                            
-                            Picker("", selection: $inspectionAlertType) {
-                                Text("Voice").tag(0)
-                                Text("Boop").tag(1)
+                        if inspectionAlert {
+                            HStack {
+                                Text("Inspection Alert Type")
+                                    .font(.body.weight(.medium))
+                                
+                                Spacer()
+                                
+                                Picker("", selection: $inspectionAlertType) {
+                                    Text("Voice").tag(0)
+                                    Text("Boop").tag(1)
+                                }
+                                .frame(maxWidth: 120)
+                                .pickerStyle(.segmented)
+                                .onChange(of: inspectionAlertType) { newValue in
+                                    stopWatchManager.inspectionAlertType = newValue
+                                }
                             }
-                            .frame(maxWidth: 120)
-                            .pickerStyle(.segmented)
-                            .onChange(of: inspectionAlertType) { newValue in
-                                stopWatchManager.inspectionAlertType = newValue
-                            }
+                            .padding(.horizontal)
+                            
+                            
+                            Text("Note: to use the 'Boop' option, your phone must not be muted. 'Boop' plays a system sound, requiring your ringer to be unmuted.")
+                                .font(.footnote.weight(.medium))
+                                .lineSpacing(-4)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .foregroundColor(Color(uiColor: .systemGray))
+                                .multilineTextAlignment(.leading)
+                                .padding(.horizontal)
                         }
-                        .padding(.horizontal)
                     }
                 }
                 
@@ -178,10 +189,14 @@ struct GeneralSettingsView: View {
                 Divider()
                 
                 VStack (alignment: .leading) {
-                    Stepper(value: $holdDownTime, in: 0.05...1.0, step: 0.05) {
+                    HStack {
                         Text("Hold Down Time: ")
                             .font(.body.weight(.medium))
                         Text(String(format: "%.2fs", holdDownTime))
+                        
+                        Spacer()
+                        
+                        Stepper("", value: $holdDownTime, in: 0.05...1.0, step: 0.05)
                     }
                     .padding(.horizontal)
                 }
