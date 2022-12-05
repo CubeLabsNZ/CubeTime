@@ -266,19 +266,14 @@ struct TimerTouchView: UIViewControllerRepresentable {
                 let v_y = velocity.y
                 
                 
-//                NSLog("\(translation.x)")
+                NSLog("\(translation.x)")
 //                NSLog("\(translation.y)")
-                NSLog("\(velocity.x)")
+//                NSLog("\(velocity.x)")
 //                NSLog("\(velocity.y)")
                 
                 
                 if v_x.magnitude > 500 || v_y.magnitude > 500 {
-                    
-                    if d_x == d_y && d_x == 0 { gestureRecogniser.state = .cancelled }
-                    
                     if d_x.magnitude > d_y.magnitude {
-                        if d_x == 0 { gestureRecogniser.state = .cancelled }
-                        
                         if d_x > 0 {
                             stopWatchManager.feedbackStyle?.impactOccurred()
                             stopWatchManager.timerColour = Color.Timer.normal
@@ -297,8 +292,6 @@ struct TimerTouchView: UIViewControllerRepresentable {
                             gestureRecogniser.state = .cancelled
                         }
                     } else {
-                        if d_y == 0 { gestureRecogniser.state = .cancelled }
-                        
                         // swipe down
                         if d_y > 0 {
                             if stopWatchManager.canGesture && stopWatchManager.mode != .inspecting {
@@ -309,12 +302,14 @@ struct TimerTouchView: UIViewControllerRepresentable {
                             }
                             
                             gestureRecogniser.state = .cancelled
-                        } else {
+                        } else if d_y < 0 {
+                            // cancel any up movement
                             gestureRecogniser.state = .cancelled
                         }
                     }
                 } else {
-                    gestureRecogniser.state = .cancelled
+                    stopWatchManager.timerColour = Color.Timer.normal
+//                    gestureRecogniser.state = .cancelled
                 }
             }
         }
