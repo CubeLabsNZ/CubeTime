@@ -60,7 +60,14 @@ struct CalculatedAverage: Identifiable, Comparable/*, Equatable, Comparable*/ {
     }
 }
 
-
+func setupAudioSession() {
+    let audioSession = AVAudioSession.sharedInstance()
+    do {
+        try audioSession.setCategory(AVAudioSession.Category.playback)
+    } catch let error as NSError {
+        print(error.description)
+    }
+}
 
 // MARK: --
 // MARK: SWM
@@ -254,15 +261,24 @@ class StopWatchManager: ObservableObject {
     
     
     // MARK: inspection alert audio
-    private let inspectionAlert_8: AVAudioPlayer! = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "8sec-audio", ofType: "wav")!))
-    private let inspectionAlert_12: AVAudioPlayer! = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "12sec-audio", ofType: "wav")!))
+    
+    
+    
     private let systemSoundID: SystemSoundID = 1057
+    private let inspectionAlert_8: AVAudioPlayer!
+    private let inspectionAlert_12: AVAudioPlayer!
     
     
     
     let isSmallDevice: Bool
     
     init (currentSession: Sessions, managedObjectContext: NSManagedObjectContext) {
+        print("initialising audio...")
+        setupAudioSession()
+        self.inspectionAlert_8 = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "8sec-audio", ofType: "wav")!))
+        self.inspectionAlert_12 = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "12sec-audio", ofType: "wav")!))
+        
+        
         self.currentSession = currentSession
         self.managedObjectContext = managedObjectContext
         self.playgroundScrambleType = currentSession.scramble_type
@@ -280,6 +296,10 @@ class StopWatchManager: ObservableObject {
         updateFont()
         
         tryUpdateCurrentSolveth()
+        
+        
+        
+        
         print("swm initialised")
     }
     
@@ -310,7 +330,7 @@ class StopWatchManager: ObservableObject {
             
             if inspectionAlert && (inspectionSecs == 8 || inspectionSecs == 12) {
                 if inspectionAlertType == 1 {
-                    AudioServicesPlaySystemSound(systemSoundID)
+                    AudioServicesPlayAlertSound(systemSoundID)
                 } else {
                     if inspectionSecs == 8 {
                         inspectionAlert_8.play()

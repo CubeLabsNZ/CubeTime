@@ -34,7 +34,7 @@ struct SessionsView: View {
                             }
                         }
                     }
-                    .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top, 64).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                    .safeAreaInset(safeArea: .tabBar)
                     
                     VStack {
                         Spacer()
@@ -64,7 +64,7 @@ struct SessionsView: View {
                             Spacer()
                         }
                     }
-                    .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                    .safeAreaInset(safeArea: .tabBar)
                 }
                 .navigationTitle("Your Sessions")
             }

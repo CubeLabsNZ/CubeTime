@@ -117,7 +117,7 @@ struct BottomTools: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-        .offset(y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12)))
+        .safeAreaInset(safeArea: .tabBar)
         .padding(.horizontal)
     }
 }
@@ -364,33 +364,33 @@ struct PadFloatingView: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @EnvironmentObject var tabRouter: TabRouter
     
-    
     @Binding var floatingPanelStage: Int
     var targetFocused: FocusState<Bool>.Binding
     
     var body: some View {
+        let _ = NSLog("\(UIApplication.shared.keyWindow?.safeAreaInsets.top)")
+        let _ = NSLog("\(UIApplication.shared.keyWindow?.safeAreaInsets.bottom)")
         
         FloatingPanel(
             currentStage: $floatingPanelStage,
-            maxHeight: (globalGeometrySize.height - 24),
-            stages: [0, 50, 130, (globalGeometrySize.height - 24)],
+            /* UIApplication.shared.keyWindow?.safeAreaInsets.top & bottom values
+             * 20 accounts for the dragger                                        */
+            maxHeight: UIScreen.screenHeight - 24 - 20 - 20,
+            stages: [0, 35, 120, UIScreen.screenHeight - 24 - 20 - 20],
             content: {
                 EmptyView()
                 
                 TimerHeader(targetFocused: targetFocused, previewMode: false)
-                    .padding(.horizontal)
-                    .padding(.top, 8)
                 
                 VStack(alignment: .leading, spacing: 12) {
                     TimerHeader(targetFocused: targetFocused, previewMode: false)
                     
                     PrevSolvesDisplay(count: 3)
+                        .padding([.horizontal, .bottom])
                 }
-                .padding()
                 
-                VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 12) {
                     TimerHeader(targetFocused: targetFocused, previewMode: false)
-                        .padding()
                     
                     MainTabsView()
                 }
@@ -398,12 +398,11 @@ struct PadFloatingView: View {
          )
         .transition(.identity)
         .ignoresSafeArea(.keyboard)
-        .frame(width: 360)
-        .padding(.top, SetValues.hasBottomBar
-                 ? 0
-                 : tabRouter.hideTabBar
-                    ? nil
-                    : 8)
+        .ignoresSafeArea(.container, edges: .top)
+        .ignoresSafeArea(.container, edges: .bottom)
+        /* this is a temporary workaround. offset of 0 will not respect safe area (as intended), but offset of 1 suddenly does?? im probably doing something wrong... */
+        .offset(y: 1)
+        #warning("TODO: fix workaround someday")
     }
 }
 
@@ -435,7 +434,7 @@ struct ScrambleText: View {
                 scrambleSheetStr = SheetStrWrapper(str: scr)
             }
             .padding(.horizontal)
-            .padding(.leading, floatingPanelStage > 1 ? 400 : 0)
+            .padding(.leading, floatingPanelStage > 1 ? 380 : 0)
             .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
     }
 }
@@ -487,6 +486,8 @@ struct TimerView: View {
     
     
     var body: some View {
+        let _ = Self._printChanges()
+        
         GeometryReader { geo in
             TimerBackgroundColor()
                 .ignoresSafeArea(.all)
@@ -563,7 +564,6 @@ struct TimerView: View {
                 // 50 for tab + 8 for padding + 16/0 for bottom bar gap
                 
                 
-                
                 HStack(alignment: .top, spacing: 6) {
                     if padFloatingLayout && UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) {
                         PadFloatingView(floatingPanelStage: $floatingPanelStage, targetFocused: $targetFocused)
@@ -578,7 +578,7 @@ struct TimerView: View {
                         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
                         .opacity(stopWatchManager.scrambleStr == nil ? 1 : 0)
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, padFloatingLayout && UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) ? 24 : nil)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 
                 
@@ -586,6 +586,7 @@ struct TimerView: View {
                 if let scr = stopWatchManager.scrambleStr {
                     ScrambleText(scr: scr, floatingPanelStage: floatingPanelStage, timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr)
                         .frame(maxHeight: .infinity, alignment: .top)
+                        .animation(.none, value: self.floatingPanelStage)
                 }
             }
             

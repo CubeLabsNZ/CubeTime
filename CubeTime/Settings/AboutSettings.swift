@@ -5,7 +5,6 @@ enum ProjectLicense: String {
     case cubetime = "CubeTime"
     case tnoodle = "TNoodle"
     case chartview = "ChartView"
-    case svgkit = "SVGKit"
     case icons = "WCA Icons (Cubing Icons & Fonts)"
     case recursivefont = "Recursive Font"
     case privacypolicy = "CubeTime Privacy Policy"
@@ -25,8 +24,6 @@ struct LicensePopUpView: View {
                 tnoodleLicense()
             case .chartview:
                 ChartViewLicense()
-            case .svgkit:
-                SVGKitLicense()
             case .icons:
                 CubingIconsLicense()
             case .recursivefont:
@@ -66,10 +63,6 @@ struct LicensesPopUpView: View {
                     }
                     Button(ProjectLicense.chartview.rawValue) {
                         projectLicense = .chartview
-                        showLicense = true
-                    }
-                    Button(ProjectLicense.svgkit.rawValue) {
-                        projectLicense = .svgkit
                         showLicense = true
                     }
                     Button(ProjectLicense.icons.rawValue) {

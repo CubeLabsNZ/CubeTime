@@ -86,6 +86,10 @@ public extension UIDevice {
     static func deviceIsLandscape(_ geo: CGSize) -> Bool {
         return geo.width > geo.height
     }
+    
+    static let hasBottomBar: Bool = {
+        return ((UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.bottom)! > 0
+    }()
 }
 
 /// device restriction function
@@ -103,11 +107,9 @@ func getModelName() -> String {
 }
 
 // screen sizes
-@available(*, deprecated, message: "Use global geometry env variable instead.")
 extension UIScreen {
    static let screenWidth = UIScreen.main.bounds.size.width
    static let screenHeight = UIScreen.main.bounds.size.height
-   static let screenSize = UIScreen.main.bounds.size
 }
 
 // solve related extensions
@@ -632,6 +634,7 @@ struct TimeMaskTextField: ViewModifier {
 
 // MARK: - MAIN TIMER STATIC VALUES
 #warning("TODO: merge this with tabrouter")
+@available(*, deprecated, message: "Use UIDevice.hasBottomBar instead.")
 class SetValues {
     static let hasBottomBar = ((UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.bottom)! > 0
 }
@@ -652,6 +655,65 @@ extension Color {
         static let eight: Color = Color(red: 234/255, green: 224/255, blue: 182/255)
         static let twelve: Color = Color(red: 234/255, green: 212/255, blue: 182/255)
         static let penalty: Color = Color(red: 234/255, green: 194/255, blue: 192/255)
+    }
+}
+
+
+
+// MARK: - CUSTOM SAFE AREA INSET
+enum SafeAreaDeviceType {
+    case defaultView
+    case padFloating
+}
+
+enum SafeAreaType {
+    case tabBar
+}
+
+struct TabBarSafeAreaInset: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                Rectangle()
+                .fill(Color.clear)
+                .frame(height: 50)
+                .padding(.top)
+                .padding(.bottom, UIDevice.hasBottomBar ? 0 : nil)
+            }
+    }
+}
+
+struct PadFloatingSafeAreaInset: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                Rectangle()
+                .fill(Color.clear)
+                .frame(height: 50)
+                .padding(.vertical)
+            }
+    }
+}
+
+extension View {
+    func safeAreaInset(safeArea: SafeAreaDeviceType) -> some View {
+        switch safeArea {
+        case .defaultView:
+            return AnyView(modifier(TabBarSafeAreaInset()))
+        case .padFloating:
+            return AnyView(modifier(PadFloatingSafeAreaInset()))
+        }
+    }
+        
+    func safeAreaInset(safeArea: SafeAreaType) -> some View {
+        switch safeArea {
+        case .tabBar:
+            if UIDevice.deviceIsPad {
+                return safeAreaInset(safeArea: .padFloating)
+            } else {
+                return safeAreaInset(safeArea: .defaultView)
+            }
+        }
     }
 }
 

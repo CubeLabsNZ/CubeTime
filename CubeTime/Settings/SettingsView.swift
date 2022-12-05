@@ -50,7 +50,7 @@ struct SettingsView: View {
                         Spacer()
                     }
                     .navigationBarTitle("Settings")
-                    .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                    .safeAreaInset(safeArea: .tabBar)
                     .padding(.vertical, 6)
                     .padding(.horizontal)
                 }
@@ -203,7 +203,7 @@ struct SettingsDetail: View {
                             .frame(maxHeight: globalGeometrySize.height / 7)
                             .padding(.bottom)
                     }
-                    .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                    .safeAreaInset(safeArea: .tabBar)
 
                     VStack {
                         ZStack {

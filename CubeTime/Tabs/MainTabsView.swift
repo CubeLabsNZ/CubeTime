@@ -83,19 +83,15 @@ struct TabIcon: View {
 }
 
 
+
+
+
 struct MainTabsView: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @EnvironmentObject var tabRouter: TabRouter
-    
-    
-    
-    
-    @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
-    @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
-    
+        
     var body: some View {
         VStack {
             ZStack {
@@ -113,14 +109,14 @@ struct MainTabsView: View {
                     SettingsView()
                 }
                 
+                
                 if !tabRouter.hideTabBar {
                     BottomTabsView(currentTab: $tabRouter.currentTab)
                         .frame(maxHeight: .infinity, alignment: .bottom)
-                        .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : nil)
+                        .padding(.bottom, UIDevice.hasBottomBar ? CGFloat(0) : nil)
+                        .padding(.bottom, UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) ? nil : 0)
                 }
             }
         }
-        .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
-        .tint(accentColour)
     }
 }
