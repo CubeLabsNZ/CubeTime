@@ -164,8 +164,6 @@ struct TimeListView: View {
                     .padding(.vertical, -6)
                 }
                 .navigationTitle(isSelectMode ? "Select Solves" : "Session Times")
-                
-                
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {
                         #warning("MAKE THIS PICKER MENU")
@@ -254,7 +252,7 @@ struct TimeListView: View {
                         }
                     }
                 }
-                .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
+                .safeAreaInset(safeArea: .tabBar)
             }
             .if (stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue) { view in
                 view

@@ -118,7 +118,7 @@ struct BottomTools: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-        .offset(y: -(50 + 12 + (SetValues.hasBottomBar ? 0 : 12)))
+        .safeAreaInset(safeArea: .tabBar)
         .padding(.horizontal)
     }
 }

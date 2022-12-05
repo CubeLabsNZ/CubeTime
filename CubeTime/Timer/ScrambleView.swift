@@ -1,6 +1,5 @@
 import Foundation
 import SwiftUI
-import SVGKit
 import SVGView
 import SwiftfulLoadingIndicators
 
@@ -50,50 +49,5 @@ struct AsyncSVGView: View {
             let result = await task.result
             svg = try? result.get()
         }
-    }
-}
-
-@available(*, deprecated, message: "USE SVGVIEW")
-// uikit wrappers
-struct DefaultScrambleSVGViewRepresentable: UIViewRepresentable {
-    var svg: String
-    var width: CGFloat
-    var height: CGFloat
-    
-    
-    func makeUIView(context: Context) -> SVGKFastImageView {
-        let svgImage = SVGKImage(data: svg.data(using: .utf8))!
-        svgImage.scaleToFit(inside: CGSize(width: width, height: height))
-        
-        let imageView = SVGKFastImageView(svgkImage: svgImage)!
-//        imageView.backgroundColor = UIColor.green
-//        imageView.setContentHuggingPriority(.required, for: .horizontal)
-//        imageView.setContentHuggingPriority(.required, for: .vertical)
-//        imageView.frame(forAlignmentRect: CGRect(origin: .zero, size: CGSize(width: width, height: height)))
-        
-        
-        return imageView
-    }
-    
-    func updateUIView(_ uiView: SVGKFastImageView, context: Context) {
-        
-    }
-}
-
-struct AsyncScrambleSVGViewRepresentable: UIViewRepresentable {
-    var svg: String
-    var width: CGFloat
-    var height: CGFloat
-    
-    func makeUIView(context: Context) -> SVGKFastImageView {
-        let svgImage = SVGKImage(data: svg.data(using: .utf8))
-        svgImage!.scaleToFit(inside: CGSize(width: width, height: height))
-        return SVGKFastImageView(svgkImage: svgImage!)!
-    }
-    
-    func updateUIView(_ uiView: SVGKFastImageView, context: Context) {
-        let svgImage = SVGKImage(data: svg.data(using: .utf8))
-        svgImage?.scaleToFit(inside: CGSize(width: width, height: height))
-        uiView.image = svgImage
     }
 }
