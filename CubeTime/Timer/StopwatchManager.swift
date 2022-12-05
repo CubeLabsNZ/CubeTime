@@ -1040,9 +1040,6 @@ extension StopWatchManager {
         try! managedObjectContext.save()
         
         self.secondsStr = formatSolveTime(secs: showPrevTime ? (self.solvesByDate.last?.time ?? 0) : 0)
-        
-        
-        print("delete called")
     }
     
         
@@ -1370,8 +1367,6 @@ extension StopWatchManager {
                 let lastGroupSolves = (solveGroups.last!.solves!.array as! [Solves])
                 if lastGroupSolves.count == 4 {
                     let sortedGroup = lastGroupSolves.sorted(by: Self.sortWithDNFsLast)
-                    
-                    print(sortedGroup.map{$0.time})
                     
                     let bpa = (sortedGroup.dropFirst().reduce(0) {$0 + timeWithPlusTwoForSolve($1)}) / 3.00
                     

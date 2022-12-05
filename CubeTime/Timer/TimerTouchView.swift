@@ -171,13 +171,16 @@ struct TimerTouchView: UIViewControllerRepresentable {
         //        longPressGesture.requiresExclusiveTouchType = ?
         
         
-        for direction in [UISwipeGestureRecognizer.Direction.up, UISwipeGestureRecognizer.Direction.down, UISwipeGestureRecognizer.Direction.left, UISwipeGestureRecognizer.Direction.right] {
-            let gesture = UISwipeGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.swipe))
-            gesture.direction = direction
-            gesture.require(toFail: longPressGesture)
-                        
-            v.view.addGestureRecognizer(gesture)
-        }
+//        for direction in [UISwipeGestureRecognizer.Direction.up, UISwipeGestureRecognizer.Direction.down, UISwipeGestureRecognizer.Direction.left, UISwipeGestureRecognizer.Direction.right] {
+//            let gesture = UISwipeGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.swipe))
+//            gesture.direction = direction
+//            gesture.require(toFail: longPressGesture)
+//
+//            v.view.addGestureRecognizer(gesture)
+//        }
+        
+        let panGestureRecognizer = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.pan))
+        v.view.addGestureRecognizer(panGestureRecognizer)
         
        
         v.view.addGestureRecognizer(longPressGesture)
@@ -247,6 +250,72 @@ struct TimerTouchView: UIViewControllerRepresentable {
                 stopWatchManager.rescramble()
             default:
                 stopWatchManager.timerColour = Color.Timer.normal
+            }
+        }
+        
+        @objc func pan(_ gestureRecogniser: UIPanGestureRecognizer) {
+            if gestureRecogniser.state != .cancelled {
+                let translation = gestureRecogniser.translation(in: gestureRecogniser.view!.superview)
+                let velocity = gestureRecogniser.velocity(in: gestureRecogniser.view!.superview)
+                
+                let d_x = translation.x
+                let d_y = translation.y
+                
+                
+                let v_x = velocity.x
+                let v_y = velocity.y
+                
+                
+//                NSLog("\(translation.x)")
+//                NSLog("\(translation.y)")
+                NSLog("\(velocity.x)")
+//                NSLog("\(velocity.y)")
+                
+                
+                if v_x.magnitude > 500 || v_y.magnitude > 500 {
+                    
+                    if d_x == d_y && d_x == 0 { gestureRecogniser.state = .cancelled }
+                    
+                    if d_x.magnitude > d_y.magnitude {
+                        if d_x == 0 { gestureRecogniser.state = .cancelled }
+                        
+                        if d_x > 0 {
+                            stopWatchManager.feedbackStyle?.impactOccurred()
+                            stopWatchManager.timerColour = Color.Timer.normal
+                            stopWatchManager.prevDownStoppedTimer = false
+                            stopWatchManager.rescramble()
+                            
+                            gestureRecogniser.state = .cancelled
+                        } else if d_x < 0 {
+                            if stopWatchManager.canGesture && stopWatchManager.mode != .inspecting {
+                                stopWatchManager.feedbackStyle?.impactOccurred()
+                                stopWatchManager.askToDelete()
+                            } else {
+                                stopWatchManager.timerColour = Color.Timer.normal
+                            }
+                            
+                            gestureRecogniser.state = .cancelled
+                        }
+                    } else {
+                        if d_y == 0 { gestureRecogniser.state = .cancelled }
+                        
+                        // swipe down
+                        if d_y > 0 {
+                            if stopWatchManager.canGesture && stopWatchManager.mode != .inspecting {
+                                stopWatchManager.feedbackStyle?.impactOccurred()
+                                stopWatchManager.displayPenOptions()
+                            } else {
+                                stopWatchManager.timerColour = Color.Timer.normal
+                            }
+                            
+                            gestureRecogniser.state = .cancelled
+                        } else {
+                            gestureRecogniser.state = .cancelled
+                        }
+                    }
+                } else {
+                    gestureRecogniser.state = .cancelled
+                }
             }
         }
     }
