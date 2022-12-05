@@ -180,6 +180,8 @@ struct TimerTouchView: UIViewControllerRepresentable {
 //        }
         
         let panGestureRecognizer = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.pan))
+        panGestureRecognizer.allowedScrollTypesMask = .all
+        panGestureRecognizer.maximumNumberOfTouches = 1
         v.view.addGestureRecognizer(panGestureRecognizer)
         
        
