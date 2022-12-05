@@ -110,6 +110,7 @@ struct MainTabsView: View {
                     BottomTabsView(currentTab: $tabRouter.currentTab)
                         .frame(maxHeight: .infinity, alignment: .bottom)
                         .padding(.bottom, SetValues.hasBottomBar ? CGFloat(0) : nil)
+                        .padding(.bottom, UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) ? nil : 0)
                 }
             }
         }

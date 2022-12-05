@@ -369,10 +369,15 @@ struct PadFloatingView: View {
     var targetFocused: FocusState<Bool>.Binding
     
     var body: some View {
+        let _ = NSLog("\(UIApplication.shared.keyWindow?.safeAreaInsets.top)")
+        let _ = NSLog("\(UIApplication.shared.keyWindow?.safeAreaInsets.bottom)")
+        
         FloatingPanel(
             currentStage: $floatingPanelStage,
-            maxHeight: UIScreen.screenHeight - 24 - 12,
-            stages: [0, 35, 120, UIScreen.screenHeight - 24 - 12],
+            /* UIApplication.shared.keyWindow?.safeAreaInsets.top & bottom values
+             * 20 accounts for the dragger                                        */
+            maxHeight: UIScreen.screenHeight - 24 - 20 - 20,
+            stages: [0, 35, 120, UIScreen.screenHeight - 24 - 20 - 20],
             content: {
                 EmptyView()
                 
@@ -395,8 +400,9 @@ struct PadFloatingView: View {
         .ignoresSafeArea(.keyboard)
         .ignoresSafeArea(.container, edges: .top)
         .ignoresSafeArea(.container, edges: .bottom)
-        .padding(.top, 44)
-        .padding(.bottom)
+        /* this is a temporary workaround. offset of 0 will not respect safe area (as intended), but offset of 1 suddenly does?? im probably doing something wrong... */
+        .offset(y: 1)
+        #warning("TODO: fix workaround someday")
     }
 }
 
