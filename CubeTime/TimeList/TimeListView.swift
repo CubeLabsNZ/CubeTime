@@ -58,7 +58,7 @@ struct TimeListView: View {
      */
     
     var body: some View {
-        NavigationView {
+//        NavigationView {
             ZStack {
                 Color.getBackgroundColour(colourScheme)
                     .ignoresSafeArea()
@@ -166,104 +166,103 @@ struct TimeListView: View {
                 .navigationTitle(isSelectMode ? "Select Solves" : "Session Times")
                 
                 
-                .toolbar {
-                    ToolbarItemGroup(placement: .navigationBarLeading) {
-                        #warning("MAKE THIS PICKER MENU")
-                        if isSelectMode && (selectedSolves.count != 0) {
-                            Menu {
-                                Menu {
-                                    Button("Move to a Normal Session") {
-                                        print("1 tapped")
-                                    }
-                                    
-                                    Button("Move to a Playground Session") {
-                                        print("2 tapped")
-                                    }
-                                } label: {
-                                    HStack {
-                                        Text("Move")
-                                        
-                                        Image(systemName: "arrow.right")
-                                    }
-                                }
-                                
-                                Button {
-                                    copySolve(solves: selectedSolves)
-                                    
-                                    selectedSolves.removeAll()
-                                } label: {
-                                    HStack {
-                                        Text("Copy to Clipboard")
-                                        
-                                        Image(systemName: "doc.on.doc")
-                                    }
-                                }
-                                
-                                Button(role: .destructive) {
-                                    isSelectMode = false
-                                    for object in selectedSolves {
-                                        withAnimation {
-                                            stopWatchManager.delete(solve: object)
-                                        }
-                                    }
-                                    
-                                    selectedSolves.removeAll()
-                                } label: {
-                                    HStack {
-                                        Text("Delete")
-                                        
-                                        Image(systemName: "trash")
-                                    }
-                                }
-                            } label: {
-                                Image(systemName: "ellipsis.circle")
-                                    .font(.body.weight(.medium))
-                                    .foregroundColor(.accentColor)
-                            }
-                        }
-                    }
-                    
-                    ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        if stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
-                            if isSelectMode {
-                                Button {
-                                    isSelectMode = false
-                                    selectedSolves.removeAll()
-                                } label: {
-                                    Text("Cancel")
-                                        .font(.subheadline.weight(.medium))
-                                        .foregroundColor(Color(uiColor: .systemGray))
-                                }
-                                .tint(Color(uiColor: .systemGray))
-                                .buttonStyle(.bordered)
-                                .clipShape(Capsule())
-                                .controlSize(.small)
-                            } else {
-                                Button {
-                                    isSelectMode = true
-                                } label: {
-                                    Text("Select")
-                                        .font(.subheadline.weight(.medium))
-                                        .foregroundColor(Color.accentColor)
-                                }
-                                .tint(.accentColor)
-                                .buttonStyle(.bordered)
-                                .clipShape(Capsule())
-                                .controlSize(.small)
-                            }
-                        }
-                    }
-                }
+//                .toolbar {
+//                    ToolbarItemGroup(placement: .navigationBarLeading) {
+//                        #warning("MAKE THIS PICKER MENU")
+//                        if isSelectMode && (selectedSolves.count != 0) {
+//                            Menu {
+//                                Menu {
+//                                    Button("Move to a Normal Session") {
+//                                        print("1 tapped")
+//                                    }
+//
+//                                    Button("Move to a Playground Session") {
+//                                        print("2 tapped")
+//                                    }
+//                                } label: {
+//                                    HStack {
+//                                        Text("Move")
+//
+//                                        Image(systemName: "arrow.right")
+//                                    }
+//                                }
+//
+//                                Button {
+//                                    copySolve(solves: selectedSolves)
+//
+//                                    selectedSolves.removeAll()
+//                                } label: {
+//                                    HStack {
+//                                        Text("Copy to Clipboard")
+//
+//                                        Image(systemName: "doc.on.doc")
+//                                    }
+//                                }
+//
+//                                Button(role: .destructive) {
+//                                    isSelectMode = false
+//                                    for object in selectedSolves {
+//                                        withAnimation {
+//                                            stopWatchManager.delete(solve: object)
+//                                        }
+//                                    }
+//
+//                                    selectedSolves.removeAll()
+//                                } label: {
+//                                    HStack {
+//                                        Text("Delete")
+//
+//                                        Image(systemName: "trash")
+//                                    }
+//                                }
+//                            } label: {
+//                                Image(systemName: "ellipsis.circle")
+//                                    .font(.body.weight(.medium))
+//                                    .foregroundColor(.accentColor)
+//                            }
+//                        }
+//                    }
+//
+//                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+//                        if stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
+//                            if isSelectMode {
+//                                Button {
+//                                    isSelectMode = false
+//                                    selectedSolves.removeAll()
+//                                } label: {
+//                                    Text("Cancel")
+//                                        .font(.subheadline.weight(.medium))
+//                                        .foregroundColor(Color(uiColor: .systemGray))
+//                                }
+//                                .tint(Color(uiColor: .systemGray))
+//                                .buttonStyle(.bordered)
+//                                .clipShape(Capsule())
+//                                .controlSize(.small)
+//                            } else {
+//                                Button {
+//                                    isSelectMode = true
+//                                } label: {
+//                                    Text("Select")
+//                                        .font(.subheadline.weight(.medium))
+//                                        .foregroundColor(Color.accentColor)
+//                                }
+//                                .tint(.accentColor)
+//                                .buttonStyle(.bordered)
+//                                .clipShape(Capsule())
+//                                .controlSize(.small)
+//                            }
+//                        }
+//                    }
+//                }
                 .safeAreaInset(edge: .bottom, spacing: 0) {RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.clear).frame(height: 50).padding(.top).padding(.bottom, SetValues.hasBottomBar ? 0 : nil)}
             }
-            .if (stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue) { view in
-                view
-                    .searchable(text: $stopWatchManager.timeListFilter, placement: .navigationBarDrawer)
-            }
+//            .if (stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue) { view in
+//                view
+//                    .searchable(text: $stopWatchManager.timeListFilter, placement: .navigationBarDrawer)
+//            }
             
-        }
-        .accentColor(accentColour)
-        .navigationViewStyle(StackNavigationViewStyle())
+//        }
+//        .navigationViewStyle(StackNavigationViewStyle())
         .sheet(item: $solve) { item in
             TimeDetail(solve: item, currentSolve: $solve)
         }

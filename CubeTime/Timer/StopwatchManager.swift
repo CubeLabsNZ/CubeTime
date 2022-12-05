@@ -260,6 +260,7 @@ class StopWatchManager: ObservableObject {
     
     
     
+    let isSmallDevice: Bool
     
     init (currentSession: Sessions, managedObjectContext: NSManagedObjectContext) {
         self.currentSession = currentSession
@@ -267,6 +268,9 @@ class StopWatchManager: ObservableObject {
         self.playgroundScrambleType = currentSession.scramble_type
         self.targetStr = filteredStrFromTime((currentSession as? CompSimSession)?.target)
         self.phaseCount = Int((currentSession as? MultiphaseSession)?.phase_count ?? 0)
+        
+        
+        self.isSmallDevice = smallDeviceNames.contains(getModelName())
         
         secondsStr = formatSolveTime(secs: 0)
         statsGetFromCache()
