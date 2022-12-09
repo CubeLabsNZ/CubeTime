@@ -486,6 +486,8 @@ struct TimerView: View {
     
     
     var body: some View {
+        let _ = Self._printChanges()
+        
         GeometryReader { geo in
             TimerBackgroundColor()
                 .ignoresSafeArea(.all)
