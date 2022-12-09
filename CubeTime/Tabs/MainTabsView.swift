@@ -115,6 +115,7 @@ struct MainTabsView: View {
                         .frame(maxHeight: .infinity, alignment: .bottom)
                         .padding(.bottom, UIDevice.hasBottomBar ? CGFloat(0) : nil)
                         .padding(.bottom, UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) ? nil : 0)
+                        .ignoresSafeArea(.keyboard)
                 }
             }
         }

@@ -486,14 +486,14 @@ struct TimerView: View {
     
     
     var body: some View {
-        let _ = Self._printChanges()
+        let typingMode = inputMode == .typing && stopWatchManager.currentSession.session_type != SessionTypes.multiphase.rawValue
         
         GeometryReader { geo in
             TimerBackgroundColor()
                 .ignoresSafeArea(.all)
             
             
-            if inputMode == .typing || targetFocused || manualInputFocused {
+            if typingMode || targetFocused || manualInputFocused {
                 Color.white.opacity(0.000001)
                     .onTapGesture {
                         if inputMode == .timer {
@@ -520,7 +520,7 @@ struct TimerView: View {
             }
             
             
-            if !((inputMode == .typing || showInputField) && !showManualInputFormattedText) {
+            if !((typingMode || showInputField) && !showManualInputFormattedText) {
                 VStack(alignment: .center, spacing: 0) {
                     TimerTime()
                         .allowsHitTesting(false)
@@ -542,7 +542,7 @@ struct TimerView: View {
             }
             
             
-            if (inputMode == .typing || showInputField) && !showManualInputFormattedText {
+            if (typingMode || showInputField) && !showManualInputFormattedText {
                 Group {
                     TextField("0.00", text: $manualInputTime)
                         .focused($manualInputFocused)
@@ -591,7 +591,7 @@ struct TimerView: View {
             }
             
             
-            if stopWatchManager.scrambleStr != nil && (inputMode == .typing || stopWatchManager.showPenOptions) {
+            if stopWatchManager.scrambleStr != nil && (typingMode || stopWatchManager.showPenOptions) {
                 HStack {
                     let showPlus = stopWatchManager.currentSession.session_type != SessionTypes.multiphase.rawValue && !justManuallyInput && (inputMode != .typing || manualInputTime != "")
                     
@@ -620,7 +620,7 @@ struct TimerView: View {
                     
                     
                     if showPlus {
-                        if inputMode == .timer {
+                        if !typingMode {
                             PenaltyBar(manualInputFocused ? 68 : 34) {
                                 Button {
                                     // IF CURRENT MODE = INPUT
@@ -655,7 +655,7 @@ struct TimerView: View {
                                 }
                                 .disabled(manualInputFocused ? (manualInputTime == "") : false)
                             }
-                        } else if inputMode == .typing {
+                        } else if typingMode {
                             PenaltyBar(68) {
                                 Button {
                                     stopWatchManager.stop(timeFromStr(manualInputTime))
