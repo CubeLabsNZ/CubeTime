@@ -179,6 +179,8 @@ struct TimerTouchView: UIViewControllerRepresentable {
             v.view.addGestureRecognizer(gesture)
         }
         
+        
+        
        
         v.view.addGestureRecognizer(longPressGesture)
         
@@ -223,6 +225,7 @@ struct TimerTouchView: UIViewControllerRepresentable {
             }
         }
         
+        /*
         @objc func swipe(_ gestureRecognizer: UISwipeGestureRecognizer) {
             switch gestureRecognizer.direction {
             case .down:
@@ -247,6 +250,68 @@ struct TimerTouchView: UIViewControllerRepresentable {
                 stopWatchManager.rescramble()
             default:
                 stopWatchManager.timerColour = Color.Timer.normal
+            }
+        }
+        */
+        
+        @objc func pan(_ gestureRecogniser: UIPanGestureRecognizer) {
+            if gestureRecogniser.state != .cancelled {
+                let translation = gestureRecogniser.translation(in: gestureRecogniser.view!.superview)
+                let velocity = gestureRecogniser.velocity(in: gestureRecogniser.view!.superview)
+                
+                let d_x = translation.x
+                let d_y = translation.y
+                
+                
+                let v_x = velocity.x
+                let v_y = velocity.y
+                
+                
+                NSLog("\(translation.x)")
+//                NSLog("\(translation.y)")
+//                NSLog("\(velocity.x)")
+//                NSLog("\(velocity.y)")
+                
+                
+                if v_x.magnitude > 500 || v_y.magnitude > 500 {
+                    if d_x.magnitude > d_y.magnitude {
+                        if d_x > 0 {
+                            stopWatchManager.feedbackStyle?.impactOccurred()
+                            stopWatchManager.timerColour = Color.Timer.normal
+                            stopWatchManager.prevDownStoppedTimer = false
+                            stopWatchManager.rescramble()
+                            
+                            gestureRecogniser.state = .cancelled
+                        } else if d_x < 0 {
+                            if stopWatchManager.canGesture && stopWatchManager.mode != .inspecting {
+                                stopWatchManager.feedbackStyle?.impactOccurred()
+                                stopWatchManager.askToDelete()
+                            } else {
+                                stopWatchManager.timerColour = Color.Timer.normal
+                            }
+                            
+                            gestureRecogniser.state = .cancelled
+                        }
+                    } else {
+                        // swipe down
+                        if d_y > 0 {
+                            if stopWatchManager.canGesture && stopWatchManager.mode != .inspecting {
+                                stopWatchManager.feedbackStyle?.impactOccurred()
+                                stopWatchManager.displayPenOptions()
+                            } else {
+                                stopWatchManager.timerColour = Color.Timer.normal
+                            }
+                            
+                            gestureRecogniser.state = .cancelled
+                        } else if d_y < 0 {
+                            // cancel any up movement
+                            gestureRecogniser.state = .cancelled
+                        }
+                    }
+                } else {
+                    stopWatchManager.timerColour = Color.Timer.normal
+//                    gestureRecogniser.state = .cancelled
+                }
             }
         }
     }
