@@ -30,7 +30,9 @@ struct TimeListView: View {
     @State var calculatedAverage: CalculatedAverage?
     
     @State var isSelectMode = false
-    @State var selectedSolves: [Solves] = []
+    @State var selectedSolves: Set<Solves> = []
+    
+    @State var isClearningSession = false
     
     private var columns: [GridItem] {
         if sizeCategory > ContentSizeCategory.extraLarge {
@@ -167,50 +169,66 @@ struct TimeListView: View {
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {
                         #warning("MAKE THIS PICKER MENU")
-                        if isSelectMode && (selectedSolves.count != 0) {
+                        if isSelectMode {
                             Menu {
-                                Menu {
-                                    Button("Move to a Normal Session") {
-                                        print("1 tapped")
-                                    }
-                                    
-                                    Button("Move to a Playground Session") {
-                                        print("2 tapped")
-                                    }
-                                } label: {
-                                    HStack {
-                                        Text("Move")
-                                        
-                                        Image(systemName: "arrow.right")
-                                    }
-                                }
-                                
-                                Button {
-                                    copySolve(solves: selectedSolves)
-                                    
-                                    selectedSolves.removeAll()
-                                } label: {
-                                    HStack {
-                                        Text("Copy to Clipboard")
-                                        
-                                        Image(systemName: "doc.on.doc")
-                                    }
-                                }
-                                
-                                Button(role: .destructive) {
-                                    isSelectMode = false
-                                    for object in selectedSolves {
+                                if selectedSolves.count == 0 {
+                                    Button() {
                                         withAnimation {
-                                            stopWatchManager.delete(solve: object)
+                                            selectedSolves = Set(stopWatchManager.timeListSolvesFiltered)
+                                        }
+                                    } label: {
+                                        Label("Select all", systemImage: "squareshape.squareshape.dashed")
+                                    }
+                                    Button(role: .destructive) {
+                                        // TODO: show sheet
+                                        isClearningSession = true
+                                    } label: {
+                                        Label("Clear Session", systemImage: "xmark.bin")
+                                    }
+                                } else {
+                                    Menu {
+                                        Button("Move to a Normal Session") {
+                                            print("1 tapped")
+                                        }
+                                        
+                                        Button("Move to a Playground Session") {
+                                            print("2 tapped")
+                                        }
+                                    } label: {
+                                        HStack {
+                                            Text("Move")
+                                            
+                                            Image(systemName: "arrow.right")
                                         }
                                     }
                                     
-                                    selectedSolves.removeAll()
-                                } label: {
-                                    HStack {
-                                        Text("Delete")
+                                    Button {
+                                        copySolve(solves: selectedSolves)
                                         
-                                        Image(systemName: "trash")
+                                        selectedSolves.removeAll()
+                                    } label: {
+                                        HStack {
+                                            Text("Copy to Clipboard")
+                                            
+                                            Image(systemName: "doc.on.doc")
+                                        }
+                                    }
+                                    
+                                    Button(role: .destructive) {
+                                        isSelectMode = false
+                                        for object in selectedSolves {
+                                            withAnimation {
+                                                stopWatchManager.delete(solve: object)
+                                            }
+                                        }
+                                        
+                                        selectedSolves.removeAll()
+                                    } label: {
+                                        HStack {
+                                            Text("Delete")
+                                            
+                                            Image(systemName: "trash")
+                                        }
                                     }
                                 }
                             } label: {
@@ -240,7 +258,7 @@ struct TimeListView: View {
                                 Button {
                                     isSelectMode = true
                                 } label: {
-                                    Text("Select")
+                                    Text("Edit")
                                         .font(.subheadline.weight(.medium))
                                         .foregroundColor(Color.accentColor)
                                 }
@@ -261,6 +279,18 @@ struct TimeListView: View {
             
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        
+        .confirmationDialog("Clear session?", isPresented: $isClearningSession, titleVisibility: .visible) {
+            Button("Confirm", role: .destructive) {
+                stopWatchManager.clearSession()
+            }
+            Button("Cancel", role: .cancel) {
+                
+            }
+        } message: {
+            Text("This will delete every solve in this session!")
+        }
+        
         .sheet(item: $solve) { item in
             TimeDetail(solve: item, currentSolve: $solve)
         }

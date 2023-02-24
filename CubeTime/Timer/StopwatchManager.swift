@@ -1094,6 +1094,13 @@ extension StopWatchManager {
         
     }
     
+    func clearSession() {
+        currentSession.solves?.forEach({managedObjectContext.delete($0 as! NSManagedObject)})
+        try! managedObjectContext.save()
+        statsGetFromCache()
+        changedTimeListSort()
+    }
+    
     
     func updateStats() {
         #warning("TODO:  maybe make these async?")
@@ -1153,7 +1160,7 @@ extension StopWatchManager {
                 )
                 || (currentAo12.totalPen, bestAo12!.totalPen) == (PenTypes.none, PenTypes.dnf) { // current is none and best is dnf
                 self.bestAo12 = currentAo12
-                self.bestAo5?.name = "Best ao12"
+                self.bestAo12?.name = "Best ao12"
                 #warning("TODO:  unhardcode")
             }
         }
@@ -1165,7 +1172,7 @@ extension StopWatchManager {
                 )
                 || (currentAo100.totalPen, bestAo100!.totalPen) == (PenTypes.none, PenTypes.dnf) { // current is none and best is dnf
                 self.bestAo100 = currentAo100
-                self.bestAo5?.name = "Best ao100"
+                self.bestAo100?.name = "Best ao100"
                 #warning("TODO:  unhardcode")
             }
         }

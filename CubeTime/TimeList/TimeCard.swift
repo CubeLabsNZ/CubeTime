@@ -19,9 +19,9 @@ struct TimeCard: View {
     @Binding var currentSolve: Solves?
     @Binding var isSelectMode: Bool
     
-    @Binding var selectedSolves: [Solves]
+    @Binding var selectedSolves: Set<Solves>
     
-    @State var isSelected = false
+    var isSelected = false
     
     @Environment(\.sizeCategory) var sizeCategory
     
@@ -46,13 +46,14 @@ struct TimeCard: View {
     }
     
     
-    init(solve: Solves, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<[Solves]>) {
+    init(solve: Solves, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<Set<Solves>>) {
         self.solve = solve
         self.formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
         self.pen = PenTypes(rawValue: solve.penalty)!
         self._currentSolve = currentSolve
         self._isSelectMode = isSelectMode
         self._selectedSolves = selectedSolves
+        self.isSelected = selectedSolves.wrappedValue.contains(solve)
     }
     
     var body: some View {
@@ -66,13 +67,11 @@ struct TimeCard: View {
                     if isSelectMode {
                         withAnimation {
                             if isSelected {
-                                isSelected = false
-                                if let index = selectedSolves.firstIndex(of: solve) {
-                                    selectedSolves.remove(at: index)
-                                }
+//                                isSelected = false
+                                selectedSolves.remove(solve)
                             } else {
-                                isSelected = true
-                                selectedSolves.append(solve)
+//                                isSelected = true
+                                selectedSolves.insert(solve)
                             }
                         }
                     } else {
@@ -95,13 +94,13 @@ struct TimeCard: View {
         }
 
         
-        .onChange(of: isSelectMode) {newValue in
-            if !newValue && isSelected {
-                withAnimation {
-                    isSelected = false
-                }
-            }
-        }
+//        .onChange(of: isSelectMode) {newValue in
+//            if !newValue && isSelected {
+//                withAnimation {
+//                    isSelected = false
+//                }
+//            }
+//        }
         .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 10, style: .continuous))
         .contextMenu {
 //            Button {
