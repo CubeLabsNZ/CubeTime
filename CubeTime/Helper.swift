@@ -395,8 +395,9 @@ func formatSolveTime(secs: Double, dp: Int) -> String {
     if secs < 60 {
         return String(format: "%.\(dp)f", secs); #warning("TODO: set DP")
     } else {
+        var secs = round(secs * 100) / 100.0
         let mins: Int = Int((secs / 60).rounded(.down))
-        let secs = secs.truncatingRemainder(dividingBy: 60)
+        secs = secs.truncatingRemainder(dividingBy: 60)
         
         return String(format: "%d:%0\(dp + 3).\(dp)f", mins, secs)
     }
@@ -413,8 +414,9 @@ func formatSolveTime(secs: Double, penType: PenTypes? = PenTypes.none) -> String
     if secs < 60 {
         return String(format: "%\(secsfmt)", secs); #warning("TODO: set DP")
     } else {
+        var secs = round(secs * 100) / 100.0
         let mins: Int = Int((secs / 60).rounded(.down))
-        let secs = secs.truncatingRemainder(dividingBy: 60)
+        secs = secs.truncatingRemainder(dividingBy: 60)
         
         return String(format: "%d:%0\(dp + 3)\(secsfmt)", mins, secs)
     }
