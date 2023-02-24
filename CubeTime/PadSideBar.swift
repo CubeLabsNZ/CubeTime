@@ -50,7 +50,7 @@ struct PadSideBar: View {
     
     var body: some View {
         HStack {
-            BottomTabsView(currentTab: $tabRouter.currentTab, pad: true)
+            TabBar(currentTab: $tabRouter.currentTab, pad: true)
                 .padding(.leading)
                 .padding(.trailing, 50)
             if tabRouter.padExpandState == 1 {

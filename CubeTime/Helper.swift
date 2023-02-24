@@ -649,14 +649,14 @@ extension Color {
     struct Theme {
         static let bg: Color = Color(0xF0F2FA)
         
-        // light
+        // grey-light
         static let bg5: Color = Color(0xE4E6EE)
         static let bg10: Color = Color(0xD8DAE1)
         static let bg20: Color = Color(0xC0C2C8)
         static let bg25: Color = Color(0xB4B6BC)
         static let bg30: Color = Color(0xA8A9AF)
         
-        // dark
+        // grey-dark
         static let bg90: Color = Color(0x242426)
         static let bg85: Color = Color(0x303032)
         static let bg75: Color = Color(0x48494B)
@@ -664,9 +664,18 @@ extension Color {
         static let bg65: Color = Color(0x606164)
         
         #warning("not used:")
-        // middle
+        // grey-middle
         static let bg40: Color = Color(0x909196)
         static let bg55: Color = Color(0x6C6D70)
+        
+        
+        // colour-light
+        static let accent1: Color = Color(0x7495F8)
+        static let accent2: Color = Color(0x97AFFA)
+        static let accent3: Color = Color(0xB9CAFB)
+        static let accent4: Color = Color(0xDCE4FD)
+        static let accent5: Color = Color(0xEEF2FE)
+        
         
         
         static func grey(_ env: ColorScheme, _ val: Int = -1, light: Bool = true) -> Color {
