@@ -39,7 +39,7 @@ struct StatsDetail: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.getBackgroundColour(colourScheme)
+                Color.backgroundColour(colourScheme)
                     .ignoresSafeArea()
                 
                 if solves.average != nil || isCurrentCompSimAverage {

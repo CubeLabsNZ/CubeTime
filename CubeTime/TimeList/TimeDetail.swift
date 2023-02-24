@@ -164,7 +164,7 @@ struct TimeDetailViewOnly: View {
     
     var body: some View {
         ZStack {
-            Color.getBackgroundColour(colourScheme)
+            Color.backgroundColour(colourScheme)
                 .ignoresSafeArea()
             
             GeometryReader { geo in

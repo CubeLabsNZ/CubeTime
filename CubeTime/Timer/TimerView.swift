@@ -73,10 +73,10 @@ struct TimerBackgroundColor: View {
                 Color.Inspection.penalty
                     .ignoresSafeArea()
             default:
-                Color.getBackgroundColour(colourScheme)
+                Color.backgroundColour(colourScheme)
             }
         } else {
-            Color.getBackgroundColour(colourScheme)
+            Color.backgroundColour(colourScheme)
         }
     }
 }

@@ -640,10 +640,22 @@ class SetValues {
 }
 
 extension Color {
-    static func getBackgroundColour(_ env: ColorScheme) -> Color {
-        return Color(uiColor: env == .light ? .systemGray6 : .black)
+    struct Theme {
+        static let bg0: Color = Color.white
+        static let bg1: Color = Color(0xF0F2FA)
+        static let bg2: Color = Color(0xDADCE1)
+        static let bg3: Color = Color(0xC2C3C8)
+        static let bg4: Color = Color(0x919296)
+        static let bg5: Color = Color(0x616264)
+        static let bg6: Color = Color(0x303132)
+        static let bg7: Color = Color(0x181819)
+        static let bg8: Color = Color.black
     }
     
+    static func backgroundColour(_ env: ColorScheme) -> Color {
+        return (env == .light ? Color.Theme.bg1 : .black)
+    }
+
     struct Timer {
         static let normal: Color = Color.primary
         static let heldDown: Color = Color.red

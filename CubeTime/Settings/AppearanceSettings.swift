@@ -344,7 +344,7 @@ struct AppearanceSettingsView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     .background(
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(Color.getBackgroundColour(colourScheme))
+                            .fill(Color.backgroundColour(colourScheme))
                     )
                     .onTapGesture {
                         showPreview = true
@@ -458,7 +458,7 @@ struct TimerPreview: View {
     var body: some View {
         ZStack {
             // BACKGROUND COLOUR
-            Color.getBackgroundColour(colourScheme)
+            Color.backgroundColour(colourScheme)
                 .ignoresSafeArea()
             
             Text("0.000")
