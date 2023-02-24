@@ -28,6 +28,7 @@ struct VHStack<Content: View>: View {
 struct BottomTabsView: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @EnvironmentObject var tabRouter: TabRouter
+    @Environment(\.colorScheme) private var colourScheme
     
     @Binding var currentTab: Tab
     
@@ -81,8 +82,8 @@ struct BottomTabsView: View {
                 height: pad ? nil : 50,
                 alignment: pad ? .top : .leading
             )
-            .background(Color(uiColor: .systemGray4).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
-            .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 3.5)
+            .background(Color.Theme.grey(colourScheme, 3).opacity(0.6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
+            .shadow(color: .black.opacity(0.04), radius: 4, x: 2, y: 0)
             .animation(.spring(), value: self.currentTab)
             .animation(.spring(), value: tabRouter.padExpandState)
             
@@ -98,9 +99,9 @@ struct BottomTabsView: View {
                 pad: pad
             )
         }
-        .background(Color(uiColor: .systemGray5).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
+        .background(Color.Theme.grey(colourScheme, 2).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
         .padding(pad ? .vertical : .horizontal)
-        .shadow(color: .black.opacity(0.16), radius: 10, x: 0, y: 3)
+        .shadow(color: .black.opacity(0.10), radius: 8, x: 0, y: 2)
         
         .ignoresSafeArea(.keyboard)
         .transition(.move(edge: .bottom).animation(.easeIn(duration: 6)))

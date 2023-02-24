@@ -66,7 +66,7 @@ struct GeneralSettingsView: View {
     @Environment(\.colorScheme) var colourScheme
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
     
     let hapticNames: [UIImpactFeedbackGenerator.FeedbackStyle: String] = [

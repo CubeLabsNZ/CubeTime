@@ -156,7 +156,7 @@ extension EnvironmentValues {
 }
 
 struct MainView: View {
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @StateObject var tabRouter: TabRouter = TabRouter()
     
     

@@ -57,7 +57,7 @@ struct OnboardingView: View {
                     
                     ZStack {
                         RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color.indigo)
+                            .fill(Color.accentColor)
                             .frame(height: 55)
                             .matchedGeometryEffect(id: "button-background", in: namespaceOB)
                             .padding()
@@ -80,7 +80,7 @@ struct OnboardingView: View {
                     
                     ZStack {
                         RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color.indigo)
+                            .fill(Color.accentColor)
                             .frame(height: 55)
                             .matchedGeometryEffect(id: "button-background", in: namespaceOB)
                             .padding()
@@ -116,7 +116,7 @@ struct OnboardingView: View {
                         
                         ZStack {
                             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .fill(Color.indigo)
+                                .fill(Color.accentColor)
                                 .frame(width: 55, height: 55)
                                 .matchedGeometryEffect(id: "button-background", in: namespaceOB)
                                 
@@ -156,7 +156,7 @@ struct PageOne: View {
                         .scaledCustomFont(name: "SFPro", size: 34, sf: true, weight: Font.Weight.bold)
                     Text("CubeTime.")
                         .scaledCustomFont(name: "RecursiveSansLnrSt-Regular", size: 34, sf: false, weight: Font.Weight.regular)
-                        .foregroundColor(Color.indigo)
+                        .foregroundColor(Color.accentColor)
                 }
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 0)
@@ -333,7 +333,7 @@ struct PageSix: View {
                     HStack {
                         Image(systemName: "timer.square")
                             .font(.system(size: 36, weight: .regular))
-                            .foregroundColor(Color.indigo)
+                            .foregroundColor(Color.accentColor)
                             .frame(width: 50)
                         
                         VStack (alignment: .leading) {
@@ -350,7 +350,7 @@ struct PageSix: View {
                     HStack {
                         Image(systemName: "command.square")
                             .font(.system(size: 36, weight: .regular))
-                            .foregroundColor(Color.indigo)
+                            .foregroundColor(Color.accentColor)
                             .frame(width: 50)
                         
                         VStack (alignment: .leading) {
@@ -367,7 +367,7 @@ struct PageSix: View {
                     HStack {
                         Image(systemName: "square.stack")
                             .font(.system(size: 36, weight: .regular))
-                            .foregroundColor(Color.indigo)
+                            .foregroundColor(Color.accentColor)
                             .frame(width: 50)
                         
                         VStack (alignment: .leading) {
@@ -383,7 +383,7 @@ struct PageSix: View {
                     HStack {
                         Image(systemName: "square.on.square")
                             .font(.system(size: 36, weight: .regular))
-                            .foregroundColor(Color.indigo)
+                            .foregroundColor(Color.accentColor)
                             .frame(width: 50)
                         
                         VStack (alignment: .leading) {
@@ -399,7 +399,7 @@ struct PageSix: View {
                     HStack {
                         Image(systemName: "globe.asia.australia")
                             .font(.system(size: 36, weight: .medium))
-                            .foregroundColor(Color.indigo)
+                            .foregroundColor(Color.accentColor)
                             .frame(width: 50)
                         
                         VStack (alignment: .leading) {

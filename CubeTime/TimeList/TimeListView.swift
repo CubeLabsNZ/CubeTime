@@ -24,7 +24,7 @@ struct TimeListView: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
     
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
     @State var solve: Solves?
     @State var calculatedAverage: CalculatedAverage?
@@ -62,7 +62,7 @@ struct TimeListView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.getBackgroundColour(colourScheme)
+                Color.bg(colourScheme)
                     .ignoresSafeArea()
                 
                 ScrollView {

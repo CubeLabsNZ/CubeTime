@@ -25,7 +25,7 @@ struct AppearanceSettingsView: View {
     private let columns = [GridItem(spacing: 16), GridItem(spacing: 16)]
     
     // colours
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @AppStorage(asKeys.staticGradient.rawValue) private var staticGradient: Bool = true
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
@@ -344,7 +344,7 @@ struct AppearanceSettingsView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     .background(
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(Color.getBackgroundColour(colourScheme))
+                            .fill(Color.bg(colourScheme))
                     )
                     .onTapGesture {
                         showPreview = true
@@ -458,7 +458,7 @@ struct TimerPreview: View {
     var body: some View {
         ZStack {
             // BACKGROUND COLOUR
-            Color.getBackgroundColour(colourScheme)
+            Color.bg(colourScheme)
                 .ignoresSafeArea()
             
             Text("0.000")

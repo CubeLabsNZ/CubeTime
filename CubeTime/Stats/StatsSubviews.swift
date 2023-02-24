@@ -33,7 +33,7 @@ struct StatsBlock<Content: View>: View {
                                                       : .white)
                                                    : (coloured
                                                       ? (colourScheme == .light
-                                                         ? .systemGray5
+                                                         ? UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0)
                                                          : .white)
                                                       : .systemGray)))
                         Spacer()
@@ -52,7 +52,7 @@ struct StatsBlock<Content: View>: View {
         }
         .if(!coloured) { view in
             view.background(Color(uiColor: title == "CURRENT STATS"
-                                    ? .systemGray5
+                                    ? UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0)
                                     : (colourScheme == .light
                                         ? .white
                                         : .systemGray6)).clipShape(RoundedRectangle(cornerRadius:16)))
@@ -113,7 +113,7 @@ struct StatsBlockText: View {
                         VStack {
                             Text("-")
                                 .font(.title.weight(.medium))
-                                .foregroundColor(Color(uiColor: .systemGray5))
+                                .foregroundColor(Color(uiColor: UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0)))
                                 .padding(.top, 20)
                             
                             Spacer()
@@ -152,7 +152,7 @@ struct StatsBlockDetailText: View {
                     let time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
                     Text(discarded ? "("+time+")" : time)
                         .font(.body)
-                        .foregroundColor(discarded ? Color(uiColor: colouredBlock ? .systemGray5 : .systemGray) : (colouredBlock ? .white : (colourScheme == .light ? .black : .white)))
+                        .foregroundColor(discarded ? Color(uiColor: colouredBlock ? UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0) : .systemGray) : (colouredBlock ? .white : (colourScheme == .light ? .black : .white)))
                         .multilineTextAlignment(.leading)
                         .padding(.bottom, 2)
                 }
@@ -227,6 +227,6 @@ struct StatsDivider: View {
     var body: some View {
         Divider()
             .frame(width: parentGeo.size.width / 2)
-            .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray))
+            .background(Color(uiColor: colourScheme == .light ? UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0) : .systemGray))
     }
 }

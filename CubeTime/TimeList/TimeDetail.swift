@@ -11,7 +11,7 @@ struct TimeDetail: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.dismiss) var dismiss
     
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
 
     
     @State var offsetValue: CGFloat = -25
@@ -164,7 +164,7 @@ struct TimeDetailViewOnly: View {
     
     var body: some View {
         ZStack {
-            Color.getBackgroundColour(colourScheme)
+            Color.bg(colourScheme)
                 .ignoresSafeArea()
             
             GeometryReader { geo in

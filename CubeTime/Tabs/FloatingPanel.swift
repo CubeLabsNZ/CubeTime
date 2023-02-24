@@ -42,20 +42,21 @@ struct FloatingPanel: View {
         ZStack(alignment: .topLeading) {
             ZStack(alignment: .bottom) {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(Color.getBackgroundColour(colourScheme))
+                    .fill(Color.bg(colourScheme))
                     .frame(width: 360, height: height + 18)
                     .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 0)
                 
                 ZStack {
                     Capsule()
-                        .fill(Color(uiColor: isPressed ? .systemGray4 : .systemGray5))
+                    // TODO: FIx
+//                        .fill(Color(uiColor: isPressed ? UIColor(red: 216/255, green: 218/255, blue: 225/255, alpha: 1.0) : UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0)))
                         .scaleEffect(isPressed ? 1.12 : 1.00)
                         .frame(width: 36, height: 6)
                 }
                 .frame(width: 360, height: 18, alignment: .center)
                 .background(
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(Color.getBackgroundColour(colourScheme))
+                        .fill(Color.bg(colourScheme))
                         .frame(width: 360, height: 18)
                 )
                 .zIndex(100)
@@ -98,7 +99,7 @@ struct FloatingPanel: View {
             
             ZStack(alignment: .topLeading) {
                 Rectangle()
-                    .fill(Color.getBackgroundColour(colourScheme))
+                    .fill(Color.bg(colourScheme))
                     .frame(width: 360, height: height)
                     .cornerRadius(8, corners: [.topLeft, .topRight])
 

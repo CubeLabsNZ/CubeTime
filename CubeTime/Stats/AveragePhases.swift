@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-let phaseColours: [Color] = [.red, .orange, .yellow, .green, .mint, .teal, .cyan, .blue, .indigo]
+let phaseColours: [Color] = [.red, .orange, .yellow, .green, .mint, .teal, .cyan, .blue, .accentColor]
 
 /// source: https://stackoverflow.com/a/46729248/17569741
 extension UIColor {

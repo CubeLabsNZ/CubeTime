@@ -9,7 +9,7 @@ struct TimeCard: View {
     
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
     var solve: Solves
     
@@ -60,7 +60,11 @@ struct TimeCard: View {
         ZStack {
             #warning("TODO:  check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectangle")
             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(isSelected ? Color(uiColor: .systemGray4) : colourScheme == .dark ? Color(uiColor: .systemGray6) : Color(uiColor: .systemBackground))
+                .fill(isSelected
+                      ? Color.Theme.grey(colourScheme, 2)
+                      : colourScheme == .dark
+                        ? Color(uiColor: .systemGray6)
+                        : Color(uiColor: .systemBackground))
                 .frame(maxWidth: cardWidth, minHeight: cardHeight, maxHeight: cardHeight)
 
                 .onTapGesture {
