@@ -10,22 +10,32 @@ import SwiftUI
 // [bugFixes, majorAdditions, minorAdditions]
 let updatesList: [String: [String?]] = [
     "2.0": [
-        nil,
         """
+        -   fixed stretched scramble image on smaller devices
+        -   fixed time distribution graph labels
+        -   fixed multiphase stats UI
+        """,
+        """
+        -   fresh new UI design
         -   dynamic type support!
             -   all major UI elements now conform to Apple's DyanmicType accessbility font sizes
             -   this is the first version, if you do notice anything out of place, please open an issue and tag it with 'DynamicType' on our Github page. Thanks!
-        –   changed java compatibility layer
+        –   changed tnoodle compatibility layer
             –   30x faster scramble generation
             –   20x less memory usage
                 –   fixed OOM crashes on older phones
-                –   fixed launch crash on iPod 7th Gen
+                    –   fixed launch crash on iPod 7th Gen
         –   added manual entry mode
             –   you can switch to entering times by typing instead of a timer in General Settings > Timer Settings > Timer Mode > Typing
         -   added rotations added for blind scrambles
         –   using WCA-complient random state 4x4 scrambles
+        -   iPad Mode!
+        -   New stats engline
+            -   much faster stats
+                -   overall smoother UI
         """,
         """
+        -   move solves between session
         –   using more modern SVG renderer, faster draw scrambles
         –   more solve selection functions:
             –   copy multiple solves
@@ -35,9 +45,6 @@ let updatesList: [String: [String?]] = [
         -   added multiphase details to solve copy
         -   improved various timing-related functions
         -   added ability to stop inspection
-        -   fixed stretched scramble image on smaller devices
-        -   fixed time distribution graph labels
-        -   fixed multiphase stats UI
         -   improved user accessibility
         –   added inspection alerts
         –   added ability to switch between voice based or beep based alerts
