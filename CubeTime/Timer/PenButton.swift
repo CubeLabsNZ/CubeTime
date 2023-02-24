@@ -55,7 +55,7 @@ struct PenaltyBar<Content: View>: View {
     var body: some View {
         buttons
             .frame(width: width, height: 35)
-            .background(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
+            .background(Color(uiColor: colourScheme == .light ? UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0) : UIColor(red: 216/255, green: 218/255, blue: 225/255, alpha: 1.0)))
             .clipShape(Capsule())
     }
 }

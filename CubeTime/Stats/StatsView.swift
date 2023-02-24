@@ -30,7 +30,7 @@ struct StatsView: View {
         NavigationView {
             GeometryReader { geo in
                 ZStack {
-                    Color.backgroundColour(colourScheme)
+                    Color.bg(colourScheme)
                         .ignoresSafeArea()
                     
                     ScrollView {

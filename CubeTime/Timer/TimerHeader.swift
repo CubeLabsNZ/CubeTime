@@ -5,7 +5,7 @@ struct TimerHeader: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var tabRouter: TabRouter
     @EnvironmentObject var stopWatchManager: StopWatchManager
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
     @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
     
@@ -22,9 +22,9 @@ struct TimerHeader: View {
             if previewMode {
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(Color(uiColor: .systemGray4))
+                        .fill(Color.Theme.grey(colourScheme, 3))
                         .frame(width: 35, height: 35)
-                        .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+//                        .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
                     
                     HStack {
                         ZStack(alignment: .center) {
@@ -47,9 +47,9 @@ struct TimerHeader: View {
             } else {
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(Color(uiColor: .systemGray4))
+                        .fill(Color.Theme.grey(colourScheme, 3))
                         .frame(width: (toggleSessionName ^ showSessionName) ? nil : 35, height: 35)
-                        .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+//                        .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
                     
                     HStack {
                         ZStack(alignment: .center) {
@@ -188,7 +188,7 @@ struct TimerHeader: View {
                 }
             }
         }
-        .background(Color(uiColor: .systemGray5))
+        .background(Color.Theme.grey(colourScheme, 1))
         .frame(height: 35)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)

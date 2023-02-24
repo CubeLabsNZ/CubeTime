@@ -1,7 +1,7 @@
 import SwiftUI
  
 struct StatsDetail: View {
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
@@ -39,7 +39,7 @@ struct StatsDetail: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.backgroundColour(colourScheme)
+                Color.bg(colourScheme)
                     .ignoresSafeArea()
                 
                 if solves.average != nil || isCurrentCompSimAverage {

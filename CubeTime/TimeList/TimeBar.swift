@@ -36,7 +36,7 @@ struct TimeBar: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(isSelected ? Color(uiColor: .systemGray4) : colourScheme == .dark ? Color(uiColor: .systemGray6) : Color(uiColor: .systemBackground))
+                .fill(isSelected ? Color(uiColor: UIColor(red: 216/255, green: 218/255, blue: 225/255, alpha: 1.0)) : colourScheme == .dark ? Color(uiColor: .systemGray6) : Color(uiColor: .systemBackground))
                 
                 .onTapGesture {
                     if isSelectMode {

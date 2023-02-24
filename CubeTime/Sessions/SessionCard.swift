@@ -9,7 +9,7 @@ struct SessionCard: View {
     
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
     @State private var isShowingDeleteDialog = false
     @State private var isShowingCustomizeDialog = false
@@ -43,7 +43,7 @@ struct SessionCard: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color(uiColor: colourScheme == .dark ? .systemGray4 : .systemGray5))
+                .fill(Color.Theme.grey(colourScheme, 1))
                 .frame(height: pinned ? 110 : 65)
                 .zIndex(0)
             

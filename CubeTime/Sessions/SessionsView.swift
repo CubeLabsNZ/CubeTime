@@ -4,7 +4,7 @@ import Combine
 
 // MARK: - MAIN SESSION VIEW
 struct SessionsView: View {
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
@@ -24,7 +24,7 @@ struct SessionsView: View {
         NavigationView {
             GeometryReader { geo in
                 ZStack {
-                    Color.backgroundColour(colourScheme)
+                    Color.bg(colourScheme)
                         .ignoresSafeArea()
                     
                     ScrollView {
@@ -76,7 +76,7 @@ struct SessionsView: View {
 
 // MARK: - CUSTOMISE SESSIONS
 struct CustomiseSessionView: View {
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
@@ -114,7 +114,7 @@ struct CustomiseSessionView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.backgroundColour(colourScheme)
+                Color.bg(colourScheme)
                     .ignoresSafeArea()
                 
                 ScrollView {
@@ -193,7 +193,7 @@ struct NewSessionView: View {
     
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
     let sessionType: SessionTypes
     let typeName: String
@@ -220,7 +220,7 @@ struct NewSessionView: View {
     
     var body: some View {
         ZStack {
-            Color.backgroundColour(colourScheme)
+            Color.bg(colourScheme)
                 .ignoresSafeArea()
             
             ScrollView {
@@ -313,7 +313,7 @@ struct NewSessionView: View {
 
 // MARK: - HELPER FUNCTIONS
 struct EventPicker: View {
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
     
     @Binding var sessionEventType: Int32
@@ -379,7 +379,7 @@ struct SessionNameField: View {
             .padding(12)
             .font(.title2.weight(.semibold))
             .multilineTextAlignment(TextAlignment.center)
-            .background(Color(uiColor: .systemGray5))
+            .background(Color(uiColor: UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0)))
             .cornerRadius(10)
             .padding([.horizontal, .bottom])
     }

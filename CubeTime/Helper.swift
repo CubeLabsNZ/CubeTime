@@ -640,22 +640,66 @@ class SetValues {
 }
 
 extension Color {
-    struct Theme {
-        static let bg0: Color = Color.white
-        static let bg1: Color = Color(0xF0F2FA)
-        static let bg2: Color = Color(0xDADCE1)
-        static let bg3: Color = Color(0xC2C3C8)
-        static let bg4: Color = Color(0x919296)
-        static let bg5: Color = Color(0x616264)
-        static let bg6: Color = Color(0x303132)
-        static let bg7: Color = Color(0x181819)
-        static let bg8: Color = Color.black
+    static func bg(_ env: ColorScheme) -> Color {
+        return (env == .light ? Color.Theme.bg : .black)
     }
     
-    static func backgroundColour(_ env: ColorScheme) -> Color {
-        return (env == .light ? Color.Theme.bg1 : .black)
+    struct Theme {
+        static let bg: Color = Color(0xF0F2FA)
+        
+        // light
+        static let bg5: Color = Color(0xE4E6EE)
+        static let bg10: Color = Color(0xD8DAE1)
+        static let bg20: Color = Color(0xC0C2C8)
+        static let bg25: Color = Color(0xB4B6BC)
+        static let bg30: Color = Color(0xA8A9AF)
+        
+        // dark
+        static let bg90: Color = Color(0x242426)
+        static let bg85: Color = Color(0x303032)
+        static let bg75: Color = Color(0x48494B)
+        static let bg70: Color = Color(0x545558)
+        static let bg65: Color = Color(0x606164)
+        
+        #warning("not used:")
+        // middle
+        static let bg40: Color = Color(0x909196)
+        static let bg55: Color = Color(0x6C6D70)
+        
+        
+        static func grey(_ env: ColorScheme, _ val: Int = -1, light: Bool = true) -> Color {
+            // middle grey
+            if (val == -1) {
+                return Color(0x84858A)
+            }
+                
+            // light
+            if (env == .light) {
+                switch (val) {
+                case 1: return Color.Theme.bg5
+                case 2: return Color.Theme.bg10
+                case 3: return Color.Theme.bg20
+                case 4: return Color.Theme.bg25
+                case 5: return Color.Theme.bg30
+                    
+                    
+                
+                default: return Color.Theme.bg
+                }
+            } else { // dark
+                switch (val) {
+                case 1: return Color.Theme.bg90
+                case 2: return Color.Theme.bg85
+                case 3: return Color.Theme.bg75
+                case 4: return Color.Theme.bg70
+                case 5: return Color.Theme.bg65
+                
+                default: return Color.Theme.bg
+                }
+            }
+        }
     }
-
+    
     struct Timer {
         static let normal: Color = Color.primary
         static let heldDown: Color = Color.red
@@ -669,7 +713,6 @@ extension Color {
         static let penalty: Color = Color(red: 234/255, green: 194/255, blue: 192/255)
     }
 }
-
 
 
 // MARK: - CUSTOM SAFE AREA INSET

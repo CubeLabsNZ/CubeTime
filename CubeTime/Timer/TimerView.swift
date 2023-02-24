@@ -73,10 +73,10 @@ struct TimerBackgroundColor: View {
                 Color.Inspection.penalty
                     .ignoresSafeArea()
             default:
-                Color.backgroundColour(colourScheme)
+                Color.bg(colourScheme)
             }
         } else {
-            Color.backgroundColour(colourScheme)
+            Color.bg(colourScheme)
         }
     }
 }
@@ -123,6 +123,7 @@ struct BottomTools: View {
 }
 
 struct BottomTool: View {
+    @Environment(\.colorScheme) private var colourScheme
     @EnvironmentObject var stopWatchManager: StopWatchManager
     @Binding var scrambleSheetStr: SheetStrWrapper?
     @Binding var presentedAvg: CalculatedAverage?
@@ -149,7 +150,7 @@ struct BottomTool: View {
         case .drawScramble:
             ZStack(alignment: .bottomLeading) {
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color(uiColor: .systemGray5))
+                    .fill(Color.Theme.grey(colourScheme, 1))
                     .frame(width: maxWidth, height: maxHeight)
                 
                 if let svg = stopWatchManager.scrambleSVG {
@@ -270,7 +271,7 @@ struct BottomTool: View {
                 }
                 .frame(width: maxWidth, height: maxHeight)
                 .background(RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .fill(Color(uiColor: .systemGray5)))
+                                .fill(Color.Theme.grey(colourScheme, 1)))
             
         
             
@@ -353,7 +354,7 @@ struct BottomTool: View {
             }
             .frame(width: maxWidth, height: maxHeight)
             .background(RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color(uiColor: .systemGray5)))
+                            .fill(Color(uiColor: UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0))))
         }
     }
 }
@@ -451,7 +452,7 @@ struct TimerView: View {
     @AppStorage("onboarding") var showOnboarding: Bool = true
     @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
     @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     @AppStorage(gsKeys.showPrevTime.rawValue) private var showPrevTime: Bool = false
     @AppStorage(gsKeys.inputMode.rawValue) private var inputMode: InputMode = .timer
@@ -612,7 +613,7 @@ struct TimerView: View {
                         
                         if showPlus {
                             Rectangle()
-                                .fill(Color(uiColor: colourScheme == .light ? .systemGray5 : .systemGray4))
+                                .fill(Color.Theme.grey(colourScheme, 1))
                                 .frame(width: 1.5, height: 20)
                                 .padding(.horizontal, 12)
                         }
@@ -718,7 +719,7 @@ struct TimerView: View {
 struct TimeScrambleDetail: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.dismiss) var dismiss
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .indigo
+    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
     var scramble: String
     var svg: String?
