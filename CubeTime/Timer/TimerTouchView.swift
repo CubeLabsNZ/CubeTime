@@ -225,7 +225,6 @@ struct TimerTouchView: UIViewControllerRepresentable {
             }
         }
         
-        /*
         @objc func swipe(_ gestureRecognizer: UISwipeGestureRecognizer) {
             switch gestureRecognizer.direction {
             case .down:
@@ -252,8 +251,8 @@ struct TimerTouchView: UIViewControllerRepresentable {
                 stopWatchManager.timerColour = Color.Timer.normal
             }
         }
-        */
         
+        /*
         @objc func pan(_ gestureRecogniser: UIPanGestureRecognizer) {
             if gestureRecogniser.state != .cancelled {
                 let translation = gestureRecogniser.translation(in: gestureRecogniser.view!.superview)
@@ -314,6 +313,7 @@ struct TimerTouchView: UIViewControllerRepresentable {
                 }
             }
         }
+         */
     }
     
     func makeCoordinator() -> Coordinator {

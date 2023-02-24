@@ -3,6 +3,8 @@ import SwiftUI
 import SVGView
 import SwiftfulLoadingIndicators
 
+//import TNoodleLibNative
+
 struct AsyncSVGView: View {
     @State var svg: String?
     var puzzle: Int32

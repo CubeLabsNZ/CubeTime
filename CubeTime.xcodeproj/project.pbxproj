@@ -28,6 +28,9 @@
 		23AB648429385D310049993B /* NewSessionModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AB648329385D310049993B /* NewSessionModalView.swift */; };
 		23AB648C293867EA0049993B /* 12sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648A293867EA0049993B /* 12sec-audio.wav */; };
 		23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648B293867EA0049993B /* 8sec-audio.wav */; };
+		23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; settings = {ATTRIBUTES = (Required, ); }; };
+		23B45E7329A8560400BDF49E /* TNoodleLibNative.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		23B45E7629A8592F00BDF49E /* BTree in Frameworks */ = {isa = PBXBuildFile; productRef = 23B45E7529A8592F00BDF49E /* BTree */; };
 		23C85EAC29388C9C00C7C3EC /* StatsSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */; };
 		23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA845F2783EBA1003901FB /* ReachedTargets.swift */; };
 		23CE093427A76D610013E227 /* SessionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CE093327A76D610013E227 /* SessionCard.swift */; };
@@ -48,7 +51,6 @@
 		23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB8A1D2779B6D3000F6663 /* TimeBar.swift */; };
 		7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2B805D279422BD0006AEDD /* AppDelegate.swift */; };
 		7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */; };
-		7D5521DC2799657300B418BE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5521DB2799657300B418BE /* Security.framework */; };
 		7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */; };
 		7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6159F82751B53E00DC9A4C /* TimeCard.swift */; };
 		7D78FF8E276087AF008BB82E /* BottomTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78FF8D276087AF008BB82E /* BottomTabsView.swift */; };
@@ -64,8 +66,6 @@
 		AF7697DF293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */; };
 		AF7697E0293C5A9D00FF1C50 /* RecMonoVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */; };
 		AF7D7806293B1E85003A2A11 /* PadSideBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7D7805293B1E85003A2A11 /* PadSideBar.swift */; };
-		AF7F0C012939EC8E005AECDC /* lib-scrambles.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		AF7F0C022939EC9D005AECDC /* lib-scrambles.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,15 +86,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		7D5521E527997A2E00B418BE /* Embed Frameworks */ = {
+		23B45E5929A83C1100BDF49E /* Embed Libraries */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				AF7F0C012939EC8E005AECDC /* lib-scrambles.dylib in Embed Frameworks */,
+				23B45E7329A8560400BDF49E /* TNoodleLibNative.xcframework in Embed Libraries */,
 			);
-			name = "Embed Frameworks";
+			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -118,6 +118,8 @@
 		23AB648329385D310049993B /* NewSessionModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSessionModalView.swift; sourceTree = "<group>"; };
 		23AB648A293867EA0049993B /* 12sec-audio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "12sec-audio.wav"; sourceTree = "<group>"; };
 		23AB648B293867EA0049993B /* 8sec-audio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "8sec-audio.wav"; sourceTree = "<group>"; };
+		23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "3rdparty-Bridging-Header.h"; sourceTree = "<group>"; };
+		23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodleLibNative.xcframework; sourceTree = "<group>"; };
 		23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsSubviews.swift; sourceTree = "<group>"; };
 		23CA845F2783EBA1003901FB /* ReachedTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachedTargets.swift; sourceTree = "<group>"; };
 		23CE093327A76D610013E227 /* SessionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCard.swift; sourceTree = "<group>"; };
@@ -149,14 +151,12 @@
 		7D7A9EBF274F38CD00C2E125 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		7D7A9EC3274F392700C2E125 /* SessionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsView.swift; sourceTree = "<group>"; };
 		7D7A9EC5274F396E00C2E125 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		7D7C45C42751DE2C0073885C /* 3rdparty-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "3rdparty-Bridging-Header.h"; sourceTree = "<group>"; };
 		7D7D205F274DE13A0016D804 /* txmerdata.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = txmerdata.xcdatamodel; sourceTree = "<group>"; };
 		7D7DDF2227955AFF00362DE9 /* PenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenButton.swift; sourceTree = "<group>"; };
 		7D7E2011275DD52600ADF01D /* Licenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Licenses.swift; sourceTree = "<group>"; };
 		7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleView.swift; sourceTree = "<group>"; };
 		AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RecMonoVariable.ttf; sourceTree = "<group>"; };
 		AF7D7805293B1E85003A2A11 /* PadSideBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadSideBar.swift; sourceTree = "<group>"; };
-		AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "lib-scrambles.dylib"; path = "CubeTime/3rdparty/tnoodle-lib/lib/lib-scrambles.dylib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,10 +164,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF7F0C022939EC9D005AECDC /* lib-scrambles.dylib in Frameworks */,
 				AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */,
+				23B45E7629A8592F00BDF49E /* BTree in Frameworks */,
 				23AB6480293609500049993B /* SVGKit in Frameworks */,
-				7D5521DC2799657300B418BE /* Security.framework in Frameworks */,
+				23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */,
 				23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -261,10 +261,18 @@
 			path = Audio;
 			sourceTree = "<group>";
 		};
+		23B45E7129A855F400BDF49E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */,
+			);
+			path = Frameworks;
+			sourceTree = "<group>";
+		};
 		23DE3BCE274DDBE200254D29 = {
 			isa = PBXGroup;
 			children = (
-				AF7F0C002939EC8D005AECDC /* lib-scrambles.dylib */,
+				23B45E7129A855F400BDF49E /* Frameworks */,
 				23DE3BD9274DDBE200254D29 /* CubeTime */,
 				23DE3BEF274DDBE400254D29 /* CubeTimeTests */,
 				23DE3BF9274DDBE400254D29 /* CubeTimeUITests */,
@@ -296,8 +304,8 @@
 				233FE7B5274F109600C6F1DF /* Helper.swift */,
 				2324160D2828F5AB0066B3C2 /* SessionBar.swift */,
 				23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */,
-				7D7C45C42751DE2C0073885C /* 3rdparty-Bridging-Header.h */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
+				23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */,
 				7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */,
 				7D69E0632751FDBB007211CC /* 3rdparty */,
 				23A73F5D276B0AC800153748 /* Tabs */,
@@ -390,7 +398,7 @@
 				23DE3BD3274DDBE200254D29 /* Sources */,
 				23DE3BD4274DDBE200254D29 /* Frameworks */,
 				23DE3BD5274DDBE200254D29 /* Resources */,
-				7D5521E527997A2E00B418BE /* Embed Frameworks */,
+				23B45E5929A83C1100BDF49E /* Embed Libraries */,
 			);
 			buildRules = (
 			);
@@ -401,6 +409,7 @@
 				23AB647F293609500049993B /* SVGKit */,
 				23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */,
 				AF7697DB293C1EFA00FF1C50 /* SVGView */,
+				23B45E7529A8592F00BDF49E /* BTree */,
 			);
 			productName = txmer;
 			productReference = 23DE3BD7274DDBE200254D29 /* CubeTime.app */;
@@ -478,6 +487,7 @@
 				23AB647E293609500049993B /* XCRemoteSwiftPackageReference "SVGKit" */,
 				23A1CDBB29399FE000F0895D /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */,
 				AF7697DA293C1EFA00FF1C50 /* XCRemoteSwiftPackageReference "SVGView" */,
+				23B45E7429A8592F00BDF49E /* XCRemoteSwiftPackageReference "BTree" */,
 			);
 			productRefGroup = 23DE3BD8274DDBE200254D29 /* Products */;
 			projectDirPath = "";
@@ -756,6 +766,7 @@
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/lib";
 				LLVM_LTO = YES_THIN;
 				MARKETING_VERSION = 2.0;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.cubetime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -967,6 +978,14 @@
 				minimumVersion = 3.0.0;
 			};
 		};
+		23B45E7429A8592F00BDF49E /* XCRemoteSwiftPackageReference "BTree" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/attaswift/BTree";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		AF7697DA293C1EFA00FF1C50 /* XCRemoteSwiftPackageReference "SVGView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/exyte/SVGView";
@@ -987,6 +1006,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 23AB647E293609500049993B /* XCRemoteSwiftPackageReference "SVGKit" */;
 			productName = SVGKit;
+		};
+		23B45E7529A8592F00BDF49E /* BTree */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 23B45E7429A8592F00BDF49E /* XCRemoteSwiftPackageReference "BTree" */;
+			productName = BTree;
 		};
 		AF7697DB293C1EFA00FF1C50 /* SVGView */ = {
 			isa = XCSwiftPackageProductDependency;
