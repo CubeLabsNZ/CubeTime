@@ -118,7 +118,7 @@ struct StatsView: View {
                                                     .padding(.top, 20)
                                             } else {
                                                 Text("not enough solves to\ndisplay graph")
-                                                    .font(.system(size: 17, weight: .medium, design: .monospaced))
+                                                    .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDesc, 17, nil)))
                                                     .multilineTextAlignment(.center)
                                                     .foregroundColor(Color(uiColor: .systemGray))
                                             }
@@ -207,7 +207,7 @@ struct StatsView: View {
                                                 .offset(y: offsetReachedTargets)
                                         } else {
                                             Text("not enough solves to\ndisplay graph")
-                                                .font(.system(size: 17, weight: .medium, design: .monospaced))
+                                                .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDesc, 17, nil)))
                                                 .multilineTextAlignment(.center)
                                                 .foregroundColor(Color(uiColor: .systemGray))
                                         }

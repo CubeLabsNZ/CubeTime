@@ -125,8 +125,9 @@ class StopWatchManager: ObservableObject {
     @Published var solveItem: Solves!
     
     
-    @Published var ctFont: Font!
-    @Published var ctFontDescTimer: CTFontDescriptor!
+    @Published var ctFontScramble: Font!
+    @Published var ctFontDescBold: CTFontDescriptor!
+    @Published var ctFontDesc: CTFontDescriptor!
     
     var feedbackStyle: UIImpactFeedbackGenerator?
     var secondsElapsed = 0.0
@@ -557,17 +558,17 @@ extension StopWatchManager {
         let variations = [2003265652: fontWeight, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
         let variationsTimer = [2003265652: fontWeight + 200, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
         
-        let ctFontDesc = CTFontDescriptorCreateWithAttributes([
+        ctFontDesc = CTFontDescriptorCreateWithAttributes([
             kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
             kCTFontVariationAttribute: variations
         ] as! CFDictionary)
         
-        ctFontDescTimer = CTFontDescriptorCreateWithAttributes([
+        ctFontDescBold = CTFontDescriptorCreateWithAttributes([
             kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
             kCTFontVariationAttribute: variationsTimer
         ] as! CFDictionary)
         
-        ctFont = Font(CTFontCreateWithFontDescriptor(ctFontDesc, CGFloat(scrambleSize), nil))
+        ctFontScramble = Font(CTFontCreateWithFontDescriptor(ctFontDesc, CGFloat(scrambleSize), nil))
     }
 }
 

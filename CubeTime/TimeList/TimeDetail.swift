@@ -250,7 +250,7 @@ struct TimeDetailViewOnly: View {
                                     Text(scramble)
                                 }
                             }
-                            .font(.callout.monospaced())
+                            .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDesc, 16, nil)))
                             .foregroundColor(colourScheme == .light ? .black : .white)
                             .padding([.horizontal], 12)
                             
