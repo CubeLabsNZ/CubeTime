@@ -1,5 +1,5 @@
 import SwiftUI
-
+import CoreData
 
 
 
@@ -46,7 +46,10 @@ struct TimeCard: View {
     }
     
     
-    init(solve: Solves, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<Set<Solves>>) {
+    @Binding var sessionsCanMoveTo: [Sessions]?
+    @State var sessionsCanMoveTo_playground: [Sessions]? = nil
+    
+    init(solve: Solves, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<Set<Solves>>, sessionsCanMoveTo: Binding<[Sessions]?>? = nil) {
         self.solve = solve
         self.formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
         self.pen = PenTypes(rawValue: solve.penalty)!
@@ -54,9 +57,11 @@ struct TimeCard: View {
         self._isSelectMode = isSelectMode
         self._selectedSolves = selectedSolves
         self.isSelected = selectedSolves.wrappedValue.contains(solve)
+        self._sessionsCanMoveTo = sessionsCanMoveTo ?? Binding.constant(nil)
     }
     
     var body: some View {
+        let sess_type = stopWatchManager.currentSession.session_type
         ZStack {
             #warning("TODO:  check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectangle")
             RoundedRectangle(cornerRadius: 10, style: .continuous)
@@ -106,34 +111,15 @@ struct TimeCard: View {
 //            }
 //        }
         .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .gesture(DragGesture(minimumDistance: 0)
+            .onChanged { _ in print("DRAG")}
+        )
         .contextMenu {
 //            Button {
 //            } label: {
 //                Label("Move To", systemImage: "arrow.up.forward.circle")
 //            }
 //
-//            Divider()
-            
-            Button {
-                stopWatchManager.changePen(solve: self.solve, pen: .none)
-            } label: {
-                Label("No Penalty", systemImage: "checkmark.circle")
-            }
-            
-            Button {
-                stopWatchManager.changePen(solve: self.solve, pen: .plustwo)
-            } label: {
-                Label("+2", image: "+2.label")
-            }
-            
-            Button {
-                stopWatchManager.changePen(solve: self.solve, pen: .dnf)
-            } label: {
-                Label("DNF", systemImage: "xmark.circle")
-            }
-            
-            
-            Divider()
             
             
             Button {
@@ -143,6 +129,36 @@ struct TimeCard: View {
                     Text("Copy Solve")
                 } icon: {
                     Image(systemName: "doc.on.doc")
+                }
+            }
+            
+            Menu {
+                Button {
+                    stopWatchManager.changePen(solve: self.solve, pen: .none)
+                } label: {
+                    Label("No Penalty", systemImage: "checkmark.circle")
+                }
+                
+                Button {
+                    stopWatchManager.changePen(solve: self.solve, pen: .plustwo)
+                } label: {
+                    Label("+2", image: "+2.label")
+                }
+                
+                Button {
+                    stopWatchManager.changePen(solve: self.solve, pen: .dnf)
+                } label: {
+                    Label("DNF", systemImage: "xmark.circle")
+                }
+            } label: {
+                Label("Penalty", systemImage: "exclamationmark.triangle")
+            }
+            
+            if sess_type != SessionTypes.compsim.rawValue {
+                SessionPickerMenu(sessions: sess_type == SessionTypes.playground.rawValue ? sessionsCanMoveTo_playground : sessionsCanMoveTo) { session in
+                    withAnimation {
+                        stopWatchManager.moveSolve(solve: solve, to: session)
+                    }
                 }
             }
             
@@ -165,6 +181,13 @@ struct TimeCard: View {
                     Image(systemName: "trash")
                 }
             }
+        }
+        .if(sess_type == SessionTypes.playground.rawValue) { view in
+            view
+                .task {
+                    #warning("Optimize this :sob:")
+                    sessionsCanMoveTo_playground = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: solve.scramble_type, currentSession: stopWatchManager.currentSession)
+                }
         }
     }
 }

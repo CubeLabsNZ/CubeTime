@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 import UIKit
 import Combine
+import CoreData
 
 // MARK: - GLOBAL LETS
 let sessionTypeForID: [SessionTypes: Sessions.Type] = [
@@ -14,6 +15,83 @@ let sessionDescriptions: [SessionTypes: String] = [
     .playground: "A playground session allows you to quickly change the scramble type within a session without having to specify a scramble type for the whole session.",
     .compsim: "A comp sim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach."
 ]
+
+struct SessionPickerMenu: View {
+    let sessions: [Sessions]?
+    let clickSession: (Sessions) -> ()
+    
+    var body: some View {
+        Menu {
+            Text("Only compatible sessions are shown")
+            if let sessions = sessions {
+                let unpinnedidx = sessions.firstIndex(where: {!$0.pinned}) ?? sessions.count
+                let pinned = sessions[0..<unpinnedidx]
+                let unpinned = sessions[unpinnedidx..<sessions.count]
+                Divider()
+                Section("Pinned Sessions") {
+                    ForEach(pinned) { session in
+                        Button {
+                            clickSession(session)
+                        } label: {
+                            Label(session.name!, systemImage: iconNamesForType[SessionTypes(rawValue:session.session_type)!]!)
+                        }
+                    }
+                }
+                Section("Other Sessions") {
+                    ForEach(unpinned) { session in
+                        Button {
+                            clickSession(session)
+                        } label: {
+                            Label(session.name!, systemImage: iconNamesForType[SessionTypes(rawValue:session.session_type)!]!)
+                        }
+                    }
+                }
+            } else {
+                Text("Loading...")
+            }
+        } label: {
+            Label("Move To", systemImage: "arrow.up.right")
+        }
+    }
+}
+
+let iconNamesForType: [SessionTypes: String] = [
+    .standard: "timer.square",
+    .algtrainer: "command.square",
+    .multiphase: "square.stack",
+    .playground: "square.on.square",
+    .compsim: "globe.asia.australia"
+]
+
+func getSessionsCanMoveTo(managedObjectContext: NSManagedObjectContext, scrambleType: Int32, currentSession: Sessions) -> [Sessions] {
+    var phaseCount: Int16 = -1
+    if let multiphaseSession = currentSession as? MultiphaseSession {
+        phaseCount = multiphaseSession.phase_count
+    }
+    
+    let req = NSFetchRequest<Sessions>(entityName: "Sessions")
+    req.sortDescriptors = [
+        NSSortDescriptor(keyPath: \Sessions.pinned, ascending: false),
+        NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
+    ]
+    req.predicate = NSPredicate(format: """
+        session_type != \(SessionTypes.compsim.rawValue)
+        AND
+        (
+            session_type == \(SessionTypes.playground.rawValue) OR
+            scramble_type == %i
+        )
+        AND
+        (
+            session_type != \(SessionTypes.multiphase.rawValue) OR
+            phase_count == %i
+        )
+        AND
+        self != %@
+    """, scrambleType, phaseCount, currentSession)
+    
+    return try! managedObjectContext.fetch(req)
+}
 
 // set small device names
 let smallDeviceNames: [String] = ["iPhoneSE"]

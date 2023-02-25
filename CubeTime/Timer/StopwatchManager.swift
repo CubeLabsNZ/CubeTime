@@ -999,8 +999,32 @@ extension StopWatchManager {
         }
     }
     
-    
     func delete(solve: Solves) {
+        removingSolve(solve: solve, removeFunc: managedObjectContext.delete)
+    }
+    
+    #warning("Remember to update new stats when actually cache stats (if ever)")
+    func moveSolve(solve: Solves, to: Sessions) {
+        removingSolve(solve: solve, removeFunc: { solve in
+            if let solve = solve as? MultiphaseSolve, (to.session_type != SessionTypes.multiphase.rawValue) {
+                #warning("Figure out how to cast")
+                managedObjectContext.delete(solve)
+                let nonMultiSolve = Solves(context: managedObjectContext)
+                nonMultiSolve.comment = solve.comment
+                nonMultiSolve.date = solve.date
+                nonMultiSolve.penalty = solve.penalty
+                nonMultiSolve.scramble = solve.scramble
+                nonMultiSolve.scramble_subtype = solve.scramble_subtype
+                nonMultiSolve.scramble_type = solve.scramble_type
+                nonMultiSolve.time = solve.time
+                nonMultiSolve.session = to
+            } else {
+                solve.session = to
+            }
+        })
+    }
+    
+    func removingSolve(solve: Solves, removeFunc: (Solves) -> ()) {
         #warning("TODO:  check best AOs")
         var recalcAO100 = false
         var recalcAO12 = false
@@ -1023,7 +1047,7 @@ extension StopWatchManager {
         solvesNoDNFsbyDate.remove(object: solve)
         changedTimeListSort()
         
-        managedObjectContext.delete(solve)
+        removeFunc(solve)
         
         bestSingle = getMin() // Get min is super fast anyway
         phases = getAveragePhases()
