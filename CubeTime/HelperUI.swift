@@ -206,7 +206,7 @@ struct HierarchialButtonBase<V: View>: View {
         case .halfcoloured:
             self.colourBg = Color("overlay0")
             self.colourFg = Color.accentColor
-            self.colourShadow = Color.black.opacity(0.04)
+            self.colourShadow = Color.black.opacity(0.06)
             
         case .coloured:
             self.colourBg = Color("accent4")
@@ -216,7 +216,7 @@ struct HierarchialButtonBase<V: View>: View {
         case .mono:
             self.colourBg = Color("overlay0")
             self.colourFg = Color("dark")
-            self.colourShadow = Color.black.opacity(0.04)
+            self.colourShadow = Color.black.opacity(0.06)
             
         case .disabled:
             self.colourBg = Color("indent2")

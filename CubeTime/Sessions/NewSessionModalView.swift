@@ -76,12 +76,13 @@ struct NewSessionModalView: View {
                         HStack {
                             Spacer()
                             
-                            Button {
+                            // CLOSE BUTTON
+                            HierarchialButton(type: .mono, size: .medium, outlined: false, square: true, onTapRun: {
                                 dismiss()
-                            } label: {
-                                CloseButton()
-                                    .padding([.trailing, .top])
+                            }) {
+                                Image(systemName: "xmark")
                             }
+                            .padding([.top, .trailing])
                         }
                         Spacer()
                     }

@@ -60,7 +60,7 @@ struct StatsDetail: View {
                                 .padding([.horizontal, .top])
                             }
                             
-                            SessionTypeHeader()
+                            SessionHeader()
                                 .padding(.horizontal)
                                 .padding(.top, isCurrentCompSimAverage ? 10 : -10)
                             

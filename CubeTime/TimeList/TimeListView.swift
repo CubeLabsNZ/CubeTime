@@ -65,7 +65,7 @@ struct SortByMenu: View {
 }
 
 
-struct SessionTypeHeader: View {
+struct SessionHeader: View {
     @EnvironmentObject var stopwatchManager: StopWatchManager
     
     var body: some View {
@@ -86,7 +86,7 @@ struct SessionTypeHeader: View {
         .frame(height: 35)
         .background(
             Color("overlay1")
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
         )
 
     }
@@ -104,7 +104,7 @@ struct TimeListHeader: View {
     var body: some View {
         HStack(spacing: 8) {
             if !searchExpanded {
-                SessionTypeHeader()
+                SessionHeader()
             }
             
             ZStack {
