@@ -139,7 +139,7 @@ extension View {
 }
 
 enum HierarchialButtonType {
-    case mono, coloured, halfcoloured
+    case mono, coloured, halfcoloured, disabled
 }
 
 enum HierarchialButtonSize {
@@ -156,8 +156,35 @@ struct AnimatedButton: ButtonStyle {
 }
 
 struct HierarchialButton<V: View>: View {
-    let content: V
+    let type: HierarchialButtonType
+    let size: HierarchialButtonSize
+    let outlined: Bool
+    let square: Bool
+        
     let onTapRun: () -> Void
+    @ViewBuilder let content: () -> V
+    
+    init(type: HierarchialButtonType, size: HierarchialButtonSize, outlined: Bool=false, square: Bool=false, onTapRun: @escaping () -> Void, @ViewBuilder _ content: @escaping () -> V) {
+        self.type = type
+        self.size = size
+        self.outlined = outlined
+        self.square = square
+        self.onTapRun = onTapRun
+        self.content = content
+    }
+    
+    var body: some View {
+        Button {
+            self.onTapRun()
+        } label: {
+            HierarchialButtonBase(type: self.type, size: self.size, outlined: self.outlined, square: self.square, content: self.content)
+        }
+        .buttonStyle(AnimatedButton())
+    }
+}
+
+struct HierarchialButtonBase<V: View>: View {
+    let content: V
     
     let colourBg: Color
     let colourFg: Color
@@ -172,10 +199,9 @@ struct HierarchialButton<V: View>: View {
     
     init(type: HierarchialButtonType,
          size: HierarchialButtonSize,
-         outlined: Bool=false,
-         square: Bool=false,
-         onTapRun: @escaping () -> (),
-         @ViewBuilder _ content: @escaping () -> V) {
+         outlined: Bool,
+         square: Bool,
+         content: @escaping () -> V) {
         switch (type) {
         case .halfcoloured:
             self.colourBg = Color("overlay0")
@@ -191,18 +217,23 @@ struct HierarchialButton<V: View>: View {
             self.colourBg = Color("overlay0")
             self.colourFg = Color("dark")
             self.colourShadow = Color.black.opacity(0.04)
+            
+        case .disabled:
+            self.colourBg = Color("indent2")
+            self.colourFg = Color("grey")
+            self.colourShadow = Color.clear
         }
         
         switch (size) {
         case .small:
             self.frameHeight = 28
-            self.horizontalPadding = 6
+            self.horizontalPadding = 8
             self.fontType = Font.callout.weight(.medium)
             
             
         case .medium:
             self.frameHeight = 32
-            self.horizontalPadding = 8
+            self.horizontalPadding = 10
             self.fontType = Font.body.weight(.medium)
             
             
@@ -216,32 +247,26 @@ struct HierarchialButton<V: View>: View {
         }
         
         self.square = square
-        self.onTapRun = onTapRun
         self.content = content()
     }
     
     var body: some View {
-        Button {
-            self.onTapRun()
-        } label: {
-            ZStack {
-                RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .fill(Material.ultraThinMaterial)
-                    .frame(height: self.frameHeight)
-                
-                RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .fill(self.colourBg.opacity(0.92))
-                    .shadow(color: self.colourShadow, radius: 4, x: 0, y: 1)
-                    .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
-                
-                content
-                    .foregroundColor(self.colourFg)
-                    .font(self.fontType)
-                    .padding(.horizontal, self.horizontalPadding)
-            }
-            .fixedSize()
+        ZStack {
+            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                .fill(Material.ultraThinMaterial)
+                .frame(height: self.frameHeight)
+            
+            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                .fill(self.colourBg.opacity(0.92))
+                .shadow(color: self.colourShadow, radius: 4, x: 0, y: 1)
+                .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
+            
+            content
+                .foregroundColor(self.colourFg)
+                .font(self.fontType)
+                .padding(.horizontal, self.horizontalPadding)
         }
-        .buttonStyle(AnimatedButton())
+        .fixedSize()
     }
 }
 

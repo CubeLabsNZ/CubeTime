@@ -24,48 +24,45 @@ struct SortByMenu: View {
     @State var penonly = false
     
     var body: some View {
-        Menu {
-            #warning("TODO: headers not working")
-            Section("Sort by") {
-                Picker("", selection: $stopWatchManager.timeListSortBy) {
-                    Label("Date", systemImage: "calendar").tag(SortBy.date)
-                    Label("Time", systemImage: "stopwatch").tag(SortBy.time)
-                }
-                .labelsHidden()
-            }
-            
-            Section("Order by") {
-                Picker("", selection: $stopWatchManager.timeListAscending) {
-                    Label("Ascending", systemImage: "arrow.up").tag(true)
-                    Label("Descending", systemImage: "arrow.down").tag(false)
-                }
-            } 
-            
-            Section("Filters") {
-                Toggle(isOn: $penonly) {
-                    Label("Has Penalty", systemImage: "exclamationmark.triangle")
-                }
-                    
-                Menu("Phase number") {
-                    Picker("", selection: .constant(0)) {
-                        Text("Total").tag(0)
-                        Text("1").tag(0)
-                        Text("2").tag(1)
-                    }
-                }
-            }
-        } label: {
-            Label("Sort", systemImage: "line.3.horizontal.decrease")
-                .frame(width: 35, height: 35)
-                .background(
-                    Color("overlay0")
-                        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-                        .shadow(color: !background ? Color.clear : Color.black.opacity(0.04), radius: 4, x: 0, y: 1)
-                )
-                .animation(.easeInOut(duration: 0.4), value: background)
-                .labelStyle(.iconOnly)
+        HierarchialButtonBase(type: .halfcoloured, size: .large, outlined: false, square: true) {
+            Image(systemName: "line.3.horizontal.decrease")
                 .matchedGeometryEffect(id: "label", in: animation)
         }
+        .frame(width: 35, height: 35)
+        
+//        Menu {
+//            #warning("TODO: headers not working")
+//            Section("Sort by") {
+//                Picker("", selection: $stopWatchManager.timeListSortBy) {
+//                    Label("Date", systemImage: "calendar").tag(SortBy.date)
+//                    Label("Time", systemImage: "stopwatch").tag(SortBy.time)
+//                }
+//                .labelsHidden()
+//            }
+//
+//            Section("Order by") {
+//                Picker("", selection: $stopWatchManager.timeListAscending) {
+//                    Label("Ascending", systemImage: "arrow.up").tag(true)
+//                    Label("Descending", systemImage: "arrow.down").tag(false)
+//                }
+//            }
+//
+//            Section("Filters") {
+//                Toggle(isOn: $penonly) {
+//                    Label("Has Penalty", systemImage: "exclamationmark.triangle")
+//                }
+//
+//                Menu("Phase number") {
+//                    Picker("", selection: .constant(0)) {
+//                        Text("Total").tag(0)
+//                        Text("1").tag(0)
+//                        Text("2").tag(1)
+//                    }
+//                }
+//            }
+//        } label: {
+//
+//        }
     }
 }
 
@@ -312,13 +309,6 @@ struct TimeListView: View {
                         if isSelectMode {
                             Menu {
                                 if selectedSolves.count == 0 {
-                                    Button() {
-                                        withAnimation {
-                                            selectedSolves = Set(stopWatchManager.timeListSolvesFiltered)
-                                        }
-                                    } label: {
-                                        Label("Select all", systemImage: "squareshape.squareshape.dashed")
-                                    }
                                     Button(role: .destructive) {
                                         isClearningSession = true
                                     } label: {
@@ -397,30 +387,24 @@ struct TimeListView: View {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         if stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
                             if isSelectMode {
-                                Button {
+                                HierarchialButton(type: .coloured, size: .small, onTapRun: {
+                                    selectedSolves = Set(stopWatchManager.timeListSolvesFiltered)
+                                }) {
+                                    Text("Select All")
+                                }
+                                
+                                HierarchialButton(type: .disabled, size: .small, onTapRun: {
                                     isSelectMode = false
                                     selectedSolves.removeAll()
-                                } label: {
+                                }) {
                                     Text("Cancel")
-                                        .font(.subheadline.weight(.medium))
-                                        .foregroundColor(Color(uiColor: .systemGray))
                                 }
-                                .tint(Color(uiColor: .systemGray))
-                                .buttonStyle(.bordered)
-                                .clipShape(Capsule())
-                                .controlSize(.small)
                             } else {
-                                Button {
+                                HierarchialButton(type: .coloured, size: .small, onTapRun: {
                                     isSelectMode = true
-                                } label: {
-                                    Text("Edit")
-                                        .font(.subheadline.weight(.medium))
-                                        .foregroundColor(Color.accentColor)
+                                }) {
+                                    Text("Select")
                                 }
-                                .tint(.accentColor)
-                                .buttonStyle(.bordered)
-                                .clipShape(Capsule())
-                                .controlSize(.small)
                             }
                         }
                     }
