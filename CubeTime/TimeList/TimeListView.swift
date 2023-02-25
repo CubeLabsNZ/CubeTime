@@ -288,7 +288,7 @@ struct TimeListView: View {
                         }
                          
                     }
-                    .padding(.vertical, -6)
+                    .padding(.top, -6)
                 }
                 .navigationTitle(isSelectMode ? "Select Solves" : "Session Times")
                 .toolbar {

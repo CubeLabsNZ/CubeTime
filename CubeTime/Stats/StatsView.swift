@@ -34,9 +34,10 @@ struct StatsView: View {
                         .ignoresSafeArea()
                     
                     ScrollView {
-                        VStack (spacing: 0) {
+                        VStack {
                             SessionTypeHeader()
                                 .padding(.horizontal)
+                                .padding(.top, -6)
 
                             let compsim: Bool = SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! == .compsim
                             
@@ -47,13 +48,13 @@ struct StatsView: View {
                                         StatsBlock("CURRENT STATS", blockHeightLarge, false, false) {
                                             StatsBlockSmallText(["AO5", "AO12", "AO100"], [stopWatchManager.currentAo5, stopWatchManager.currentAo12, stopWatchManager.currentAo100], $presentedAvg)
                                         }
-                                        .padding(.top, 2)
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
                                         VStack(spacing: 10) {
                                             StatsBlock("SOLVE COUNT", blockHeightSmall, false, false) {
                                                 StatsBlockText("\(stopWatchManager.getNumberOfSolves())", false, false, false, true)
                                             }
+                                            .offset(y: 1)
                                             
                                             StatsBlock("SESSION MEAN", blockHeightSmall, false, false) {
                                                 if let sessionMean = stopWatchManager.sessionMean {
