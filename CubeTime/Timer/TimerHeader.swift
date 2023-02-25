@@ -29,6 +29,7 @@ struct SessionIconView: View {
                 }
             }
         }
+        .frame(width: 35, height: 35)
     }
 }
 

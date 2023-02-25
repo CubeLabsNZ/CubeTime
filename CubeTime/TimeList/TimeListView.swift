@@ -25,23 +25,21 @@ struct SortByMenu: View {
     
     var body: some View {
         Menu {
-            Section {
-                Picker("Sort Method", selection: $stopWatchManager.timeListSortBy) {
+            #warning("TODO: headers not working")
+            Section("Sort by") {
+                Picker("", selection: $stopWatchManager.timeListSortBy) {
                     Label("Date", systemImage: "calendar").tag(SortBy.date)
                     Label("Time", systemImage: "stopwatch").tag(SortBy.time)
                 }
-            } header: {
-                Text("Sort")
+                .labelsHidden()
             }
             
-            Section {
-                Picker("Sort Direction", selection: $stopWatchManager.timeListAscending) {
+            Section("Order by") {
+                Picker("", selection: $stopWatchManager.timeListAscending) {
                     Label("Ascending", systemImage: "arrow.up").tag(true)
                     Label("Descending", systemImage: "arrow.down").tag(false)
                 }
-            } header: {
-                Text("Order")
-            }
+            } 
             
             Section("Filters") {
                 Toggle(isOn: $penonly) {
@@ -49,7 +47,7 @@ struct SortByMenu: View {
                 }
                     
                 Menu("Phase number") {
-                    Picker("Sort Method", selection: .constant(0)) {
+                    Picker("", selection: .constant(0)) {
                         Text("Total").tag(0)
                         Text("1").tag(0)
                         Text("2").tag(1)
@@ -59,15 +57,12 @@ struct SortByMenu: View {
         } label: {
             Label("Sort", systemImage: "line.3.horizontal.decrease")
                 .frame(width: 35, height: 35)
-                .if (background) { view in
-                    view
-                        .background(
-                            Color("overlay0")
-                                .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-                        )
-                        .shadow(color: Color.black.opacity(0.04), radius: 4, x: 0, y: 1)
-                    
-                }
+                .background(
+                    Color("overlay0")
+                        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                        .shadow(color: !background ? Color.clear : Color.black.opacity(0.04), radius: 4, x: 0, y: 1)
+                )
+                .animation(.easeInOut(duration: 0.4), value: background)
                 .labelStyle(.iconOnly)
                 .matchedGeometryEffect(id: "label", in: animation)
         }
@@ -89,16 +84,17 @@ struct TimeListHeader: View {
             if !searchExpanded {
                 HStack {
                     SessionIconView(session: stopWatchManager.currentSession)
+                    
                     Text(stopWatchManager.currentSession.name ?? "Unknown Session Name")
                         .font(.system(size: 17, weight: .medium))
                         .padding(.trailing, 4)
+                    
                     Spacer()
                 }
+                .frame(height: 35)
                 .background(
                     Color("overlay1")
                         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                        .shadowLight(x: 0, y: 2)
-                        .animation(.spring(), value: stopWatchManager.playgroundScrambleType)
                 )
             }
             
@@ -114,15 +110,13 @@ struct TimeListHeader: View {
                         .font(.body.weight(.medium))
                     
                     if searchExpanded {
-                        
                         TextField("Search for a time...", text: .constant(""))
                             .frame(width: .infinity)
-                        
+                            .foregroundColor(Color("grey"))
+//                            .trim(from: 0, to: searchExpanded ? 1 : 0)
                         
                         HStack(spacing: 8) {
                             Spacer()
-                            
-                            SortByMenu(background: false, animation: animation)
                             
                             Button {
                                 withAnimation {
@@ -134,15 +128,22 @@ struct TimeListHeader: View {
                         }
                         .font(.body)
                         .buttonStyle(AnimatedButton())
-                        .foregroundColor(Color.accentColor)
+                        .foregroundColor(searchExpanded ? Color.accentColor : Color.clear)
                         .padding(.horizontal, 8)
                     }
                 }
+                .animation(.easeOut(duration: 0.05), value: searchExpanded)
+                .mask(
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .frame(width: searchExpanded ? nil : 35)
+                )
+                .frame(width: searchExpanded ? nil : 35)
             }
             .frame(width: searchExpanded ? nil : 35, height: 35)
+            
+            // pressing effects
             .scaleEffect(pressing ? 0.96 : 1.00)
             .opacity(pressing ? 0.80 : 1.00)
-            .animation(.easeIn(duration: 0.1), value: pressing)
             .gesture(
                 searchExpanded ? nil :
                 DragGesture(minimumDistance: 0)
@@ -157,13 +158,11 @@ struct TimeListHeader: View {
                     }
             )
             .fixedSize(horizontal: !searchExpanded, vertical: true)
+            .padding(.trailing, searchExpanded ? -43 : 0)
             
-            
-            if !searchExpanded {
-                SortByMenu(background: true, animation: animation)
-            }
+            SortByMenu(background: !searchExpanded, animation: animation)
+                .offset(x: searchExpanded ? -43 : 0)
         }
-        .padding(.top, 2)
         .padding(.horizontal)
     }
 }
