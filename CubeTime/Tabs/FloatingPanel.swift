@@ -42,7 +42,7 @@ struct FloatingPanel: View {
         ZStack(alignment: .topLeading) {
             ZStack(alignment: .bottom) {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(Color.bg(colourScheme))
+                    .fill(Color("base"))
                     .frame(width: 360, height: height + 18)
                     .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 0)
                 
@@ -56,7 +56,7 @@ struct FloatingPanel: View {
                 .frame(width: 360, height: 18, alignment: .center)
                 .background(
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(Color.bg(colourScheme))
+                        .fill(Color("base"))
                         .frame(width: 360, height: 18)
                 )
                 .zIndex(100)
@@ -99,7 +99,7 @@ struct FloatingPanel: View {
             
             ZStack(alignment: .topLeading) {
                 Rectangle()
-                    .fill(Color.bg(colourScheme))
+                    .fill(Color("base"))
                     .frame(width: 360, height: height)
                     .cornerRadius(8, corners: [.topLeft, .topRight])
 

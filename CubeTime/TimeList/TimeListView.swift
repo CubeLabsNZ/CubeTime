@@ -14,6 +14,173 @@ enum SortBy: Int {
     case time
 }
 
+struct SortByMenu: View {
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
+    let background: Bool
+    
+    var animation: Namespace.ID
+    
+    @State var penonly = false
+    
+    var body: some View {
+        Menu {
+            #warning("TODO: headers not working")
+            Section("Sort by") {
+                Picker("", selection: $stopWatchManager.timeListSortBy) {
+                    Label("Date", systemImage: "calendar").tag(SortBy.date)
+                    Label("Time", systemImage: "stopwatch").tag(SortBy.time)
+                }
+                .labelsHidden()
+            }
+            
+            Section("Order by") {
+                Picker("", selection: $stopWatchManager.timeListAscending) {
+                    Label("Ascending", systemImage: "arrow.up").tag(true)
+                    Label("Descending", systemImage: "arrow.down").tag(false)
+                }
+            } 
+            
+            Section("Filters") {
+                Toggle(isOn: $penonly) {
+                    Label("Has Penalty", systemImage: "exclamationmark.triangle")
+                }
+                    
+                Menu("Phase number") {
+                    Picker("", selection: .constant(0)) {
+                        Text("Total").tag(0)
+                        Text("1").tag(0)
+                        Text("2").tag(1)
+                    }
+                }
+            }
+        } label: {
+            Label("Sort", systemImage: "line.3.horizontal.decrease")
+                .frame(width: 35, height: 35)
+                .background(
+                    Color("overlay0")
+                        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                        .shadow(color: !background ? Color.clear : Color.black.opacity(0.04), radius: 4, x: 0, y: 1)
+                )
+                .animation(.easeInOut(duration: 0.4), value: background)
+                .labelStyle(.iconOnly)
+                .matchedGeometryEffect(id: "label", in: animation)
+        }
+    }
+}
+
+
+struct SessionTypeHeader: View {
+    @EnvironmentObject var stopwatchManager: StopWatchManager
+    
+    var body: some View {
+        HStack {
+            SessionIconView(session: stopwatchManager.currentSession)
+            
+            Text(stopwatchManager.currentSession.name ?? "Unknown Session Name")
+                .font(.system(size: 17, weight: .medium))
+            
+            Spacer()
+            
+            if (SessionTypes(rawValue: stopwatchManager.currentSession.session_type) != .playground) {
+                Text(puzzle_types[Int(stopwatchManager.currentSession.scramble_type)].name)
+                    .font(.system(size: 17, weight: .medium))
+                    .padding(.trailing)
+            }
+        }
+        .frame(height: 35)
+        .background(
+            Color("overlay1")
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        )
+
+    }
+}
+
+
+struct TimeListHeader: View {
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
+    @State var searchExpanded = false
+    @State var pressing = false
+    
+    @Namespace private var animation
+    
+    var body: some View {
+        HStack(spacing: 8) {
+            if !searchExpanded {
+                SessionTypeHeader()
+            }
+            
+            ZStack {
+                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                    .fill(Color("overlay0"))
+                    .shadow(color: Color.black.opacity(0.04), radius: 4, x: 0, y: 1)
+                
+                HStack {
+                    Image(systemName: "magnifyingglass")
+                        .padding(.horizontal, searchExpanded ? 9 : 0)
+                        .foregroundColor(Color.accentColor)
+                        .font(.body.weight(.medium))
+                    
+                    if searchExpanded {
+                        TextField("Search for a time...", text: .constant(""))
+                            .frame(width: .infinity)
+                            .foregroundColor(Color("grey"))
+//                            .trim(from: 0, to: searchExpanded ? 1 : 0)
+                        
+                        HStack(spacing: 8) {
+                            Spacer()
+                            
+                            Button {
+                                withAnimation {
+                                    searchExpanded = false
+                                }
+                            } label: {
+                                Image(systemName: "xmark")
+                            }
+                        }
+                        .font(.body)
+                        .buttonStyle(AnimatedButton())
+                        .foregroundColor(searchExpanded ? Color.accentColor : Color.clear)
+                        .padding(.horizontal, 8)
+                    }
+                }
+                .animation(.easeOut(duration: 0.05), value: searchExpanded)
+                .mask(
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .frame(width: searchExpanded ? nil : 35)
+                )
+                .frame(width: searchExpanded ? nil : 35)
+            }
+            .frame(width: searchExpanded ? nil : 35, height: 35)
+            
+            // pressing effects
+            .scaleEffect(pressing ? 0.96 : 1.00)
+            .opacity(pressing ? 0.80 : 1.00)
+            .gesture(
+                searchExpanded ? nil :
+                DragGesture(minimumDistance: 0)
+                    .onChanged{ _ in
+                        pressing = true
+                    }
+                    .onEnded{ _ in
+                        pressing = false
+                        withAnimation {
+                            searchExpanded = true
+                        }
+                    }
+            )
+            .fixedSize(horizontal: !searchExpanded, vertical: true)
+            .padding(.trailing, searchExpanded ? -43 : 0)
+            
+            SortByMenu(background: !searchExpanded, animation: animation)
+                .offset(x: searchExpanded ? -43 : 0)
+        }
+        .padding(.horizontal)
+    }
+}
+
 
 
 struct TimeListView: View {
@@ -73,52 +240,13 @@ struct TimeListView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.bg(colourScheme)
+                Color("base")
                     .ignoresSafeArea()
                 
                 ScrollView {
                     LazyVStack {
-                        SessionBar(name: stopWatchManager.currentSession.name!, session: stopWatchManager.currentSession)
-                            .padding(.horizontal)
-                        
-                        
-                        // REMOVE THIS IF WHEN SORT IMPELEMNTED FOR COMP SIM SESSIONS
-                        if stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
-                            ZStack {
-                                HStack {
-                                    Spacer()
-                                    
-                                    Picker("Sort Method", selection: $stopWatchManager.timeListSortBy) {
-                                        Text("Sort by Date").tag(SortBy.date)
-                                        Text("Sort by Time").tag(SortBy.time)
-                                    }
-                                    .pickerStyle(SegmentedPickerStyle())
-                                    .frame(maxWidth: 200, alignment: .center)
-                                    .padding(.top, -6)
-                                    .padding(.bottom, 4)
-                                    
-                                   
-                                    Spacer()
-                                }
-                                
-                                HStack {
-                                    Spacer()
-                                    
-                                    Button {
-                                        stopWatchManager.timeListAscending.toggle()
-                                        // let sortDesc: NSSortDescriptor = NSSortDescriptor(key: "date", ascending: sortAscending)
-                                        //solves.sortDescriptors = [sortDesc]
-                                    } label: {
-                                        Image(systemName: stopWatchManager.timeListAscending ? "chevron.up.circle" : "chevron.down.circle")
-                                            .font(.title3.weight(.medium))
-                                    }
-                                    .padding(.trailing)
-                                    .padding(.top, -6)
-                                    .padding(.bottom, 4)
-                                }
-                            }
-                        }
-                        
+                        TimeListHeader()
+
                         let sessType = stopWatchManager.currentSession.session_type
                         
                         if sessType != SessionTypes.compsim.rawValue {
@@ -175,7 +303,7 @@ struct TimeListView: View {
                         }
                          
                     }
-                    .padding(.vertical, -6)
+                    .padding(.top, -6)
                 }
                 .navigationTitle(isSelectMode ? "Select Solves" : "Session Times")
                 .toolbar {
@@ -299,11 +427,6 @@ struct TimeListView: View {
                 }
                 .safeAreaInset(safeArea: .tabBar)
             }
-//            .if (stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue) { view in
-//                view
-//                    .searchable(text: $stopWatchManager.timeListFilter, placement: .navigationBarDrawer)
-//            }
-            
         }
         .navigationViewStyle(StackNavigationViewStyle())
         

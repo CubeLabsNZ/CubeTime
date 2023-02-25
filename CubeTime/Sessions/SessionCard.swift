@@ -42,14 +42,14 @@ struct SessionCard: View {
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.Theme.grey(colourScheme, 1))
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color("indent2"))
                 .frame(height: pinned ? 110 : 65)
                 .zIndex(0)
             
             
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(colourScheme == .dark ? Color(uiColor: .systemGray6) : Color.white)
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color("overlay1"))
                 .frame(width: stopWatchManager.currentSession == item
                        ? 16
                        : parentGeo.size.width - 32, height: item.pinned ? 110 : 65)
@@ -105,8 +105,7 @@ struct SessionCard: View {
                             VStack(alignment: .leading, spacing: -2) {
                                 Text(name)
                                     .font(.title2.weight(.bold))
-//                                    .foregroundColor(currentSession == item ? accentColour : (colourScheme == .dark ? Color.white : Color.black))
-                                    .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
+                                    .foregroundColor(Color("dark"))
                                 
                                 Group {
                                     switch session_type {
@@ -123,8 +122,7 @@ struct SessionCard: View {
                                     }
                                 }
                                 .font(.subheadline.weight(.medium))
-                                    .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
-//                                .foregroundColor(currentSession == item ? accentColour : (colourScheme == .dark ? Color.white : Color.black))
+                                    .foregroundColor(Color("dark"))
                                 .if(!pinned) { view in
                                     view.offset(y: -2)
                                 }
@@ -135,8 +133,7 @@ struct SessionCard: View {
                             Spacer()
                             Text("\(solveCount) Solves")
                                 .font(.subheadline.weight(.bold))
-//                                .font(.system(size: 15, weight: .bold, design: .default))
-                                .foregroundColor(Color(uiColor: .systemGray))
+                                .foregroundColor(Color("grey"))
                                 .padding(.bottom, 4)
                         }
                     }
@@ -149,16 +146,14 @@ struct SessionCard: View {
                             Image(puzzle_types[scramble_type].name)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-//                                .foregroundColor(currentSession == item ? accentColour : (colourScheme == .dark ? Color.white : Color.black))
-                                .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
+                                .foregroundColor(Color("dark"))
                                 .padding(.vertical, 4)
                                 .padding(.trailing, 12)
                         } else {
                             Image(puzzle_types[scramble_type].name)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-//                                .foregroundColor(currentSession == item ? accentColour : (colourScheme == .dark ? Color.white : Color.black))
-                                .foregroundColor(colourScheme == .dark ? Color.white : Color.black)
+                                .foregroundColor(Color("dark"))
                                 .padding(.trailing, 6)
                         }
                     }
@@ -173,20 +168,8 @@ struct SessionCard: View {
             .frame(height: pinned ? 110 : 65)
             
             .background(Color.clear)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             .zIndex(2)
-            
-            if stopWatchManager.currentSession == item {
-                HStack {
-                    Capsule()
-                        .fill(accentColour.opacity(0.6))
-                        .frame(width: 4, height: (pinned ? 110 * 0.5 : 65 * 0.6))
-                    
-                    Spacer()
-                }
-                .offset(x: 5.5)
-                .zIndex(3)
-            }
         }
         .onTapGesture {
             withAnimation(.spring(response: 0.325)) {
@@ -198,7 +181,7 @@ struct SessionCard: View {
         
         
         
-        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 12, style: .continuous))
         
         .contextMenu(menuItems: {
             ContextMenuButton(delay: false,

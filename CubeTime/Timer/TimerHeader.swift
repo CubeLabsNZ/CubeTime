@@ -1,5 +1,38 @@
 import SwiftUI
 
+struct SessionIconView: View {
+    let session: Sessions
+    var body: some View {
+        ZStack(alignment: .center) {
+            Rectangle()
+                .fill(Color.clear)
+                .frame(width: 35, height: 35)
+            
+            
+            Group {
+                switch SessionTypes(rawValue: session.session_type)! {
+                case .standard:
+                    Image(systemName: "timer.square")
+                        .font(.system(size: 26, weight: .regular))
+                case .algtrainer:
+                    Image(systemName: "command.square")
+                        .font(.system(size: 26, weight: .regular))
+                case .multiphase:
+                    Image(systemName: "square.stack")
+                        .font(.system(size: 22, weight: .regular))
+                case .playground:
+                    Image(systemName: "square.on.square")
+                        .font(.system(size: 22, weight: .regular))
+                case .compsim:
+                    Image(systemName: "globe.asia.australia")
+                        .font(.system(size: 22, weight: .medium))
+                }
+            }
+        }
+        .frame(width: 35, height: 35)
+    }
+}
+
 struct TimerHeader: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -22,9 +55,9 @@ struct TimerHeader: View {
             if previewMode {
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(Color.Theme.grey(colourScheme, 3))
+                        .fill(Color("overlay0"))
                         .frame(width: 35, height: 35)
-//                        .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+                        .shadowDark(x: 2, y: 0)
                     
                     HStack {
                         ZStack(alignment: .center) {
@@ -47,37 +80,12 @@ struct TimerHeader: View {
             } else {
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(Color.Theme.grey(colourScheme, 3))
+                        .fill(Color("overlay0"))
                         .frame(width: (toggleSessionName ^ showSessionName) ? nil : 35, height: 35)
-//                        .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+                        .shadowDark(x: 2, y: 0)
                     
                     HStack {
-                        ZStack(alignment: .center) {
-                            Rectangle()
-                                .fill(Color.clear)
-                                .frame(width: 35, height: 35)
-                            
-                            
-                            Group {
-                                switch SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! {
-                                case .standard:
-                                    Image(systemName: "timer.square")
-                                        .font(.system(size: 26, weight: .regular))
-                                case .algtrainer:
-                                    Image(systemName: "command.square")
-                                        .font(.system(size: 26, weight: .regular))
-                                case .multiphase:
-                                    Image(systemName: "square.stack")
-                                        .font(.system(size: 22, weight: .regular))
-                                case .playground:
-                                    Image(systemName: "square.on.square")
-                                        .font(.system(size: 22, weight: .regular))
-                                case .compsim:
-                                    Image(systemName: "globe.asia.australia")
-                                        .font(.system(size: 22, weight: .medium))
-                                }
-                            }
-                        }
+                        SessionIconView(session: stopWatchManager.currentSession)
                         
                         if (toggleSessionName ^ showSessionName) {
                             Text(stopWatchManager.currentSession.name ?? "Unknown Session Name")
@@ -118,8 +126,8 @@ struct TimerHeader: View {
                             .font(.system(size: 15, weight: .regular))
                         
                     }
-                    .padding(.leading, 6)
-                    .padding(.trailing)
+//                    .padding(.leading, 6)
+//                    .padding(.trailing)
                 case .playground:
                     if !(toggleSessionName ^ showSessionName) {
                         Text("PLAYGROUND")
@@ -134,9 +142,9 @@ struct TimerHeader: View {
                     }
                     .accentColor(accentColour)
                     .pickerStyle(.menu)
-                    .padding(.leading, 6)
-                    .padding(.trailing)
-                    .fixedSize()
+//                    .padding(.leading, 6)
+//                    .padding(.trailing)
+//                    .fixedSize()
                     
                 case .compsim:
                     if !(toggleSessionName ^ showSessionName) {
@@ -182,15 +190,18 @@ struct TimerHeader: View {
                                 .padding(.trailing, 4)
                         }
                     }
-                    .padding(.leading, 6)
-                    .padding(.trailing, 12)
+//                    .padding(.leading, 6)
+//                    .padding(.trailing, 12)
                     .foregroundColor(accentColour)
                 }
             }
         }
-        .background(Color.Theme.grey(colourScheme, 1))
         .frame(height: 35)
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .background(
+            Color("overlay1")
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .animation(.spring(), value: stopWatchManager.playgroundScrambleType)
+        )
         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
     }
 }

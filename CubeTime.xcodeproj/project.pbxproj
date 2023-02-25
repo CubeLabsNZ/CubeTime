@@ -12,7 +12,6 @@
 		2303472A278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		2303472B278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2319F8B8276872F200644EB3 /* TimeTrend.swift */; };
-		2324160E2828F5AB0066B3C2 /* SessionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2324160D2828F5AB0066B3C2 /* SessionBar.swift */; };
 		2326435D28C490A500F6322E /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435B28C490A500F6322E /* FloatingPanel.swift */; };
 		2326436028C4927600F6322E /* TimerHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435F28C4927600F6322E /* TimerHeader.swift */; };
 		2326436228C4929700F6322E /* PrevSolvesDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326436128C4929700F6322E /* PrevSolvesDisplay.swift */; };
@@ -20,6 +19,7 @@
 		233FE7B6274F109600C6F1DF /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Helper.swift */; };
 		2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2359689227A367A0003ED9E1 /* StopwatchManager.swift */; };
 		235CDA0327A786D800F48C89 /* Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235CDA0227A786D800F48C89 /* Updates.swift */; };
+		2377418829A9A05A00A4F917 /* HelperUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2377418729A9A05A00A4F917 /* HelperUI.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
 		239C7E702781511300943AF2 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239C7E6F2781511300943AF2 /* Onboarding.swift */; };
@@ -53,7 +53,7 @@
 		7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */; };
 		7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */; };
 		7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6159F82751B53E00DC9A4C /* TimeCard.swift */; };
-		7D78FF8E276087AF008BB82E /* BottomTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78FF8D276087AF008BB82E /* BottomTabsView.swift */; };
+		7D78FF8E276087AF008BB82E /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78FF8D276087AF008BB82E /* TabBar.swift */; };
 		7D7A9EC0274F38CD00C2E125 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EBF274F38CD00C2E125 /* StatsView.swift */; };
 		7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EC3274F392700C2E125 /* SessionsView.swift */; };
 		7D7A9EC6274F396E00C2E125 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EC5274F396E00C2E125 /* SettingsView.swift */; };
@@ -103,7 +103,6 @@
 		23034724278BD22600553A7D /* TimeDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDetail.swift; sourceTree = "<group>"; };
 		23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RecursiveSansLnrSt-Regular.ttf"; sourceTree = "<group>"; };
 		2319F8B8276872F200644EB3 /* TimeTrend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrend.swift; sourceTree = "<group>"; };
-		2324160D2828F5AB0066B3C2 /* SessionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionBar.swift; sourceTree = "<group>"; };
 		2326435B28C490A500F6322E /* FloatingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingPanel.swift; sourceTree = "<group>"; };
 		2326435F28C4927600F6322E /* TimerHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerHeader.swift; sourceTree = "<group>"; };
 		2326436128C4929700F6322E /* PrevSolvesDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrevSolvesDisplay.swift; sourceTree = "<group>"; };
@@ -112,6 +111,7 @@
 		2354882227642E2800FE8D7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2359689227A367A0003ED9E1 /* StopwatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchManager.swift; sourceTree = "<group>"; };
 		235CDA0227A786D800F48C89 /* Updates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updates.swift; sourceTree = "<group>"; };
+		2377418729A9A05A00A4F917 /* HelperUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperUI.swift; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
 		2397131E2791032300268DFA /* AveragePhases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AveragePhases.swift; sourceTree = "<group>"; };
 		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
@@ -147,7 +147,7 @@
 		7D5521DD2799657B00B418BE /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabsView.swift; sourceTree = "<group>"; };
 		7D6159F82751B53E00DC9A4C /* TimeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCard.swift; sourceTree = "<group>"; };
-		7D78FF8D276087AF008BB82E /* BottomTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomTabsView.swift; sourceTree = "<group>"; };
+		7D78FF8D276087AF008BB82E /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		7D7A9EBF274F38CD00C2E125 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		7D7A9EC3274F392700C2E125 /* SessionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsView.swift; sourceTree = "<group>"; };
 		7D7A9EC5274F396E00C2E125 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -216,7 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */,
-				7D78FF8D276087AF008BB82E /* BottomTabsView.swift */,
+				7D78FF8D276087AF008BB82E /* TabBar.swift */,
 				2326435B28C490A500F6322E /* FloatingPanel.swift */,
 			);
 			path = Tabs;
@@ -237,8 +237,8 @@
 			isa = PBXGroup;
 			children = (
 				7D7A9EC3274F392700C2E125 /* SessionsView.swift */,
-				23AB648329385D310049993B /* NewSessionModalView.swift */,
 				23CE093327A76D610013E227 /* SessionCard.swift */,
+				23AB648329385D310049993B /* NewSessionModalView.swift */,
 			);
 			path = Sessions;
 			sourceTree = "<group>";
@@ -302,7 +302,7 @@
 				239C7E6F2781511300943AF2 /* Onboarding.swift */,
 				235CDA0227A786D800F48C89 /* Updates.swift */,
 				233FE7B5274F109600C6F1DF /* Helper.swift */,
-				2324160D2828F5AB0066B3C2 /* SessionBar.swift */,
+				2377418729A9A05A00A4F917 /* HelperUI.swift */,
 				23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */,
@@ -559,9 +559,8 @@
 				7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */,
 				7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */,
 				237B35502761995F00CC39BF /* SettingsCard.swift in Sources */,
-				7D78FF8E276087AF008BB82E /* BottomTabsView.swift in Sources */,
+				7D78FF8E276087AF008BB82E /* TabBar.swift in Sources */,
 				23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */,
-				2324160E2828F5AB0066B3C2 /* SessionBar.swift in Sources */,
 				7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */,
 				23E647C62775B2AC00561780 /* TimeDistribution.swift in Sources */,
 				235CDA0327A786D800F48C89 /* Updates.swift in Sources */,
@@ -579,6 +578,7 @@
 				23CE093427A76D610013E227 /* SessionCard.swift in Sources */,
 				2337E6882767619D00438F43 /* StatsDetail.swift in Sources */,
 				23C85EAC29388C9C00C7C3EC /* StatsSubviews.swift in Sources */,
+				2377418829A9A05A00A4F917 /* HelperUI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,7 +16,7 @@ struct SheetStrWrapper: Identifiable {
 struct TimerTime: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
     @Environment(\.colorScheme) var colourScheme
-        
+    
     @inlinable func getTimerColor() -> Color {
         if stopWatchManager.mode == .inspecting && colourScheme == .dark && stopWatchManager.timerColour == Color.Timer.normal {
             switch stopWatchManager.inspectionSecs {
@@ -39,18 +39,18 @@ struct TimerTime: View {
                        ? "(+2)"
                        : "")))
                 : ""))
-            .foregroundColor(getTimerColor())
-            .modifier(DynamicText())
+        .foregroundColor(getTimerColor())
+        .modifier(DynamicText())
         // for smaller phones (iPhoneSE and test sim), disable animation to larger text
         // to prevent text clipping and other UI problems
-            .ifelse (stopWatchManager.isSmallDevice) { view in
-                return view
-                    .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDescBold, 54, nil)))
-            } elseDo: { view in
-                return view
-                    .modifier(AnimatingFontSize(font: stopWatchManager.ctFontDescBold, fontSize: stopWatchManager.mode == .running ? 70 : 56))
-                    .animation(Animation.spring(), value: stopWatchManager.mode == .running)
-            }
+        .ifelse (stopWatchManager.isSmallDevice) { view in
+            return view
+                .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDescBold, 54, nil)))
+        } elseDo: { view in
+            return view
+                .modifier(AnimatingFontSize(font: stopWatchManager.ctFontDescBold, fontSize: stopWatchManager.mode == .running ? 70 : 56))
+                .animation(Animation.spring(), value: stopWatchManager.mode == .running)
+        }
     }
 }
 
@@ -73,10 +73,10 @@ struct TimerBackgroundColor: View {
                 Color.Inspection.penalty
                     .ignoresSafeArea()
             default:
-                Color.bg(colourScheme)
+                Color("base")
             }
         } else {
-            Color.bg(colourScheme)
+            Color("base")
         }
     }
 }
@@ -110,10 +110,10 @@ struct BottomTools: View {
             
             if showStats {
                 BottomTool(toolType: SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! != .compsim
-                            ? .statsStandard
-                            : .statsCompsim,
-                            parentGeo: timerSize,
-                            presentedAvg: $presentedAvg)
+                           ? .statsStandard
+                           : .statsCompsim,
+                           parentGeo: timerSize,
+                           presentedAvg: $presentedAvg)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
@@ -122,12 +122,23 @@ struct BottomTools: View {
     }
 }
 
+struct BottomToolBG: View {
+    let maxHeight: CGFloat
+    let maxWidth: CGFloat
+    
+    var body: some View {
+        RoundedRectangle(cornerRadius: 12, style: .continuous)
+            .fill(Color("overlay1"))
+            .frame(width: maxWidth, height: maxHeight)
+    }
+}
+
 struct BottomTool: View {
     @Environment(\.colorScheme) private var colourScheme
     @EnvironmentObject var stopWatchManager: StopWatchManager
     @Binding var scrambleSheetStr: SheetStrWrapper?
     @Binding var presentedAvg: CalculatedAverage?
-
+    
     
     let toolType: TimerTool
     let maxHeight: CGFloat
@@ -146,13 +157,11 @@ struct BottomTool: View {
     
     
     var body: some View {
-        switch toolType {
-        case .drawScramble:
-            ZStack(alignment: .bottomLeading) {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color.Theme.grey(colourScheme, 1))
-                    .frame(width: maxWidth, height: maxHeight)
-                
+        ZStack {
+            BottomToolBG(maxHeight: maxHeight, maxWidth: maxWidth)
+            
+            switch toolType {
+            case .drawScramble:
                 if let svg = stopWatchManager.scrambleSVG {
                     if let scr = stopWatchManager.scrambleStr {
                         SVGView(string: svg)
@@ -168,11 +177,8 @@ struct BottomTool: View {
                     LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
                         .frame(width: maxWidth, height: maxHeight, alignment: .center)
                 }
-            }
-            .frame(width: maxWidth, height: maxHeight)
-            
-            
-        case .statsStandard:
+                
+            case .statsStandard:
                 VStack(spacing: 6) {
                     HStack(spacing: 0) {
                         // ao5
@@ -270,92 +276,89 @@ struct BottomTool: View {
                     }
                 }
                 .frame(width: maxWidth, height: maxHeight)
-                .background(RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .fill(Color.Theme.grey(colourScheme, 1)))
-            
-        
-            
-            
-            
-        case .statsCompsim:
-            VStack(spacing: 6) {
-                HStack {
-                    // bpa
-                    VStack(spacing: 0) {
-                        Text("BPA")
-                            .font(.system(size: 13, weight: .medium))
-                        
-                        if let bpa = stopWatchManager.bpa {
-                            Text(formatSolveTime(secs: bpa))
-                                .font(.system(size: 24, weight: .bold))
-                                .frame(maxWidth: maxWidth/2-8)
-                                .modifier(DynamicText())
-                        } else {
-                            Text("...")
-                                .font(.system(size: 24, weight: .medium, design: .default))
-                                .foregroundColor(Color(uiColor: .systemGray))
-                        }
-                        
-                    }
-                    .frame(minWidth: 0, maxWidth: .infinity)
-                    
-                    // wpa
-                    VStack(spacing: 0) {
-                        Text("WPA")
-                            .font(.system(size: 13, weight: .medium))
-                        
-                        if let wpa = stopWatchManager.wpa {
-                            if wpa == -1 {
-                                Text("DNF")
-                                    .font(.system(size: 24, weight: .bold))
-                                    .modifier(DynamicText())
-                            } else {
-                                Text(formatSolveTime(secs: wpa))
+                
+                
+                
+                
+                
+            case .statsCompsim:
+                VStack(spacing: 6) {
+                    HStack {
+                        // bpa
+                        VStack(spacing: 0) {
+                            Text("BPA")
+                                .font(.system(size: 13, weight: .medium))
+                            
+                            if let bpa = stopWatchManager.bpa {
+                                Text(formatSolveTime(secs: bpa))
                                     .font(.system(size: 24, weight: .bold))
                                     .frame(maxWidth: maxWidth/2-8)
                                     .modifier(DynamicText())
+                            } else {
+                                Text("...")
+                                    .font(.system(size: 24, weight: .medium, design: .default))
+                                    .foregroundColor(Color(uiColor: .systemGray))
                             }
                             
-                            
-                            
-                        } else {
-                            Text("...")
-                                .font(.system(size: 24, weight: .medium, design: .default))
-                                .foregroundColor(Color(uiColor: .systemGray))
                         }
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        
+                        // wpa
+                        VStack(spacing: 0) {
+                            Text("WPA")
+                                .font(.system(size: 13, weight: .medium))
+                            
+                            if let wpa = stopWatchManager.wpa {
+                                if wpa == -1 {
+                                    Text("DNF")
+                                        .font(.system(size: 24, weight: .bold))
+                                        .modifier(DynamicText())
+                                } else {
+                                    Text(formatSolveTime(secs: wpa))
+                                        .font(.system(size: 24, weight: .bold))
+                                        .frame(maxWidth: maxWidth/2-8)
+                                        .modifier(DynamicText())
+                                }
+                                
+                                
+                                
+                            } else {
+                                Text("...")
+                                    .font(.system(size: 24, weight: .medium, design: .default))
+                                    .foregroundColor(Color(uiColor: .systemGray))
+                            }
+                        }
+                        .frame(minWidth: 0, maxWidth: .infinity)
                     }
-                    .frame(minWidth: 0, maxWidth: .infinity)
-                }
-                
-                Divider()
-                    .frame(width: maxWidth - 48)
-                
-                // reach target
-                VStack(spacing: 0) {
-                    Text("TO REACH TARGET")
-                        .font(.system(size: 13, weight: .medium))
                     
-                    if let timeNeededForTarget = stopWatchManager.timeNeededForTarget {
-                        if timeNeededForTarget == -1 {
-                            Text("Not Possible")
-                                .font(.system(size: 22, weight: .bold))
-                                .modifier(DynamicText())
-                        } else if timeNeededForTarget == -2 {
-                            Text("Guaranteed")
-                                .font(.system(size: 22, weight: .bold))
-                                .modifier(DynamicText())
-                        } else {
-                            Text("...")
-                                .font(.system(size: 24, weight: .medium, design: .default))
-                                .foregroundColor(Color(uiColor: .systemGray))
+                    Divider()
+                        .frame(width: maxWidth - 48)
+                    
+                    // reach target
+                    VStack(spacing: 0) {
+                        Text("TO REACH TARGET")
+                            .font(.system(size: 13, weight: .medium))
+                        
+                        if let timeNeededForTarget = stopWatchManager.timeNeededForTarget {
+                            if timeNeededForTarget == -1 {
+                                Text("Not Possible")
+                                    .font(.system(size: 22, weight: .bold))
+                                    .modifier(DynamicText())
+                            } else if timeNeededForTarget == -2 {
+                                Text("Guaranteed")
+                                    .font(.system(size: 22, weight: .bold))
+                                    .modifier(DynamicText())
+                            } else {
+                                Text("...")
+                                    .font(.system(size: 24, weight: .medium, design: .default))
+                                    .foregroundColor(Color(uiColor: .systemGray))
+                            }
                         }
                     }
                 }
             }
-            .frame(width: maxWidth, height: maxHeight)
-            .background(RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color(uiColor: UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0))))
         }
+        .frame(width: maxWidth, height: maxHeight)
     }
 }
 
@@ -396,14 +399,14 @@ struct PadFloatingView: View {
                     MainTabsView()
                 }
             }
-         )
+        )
         .transition(.identity)
         .ignoresSafeArea(.keyboard)
         .ignoresSafeArea(.container, edges: .top)
         .ignoresSafeArea(.container, edges: .bottom)
         /* this is a temporary workaround. offset of 0 will not respect safe area (as intended), but offset of 1 suddenly does?? im probably doing something wrong... */
         .offset(y: 1)
-        #warning("TODO: fix workaround someday")
+#warning("TODO: fix workaround someday")
     }
 }
 
@@ -427,7 +430,7 @@ struct ScrambleText: View {
             .multilineTextAlignment(mega ? .leading : .center)
             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
             .textSelection(.enabled)
-            // WORKAROUND
+
             .if(mega) { view in
                 view.minimumScaleFactor(0.00001).scaledToFit()
             }
@@ -457,7 +460,7 @@ struct TimerView: View {
     @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     @AppStorage(gsKeys.showPrevTime.rawValue) private var showPrevTime: Bool = false
     @AppStorage(gsKeys.inputMode.rawValue) private var inputMode: InputMode = .timer
-
+    
     
     // FOCUS STATES
     @FocusState private var targetFocused: Bool
@@ -477,14 +480,14 @@ struct TimerView: View {
     
     @State var hideStatusBar = true
     @State var algTrainerSubset = 0
-
+    
     
     // iPAD SPECIFIC
     @State var floatingPanelStage: Int = 1
     
-
     
-    #warning("TODO: find a way to not use an initialiser")
+    
+#warning("TODO: find a way to not use an initialiser")
     
     
     var body: some View {
@@ -507,7 +510,7 @@ struct TimerView: View {
                                 showManualInputFormattedText = false
                                 manualInputFocused = true
                                 
-                             
+                                
                                 if justManuallyInput {
                                     manualInputTime = ""
                                     justManuallyInput = false
@@ -526,7 +529,7 @@ struct TimerView: View {
                 VStack(alignment: .center, spacing: 0) {
                     TimerTime()
                         .allowsHitTesting(false)
-                        
+                    
                     if stopWatchManager.mode == .inspecting && showCancelInspection {
                         PenaltyBar(90) {
                             Button {
@@ -614,7 +617,7 @@ struct TimerView: View {
                         
                         if showPlus {
                             Rectangle()
-                                .fill(Color.Theme.grey(colourScheme, 1))
+                                .fill(Color("indent1"))
                                 .frame(width: 1.5, height: 20)
                                 .padding(.horizontal, 12)
                         }
@@ -753,7 +756,7 @@ struct TimeScrambleDetail: View {
                     } else {
                         LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .medium, speed: .normal)
                         
-    //                    ProgressView()
+                        //                    ProgressView()
                     }
                 }
                 .navigationTitle("Scramble")

@@ -41,7 +41,7 @@ struct StatsDetail: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.bg(colourScheme)
+                Color("base")
                     .ignoresSafeArea()
                 
                 if solves.average != nil || isCurrentCompSimAverage {
@@ -60,7 +60,7 @@ struct StatsDetail: View {
                                 .padding([.horizontal, .top])
                             }
                             
-                            SessionBar(name: session.name ?? "Unknown session name", session: session)
+                            SessionTypeHeader()
                                 .padding(.horizontal)
                                 .padding(.top, isCurrentCompSimAverage ? 10 : -10)
                             

@@ -367,7 +367,7 @@ extension View {
         ForEach(0..<2) { i in
             Rectangle()
                 .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
-                .mask(self.blur(radius: 16))
+                .mask(self.blur(radius: 12))
                 .overlay(self.blur(radius: 5 - CGFloat(i * 5)))
         }
     }
@@ -538,10 +538,10 @@ struct Legend: View {
                 HStack(alignment: .center) {
                     VStack (alignment: .center) {
                         Text(formatLegendTime(secs: self.getYLegendSafe(height: height), dp: 1))
-                            .offset(x: 0, y: self.getYposition(height: height))
-                            .foregroundColor(Color(uiColor: .systemGray2))
+                            .offset(x: 2, y: self.getYposition(height: height))
+                            .foregroundColor(Color("grey"))
                             .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDesc, 10, nil)))
-                            .offset(x: 2)
+
                     }
                     .offset(y: 3)
                     
@@ -549,10 +549,9 @@ struct Legend: View {
                     
                     withAnimation(.easeOut(duration: 0.2)) {
                         self.line(atHeight: self.getYLegendSafe(height: height), width: self.frame.width)
-                            .stroke(Color(uiColor: UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0)), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5,height == 0 ? 0 : 10]))
+                            .stroke(Color("indent0"), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5,height == 0 ? 0 : 10]))
                             .rotationEffect(.degrees(180), anchor: .center)
                             .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
-//                            .animation(.easeOut(duration: 0.2))
                             .clipped()
                     }
                 }
@@ -560,7 +559,7 @@ struct Legend: View {
             }
             
             Rectangle()
-                .fill(Color(uiColor: .systemGray3))
+                .fill(Color("indent0"))
                 .frame(width: 1, height: self.frame.height + 6)
                 .offset(x: 30, y: 3)
         }

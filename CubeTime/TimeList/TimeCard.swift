@@ -64,12 +64,10 @@ struct TimeCard: View {
         let sess_type = stopWatchManager.currentSession.session_type
         ZStack {
             #warning("TODO:  check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectangle")
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(isSelected
-                      ? Color.Theme.grey(colourScheme, 2)
-                      : colourScheme == .dark
-                        ? Color(uiColor: .systemGray6)
-                        : Color(uiColor: .systemBackground))
+                      ? Color("indent1")
+                      : Color("overlay0"))
                 .frame(maxWidth: cardWidth, minHeight: cardHeight, maxHeight: cardHeight)
 
                 .onTapGesture {
@@ -101,19 +99,9 @@ struct TimeCard: View {
                 }
             }
         }
+        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 8, style: .continuous))
 
-        
-//        .onChange(of: isSelectMode) {newValue in
-//            if !newValue && isSelected {
-//                withAnimation {
-//                    isSelected = false
-//                }
-//            }
-//        }
-        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 10, style: .continuous))
-        .gesture(DragGesture(minimumDistance: 0)
-            .onChanged { _ in print("DRAG")}
-        )
+
         .contextMenu {
 //            Button {
 //            } label: {

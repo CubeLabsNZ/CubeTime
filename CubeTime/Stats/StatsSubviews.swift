@@ -27,15 +27,14 @@ struct StatsBlock<Content: View>: View {
                     HStack {
                         Text(title)
                             .font(.footnote.weight(.medium))
-                            .foregroundColor(Color(uiColor: title == "CURRENT STATS"
-                                                   ? (colourScheme == .light
-                                                      ? .black
-                                                      : .white)
-                                                   : (coloured
-                                                      ? (colourScheme == .light
-                                                         ? UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0)
-                                                         : .white)
-                                                      : .systemGray)))
+                            .foregroundColor(
+                                title == "CURRENT STATS"
+                                ? Color("dark")
+                                : coloured
+                                ? Color.white
+                                  : Color("grey")
+                            )
+                        
                         Spacer()
                     }
                     Spacer()
@@ -48,14 +47,15 @@ struct StatsBlock<Content: View>: View {
         }
         .frame(height: blockHeight)
         .if(coloured) { view in
-            view.background(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)                                        .clipShape(RoundedRectangle(cornerRadius:16)))
+            view.background(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)                                        .clipShape(RoundedRectangle(cornerRadius: 12)))
         }
         .if(!coloured) { view in
-            view.background(Color(uiColor: title == "CURRENT STATS"
-                                    ? UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0)
-                                    : (colourScheme == .light
-                                        ? .white
-                                        : .systemGray6)).clipShape(RoundedRectangle(cornerRadius:16)))
+            view.background(
+                (title == "CURRENT STATS"
+                    ? Color("overlay0")
+                    : Color("overlay1"))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            )
         }
         .if(bigBlock) { view in
             view.padding(.horizontal)
@@ -101,7 +101,11 @@ struct StatsBlockText: View {
                             .padding(.bottom, 2)
                         
                             .if(!colouredText) { view in
-                                view.foregroundColor(Color(uiColor: colouredBlock ? .white : (colourScheme == .light ? .black : .white)))
+                                view.foregroundColor(
+                                    colouredBlock
+                                    ? .white
+                                    : Color("dark")
+                                )
                             }
                             .if(colouredText) { view in
                                 view.gradientForeground(gradientSelected: gradientSelected)
@@ -113,7 +117,9 @@ struct StatsBlockText: View {
                         VStack {
                             Text("-")
                                 .font(.title.weight(.medium))
-                                .foregroundColor(Color(uiColor: UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0)))
+                                .foregroundColor(colouredBlock
+                                                 ? Color(0xF6F7FC) // hardcoded
+                                                 : Color("grey"))
                                 .padding(.top, 20)
                             
                             Spacer()
@@ -127,7 +133,6 @@ struct StatsBlockText: View {
             .padding(.bottom, 4)
             .padding(.leading, 12)
             .frame(height: blockHeightSmall)
-//            .background(Color.red)
             
             
             if displayDetail {
@@ -152,7 +157,15 @@ struct StatsBlockDetailText: View {
                     let time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
                     Text(discarded ? "("+time+")" : time)
                         .font(.body)
-                        .foregroundColor(discarded ? Color(uiColor: colouredBlock ? UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0) : .systemGray) : (colouredBlock ? .white : (colourScheme == .light ? .black : .white)))
+                        .foregroundColor(
+                            discarded
+                            ? colouredBlock
+                              ? Color("indent2")
+                              : Color("grey")
+                            : colouredBlock
+                              ? .white
+                              : Color("dark")
+                        )
                         .multilineTextAlignment(.leading)
                         .padding(.bottom, 2)
                 }
@@ -167,7 +180,7 @@ struct StatsBlockDetailText: View {
 struct StatsBlockSmallText: View {
     @Environment(\.colorScheme) var colourScheme
     @ScaledMetric private var bigSpacing: CGFloat = 2
-    @ScaledMetric private var spacing: CGFloat = -6
+    @ScaledMetric private var spacing: CGFloat = -4
         
     var titles: [String]
     var data: [CalculatedAverage?]
@@ -183,7 +196,7 @@ struct StatsBlockSmallText: View {
         VStack(alignment: .leading, spacing: bigSpacing) {
             ForEach(Array(zip(titles.indices, titles)), id: \.0) { index, title in
                 HStack {
-                    VStack (alignment: .leading, spacing: spacing) {
+                    VStack(alignment: .leading, spacing: spacing) {
                         Text(title)
                             .font(.footnote.weight(.medium))
                             .foregroundColor(Color(uiColor: .systemGray))
@@ -191,12 +204,12 @@ struct StatsBlockSmallText: View {
                         if let datum = data[index] {
                             Text(formatSolveTime(secs: datum.average ?? 0, penType: datum.totalPen))
                                 .font(.title2.weight(.bold))
-                                .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
+                                .foregroundColor(Color("dark"))
                                 .modifier(DynamicText())
                         } else {
                             Text("-")
                                 .font(.title3.weight(.medium))
-                                .foregroundColor(Color(uiColor:.systemGray2))
+                                .foregroundColor(Color("grey"))
                         }
                     }
                     
@@ -212,21 +225,5 @@ struct StatsBlockSmallText: View {
             }
         }
         .padding(.top, 16)
-    }
-}
-
-struct StatsDivider: View {
-    @Environment(\.colorScheme) var colourScheme
-    
-    let parentGeo: GeometryProxy
-    
-    private let windowSize = UIApplication.shared.connectedScenes.compactMap({ scene -> UIWindow? in
-                                (scene as? UIWindowScene)?.keyWindow
-                            }).first?.frame.size
-
-    var body: some View {
-        Divider()
-            .frame(width: parentGeo.size.width / 2)
-            .background(Color(uiColor: colourScheme == .light ? UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0) : .systemGray))
     }
 }

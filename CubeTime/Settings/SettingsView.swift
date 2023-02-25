@@ -29,7 +29,7 @@ struct SettingsView: View {
         ZStack {
             NavigationView {
                 ZStack {
-                    Color.bg(colourScheme)
+                    Color("base")
                         .ignoresSafeArea()
                     
                     VStack(spacing: 16) {
@@ -177,7 +177,7 @@ struct SettingsDetail: View {
         if currentCard != nil {
             GeometryReader { geo in
                 ZStack {
-                    Color.bg(colourScheme)
+                    Color("base")
                         .ignoresSafeArea()
                         .zIndex(0)
                     
