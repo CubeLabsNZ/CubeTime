@@ -42,13 +42,13 @@ struct SessionCard: View {
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(Color("indent1"))
                 .frame(height: pinned ? 110 : 65)
                 .zIndex(0)
             
             
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(colourScheme == .dark ? Color(uiColor: .systemGray6) : Color.white)
                 .frame(width: stopWatchManager.currentSession == item
                        ? 16
@@ -173,7 +173,7 @@ struct SessionCard: View {
             .frame(height: pinned ? 110 : 65)
             
             .background(Color.clear)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             .zIndex(2)
             
             if stopWatchManager.currentSession == item {
@@ -198,7 +198,7 @@ struct SessionCard: View {
         
         
         
-        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 12, style: .continuous))
         
         .contextMenu(menuItems: {
             ContextMenuButton(delay: false,

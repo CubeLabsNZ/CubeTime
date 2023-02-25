@@ -58,7 +58,7 @@ struct TimeCard: View {
     var body: some View {
         ZStack {
             #warning("TODO:  check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectangle")
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(isSelected
                       ? Color("indent1")
                       : Color("overlay0"))
@@ -104,7 +104,7 @@ struct TimeCard: View {
                 }
             }
         }
-        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 8, style: .continuous))
         .contextMenu {
 //            Button {
 //            } label: {
