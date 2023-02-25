@@ -197,6 +197,42 @@ struct TimeListView: View {
                                         Label("Clear Session", systemImage: "xmark.bin")
                                     }
                                 } else {
+                                    Button {
+                                        copySolve(solves: selectedSolves)
+                                        
+                                        selectedSolves.removeAll()
+                                    } label: {
+                                        Label("Copy", systemImage: "doc.on.doc")
+                                    }
+                                    
+                                    Menu {
+                                        Button {
+                                            for object in selectedSolves {
+                                                stopWatchManager.changePen(solve: object, pen: .none)
+                                            }
+                                        } label: {
+                                            Label("No Penalty", systemImage: "checkmark.circle")
+                                        }
+                                        
+                                        Button {
+                                            for object in selectedSolves {
+                                                stopWatchManager.changePen(solve: object, pen: .plustwo)
+                                            }
+                                        } label: {
+                                            Label("+2", image: "+2.label")
+                                        }
+                                        
+                                        Button {
+                                            for object in selectedSolves {
+                                                stopWatchManager.changePen(solve: object, pen: .dnf)
+                                            }
+                                        } label: {
+                                            Label("DNF", systemImage: "xmark.circle")
+                                        }
+                                    } label: {
+                                        Label("Penalty", systemImage: "exclamationmark.triangle")
+                                    }
+                                    
                                     if stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
                                         SessionPickerMenu(sessions: sessionsCanMoveTo) { session in
                                             for object in selectedSolves {
@@ -207,13 +243,7 @@ struct TimeListView: View {
                                         }
                                     }
                                     
-                                    Button {
-                                        copySolve(solves: selectedSolves)
-                                        
-                                        selectedSolves.removeAll()
-                                    } label: {
-                                        Label("Copy to Clipboard", systemImage: "doc.on.doc")
-                                    }
+                                    Divider()
                                     
                                     Button(role: .destructive) {
                                         isSelectMode = false

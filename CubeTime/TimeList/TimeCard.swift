@@ -126,7 +126,7 @@ struct TimeCard: View {
                 copySolve(solve: solve)
             } label: {
                 Label {
-                    Text("Copy Solve")
+                    Text("Copy")
                 } icon: {
                     Image(systemName: "doc.on.doc")
                 }
@@ -176,7 +176,7 @@ struct TimeCard: View {
                 }
             } label: {
                 Label {
-                    Text("Delete Solve")
+                    Text("Delete")
                 } icon: {
                     Image(systemName: "trash")
                 }
