@@ -146,8 +146,19 @@ enum HierarchialButtonSize {
     case small, medium, large
 }
 
+struct AnimatedButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        return configuration.label
+            .scaleEffect(configuration.isPressed ? 0.96 : 1.00)
+            .opacity(configuration.isPressed ? 0.80 : 1.00)
+            .animation(.easeIn(duration: 0.1), value: configuration.isPressed)
+    }
+}
+
 struct HierarchialButton<V: View>: View {
     let content: V
+    let onTapRun: () -> Void
+    
     let colourBg: Color
     let colourFg: Color
     let colourShadow: Color
@@ -158,8 +169,9 @@ struct HierarchialButton<V: View>: View {
     
     
     init(type: HierarchialButtonType,
-         outlined: Bool=false,
          size: HierarchialButtonSize,
+         outlined: Bool=false,
+         onTapRun: @escaping () -> (),
          @ViewBuilder _ content: @escaping () -> V) {
         switch (type) {
         case .coloured:
@@ -195,30 +207,28 @@ struct HierarchialButton<V: View>: View {
             
         }
         
+        self.onTapRun = onTapRun
         self.content = content()
     }
     
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .fill(self.colourBg)
-                .shadow(color: self.colourShadow, radius: 4, x: 0, y: 1)
-                .frame(height: self.frameHeight)
-            
-            content
-                .foregroundColor(self.colourFg)
-                .font(self.fontType)
-                .padding(.horizontal, self.horizontalPadding)
+        Button {
+            self.onTapRun()
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                    .fill(self.colourBg)
+                    .shadow(color: self.colourShadow, radius: 4, x: 0, y: 1)
+                    .frame(height: self.frameHeight)
+                
+                content
+                    .foregroundColor(self.colourFg)
+                    .font(self.fontType)
+                    .padding(.horizontal, self.horizontalPadding)
+            }
+            .fixedSize()
         }
-        .fixedSize()
+        .buttonStyle(AnimatedButton())
     }
 }
 
-struct AnimatedButton: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        return configuration.label
-            .scaleEffect(configuration.isPressed ? 0.96 : 1.00)
-            .opacity(configuration.isPressed ? 0.80 : 1.00)
-            .animation(.easeIn(duration: 0.1), value: configuration.isPressed)
-    }
-}

@@ -36,19 +36,16 @@ struct SessionsView: View {
                     }
                     .safeAreaInset(safeArea: .tabBar, avoidBottomBy: 50)
                     
-                    Button {
+                    HierarchialButton(type: .coloured, size: .large, onTapRun: {
                         showNewSessionPopUp = true
-                    } label: {
-                        HierarchialButton(type: .coloured, size: .large) {
-                            HStack(spacing: 6) {
-                                Image(systemName: "plus.circle.fill")
-                                    .offset(x: -2)
-                                
-                                Text("New Session")
-                            }
+                    }) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "plus.circle.fill")
+                                .offset(x: -2)
+                            
+                            Text("New Session")
                         }
                     }
-                    .buttonStyle(AnimatedButton())
                     .padding(.bottom, 58)
                     .padding(.bottom, UIDevice.hasBottomBar ? 0 : nil)
                     .padding(.horizontal)
