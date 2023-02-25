@@ -426,6 +426,7 @@ struct ScrambleText: View {
             .fixedSize(horizontal: mega, vertical: false)
             .multilineTextAlignment(mega ? .leading : .center)
             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
+            .textSelection(.enabled)
             // WORKAROUND
             .if(mega) { view in
                 view.minimumScaleFactor(0.00001).scaledToFit()
