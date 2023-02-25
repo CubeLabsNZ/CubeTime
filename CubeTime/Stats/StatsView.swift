@@ -35,10 +35,8 @@ struct StatsView: View {
                     
                     ScrollView {
                         VStack (spacing: 0) {
-                            SessionBar(name: stopWatchManager.currentSession.name!, session: stopWatchManager.currentSession)
-                                .padding(.top, -6)
+                            SessionTypeHeader()
                                 .padding(.horizontal)
-                                .padding(.bottom, 8)
 
                             let compsim: Bool = SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! == .compsim
                             

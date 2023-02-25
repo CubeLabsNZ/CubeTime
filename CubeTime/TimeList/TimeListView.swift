@@ -70,6 +70,33 @@ struct SortByMenu: View {
 }
 
 
+struct SessionTypeHeader: View {
+    @EnvironmentObject var stopwatchManager: StopWatchManager
+    
+    var body: some View {
+        HStack {
+            SessionIconView(session: stopwatchManager.currentSession)
+            
+            Text(stopwatchManager.currentSession.name ?? "Unknown Session Name")
+                .font(.system(size: 17, weight: .medium))
+            
+            Spacer()
+            
+            if (SessionTypes(rawValue: stopwatchManager.currentSession.session_type) != .playground) {
+                Text(puzzle_types[Int(stopwatchManager.currentSession.scramble_type)].name)
+                    .font(.system(size: 17, weight: .medium))
+                    .padding(.trailing)
+            }
+        }
+        .frame(height: 35)
+        .background(
+            Color("overlay1")
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        )
+
+    }
+}
+
 
 struct TimeListHeader: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
@@ -82,20 +109,7 @@ struct TimeListHeader: View {
     var body: some View {
         HStack(spacing: 8) {
             if !searchExpanded {
-                HStack {
-                    SessionIconView(session: stopWatchManager.currentSession)
-                    
-                    Text(stopWatchManager.currentSession.name ?? "Unknown Session Name")
-                        .font(.system(size: 17, weight: .medium))
-                        .padding(.trailing, 4)
-                    
-                    Spacer()
-                }
-                .frame(height: 35)
-                .background(
-                    Color("overlay1")
-                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                )
+                SessionTypeHeader()
             }
             
             ZStack {

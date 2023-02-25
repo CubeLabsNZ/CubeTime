@@ -12,7 +12,6 @@
 		2303472A278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		2303472B278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2319F8B8276872F200644EB3 /* TimeTrend.swift */; };
-		2324160E2828F5AB0066B3C2 /* SessionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2324160D2828F5AB0066B3C2 /* SessionBar.swift */; };
 		2326435D28C490A500F6322E /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435B28C490A500F6322E /* FloatingPanel.swift */; };
 		2326436028C4927600F6322E /* TimerHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435F28C4927600F6322E /* TimerHeader.swift */; };
 		2326436228C4929700F6322E /* PrevSolvesDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326436128C4929700F6322E /* PrevSolvesDisplay.swift */; };
@@ -104,7 +103,6 @@
 		23034724278BD22600553A7D /* TimeDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDetail.swift; sourceTree = "<group>"; };
 		23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RecursiveSansLnrSt-Regular.ttf"; sourceTree = "<group>"; };
 		2319F8B8276872F200644EB3 /* TimeTrend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrend.swift; sourceTree = "<group>"; };
-		2324160D2828F5AB0066B3C2 /* SessionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionBar.swift; sourceTree = "<group>"; };
 		2326435B28C490A500F6322E /* FloatingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingPanel.swift; sourceTree = "<group>"; };
 		2326435F28C4927600F6322E /* TimerHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerHeader.swift; sourceTree = "<group>"; };
 		2326436128C4929700F6322E /* PrevSolvesDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrevSolvesDisplay.swift; sourceTree = "<group>"; };
@@ -305,7 +303,6 @@
 				235CDA0227A786D800F48C89 /* Updates.swift */,
 				233FE7B5274F109600C6F1DF /* Helper.swift */,
 				2377418729A9A05A00A4F917 /* HelperUI.swift */,
-				2324160D2828F5AB0066B3C2 /* SessionBar.swift */,
 				23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */,
@@ -564,7 +561,6 @@
 				237B35502761995F00CC39BF /* SettingsCard.swift in Sources */,
 				7D78FF8E276087AF008BB82E /* TabBar.swift in Sources */,
 				23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */,
-				2324160E2828F5AB0066B3C2 /* SessionBar.swift in Sources */,
 				7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */,
 				23E647C62775B2AC00561780 /* TimeDistribution.swift in Sources */,
 				235CDA0327A786D800F48C89 /* Updates.swift in Sources */,
