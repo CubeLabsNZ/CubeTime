@@ -23,7 +23,7 @@ struct SessionsView: View {
         let _ = NSLog("\(sessions.map({$0.scramble_type}))")
         NavigationView {
             GeometryReader { geo in
-                ZStack {
+                ZStack(alignment: .bottomLeading) {
                     Color("base")
                         .ignoresSafeArea()
                     
@@ -36,40 +36,31 @@ struct SessionsView: View {
                     }
                     .safeAreaInset(safeArea: .tabBar)
                     
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Button {
-                                showNewSessionPopUp = true
-                            } label: {
+                    Button {
+                        showNewSessionPopUp = true
+                    } label: {
+                        HierarchialButton(type: .coloured) {
+                            HStack(spacing: 6) {
                                 Image(systemName: "plus.circle.fill")
-                                    .font(.title2.weight(.semibold))
-                                    .padding(.leading, -5)
+                                    .offset(x: -2)
+                                
                                 Text("New Session")
-                                    .font(.headline.weight(.medium))
-                                    .padding(.leading, -2)
                             }
-                            .shadow(color: .black.opacity(0.12), radius: 10, x: 0, y: 3)
-                            .overlay(Capsule().stroke(Color.black.opacity(0.05), lineWidth: 0.5))
-                            .buttonStyle(.bordered)
-                            .controlSize(.small)
-                            .background(.ultraThinMaterial, in: Capsule())
-                            .sheet(isPresented: $showNewSessionPopUp) {
-                                NewSessionModalView(showNewSessionPopUp: $showNewSessionPopUp)
-                                    .environment(\.managedObjectContext, managedObjectContext)
-                            }
-                            .padding(.leading)
-                            .padding(.bottom, 8)
-                            
-                            Spacer()
                         }
                     }
-                    .safeAreaInset(safeArea: .tabBar)
+                    .buttonStyle(AnimatedButton())
+                    .padding(.bottom, 58)
+                    .padding(.bottom, UIDevice.hasBottomBar ? 0 : nil)
+                    .padding(.horizontal)
                 }
                 .navigationTitle("Your Sessions")
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .sheet(isPresented: $showNewSessionPopUp) {
+            NewSessionModalView(showNewSessionPopUp: $showNewSessionPopUp)
+                .environment(\.managedObjectContext, managedObjectContext)
+        }
     }
 }
 

@@ -136,6 +136,57 @@ extension View {
     func shadowDark(x: CGFloat, y: CGFloat) -> some View {
         modifier(ShadowDark(x: x, y: y))
     }
+}
+
+enum HierarchialButtonType {
+    case mono, coloured
+}
+
+struct HierarchialButton<V: View>: View {
+    let content: V
+    let colourBg: Color
+    let colourFg: Color
+    let colourShadow: Color
+    
+    init(type: HierarchialButtonType,
+         outlined: Bool=false,
+         @ViewBuilder _ content: @escaping () -> V) {
+        switch (type) {
+        case .coloured:
+            self.colourBg = Color("accent4")
+            self.colourFg = Color.accentColor
+            self.colourShadow = Color.accentColor.opacity(0.08)
             
+        case .mono:
+            self.colourBg = Color("overlay0")
+            self.colourFg = Color("dark")
+            self.colourShadow = Color.black.opacity(0.04)
+        }
+        
+        self.content = content()
+    }
+    
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                .fill(self.colourBg)
+                .shadow(color: self.colourShadow, radius: 4, x: 0, y: 1)
             
+            content
+                .foregroundColor(self.colourFg)
+                .font(.body.weight(.medium))
+                .padding(.vertical, 8)
+                .padding(.horizontal, 12)
+        }
+        .fixedSize()
+    }
+}
+
+struct AnimatedButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        return configuration.label
+            .scaleEffect(configuration.isPressed ? 0.96 : 1.00)
+            .opacity(configuration.isPressed ? 0.80 : 1.00)
+            .animation(.easeIn(duration: 0.1), value: configuration.isPressed)
+    }
 }

@@ -652,7 +652,7 @@ struct TabBarSafeAreaInset: ViewModifier {
                 Rectangle()
                 .fill(Color.clear)
                 .frame(height: 50)
-                .padding(.top)
+                .padding(.top, 8)
                 .padding(.bottom, UIDevice.hasBottomBar ? 0 : nil)
             }
     }
