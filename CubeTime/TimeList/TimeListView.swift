@@ -24,45 +24,43 @@ struct SortByMenu: View {
     @State var penonly = false
     
     var body: some View {
-        HierarchialButtonBase(type: .halfcoloured, size: .large, outlined: false, square: true) {
-            Image(systemName: "line.3.horizontal.decrease")
-                .matchedGeometryEffect(id: "label", in: animation)
+        Menu {
+            #warning("TODO: headers not working")
+            Section("Sort by") {
+                Picker("", selection: $stopWatchManager.timeListSortBy) {
+                    Label("Date", systemImage: "calendar").tag(SortBy.date)
+                    Label("Time", systemImage: "stopwatch").tag(SortBy.time)
+                }
+                .labelsHidden()
+            }
+
+            Section("Order by") {
+                Picker("", selection: $stopWatchManager.timeListAscending) {
+                    Label("Ascending", systemImage: "arrow.up").tag(true)
+                    Label("Descending", systemImage: "arrow.down").tag(false)
+                }
+            }
+
+            Section("Filters") {
+                Toggle(isOn: $penonly) {
+                    Label("Has Penalty", systemImage: "exclamationmark.triangle")
+                }
+
+                Menu("Phase number") {
+                    Picker("", selection: .constant(0)) {
+                        Text("Total").tag(0)
+                        Text("1").tag(0)
+                        Text("2").tag(1)
+                    }
+                }
+            }
+        } label: {
+            HierarchialButtonBase(type: .halfcoloured, size: .large, outlined: false, square: true) {
+                Image(systemName: "line.3.horizontal.decrease")
+                    .matchedGeometryEffect(id: "label", in: animation)
+            }
+            .frame(width: 35, height: 35)
         }
-        .frame(width: 35, height: 35)
-        
-//        Menu {
-//            #warning("TODO: headers not working")
-//            Section("Sort by") {
-//                Picker("", selection: $stopWatchManager.timeListSortBy) {
-//                    Label("Date", systemImage: "calendar").tag(SortBy.date)
-//                    Label("Time", systemImage: "stopwatch").tag(SortBy.time)
-//                }
-//                .labelsHidden()
-//            }
-//
-//            Section("Order by") {
-//                Picker("", selection: $stopWatchManager.timeListAscending) {
-//                    Label("Ascending", systemImage: "arrow.up").tag(true)
-//                    Label("Descending", systemImage: "arrow.down").tag(false)
-//                }
-//            }
-//
-//            Section("Filters") {
-//                Toggle(isOn: $penonly) {
-//                    Label("Has Penalty", systemImage: "exclamationmark.triangle")
-//                }
-//
-//                Menu("Phase number") {
-//                    Picker("", selection: .constant(0)) {
-//                        Text("Total").tag(0)
-//                        Text("1").tag(0)
-//                        Text("2").tag(1)
-//                    }
-//                }
-//            }
-//        } label: {
-//
-//        }
     }
 }
 

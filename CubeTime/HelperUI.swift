@@ -254,12 +254,12 @@ struct HierarchialButtonBase<V: View>: View {
         ZStack {
             RoundedRectangle(cornerRadius: 6, style: .continuous)
                 .fill(Material.ultraThinMaterial)
-                .frame(height: self.frameHeight)
+                .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
             
             RoundedRectangle(cornerRadius: 6, style: .continuous)
                 .fill(self.colourBg.opacity(0.92))
-                .shadow(color: self.colourShadow, radius: 4, x: 0, y: 1)
                 .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
+                .shadow(color: self.colourShadow, radius: 4, x: 0, y: 1)
             
             content
                 .foregroundColor(self.colourFg)

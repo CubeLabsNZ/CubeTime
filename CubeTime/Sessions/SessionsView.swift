@@ -51,6 +51,18 @@ struct SessionsView: View {
                     .padding(.horizontal)
                 }
                 .navigationTitle("Your Sessions")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: false) {
+                            HStack {
+                                Image(systemName: "wrench.and.screwdriver")
+                                    .font(Font.subheadline)
+                                
+                                Text("Tools")
+                            }
+                        }
+                    }
+                }
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
