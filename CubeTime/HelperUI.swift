@@ -124,7 +124,7 @@ struct ShadowDark: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .shadow(color: env == .dark ? .clear : .black.opacity(0.04), radius: 4, x: x, y: y)
+            .shadow(color: env == .dark ? .clear : .black.opacity(0.06), radius: 4, x: x, y: y)
     }
 }
 
@@ -226,7 +226,11 @@ struct HierarchialButton<V: View>: View {
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .fill(self.colourBg)
+                    .fill(Material.ultraThinMaterial)
+                    .frame(height: self.frameHeight)
+                
+                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                    .fill(self.colourBg.opacity(0.92))
                     .shadow(color: self.colourShadow, radius: 4, x: 0, y: 1)
                     .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
                 

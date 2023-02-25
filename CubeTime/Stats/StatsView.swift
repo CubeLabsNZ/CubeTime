@@ -68,8 +68,8 @@ struct StatsView: View {
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     }
                                     .padding(.horizontal)
+                                    .padding(.bottom, 8)
                                     
-                                    StatsDivider(parentGeo: geo)
                                     
                                     HStack(spacing: 10) {
                                         VStack (spacing: 10) {
@@ -77,7 +77,7 @@ struct StatsView: View {
                                                 if let bestSingle = stopWatchManager.bestSingle {
                                                     StatsBlockText(formatSolveTime(secs: bestSingle.time, penType: PenTypes(rawValue: bestSingle.penalty)!), false, true, false, true)
                                                 } else {
-                                                    StatsBlockText("", false, false, false, false)
+                                                    StatsBlockText("", false, true, false, false)
                                                 }
                                             }
                                             .onTapGesture {
@@ -107,8 +107,8 @@ struct StatsView: View {
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     }
                                     .padding(.horizontal)
+                                    .padding(.bottom, 8)
                                     
-                                    StatsDivider(parentGeo: geo)
                                     
                                     if SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! == .multiphase {
                                         StatsBlock("AVERAGE PHASES", stopWatchManager.solvesNoDNFs.count == 0 ? 150 : nil, true, false) {
@@ -181,8 +181,8 @@ struct StatsView: View {
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     }
                                     .padding(.horizontal)
+                                    .padding(.bottom, 8)
                                     
-                                    StatsDivider(parentGeo: geo)
                                     
                                     HStack(spacing: 10) {
                                         StatsBlock("TARGET", blockHeightSmall, false, false) {
@@ -212,8 +212,8 @@ struct StatsView: View {
                                                 .foregroundColor(Color(uiColor: .systemGray))
                                         }
                                     }
+                                    .padding(.bottom, 8)
                                     
-                                    StatsDivider(parentGeo: geo)
                                     
                                     HStack(spacing: 10) {
                                         StatsBlock("CURRENT MO10 AO5", blockHeightSmall, false, false) {
@@ -236,8 +236,7 @@ struct StatsView: View {
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     }
                                     .padding(.horizontal)
-                                    
-                                    StatsDivider(parentGeo: geo)
+                                    .padding(.bottom, 8)
                                 }
                                 
                                 let allCompsimAveragesByDate: [CalculatedAverage] = stopWatchManager.getBestCompsimAverageAndArrayOfCompsimAverages().1
@@ -259,11 +258,11 @@ struct StatsView: View {
                                 }
                                  
                                 
-                                StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? 150 : 310), true, false) {
-                                    TimeDistribution(solves: timeDistributionData)
-                                        .drawingGroup()
-                                        .frame(height: timeDistributionData.count < 4 ? 150 : 300)
-                                }
+//                                StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? 150 : 310), true, false) {
+//                                    TimeDistribution(solves: timeDistributionData)
+//                                        .drawingGroup()
+//                                        .frame(height: timeDistributionData.count < 4 ? 150 : 300)
+//                                }
                             }
                             .frame(minWidth: 0, maxWidth: .infinity)
                         }

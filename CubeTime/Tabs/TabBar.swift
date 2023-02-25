@@ -43,7 +43,7 @@ struct TabBar: View {
                        ? Color("base")
                        : Color("overlay0")))
             
-                .shadow(color: .black.opacity(self.currentTab == .timer ? 0.00 : 0.04),
+                .shadow(color: .black.opacity(self.currentTab == .timer ? 0.00 : 0.06),
                         radius: self.currentTab != .timer ? 6 : 0,
                         x: 0,
                         y: self.currentTab != .timer ? 2 : 0)
@@ -147,7 +147,9 @@ struct TabIcon: View {
                         if (currentTab == assignedTab) {
                             Capsule()
                                 .fill(currentTab == .timer
-                                      ? Color("accent2")
+                                      ? colourScheme == .dark
+                                        ? Color.accentColor
+                                        : Color("accent2")
                                       : Color("dark"))
                                 .matchedGeometryEffect(id: "littleguy", in: namespace, properties: .frame)
                                 .shadow(color: currentTab == .timer
