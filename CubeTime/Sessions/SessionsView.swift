@@ -34,12 +34,12 @@ struct SessionsView: View {
                             }
                         }
                     }
-                    .safeAreaInset(safeArea: .tabBar)
+                    .safeAreaInset(safeArea: .tabBar, avoidBottomBy: 50)
                     
                     Button {
                         showNewSessionPopUp = true
                     } label: {
-                        HierarchialButton(type: .coloured) {
+                        HierarchialButton(type: .coloured, size: .large) {
                             HStack(spacing: 6) {
                                 Image(systemName: "plus.circle.fill")
                                     .offset(x: -2)

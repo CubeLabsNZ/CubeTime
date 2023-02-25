@@ -192,7 +192,6 @@ struct TimerHeader: View {
         .background(
             Color("overlay1")
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                .shadowLight(x: 0, y: 2)
                 .animation(.spring(), value: stopWatchManager.playgroundScrambleType)
         )
         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)

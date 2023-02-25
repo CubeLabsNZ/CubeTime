@@ -646,13 +646,19 @@ enum SafeAreaType {
 }
 
 struct TabBarSafeAreaInset: ViewModifier {
+    let avoidBottomBy: CGFloat
+    
+    init(avoidBottomBy: CGFloat = 0) {
+        self.avoidBottomBy = avoidBottomBy
+    }
+    
     func body(content: Content) -> some View {
         content
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 Rectangle()
                 .fill(Color.clear)
                 .frame(height: 50)
-                .padding(.top, 8)
+                .padding(.top, 8 + avoidBottomBy)
                 .padding(.bottom, UIDevice.hasBottomBar ? 0 : nil)
             }
     }
@@ -671,22 +677,22 @@ struct PadFloatingSafeAreaInset: ViewModifier {
 }
 
 extension View {
-    func safeAreaInset(safeArea: SafeAreaDeviceType) -> some View {
+    func safeAreaInset(safeArea: SafeAreaDeviceType, avoidBottomBy: CGFloat=0) -> some View {
         switch safeArea {
         case .defaultView:
-            return AnyView(modifier(TabBarSafeAreaInset()))
+            return AnyView(modifier(TabBarSafeAreaInset(avoidBottomBy: avoidBottomBy)))
         case .padFloating:
             return AnyView(modifier(PadFloatingSafeAreaInset()))
         }
     }
         
-    func safeAreaInset(safeArea: SafeAreaType) -> some View {
+    func safeAreaInset(safeArea: SafeAreaType, avoidBottomBy: CGFloat=0) -> some View {
         switch safeArea {
         case .tabBar:
             if UIDevice.deviceIsPad {
-                return safeAreaInset(safeArea: .padFloating)
+                return safeAreaInset(safeArea: .padFloating, avoidBottomBy: avoidBottomBy)
             } else {
-                return safeAreaInset(safeArea: .defaultView)
+                return safeAreaInset(safeArea: .defaultView, avoidBottomBy: avoidBottomBy)
             }
         }
     }

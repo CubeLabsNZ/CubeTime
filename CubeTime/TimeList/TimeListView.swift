@@ -254,10 +254,10 @@ struct TimeListView: View {
                 }
                 .safeAreaInset(safeArea: .tabBar)
             }
-//            .if (stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue) { view in
-//                view
-//                    .searchable(text: $stopWatchManager.timeListFilter, placement: .navigationBarDrawer)
-//            }
+            .if (stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue) { view in
+                view
+                    .searchable(text: $stopWatchManager.timeListFilter, placement: .navigationBarDrawer)
+            }
             
         }
         .navigationViewStyle(StackNavigationViewStyle())
