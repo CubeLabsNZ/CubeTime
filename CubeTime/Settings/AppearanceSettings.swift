@@ -328,7 +328,7 @@ struct AppearanceSettingsView: View {
                     
                     VStack {
                         Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
-                            .font(stopWatchManager.ctFont)
+                            .font(stopWatchManager.ctFontScramble)
                             .padding()
                         
                         
@@ -463,7 +463,7 @@ struct TimerPreview: View {
             
             Text("0.000")
                 .foregroundColor(Color(uiColor: .systemGray))
-                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescTimer,
+                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold,
                                                           smallDeviceNames.contains(getModelName()) ? 54 : 56
                                                           , nil)))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -491,7 +491,7 @@ struct TimerPreview: View {
             
             VStack {
                 Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
-                    .font(stopwatchManager.ctFont)
+                    .font(stopwatchManager.ctFontScramble)
                     .frame(maxHeight: globalGeometrySize.height/3)
                     .multilineTextAlignment(.center)
                     

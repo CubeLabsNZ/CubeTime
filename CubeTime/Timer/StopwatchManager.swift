@@ -125,8 +125,9 @@ class StopWatchManager: ObservableObject {
     @Published var solveItem: Solves!
     
     
-    @Published var ctFont: Font!
-    @Published var ctFontDescTimer: CTFontDescriptor!
+    @Published var ctFontScramble: Font!
+    @Published var ctFontDescBold: CTFontDescriptor!
+    @Published var ctFontDesc: CTFontDescriptor!
     
     var feedbackStyle: UIImpactFeedbackGenerator?
     var secondsElapsed = 0.0
@@ -557,17 +558,17 @@ extension StopWatchManager {
         let variations = [2003265652: fontWeight, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
         let variationsTimer = [2003265652: fontWeight + 200, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
         
-        let ctFontDesc = CTFontDescriptorCreateWithAttributes([
+        ctFontDesc = CTFontDescriptorCreateWithAttributes([
             kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
             kCTFontVariationAttribute: variations
         ] as! CFDictionary)
         
-        ctFontDescTimer = CTFontDescriptorCreateWithAttributes([
+        ctFontDescBold = CTFontDescriptorCreateWithAttributes([
             kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
             kCTFontVariationAttribute: variationsTimer
         ] as! CFDictionary)
         
-        ctFont = Font(CTFontCreateWithFontDescriptor(ctFontDesc, CGFloat(scrambleSize), nil))
+        ctFontScramble = Font(CTFontCreateWithFontDescriptor(ctFontDesc, CGFloat(scrambleSize), nil))
     }
 }
 
@@ -998,8 +999,32 @@ extension StopWatchManager {
         }
     }
     
-    
     func delete(solve: Solves) {
+        removingSolve(solve: solve, removeFunc: managedObjectContext.delete)
+    }
+    
+    #warning("Remember to update new stats when actually cache stats (if ever)")
+    func moveSolve(solve: Solves, to: Sessions) {
+        removingSolve(solve: solve, removeFunc: { solve in
+            if let solve = solve as? MultiphaseSolve, (to.session_type != SessionTypes.multiphase.rawValue) {
+                #warning("Figure out how to cast")
+                managedObjectContext.delete(solve)
+                let nonMultiSolve = Solves(context: managedObjectContext)
+                nonMultiSolve.comment = solve.comment
+                nonMultiSolve.date = solve.date
+                nonMultiSolve.penalty = solve.penalty
+                nonMultiSolve.scramble = solve.scramble
+                nonMultiSolve.scramble_subtype = solve.scramble_subtype
+                nonMultiSolve.scramble_type = solve.scramble_type
+                nonMultiSolve.time = solve.time
+                nonMultiSolve.session = to
+            } else {
+                solve.session = to
+            }
+        })
+    }
+    
+    func removingSolve(solve: Solves, removeFunc: (Solves) -> ()) {
         #warning("TODO:  check best AOs")
         var recalcAO100 = false
         var recalcAO12 = false
@@ -1022,7 +1047,7 @@ extension StopWatchManager {
         solvesNoDNFsbyDate.remove(object: solve)
         changedTimeListSort()
         
-        managedObjectContext.delete(solve)
+        removeFunc(solve)
         
         bestSingle = getMin() // Get min is super fast anyway
         phases = getAveragePhases()
@@ -1094,6 +1119,13 @@ extension StopWatchManager {
         
     }
     
+    func clearSession() {
+        currentSession.solves?.forEach({managedObjectContext.delete($0 as! NSManagedObject)})
+        try! managedObjectContext.save()
+        statsGetFromCache()
+        changedTimeListSort()
+    }
+    
     
     func updateStats() {
         #warning("TODO:  maybe make these async?")
@@ -1153,7 +1185,7 @@ extension StopWatchManager {
                 )
                 || (currentAo12.totalPen, bestAo12!.totalPen) == (PenTypes.none, PenTypes.dnf) { // current is none and best is dnf
                 self.bestAo12 = currentAo12
-                self.bestAo5?.name = "Best ao12"
+                self.bestAo12?.name = "Best ao12"
                 #warning("TODO:  unhardcode")
             }
         }
@@ -1165,7 +1197,7 @@ extension StopWatchManager {
                 )
                 || (currentAo100.totalPen, bestAo100!.totalPen) == (PenTypes.none, PenTypes.dnf) { // current is none and best is dnf
                 self.bestAo100 = currentAo100
-                self.bestAo5?.name = "Best ao100"
+                self.bestAo100?.name = "Best ao100"
                 #warning("TODO:  unhardcode")
             }
         }

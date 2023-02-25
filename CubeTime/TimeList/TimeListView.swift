@@ -196,8 +196,12 @@ struct TimeListView: View {
     @State var solve: Solves?
     @State var calculatedAverage: CalculatedAverage?
     
+    @State var sessionsCanMoveTo: [Sessions]?
+    
     @State var isSelectMode = false
-    @State var selectedSolves: [Solves] = []
+    @State var selectedSolves: Set<Solves> = []
+    
+    @State var isClearningSession = false
     
     private var columns: [GridItem] {
         if sizeCategory > ContentSizeCategory.extraLarge {
@@ -224,6 +228,15 @@ struct TimeListView: View {
     }
      */
     
+    func updateSessionsCanMoveTo() {
+        if stopWatchManager.currentSession.session_type == SessionTypes.playground.rawValue || stopWatchManager.currentSession.session_type == SessionTypes.compsim.rawValue {
+            return
+        }
+        
+        
+        sessionsCanMoveTo = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: stopWatchManager.currentSession.scramble_type, currentSession: stopWatchManager.currentSession)
+    }
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -233,11 +246,13 @@ struct TimeListView: View {
                 ScrollView {
                     LazyVStack {
                         TimeListHeader()
+
+                        let sessType = stopWatchManager.currentSession.session_type
                         
-                        if stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
+                        if sessType != SessionTypes.compsim.rawValue {
                             LazyVGrid(columns: columns, spacing: 12) {
                                 ForEach(stopWatchManager.timeListSolvesFiltered, id: \.self) { item in
-                                    TimeCard(solve: item, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
+                                    TimeCard(solve: item, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves, sessionsCanMoveTo: sessType != SessionTypes.playground.rawValue ? $sessionsCanMoveTo : nil)
                                 }
                             }
                             .padding(.horizontal)
@@ -294,50 +309,81 @@ struct TimeListView: View {
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {
                         #warning("MAKE THIS PICKER MENU")
-                        if isSelectMode && (selectedSolves.count != 0) {
+                        if isSelectMode {
                             Menu {
-                                Menu {
-                                    Button("Move to a Normal Session") {
-                                        print("1 tapped")
-                                    }
-                                    
-                                    Button("Move to a Playground Session") {
-                                        print("2 tapped")
-                                    }
-                                } label: {
-                                    HStack {
-                                        Text("Move")
-                                        
-                                        Image(systemName: "arrow.right")
-                                    }
-                                }
-                                
-                                Button {
-                                    copySolve(solves: selectedSolves)
-                                    
-                                    selectedSolves.removeAll()
-                                } label: {
-                                    HStack {
-                                        Text("Copy to Clipboard")
-                                        
-                                        Image(systemName: "doc.on.doc")
-                                    }
-                                }
-                                
-                                Button(role: .destructive) {
-                                    isSelectMode = false
-                                    for object in selectedSolves {
+                                if selectedSolves.count == 0 {
+                                    Button() {
                                         withAnimation {
-                                            stopWatchManager.delete(solve: object)
+                                            selectedSolves = Set(stopWatchManager.timeListSolvesFiltered)
+                                        }
+                                    } label: {
+                                        Label("Select all", systemImage: "squareshape.squareshape.dashed")
+                                    }
+                                    Button(role: .destructive) {
+                                        isClearningSession = true
+                                    } label: {
+                                        Label("Clear Session", systemImage: "xmark.bin")
+                                    }
+                                } else {
+                                    Button {
+                                        copySolve(solves: selectedSolves)
+                                        
+                                        selectedSolves.removeAll()
+                                    } label: {
+                                        Label("Copy", systemImage: "doc.on.doc")
+                                    }
+                                    
+                                    Menu {
+                                        Button {
+                                            for object in selectedSolves {
+                                                stopWatchManager.changePen(solve: object, pen: .none)
+                                            }
+                                        } label: {
+                                            Label("No Penalty", systemImage: "checkmark.circle")
+                                        }
+                                        
+                                        Button {
+                                            for object in selectedSolves {
+                                                stopWatchManager.changePen(solve: object, pen: .plustwo)
+                                            }
+                                        } label: {
+                                            Label("+2", image: "+2.label")
+                                        }
+                                        
+                                        Button {
+                                            for object in selectedSolves {
+                                                stopWatchManager.changePen(solve: object, pen: .dnf)
+                                            }
+                                        } label: {
+                                            Label("DNF", systemImage: "xmark.circle")
+                                        }
+                                    } label: {
+                                        Label("Penalty", systemImage: "exclamationmark.triangle")
+                                    }
+                                    
+                                    if stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
+                                        SessionPickerMenu(sessions: sessionsCanMoveTo) { session in
+                                            for object in selectedSolves {
+                                                withAnimation {
+                                                    stopWatchManager.moveSolve(solve: object, to: session)
+                                                }
+                                            }
                                         }
                                     }
                                     
-                                    selectedSolves.removeAll()
-                                } label: {
-                                    HStack {
-                                        Text("Delete")
+                                    Divider()
+                                    
+                                    Button(role: .destructive) {
+                                        isSelectMode = false
+                                        for object in selectedSolves {
+                                            withAnimation {
+                                                stopWatchManager.delete(solve: object)
+                                            }
+                                        }
                                         
-                                        Image(systemName: "trash")
+                                        selectedSolves.removeAll()
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
                                     }
                                 }
                             } label: {
@@ -367,7 +413,7 @@ struct TimeListView: View {
                                 Button {
                                     isSelectMode = true
                                 } label: {
-                                    Text("Select")
+                                    Text("Edit")
                                         .font(.subheadline.weight(.medium))
                                         .foregroundColor(Color.accentColor)
                                 }
@@ -383,12 +429,59 @@ struct TimeListView: View {
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        
+        .confirmationDialog("Clear session?", isPresented: $isClearningSession, titleVisibility: .visible) {
+            Button("Confirm", role: .destructive) {
+                stopWatchManager.clearSession()
+                isSelectMode = false
+            }
+            Button("Cancel", role: .cancel) {
+                
+            }
+        } message: {
+            Text("This will delete every solve in this session!")
+        }
+        
         .sheet(item: $solve) { item in
             TimeDetail(solve: item, currentSolve: $solve)
         }
         
         .sheet(item: $calculatedAverage) { item in
             StatsDetail(solves: item, session: stopWatchManager.currentSession)
+        }
+        
+        .task {
+            print("Task")
+            updateSessionsCanMoveTo()
+        }
+        
+        .onChange(of: stopWatchManager.currentSession) { newValue in
+            #warning("make sure this actually is needed")
+            print("CHANGED SESSION - TimeListView")
+            updateSessionsCanMoveTo()
+        }
+        
+        .onChange(of: selectedSolves) { newValue in
+            if newValue.count == 0 {
+                isSelectMode = false
+                return
+            }
+            
+            if stopWatchManager.currentSession.session_type != SessionTypes.playground.rawValue {
+                return
+            }
+            
+            let uniqueScrambles = Set(selectedSolves.map{$0.scramble_type})
+            let scr_type: Int32!
+            
+            if uniqueScrambles.count > 1 {
+                scr_type = -1
+            } else {
+                scr_type = uniqueScrambles.first!
+            }
+            
+            sessionsCanMoveTo = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: scr_type, currentSession: stopWatchManager.currentSession)
+            
         }
     }
 }

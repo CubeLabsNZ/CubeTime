@@ -11,6 +11,8 @@ struct StatsDetail: View {
     @State var showSolve = false
     @State var solveToShow: Solves?
     
+    @EnvironmentObject var stopWatchManager: StopWatchManager
+    
     let solves: CalculatedAverage
     let session: Sessions
     
@@ -139,7 +141,7 @@ struct StatsDetail: View {
                                                 
                                                 Spacer()
                                             }
-                                            .font(.callout.monospaced())
+                                            .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDesc, 16, nil)))
                                             .padding(.horizontal)
                                             .padding(.bottom, (index != solves.accountedSolves!.indices.last!) ? 8 : 0)
                                         }
