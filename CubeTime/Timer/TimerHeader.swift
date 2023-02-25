@@ -1,5 +1,37 @@
 import SwiftUI
 
+struct SessionIconView: View {
+    let session: Sessions
+    var body: some View {
+        ZStack(alignment: .center) {
+            Rectangle()
+                .fill(Color.clear)
+                .frame(width: 35, height: 35)
+            
+            
+            Group {
+                switch SessionTypes(rawValue: session.session_type)! {
+                case .standard:
+                    Image(systemName: "timer.square")
+                        .font(.system(size: 26, weight: .regular))
+                case .algtrainer:
+                    Image(systemName: "command.square")
+                        .font(.system(size: 26, weight: .regular))
+                case .multiphase:
+                    Image(systemName: "square.stack")
+                        .font(.system(size: 22, weight: .regular))
+                case .playground:
+                    Image(systemName: "square.on.square")
+                        .font(.system(size: 22, weight: .regular))
+                case .compsim:
+                    Image(systemName: "globe.asia.australia")
+                        .font(.system(size: 22, weight: .medium))
+                }
+            }
+        }
+    }
+}
+
 struct TimerHeader: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -52,32 +84,7 @@ struct TimerHeader: View {
                         .shadowDark(x: 2, y: 0)
                     
                     HStack {
-                        ZStack(alignment: .center) {
-                            Rectangle()
-                                .fill(Color.clear)
-                                .frame(width: 35, height: 35)
-                            
-                            
-                            Group {
-                                switch SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! {
-                                case .standard:
-                                    Image(systemName: "timer.square")
-                                        .font(.system(size: 26, weight: .regular))
-                                case .algtrainer:
-                                    Image(systemName: "command.square")
-                                        .font(.system(size: 26, weight: .regular))
-                                case .multiphase:
-                                    Image(systemName: "square.stack")
-                                        .font(.system(size: 22, weight: .regular))
-                                case .playground:
-                                    Image(systemName: "square.on.square")
-                                        .font(.system(size: 22, weight: .regular))
-                                case .compsim:
-                                    Image(systemName: "globe.asia.australia")
-                                        .font(.system(size: 22, weight: .medium))
-                                }
-                            }
-                        }
+                        SessionIconView(session: stopWatchManager.currentSession)
                         
                         if (toggleSessionName ^ showSessionName) {
                             Text(stopWatchManager.currentSession.name ?? "Unknown Session Name")

@@ -139,7 +139,7 @@ extension View {
 }
 
 enum HierarchialButtonType {
-    case mono, coloured
+    case mono, coloured, halfcoloured
 }
 
 enum HierarchialButtonSize {
@@ -167,13 +167,21 @@ struct HierarchialButton<V: View>: View {
     let horizontalPadding: CGFloat
     let fontType: Font
     
+    let square: Bool
+    
     
     init(type: HierarchialButtonType,
          size: HierarchialButtonSize,
          outlined: Bool=false,
+         square: Bool=false,
          onTapRun: @escaping () -> (),
          @ViewBuilder _ content: @escaping () -> V) {
         switch (type) {
+        case .halfcoloured:
+            self.colourBg = Color("overlay0")
+            self.colourFg = Color.accentColor
+            self.colourShadow = Color.black.opacity(0.04)
+            
         case .coloured:
             self.colourBg = Color("accent4")
             self.colourFg = Color.accentColor
@@ -196,17 +204,18 @@ struct HierarchialButton<V: View>: View {
             self.frameHeight = 32
             self.horizontalPadding = 8
             self.fontType = Font.body.weight(.medium)
-
+            
             
         case .large:
-            self.frameHeight = 36
+            self.frameHeight = 35
             self.horizontalPadding = 12
             self.fontType = Font.body.weight(.medium)
-
+            
             
             
         }
         
+        self.square = square
         self.onTapRun = onTapRun
         self.content = content()
     }
@@ -219,7 +228,7 @@ struct HierarchialButton<V: View>: View {
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
                     .fill(self.colourBg)
                     .shadow(color: self.colourShadow, radius: 4, x: 0, y: 1)
-                    .frame(height: self.frameHeight)
+                    .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
                 
                 content
                     .foregroundColor(self.colourFg)
