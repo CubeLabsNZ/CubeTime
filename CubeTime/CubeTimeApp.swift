@@ -20,7 +20,7 @@ struct CubeTime: App {
     private let moc: NSManagedObjectContext
     
     @StateObject var stopWatchManager: StopWatchManager
-    @StateObject var tabRouter: TabRouter = TabRouter()
+    @StateObject var tabRouter: TabRouter = TabRouter.shared
     
     @State var showUpdates: Bool = false
     @State var pageIndex: Int = 0
@@ -157,7 +157,7 @@ extension EnvironmentValues {
 
 struct MainView: View {
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    @StateObject var tabRouter: TabRouter = TabRouter()
+    @StateObject var tabRouter: TabRouter = TabRouter.shared
     
     
     @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false

@@ -21,4 +21,15 @@ final class CustomScene: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         UIApplication.shared.isIdleTimerDisabled = true
     }
+    
+    func windowScene(
+        _ windowScene: UIWindowScene,
+        performActionFor shortcutItem: UIApplicationShortcutItem,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        if shortcutItem.type == "com.cubetime.cubetime.sessions" {
+            print("Setting sessions")
+            TabRouter.shared.currentTab = .sessions
+        }
+    }
 }

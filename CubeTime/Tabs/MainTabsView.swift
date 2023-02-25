@@ -10,6 +10,8 @@ enum Tab {
 }
 
 class TabRouter: ObservableObject {
+    static let shared = TabRouter()
+    
     @Published var currentTab: Tab = .timer {
         didSet {
             if currentTab == .timer {
