@@ -338,6 +338,8 @@ struct TimeListView: View {
                                             for object in selectedSolves {
                                                 stopWatchManager.changePen(solve: object, pen: .none)
                                             }
+                                            
+                                            selectedSolves.removeAll()
                                         } label: {
                                             Label("No Penalty", systemImage: "checkmark.circle")
                                         }
@@ -346,6 +348,8 @@ struct TimeListView: View {
                                             for object in selectedSolves {
                                                 stopWatchManager.changePen(solve: object, pen: .plustwo)
                                             }
+                                            
+                                            selectedSolves.removeAll()
                                         } label: {
                                             Label("+2", image: "+2.label")
                                         }
@@ -354,6 +358,8 @@ struct TimeListView: View {
                                             for object in selectedSolves {
                                                 stopWatchManager.changePen(solve: object, pen: .dnf)
                                             }
+                                            
+                                            selectedSolves.removeAll()
                                         } label: {
                                             Label("DNF", systemImage: "xmark.circle")
                                         }
@@ -367,6 +373,8 @@ struct TimeListView: View {
                                                 withAnimation {
                                                     stopWatchManager.moveSolve(solve: object, to: session)
                                                 }
+                                                
+                                                selectedSolves.removeAll()
                                             }
                                         }
                                     }
