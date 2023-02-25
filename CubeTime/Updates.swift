@@ -23,8 +23,8 @@ let updatesList: [String: [String?]] = [
         –   changed tnoodle compatibility layer
             –   30x faster scramble generation
             –   20x less memory usage
-                –   fixed OOM crashes on older phones
-                    –   fixed launch crash on iPod 7th Gen
+                –   fixes OOM crashes on older phones
+                    –   fixes launch crash on iPod 7th Gen
         –   added manual entry mode
             –   you can switch to entering times by typing instead of a timer in General Settings > Timer Settings > Timer Mode > Typing
         -   added rotations added for blind scrambles
@@ -39,6 +39,7 @@ let updatesList: [String: [String?]] = [
         –   using more modern SVG renderer, faster draw scrambles
         –   more solve selection functions:
             –   copy multiple solves
+            -   add penalty to multiple solves
         –   show +2 and DNF time in brackets
         –   swapped around delete and copy button in individual solve cards
         –   added ability to delete currently selected session
@@ -49,7 +50,6 @@ let updatesList: [String: [String?]] = [
         –   added inspection alerts
         –   added ability to switch between voice based or beep based alerts
         –   added ability to toggle session name in timer view
-        -   various interface changes throughout
         """
     ],
     "1.2.1": [
