@@ -50,18 +50,18 @@ struct TabIcon: View {
         ZStack {
             if (hasBar) {
                 VHStack(vertical: !pad) {
-                    if currentTab == assignedTab {
-                        Color.Theme.accent2
-                            .frame(width: 32, height: 2)
-                            .clipShape(Capsule())
-                            .matchedGeometryEffect(id: "littleguy", in: namespace, properties: .frame)
-                            .shadow(color: Color.Theme.accent4, radius: 2, x: 0, y: 0.5)
-                            .offset(y: 48)
-                    } else {
-                        Color.clear
-                            .frame(width: 32, height: 2)
-                            .offset(y: 48)
+                    Group {
+                        if currentTab == assignedTab {
+                            (self.currentTab == .timer ? Color("accent2") : Color.black)
+                                .clipShape(Capsule())
+                                .matchedGeometryEffect(id: "littleguy", in: namespace, properties: .frame)
+                                .shadow(color: Color("accent4"), radius: 2, x: 0, y: 0.5)
+                        } else {
+                            Color.clear
+                        }
                     }
+                    .frame(width: 32, height: 2.25)
+                    .offset(y: 47.75)
                     
                     Spacer()
                 }

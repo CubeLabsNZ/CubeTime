@@ -60,7 +60,7 @@ struct TimeListView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.bg(colourScheme)
+                Color("base")
                     .ignoresSafeArea()
                 
                 ScrollView {

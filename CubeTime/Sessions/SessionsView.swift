@@ -24,7 +24,7 @@ struct SessionsView: View {
         NavigationView {
             GeometryReader { geo in
                 ZStack {
-                    Color.bg(colourScheme)
+                    Color("base")
                         .ignoresSafeArea()
                     
                     ScrollView {
@@ -114,7 +114,7 @@ struct CustomiseSessionView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.bg(colourScheme)
+                Color("base")
                     .ignoresSafeArea()
                 
                 ScrollView {
@@ -220,7 +220,7 @@ struct NewSessionView: View {
     
     var body: some View {
         ZStack {
-            Color.bg(colourScheme)
+            Color("base")
                 .ignoresSafeArea()
             
             ScrollView {

@@ -37,69 +37,81 @@ struct TabBar: View {
     @Namespace private var namespace
     
     var body: some View {
-        VHStack(vertical: pad) {
+        ZStack {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill((self.currentTab == .timer
+                       ? Color("base")
+                       : Color("overlay0")))
+            
+                .shadow(color: .black.opacity(self.currentTab == .timer ? 0.00 : 0.04),
+                        radius: self.currentTab != .timer ? 6 : 0,
+                        x: 0,
+                        y: self.currentTab != .timer ? 2 : 0)
+
+                .animation(.spring(response: 0.3, dampingFraction: 0.72, blendDuration: 0), value: self.currentTab)
+            
             VHStack(vertical: pad) {
-                if !(UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) && padFloatingLayout) {
+                VHStack(vertical: pad) {
+                    if !(UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) && padFloatingLayout) {
+                        TabIcon(
+                            currentTab: $currentTab,
+                            assignedTab: .timer,
+                            systemIconName: "stopwatch",
+                            systemIconNameSelected: "stopwatch.fill",
+                            pad: pad,
+                            namespace: namespace
+                        )
+                    }
+                                                   
                     TabIcon(
                         currentTab: $currentTab,
-                        assignedTab: .timer,
-                        systemIconName: "stopwatch",
-                        systemIconNameSelected: "stopwatch.fill",
+                        assignedTab: .solves,
+                        systemIconName: "hourglass.bottomhalf.filled",
+                        systemIconNameSelected: "hourglass.tophalf.filled",
+                        pad: pad,
+                        namespace: namespace
+                    )
+                    
+                    TabIcon(
+                        currentTab: $currentTab,
+                        assignedTab: .stats,
+                        systemIconName: "chart.pie",
+                        systemIconNameSelected: "chart.pie.fill",
+                        pad: pad,
+                        namespace: namespace
+                    )
+                    
+                    TabIcon(
+                        currentTab: $currentTab,
+                        assignedTab: .sessions,
+                        systemIconName: "line.3.horizontal.circle",
+                        systemIconNameSelected: "line.3.horizontal.circle.fill",
                         pad: pad,
                         namespace: namespace
                     )
                 }
-                                               
-                TabIcon(
-                    currentTab: $currentTab,
-                    assignedTab: .solves,
-                    systemIconName: "hourglass.bottomhalf.filled",
-                    systemIconNameSelected: "hourglass.tophalf.filled",
-                    pad: pad,
-                    namespace: namespace
+                .frame(
+                    width: pad ? 50 : nil,
+                    height: pad ? nil : 50,
+                    alignment: pad ? .top : .leading
                 )
+                .animation(.spring(response: 0.30, dampingFraction: 0.72, blendDuration: 0), value: self.currentTab)
+                .animation(.spring(), value: tabRouter.padExpandState)
+                
+                Spacer()
                 
                 TabIcon(
                     currentTab: $currentTab,
-                    assignedTab: .stats,
-                    systemIconName: "chart.pie",
-                    systemIconNameSelected: "chart.pie.fill",
+                    assignedTab: .settings,
+                    systemIconName: "gearshape",
+                    systemIconNameSelected: "gearshape.fill",
                     pad: pad,
-                    namespace: namespace
-                )
-                
-                TabIcon(
-                    currentTab: $currentTab,
-                    assignedTab: .sessions,
-                    systemIconName: "line.3.horizontal.circle",
-                    systemIconNameSelected: "line.3.horizontal.circle.fill",
-                    pad: pad,
-                    namespace: namespace
+                    namespace: namespace,
+                    hasBar: false
                 )
             }
-            .frame(
-                width: pad ? 50 : nil,
-                height: pad ? nil : 50,
-                alignment: pad ? .top : .leading
-            )
-            .animation(.spring(response: 0.28, dampingFraction: 0.68, blendDuration: 0), value: self.currentTab)
-            .animation(.spring(), value: tabRouter.padExpandState)
-            
-            Spacer()
-            
-            TabIcon(
-                currentTab: $currentTab,
-                assignedTab: .settings,
-                systemIconName: "gearshape",
-                systemIconNameSelected: "gearshape.fill",
-                pad: pad,
-                namespace: namespace,
-                hasBar: false
-            )
         }
-        .background(Color.bg(colourScheme).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
         .padding(pad ? .vertical : .horizontal)
-        
         .ignoresSafeArea(.keyboard)
         .transition(.move(edge: .bottom).animation(.easeIn(duration: 6)))
         .fixedSize(horizontal: pad, vertical: !pad)

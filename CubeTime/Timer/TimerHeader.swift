@@ -22,9 +22,9 @@ struct TimerHeader: View {
             if previewMode {
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(Color.Theme.grey(colourScheme, 3))
+                        .fill(Color("overlay0"))
                         .frame(width: 35, height: 35)
-//                        .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+                        .shadow(color: .black.opacity(0.04), radius: 6, x: 2, y: 0)
                     
                     HStack {
                         ZStack(alignment: .center) {
@@ -47,9 +47,9 @@ struct TimerHeader: View {
             } else {
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(Color.Theme.grey(colourScheme, 3))
+                        .fill(Color("overlay0"))
                         .frame(width: (toggleSessionName ^ showSessionName) ? nil : 35, height: 35)
-//                        .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+                        .shadow(color: .black.opacity(0.04), radius: 6, x: 2, y: 0)
                     
                     HStack {
                         ZStack(alignment: .center) {
@@ -118,8 +118,8 @@ struct TimerHeader: View {
                             .font(.system(size: 15, weight: .regular))
                         
                     }
-                    .padding(.leading, 6)
-                    .padding(.trailing)
+//                    .padding(.leading, 6)
+//                    .padding(.trailing)
                 case .playground:
                     if !(toggleSessionName ^ showSessionName) {
                         Text("PLAYGROUND")
@@ -134,9 +134,9 @@ struct TimerHeader: View {
                     }
                     .accentColor(accentColour)
                     .pickerStyle(.menu)
-                    .padding(.leading, 6)
-                    .padding(.trailing)
-                    .fixedSize()
+//                    .padding(.leading, 6)
+//                    .padding(.trailing)
+//                    .fixedSize()
                     
                 case .compsim:
                     if !(toggleSessionName ^ showSessionName) {
@@ -182,15 +182,19 @@ struct TimerHeader: View {
                                 .padding(.trailing, 4)
                         }
                     }
-                    .padding(.leading, 6)
-                    .padding(.trailing, 12)
+//                    .padding(.leading, 6)
+//                    .padding(.trailing, 12)
                     .foregroundColor(accentColour)
                 }
             }
         }
-        .background(Color.Theme.grey(colourScheme, 1))
         .frame(height: 35)
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .background(
+            Color("overlay1")
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .shadow(color: .black.opacity(0.02), radius: 6, x: 0, y: 2)
+                .animation(.spring(), value: stopWatchManager.playgroundScrambleType)
+        )
         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
     }
 }

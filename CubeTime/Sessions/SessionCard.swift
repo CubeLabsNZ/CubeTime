@@ -43,7 +43,7 @@ struct SessionCard: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.Theme.grey(colourScheme, 1))
+                .fill(Color("indent1"))
                 .frame(height: pinned ? 110 : 65)
                 .zIndex(0)
             
