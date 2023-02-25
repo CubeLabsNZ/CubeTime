@@ -27,61 +27,6 @@ class TabRouter: ObservableObject {
     }
 }
 
-struct TabIcon: View {
-    @Binding var currentTab: Tab
-    let assignedTab: Tab
-    let systemIconName: String
-    let systemIconNameSelected: String
-    let pad: Bool
-    var namespace: Namespace.ID
-    let hasBar: Bool
-    
-    init(currentTab: Binding<Tab>, assignedTab: Tab, systemIconName: String, systemIconNameSelected: String, pad: Bool, namespace: Namespace.ID, hasBar: Bool = true) {
-        self._currentTab = currentTab
-        self.assignedTab = assignedTab
-        self.systemIconName = systemIconName
-        self.systemIconNameSelected = systemIconNameSelected
-        self.pad = pad
-        self.namespace = namespace
-        self.hasBar = hasBar
-    }
-    
-    var body: some View {
-        ZStack {
-            if (hasBar) {
-                VHStack(vertical: !pad) {
-                    Group {
-                        if currentTab == assignedTab {
-                            (self.currentTab == .timer ? Color("accent2") : Color.black)
-                                .clipShape(Capsule())
-                                .matchedGeometryEffect(id: "littleguy", in: namespace, properties: .frame)
-                                .shadow(color: Color("accent4"), radius: 2, x: 0, y: 0.5)
-                        } else {
-                            Color.clear
-                        }
-                    }
-                    .frame(width: 32, height: 2.25)
-                    .offset(y: 47.75)
-                    
-                    Spacer()
-                }
-            }
-            
-            Image(systemName: currentTab == assignedTab ? systemIconNameSelected : systemIconName)
-                .font(.system(size: 22, weight: .medium))
-                .padding(.horizontal, 14)
-                .padding(.vertical, 12)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    if currentTab != assignedTab {
-                        currentTab = assignedTab
-                    }
-                }
-                .frame(height: 48)
-        }
-    }
-}
-
 
 struct MainTabsView: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize

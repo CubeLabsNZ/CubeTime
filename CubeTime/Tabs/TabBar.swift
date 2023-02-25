@@ -117,3 +117,71 @@ struct TabBar: View {
         .fixedSize(horizontal: pad, vertical: !pad)
     }
 }
+
+
+struct TabIcon: View {
+    @Environment(\.colorScheme) private var colourScheme
+    @Binding var currentTab: Tab
+    let assignedTab: Tab
+    let systemIconName: String
+    let systemIconNameSelected: String
+    let pad: Bool
+    var namespace: Namespace.ID
+    let hasBar: Bool
+    
+    init(currentTab: Binding<Tab>, assignedTab: Tab, systemIconName: String, systemIconNameSelected: String, pad: Bool, namespace: Namespace.ID, hasBar: Bool = true) {
+        self._currentTab = currentTab
+        self.assignedTab = assignedTab
+        self.systemIconName = systemIconName
+        self.systemIconNameSelected = systemIconNameSelected
+        self.pad = pad
+        self.namespace = namespace
+        self.hasBar = hasBar
+    }
+    
+    var body: some View {
+        ZStack {
+            if (hasBar) {
+                VHStack(vertical: !pad) {
+                    Group {
+                        if (currentTab == assignedTab) {
+                            Capsule()
+                                .fill(currentTab == .timer
+                                      ? Color("accent2")
+                                      : Color("dark"))
+                                .matchedGeometryEffect(id: "littleguy", in: namespace, properties: .frame)
+                                .shadow(color: currentTab == .timer
+                                        ? Color("accent3")
+                                        : colourScheme == .dark
+                                          ? Color.clear
+                                          : Color("indent1"),
+                                        radius: 2,
+                                        x: 0, y: 0.5)
+                            
+                        } else {
+                            Capsule()
+                                .fill(Color.clear)
+                        }
+                    }
+                    .frame(width: 32, height: 2.25)
+                    .offset(y: 47.75)
+                    
+                    Spacer()
+                }
+            }
+            
+            Image(systemName: currentTab == assignedTab ? systemIconNameSelected : systemIconName)
+                .font(.system(size: 23, weight: .medium))
+                .padding(.horizontal, 15)
+                .padding(.vertical, 12)
+                .contentShape(Rectangle())
+                
+                .onTapGesture {
+                    if currentTab != assignedTab {
+                        currentTab = assignedTab
+                    }
+                }
+                .frame(height: 48)
+        }
+    }
+}

@@ -102,3 +102,40 @@ extension Color {
         static let penalty: Color = Color(red: 234/255, green: 194/255, blue: 192/255)
     }
 }
+
+
+struct ShadowLight: ViewModifier {
+    @Environment(\.colorScheme) private var env
+    
+    let x: CGFloat
+    let y: CGFloat
+
+    func body(content: Content) -> some View {
+        content
+            .shadow(color: env == .dark ? .clear : .black.opacity(0.02), radius: 6, x: x, y: y)
+    }
+}
+
+struct ShadowDark: ViewModifier {
+    @Environment(\.colorScheme) private var env
+    
+    let x: CGFloat
+    let y: CGFloat
+    
+    func body(content: Content) -> some View {
+        content
+            .shadow(color: env == .dark ? .clear : .black.opacity(0.04), radius: 4, x: x, y: y)
+    }
+}
+
+extension View {
+    func shadowLight(x: CGFloat, y: CGFloat) -> some View {
+        modifier(ShadowLight(x: x, y: y))
+    }
+    
+    func shadowDark(x: CGFloat, y: CGFloat) -> some View {
+        modifier(ShadowDark(x: x, y: y))
+    }
+            
+            
+}

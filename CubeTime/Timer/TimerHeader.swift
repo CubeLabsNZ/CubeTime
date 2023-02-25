@@ -24,7 +24,7 @@ struct TimerHeader: View {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
                         .fill(Color("overlay0"))
                         .frame(width: 35, height: 35)
-                        .shadow(color: .black.opacity(0.04), radius: 6, x: 2, y: 0)
+                        .shadowDark(x: 2, y: 0)
                     
                     HStack {
                         ZStack(alignment: .center) {
@@ -49,7 +49,7 @@ struct TimerHeader: View {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
                         .fill(Color("overlay0"))
                         .frame(width: (toggleSessionName ^ showSessionName) ? nil : 35, height: 35)
-                        .shadow(color: .black.opacity(0.04), radius: 6, x: 2, y: 0)
+                        .shadowDark(x: 2, y: 0)
                     
                     HStack {
                         ZStack(alignment: .center) {
@@ -192,7 +192,7 @@ struct TimerHeader: View {
         .background(
             Color("overlay1")
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                .shadow(color: .black.opacity(0.02), radius: 6, x: 0, y: 2)
+                .shadowLight(x: 0, y: 2)
                 .animation(.spring(), value: stopWatchManager.playgroundScrambleType)
         )
         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)

@@ -60,10 +60,8 @@ struct TimeCard: View {
             #warning("TODO:  check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectangle")
             RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(isSelected
-                      ? Color("indent2")
-                      : colourScheme == .dark
-                        ? Color(uiColor: .systemGray6)
-                        : Color(uiColor: .systemBackground))
+                      ? Color("indent1")
+                      : Color("overlay0"))
                 .frame(maxWidth: cardWidth, minHeight: cardHeight, maxHeight: cardHeight)
 
                 .onTapGesture {
