@@ -5,8 +5,10 @@
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>qa-sessions</string>
 			<key>UIApplicationShortcutItemType</key>
-			<string>com.cubetime.cubetime.sessions</string>
+			<string>com.cubetime.cubetime.allsessions</string>
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>All sessions</string>
 		</dict>

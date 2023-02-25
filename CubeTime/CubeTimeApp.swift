@@ -33,27 +33,11 @@ struct CubeTime: App {
         #warning("TODO: move to WM")
         UIApplication.shared.isIdleTimerDisabled = true
         
-        #warning("TODO: move to SWM init")
-        
+
         let userDefaults = UserDefaults.standard
         
-        let lastUsedSessionURI = userDefaults.url(forKey: "last_used_session")
-        let fetchedSession: Sessions
-        
-        if lastUsedSessionURI == nil {
-            fetchedSession = Sessions(context: moc)
-            fetchedSession.scramble_type = 1
-            fetchedSession.session_type = SessionTypes.playground.rawValue
-            fetchedSession.name = "Default Session"
-            try! moc.save()
-            userDefaults.set(fetchedSession.objectID.uriRepresentation(), forKey: "last_used_session")
-        } else {
-            let objID = moc.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI!)!
-            fetchedSession = try! moc.existingObject(with: objID) as! Sessions; #warning("TODO: better error handling")
-        }
-        
         // https://swiftui-lab.com/random-lessons/#data-10
-        self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: fetchedSession, managedObjectContext: moc))
+        self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: nil, managedObjectContext: moc))
         
         
         self.moc = moc
@@ -133,7 +117,21 @@ struct CubeTime: App {
 //                    self.deviceManager.deviceOrientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation
 //                }
         }
-
+        .onChange(of: phase) { newValue in
+            switch(newValue) {
+            case .background:
+                stopWatchManager.addSessionQuickActions()
+                break
+            case .active:
+                if let pendingSession = tabRouter.pendingSessionURL {
+                    let url = URL(string: pendingSession as String)
+                    let objID = moc.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: url!)!
+                    stopWatchManager.currentSession = try! moc.existingObject(with: objID) as! Sessions
+                    tabRouter.pendingSessionURL = nil
+                }
+            default: break
+            }
+        }
     }
 }
 

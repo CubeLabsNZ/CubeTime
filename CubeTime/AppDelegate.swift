@@ -27,9 +27,11 @@ final class CustomScene: UIResponder, UIWindowSceneDelegate {
         performActionFor shortcutItem: UIApplicationShortcutItem,
         completionHandler: @escaping (Bool) -> Void
     ) {
-        if shortcutItem.type == "com.cubetime.cubetime.sessions" {
+        if shortcutItem.type == "com.cubetime.cubetime.allsessions" {
             print("Setting sessions")
             TabRouter.shared.currentTab = .sessions
+        } else if shortcutItem.type == "com.cubetime.cubetime.session" {
+            TabRouter.shared.pendingSessionURL = shortcutItem.userInfo!["id"] as! NSString
         }
     }
 }

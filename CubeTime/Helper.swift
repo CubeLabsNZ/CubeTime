@@ -55,6 +55,27 @@ struct SessionPickerMenu: View {
     }
 }
 
+
+extension Sessions {
+    var shortcutName: String {
+        get {
+            let scrname = puzzle_types[Int(scramble_type)].name
+            switch (SessionTypes(rawValue: session_type)!) {
+            case .standard:
+                return scrname
+            case .algtrainer:
+                return "Alg trainer - " + scrname
+            case .multiphase:
+                return "Multiphase - " + scrname
+            case .playground:
+                return "Playground"
+            case .compsim:
+                return "Comp Sim - " + scrname
+            }
+        }
+    }
+}
+
 let iconNamesForType: [SessionTypes: String] = [
     .standard: "timer.square",
     .algtrainer: "command.square",

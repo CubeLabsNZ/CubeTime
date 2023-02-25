@@ -12,6 +12,7 @@ enum Tab {
 class TabRouter: ObservableObject {
     static let shared = TabRouter()
     
+    var pendingSessionURL: NSString?
     @Published var currentTab: Tab = .timer {
         didSet {
             if currentTab == .timer {

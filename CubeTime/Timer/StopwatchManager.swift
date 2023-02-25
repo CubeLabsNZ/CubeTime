@@ -93,19 +93,17 @@ class StopWatchManager: ObservableObject {
     // MARK: published variables
     @Published var timerColour: Color = Color.Timer.normal
     
-    @Published var currentSession: Sessions {
+    @Published var currentSession: Sessions! {
         didSet {
-            if currentSession.session_type == SessionTypes.playground.rawValue {
-                NSLog("sesion is play, setting scramble to \(currentSession.scramble_type)")
-                playgroundScrambleType = currentSession.scramble_type
-            } else if let currentSession = currentSession as? MultiphaseSession {
-                self.phaseCount = Int(currentSession.phase_count)
-            }
+            NSLog("DIDSET currentsession")
+            self.targetStr = filteredStrFromTime((currentSession as? CompSimSession)?.target)
+            self.phaseCount = Int((currentSession as? MultiphaseSession)?.phase_count ?? 0)
             
             rescramble()
             tryUpdateCurrentSolveth()
             statsGetFromCache()
-            UserDefaults.standard.set(currentSession.objectID.uriRepresentation(), forKey: "last_used_session")
+            currentSession.last_used = Date()
+            self.playgroundScrambleType = currentSession.scramble_type
         }
     }
     
@@ -173,15 +171,16 @@ class StopWatchManager: ObservableObject {
     // MARK: stats
     @Published var playgroundScrambleType: Int32 {
         didSet {
-            NSLog("playgroundScrambleType didset to \(playgroundScrambleType)")
-            currentSession.scramble_type = playgroundScrambleType
-            try! managedObjectContext.save()
-            #warning("TODO:  do not rescramble when setting to same scramble eg 3blnd -> 3oh")
-            rescramble()
+            if (playgroundScrambleType != -1){
+                NSLog("playgroundScrambleType didset to \(playgroundScrambleType)")
+                currentSession.scramble_type = playgroundScrambleType
+                try! managedObjectContext.save()
+                rescramble()
+            }
         }
     }
-    @Published var targetStr: String
-    @Published var phaseCount: Int
+    @Published var targetStr: String!
+    @Published var phaseCount: Int!
     
     // STATS
     
@@ -273,23 +272,90 @@ class StopWatchManager: ObservableObject {
     
     let isSmallDevice: Bool
     
-    init (currentSession: Sessions, managedObjectContext: NSManagedObjectContext) {
+    
+    func addSessionQuickActions() {
+        NSLog("adding actions")
+        let req = NSFetchRequest<Sessions>(entityName: "Sessions")
+        req.predicate = NSPredicate(format: "last_used != nil")
+        req.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Sessions.last_used, ascending: false),
+        ]
+        req.fetchLimit = 3
+        
+        let lastUsed = try! managedObjectContext.fetch(req)
+        
+        
+        UIApplication.shared.shortcutItems = lastUsed.map { session in
+            return UIApplicationShortcutItem (
+                type: "com.cubetime.cubetime.session",
+                localizedTitle: session.name ?? "Unknown Session",
+                localizedSubtitle: session.shortcutName,
+                icon: UIApplicationShortcutIcon(
+                    systemImageName: iconNamesForType[SessionTypes(rawValue: session.session_type)!]!
+                ),
+                userInfo: ["id": session.objectID.uriRepresentation().absoluteString as NSString]
+            )
+        }
+    }
+    
+    
+    func loadSessionsHistory() {
+        let userDefaults = UserDefaults.standard
+        let moc = self.managedObjectContext
+        
+        let lastUsedSessionURI = userDefaults.url(forKey: "last_used_session")
+        
+        if let lastUsedSessionURI = lastUsedSessionURI {
+            let objID = moc.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI)!
+            self.currentSession = try! moc.existingObject(with: objID) as! Sessions
+            userDefaults.removeObject(forKey: "last_used_session")
+        } else {
+            let req = NSFetchRequest<Sessions>(entityName: "Sessions")
+            req.sortDescriptors = [
+                NSSortDescriptor(keyPath: \Sessions.last_used, ascending: false),
+            ]
+            req.fetchLimit = 1
+            
+            let lastUsed = try! managedObjectContext.fetch(req)
+                        
+            if lastUsed.count > 0 {
+                currentSession = lastUsed[0]
+            } else {
+                let sessionToSave = Sessions(context: moc) // Must use this variable else didset will fire prematurely
+                sessionToSave.scramble_type = 1
+                sessionToSave.session_type = SessionTypes.playground.rawValue
+                sessionToSave.name = "Default Session"
+                currentSession = sessionToSave
+                try! moc.save()
+            }
+        }
+        assert(currentSession != nil)
+    }
+    
+    
+    init (currentSession: Sessions?, managedObjectContext: NSManagedObjectContext) {
         print("initialising audio...")
         setupAudioSession()
         self.inspectionAlert_8 = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "8sec-audio", ofType: "wav")!))
         self.inspectionAlert_12 = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "12sec-audio", ofType: "wav")!))
         
         
-        self.currentSession = currentSession
+//        self.currentSession = currentSession
         self.managedObjectContext = managedObjectContext
-        self.playgroundScrambleType = currentSession.scramble_type
-        self.targetStr = filteredStrFromTime((currentSession as? CompSimSession)?.target)
-        self.phaseCount = Int((currentSession as? MultiphaseSession)?.phase_count ?? 0)
         
         
         self.isSmallDevice = smallDeviceNames.contains(getModelName())
         
         secondsStr = formatSolveTime(secs: 0)
+        
+        self.playgroundScrambleType = -1 // Get the compiler to shut up about not initialized, cannot be optional for picker
+        
+        if let currentSession = currentSession {
+            self.currentSession = currentSession
+        } else {
+            loadSessionsHistory()
+        }
+        
         statsGetFromCache()
         calculateFeedbackStyle()
         self.rescramble()

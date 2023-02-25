@@ -1,16 +1,17 @@
 {
   "images" : [
     {
+      "filename" : "line.3.horizontal.circle.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "qa-2-times@2x.png",
+      "filename" : "line.3.horizontal.circle@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "qa-2-times@3x.png",
+      "filename" : "line.3.horizontal.circle@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
