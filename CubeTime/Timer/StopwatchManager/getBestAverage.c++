@@ -24,18 +24,15 @@ double getBestAverageOf(const int width,
     
     multimap<double, int> s;
     double best = INFINITY;
-    
     double sum = 0;
+    double trimSum = 0;
     
-    for (int i = 0; i < solvesCount; i++) cout << solves[i] << " ";
-    cout << endl;
     
     for (int i = 0; i < width - 1; i++) {
         sum += solves[i];
         s.emplace(solves[i], i);
     }
     
-    double trimSum = 0;
     
     for (int i = width - 1; i < solvesCount; i++) {
         if (solves[i] != DINF)

@@ -753,33 +753,34 @@ extension StopwatchManager {
         
         let trim: Int32 = getTrimSizeEachEnd(width)
         
-        var accountedSolves: [Int32] = Array(repeating: 0, count: Int(width - trim*2))
-        var trimmedSolves: [Int32] = Array(repeating: 0, count: Int(trim*2))
+        var countedSolvesIndices: [Int32] = Array(repeating: 0, count: Int(width - trim*2))
+        var trimmedSolvesIndices: [Int32] = Array(repeating: 0, count: Int(trim*2))
         
         // getBestAverageOf(width:,trim:,solvesCount:,solves:
         //                  [return into] accountedSolves:,trimmedSolves:)
         let bestAverage: Double = getBestAverageOf(width, trim, count,
                                                    solveDoubles,
-                                                   &accountedSolves, &trimmedSolves);
+                                                   &countedSolvesIndices, &trimmedSolvesIndices);
         
         if (bestAverage.isNaN) {
             return nil
-        } else if (bestAverage == .infinity) {
-            return CalculatedAverage(name: "Best ao \(width)",
-                                     average: bestAverage,
-                                     accountedSolves: accountedSolves.map({ solvesByDate[Int($0)] }),
-                                     totalPen: .dnf,
-                                     trimmedSolves: trimmedSolves.map({ solvesByDate[Int($0)] }))
         } else {
-            print(trimmedSolves.map({ solvesByDate[Int($0)] }))
-            print(accountedSolves.map({ solvesByDate[Int($0)] }))
+            let trimmedSolves = trimmedSolvesIndices.map({ solvesByDate[Int($0)] })
+            let allSolves = trimmedSolves + countedSolvesIndices.map({ solvesByDate[Int($0)] })
             
-            return CalculatedAverage(name: "Best ao\(width)",
-                                     average: bestAverage,
-                                     accountedSolves: accountedSolves.map({ solvesByDate[Int($0)] }),
-                                     totalPen: .none,
-                                     trimmedSolves: trimmedSolves.map({ solvesByDate[Int($0)] }))
-
+            if (bestAverage == .infinity) {
+                return CalculatedAverage(name: "Best ao \(width)",
+                                         average: bestAverage,
+                                         accountedSolves: allSolves,
+                                         totalPen: .dnf,
+                                         trimmedSolves: trimmedSolves)
+            } else {
+                return CalculatedAverage(name: "Best ao\(width)",
+                                         average: bestAverage,
+                                         accountedSolves: allSolves,
+                                         totalPen: .none,
+                                         trimmedSolves: trimmedSolves)
+            }
         }
     }
 }
