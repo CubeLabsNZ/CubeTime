@@ -1,68 +1,74 @@
-#include <iostream>
 #include <map>
 #include <vector>
 #include "getBestAverage.h++"
+#include <cmath>
+#include <numeric>
+
+#include <iostream>
 
 using namespace std;
 
 extern "C" {
-double getBestAverageOf(const int n,
-                        const int m,
+double getBestAverageOf(const int width,
                         const int trim,
-                        const double a[_Nonnull],
-                        int accountedSolves[_Nonnull],
-                        int trimmedSolves[_Nonnull]) {
+                        const int solvesCount,
+                        
+                        const double solves[_Nonnull],
+                        
+                        int countedSolvesIndices[_Nonnull],
+                        int trimmedSolvesIndices[_Nonnull]) {
+    
+    if (solvesCount < width) return NAN;
+    
     multimap<double, int> s;
     double best = 100;
     
     double sum = 0;
     
-    for (int i = 0; i < m - 1; i++) {
-        sum += a[i];
-        s.emplace(a[i], i);
+    for (int i = 0; i < solvesCount; i++) cout << solves[i] << " ";
+    cout << endl;
+    
+    for (int i = 0; i < width - 1; i++) {
+        sum += solves[i];
+        s.emplace(solves[i], i);
     }
     
-    double minTrim = 0;
-    double maxTrim = 0;
+    double trimSum = 0;
     
     int trimmedSolvesSize = trim*2;
-    int accountedSolvesSize = m - (trimmedSolvesSize);
-    
-    
+    int accountedSolvesSize = width - (trimmedSolvesSize);
         
-    for (int i = m - 1; i < n; i++) {
-        sum += a[i];
-        s.emplace(a[i], i);
+    for (int i = width - 1; i < solvesCount; i++) {
+        sum += solves[i];
+        s.emplace(solves[i], i);
         
         auto minItr = s.begin();
         auto maxItr = --s.end();
         
-        for (int i = 0; i < trim; ++i) {
-            minTrim += (*(minItr++)).first;
-            maxTrim += (*(maxItr--)).first;
-        }
+        for (int i = 0; i < trim; ++i)
+            trimSum += ((*(minItr++)).first + (*(maxItr--)).first);
         
-        double avg = (double)(sum - minTrim - maxTrim) /(double) (m - 2*trim);
+        if ((*maxItr).first == INFINITY || (*maxItr).first == numeric_limits<double>::infinity()) return INFINITY;
+        
+        double avg = (double)(sum - trimSum) /(double) (width - 2*trim);
         
         if (avg < best) {
             auto minItr = s.begin(), maxItr = --s.end();
             for (int i = 0; i < trim; ++i) {
-                trimmedSolves[2*i] = (*(minItr++)).second;
-                trimmedSolves[2*i + 1] = (*(maxItr--)).second;
+                trimmedSolvesIndices[2*i] = (*(minItr++)).second;
+                trimmedSolvesIndices[2*i + 1] = (*(maxItr--)).second;
             }
             
-            for (int i = 0; i < (m - trim*2); ++i)
-                accountedSolves[i] = (*(minItr++)).second;
-            
+            for (int i = 0; i < (width - trim*2); ++i)
+                countedSolvesIndices[i] = (*(minItr++)).second;
             
             best = avg;
         }
         
-        sum -= a[i - m + 1];
-        s.erase(s.find(a[i - m + 1]));
+        sum -= solves[i - width + 1];
+        s.erase(s.find(solves[i - width + 1]));
         
-        minTrim = 0;
-        maxTrim = 0;
+        trimSum = 0;
     }
     
     return best;

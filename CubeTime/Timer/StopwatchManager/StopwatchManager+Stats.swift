@@ -128,6 +128,7 @@ extension StopwatchManager {
     }
     
     
+    /*
     func getBestMovingAverageOf(_ period: Int) -> CalculatedAverage? {
         precondition(period > 1)
         if solvesByDate.count < period {
@@ -175,6 +176,7 @@ extension StopwatchManager {
         }
         return CalculatedAverage(name: "Best ao\(period)", average: lowestAverage, accountedSolves: lowestValues, totalPen: lowestTotalPen, trimmedSolves: lowsetTrimmedSolves)
     }
+     */
 }
 
 
@@ -259,9 +261,9 @@ extension StopwatchManager {
             }
         }
         
-        self.bestAo5 = getBestMovingAverageOf(5)
-        self.bestAo12 = getBestMovingAverageOf(12)
-        self.bestAo100 = getBestMovingAverageOf(100)
+        self.bestAo5 = getBestAverage(of: 5)
+        self.bestAo12 = getBestAverage(of: 12)
+        self.bestAo100 = getBestAverage(of: 100)
         
         try! managedObjectContext.save()
         
@@ -288,52 +290,9 @@ extension StopwatchManager {
         solvesNoDNFs.removeAll(where: { $0.penalty == PenTypes.dnf.rawValue })
         
         
-        bestAo5 = getBestMovingAverageOf(5)
-        bestAo12 = getBestMovingAverageOf(12)
-        bestAo100 = getBestMovingAverageOf(100)
-        
-        if #available(iOS 16.0, *) {
-            let clock = ContinuousClock()
-            
-            let result = clock.measure {
-                print(getBestMovingAverageOf(100)?.average)
-            }
-            
-            print(result)
-            
-            let clock2 = ContinuousClock()
-
-            let result2 = clock2.measure {
-                print(getBestAverage(of: 100)?.average)
-            }
-
-            print(result2)
-            
-            let count = solvesByDate.count;
-            let solveDoubles = solvesByDate.map{ $0.timeIncPen };
-            
-            let clock3 = ContinuousClock()
-
-            let result3 = clock3.measure {
-                var accountedSolves: [Int32] = Array(repeating: 0, count: 90)
-                var trimmedSolves: [Int32] = Array(repeating: 0, count: 10)
-                
-                let a: Double = getBestAverageOf(Int32(count), Int32(100), Int32(5), solveDoubles, &accountedSolves, &trimmedSolves);
-                print(a);
-                
-                print(accountedSolves);
-                print(trimmedSolves);
-                
-                
-            }
-            
-            print(result3)
-        } else {
-            print("fuck you")
-        }
-        
-        
-        
+        bestAo5 = getBestAverage(of: 5)
+        bestAo12 = getBestAverage(of: 12)
+        bestAo100 = getBestAverage(of: 100)
         
         
         
@@ -702,10 +661,8 @@ extension StopwatchManager {
     
     
     
-    func getTrimSizeEachEnd(_ n: Int) -> Int {
-        return (n <= 12) ? 1 : Int(n / 20)
-    }
 
+    /*
     func getBestAverage(of width: Int) -> CalculatedAverage? {
         precondition(width >= 5)
         
@@ -784,7 +741,53 @@ extension StopwatchManager {
                                  totalPen: .none,
                                  trimmedSolves: Array(minTrimmedSolves) + Array(maxTrimmedSolves))
     }
+     */
+    
+    func getTrimSizeEachEnd(_ n: Int32) -> Int32 {
+        return (n <= 12) ? 1 : Int32(n / 20)
+    }
+    
+    func getBestAverage(of width: Int32) -> CalculatedAverage? {
+        let count: Int32 = Int32(solvesByDate.count);
+        let solveDoubles = solvesByDate.map{ $0.timeIncPenDNFMax };
+        
+        let trim: Int32 = getTrimSizeEachEnd(width)
+        
+        var accountedSolves: [Int32] = Array(repeating: 0, count: Int(width - trim*2))
+        var trimmedSolves: [Int32] = Array(repeating: 0, count: Int(trim*2))
+        
+        // getBestAverageOf(width:,trim:,solvesCount:,solves:
+        //                  [return into] accountedSolves:,trimmedSolves:)
+        let bestAverage: Double = getBestAverageOf(width, trim, count,
+                                                   solveDoubles,
+                                                   &accountedSolves, &trimmedSolves);
+        
+        if (bestAverage.isNaN) {
+            return nil
+        } else if (bestAverage == .infinity) {
+            return CalculatedAverage(name: "Best ao \(width)",
+                                     average: bestAverage,
+                                     accountedSolves: accountedSolves.map({ solvesByDate[Int($0)] }),
+                                     totalPen: .dnf,
+                                     trimmedSolves: trimmedSolves.map({ solvesByDate[Int($0)] }))
+        } else {
+            print(trimmedSolves.map({ solvesByDate[Int($0)] }))
+            print(accountedSolves.map({ solvesByDate[Int($0)] }))
+            
+            return CalculatedAverage(name: "Best ao\(width)",
+                                     average: bestAverage,
+                                     accountedSolves: accountedSolves.map({ solvesByDate[Int($0)] }),
+                                     totalPen: .none,
+                                     trimmedSolves: trimmedSolves.map({ solvesByDate[Int($0)] }))
+
+        }
+    }
 }
+
+
+
+
+
 
 
 

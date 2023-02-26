@@ -28,9 +28,9 @@ extension StopwatchManager {
         
 #warning("TODO: next update use optimised versions")
         
-        bestAo5 = getBestMovingAverageOf(5)
-        bestAo12 = getBestMovingAverageOf(12)
-        bestAo100 = getBestMovingAverageOf(100)
+        bestAo5 = getBestAverage(of: 5)
+        bestAo12 = getBestAverage(of: 12)
+        bestAo100 = getBestAverage(of: 100)
         
 #warning("TODO:  optimise")
         sessionMean = getSessionMean()
@@ -81,9 +81,9 @@ extension StopwatchManager {
             }
         }
         
-        self.bestAo5 = getBestMovingAverageOf(5)
-        self.bestAo12 = getBestMovingAverageOf(12)
-        self.bestAo100 = getBestMovingAverageOf(100)
+        self.bestAo5 = getBestAverage(of: 5)
+        self.bestAo12 = getBestAverage(of: 12)
+        self.bestAo100 = getBestAverage(of: 100)
         
         stateID = UUID() // I'm so sorry
         

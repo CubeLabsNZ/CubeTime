@@ -248,6 +248,14 @@ extension Solves: Comparable, RawGraphData {
         }
     }
     
+    var timeIncPenDNFMax: Double {
+        get {
+            return (self.penalty == PenTypes.dnf.rawValue
+                    ? Double.infinity
+                    : (self.time + (self.penalty == PenTypes.plustwo.rawValue ? 2 : 0)))
+        }
+    }
+    
     var graphData: Double? {
         get {
             return timeIncPen

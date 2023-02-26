@@ -4,12 +4,14 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-double getBestAverageOf(const int n,
-                        const int m,
+double getBestAverageOf(const int width,
                         const int trim,
-                        const double a[_Nonnull],
-                        int accountedSolves[_Nonnull],
-                        int trimmedSolves[_Nonnull]);
+                        const int solvesCount,
+                        
+                        const double solves[_Nonnull],
+                        
+                        int countedSolvesIndices[_Nonnull],
+                        int trimmedSolvesIndices[_Nonnull]);
 #ifdef __cplusplus
 }
 #endif
