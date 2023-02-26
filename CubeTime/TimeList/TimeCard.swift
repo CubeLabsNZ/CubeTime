@@ -72,7 +72,7 @@ struct TimeCard: View {
 
                 .onTapGesture {
                     if isSelectMode {
-                        withAnimation {
+                        withAnimation(Animation.customDampedSpring) {
                             if isSelected {
 //                                isSelected = false
                                 selectedSolves.remove(solve)
@@ -144,7 +144,7 @@ struct TimeCard: View {
             
             if sess_type != SessionTypes.compsim.rawValue {
                 SessionPickerMenu(sessions: sess_type == SessionTypes.playground.rawValue ? sessionsCanMoveTo_playground : sessionsCanMoveTo) { session in
-                    withAnimation {
+                    withAnimation(Animation.customDampedSpring) {
                         stopWatchManager.moveSolve(solve: solve, to: session)
                     }
                 }
@@ -159,7 +159,7 @@ struct TimeCard: View {
                 try! managedObjectContext.save()
                 stopWatchManager.tryUpdateCurrentSolveth()
                 
-                withAnimation {
+                withAnimation(Animation.customDampedSpring) {
                     stopWatchManager.delete(solve: solve)
                 }
             } label: {

@@ -160,7 +160,7 @@ struct TimeBar: View {
         }
         .onChange(of: isSelectMode) {newValue in
             if !newValue && isSelected {
-                withAnimation {
+                withAnimation(Animation.customFastSpring) {
                     isSelected = false
                 }
             }

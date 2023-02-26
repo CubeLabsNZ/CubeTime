@@ -35,7 +35,7 @@ struct StatsView: View {
                     
                     ScrollView {
                         VStack {
-                            SessionTypeHeader()
+                            SessionHeader()
                                 .padding(.horizontal)
                                 .padding(.top, -6)
 

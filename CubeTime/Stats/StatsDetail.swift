@@ -60,7 +60,7 @@ struct StatsDetail: View {
                                 .padding([.horizontal, .top])
                             }
                             
-                            SessionTypeHeader()
+                            SessionHeader()
                                 .padding(.horizontal)
                                 .padding(.top, isCurrentCompSimAverage ? 10 : -10)
                             
@@ -172,11 +172,11 @@ struct StatsDetail: View {
                                 Button {
                                     copySolve(solves: solves)
                                     
-                                    withAnimation(Animation.interpolatingSpring(stiffness: 140, damping: 20).delay(0.25)) {
+                                    withAnimation(Animation.customSlowSpring.delay(0.25)) {
                                         self.offsetValue = 0
                                     }
                                     
-                                    withAnimation(Animation.easeOut.delay(2.25)) {
+                                    withAnimation(Animation.customFastEaseOut.delay(2.25)) {
                                         self.offsetValue = -25
                                     }
                                     

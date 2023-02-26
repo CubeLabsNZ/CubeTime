@@ -131,7 +131,7 @@ struct AppearanceSettingsView: View {
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            withAnimation(.spring()) {
+                            withAnimation(Animation.customSlowSpring) {
                                 showThemeOptions.toggle()
                             }
                         }
@@ -480,11 +480,13 @@ struct TimerPreview: View {
                     .frame(width: 85, height: 30)
                     .padding(.trailing, 8)
                 
-                CloseButton()
-                    .onTapGesture {
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                    .padding(0)
+                // CLOSE BUTTON
+                HierarchialButton(type: .mono, size: .medium, outlined: false, square: true, onTapRun: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "xmark")
+                }
+                .padding(0)
             }
             .frame(maxHeight: .infinity, alignment: .top)
             .padding(.horizontal)

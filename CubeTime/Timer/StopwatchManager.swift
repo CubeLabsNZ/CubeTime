@@ -563,7 +563,7 @@ class StopWatchManager: ObservableObject {
         
         
         if showPenOptions {
-            withAnimation {
+            withAnimation(Animation.customSlowSpring) {
                 showPenOptions = false
             }
         }
@@ -596,7 +596,7 @@ class StopWatchManager: ObservableObject {
             timerColour = Color.Timer.loading
         }
         
-        withAnimation {
+        withAnimation(Animation.customSlowSpring) {
             showPenOptions = false
         }
         
@@ -721,9 +721,7 @@ extension StopWatchManager {
         }
         
         if PenTypes(rawValue: solveItem.penalty)! == .plustwo {
-//            withAnimation {
-                secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
-//            }
+            secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
         } else {
             secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
         }
@@ -812,7 +810,7 @@ extension StopWatchManager {
         }
         prevDownStoppedTimer = false
         
-        withAnimation {
+        withAnimation(Animation.customSlowSpring) {
             showPenOptions = true
             nilSolve = (solveItem == nil)
         }
@@ -820,7 +818,7 @@ extension StopWatchManager {
     
     
     func askToDelete() {
-        withAnimation {
+        withAnimation(Animation.customSlowSpring) {
             showPenOptions = false
         }
         

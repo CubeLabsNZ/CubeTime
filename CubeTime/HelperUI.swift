@@ -151,24 +151,35 @@ struct AnimatedButton: ButtonStyle {
         return configuration.label
             .scaleEffect(configuration.isPressed ? 0.96 : 1.00)
             .opacity(configuration.isPressed ? 0.80 : 1.00)
-            .animation(.easeIn(duration: 0.1), value: configuration.isPressed)
+            .animation(Animation.customFastSpring, value: configuration.isPressed)
     }
 }
 
 struct HierarchialButton<V: View>: View {
     let type: HierarchialButtonType
     let size: HierarchialButtonSize
+    
     let outlined: Bool
     let square: Bool
+    let shadow: Bool
         
     let onTapRun: () -> Void
     @ViewBuilder let content: () -> V
     
-    init(type: HierarchialButtonType, size: HierarchialButtonSize, outlined: Bool=false, square: Bool=false, onTapRun: @escaping () -> Void, @ViewBuilder _ content: @escaping () -> V) {
+    init(type: HierarchialButtonType,
+         size: HierarchialButtonSize,
+         outlined: Bool=false,
+         square: Bool=false,
+         shadow: Bool=true,
+         onTapRun: @escaping () -> Void,
+         @ViewBuilder _ content: @escaping () -> V) {
         self.type = type
         self.size = size
+        
+        self.shadow = shadow
         self.outlined = outlined
         self.square = square
+        
         self.onTapRun = onTapRun
         self.content = content
     }
@@ -177,7 +188,12 @@ struct HierarchialButton<V: View>: View {
         Button {
             self.onTapRun()
         } label: {
-            HierarchialButtonBase(type: self.type, size: self.size, outlined: self.outlined, square: self.square, content: self.content)
+            HierarchialButtonBase(type: self.type,
+                                  size: self.size,
+                                  outlined: self.outlined,
+                                  square: self.square,
+                                  shadow: self.shadow,
+                                  content: self.content)
         }
         .buttonStyle(AnimatedButton())
     }
@@ -195,18 +211,20 @@ struct HierarchialButtonBase<V: View>: View {
     let fontType: Font
     
     let square: Bool
+    let shadow: Bool
     
     
     init(type: HierarchialButtonType,
          size: HierarchialButtonSize,
          outlined: Bool,
          square: Bool,
+         shadow: Bool,
          content: @escaping () -> V) {
         switch (type) {
         case .halfcoloured:
             self.colourBg = Color("overlay0")
             self.colourFg = Color.accentColor
-            self.colourShadow = Color.black.opacity(0.04)
+            self.colourShadow = Color.black.opacity(0.06)
             
         case .coloured:
             self.colourBg = Color("accent4")
@@ -216,7 +234,7 @@ struct HierarchialButtonBase<V: View>: View {
         case .mono:
             self.colourBg = Color("overlay0")
             self.colourFg = Color("dark")
-            self.colourShadow = Color.black.opacity(0.04)
+            self.colourShadow = Color.black.opacity(0.06)
             
         case .disabled:
             self.colourBg = Color("indent2")
@@ -246,6 +264,7 @@ struct HierarchialButtonBase<V: View>: View {
             
         }
         
+        self.shadow = shadow
         self.square = square
         self.content = content()
     }
@@ -259,7 +278,12 @@ struct HierarchialButtonBase<V: View>: View {
             RoundedRectangle(cornerRadius: 6, style: .continuous)
                 .fill(self.colourBg.opacity(0.92))
                 .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
-                .shadow(color: self.colourShadow, radius: 4, x: 0, y: 1)
+                .shadow(color: self.shadow
+                        ? self.colourShadow
+                        : Color.clear,
+                        radius: self.shadow ? 4 : 0,
+                        x: 0,
+                        y: self.shadow ? 1 : 0)
             
             content
                 .foregroundColor(self.colourFg)
@@ -270,3 +294,13 @@ struct HierarchialButtonBase<V: View>: View {
     }
 }
 
+extension Animation {
+    static let customFastSpring: Animation = .spring(response: 0.3, dampingFraction: 0.72)
+    static let customSlowSpring: Animation = .spring(response: 0.45, dampingFraction: 0.76)
+    
+    static let customDampedSpring: Animation = .spring(response: 0.3, dampingFraction: 0.82)
+    static let customBouncySpring: Animation = .spring(response: 0.45, dampingFraction: 0.64)
+    
+    static let customFastEaseOut: Animation = .easeOut(duration: 0.28)
+    static let customEaseInOut: Animation = .easeInOut(duration: 0.36)
+}

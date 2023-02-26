@@ -80,7 +80,7 @@ struct SettingsCard: View {
         // once import and export is added
         if info.name == "General" || info.name == "Appearance" {
             Button {
-                withAnimation(.spring(response: 0.6)) {
+                withAnimation(Animation.customSlowSpring) {
                     currentCard = info
                 }
             } label: {
@@ -124,7 +124,7 @@ struct SettingsCard: View {
             .buttonStyle(CardButtonStyle())
         } else {
             Button {
-                withAnimation(.spring(response: 0.6)) {
+                withAnimation(Animation.customSlowSpring) {
                     currentCard = info
                 }
             } label: {
@@ -245,15 +245,16 @@ struct SettingsDetail: View {
                             HStack {
                                 Spacer()
                                 
-                                CloseButton()
-                                    .padding([.horizontal, .bottom])
-                                    .padding(.top, 8)
-                                    .onTapGesture {
-                                        withAnimation(.spring(response: 0.5)) {
-                                            currentCard = nil
-                                        }
-                                        
+                                // CLOSE BUTTON
+                                HierarchialButton(type: .mono, size: .medium, outlined: false, square: true, onTapRun: {
+                                    withAnimation(Animation.customSlowSpring) {
+                                        currentCard = nil
                                     }
+                                }) {
+                                    Image(systemName: "xmark")
+                                }
+                                .padding([.horizontal, .bottom])
+                                .padding(.top, 8)
                             }
                             Spacer()
                         }

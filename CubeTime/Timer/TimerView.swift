@@ -49,7 +49,7 @@ struct TimerTime: View {
         } elseDo: { view in
             return view
                 .modifier(AnimatingFontSize(font: stopWatchManager.ctFontDescBold, fontSize: stopWatchManager.mode == .running ? 70 : 56))
-                .animation(Animation.spring(), value: stopWatchManager.mode == .running)
+                .animation(Animation.customBouncySpring, value: stopWatchManager.mode == .running)
         }
     }
 }

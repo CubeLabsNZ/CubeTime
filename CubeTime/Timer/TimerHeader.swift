@@ -54,7 +54,7 @@ struct TimerHeader: View {
         HStack {
             if previewMode {
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
                         .fill(Color("overlay0"))
                         .frame(width: 35, height: 35)
                         .shadowDark(x: 2, y: 0)
@@ -79,7 +79,7 @@ struct TimerHeader: View {
                 }
             } else {
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
                         .fill(Color("overlay0"))
                         .frame(width: (toggleSessionName ^ showSessionName) ? nil : 35, height: 35)
                         .shadowDark(x: 2, y: 0)
@@ -95,7 +95,7 @@ struct TimerHeader: View {
                     }
                 }
                 .onTapGesture {
-                    withAnimation(.spring()) {
+                    withAnimation(Animation.customSlowSpring) {
                         toggleSessionName.toggle()
                     }
                 }
@@ -199,8 +199,8 @@ struct TimerHeader: View {
         .frame(height: 35)
         .background(
             Color("overlay1")
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                .animation(.spring(), value: stopWatchManager.playgroundScrambleType)
+                .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                .animation(Animation.customFastSpring, value: stopWatchManager.playgroundScrambleType)
         )
         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
     }

@@ -56,7 +56,7 @@ struct SessionsView: View {
                         NavigationLink {
                             ToolsList()
                         } label: {
-                            HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: false) {
+                            HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: false, shadow: true) {
                                 Label("Tools", systemImage: "wrench.and.screwdriver")
                                     .labelStyle(.titleAndIcon)
                                     .imageScale(.small)

@@ -172,7 +172,7 @@ struct SessionCard: View {
             .zIndex(2)
         }
         .onTapGesture {
-            withAnimation(.spring(response: 0.325)) {
+            withAnimation(Animation.customDampedSpring) {
                 if stopWatchManager.currentSession != item {
                     stopWatchManager.currentSession = item
                 }
@@ -191,7 +191,7 @@ struct SessionCard: View {
             
             ContextMenuButton(delay: true,
                               action: {
-                withAnimation(.spring()) {
+                withAnimation(Animation.customDampedSpring) {
                     item.pinned.toggle()
                     try! managedObjectContext.save()
                 }
@@ -228,14 +228,14 @@ struct SessionCard: View {
                     }
                     
                     if let next = next {
-                        withAnimation {
+                        withAnimation(Animation.customDampedSpring) {
                             stopWatchManager.currentSession = next
                         }
                         
                     }
                 }
                 
-                withAnimation(.spring()) {
+                withAnimation(Animation.customDampedSpring) {
                     managedObjectContext.delete(item)
                     try! managedObjectContext.save()
                 }
