@@ -40,6 +40,8 @@ struct ToolOverlay: View {
 }
 
 struct ToolsList: View {
+    @EnvironmentObject var tabRouter: TabRouter
+    
     @State var displayingTool: Tool? = nil
     @Namespace private var namespace
     
@@ -59,14 +61,13 @@ struct ToolsList: View {
             if let displayingTool = displayingTool {
                 ZStack {
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
-//                        .fill(Color("overlay0"))
-                        .fill(Color.red)
+                        .fill(Color("overlay0"))
                         .matchedGeometryEffect(id: "bg" + displayingTool.name, in: namespace)
                         .frame(height: nil)
                         .ignoresSafeArea()
                         .transition(.identity)
                     
-                    Text(displayingTool.name)
+                    TimerOnlyTool(showOverlay: $displayingTool)
                 }
                 .zIndex(100)
                 
@@ -102,6 +103,7 @@ struct ToolsList: View {
                         .onTapGesture {
                             withAnimation {
                                 displayingTool = tool
+                                tabRouter.hideTabBar = true
                             }
                         }
                     }
@@ -115,5 +117,6 @@ struct ToolsList: View {
         .navigationViewStyle(StackNavigationViewStyle())
         .navigationBarTitle("Tools")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(displayingTool != nil)
     }
 }

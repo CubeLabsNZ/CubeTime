@@ -88,7 +88,6 @@ struct SessionHeader: View {
             Color("overlay1")
                 .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
         )
-
     }
 }
 

@@ -310,10 +310,16 @@ struct HierarchialButtonBase<V: View>: View {
 }
 
 struct CloseButton: View {
+    let hasBackgroundShadow: Bool
     let onTapRun: () -> Void
     
+    init(hasBackgroundShadow: Bool=false, onTapRun: @escaping () -> Void) {
+        self.hasBackgroundShadow = hasBackgroundShadow
+        self.onTapRun = onTapRun
+    }
+    
     var body: some View {
-        HierarchialButton(type: .mono, size: .medium, hasShadow: false, hasBackground: false, onTapRun: self.onTapRun) {
+        HierarchialButton(type: .mono, size: .medium, square: true, hasShadow: hasBackgroundShadow, hasBackground: hasBackgroundShadow, onTapRun: self.onTapRun) {
             Image(systemName: "xmark")
         }
     }

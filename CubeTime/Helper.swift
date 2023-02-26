@@ -162,6 +162,23 @@ extension Bool {
     }
 }
 
+
+extension Array where Element: Equatable {
+    // Remove first collection element that is equal to the given `object`:
+    mutating func remove(object: Element) {
+        guard let index = firstIndex(of: object) else {return}
+        remove(at: index)
+    }
+    
+    
+    func chunked() -> [[Element]] {
+        return stride(from: 0, to: count-1, by: 1).map {
+            Array(self[$0 ..< Swift.min($0 + 2, count)])
+        }
+    }
+}
+
+
 #warning("TODO: fix these, combine")
 // get device type extension
 public extension UIDevice {
@@ -799,6 +816,10 @@ extension View {
 
 
 
+@available(*, deprecated, message: "Use solve.timeIncPen instead.")
+func timeWithPlusTwoForSolve(_ solve: Solves) -> Double {
+    return solve.time + (solve.penalty == PenTypes.plustwo.rawValue ? 2 : 0)
+}
 
 
 
