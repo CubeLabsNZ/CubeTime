@@ -17,6 +17,17 @@ struct TimerOnlyTool: View {
     
     @Binding var showOverlay: Tool?
     
+    var namespace: Namespace.ID
+    
+    let name: String
+    
+    init(showOverlay: Binding<Tool?>, namespace: Namespace.ID) {
+        self._showOverlay = showOverlay
+        self.namespace = namespace
+        self.name = showOverlay.wrappedValue!.name
+        
+    }
+    
     // GET USER DEFAULTS
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
@@ -39,11 +50,8 @@ struct TimerOnlyTool: View {
             
             if stopwatchManager.mode == .stopped {
                 HStack {
-                    HStack(spacing: 16) {
-                        Image(systemName: "stopwatch")
-                        
-                        Text("Timer Only")
-                    }
+                    Label("Timer Only", systemImage: "stopwatch")
+                    .matchedGeometryEffect(id: name, in: namespace)
                     .font(.system(size: 17, weight: .medium))
                     .padding(.leading, 8)
                     .padding(.trailing)
@@ -51,6 +59,7 @@ struct TimerOnlyTool: View {
                     .background(
                         Color("overlay1")
                             .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                            .matchedGeometryEffect(id: "bg" + name, in: namespace)
                     )
                     
                     Spacer()
