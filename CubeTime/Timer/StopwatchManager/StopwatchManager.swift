@@ -54,7 +54,7 @@ func setupAudioSession() {
 
 // MARK: --
 // MARK: SWM
-class StopWatchManager: ObservableObject {
+class StopwatchManager: ObservableObject {
     let managedObjectContext: NSManagedObjectContext
     
     // MARK: get user defaults

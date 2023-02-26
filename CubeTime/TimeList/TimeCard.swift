@@ -7,7 +7,7 @@ struct TimeCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
@@ -61,7 +61,7 @@ struct TimeCard: View {
     }
     
     var body: some View {
-        let sess_type = stopWatchManager.currentSession.session_type
+        let sess_type = stopwatchManager.currentSession.session_type
         ZStack {
             #warning("TODO:  check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectangle")
             RoundedRectangle(cornerRadius: 8, style: .continuous)
@@ -122,19 +122,19 @@ struct TimeCard: View {
             
             Menu {
                 Button {
-                    stopWatchManager.changePen(solve: self.solve, pen: .none)
+                    stopwatchManager.changePen(solve: self.solve, pen: .none)
                 } label: {
                     Label("No Penalty", systemImage: "checkmark.circle")
                 }
                 
                 Button {
-                    stopWatchManager.changePen(solve: self.solve, pen: .plustwo)
+                    stopwatchManager.changePen(solve: self.solve, pen: .plustwo)
                 } label: {
                     Label("+2", image: "+2.label")
                 }
                 
                 Button {
-                    stopWatchManager.changePen(solve: self.solve, pen: .dnf)
+                    stopwatchManager.changePen(solve: self.solve, pen: .dnf)
                 } label: {
                     Label("DNF", systemImage: "xmark.circle")
                 }
@@ -145,7 +145,7 @@ struct TimeCard: View {
             if sess_type != SessionTypes.compsim.rawValue {
                 SessionPickerMenu(sessions: sess_type == SessionTypes.playground.rawValue ? sessionsCanMoveTo_playground : sessionsCanMoveTo) { session in
                     withAnimation(Animation.customDampedSpring) {
-                        stopWatchManager.moveSolve(solve: solve, to: session)
+                        stopwatchManager.moveSolve(solve: solve, to: session)
                     }
                 }
             }
@@ -157,10 +157,10 @@ struct TimeCard: View {
             Button(role: .destructive) {
                 managedObjectContext.delete(solve)
                 try! managedObjectContext.save()
-                stopWatchManager.tryUpdateCurrentSolveth()
+                stopwatchManager.tryUpdateCurrentSolveth()
                 
                 withAnimation(Animation.customDampedSpring) {
-                    stopWatchManager.delete(solve: solve)
+                    stopwatchManager.delete(solve: solve)
                 }
             } label: {
                 Label {
@@ -174,7 +174,7 @@ struct TimeCard: View {
             view
                 .task {
                     #warning("Optimize this :sob:")
-                    sessionsCanMoveTo_playground = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: solve.scramble_type, currentSession: stopWatchManager.currentSession)
+                    sessionsCanMoveTo_playground = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: solve.scramble_type, currentSession: stopwatchManager.currentSession)
                 }
         }
     }

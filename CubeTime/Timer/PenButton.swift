@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PenaltyButton: View {
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     @Environment(\.managedObjectContext) private var managedObjectContext
     @Environment(\.colorScheme) private var colourScheme
     
@@ -20,9 +20,9 @@ struct PenaltyButton: View {
     
     var body: some View {
         Button(action: {
-            let oldPen = stopWatchManager.solveItem.penalty
-            stopWatchManager.solveItem.penalty = penType.rawValue
-            stopWatchManager.changedPen(PenTypes(rawValue: oldPen)!)
+            let oldPen = stopwatchManager.solveItem.penalty
+            stopwatchManager.solveItem.penalty = penType.rawValue
+            stopwatchManager.changedPen(PenTypes(rawValue: oldPen)!)
             try! managedObjectContext.save()
             
         }, label: {

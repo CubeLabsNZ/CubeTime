@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct PrevSolvesDisplay: View {
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     var count: Int?;
     var body: some View {
         HStack {
             ForEach((count != nil)
-                    ? stopWatchManager.solvesByDate.suffix(count!).reversed()
-                    : stopWatchManager.solvesByDate.reversed(), id: \.self) { solve in
+                    ? stopwatchManager.solvesByDate.suffix(count!).reversed()
+                    : stopwatchManager.solvesByDate.reversed(), id: \.self) { solve in
                 #warning("TODO:  popup")
                 TimeCard(solve: solve, currentSolve: .constant(nil), isSelectMode: .constant(false), selectedSolves: .constant([]))
             }
@@ -24,7 +24,7 @@ struct PrevSolvesDisplay: View {
 
 struct PrevSolvesDisplay_Previews: PreviewProvider {
     static let moc = PersistenceController.shared.container.viewContext
-    static let stopWatchManager: StopWatchManager = {
+    static let stopwatchManager: StopwatchManager = {
         let session = Sessions(context: moc)
         session.name = "Session"
         session.scramble_type = 3
@@ -42,11 +42,11 @@ struct PrevSolvesDisplay_Previews: PreviewProvider {
             solve.scramble_type = 3
             solve.scramble_subtype = 0
         }
-        let swm = StopWatchManager(currentSession: session, managedObjectContext: moc)
+        let swm = StopwatchManager(currentSession: session, managedObjectContext: moc)
         return swm
     }()
     static var previews: some View {
         PrevSolvesDisplay()
-            .environmentObject(stopWatchManager)
+            .environmentObject(stopwatchManager)
     }
 }

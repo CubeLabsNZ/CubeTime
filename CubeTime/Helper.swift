@@ -237,7 +237,7 @@ extension CompSimSolveGroup: RawGraphData {
     }
     
     var avg: CalculatedAverage? {
-        return StopWatchManager.calculateAverage(self.solves!.array as! [Solves], "Comp Sim Group", true)
+        return StopwatchManager.calculateAverage(self.solves!.array as! [Solves], "Comp Sim Group", true)
     }
 }
 
@@ -565,7 +565,7 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
         return nil
     }
     
-    let sorted = solves.sorted(by: StopWatchManager.sortWithDNFsLast)
+    let sorted = solves.sorted(by: StopwatchManager.sortWithDNFsLast)
     let trimmedSolves: [Solves] = sorted.prefix(trim) + sorted.suffix(trim)
     
     return CalculatedAverage(

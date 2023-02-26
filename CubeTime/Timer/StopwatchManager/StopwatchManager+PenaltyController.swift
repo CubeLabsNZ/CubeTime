@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-extension StopWatchManager {
+extension StopwatchManager {
     func changedPen(_ oldPen: PenTypes) {
         if oldPen.rawValue == solveItem.penalty {
             return

@@ -14,28 +14,28 @@ struct SheetStrWrapper: Identifiable {
 
 
 struct TimerTime: View {
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     @Environment(\.colorScheme) var colourScheme
     
     @inlinable func getTimerColor() -> Color {
-        if stopWatchManager.mode == .inspecting && colourScheme == .dark && stopWatchManager.timerColour == Color.Timer.normal {
-            switch stopWatchManager.inspectionSecs {
+        if stopwatchManager.mode == .inspecting && colourScheme == .dark && stopwatchManager.timerColour == Color.Timer.normal {
+            switch stopwatchManager.inspectionSecs {
             case ..<8: return Color.Timer.normal
             case 8..<12: return Color(uiColor: .systemYellow)
             case 12..<15: return Color(uiColor: .systemOrange)
             default: return Color(uiColor: .systemRed)
             }
         } else {
-            return stopWatchManager.timerColour
+            return stopwatchManager.timerColour
         }
     }
     
     var body: some View {
-        Text(stopWatchManager.secondsStr
-             + (stopWatchManager.mode == .inspecting
-                ? ((stopWatchManager.inspectionSecs >= 17
+        Text(stopwatchManager.secondsStr
+             + (stopwatchManager.mode == .inspecting
+                ? ((stopwatchManager.inspectionSecs >= 17
                     ? "(DNF)"
-                    : (stopWatchManager.inspectionSecs >= 15
+                    : (stopwatchManager.inspectionSecs >= 15
                        ? "(+2)"
                        : "")))
                 : ""))
@@ -43,26 +43,26 @@ struct TimerTime: View {
         .modifier(DynamicText())
         // for smaller phones (iPhoneSE and test sim), disable animation to larger text
         // to prevent text clipping and other UI problems
-        .ifelse (stopWatchManager.isSmallDevice) { view in
+        .ifelse (stopwatchManager.isSmallDevice) { view in
             return view
-                .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDescBold, 54, nil)))
+                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 54, nil)))
         } elseDo: { view in
             return view
-                .modifier(AnimatingFontSize(font: stopWatchManager.ctFontDescBold, fontSize: stopWatchManager.mode == .running ? 70 : 56))
-                .animation(Animation.customBouncySpring, value: stopWatchManager.mode == .running)
+                .modifier(AnimatingFontSize(font: stopwatchManager.ctFontDescBold, fontSize: stopwatchManager.mode == .running ? 70 : 56))
+                .animation(Animation.customBouncySpring, value: stopwatchManager.mode == .running)
         }
     }
 }
 
 
 struct TimerBackgroundColor: View {
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     @Environment(\.colorScheme) var colourScheme
     
     var body: some View {
-        if stopWatchManager.mode == .inspecting && colourScheme == .light {
-            switch stopWatchManager.inspectionSecs {
+        if stopwatchManager.mode == .inspecting && colourScheme == .light {
+            switch stopwatchManager.inspectionSecs {
             case 8..<12:
                 Color.Inspection.eight
                     .ignoresSafeArea()
@@ -89,7 +89,7 @@ enum TimerTool {
 }
 
 struct BottomTools: View {
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     @AppStorage(gsKeys.showScramble.rawValue) private var showScramble: Bool = true
     @AppStorage(gsKeys.showStats.rawValue) private var showStats: Bool = true
     
@@ -109,7 +109,7 @@ struct BottomTools: View {
             }
             
             if showStats {
-                BottomTool(toolType: SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! != .compsim
+                BottomTool(toolType: SessionTypes(rawValue: stopwatchManager.currentSession.session_type)! != .compsim
                            ? .statsStandard
                            : .statsCompsim,
                            parentGeo: timerSize,
@@ -135,7 +135,7 @@ struct BottomToolBG: View {
 
 struct BottomTool: View {
     @Environment(\.colorScheme) private var colourScheme
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     @Binding var scrambleSheetStr: SheetStrWrapper?
     @Binding var presentedAvg: CalculatedAverage?
     
@@ -162,8 +162,8 @@ struct BottomTool: View {
             
             switch toolType {
             case .drawScramble:
-                if let svg = stopWatchManager.scrambleSVG {
-                    if let scr = stopWatchManager.scrambleStr {
+                if let svg = stopwatchManager.scrambleSVG {
+                    if let scr = stopwatchManager.scrambleStr {
                         SVGView(string: svg)
                             .padding(2)
                             .frame(width: maxWidth, height: maxHeight)
@@ -186,7 +186,7 @@ struct BottomTool: View {
                             Text("AO5")
                                 .font(.system(size: 13, weight: .medium))
                             
-                            if let currentAo5 = stopWatchManager.currentAo5 {
+                            if let currentAo5 = stopwatchManager.currentAo5 {
                                 Text(formatSolveTime(secs: currentAo5.average!, penType: currentAo5.totalPen))
                                     .font(.system(size: 24, weight: .bold))
                                     .frame(maxWidth: maxWidth/2-8)
@@ -200,8 +200,8 @@ struct BottomTool: View {
                         }
                         .frame(minWidth: 0, maxWidth: .infinity)
                         .onTapGesture {
-                            if stopWatchManager.currentAo5 != nil {
-                                presentedAvg = stopWatchManager.currentAo5
+                            if stopwatchManager.currentAo5 != nil {
+                                presentedAvg = stopwatchManager.currentAo5
                             }
                         }
                         
@@ -210,7 +210,7 @@ struct BottomTool: View {
                             Text("AO12")
                                 .font(.system(size: 13, weight: .medium))
                             
-                            if let currentAo12 = stopWatchManager.currentAo12 {
+                            if let currentAo12 = stopwatchManager.currentAo12 {
                                 Text(formatSolveTime(secs: currentAo12.average!, penType: currentAo12.totalPen))
                                     .font(.system(size: 24, weight: .bold))
                                     .frame(maxWidth: maxWidth/2-8)
@@ -223,8 +223,8 @@ struct BottomTool: View {
                         }
                         .frame(minWidth: 0, maxWidth: .infinity)
                         .onTapGesture {
-                            if stopWatchManager.currentAo12 != nil {
-                                presentedAvg = stopWatchManager.currentAo12
+                            if stopwatchManager.currentAo12 != nil {
+                                presentedAvg = stopwatchManager.currentAo12
                             }
                         }
                     }
@@ -238,7 +238,7 @@ struct BottomTool: View {
                             Text("AO100")
                                 .font(.system(size: 13, weight: .medium))
                             
-                            if let currentAo100 = stopWatchManager.currentAo100 {
+                            if let currentAo100 = stopwatchManager.currentAo100 {
                                 Text(formatSolveTime(secs: currentAo100.average!, penType: currentAo100.totalPen))
                                     .font(.system(size: 24, weight: .bold))
                                     .frame(maxWidth: maxWidth/2-8)
@@ -251,8 +251,8 @@ struct BottomTool: View {
                         }
                         .frame(minWidth: 0, maxWidth: .infinity)
                         .onTapGesture {
-                            if stopWatchManager.currentAo100 != nil {
-                                presentedAvg = stopWatchManager.currentAo100
+                            if stopwatchManager.currentAo100 != nil {
+                                presentedAvg = stopwatchManager.currentAo100
                             }
                         }
                         
@@ -261,7 +261,7 @@ struct BottomTool: View {
                             Text("MEAN")
                                 .font(.system(size: 13, weight: .medium))
                             
-                            if let sessionMean = stopWatchManager.sessionMean {
+                            if let sessionMean = stopwatchManager.sessionMean {
                                 Text(formatSolveTime(secs: sessionMean))
                                     .font(.system(size: 24, weight: .bold))
                                     .frame(maxWidth: maxWidth/2-8)
@@ -289,7 +289,7 @@ struct BottomTool: View {
                             Text("BPA")
                                 .font(.system(size: 13, weight: .medium))
                             
-                            if let bpa = stopWatchManager.bpa {
+                            if let bpa = stopwatchManager.bpa {
                                 Text(formatSolveTime(secs: bpa))
                                     .font(.system(size: 24, weight: .bold))
                                     .frame(maxWidth: maxWidth/2-8)
@@ -308,7 +308,7 @@ struct BottomTool: View {
                             Text("WPA")
                                 .font(.system(size: 13, weight: .medium))
                             
-                            if let wpa = stopWatchManager.wpa {
+                            if let wpa = stopwatchManager.wpa {
                                 if wpa == -1 {
                                     Text("DNF")
                                         .font(.system(size: 24, weight: .bold))
@@ -339,7 +339,7 @@ struct BottomTool: View {
                         Text("TO REACH TARGET")
                             .font(.system(size: 13, weight: .medium))
                         
-                        if let timeNeededForTarget = stopWatchManager.timeNeededForTarget {
+                        if let timeNeededForTarget = stopwatchManager.timeNeededForTarget {
                             if timeNeededForTarget == -1 {
                                 Text("Not Possible")
                                     .font(.system(size: 22, weight: .bold))
@@ -414,7 +414,7 @@ let padFloatingLayout = true
 
 
 struct ScrambleText: View {
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     let scr: String
     var floatingPanelStage: Int
     var timerSize: CGSize
@@ -422,10 +422,10 @@ struct ScrambleText: View {
     
     
     var body: some View {
-        let mega: Bool = stopWatchManager.currentSession.scramble_type == 7
+        let mega: Bool = stopwatchManager.currentSession.scramble_type == 7
         
         Text(scr)
-            .font(stopWatchManager.ctFontScramble)
+            .font(stopwatchManager.ctFontScramble)
             .fixedSize(horizontal: mega, vertical: false)
             .multilineTextAlignment(mega ? .leading : .center)
             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
@@ -445,7 +445,7 @@ struct ScrambleText: View {
 }
 
 struct TimerView: View {
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var tabRouter: TabRouter
     
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -491,7 +491,7 @@ struct TimerView: View {
     
     
     var body: some View {
-        let typingMode = inputMode == .typing && stopWatchManager.currentSession.session_type != SessionTypes.multiphase.rawValue
+        let typingMode = inputMode == .typing && stopwatchManager.currentSession.session_type != SessionTypes.multiphase.rawValue
         
         GeometryReader { geo in
             TimerBackgroundColor()
@@ -521,7 +521,7 @@ struct TimerView: View {
                         }
                     }
             } else {
-                TimerTouchView(stopWatchManager: stopWatchManager)
+                TimerTouchView(stopwatchManager: stopwatchManager)
             }
             
             
@@ -530,10 +530,10 @@ struct TimerView: View {
                     TimerTime()
                         .allowsHitTesting(false)
                     
-                    if stopWatchManager.mode == .inspecting && showCancelInspection {
+                    if stopwatchManager.mode == .inspecting && showCancelInspection {
                         PenaltyBar(90) {
                             Button {
-                                stopWatchManager.interruptInspection()
+                                stopwatchManager.interruptInspection()
                             } label: {
                                 Text("Cancel")
                                     .font(.system(size: 21, weight: .semibold, design: .rounded))
@@ -552,9 +552,9 @@ struct TimerView: View {
                     TextField("0.00", text: $manualInputTime)
                         .focused($manualInputFocused)
                         .frame(maxWidth: geo.size.width-32)
-                        .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDescBold, 56, nil)))
+                        .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 56, nil)))
                         .multilineTextAlignment(.center)
-                        .foregroundColor(stopWatchManager.timerColour)
+                        .foregroundColor(stopwatchManager.timerColour)
                         .background(Color("bg"))
                         .modifier(DynamicText())
                         .modifier(TimeMaskTextField(text: $manualInputTime))
@@ -563,7 +563,7 @@ struct TimerView: View {
                 .ignoresSafeArea(edges: .all)
             }
             
-            if stopWatchManager.mode == .stopped {
+            if stopwatchManager.mode == .stopped {
                 BottomTools(timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr, presentedAvg: $presentedAvg)
                 
                 // 50 for tab + 8 for padding + 16/0 for bottom bar gap
@@ -581,14 +581,14 @@ struct TimerView: View {
                     LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
                         .frame(maxHeight: 35)
                         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
-                        .opacity(stopWatchManager.scrambleStr == nil ? 1 : 0)
+                        .opacity(stopwatchManager.scrambleStr == nil ? 1 : 0)
                 }
                 .padding(.horizontal, padFloatingLayout && UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) ? 24 : nil)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 
                 
                 
-                if let scr = stopWatchManager.scrambleStr {
+                if let scr = stopwatchManager.scrambleStr {
                     ScrambleText(scr: scr, floatingPanelStage: floatingPanelStage, timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr)
                         .frame(maxHeight: .infinity, alignment: .top)
                         .animation(.none, value: self.floatingPanelStage)
@@ -596,11 +596,11 @@ struct TimerView: View {
             }
             
             
-            if stopWatchManager.scrambleStr != nil && (typingMode || stopWatchManager.showPenOptions) {
+            if stopwatchManager.scrambleStr != nil && (typingMode || stopwatchManager.showPenOptions) {
                 HStack {
-                    let showPlus = stopWatchManager.currentSession.session_type != SessionTypes.multiphase.rawValue && !justManuallyInput && (inputMode != .typing || manualInputTime != "")
+                    let showPlus = stopwatchManager.currentSession.session_type != SessionTypes.multiphase.rawValue && !justManuallyInput && (inputMode != .typing || manualInputTime != "")
                     
-                    if stopWatchManager.solveItem != nil && !manualInputFocused {
+                    if stopwatchManager.solveItem != nil && !manualInputFocused {
                         PenaltyBar(122) {
                             HStack {
                                 PenaltyButton(penType: .plustwo, penSymbol: "+2", imageSymbol: true, canType: false, colour: Color.yellow)
@@ -632,7 +632,7 @@ struct TimerView: View {
                                     if manualInputFocused {
                                         if manualInputTime != "" {
                                             // record entered time time
-                                            stopWatchManager.stop(timeFromStr(manualInputTime))
+                                            stopwatchManager.stop(timeFromStr(manualInputTime))
                                             
                                             // remove focus and reset time
                                             showInputField = false
@@ -663,13 +663,13 @@ struct TimerView: View {
                         } else if typingMode {
                             PenaltyBar(68) {
                                 Button {
-                                    stopWatchManager.stop(timeFromStr(manualInputTime))
+                                    stopwatchManager.stop(timeFromStr(manualInputTime))
                                     
                                     // remove focus and reset time
                                     manualInputFocused = false
                                     justManuallyInput = true
                                     
-                                    stopWatchManager.displayPenOptions()
+                                    stopwatchManager.displayPenOptions()
                                     
                                     showManualInputFormattedText = true
                                     
@@ -681,7 +681,7 @@ struct TimerView: View {
                         }
                     }
                 }
-                .disabled(stopWatchManager.scrambleStr == nil)
+                .disabled(stopwatchManager.scrambleStr == nil)
                 .ignoresSafeArea(edges: .all)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .offset(y: 45)
@@ -689,15 +689,15 @@ struct TimerView: View {
             
             
         }
-        .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopWatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopWatchManager.solveItem) { detail in
+        .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopwatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopwatchManager.solveItem) { detail in
             Button("Confirm", role: .destructive) {
                 managedObjectContext.delete(detail.wrappedValue!); #warning("TODO: delete this line?")
-                stopWatchManager.delete(solve: detail.wrappedValue!)
+                stopwatchManager.delete(solve: detail.wrappedValue!)
                 detail.wrappedValue = nil
-                stopWatchManager.secondsElapsed = 0
-                //                stopWatchManager.secondsStr = formatSolveTime(secs: 0)
-                stopWatchManager.secondsStr = formatSolveTime(secs: showPrevTime
-                                                              ? (stopWatchManager.solvesByDate.last?.time ?? 0)
+                stopwatchManager.secondsElapsed = 0
+                //                stopwatchManager.secondsStr = formatSolveTime(secs: 0)
+                stopwatchManager.secondsStr = formatSolveTime(secs: showPrevTime
+                                                              ? (stopwatchManager.solvesByDate.last?.time ?? 0)
                                                               : 0)
             }
             Button("Cancel", role: .cancel) {
@@ -705,12 +705,12 @@ struct TimerView: View {
             }
         }
         .sheet(item: $scrambleSheetStr) { str in
-            TimeScrambleDetail(str.str, stopWatchManager.scrambleSVG)
+            TimeScrambleDetail(str.str, stopwatchManager.scrambleSVG)
         }
         .sheet(item: $presentedAvg) { item in
-            StatsDetail(solves: item, session: stopWatchManager.currentSession); #warning("TODO: use SWM env object")
+            StatsDetail(solves: item, session: stopwatchManager.currentSession); #warning("TODO: use SWM env object")
         }
-        .onReceive(stopWatchManager.$mode) { newMode in
+        .onReceive(stopwatchManager.$mode) { newMode in
             tabRouter.hideTabBar = newMode == .inspecting || newMode == .running
             hideStatusBar = newMode == .inspecting || newMode == .running
         }
@@ -724,7 +724,7 @@ struct TimeScrambleDetail: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.dismiss) var dismiss
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     var scramble: String
     var svg: String?
@@ -741,7 +741,7 @@ struct TimeScrambleDetail: View {
                 VStack {
                     ScrollView {
                         Text(scramble)
-                            .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDesc, CGFloat(windowedScrambleSize), nil)))
+                            .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, CGFloat(windowedScrambleSize), nil)))
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
                     }

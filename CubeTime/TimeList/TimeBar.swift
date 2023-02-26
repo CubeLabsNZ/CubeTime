@@ -24,7 +24,7 @@ struct TimeBar: View {
     
     let current: Bool
     
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     init(solvegroup: CompSimSolveGroup, currentCalculatedAverage: Binding<CalculatedAverage?>, isSelectMode: Binding<Bool>, current: Bool) {
         self.solvegroup = solvegroup

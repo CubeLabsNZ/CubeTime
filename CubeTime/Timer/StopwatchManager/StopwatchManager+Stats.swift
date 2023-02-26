@@ -1,7 +1,7 @@
 import Foundation
 import CoreData
 
-extension StopWatchManager {
+extension StopwatchManager {
     static func calculateAverage(_ solves: [Solves], _ id: String, _ compsim: Bool) -> CalculatedAverage? {
         let cnt = solves.count
         
@@ -57,7 +57,7 @@ extension StopWatchManager {
 }
 
 // MARK: - STATS: STANDARD STATS FUNCS
-extension StopWatchManager {
+extension StopwatchManager {
     func getMin() -> Solves? {
         if let solve = solvesNoDNFs.first {
             return solve
@@ -179,7 +179,7 @@ extension StopWatchManager {
 
 
 // MARK: - STATS: CACHE STATS
-extension StopWatchManager {
+extension StopwatchManager {
     func changedTimeListSort() {
         let s: [Solves] = timeListSortBy == .date ? solvesByDate : solves
         timeListSolves = timeListAscending ? s : s.reversed()
@@ -404,7 +404,7 @@ extension StopWatchManager {
 
 
 // MARK: - STATS: MULTIPHASE
-extension StopWatchManager {
+extension StopwatchManager {
     func getAveragePhases() -> [Double]? {
         if let multiphaseSession = currentSession as? MultiphaseSession {
             let times = (solvesNoDNFs as! [MultiphaseSolve]).map({ $0.phases! })
@@ -436,7 +436,7 @@ extension StopWatchManager {
 
 
 // MARK: - STATS: COMPSIM
-extension StopWatchManager {
+extension StopwatchManager {
     func getNumberOfAverages() -> Int {
         return (solves.count / 5)
     }

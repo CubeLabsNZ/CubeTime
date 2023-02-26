@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftfulLoadingIndicators
 
 struct TimerOnlyTool: View {
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var tabRouter: TabRouter
     
     @Environment(\.colorScheme) var colourScheme
@@ -28,7 +28,7 @@ struct TimerOnlyTool: View {
             TimerBackgroundColor()
                 .ignoresSafeArea(.all)
             
-            TimerTouchView(stopWatchManager: stopWatchManager)
+            TimerTouchView(stopwatchManager: stopwatchManager)
             
             
             TimerTime()
@@ -37,7 +37,7 @@ struct TimerOnlyTool: View {
                 .ignoresSafeArea(edges: .all)
             
             
-            if stopWatchManager.mode == .stopped {
+            if stopwatchManager.mode == .stopped {
                 HStack {
                     HStack(spacing: 16) {
                         Image(systemName: "stopwatch")

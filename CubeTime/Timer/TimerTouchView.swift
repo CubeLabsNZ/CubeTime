@@ -4,11 +4,11 @@ import UIKit
 
 
 class TimerUIView: UIViewController {
-    let stopWatchManager: StopWatchManager
+    let stopwatchManager: StopwatchManager
 
         
-    required init(stopWatchManager: StopWatchManager) {
-        self.stopWatchManager = stopWatchManager
+    required init(stopwatchManager: StopwatchManager) {
+        self.stopwatchManager = stopwatchManager
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -21,11 +21,11 @@ class TimerUIView: UIViewController {
         super.touchesBegan(touches, with: event)
         UIApplication.shared.isIdleTimerDisabled = true
         #warning("TODO: make this actually work: impelemnt in swm (possibly remove in application delegate")
-        stopWatchManager.touchDown()
+        stopwatchManager.touchDown()
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        stopWatchManager.touchUp()
+        stopwatchManager.touchUp()
     }
     
     
@@ -40,15 +40,15 @@ class TimerUIView: UIViewController {
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         guard let key = presses.first?.key else { return }
 
-        if stopWatchManager.mode == .running {
+        if stopwatchManager.mode == .running {
             keyDownThatStopped = key.keyCode
-            stopWatchManager.touchDown()
+            stopwatchManager.touchDown()
         } else if key.keyCode == .keyboardSpacebar {
-            stopWatchManager.touchDown()
+            stopwatchManager.touchDown()
             NSLog("Pressed space, touch down")
             let newTaskTimerReady = DispatchWorkItem {
                 NSLog("Pressed space for long press start - islongpress = true")
-                self.stopWatchManager.longPressStart()
+                self.stopwatchManager.longPressStart()
                 self.isLongPress = true
             }
             taskTimerReady = newTaskTimerReady
@@ -63,17 +63,17 @@ class TimerUIView: UIViewController {
         
         if keyDownThatStopped == key.keyCode {
             keyDownThatStopped = nil
-            stopWatchManager.touchUp() // In case any key previously stopped
+            stopwatchManager.touchUp() // In case any key previously stopped
         } else if keyDownThatStopped == nil && key.keyCode == .keyboardSpacebar {
             NSLog("Press ended space")
             taskTimerReady?.cancel()
             if isLongPress {
                 NSLog("was long press")
-                stopWatchManager.longPressEnd()
+                stopwatchManager.longPressEnd()
                 isLongPress = false
             } else {
                 NSLog("was short press")
-                stopWatchManager.touchUp()
+                stopwatchManager.touchUp()
             }
         } else {
             super.pressesBegan(presses, with: event)
@@ -84,10 +84,10 @@ class TimerUIView: UIViewController {
 
 /*
 class InspectionUIView: UIView {
-    let stopWatchManager: StopWatchManager
+    let stopwatchManager: StopWatchManager
     
-    required init(frame: CGRect, stopWatchManager: StopWatchManager) {
-        self.stopWatchManager = stopWatchManager
+    required init(frame: CGRect, stopwatchManager: StopWatchManager) {
+        self.stopwatchManager = stopwatchManager
         super.init(frame: frame)
     }
     
@@ -97,25 +97,25 @@ class InspectionUIView: UIView {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        stopWatchManager.touchDown()
+        stopwatchManager.touchDown()
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        stopWatchManager.touchUp()
+        stopwatchManager.touchUp()
     }
     
 }
 
 final class InspectionTouchView: UIViewRepresentable {
-    @ObservedObject var stopWatchManager: StopWatchManager
+    @ObservedObject var stopwatchManager: StopWatchManager
     
-    init (stopWatchManager: StopWatchManager) {
-        self.stopWatchManager = stopWatchManager
+    init (stopwatchManager: StopWatchManager) {
+        self.stopwatchManager = stopwatchManager
     }
     
     
     func makeUIView(context: UIViewRepresentableContext<InspectionTouchView>) -> TimerUIView {
-        let v = TimerUIView(frame: .zero, stopWatchManager: stopWatchManager)
+        let v = TimerUIView(frame: .zero, stopwatchManager: stopwatchManager)
         
         let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.tap(_:)))
         
@@ -129,21 +129,21 @@ final class InspectionTouchView: UIViewRepresentable {
     }
     
     class Coordinator: NSObject {
-        let stopWatchManager: StopWatchManager
+        let stopwatchManager: StopWatchManager
         
-        init(stopWatchManager: StopWatchManager) {
-            self.stopWatchManager = stopWatchManager
+        init(stopwatchManager: StopWatchManager) {
+            self.stopwatchManager = stopwatchManager
         }
         
         @objc func tap(_ gestureRecognizer: UITapGestureRecognizer) {
             if gestureRecognizer.state == .ended {
-                stopWatchManager.startInspection()
+                stopwatchManager.startInspection()
             }
         }
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(stopWatchManager: stopWatchManager)
+        return Coordinator(stopwatchManager: stopwatchManager)
     }
 }
  */
@@ -151,18 +151,18 @@ final class InspectionTouchView: UIViewRepresentable {
 
 struct TimerTouchView: UIViewControllerRepresentable {
     
-    @ObservedObject var stopWatchManager: StopWatchManager
+    @ObservedObject var stopwatchManager: StopwatchManager
     
     @AppStorage(gsKeys.freeze.rawValue) private var userHoldTime: Double = 0.5
     @AppStorage(gsKeys.gestureDistance.rawValue) private var gestureThreshold: Double = 50
     
-    init (stopWatchManager: StopWatchManager) {
-        self.stopWatchManager = stopWatchManager
+    init (stopwatchManager: StopwatchManager) {
+        self.stopwatchManager = stopwatchManager
     }
     
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<TimerTouchView>) -> TimerUIView {
-        let v = TimerUIView(stopWatchManager: stopWatchManager)
+        let v = TimerUIView(stopwatchManager: stopwatchManager)
         
         let longPressGesture = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.longPress))
         longPressGesture.allowableMovement = gestureThreshold
@@ -190,7 +190,7 @@ struct TimerTouchView: UIViewControllerRepresentable {
     
     func updateUIViewController(_ uiView: TimerUIView, context: UIViewControllerRepresentableContext<TimerTouchView>) {
         /*
-        if stopWatchManager.scrambleStr == nil {
+        if stopwatchManager.scrambleStr == nil {
             for gesture in uiView.gestureRecognizers! {
                 /*
                 if gesture is UISwipeGestureRecognizer && (gesture as! UISwipeGestureRecognizer).direction == UISwipeGestureRecognizer.Direction.right {
@@ -211,44 +211,44 @@ struct TimerTouchView: UIViewControllerRepresentable {
     }
     
     class Coordinator: NSObject {
-        let stopWatchManager: StopWatchManager
+        let stopwatchManager: StopwatchManager
         
-        init(stopWatchManager: StopWatchManager) {
-            self.stopWatchManager = stopWatchManager
+        init(stopwatchManager: StopwatchManager) {
+            self.stopwatchManager = stopwatchManager
         }
         
         @objc func longPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
             if gestureRecognizer.state == .began {
-                stopWatchManager.longPressStart()
+                stopwatchManager.longPressStart()
             } else if gestureRecognizer.state == .ended {
-                stopWatchManager.longPressEnd()
+                stopwatchManager.longPressEnd()
             }
         }
         
         @objc func swipe(_ gestureRecognizer: UISwipeGestureRecognizer) {
             switch gestureRecognizer.direction {
             case .down:
-                if stopWatchManager.canGesture && stopWatchManager.mode != .inspecting {
-                    stopWatchManager.feedbackStyle?.impactOccurred()
-                    stopWatchManager.displayPenOptions()
+                if stopwatchManager.canGesture && stopwatchManager.mode != .inspecting {
+                    stopwatchManager.feedbackStyle?.impactOccurred()
+                    stopwatchManager.displayPenOptions()
                 } else {
-                    stopWatchManager.timerColour = Color.Timer.normal
+                    stopwatchManager.timerColour = Color.Timer.normal
                 }
                 
             case .left:
-                if stopWatchManager.canGesture && stopWatchManager.mode != .inspecting {
-                    stopWatchManager.feedbackStyle?.impactOccurred()
-                    stopWatchManager.askToDelete()
+                if stopwatchManager.canGesture && stopwatchManager.mode != .inspecting {
+                    stopwatchManager.feedbackStyle?.impactOccurred()
+                    stopwatchManager.askToDelete()
                 } else {
-                    stopWatchManager.timerColour = Color.Timer.normal
+                    stopwatchManager.timerColour = Color.Timer.normal
                 }
             case .right:
-                stopWatchManager.feedbackStyle?.impactOccurred()
-                stopWatchManager.timerColour = Color.Timer.normal
-                stopWatchManager.prevDownStoppedTimer = false
-                stopWatchManager.rescramble()
+                stopwatchManager.feedbackStyle?.impactOccurred()
+                stopwatchManager.timerColour = Color.Timer.normal
+                stopwatchManager.prevDownStoppedTimer = false
+                stopwatchManager.rescramble()
             default:
-                stopWatchManager.timerColour = Color.Timer.normal
+                stopwatchManager.timerColour = Color.Timer.normal
             }
         }
         
@@ -275,18 +275,18 @@ struct TimerTouchView: UIViewControllerRepresentable {
                 if v_x.magnitude > 500 || v_y.magnitude > 500 {
                     if d_x.magnitude > d_y.magnitude {
                         if d_x > 0 {
-                            stopWatchManager.feedbackStyle?.impactOccurred()
-                            stopWatchManager.timerColour = Color.Timer.normal
-                            stopWatchManager.prevDownStoppedTimer = false
-                            stopWatchManager.rescramble()
+                            stopwatchManager.feedbackStyle?.impactOccurred()
+                            stopwatchManager.timerColour = Color.Timer.normal
+                            stopwatchManager.prevDownStoppedTimer = false
+                            stopwatchManager.rescramble()
                             
                             gestureRecogniser.state = .cancelled
                         } else if d_x < 0 {
-                            if stopWatchManager.canGesture && stopWatchManager.mode != .inspecting {
-                                stopWatchManager.feedbackStyle?.impactOccurred()
-                                stopWatchManager.askToDelete()
+                            if stopwatchManager.canGesture && stopwatchManager.mode != .inspecting {
+                                stopwatchManager.feedbackStyle?.impactOccurred()
+                                stopwatchManager.askToDelete()
                             } else {
-                                stopWatchManager.timerColour = Color.Timer.normal
+                                stopwatchManager.timerColour = Color.Timer.normal
                             }
                             
                             gestureRecogniser.state = .cancelled
@@ -294,11 +294,11 @@ struct TimerTouchView: UIViewControllerRepresentable {
                     } else {
                         // swipe down
                         if d_y > 0 {
-                            if stopWatchManager.canGesture && stopWatchManager.mode != .inspecting {
-                                stopWatchManager.feedbackStyle?.impactOccurred()
-                                stopWatchManager.displayPenOptions()
+                            if stopwatchManager.canGesture && stopwatchManager.mode != .inspecting {
+                                stopwatchManager.feedbackStyle?.impactOccurred()
+                                stopwatchManager.displayPenOptions()
                             } else {
-                                stopWatchManager.timerColour = Color.Timer.normal
+                                stopwatchManager.timerColour = Color.Timer.normal
                             }
                             
                             gestureRecogniser.state = .cancelled
@@ -308,7 +308,7 @@ struct TimerTouchView: UIViewControllerRepresentable {
                         }
                     }
                 } else {
-                    stopWatchManager.timerColour = Color.Timer.normal
+                    stopwatchManager.timerColour = Color.Timer.normal
 //                    gestureRecogniser.state = .cancelled
                 }
             }
@@ -317,6 +317,6 @@ struct TimerTouchView: UIViewControllerRepresentable {
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(stopWatchManager: stopWatchManager)
+        return Coordinator(stopwatchManager: stopwatchManager)
     }
 }

@@ -78,7 +78,7 @@ struct TimeDistribution: View {
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
 
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     var count: Int
     var data: Array<(Double, Int)>
@@ -117,7 +117,7 @@ struct TimeDistribution: View {
                     let medianxmax = (divs*CGFloat((count < 8 ? count : 8))+20)
                     let medianxmin = (divs+20)
                     
-                    let medianxloc = (medianxmax - medianxmin) * CGFloat(stopWatchManager.normalMedian.1!) + medianxmin
+                    let medianxloc = (medianxmax - medianxmin) * CGFloat(stopwatchManager.normalMedian.1!) + medianxmin
                     
                     
                     Path { path in
@@ -148,7 +148,7 @@ struct TimeDistribution: View {
                                     Text("\(data[datum].1)")
                                         .position(x: xloc, y: (220 - max_height * CGFloat(data[datum].1)) - 10)
                                         .multilineTextAlignment(.center)
-                                        .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDescBold, 10, nil)))
+                                        .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 10, nil)))
                                 }
                                 .if(graphGlow) { view in
                                     view.colouredGlow(gradientSelected: gradientSelected)
@@ -156,7 +156,7 @@ struct TimeDistribution: View {
                             
                             Text((datum == 0 ? "<" : (datum == data.count-1 ? ">" : ""))+formatLegendTime(secs: data[datum].0, dp: 1)+(datum != 0 && datum != data.count-1 ? "+" : ""))
                                 .foregroundColor(Color(uiColor: .systemGray2))
-                                .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDesc, 10, nil)))
+                                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 10, nil)))
                                 .position(x: xloc, y: 240)
                         }
                         .padding(.horizontal)
@@ -167,8 +167,8 @@ struct TimeDistribution: View {
                             .font(.system(size: 11, weight: .bold, design: .default))
                             .foregroundColor(Color(uiColor: .systemGray))
                         
-                        Text(formatSolveTime(secs: stopWatchManager.normalMedian.0!))
-                            .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDescBold, 11, nil)))
+                        Text(formatSolveTime(secs: stopwatchManager.normalMedian.0!))
+                            .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 11, nil)))
                             .foregroundColor(Color(uiColor: .systemGray))
                     }
                     .position(x: medianxloc, y: -16)
@@ -178,7 +178,7 @@ struct TimeDistribution: View {
             }
         } else {
             Text("not enough solves to\ndisplay graph")
-                .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDesc, 17, nil)))
+                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 17, nil)))
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color(uiColor: .systemGray))
         }

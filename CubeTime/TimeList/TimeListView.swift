@@ -15,7 +15,7 @@ enum SortBy: Int {
 }
 
 struct SortByMenu: View {
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     let shadow: Bool
     var animation: Namespace.ID
@@ -26,7 +26,7 @@ struct SortByMenu: View {
         Menu {
             #warning("TODO: headers not working")
             Section("Sort by") {
-                Picker("", selection: $stopWatchManager.timeListSortBy) {
+                Picker("", selection: $stopwatchManager.timeListSortBy) {
                     Label("Date", systemImage: "calendar").tag(SortBy.date)
                     Label("Time", systemImage: "stopwatch").tag(SortBy.time)
                 }
@@ -34,7 +34,7 @@ struct SortByMenu: View {
             }
 
             Section("Order by") {
-                Picker("", selection: $stopWatchManager.timeListAscending) {
+                Picker("", selection: $stopwatchManager.timeListAscending) {
                     Label("Ascending", systemImage: "arrow.up").tag(true)
                     Label("Descending", systemImage: "arrow.down").tag(false)
                 }
@@ -66,7 +66,7 @@ struct SortByMenu: View {
 
 
 struct SessionHeader: View {
-    @EnvironmentObject var stopwatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     var body: some View {
         HStack {
@@ -93,7 +93,7 @@ struct SessionHeader: View {
 
 
 struct TimeListHeader: View {
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     @State var searchExpanded = false
     @State var pressing = false
@@ -181,7 +181,7 @@ struct TimeListView: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.sizeCategory) var sizeCategory
     
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
@@ -222,12 +222,12 @@ struct TimeListView: View {
      */
     
     func updateSessionsCanMoveTo() {
-        if stopWatchManager.currentSession.session_type == SessionTypes.playground.rawValue || stopWatchManager.currentSession.session_type == SessionTypes.compsim.rawValue {
+        if stopwatchManager.currentSession.session_type == SessionTypes.playground.rawValue || stopwatchManager.currentSession.session_type == SessionTypes.compsim.rawValue {
             return
         }
         
         
-        sessionsCanMoveTo = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: stopWatchManager.currentSession.scramble_type, currentSession: stopWatchManager.currentSession)
+        sessionsCanMoveTo = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: stopwatchManager.currentSession.scramble_type, currentSession: stopwatchManager.currentSession)
     }
     
     var body: some View {
@@ -240,18 +240,18 @@ struct TimeListView: View {
                     LazyVStack {
                         TimeListHeader()
 
-                        let sessType = stopWatchManager.currentSession.session_type
+                        let sessType = stopwatchManager.currentSession.session_type
                         
                         if sessType != SessionTypes.compsim.rawValue {
                             LazyVGrid(columns: columns, spacing: 12) {
-                                ForEach(stopWatchManager.timeListSolvesFiltered, id: \.self) { item in
+                                ForEach(stopwatchManager.timeListSolvesFiltered, id: \.self) { item in
                                     TimeCard(solve: item, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves, sessionsCanMoveTo: sessType != SessionTypes.playground.rawValue ? $sessionsCanMoveTo : nil)
                                 }
                             }
                             .padding(.horizontal)
                         } else {
                             LazyVStack(spacing: 12) {
-                                let groups = ((stopWatchManager.currentSession as! CompSimSession).solvegroups!.array as! [CompSimSolveGroup])
+                                let groups = ((stopwatchManager.currentSession as! CompSimSession).solvegroups!.array as! [CompSimSolveGroup])
                                     
                                 if groups.count != 0 {
                                     TimeBar(solvegroup: groups.last!, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode, current: true)
@@ -322,7 +322,7 @@ struct TimeListView: View {
                                     Menu {
                                         Button {
                                             for object in selectedSolves {
-                                                stopWatchManager.changePen(solve: object, pen: .none)
+                                                stopwatchManager.changePen(solve: object, pen: .none)
                                             }
                                             
                                             selectedSolves.removeAll()
@@ -332,7 +332,7 @@ struct TimeListView: View {
                                         
                                         Button {
                                             for object in selectedSolves {
-                                                stopWatchManager.changePen(solve: object, pen: .plustwo)
+                                                stopwatchManager.changePen(solve: object, pen: .plustwo)
                                             }
                                             
                                             selectedSolves.removeAll()
@@ -342,7 +342,7 @@ struct TimeListView: View {
                                         
                                         Button {
                                             for object in selectedSolves {
-                                                stopWatchManager.changePen(solve: object, pen: .dnf)
+                                                stopwatchManager.changePen(solve: object, pen: .dnf)
                                             }
                                             
                                             selectedSolves.removeAll()
@@ -353,11 +353,11 @@ struct TimeListView: View {
                                         Label("Penalty", systemImage: "exclamationmark.triangle")
                                     }
                                     
-                                    if stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
+                                    if stopwatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
                                         SessionPickerMenu(sessions: sessionsCanMoveTo) { session in
                                             for object in selectedSolves {
                                                 withAnimation(Animation.customDampedSpring) {
-                                                    stopWatchManager.moveSolve(solve: object, to: session)
+                                                    stopwatchManager.moveSolve(solve: object, to: session)
                                                 }
                                                 
                                                 selectedSolves.removeAll()
@@ -370,7 +370,7 @@ struct TimeListView: View {
                                     Button(role: .destructive) {
                                         isSelectMode = false
                                         for object in selectedSolves {
-                                            stopWatchManager.delete(solve: object)
+                                            stopwatchManager.delete(solve: object)
                                         }
                                         
                                         selectedSolves.removeAll()
@@ -388,11 +388,11 @@ struct TimeListView: View {
                     }
                     
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        if stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
+                        if stopwatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
                             if isSelectMode {
                                 HierarchialButton(type: .coloured, size: .small, onTapRun: {
                                     withAnimation(Animation.customDampedSpring) {
-                                        selectedSolves = Set(stopWatchManager.timeListSolvesFiltered)
+                                        selectedSolves = Set(stopwatchManager.timeListSolvesFiltered)
                                     }
                                 }) {
                                     Text("Select All")
@@ -423,7 +423,7 @@ struct TimeListView: View {
         
         .confirmationDialog("Clear session?", isPresented: $isClearningSession, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
-                stopWatchManager.clearSession()
+                stopwatchManager.clearSession()
                 isSelectMode = false
             }
             Button("Cancel", role: .cancel) { }
@@ -436,7 +436,7 @@ struct TimeListView: View {
         }
         
         .sheet(item: $calculatedAverage) { item in
-            StatsDetail(solves: item, session: stopWatchManager.currentSession)
+            StatsDetail(solves: item, session: stopwatchManager.currentSession)
         }
         
         .task {
@@ -444,7 +444,7 @@ struct TimeListView: View {
             updateSessionsCanMoveTo()
         }
         
-        .onChange(of: stopWatchManager.currentSession) { newValue in
+        .onChange(of: stopwatchManager.currentSession) { newValue in
             #warning("make sure this actually is needed")
             print("CHANGED SESSION - TimeListView")
             updateSessionsCanMoveTo()
@@ -456,7 +456,7 @@ struct TimeListView: View {
                 return
             }
             
-            if stopWatchManager.currentSession.session_type != SessionTypes.playground.rawValue {
+            if stopwatchManager.currentSession.session_type != SessionTypes.playground.rawValue {
                 return
             }
             
@@ -469,7 +469,7 @@ struct TimeListView: View {
                 scr_type = uniqueScrambles.first!
             }
             
-            sessionsCanMoveTo = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: scr_type, currentSession: stopWatchManager.currentSession)
+            sessionsCanMoveTo = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: scr_type, currentSession: stopwatchManager.currentSession)
             
         }
     }

@@ -502,7 +502,7 @@ struct Line: View {
 
 
 struct Legend: View {
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     @ObservedObject var data: ChartData
     @Binding var frame: CGRect
     @Environment(\.colorScheme) var colorScheme: ColorScheme
@@ -540,7 +540,7 @@ struct Legend: View {
                         Text(formatLegendTime(secs: self.getYLegendSafe(height: height), dp: 1))
                             .offset(x: 2, y: self.getYposition(height: height))
                             .foregroundColor(Color("grey"))
-                            .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDesc, 10, nil)))
+                            .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 10, nil)))
 
                     }
                     .offset(y: 3)
@@ -598,7 +598,7 @@ struct Legend: View {
 
 
 struct TimeTrend: View {
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
     
@@ -651,7 +651,7 @@ struct TimeTrend: View {
             }
         } else {
             Text("not enough solves to\ndisplay graph")
-                .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDesc, 17, nil)))
+                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 17, nil)))
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color(uiColor: .systemGray))
                 .offset(y: 5)

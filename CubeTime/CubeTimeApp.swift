@@ -19,7 +19,7 @@ struct CubeTime: App {
     let persistenceController: PersistenceController
     private let moc: NSManagedObjectContext
     
-    @StateObject var stopWatchManager: StopWatchManager
+    @StateObject var stopwatchManager: StopwatchManager
     @StateObject var tabRouter: TabRouter = TabRouter.shared
     
     @State var showUpdates: Bool = false
@@ -37,7 +37,7 @@ struct CubeTime: App {
         let userDefaults = UserDefaults.standard
         
         // https://swiftui-lab.com/random-lessons/#data-10
-        self._stopWatchManager = StateObject(wrappedValue: StopWatchManager(currentSession: nil, managedObjectContext: moc))
+        self._stopwatchManager = StateObject(wrappedValue: StopwatchManager(currentSession: nil, managedObjectContext: moc))
         
         
         self.moc = moc
@@ -111,7 +111,7 @@ struct CubeTime: App {
                         }
                 }
                 .environment(\.managedObjectContext, moc)
-                .environmentObject(stopWatchManager)
+                .environmentObject(stopwatchManager)
                 .environmentObject(tabRouter)
 //                .onAppear {
 //                    self.deviceManager.deviceOrientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation
@@ -120,13 +120,13 @@ struct CubeTime: App {
         .onChange(of: phase) { newValue in
             switch(newValue) {
             case .background:
-                stopWatchManager.addSessionQuickActions()
+                stopwatchManager.addSessionQuickActions()
                 break
             case .active:
                 if let pendingSession = tabRouter.pendingSessionURL {
                     let url = URL(string: pendingSession as String)
                     let objID = moc.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: url!)!
-                    stopWatchManager.currentSession = try! moc.existingObject(with: objID) as! Sessions
+                    stopwatchManager.currentSession = try! moc.existingObject(with: objID) as! Sessions
                     tabRouter.pendingSessionURL = nil
                 }
             default: break

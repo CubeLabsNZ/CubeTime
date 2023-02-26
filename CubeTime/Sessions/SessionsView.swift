@@ -81,7 +81,7 @@ struct CustomiseSessionView: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
     
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     let sessionItem: Sessions
     
@@ -162,8 +162,8 @@ struct CustomiseSessionView: View {
                             }
                             
                             if sessionItem.session_type == SessionTypes.playground.rawValue {
-                                if sessionItem == stopWatchManager.currentSession {
-                                    stopWatchManager.playgroundScrambleType = sessionEventType
+                                if sessionItem == stopwatchManager.currentSession {
+                                    stopwatchManager.playgroundScrambleType = sessionEventType
                                 } else {
                                     sessionItem.scramble_type = sessionEventType
                                 }
@@ -191,7 +191,7 @@ struct NewSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
@@ -297,7 +297,7 @@ struct NewSessionView: View {
                         }
                         
                         try! managedObjectContext.save()
-                        stopWatchManager.currentSession = sessionItem
+                        stopwatchManager.currentSession = sessionItem
                         showNewSessionPopUp = false
                     } label: {
                         Text("Create")

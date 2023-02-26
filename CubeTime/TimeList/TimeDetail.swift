@@ -21,7 +21,7 @@ struct TimeDetail: View {
 
     let phases: Array<Double>?
     
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     let solve: Solves
     @Binding var currentSolve: Solves?
@@ -112,7 +112,7 @@ struct TimeDetailViewOnly: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.globalGeometrySize) var globalGeometrySize
     
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
 
     @Environment(\.dismiss) var dismiss
     private let titleDateFormat: DateFormatter
@@ -250,7 +250,7 @@ struct TimeDetailViewOnly: View {
                                     Text(scramble)
                                 }
                             }
-                            .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDesc, 16, nil)))
+                            .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 16, nil)))
                             .foregroundColor(colourScheme == .light ? .black : .white)
                             .padding([.horizontal], 12)
                             
@@ -398,7 +398,7 @@ struct TimeDetailViewOnly: View {
                             currentSolve = nil
 
                             withAnimation {
-                                stopWatchManager.delete(solve: solve)
+                                stopwatchManager.delete(solve: solve)
                             }
                         } label: {
                             HStack {

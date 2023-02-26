@@ -7,7 +7,7 @@ struct SessionCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
@@ -50,10 +50,10 @@ struct SessionCard: View {
             
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(Color("overlay0"))
-                .frame(width: stopWatchManager.currentSession == item
+                .frame(width: stopwatchManager.currentSession == item
                        ? 16
                        : parentGeo.size.width - 32, height: item.pinned ? 110 : 65)
-                .offset(x: stopWatchManager.currentSession == item
+                .offset(x: stopwatchManager.currentSession == item
                         ? -((parentGeo.size.width - 16)/2) + 16
                         : 0)
             
@@ -137,7 +137,7 @@ struct SessionCard: View {
                                 .padding(.bottom, 4)
                         }
                     }
-                    .offset(x: stopWatchManager.currentSession == item ? 10 : 0)
+                    .offset(x: stopwatchManager.currentSession == item ? 10 : 0)
                     
                     Spacer()
                     
@@ -173,8 +173,8 @@ struct SessionCard: View {
         }
         .onTapGesture {
             withAnimation(Animation.customDampedSpring) {
-                if stopWatchManager.currentSession != item {
-                    stopWatchManager.currentSession = item
+                if stopwatchManager.currentSession != item {
+                    stopwatchManager.currentSession = item
                 }
             }
         }
@@ -215,10 +215,10 @@ struct SessionCard: View {
         
         .confirmationDialog(String("Are you sure you want to delete \"\(name)\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
-                if item == stopWatchManager.currentSession {
+                if item == stopwatchManager.currentSession {
                     var next: Sessions? = nil
                     for item in allSessions {
-                        if item != stopWatchManager.currentSession {
+                        if item != stopwatchManager.currentSession {
                             next = item
                             break
                         }
@@ -229,7 +229,7 @@ struct SessionCard: View {
                     
                     if let next = next {
                         withAnimation(Animation.customDampedSpring) {
-                            stopWatchManager.currentSession = next
+                            stopwatchManager.currentSession = next
                         }
                         
                     }

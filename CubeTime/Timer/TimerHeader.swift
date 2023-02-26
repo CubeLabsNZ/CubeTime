@@ -37,7 +37,7 @@ struct TimerHeader: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var tabRouter: TabRouter
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
     @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
@@ -85,10 +85,10 @@ struct TimerHeader: View {
                         .shadowDark(x: 2, y: 0)
                     
                     HStack {
-                        SessionIconView(session: stopWatchManager.currentSession)
+                        SessionIconView(session: stopwatchManager.currentSession)
                         
                         if (toggleSessionName ^ showSessionName) {
-                            Text(stopWatchManager.currentSession.name ?? "Unknown Session Name")
+                            Text(stopwatchManager.currentSession.name ?? "Unknown Session Name")
                                 .font(.system(size: 17, weight: .medium))
                                 .padding(.trailing, 4)
                         }
@@ -102,7 +102,7 @@ struct TimerHeader: View {
                 
                 // SESSION TYPE NAME
                 
-                switch SessionTypes(rawValue: stopWatchManager.currentSession.session_type)! {
+                switch SessionTypes(rawValue: stopwatchManager.currentSession.session_type)! {
                 case .standard:
                     if !(toggleSessionName ^ showSessionName) {
                         Text("STANDARD SESSION")
@@ -122,7 +122,7 @@ struct TimerHeader: View {
                         Text("PHASES: ")
                             .font(.system(size: 15, weight: .regular))
                         
-                        Text("\(stopWatchManager.phaseCount)")
+                        Text("\(stopwatchManager.phaseCount)")
                             .font(.system(size: 15, weight: .regular))
                         
                     }
@@ -134,7 +134,7 @@ struct TimerHeader: View {
                             .font(.system(size: 17, weight: .medium))
                     }
                     
-                    Picker("", selection: $stopWatchManager.playgroundScrambleType) {
+                    Picker("", selection: $stopwatchManager.playgroundScrambleType) {
                         ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
                             Text(element.name).tag(Int32(index))
                                 .font(.system(size: 15, weight: .regular))
@@ -152,7 +152,7 @@ struct TimerHeader: View {
                             .font(.system(size: 17, weight: .medium))
                     }
                     
-                    let solveth: Int = stopWatchManager.currentSolveth!+1
+                    let solveth: Int = stopwatchManager.currentSolveth!+1
                     
                     Text("SOLVE \(solveth == 6 ? 1 : solveth)")
                         .font(.system(size: 15, weight: .regular))
@@ -167,22 +167,22 @@ struct TimerHeader: View {
                             .foregroundColor(accentColour)
                         
                         ZStack {
-                            Text(stopWatchManager.targetStr == "" ? "0.00" : stopWatchManager.targetStr)
+                            Text(stopwatchManager.targetStr == "" ? "0.00" : stopwatchManager.targetStr)
                                 .background(GlobalGeometryGetter(rect: $textRect))
                                 .layoutPriority(1)
                                 .opacity(0)
                             
                             
-                            TextField("0.00", text: $stopWatchManager.targetStr)
+                            TextField("0.00", text: $stopwatchManager.targetStr)
                                 .font(.system(size: 17, weight: .regular))
-                                .frame(width: textRect.width + CGFloat(stopWatchManager.targetStr.count > 6 ? 12 : 6))
+                                .frame(width: textRect.width + CGFloat(stopwatchManager.targetStr.count > 6 ? 12 : 6))
                                 .submitLabel(.done)
                                 .focused(targetFocused!)
                                 .multilineTextAlignment(.leading)
                                 .tint(accentColour)
-                                .modifier(TimeMaskTextField(text: $stopWatchManager.targetStr, onReceiveAlso: { text in
+                                .modifier(TimeMaskTextField(text: $stopwatchManager.targetStr, onReceiveAlso: { text in
                                     if let time = timeFromStr(text) {
-                                        (stopWatchManager.currentSession as! CompSimSession).target = time
+                                        (stopwatchManager.currentSession as! CompSimSession).target = time
                                         
                                         try! managedObjectContext.save()
                                     }
@@ -200,7 +200,7 @@ struct TimerHeader: View {
         .background(
             Color("overlay1")
                 .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-                .animation(Animation.customFastSpring, value: stopWatchManager.playgroundScrambleType)
+                .animation(Animation.customFastSpring, value: stopwatchManager.playgroundScrambleType)
         )
         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
     }

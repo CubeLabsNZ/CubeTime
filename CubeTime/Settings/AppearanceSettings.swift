@@ -42,7 +42,7 @@ struct AppearanceSettingsView: View {
     @AppStorage(asKeys.fontCursive.rawValue) private var fontCursive: Bool = false
     
     
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     var body: some View {
         VStack(spacing: 16) {
@@ -328,7 +328,7 @@ struct AppearanceSettingsView: View {
                     
                     VStack {
                         Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
-                            .font(stopWatchManager.ctFontScramble)
+                            .font(stopwatchManager.ctFontScramble)
                             .padding()
                         
                         
@@ -384,8 +384,8 @@ struct AppearanceSettingsView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 12)
                     .onChange(of: fontWeight) { newValue in
-                        stopWatchManager.fontWeight = newValue
-                        stopWatchManager.updateFont()
+                        stopwatchManager.fontWeight = newValue
+                        stopwatchManager.updateFont()
                     }
                     
                     VStack(alignment: .leading, spacing: 0) {
@@ -411,8 +411,8 @@ struct AppearanceSettingsView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 12)
                     .onChange(of: fontCasual) { newValue in
-                        stopWatchManager.fontCasual = newValue
-                        stopWatchManager.updateFont()
+                        stopwatchManager.fontCasual = newValue
+                        stopwatchManager.updateFont()
                     }
                     
                     VStack(alignment: .leading, spacing: 0) {
@@ -427,8 +427,8 @@ struct AppearanceSettingsView: View {
                         .padding(.bottom, 12)
                     }
                     .onChange(of: fontCursive) { newValue in
-                        stopWatchManager.fontCursive = newValue
-                        stopWatchManager.updateFont()
+                        stopwatchManager.fontCursive = newValue
+                        stopwatchManager.updateFont()
                     }
                 }
             }
@@ -439,15 +439,15 @@ struct AppearanceSettingsView: View {
         .padding(.horizontal)
         .preferredColorScheme(overrideSystemAppearance ? darkMode ? .dark : .light : nil)
             .onChange(of: scrambleSize) { newValue in
-                stopWatchManager.scrambleSize = newValue
-                stopWatchManager.updateFont()
+                stopwatchManager.scrambleSize = newValue
+                stopwatchManager.updateFont()
             }
     }
 }
 
 
 struct TimerPreview: View {
-    @EnvironmentObject var stopwatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.globalGeometrySize) var globalGeometrySize

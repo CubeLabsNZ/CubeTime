@@ -64,7 +64,7 @@ struct GeneralSettingsView: View {
     
         
     @Environment(\.colorScheme) var colourScheme
-    @EnvironmentObject var stopWatchManager: StopWatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
@@ -102,7 +102,7 @@ struct GeneralSettingsView: View {
                     }
                     .padding(.horizontal)
                     .onChange(of: inspectionTime) { newValue in
-                        stopWatchManager.inspectionEnabled = newValue
+                        stopwatchManager.inspectionEnabled = newValue
                     }
                     
                     
@@ -115,7 +115,7 @@ struct GeneralSettingsView: View {
                         .toggleStyle(SwitchToggleStyle(tint: accentColour))
                         .padding(.horizontal)
                         .onChange(of: insCountDown) { newValue in
-                            stopWatchManager.insCountDown = newValue
+                            stopwatchManager.insCountDown = newValue
                         }
                         
                         Toggle(isOn: $showCancelInspection) {
@@ -141,7 +141,7 @@ struct GeneralSettingsView: View {
                         .toggleStyle(SwitchToggleStyle(tint: accentColour))
                         .padding(.horizontal)
                         .onChange(of: inspectionAlert) { newValue in
-                            stopWatchManager.inspectionAlert = newValue
+                            stopwatchManager.inspectionAlert = newValue
                         }
                         
                         Text("Play an audible alert when 8 or 12 seconds is reached.")
@@ -166,7 +166,7 @@ struct GeneralSettingsView: View {
                                 .frame(maxWidth: 120)
                                 .pickerStyle(.segmented)
                                 .onChange(of: inspectionAlertType) { newValue in
-                                    stopWatchManager.inspectionAlertType = newValue
+                                    stopwatchManager.inspectionAlertType = newValue
                                 }
                             }
                             .padding(.horizontal)
@@ -258,7 +258,7 @@ struct GeneralSettingsView: View {
                             .accentColor(accentColour)
                         }
                         .onChange(of: timerDP) { newValue in
-                            stopWatchManager.timeDP = newValue
+                            stopwatchManager.timeDP = newValue
                         }
                     }
                 }
@@ -307,7 +307,7 @@ struct GeneralSettingsView: View {
                             .font(.body.weight(.medium))
                     }
 //                    .onChange(of: showStats) { newValue in
-//                        stopWatchManager.updateStats()
+//                        stopwatchManager.updateStats()
 //                    }
                     .toggleStyle(SwitchToggleStyle(tint: accentColour))
                     
@@ -384,7 +384,7 @@ struct GeneralSettingsView: View {
                         .toggleStyle(SwitchToggleStyle(tint: accentColour))
                         .padding(.horizontal)
                         .onChange(of: showPrevTime) { newValue in
-                            stopWatchManager.showPrevTime = newValue
+                            stopwatchManager.showPrevTime = newValue
                         }
                     }
                     
@@ -479,8 +479,8 @@ struct GeneralSettingsView: View {
                 }
                 .padding(.horizontal)
                 .onChange(of: hapticFeedback) { newValue in
-                    stopWatchManager.hapticEnabled = newValue
-                    stopWatchManager.calculateFeedbackStyle()
+                    stopwatchManager.hapticEnabled = newValue
+                    stopwatchManager.calculateFeedbackStyle()
                 }
                 
                 if hapticFeedback {
@@ -507,8 +507,8 @@ struct GeneralSettingsView: View {
                     }
                     .padding(.horizontal)
                     .onChange(of: feedbackType) { newValue in
-                        stopWatchManager.hapticType = newValue.rawValue
-                        stopWatchManager.calculateFeedbackStyle()
+                        stopwatchManager.hapticType = newValue.rawValue
+                        stopwatchManager.calculateFeedbackStyle()
                     }
                 }
                 

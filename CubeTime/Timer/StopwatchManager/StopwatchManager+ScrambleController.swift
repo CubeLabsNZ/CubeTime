@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-extension StopWatchManager {
+extension StopwatchManager {
     func safeGetScramble() -> String {
         var isolate: OpaquePointer? = nil
         var thread: OpaquePointer? = nil
