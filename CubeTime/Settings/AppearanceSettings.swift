@@ -480,11 +480,8 @@ struct TimerPreview: View {
                     .frame(width: 85, height: 30)
                     .padding(.trailing, 8)
                 
-                // CLOSE BUTTON
-                HierarchialButton(type: .mono, size: .medium, outlined: false, square: true, onTapRun: {
+                CloseButton {
                     presentationMode.wrappedValue.dismiss()
-                }) {
-                    Image(systemName: "xmark")
                 }
                 .padding(0)
             }

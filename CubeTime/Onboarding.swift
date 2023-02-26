@@ -36,17 +36,12 @@ struct OnboardingView: View {
                 HStack {
                     Spacer()
                     
-                    // CLOSE BUTTON
-                    HierarchialButton(type: .mono, size: .medium, outlined: false, square: true, onTapRun: {
+                    CloseButton {
                         dismiss()
                         showOnboarding = false
-                    }) {
-                        Image(systemName: "xmark")
                     }
                     .padding([.top, .trailing])
                 }
-                
-               
                 
                 Spacer()
             }

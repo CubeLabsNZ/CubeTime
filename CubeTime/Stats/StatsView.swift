@@ -119,7 +119,7 @@ struct StatsView: View {
                                                 Text("not enough solves to\ndisplay graph")
                                                     .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDesc, 17, nil)))
                                                     .multilineTextAlignment(.center)
-                                                    .foregroundColor(Color(uiColor: .systemGray))
+                                                    .foregroundColor(Color("grey"))
                                             }
                                         }
                                     }
@@ -208,7 +208,7 @@ struct StatsView: View {
                                             Text("not enough solves to\ndisplay graph")
                                                 .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDesc, 17, nil)))
                                                 .multilineTextAlignment(.center)
-                                                .foregroundColor(Color(uiColor: .systemGray))
+                                                .foregroundColor(Color("grey"))
                                         }
                                     }
                                     .padding(.bottom, 8)

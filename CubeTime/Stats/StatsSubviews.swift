@@ -199,7 +199,7 @@ struct StatsBlockSmallText: View {
                     VStack(alignment: .leading, spacing: spacing) {
                         Text(title)
                             .font(.footnote.weight(.medium))
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                         
                         if let datum = data[index] {
                             Text(formatSolveTime(secs: datum.average ?? 0, penType: datum.totalPen))

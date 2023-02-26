@@ -49,7 +49,7 @@ struct SessionCard: View {
             
             
             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Color("overlay1"))
+                .fill(Color("overlay0"))
                 .frame(width: stopWatchManager.currentSession == item
                        ? 16
                        : parentGeo.size.width - 32, height: item.pinned ? 110 : 65)

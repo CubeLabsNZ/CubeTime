@@ -93,7 +93,7 @@ extension Color {
         static let normal: Color = Color.primary
         static let heldDown: Color = Color.red
         static let canStart: Color = Color.green
-        static let loading: Color = Color(uiColor: .systemGray)
+        static let loading: Color = Color("grey")
     }
     
     struct Inspection {
@@ -161,7 +161,9 @@ struct HierarchialButton<V: View>: View {
     
     let outlined: Bool
     let square: Bool
-    let shadow: Bool
+    
+    let hasShadow: Bool
+    let hasBackground: Bool
         
     let onTapRun: () -> Void
     @ViewBuilder let content: () -> V
@@ -170,15 +172,18 @@ struct HierarchialButton<V: View>: View {
          size: HierarchialButtonSize,
          outlined: Bool=false,
          square: Bool=false,
-         shadow: Bool=true,
+         hasShadow: Bool=true,
+         hasBackground: Bool=true,
          onTapRun: @escaping () -> Void,
          @ViewBuilder _ content: @escaping () -> V) {
         self.type = type
         self.size = size
         
-        self.shadow = shadow
         self.outlined = outlined
         self.square = square
+        
+        self.hasShadow = hasShadow
+        self.hasBackground = hasBackground
         
         self.onTapRun = onTapRun
         self.content = content
@@ -192,7 +197,8 @@ struct HierarchialButton<V: View>: View {
                                   size: self.size,
                                   outlined: self.outlined,
                                   square: self.square,
-                                  shadow: self.shadow,
+                                  hasShadow: self.hasShadow,
+                                  hasBackground: self.hasBackground,
                                   content: self.content)
         }
         .buttonStyle(AnimatedButton())
@@ -211,14 +217,17 @@ struct HierarchialButtonBase<V: View>: View {
     let fontType: Font
     
     let square: Bool
-    let shadow: Bool
+    
+    let hasShadow: Bool
+    let hasBackground: Bool
     
     
     init(type: HierarchialButtonType,
          size: HierarchialButtonSize,
          outlined: Bool,
          square: Bool,
-         shadow: Bool,
+         hasShadow: Bool,
+         hasBackground: Bool,
          content: @escaping () -> V) {
         switch (type) {
         case .halfcoloured:
@@ -264,33 +273,49 @@ struct HierarchialButtonBase<V: View>: View {
             
         }
         
-        self.shadow = shadow
         self.square = square
+        
+        self.hasShadow = hasShadow
+        self.hasBackground = hasBackground
+        
         self.content = content()
     }
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .fill(Material.ultraThinMaterial)
-                .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
+            if (self.hasBackground) {
+                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                    .fill(Material.ultraThinMaterial)
+                    .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
+            }
             
             RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .fill(self.colourBg.opacity(0.92))
+                .fill(self.hasBackground ? self.colourBg.opacity(0.92) : Color.white.opacity(0.001))
                 .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
-                .shadow(color: self.shadow
+                .shadow(color: self.hasShadow
                         ? self.colourShadow
                         : Color.clear,
-                        radius: self.shadow ? 4 : 0,
+                        radius: self.hasShadow ? 4 : 0,
                         x: 0,
-                        y: self.shadow ? 1 : 0)
+                        y: self.hasShadow ? 1 : 0)
             
             content
                 .foregroundColor(self.colourFg)
                 .font(self.fontType)
                 .padding(.horizontal, self.horizontalPadding)
         }
+        .contentShape(Rectangle())
         .fixedSize()
+    }
+}
+
+struct CloseButton: View {
+    let onTapRun: () -> Void
+    
+    var body: some View {
+        HierarchialButton(type: .mono, size: .medium, hasShadow: false, hasBackground: false, onTapRun: self.onTapRun) {
+            Image(systemName: "xmark")
+        }
     }
 }
 

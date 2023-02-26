@@ -245,13 +245,10 @@ struct SettingsDetail: View {
                             HStack {
                                 Spacer()
                                 
-                                // CLOSE BUTTON
-                                HierarchialButton(type: .mono, size: .medium, outlined: false, square: true, onTapRun: {
+                                CloseButton {
                                     withAnimation(Animation.customSlowSpring) {
                                         currentCard = nil
                                     }
-                                }) {
-                                    Image(systemName: "xmark")
                                 }
                                 .padding([.horizontal, .bottom])
                                 .padding(.top, 8)

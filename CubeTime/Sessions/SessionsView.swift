@@ -53,7 +53,7 @@ struct SessionsView: View {
                 .navigationTitle("Your Sessions")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: false, shadow: true) {
+                        HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true) {
                             HStack {
                                 Image(systemName: "wrench.and.screwdriver")
                                     .font(Font.subheadline)
@@ -238,7 +238,7 @@ struct NewSessionView: View {
                         if let session_desc = sessionDescriptions[sessionType] {
                             Text(session_desc)
                                 .multilineTextAlignment(.leading)
-                                .foregroundColor(Color(uiColor: .systemGray))
+                                .foregroundColor(Color("grey"))
                                 .padding([.horizontal, .bottom])
                         }
                     }

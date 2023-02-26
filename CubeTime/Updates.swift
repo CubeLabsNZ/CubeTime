@@ -144,12 +144,9 @@ struct Updates: View {
             .navigationBarTitle("What's New!")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    // CLOSE BUTTON
-                    HierarchialButton(type: .mono, size: .medium, outlined: false, square: true, onTapRun: {
+                    CloseButton {
                         dismiss()
                         showUpdates = false
-                    }) {
-                        Image(systemName: "xmark")
                     }
                     .padding([.top, .trailing])
                 }

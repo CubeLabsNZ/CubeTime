@@ -76,11 +76,8 @@ struct NewSessionModalView: View {
                         HStack {
                             Spacer()
                             
-                            // CLOSE BUTTON
-                            HierarchialButton(type: .mono, size: .medium, outlined: false, square: true, onTapRun: {
+                            CloseButton {
                                 dismiss()
-                            }) {
-                                Image(systemName: "xmark")
                             }
                             .padding([.top, .trailing])
                         }

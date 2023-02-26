@@ -128,7 +128,7 @@ struct BottomToolBG: View {
     
     var body: some View {
         RoundedRectangle(cornerRadius: 12, style: .continuous)
-            .fill(Color("overlay1"))
+            .fill(Color("overlay0"))
             .frame(width: maxWidth, height: maxHeight)
     }
 }
@@ -194,7 +194,7 @@ struct BottomTool: View {
                             } else {
                                 Text("-")
                                     .font(.system(size: 24, weight: .medium, design: .default))
-                                    .foregroundColor(Color(uiColor: .systemGray))
+                                    .foregroundColor(Color("grey"))
                             }
                             
                         }
@@ -218,7 +218,7 @@ struct BottomTool: View {
                             } else {
                                 Text("-")
                                     .font(.system(size: 24, weight: .medium, design: .default))
-                                    .foregroundColor(Color(uiColor: .systemGray))
+                                    .foregroundColor(Color("grey"))
                             }
                         }
                         .frame(minWidth: 0, maxWidth: .infinity)
@@ -246,7 +246,7 @@ struct BottomTool: View {
                             } else {
                                 Text("-")
                                     .font(.system(size: 24, weight: .medium, design: .default))
-                                    .foregroundColor(Color(uiColor: .systemGray))
+                                    .foregroundColor(Color("grey"))
                             }
                         }
                         .frame(minWidth: 0, maxWidth: .infinity)
@@ -269,7 +269,7 @@ struct BottomTool: View {
                             } else {
                                 Text("-")
                                     .font(.system(size: 24, weight: .medium, design: .default))
-                                    .foregroundColor(Color(uiColor: .systemGray))
+                                    .foregroundColor(Color("grey"))
                             }
                         }
                         .frame(minWidth: 0, maxWidth: .infinity)
@@ -297,7 +297,7 @@ struct BottomTool: View {
                             } else {
                                 Text("...")
                                     .font(.system(size: 24, weight: .medium, design: .default))
-                                    .foregroundColor(Color(uiColor: .systemGray))
+                                    .foregroundColor(Color("grey"))
                             }
                             
                         }
@@ -325,7 +325,7 @@ struct BottomTool: View {
                             } else {
                                 Text("...")
                                     .font(.system(size: 24, weight: .medium, design: .default))
-                                    .foregroundColor(Color(uiColor: .systemGray))
+                                    .foregroundColor(Color("grey"))
                             }
                         }
                         .frame(minWidth: 0, maxWidth: .infinity)
@@ -351,7 +351,7 @@ struct BottomTool: View {
                             } else {
                                 Text("...")
                                     .font(.system(size: 24, weight: .medium, design: .default))
-                                    .foregroundColor(Color(uiColor: .systemGray))
+                                    .foregroundColor(Color("grey"))
                             }
                         }
                     }
@@ -555,7 +555,7 @@ struct TimerView: View {
                         .font(Font(CTFontCreateWithFontDescriptor(stopWatchManager.ctFontDescBold, 56, nil)))
                         .multilineTextAlignment(.center)
                         .foregroundColor(stopWatchManager.timerColour)
-                        .background(Color(uiColor: colourScheme == .light ? .systemGray6 : .black))
+                        .background(Color("bg"))
                         .modifier(DynamicText())
                         .modifier(TimeMaskTextField(text: $manualInputTime))
                 }
