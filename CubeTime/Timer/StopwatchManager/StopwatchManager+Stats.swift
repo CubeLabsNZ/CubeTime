@@ -264,7 +264,7 @@ extension StopwatchManager {
         
         try! managedObjectContext.save()
         
-        self.secondsStr = formatSolveTime(secs: showPrevTime ? (self.solvesByDate.last?.time ?? 0) : 0)
+        timerController.secondsStr = formatSolveTime(secs: showPrevTime ? (self.solvesByDate.last?.time ?? 0) : 0)
         
         
         print("delete called")

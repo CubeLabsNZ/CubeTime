@@ -58,13 +58,6 @@ class StopwatchManager: ObservableObject {
     let managedObjectContext: NSManagedObjectContext
     
     // MARK: get user defaults
-    var hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue)
-    var hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue)
-    var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
-    var inspectionAlert: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionAlert.rawValue)
-    var inspectionAlertType: Int = UserDefaults.standard.integer(forKey: gsKeys.inspectionAlertType.rawValue)
-    var timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
-    var insCountDown: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionCountsDown.rawValue)
     var showPrevTime: Bool = UserDefaults.standard.bool(forKey: gsKeys.showPrevTime.rawValue)
     var fontWeight: Double = UserDefaults.standard.double(forKey: asKeys.fontWeight.rawValue)
     var fontCasual: Double = UserDefaults.standard.double(forKey: asKeys.fontCasual.rawValue)
@@ -74,11 +67,9 @@ class StopwatchManager: ObservableObject {
     
     
     // MARK: published variables
-    @Published var timerColour: Color = Color.Timer.normal
-    
     @Published var currentSession: Sessions! {
         didSet {
-            NSLog("DIDSET currentsession")
+            NSLog("BEGIN DIDSET currentsession, now \(currentSession)")
             self.targetStr = filteredStrFromTime((currentSession as? CompSimSession)?.target)
             self.phaseCount = Int((currentSession as? MultiphaseSession)?.phase_count ?? 0)
             
@@ -86,17 +77,25 @@ class StopwatchManager: ObservableObject {
             tryUpdateCurrentSolveth()
             statsGetFromCache()
             currentSession.last_used = Date()
+            try! managedObjectContext.save()
             self.playgroundScrambleType = currentSession.scramble_type
+            if let currentSession = currentSession as? MultiphaseSession {
+                timerController.phaseCount = Int(currentSession.phase_count)
+            } else {
+                timerController.phaseCount = nil
+            }
+            NSLog("END DIDSET currentsession, now \(currentSession)")
         }
     }
     
-    @Published var scrambleStr: String? = nil
+    @Published var scrambleStr: String? = nil {
+        didSet {
+            timerController.disabled = scrambleStr == nil
+        }
+    }
     @Published var scrambleSVG: String? = nil
     
-    @Published var secondsStr = ""
-    @Published var inspectionSecs = 0
     
-    @Published var mode: stopWatchMode = .stopped
     
     @Published var showDeleteSolveConfirmation = false
     @Published var showPenOptions = false
@@ -110,8 +109,6 @@ class StopwatchManager: ObservableObject {
     @Published var ctFontDescBold: CTFontDescriptor!
     @Published var ctFontDesc: CTFontDescriptor!
     
-    var feedbackStyle: UIImpactFeedbackGenerator?
-    var secondsElapsed = 0.0
     var penType: PenTypes = .none
 
     
@@ -122,26 +119,6 @@ class StopwatchManager: ObservableObject {
     
     // MARK: private
     var prevScrambleStr: String! = nil
-    let plusTwoTime: Int = 15
-    let dnfTime: Int = 17
-    
-    
-    // MARK: timer
-    private var timer: Timer?
-    private var timerStartTime: Date?
-    
-    private var justInspected = false
-    
-    var prevDownStoppedTimer = false
-    var canGesture: Bool = true
-    
-    
-    // MARK: multiphase
-    private var currentMPCount: Int = 1
-    var phaseTimes: [Double] = []
-    
-    
-    
     
     #warning("TODO: remove")
     var nilSolve: Bool = true
@@ -246,9 +223,6 @@ class StopwatchManager: ObservableObject {
     
     
     
-    private let systemSoundID: SystemSoundID = 1057
-    private let inspectionAlert_8: AVAudioPlayer!
-    private let inspectionAlert_12: AVAudioPlayer!
     
     
     
@@ -314,12 +288,11 @@ class StopwatchManager: ObservableObject {
         assert(currentSession != nil)
     }
     
+    var timerController: TimerContoller! = nil; #warning("figure out way to not make it ! optional")
     
     init (currentSession: Sessions?, managedObjectContext: NSManagedObjectContext) {
         print("initialising audio...")
         setupAudioSession()
-        self.inspectionAlert_8 = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "8sec-audio", ofType: "wav")!))
-        self.inspectionAlert_12 = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "12sec-audio", ofType: "wav")!))
         
         
 //        self.currentSession = currentSession
@@ -327,9 +300,95 @@ class StopwatchManager: ObservableObject {
         
         self.isSmallDevice = smallDeviceNames.contains(getModelName())
         
-        secondsStr = formatSolveTime(secs: 0)
         
         self.playgroundScrambleType = -1 // Get the compiler to shut up about not initialized, cannot be optional for picker
+        
+        
+        self.timerController = TimerContoller(
+            onStartInspection: { self.penType = .none /* reset penType from last solve */ },
+            onInspectionSecondsChange: { inspectionSecs in
+                if inspectionSecs == inspectionPlusTwoTime {
+                    self.penType = .plustwo
+                } else if inspectionSecs == inspectionDnfTime {
+                    self.penType = .dnf
+                }
+            },
+            onStop: { (time, secondsElapsed, phaseTimes) in
+                NSLog("called onStop(\(time), \(secondsElapsed), \(phaseTimes))")
+                if let currentSession = self.currentSession as? CompSimSession {
+                    self.solveItem = CompSimSolve(context: managedObjectContext)
+                    if currentSession.solvegroups == nil {
+                        currentSession.solvegroups = NSOrderedSet()
+                    }
+                                        
+                    if currentSession.solvegroups!.count == 0 || self.currentSolveth == 5 {
+                        let solvegroup = CompSimSolveGroup(context: managedObjectContext)
+                        solvegroup.session = currentSession
+                        
+                    }
+                    
+                    (self.solveItem as! CompSimSolve).solvegroup = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup)
+                    self.currentSolveth = (currentSession.solvegroups!.lastObject! as? CompSimSolveGroup)!.solves!.count
+
+                } else {
+                    NSLog("NON CS, SESSION IS: \(self.currentSession)")
+                    if let _ = self.currentSession as? MultiphaseSession {
+                        NSLog("MULTIPHASE, MAKING MULTIPHASSEOLVE")
+                        self.solveItem = MultiphaseSolve(context: managedObjectContext)
+                        
+                        (self.solveItem as! MultiphaseSolve).phases = phaseTimes
+                    } else {
+                        self.solveItem = Solves(context: managedObjectContext)
+                    }
+                }
+                
+                
+                self.solveItem.date = Date()
+                self.solveItem.penalty = self.penType.rawValue
+                // .puzzle_id
+                self.solveItem.session = self.currentSession
+                // Use the current scramble if stopped from manual input
+                self.solveItem.scramble = time == nil ? self.prevScrambleStr : self.scrambleStr
+                self.solveItem.scramble_type = self.currentSession.scramble_type
+                self.solveItem.scramble_subtype = 0
+                self.solveItem.time = secondsElapsed
+                try! managedObjectContext.save()
+                
+                // Rescramble if from manual input
+                if time != nil {
+                    self.rescramble()
+                }
+                
+                self.updateStats()
+            },
+            onTouchUp: {
+                if self.showPenOptions {
+                    withAnimation(Animation.customSlowSpring) {
+                        self.showPenOptions = false
+                    }
+                }
+            },
+            preTimerStart: {
+                self.rescramble()
+            },
+            onGesture: { [self] direction in
+                switch direction {
+                case .down:
+                    timerController.feedbackStyle?.impactOccurred()
+                    displayPenOptions()
+                case .left:
+                    timerController.feedbackStyle?.impactOccurred()
+                    askToDelete()
+                case .right:
+                    timerController.feedbackStyle?.impactOccurred()
+//                    timerController.timerColour = Color.Timer.normal
+//                    timerController.prevDownStoppedTimer = false
+                    rescramble()
+                default: break
+//                    timerController.timerColour = Color.Timer.normal
+                }
+            }
+        )
         
         if let currentSession = currentSession {
             self.currentSession = currentSession
@@ -338,7 +397,6 @@ class StopwatchManager: ObservableObject {
         }
         
         statsGetFromCache()
-        calculateFeedbackStyle()
         self.rescramble()
         
         updateFont()
@@ -351,255 +409,6 @@ class StopwatchManager: ObservableObject {
         print("swm initialised")
     }
     
-    
-    func startInspection() {
-        timer?.invalidate()
-        penType = .none // reset penType from last solve
-        secondsStr = insCountDown ? "15" : "0"
-        inspectionSecs = 0
-        mode = .inspecting
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
-            inspectionSecs += 1
-            if insCountDown {
-                if inspectionSecs == 16 {
-                    self.secondsStr = "-"
-                } else if inspectionSecs < 16 {
-                    self.secondsStr = String(15 - inspectionSecs)
-                }
-            } else {
-                self.secondsStr = String(inspectionSecs)
-            }
-            
-            if inspectionSecs == self.plusTwoTime {
-                penType = .plustwo
-            } else if inspectionSecs == self.dnfTime {
-                penType = .dnf
-            }
-            
-            if inspectionAlert && (inspectionSecs == 8 || inspectionSecs == 12) {
-                if inspectionAlertType == 1 {
-                    AudioServicesPlayAlertSound(systemSoundID)
-                } else {
-                    if inspectionSecs == 8 {
-                        inspectionAlert_8.play()
-                    } else {
-                        inspectionAlert_12.play()
-                    }
-                }
-            }
-        }
-    }
-    
-    func interruptInspection() {
-        mode = .stopped
-        timer?.invalidate()
-        inspectionSecs = 0
-        secondsElapsed = 0
-        justInspected = false
-        secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: timeDP)
-        
-    }
-
-    
-    
-    
-    func start() {
-        #if DEBUG
-        NSLog("starting")
-        #endif
-        mode = .running
-
-        timer?.invalidate() // Stop possibly running inspections
-
-        secondsElapsed = 0
-        secondsStr = formatSolveTime(secs: 0)
-        timerStartTime = Date()
-
-        if timeDP != -1 {
-            timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { [self] timer in
-                self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
-                self.secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: timeDP)
-            }
-        } else {
-            self.secondsStr = "..."
-        }
-    }
-    
-    
-    func stop(_ time: Double?) {
-        #if DEBUG
-        NSLog("stopping")
-        #endif
-        timer?.invalidate()
-        
-        if let time = time {
-            self.secondsElapsed = time
-        } else {
-            self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
-        }
-        
-        self.secondsStr = formatSolveTime(secs: self.secondsElapsed)
-        mode = .stopped
-
-        if let currentSession = currentSession as? CompSimSession {
-            solveItem = CompSimSolve(context: managedObjectContext)
-            if currentSession.solvegroups == nil {
-                currentSession.solvegroups = NSOrderedSet()
-            }
-                                
-            if currentSession.solvegroups!.count == 0 || currentSolveth == 5 {
-                let solvegroup = CompSimSolveGroup(context: managedObjectContext)
-                solvegroup.session = currentSession
-                
-            }
-            
-            (solveItem as! CompSimSolve).solvegroup = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup)
-            currentSolveth = (currentSession.solvegroups!.lastObject! as? CompSimSolveGroup)!.solves!.count
-
-        } else {
-            if let _ = currentSession as? MultiphaseSession {
-                solveItem = MultiphaseSolve(context: managedObjectContext)
-                
-                (solveItem as! MultiphaseSolve).phases = phaseTimes
-                
-                currentMPCount = 1
-                phaseTimes = []
-            } else {
-                solveItem = Solves(context: managedObjectContext)
-            }
-        }
-        
-        
-        solveItem.date = Date()
-        solveItem.penalty = penType.rawValue
-        // .puzzle_id
-        solveItem.session = currentSession
-        // Use the current scramble if stopped from manual input
-        solveItem.scramble = time == nil ? prevScrambleStr : scrambleStr
-        solveItem.scramble_type = currentSession.scramble_type
-        solveItem.scramble_subtype = 0
-        solveItem.time = self.secondsElapsed
-        try! managedObjectContext.save()
-        
-        // Rescramble if from manual input
-        if time != nil {
-            rescramble()
-        }
-        
-        updateStats()
-    }
-    
-    
-    func touchDown() {
-        #if DEBUG
-        NSLog("touch down")
-        #endif
-        if mode != .stopped || scrambleStr != nil || prevDownStoppedTimer {
-            timerColour = Color.Timer.heldDown
-        }
-        
-        if mode == .running {
-            
-            justInspected = false
-            
-            if let multiphaseSession = currentSession as? MultiphaseSession {
-                
-                if phaseCount != currentMPCount {
-                    canGesture = false
-                    
-                    currentMPCount += 1
-                    lap()
-                } else {
-                    canGesture = true
-                    
-                    lap()
-                    prevDownStoppedTimer = true
-                    justInspected = false
-                    stop(nil)
-                }
-            } else {
-                canGesture = true
-                prevDownStoppedTimer = true
-                justInspected = false
-                stop(nil)
-            }
-        }
-    }
-    
-    
-    func touchUp() {
-        #if DEBUG
-        NSLog("touchup")
-        #endif
-        if mode != .stopped || scrambleStr != nil {
-            timerColour = Color.Timer.normal
-            
-            if inspectionEnabled && mode == .stopped && !prevDownStoppedTimer {
-                startInspection()
-                justInspected = true
-            }
-        } else if prevDownStoppedTimer && scrambleStr == nil {
-            timerColour = Color.Timer.loading
-        }
-        
-        
-        if showPenOptions {
-            withAnimation(Animation.customSlowSpring) {
-                showPenOptions = false
-            }
-        }
-        prevDownStoppedTimer = false
-    }
-    
-    
-    func longPressStart() {
-        #if DEBUG
-        NSLog("long press start")
-        #endif
-        
-        if inspectionEnabled ? mode == .inspecting : mode == .stopped && !prevDownStoppedTimer && ( mode != .stopped || scrambleStr != nil ) {
-            #if DEBUG
-            NSLog("timer can start")
-            #endif
-            
-            timerColour = Color.Timer.canStart
-            feedbackStyle?.impactOccurred()
-        }
-    }
-    
-    func longPressEnd() {
-        #if DEBUG
-        NSLog("long press end")
-        #endif
-        if mode != .stopped || scrambleStr != nil {
-            timerColour = Color.Timer.normal
-        } else if prevDownStoppedTimer && scrambleStr == nil {
-            timerColour = Color.Timer.loading
-        }
-        
-        withAnimation(Animation.customSlowSpring) {
-            showPenOptions = false
-        }
-        
-        if !prevDownStoppedTimer && ( mode != .stopped || scrambleStr != nil ) {
-            if inspectionEnabled ? mode == .inspecting : mode == .stopped {
-                start()
-                rescramble()
-            } else if inspectionEnabled && mode == .stopped && !justInspected {
-                startInspection()
-//                rescramble()
-                justInspected = true
-            }
-        }
-        
-        prevDownStoppedTimer = false
-    }
-    
-    
-    // multiphase
-    func lap() {
-        phaseTimes.append(-timerStartTime!.timeIntervalSinceNow)
-    }
     
     // compsim
     func tryUpdateCurrentSolveth() {

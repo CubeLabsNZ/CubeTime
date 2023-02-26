@@ -9,7 +9,27 @@ import SwiftUI
 import SwiftfulLoadingIndicators
 
 struct TimerOnlyTool: View {
-    @EnvironmentObject var stopwatchManager: StopwatchManager
+    @StateObject var timerController: TimerContoller = TimerContoller()
+    
+    @Binding var showOverlay: Tool?
+    var namespace: Namespace.ID
+    let name: String
+    
+    init(showOverlay: Binding<Tool?>, namespace: Namespace.ID) {
+        self._showOverlay = showOverlay
+        self.namespace = namespace
+        self.name = showOverlay.wrappedValue!.name
+        
+    }
+    
+    var body: some View {
+        TimerOnlyToolInner(showOverlay: $showOverlay, namespace: namespace, name: name)
+            .environmentObject(timerController)
+    }
+}
+
+struct TimerOnlyToolInner: View {
+    @EnvironmentObject var timerController: TimerContoller
     @EnvironmentObject var tabRouter: TabRouter
     
     @Environment(\.colorScheme) var colourScheme
@@ -20,13 +40,6 @@ struct TimerOnlyTool: View {
     var namespace: Namespace.ID
     
     let name: String
-    
-    init(showOverlay: Binding<Tool?>, namespace: Namespace.ID) {
-        self._showOverlay = showOverlay
-        self.namespace = namespace
-        self.name = showOverlay.wrappedValue!.name
-        
-    }
     
     // GET USER DEFAULTS
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
@@ -39,7 +52,7 @@ struct TimerOnlyTool: View {
             TimerBackgroundColor()
                 .ignoresSafeArea(.all)
             
-            TimerTouchView(stopwatchManager: stopwatchManager)
+            TimerTouchView()
             
             
             TimerTime()
@@ -48,7 +61,7 @@ struct TimerOnlyTool: View {
                 .ignoresSafeArea(edges: .all)
             
             
-            if stopwatchManager.mode == .stopped {
+            if timerController.mode == .stopped || timerController.mode == .inspecting {
                 HStack {
                     Label("Timer Only", systemImage: "stopwatch")
                     .matchedGeometryEffect(id: name, in: namespace)
