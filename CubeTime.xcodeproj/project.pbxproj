@@ -12,7 +12,6 @@
 		2303472A278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		2303472B278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2319F8B8276872F200644EB3 /* TimeTrend.swift */; };
-		2326435D28C490A500F6322E /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435B28C490A500F6322E /* FloatingPanel.swift */; };
 		2326436028C4927600F6322E /* TimerHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435F28C4927600F6322E /* TimerHeader.swift */; };
 		2326436228C4929700F6322E /* PrevSolvesDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326436128C4929700F6322E /* PrevSolvesDisplay.swift */; };
 		2337E6882767619D00438F43 /* StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2337E6872767619D00438F43 /* StatsDetail.swift */; };
@@ -72,7 +71,6 @@
 		AF7697DE293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */; };
 		AF7697DF293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */; };
 		AF7697E0293C5A9D00FF1C50 /* RecMonoVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */; };
-		AF7D7806293B1E85003A2A11 /* PadSideBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7D7805293B1E85003A2A11 /* PadSideBar.swift */; };
 		AF8874C129AAC8C0001E49D0 /* ToolsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C029AAC8C0001E49D0 /* ToolsList.swift */; };
 		AF8874C329AB0BE7001E49D0 /* TimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C229AB0BE7001E49D0 /* TimerController.swift */; };
 		AF8874C529AB3736001E49D0 /* ScrambleGeneratorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */; };
@@ -113,7 +111,6 @@
 		23034724278BD22600553A7D /* TimeDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDetail.swift; sourceTree = "<group>"; };
 		23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RecursiveSansLnrSt-Regular.ttf"; sourceTree = "<group>"; };
 		2319F8B8276872F200644EB3 /* TimeTrend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrend.swift; sourceTree = "<group>"; };
-		2326435B28C490A500F6322E /* FloatingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingPanel.swift; sourceTree = "<group>"; };
 		2326435F28C4927600F6322E /* TimerHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerHeader.swift; sourceTree = "<group>"; };
 		2326436128C4929700F6322E /* PrevSolvesDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrevSolvesDisplay.swift; sourceTree = "<group>"; };
 		2337E6872767619D00438F43 /* StatsDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsDetail.swift; sourceTree = "<group>"; };
@@ -174,7 +171,6 @@
 		7D7E2011275DD52600ADF01D /* Licenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Licenses.swift; sourceTree = "<group>"; };
 		7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleView.swift; sourceTree = "<group>"; };
 		AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RecMonoVariable.ttf; sourceTree = "<group>"; };
-		AF7D7805293B1E85003A2A11 /* PadSideBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadSideBar.swift; sourceTree = "<group>"; };
 		AF8874C029AAC8C0001E49D0 /* ToolsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsList.swift; sourceTree = "<group>"; };
 		AF8874C229AB0BE7001E49D0 /* TimerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerController.swift; sourceTree = "<group>"; };
 		AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleGeneratorTool.swift; sourceTree = "<group>"; };
@@ -238,7 +234,6 @@
 			children = (
 				7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */,
 				7D78FF8D276087AF008BB82E /* TabBar.swift */,
-				2326435B28C490A500F6322E /* FloatingPanel.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -353,7 +348,6 @@
 				23A73F5F276B0B0200153748 /* Sessions */,
 				23E81E6D275D8DB500B741E3 /* Settings */,
 				23DE3BE0274DDBE300254D29 /* Preview Content */,
-				AF7D7805293B1E85003A2A11 /* PadSideBar.swift */,
 			);
 			path = CubeTime;
 			sourceTree = "<group>";
@@ -610,7 +604,6 @@
 				7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */,
 				AF8874C529AB3736001E49D0 /* ScrambleGeneratorTool.swift in Sources */,
 				23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */,
-				2326435D28C490A500F6322E /* FloatingPanel.swift in Sources */,
 				7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */,
 				7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */,
 				237B35502761995F00CC39BF /* SettingsCard.swift in Sources */,
@@ -623,7 +616,6 @@
 				2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */,
 				7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */,
 				233FE7B6274F109600C6F1DF /* Helper.swift in Sources */,
-				AF7D7806293B1E85003A2A11 /* PadSideBar.swift in Sources */,
 				23CA8A0C29AAFABD006676BF /* StopwatchManager+ScrambleController.swift in Sources */,
 				7D7A9EC6274F396E00C2E125 /* SettingsView.swift in Sources */,
 				2326436028C4927600F6322E /* TimerHeader.swift in Sources */,

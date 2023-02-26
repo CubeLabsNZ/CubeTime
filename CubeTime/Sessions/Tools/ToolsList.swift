@@ -67,7 +67,7 @@ struct ToolHeader: View {
                 tabRouter.hideTabBar = false
             }
         }
-        .padding(.horizontal, padFloatingLayout && UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) ? 24 : nil)
+        .padding(.horizontal)
         .frame(maxWidth: .infinity)
     }
 }

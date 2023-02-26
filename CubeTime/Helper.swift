@@ -805,11 +805,7 @@ extension View {
     func safeAreaInset(safeArea: SafeAreaType, avoidBottomBy: CGFloat=0) -> some View {
         switch safeArea {
         case .tabBar:
-            if UIDevice.deviceIsPad {
-                return safeAreaInset(safeArea: .padFloating, avoidBottomBy: avoidBottomBy)
-            } else {
-                return safeAreaInset(safeArea: .defaultView, avoidBottomBy: avoidBottomBy)
-            }
+            return safeAreaInset(safeArea: .defaultView, avoidBottomBy: avoidBottomBy)
         }
     }
 }
