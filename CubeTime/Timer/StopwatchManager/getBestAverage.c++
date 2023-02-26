@@ -6,11 +6,12 @@
 using namespace std;
 
 extern "C" {
-const int* _Nonnull allSolvesPtr(const struct CalculatedAverageFragment* _Nonnull const cafPtr) {
-    return &(cafPtr->allSolves)[0];
-}
-
-CalculatedAverageFragment getBestAverageOf(const int n, const int m, const int trim, const double a[_Nonnull]) {
+double getBestAverageOf(const int n,
+                        const int m,
+                        const int trim,
+                        const double a[_Nonnull],
+                        int accountedSolves[_Nonnull],
+                        int trimmedSolves[_Nonnull]) {
     multimap<double, int> s;
     double best = 100;
     
@@ -27,12 +28,8 @@ CalculatedAverageFragment getBestAverageOf(const int n, const int m, const int t
     int trimmedSolvesSize = trim*2;
     int accountedSolvesSize = m - (trimmedSolvesSize);
     
-    CalculatedAverageFragment* res = (CalculatedAverageFragment*) alloca(sizeof(CalculatedAverageFragment) + sizeof(int) * m);
-
-    int* accountedSolves = res->allSolves;
-    int* trimmedSolves = res->allSolves + (accountedSolvesSize);
-                                           
     
+        
     for (int i = m - 1; i < n; i++) {
         sum += a[i];
         s.emplace(a[i], i);
@@ -54,7 +51,7 @@ CalculatedAverageFragment getBestAverageOf(const int n, const int m, const int t
                 trimmedSolves[2*i + 1] = (*(maxItr--)).second;
             }
             
-            for (int i = 0; i < (m - trim); ++i)
+            for (int i = 0; i < (m - trim*2); ++i)
                 accountedSolves[i] = (*(minItr++)).second;
             
             
@@ -68,14 +65,6 @@ CalculatedAverageFragment getBestAverageOf(const int n, const int m, const int t
         maxTrim = 0;
     }
     
-    res->average = best;
-    
-    for (int i = 0; i < m; i++) cout << res->allSolves[i] << " ";
-    cout << endl;
-    assert(res->allSolves == allSolvesPtr(res));
-    
-    cout << allSolvesPtr(res) << endl;
-    
-    return *res;
+    return best;
 }
 }

@@ -315,18 +315,16 @@ extension StopwatchManager {
             let clock3 = ContinuousClock()
 
             let result3 = clock3.measure {
-                let a: CalculatedAverageFragment = getBestAverageOf(Int32(count), Int32(100), Int32(5), solveDoubles);
-                print(a.average);
+                var accountedSolves: [Int32] = Array(repeating: 0, count: 90)
+                var trimmedSolves: [Int32] = Array(repeating: 0, count: 10)
                 
-                let b = [a];
+                let a: Double = getBestAverageOf(Int32(count), Int32(100), Int32(5), solveDoubles, &accountedSolves, &trimmedSolves);
+                print(a);
                 
-                let allSolves = UnsafeBufferPointer(start: allSolvesPtr(b), count: 100)
+                print(accountedSolves);
+                print(trimmedSolves);
                 
-//                print(Unmanaged.passUnretained(a as AnyObject).toOpaque())
-////                print(Unmanaged.passUnretained(a).toOpaque())
-//                print(allSolves)
                 
-                print(Array(allSolves))
             }
             
             print(result3)
