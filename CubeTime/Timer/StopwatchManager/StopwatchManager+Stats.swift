@@ -296,18 +296,38 @@ extension StopwatchManager {
             let clock = ContinuousClock()
             
             let result = clock.measure {
-                print(bestAo100?.average)
+                print(getBestMovingAverageOf(100)?.average)
             }
             
             print(result)
             
             let clock2 = ContinuousClock()
-            
+
             let result2 = clock2.measure {
                 print(getBestAverage(of: 100)?.average)
             }
-            
+
             print(result2)
+            
+            let count = solvesByDate.count;
+            let solveDoubles = solvesByDate.map{ $0.timeIncPen };
+            
+            let clock3 = ContinuousClock()
+
+            let result3 = clock3.measure {
+                var accountedSolves: [Int32] = Array(repeating: 0, count: 90)
+                var trimmedSolves: [Int32] = Array(repeating: 0, count: 10)
+                
+                let a: Double = getBestAverageOf(Int32(count), Int32(100), Int32(5), solveDoubles, &accountedSolves, &trimmedSolves);
+                print(a);
+                
+                print(accountedSolves);
+                print(trimmedSolves);
+                
+                
+            }
+            
+            print(result3)
         } else {
             print("fuck you")
         }
@@ -698,8 +718,9 @@ extension StopwatchManager {
         var sum: Double = 0
         var multiset: SortedBag<Solves> = SortedBag<Solves>()
         
-        var accountedSolves: [Solves] = []
-        var trimmedSolves: [Solves] = []
+        var accountedSolves: SortedBag<Solves> = SortedBag<Solves>()
+        var minTrimmedSolves: SortedBag<Solves> = SortedBag<Solves>()
+        var maxTrimmedSolves: SortedBag<Solves> = SortedBag<Solves>()
         
         let trimSize: Int = getTrimSizeEachEnd(width)
         
@@ -727,12 +748,19 @@ extension StopwatchManager {
                                          trimmedSolves: nil)
             }
             
+            let tempMinTrim = multiset.prefix(trimSize)
+            let tempMaxTrim = multiset.suffix(trimSize)
+            
             // for ao5, ao12
             if (trimSize == 1) {
                 sumTrimmed = multiset.first!.timeIncPen + multiset.last!.timeIncPen
             } else {  // for ao>12
-                let sumFastest = multiset.prefix(trimSize).reduce(0, {$0 + $1.timeIncPen})
-                sumTrimmed = multiset.suffix(trimSize).reduce(sumFastest, {$0 + $1.timeIncPen})
+                tempMinTrim.forEach({
+                    sumTrimmed += $0.timeIncPen
+                })
+                tempMaxTrim.forEach({
+                    sumTrimmed += $0.timeIncPen
+                })
             }
             
             // todo add error checking
@@ -741,8 +769,9 @@ extension StopwatchManager {
             // if updates
             if (average < bestAverage) {
                 bestAverage = average
-                accountedSolves = multiset.map({$0})
-                trimmedSolves = multiset.prefix(trimSize).map({$0}) + multiset.prefix(trimSize).map({$0})
+                accountedSolves = multiset.suffix(solvesByDate.count - trimSize).prefix(solvesByDate.count - trimSize*2)
+                minTrimmedSolves = tempMinTrim
+                maxTrimmedSolves = tempMaxTrim
             }
             
             sum -= solvesByDate[i - width + 1].timeIncPen
@@ -751,12 +780,10 @@ extension StopwatchManager {
         
         return CalculatedAverage(name: "Best ao\(width)",
                                  average: bestAverage,
-                                 accountedSolves: accountedSolves,
+                                 accountedSolves: Array(accountedSolves),
                                  totalPen: .none,
-                                 trimmedSolves: trimmedSolves)
+                                 trimmedSolves: Array(minTrimmedSolves) + Array(maxTrimmedSolves))
     }
-
-
 }
 
 
