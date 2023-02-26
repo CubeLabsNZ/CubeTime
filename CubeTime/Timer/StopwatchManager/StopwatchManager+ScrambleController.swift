@@ -24,9 +24,6 @@ extension StopwatchManager {
         
         prevScrambleStr = scrambleStr
         scrambleStr = nil
-        if mode == .stopped {
-            self.timerColour = Color.Timer.loading
-        }
         scrambleSVG = nil
         let newWorkItem = DispatchWorkItem {
             #if DEBUG
@@ -41,7 +38,6 @@ extension StopwatchManager {
             if scrTypeAtWorkStart == self.currentSession.scramble_type {
                 DispatchQueue.main.async {
                     self.scrambleStr = scramble
-                    self.timerColour = Color.Timer.normal
                 }
                 
                 var isolate: OpaquePointer? = nil

@@ -282,6 +282,7 @@ struct NewSessionView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         let sessionItem = sessionTypeForID[sessionType, default: Sessions.self].init(context: managedObjectContext)
+                        NSLog("creating sesion item!: \(sessionItem)")
                         sessionItem.name = name
                         sessionItem.pinned = pinnedSession
                         sessionItem.session_type = sessionType.rawValue

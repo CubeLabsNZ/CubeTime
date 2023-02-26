@@ -15,27 +15,30 @@ struct SheetStrWrapper: Identifiable {
 
 struct TimerTime: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var timerController: TimerContoller
     @Environment(\.colorScheme) var colourScheme
     
     @inlinable func getTimerColor() -> Color {
-        if stopwatchManager.mode == .inspecting && colourScheme == .dark && stopwatchManager.timerColour == Color.Timer.normal {
-            switch stopwatchManager.inspectionSecs {
+        #warning("move this to timer controller?")
+        if timerController.mode == .inspecting && colourScheme == .dark && timerController.timerColour == Color.Timer.normal {
+            switch timerController.inspectionSecs {
             case ..<8: return Color.Timer.normal
             case 8..<12: return Color(uiColor: .systemYellow)
             case 12..<15: return Color(uiColor: .systemOrange)
             default: return Color(uiColor: .systemRed)
             }
         } else {
-            return stopwatchManager.timerColour
+            return timerController.timerColour
         }
     }
     
     var body: some View {
-        Text(stopwatchManager.secondsStr
-             + (stopwatchManager.mode == .inspecting
-                ? ((stopwatchManager.inspectionSecs >= 17
+        #warning("move this to timer controller?")
+        Text(timerController.secondsStr
+             + (timerController.mode == .inspecting
+                ? ((timerController.inspectionSecs >= 17
                     ? "(DNF)"
-                    : (stopwatchManager.inspectionSecs >= 15
+                    : (timerController.inspectionSecs >= 15
                        ? "(+2)"
                        : "")))
                 : ""))
@@ -48,8 +51,8 @@ struct TimerTime: View {
                 .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 54, nil)))
         } elseDo: { view in
             return view
-                .modifier(AnimatingFontSize(font: stopwatchManager.ctFontDescBold, fontSize: stopwatchManager.mode == .running ? 70 : 56))
-                .animation(Animation.customBouncySpring, value: stopwatchManager.mode == .running)
+                .modifier(AnimatingFontSize(font: stopwatchManager.ctFontDescBold, fontSize: timerController.mode == .running ? 70 : 56))
+                .animation(Animation.customBouncySpring, value: timerController.mode == .running)
         }
     }
 }
@@ -57,12 +60,13 @@ struct TimerTime: View {
 
 struct TimerBackgroundColor: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var timerController: TimerContoller
     
     @Environment(\.colorScheme) var colourScheme
     
     var body: some View {
-        if stopwatchManager.mode == .inspecting && colourScheme == .light {
-            switch stopwatchManager.inspectionSecs {
+        if timerController.mode == .inspecting && colourScheme == .light {
+            switch timerController.inspectionSecs {
             case 8..<12:
                 Color.Inspection.eight
                     .ignoresSafeArea()
@@ -446,6 +450,7 @@ struct ScrambleText: View {
 
 struct TimerView: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var timerController: TimerContoller
     @EnvironmentObject var tabRouter: TabRouter
     
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -521,7 +526,7 @@ struct TimerView: View {
                         }
                     }
             } else {
-                TimerTouchView(stopwatchManager: stopwatchManager)
+                TimerTouchView()
             }
             
             
@@ -530,10 +535,10 @@ struct TimerView: View {
                     TimerTime()
                         .allowsHitTesting(false)
                     
-                    if stopwatchManager.mode == .inspecting && showCancelInspection {
+                    if timerController.mode == .inspecting && showCancelInspection {
                         PenaltyBar(90) {
                             Button {
-                                stopwatchManager.interruptInspection()
+                                timerController.interruptInspection()
                             } label: {
                                 Text("Cancel")
                                     .font(.system(size: 21, weight: .semibold, design: .rounded))
@@ -554,7 +559,7 @@ struct TimerView: View {
                         .frame(maxWidth: geo.size.width-32)
                         .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 56, nil)))
                         .multilineTextAlignment(.center)
-                        .foregroundColor(stopwatchManager.timerColour)
+                        .foregroundColor(timerController.timerColour)
                         .background(Color("bg"))
                         .modifier(DynamicText())
                         .modifier(TimeMaskTextField(text: $manualInputTime))
@@ -563,7 +568,7 @@ struct TimerView: View {
                 .ignoresSafeArea(edges: .all)
             }
             
-            if stopwatchManager.mode == .stopped {
+            if timerController.mode == .stopped {
                 BottomTools(timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr, presentedAvg: $presentedAvg)
                 
                 // 50 for tab + 8 for padding + 16/0 for bottom bar gap
@@ -632,7 +637,7 @@ struct TimerView: View {
                                     if manualInputFocused {
                                         if manualInputTime != "" {
                                             // record entered time time
-                                            stopwatchManager.stop(timeFromStr(manualInputTime))
+                                            timerController.stop(timeFromStr(manualInputTime))
                                             
                                             // remove focus and reset time
                                             showInputField = false
@@ -663,7 +668,7 @@ struct TimerView: View {
                         } else if typingMode {
                             PenaltyBar(68) {
                                 Button {
-                                    stopwatchManager.stop(timeFromStr(manualInputTime))
+                                    timerController.stop(timeFromStr(manualInputTime))
                                     
                                     // remove focus and reset time
                                     manualInputFocused = false
@@ -694,9 +699,9 @@ struct TimerView: View {
                 managedObjectContext.delete(detail.wrappedValue!); #warning("TODO: delete this line?")
                 stopwatchManager.delete(solve: detail.wrappedValue!)
                 detail.wrappedValue = nil
-                stopwatchManager.secondsElapsed = 0
+                timerController.secondsElapsed = 0
                 //                stopwatchManager.secondsStr = formatSolveTime(secs: 0)
-                stopwatchManager.secondsStr = formatSolveTime(secs: showPrevTime
+                timerController.secondsStr = formatSolveTime(secs: showPrevTime
                                                               ? (stopwatchManager.solvesByDate.last?.time ?? 0)
                                                               : 0)
             }
@@ -710,7 +715,7 @@ struct TimerView: View {
         .sheet(item: $presentedAvg) { item in
             StatsDetail(solves: item, session: stopwatchManager.currentSession); #warning("TODO: use SWM env object")
         }
-        .onReceive(stopwatchManager.$mode) { newMode in
+        .onReceive(timerController.$mode) { newMode in
             tabRouter.hideTabBar = newMode == .inspecting || newMode == .running
             hideStatusBar = newMode == .inspecting || newMode == .running
         }

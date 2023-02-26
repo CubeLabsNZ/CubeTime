@@ -102,7 +102,7 @@ struct GeneralSettingsView: View {
                     }
                     .padding(.horizontal)
                     .onChange(of: inspectionTime) { newValue in
-                        stopwatchManager.inspectionEnabled = newValue
+                        stopwatchManager.timerController.inspectionEnabled = newValue
                     }
                     
                     
@@ -115,7 +115,7 @@ struct GeneralSettingsView: View {
                         .toggleStyle(SwitchToggleStyle(tint: accentColour))
                         .padding(.horizontal)
                         .onChange(of: insCountDown) { newValue in
-                            stopwatchManager.insCountDown = newValue
+                            stopwatchManager.timerController.insCountDown = newValue
                         }
                         
                         Toggle(isOn: $showCancelInspection) {
@@ -141,7 +141,7 @@ struct GeneralSettingsView: View {
                         .toggleStyle(SwitchToggleStyle(tint: accentColour))
                         .padding(.horizontal)
                         .onChange(of: inspectionAlert) { newValue in
-                            stopwatchManager.inspectionAlert = newValue
+                            stopwatchManager.timerController.inspectionAlert = newValue
                         }
                         
                         Text("Play an audible alert when 8 or 12 seconds is reached.")
@@ -166,7 +166,7 @@ struct GeneralSettingsView: View {
                                 .frame(maxWidth: 120)
                                 .pickerStyle(.segmented)
                                 .onChange(of: inspectionAlertType) { newValue in
-                                    stopwatchManager.inspectionAlertType = newValue
+                                    stopwatchManager.timerController.inspectionAlertType = newValue
                                 }
                             }
                             .padding(.horizontal)
@@ -258,7 +258,7 @@ struct GeneralSettingsView: View {
                             .accentColor(accentColour)
                         }
                         .onChange(of: timerDP) { newValue in
-                            stopwatchManager.timeDP = newValue
+                            stopwatchManager.timerController.timeDP = newValue
                         }
                     }
                 }
@@ -479,8 +479,7 @@ struct GeneralSettingsView: View {
                 }
                 .padding(.horizontal)
                 .onChange(of: hapticFeedback) { newValue in
-                    stopwatchManager.hapticEnabled = newValue
-                    stopwatchManager.calculateFeedbackStyle()
+                    stopwatchManager.timerController.hapticEnabled = newValue
                 }
                 
                 if hapticFeedback {
@@ -507,8 +506,7 @@ struct GeneralSettingsView: View {
                     }
                     .padding(.horizontal)
                     .onChange(of: feedbackType) { newValue in
-                        stopwatchManager.hapticType = newValue.rawValue
-                        stopwatchManager.calculateFeedbackStyle()
+                        stopwatchManager.timerController.hapticType = newValue.rawValue
                     }
                 }
                 

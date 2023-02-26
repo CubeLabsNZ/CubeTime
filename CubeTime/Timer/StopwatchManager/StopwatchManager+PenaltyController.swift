@@ -8,9 +8,9 @@ extension StopwatchManager {
         }
         
         if PenTypes(rawValue: solveItem.penalty)! == .plustwo {
-            secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
+            timerController.secondsStr = formatSolveTime(secs: timerController.secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
         } else {
-            secondsStr = formatSolveTime(secs: secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
+            timerController.secondsStr = formatSolveTime(secs: timerController.secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
         }
         
         solves.remove(object: solveItem)
@@ -92,11 +92,6 @@ extension StopwatchManager {
 
     
     func displayPenOptions() {
-        if solveItem != nil && scrambleStr != nil {
-            timerColour = Color.Timer.normal
-        }
-        prevDownStoppedTimer = false
-        
         withAnimation(Animation.customSlowSpring) {
             showPenOptions = true
             nilSolve = (solveItem == nil)
@@ -108,9 +103,6 @@ extension StopwatchManager {
         withAnimation(Animation.customSlowSpring) {
             showPenOptions = false
         }
-        
-        timerColour = Color.Timer.normal
-        prevDownStoppedTimer = false
         
         if solveItem != nil {
             #warning("TODO")

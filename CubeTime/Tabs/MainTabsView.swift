@@ -36,14 +36,17 @@ struct MainTabsView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @EnvironmentObject var tabRouter: TabRouter
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     var body: some View {
+        let timerController = stopwatchManager.timerController
         VStack {
             ZStack {
                 switch tabRouter.currentTab {
                 case .timer:
                     TimerView()
                         .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
+                        .environmentObject(stopwatchManager.timerController)
                 case .solves:
                     TimeListView()
                 case .stats:

@@ -9,13 +9,37 @@ import SwiftUI
 import SwiftfulLoadingIndicators
 
 struct TimerOnlyTool: View {
-    @EnvironmentObject var stopwatchManager: StopwatchManager
+    @StateObject var timerController: TimerContoller = TimerContoller()
+    
+    @Binding var showOverlay: Tool?
+    var namespace: Namespace.ID
+    let name: String
+    
+    init(showOverlay: Binding<Tool?>, namespace: Namespace.ID) {
+        self._showOverlay = showOverlay
+        self.namespace = namespace
+        self.name = showOverlay.wrappedValue!.name
+        
+    }
+    
+    var body: some View {
+        TimerOnlyToolInner(showOverlay: $showOverlay, namespace: namespace, name: name)
+            .environmentObject(timerController)
+    }
+}
+
+struct TimerOnlyToolInner: View {
+    @EnvironmentObject var timerController: TimerContoller
     @EnvironmentObject var tabRouter: TabRouter
     
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.globalGeometrySize) var globalGeometrySize
     
     @Binding var showOverlay: Tool?
+    
+    var namespace: Namespace.ID
+    
+    let name: String
     
     // GET USER DEFAULTS
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
@@ -28,7 +52,7 @@ struct TimerOnlyTool: View {
             TimerBackgroundColor()
                 .ignoresSafeArea(.all)
             
-            TimerTouchView(stopwatchManager: stopwatchManager)
+            TimerTouchView()
             
             
             TimerTime()
@@ -37,13 +61,10 @@ struct TimerOnlyTool: View {
                 .ignoresSafeArea(edges: .all)
             
             
-            if stopwatchManager.mode == .stopped {
+            if timerController.mode == .stopped || timerController.mode == .inspecting {
                 HStack {
-                    HStack(spacing: 16) {
-                        Image(systemName: "stopwatch")
-                        
-                        Text("Timer Only")
-                    }
+                    Label("Timer Only", systemImage: "stopwatch")
+                    .matchedGeometryEffect(id: name, in: namespace)
                     .font(.system(size: 17, weight: .medium))
                     .padding(.leading, 8)
                     .padding(.trailing)
@@ -51,6 +72,7 @@ struct TimerOnlyTool: View {
                     .background(
                         Color("overlay1")
                             .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                            .matchedGeometryEffect(id: "bg" + name, in: namespace)
                     )
                     
                     Spacer()
