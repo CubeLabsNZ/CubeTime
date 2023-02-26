@@ -1,38 +1,12 @@
 import SwiftUI
 
 
-struct VHStack<Content: View>: View {
-    let vertical: Bool
-    let spacing: CGFloat?
-    let content: Content
-
-    init(vertical: Bool, spacing: CGFloat? = nil, @ViewBuilder _ content: () -> Content) {
-        self.vertical = vertical
-        self.spacing = spacing
-        self.content = content()
-    }
-
-    var body: some View {
-        if vertical {
-            VStack(spacing: spacing) {
-                content
-            }
-        } else {
-            HStack(spacing: spacing) {
-                content
-            }
-        }
-    }
-}
-
 struct TabBar: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @EnvironmentObject var tabRouter: TabRouter
     @Environment(\.colorScheme) private var colourScheme
     
     @Binding var currentTab: Tab
-    
-    var pad = false
     
     @Namespace private var namespace
     
@@ -50,25 +24,21 @@ struct TabBar: View {
 
                 .animation(Animation.customFastSpring, value: self.currentTab)
             
-            VHStack(vertical: pad) {
-                VHStack(vertical: pad) {
-                    if !(UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) && padFloatingLayout) {
-                        TabIcon(
-                            currentTab: $currentTab,
-                            assignedTab: .timer,
-                            systemIconName: "stopwatch",
-                            systemIconNameSelected: "stopwatch.fill",
-                            pad: pad,
-                            namespace: namespace
-                        )
-                    }
+            HStack {
+                HStack {
+                    TabIcon(
+                        currentTab: $currentTab,
+                        assignedTab: .timer,
+                        systemIconName: "stopwatch",
+                        systemIconNameSelected: "stopwatch.fill",
+                        namespace: namespace
+                    )
                                                    
                     TabIcon(
                         currentTab: $currentTab,
                         assignedTab: .solves,
                         systemIconName: "hourglass.bottomhalf.filled",
                         systemIconNameSelected: "hourglass.tophalf.filled",
-                        pad: pad,
                         namespace: namespace
                     )
                     
@@ -77,7 +47,6 @@ struct TabBar: View {
                         assignedTab: .stats,
                         systemIconName: "chart.pie",
                         systemIconNameSelected: "chart.pie.fill",
-                        pad: pad,
                         namespace: namespace
                     )
                     
@@ -86,14 +55,12 @@ struct TabBar: View {
                         assignedTab: .sessions,
                         systemIconName: "line.3.horizontal.circle",
                         systemIconNameSelected: "line.3.horizontal.circle.fill",
-                        pad: pad,
                         namespace: namespace
                     )
                 }
                 .frame(
-                    width: pad ? 50 : nil,
-                    height: pad ? nil : 50,
-                    alignment: pad ? .top : .leading
+                    height: 50,
+                    alignment: .leading
                 )
                 .animation(Animation.customFastSpring, value: self.currentTab)
                 .animation(.spring(), value: tabRouter.padExpandState)
@@ -105,16 +72,15 @@ struct TabBar: View {
                     assignedTab: .settings,
                     systemIconName: "gearshape",
                     systemIconNameSelected: "gearshape.fill",
-                    pad: pad,
                     namespace: namespace,
                     hasBar: false
                 )
             }
         }
-        .padding(pad ? .vertical : .horizontal)
+        .padding(.horizontal)
         .ignoresSafeArea(.keyboard)
         .transition(.move(edge: .bottom).animation(.easeIn(duration: 6)))
-        .fixedSize(horizontal: pad, vertical: !pad)
+        .fixedSize(horizontal: false, vertical: true)
     }
 }
 
@@ -125,16 +91,14 @@ struct TabIcon: View {
     let assignedTab: Tab
     let systemIconName: String
     let systemIconNameSelected: String
-    let pad: Bool
     var namespace: Namespace.ID
     let hasBar: Bool
     
-    init(currentTab: Binding<Tab>, assignedTab: Tab, systemIconName: String, systemIconNameSelected: String, pad: Bool, namespace: Namespace.ID, hasBar: Bool = true) {
+    init(currentTab: Binding<Tab>, assignedTab: Tab, systemIconName: String, systemIconNameSelected: String, namespace: Namespace.ID, hasBar: Bool = true) {
         self._currentTab = currentTab
         self.assignedTab = assignedTab
         self.systemIconName = systemIconName
         self.systemIconNameSelected = systemIconNameSelected
-        self.pad = pad
         self.namespace = namespace
         self.hasBar = hasBar
     }
@@ -142,7 +106,7 @@ struct TabIcon: View {
     var body: some View {
         ZStack {
             if (hasBar) {
-                VHStack(vertical: !pad) {
+                VStack() {
                     Group {
                         if (currentTab == assignedTab) {
                             Capsule()

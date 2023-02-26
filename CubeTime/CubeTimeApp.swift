@@ -165,20 +165,7 @@ struct MainView: View {
     var body: some View {
         GeometryReader { geo in
             Group {
-                if UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(geo.size) {
-                    if padFloatingLayout {
-                        TimerView()
-                            .onAppear {
-                                if tabRouter.currentTab == .timer {
-                                    tabRouter.currentTab = .solves
-                                }
-                            }
-                    } else {
-                        PadMainView()
-                    }
-                } else {
-                    MainTabsView()
-                }
+                MainTabsView()
             }
             .tint(accentColour)
             .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)

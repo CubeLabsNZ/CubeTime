@@ -62,7 +62,7 @@ struct MainTabsView: View {
                     TabBar(currentTab: $tabRouter.currentTab)
                         .frame(maxHeight: .infinity, alignment: .bottom)
                         .padding(.bottom, UIDevice.hasBottomBar ? CGFloat(0) : nil)
-                        .padding(.bottom, UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) ? nil : 0)
+                        .padding(.bottom, 0)
                         .ignoresSafeArea(.keyboard)
                 }
             }

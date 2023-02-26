@@ -314,7 +314,6 @@ class StopwatchManager: ObservableObject {
                 }
             },
             onStop: { (time, secondsElapsed, phaseTimes) in
-                NSLog("called onStop(\(time), \(secondsElapsed), \(phaseTimes))")
                 if let currentSession = self.currentSession as? CompSimSession {
                     self.solveItem = CompSimSolve(context: managedObjectContext)
                     if currentSession.solvegroups == nil {
@@ -331,9 +330,7 @@ class StopwatchManager: ObservableObject {
                     self.currentSolveth = (currentSession.solvegroups!.lastObject! as? CompSimSolveGroup)!.solves!.count
 
                 } else {
-                    NSLog("NON CS, SESSION IS: \(self.currentSession)")
                     if let _ = self.currentSession as? MultiphaseSession {
-                        NSLog("MULTIPHASE, MAKING MULTIPHASSEOLVE")
                         self.solveItem = MultiphaseSolve(context: managedObjectContext)
                         
                         (self.solveItem as! MultiphaseSolve).phases = phaseTimes
