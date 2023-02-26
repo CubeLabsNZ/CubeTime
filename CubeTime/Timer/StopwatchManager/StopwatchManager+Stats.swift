@@ -1,5 +1,6 @@
 import Foundation
 import CoreData
+import BTree
 
 extension StopwatchManager {
     static func calculateAverage(_ solves: [Solves], _ id: String, _ compsim: Bool) -> CalculatedAverage? {
@@ -290,6 +291,31 @@ extension StopwatchManager {
         bestAo5 = getBestMovingAverageOf(5)
         bestAo12 = getBestMovingAverageOf(12)
         bestAo100 = getBestMovingAverageOf(100)
+        
+        if #available(iOS 16.0, *) {
+            let clock = ContinuousClock()
+            
+            let result = clock.measure {
+                print(bestAo100?.average)
+            }
+            
+            print(result)
+            
+            let clock2 = ContinuousClock()
+            
+            let result2 = clock2.measure {
+                print(getBestAverage(of: 100, in: solvesByDate)?.average)
+            }
+            
+            print(result2)
+        } else {
+            print("fuck you")
+        }
+        
+        
+        
+        
+        
         
         currentAo5 = getCurrentAverageOf(5)
         currentAo12 = getCurrentAverageOf(12)
@@ -643,3 +669,83 @@ extension StopwatchManager {
         return nil
     }
 }
+
+
+
+
+
+
+func getTrimSizeEachEnd(_ n: Int) -> Int {
+    return (n <= 12) ? 1 : Int(n / 20)
+}
+
+func getBestAverage(of width: Int, in solves: [Solves]) -> CalculatedAverage? {
+    precondition(width >= 5)
+    
+    if (solves.count < width) {
+        return nil
+    }
+    
+    var bestAverage: Double = Double.greatestFiniteMagnitude
+
+    var sum: Double = 0
+    var multiset: SortedBag<Solves> = SortedBag<Solves>()
+    
+    var accountedSolves: [Solves] = []
+    var trimmedSolves: [Solves] = []
+    
+    let trimSize: Int = getTrimSizeEachEnd(width)
+    
+    // width of window - 1
+    let beginWidth: Int = (width - 1)
+    
+    for i in 0 ..< beginWidth {
+        sum += solves[i].timeIncPen
+        multiset.insert(solves[i])
+    }
+
+    // rest of solves
+    for i in beginWidth ..< solves.count {
+        sum += solves[i].timeIncPen
+        multiset.insert(solves[i])
+        
+        var sumTrimmed: Double = 0
+        
+        // if after trim, includes dnf => entire average dnf
+        if (multiset[width - trimSize - 1].penalty == PenTypes.dnf.rawValue) {
+            return CalculatedAverage(name: "Best ao\(width)",
+                                     average: nil,
+                                     accountedSolves: nil,
+                                     totalPen: PenTypes.dnf,
+                                     trimmedSolves: nil)
+        }
+        
+        // for ao5, ao12
+        if (trimSize == 1) {
+            sumTrimmed = multiset.first!.timeIncPen + multiset.last!.timeIncPen
+        } else {  // for ao>12
+            let sumFastest = multiset.prefix(trimSize).reduce(0, {$0 + $1.timeIncPen})
+            sumTrimmed = multiset.suffix(trimSize).reduce(sumFastest, {$0 + $1.timeIncPen})
+        }
+        
+        // todo add error checking
+        let average: Double = (sum - sumTrimmed) / Double(width - (trimSize * 2))
+        
+        // if updates
+        if (average < bestAverage) {
+            bestAverage = average
+            accountedSolves = multiset.map({$0})
+            trimmedSolves = multiset.prefix(trimSize).map({$0}) + multiset.prefix(trimSize).map({$0})
+        }
+        
+        sum -= solves[i - width + 1].timeIncPen
+        multiset.remove(solves[i - width + 1])
+    }
+    
+    return CalculatedAverage(name: "Best ao\(width)",
+                             average: bestAverage,
+                             accountedSolves: accountedSolves,
+                             totalPen: .none,
+                             trimmedSolves: trimmedSolves)
+}
+

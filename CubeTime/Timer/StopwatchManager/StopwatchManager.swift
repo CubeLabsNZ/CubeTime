@@ -345,9 +345,6 @@ class StopwatchManager: ObservableObject {
         
         tryUpdateCurrentSolveth()
         
-        
-        
-        
         print("swm initialised")
     }
     

@@ -38,6 +38,21 @@ struct StatsView: View {
                             SessionHeader()
                                 .padding(.horizontal)
                                 .padding(.top, -6)
+                                .onTapGesture {
+                                    for _ in 0..<39000 {
+                                        let solve: Solves = Solves(context: managedObjectContext)
+                                        solve.time = Double.random(in: 0...10)
+                                        solve.scramble = "sdlfkjsdlfksdjf"
+                                        solve.date = Date()
+                                        solve.scramble_type = 2
+                                        solve.penalty = PenTypes.none.rawValue
+                                        solve.scramble_subtype = 0
+                                        solve.session = stopwatchManager.currentSession
+                                        
+                                        try! managedObjectContext.save()
+                                    }
+                                    print("finished")
+                                }
 
                             let compsim: Bool = SessionTypes(rawValue: stopwatchManager.currentSession.session_type)! == .compsim
                             
