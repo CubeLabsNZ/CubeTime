@@ -127,7 +127,6 @@
 		23AB648B293867EA0049993B /* 8sec-audio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "8sec-audio.wav"; sourceTree = "<group>"; };
 		23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "3rdparty-Bridging-Header.h"; sourceTree = "<group>"; };
 		23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodleLibNative.xcframework; sourceTree = "<group>"; };
-		23B879B529AB0E390027E6B9 /* Stats.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Stats.playground; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsSubviews.swift; sourceTree = "<group>"; };
 		23CA845F2783EBA1003901FB /* ReachedTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachedTargets.swift; sourceTree = "<group>"; };
 		23CA8A0029AAF338006676BF /* TimerOnlyTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerOnlyTool.swift; sourceTree = "<group>"; };
@@ -323,7 +322,6 @@
 		23DE3BD9274DDBE200254D29 /* CubeTime */ = {
 			isa = PBXGroup;
 			children = (
-				23B879B529AB0E390027E6B9 /* Stats.playground */,
 				2354882227642E2800FE8D7A /* Info.plist */,
 				23AB6488293867CB0049993B /* Ext */,
 				23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */,
