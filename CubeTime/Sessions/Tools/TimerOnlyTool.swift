@@ -62,28 +62,8 @@ struct TimerOnlyToolInner: View {
             
             
             if timerController.mode == .stopped || timerController.mode == .inspecting {
-                HStack {
-                    Label("Timer Only", systemImage: "stopwatch")
-                    .matchedGeometryEffect(id: name, in: namespace)
-                    .font(.system(size: 17, weight: .medium))
-                    .padding(.leading, 8)
-                    .padding(.trailing)
-                    .frame(height: 35)
-                    .background(
-                        Color("overlay1")
-                            .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-                            .matchedGeometryEffect(id: "bg" + name, in: namespace)
-                    )
-                    
-                    Spacer()
-                    
-                    CloseButton(hasBackgroundShadow: true) {
-                        showOverlay = nil
-                        tabRouter.hideTabBar = false
-                    }
-                }
-                .padding(.horizontal, padFloatingLayout && UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) ? 24 : nil)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                ToolHeader(name: name, image: "stopwatch", showOverlay: $showOverlay, namespace: namespace)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
         }
         .statusBar(hidden: hideStatusBar)

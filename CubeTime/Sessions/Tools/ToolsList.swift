@@ -39,6 +39,39 @@ struct ToolOverlay: View {
     }
 }
 
+struct ToolHeader: View {
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+    @EnvironmentObject var tabRouter: TabRouter
+    let name:String
+    let image:String
+    @Binding var showOverlay: Tool?
+    var namespace: Namespace.ID
+    var body: some View {
+        HStack {
+            Label(name, systemImage: image)
+                .matchedGeometryEffect(id: name, in: namespace)
+                .font(.system(size: 17, weight: .medium))
+                .padding(.leading, 8)
+                .padding(.trailing)
+                .frame(height: 35)
+                .background(
+                    Color("overlay1")
+                        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                        .matchedGeometryEffect(id: "bg" + name, in: namespace)
+                )
+            
+            Spacer()
+            
+            CloseButton(hasBackgroundShadow: true) {
+                showOverlay = nil
+                tabRouter.hideTabBar = false
+            }
+        }
+        .padding(.horizontal, padFloatingLayout && UIDevice.deviceIsPad && UIDevice.deviceIsLandscape(globalGeometrySize) ? 24 : nil)
+        .frame(maxWidth: .infinity)
+    }
+}
+
 struct ToolsList: View {
     @EnvironmentObject var tabRouter: TabRouter
     
@@ -66,7 +99,7 @@ struct ToolsList: View {
                         .ignoresSafeArea()
                         .transition(.identity)
                     
-                    TimerOnlyTool(showOverlay: $displayingTool, namespace: namespace)
+                    ScrambleGeneratorTool(showOverlay: $displayingTool, namespace: namespace)
                 }
                 .zIndex(100)
                 
