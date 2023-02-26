@@ -48,7 +48,7 @@ struct TabBar: View {
                         x: 0,
                         y: self.currentTab != .timer ? 2 : 0)
 
-                .animation(.spring(response: 0.3, dampingFraction: 0.72, blendDuration: 0), value: self.currentTab)
+                .animation(Animation.customFastSpring, value: self.currentTab)
             
             VHStack(vertical: pad) {
                 VHStack(vertical: pad) {
@@ -95,7 +95,7 @@ struct TabBar: View {
                     height: pad ? nil : 50,
                     alignment: pad ? .top : .leading
                 )
-                .animation(.spring(response: 0.30, dampingFraction: 0.72, blendDuration: 0), value: self.currentTab)
+                .animation(Animation.customFastSpring, value: self.currentTab)
                 .animation(.spring(), value: tabRouter.padExpandState)
                 
                 Spacer()

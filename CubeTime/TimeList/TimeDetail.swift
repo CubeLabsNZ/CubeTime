@@ -69,11 +69,11 @@ struct TimeDetail: View {
                     Button {
                         copySolve(solve: solve)
                         
-                        withAnimation(Animation.interpolatingSpring(stiffness: 140, damping: 20).delay(0.25)) {
+                        withAnimation(Animation.customSlowSpring.delay(0.25)) {
                             self.offsetValue = 0
                         }
                         
-                        withAnimation(Animation.easeOut.delay(2.25)) {
+                        withAnimation(Animation.customFastEaseOut.delay(2.25)) {
                             self.offsetValue = -25
                         }
                         

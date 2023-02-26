@@ -843,19 +843,3 @@ struct ContextMenuButton: View {
         }
     }
 }
-
-
-
-// MARK: - OTHER GLOBAL VIEWS
-// global close button view
-struct CloseButton: View {
-    @Environment(\.colorScheme) var colourScheme
-    
-    var body: some View {
-        Image(systemName: "xmark.circle.fill")
-            .font(.system(size: 24, weight: .medium))
-            .symbolRenderingMode(.hierarchical)
-            .foregroundStyle(.secondary)
-            .foregroundStyle(colourScheme == .light ? .black : .white)
-    }
-}

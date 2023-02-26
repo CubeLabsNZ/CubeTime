@@ -53,7 +53,7 @@ struct SessionsView: View {
                 .navigationTitle("Your Sessions")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: false) {
+                        HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: false, shadow: true) {
                             HStack {
                                 Image(systemName: "wrench.and.screwdriver")
                                     .font(Font.subheadline)

@@ -17,8 +17,7 @@ enum SortBy: Int {
 struct SortByMenu: View {
     @EnvironmentObject var stopWatchManager: StopWatchManager
     
-    let background: Bool
-    
+    let shadow: Bool
     var animation: Namespace.ID
     
     @State var penonly = false
@@ -55,10 +54,11 @@ struct SortByMenu: View {
                 }
             }
         } label: {
-            HierarchialButtonBase(type: .halfcoloured, size: .large, outlined: false, square: true) {
+            HierarchialButtonBase(type: .halfcoloured, size: .large, outlined: false, square: true, shadow: shadow) {
                 Image(systemName: "line.3.horizontal.decrease")
                     .matchedGeometryEffect(id: "label", in: animation)
             }
+            .animation(Animation.customEaseInOut, value: self.shadow)
             .frame(width: 35, height: 35)
         }
     }
@@ -107,10 +107,12 @@ struct TimeListHeader: View {
                 SessionHeader()
             }
             
+            // search bar
             ZStack {
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
                     .fill(Color("overlay0"))
-                    .shadow(color: Color.black.opacity(0.04), radius: 4, x: 0, y: 1)
+                    .shadowDark(x: 0, y: 1)
+                
                 
                 HStack {
                     Image(systemName: "magnifyingglass")
@@ -122,13 +124,12 @@ struct TimeListHeader: View {
                         TextField("Search for a time...", text: .constant(""))
                             .frame(width: .infinity)
                             .foregroundColor(Color("grey"))
-//                            .trim(from: 0, to: searchExpanded ? 1 : 0)
                         
                         HStack(spacing: 8) {
                             Spacer()
                             
                             Button {
-                                withAnimation {
+                                withAnimation(Animation.customEaseInOut) {
                                     searchExpanded = false
                                 }
                             } label: {
@@ -141,16 +142,14 @@ struct TimeListHeader: View {
                         .padding(.horizontal, 8)
                     }
                 }
-                .animation(.easeOut(duration: 0.05), value: searchExpanded)
                 .mask(
                     RoundedRectangle(cornerRadius: 6, style: .continuous)
                         .frame(width: searchExpanded ? nil : 35)
                 )
-                .frame(width: searchExpanded ? nil : 35)
             }
             .frame(width: searchExpanded ? nil : 35, height: 35)
+            .fixedSize(horizontal: !searchExpanded, vertical: true)
             
-            // pressing effects
             .scaleEffect(pressing ? 0.96 : 1.00)
             .opacity(pressing ? 0.80 : 1.00)
             .gesture(
@@ -161,15 +160,15 @@ struct TimeListHeader: View {
                     }
                     .onEnded{ _ in
                         pressing = false
-                        withAnimation {
+                        withAnimation(Animation.customEaseInOut) {
                             searchExpanded = true
                         }
                     }
             )
-            .fixedSize(horizontal: !searchExpanded, vertical: true)
+            
             .padding(.trailing, searchExpanded ? -43 : 0)
             
-            SortByMenu(background: !searchExpanded, animation: animation)
+            SortByMenu(shadow: !searchExpanded, animation: animation)
                 .offset(x: searchExpanded ? -43 : 0)
         }
         .padding(.horizontal)
@@ -358,7 +357,7 @@ struct TimeListView: View {
                                     if stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
                                         SessionPickerMenu(sessions: sessionsCanMoveTo) { session in
                                             for object in selectedSolves {
-                                                withAnimation {
+                                                withAnimation(Animation.customDampedSpring) {
                                                     stopWatchManager.moveSolve(solve: object, to: session)
                                                 }
                                                 
@@ -372,9 +371,7 @@ struct TimeListView: View {
                                     Button(role: .destructive) {
                                         isSelectMode = false
                                         for object in selectedSolves {
-                                            withAnimation {
-                                                stopWatchManager.delete(solve: object)
-                                            }
+                                            stopWatchManager.delete(solve: object)
                                         }
                                         
                                         selectedSolves.removeAll()
@@ -383,9 +380,10 @@ struct TimeListView: View {
                                     }
                                 }
                             } label: {
-                                Image(systemName: "ellipsis.circle")
-                                    .font(.body.weight(.medium))
-                                    .foregroundColor(.accentColor)
+                                HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: true, shadow: true) {
+                                    Image(systemName: "ellipsis")
+                                        .imageScale(.medium)
+                                }
                             }
                         }
                     }
@@ -394,14 +392,18 @@ struct TimeListView: View {
                         if stopWatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
                             if isSelectMode {
                                 HierarchialButton(type: .coloured, size: .small, onTapRun: {
-                                    selectedSolves = Set(stopWatchManager.timeListSolvesFiltered)
+                                    withAnimation(Animation.customDampedSpring) {
+                                        selectedSolves = Set(stopWatchManager.timeListSolvesFiltered)
+                                    }
                                 }) {
                                     Text("Select All")
                                 }
                                 
                                 HierarchialButton(type: .disabled, size: .small, onTapRun: {
                                     isSelectMode = false
-                                    selectedSolves.removeAll()
+                                    withAnimation(Animation.customDampedSpring) {
+                                        selectedSolves.removeAll()
+                                    }
                                 }) {
                                     Text("Cancel")
                                 }
@@ -425,11 +427,9 @@ struct TimeListView: View {
                 stopWatchManager.clearSession()
                 isSelectMode = false
             }
-            Button("Cancel", role: .cancel) {
-                
-            }
+            Button("Cancel", role: .cancel) { }
         } message: {
-            Text("This will delete every solve in this session!")
+            Text("Are you sure you want to continue? This will delete every solve in this session!")
         }
         
         .sheet(item: $solve) { item in

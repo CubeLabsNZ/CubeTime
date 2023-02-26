@@ -131,7 +131,7 @@ struct AppearanceSettingsView: View {
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            withAnimation(.spring()) {
+                            withAnimation(Animation.customSlowSpring) {
                                 showThemeOptions.toggle()
                             }
                         }

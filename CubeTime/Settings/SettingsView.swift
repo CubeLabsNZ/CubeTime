@@ -80,7 +80,7 @@ struct SettingsCard: View {
         // once import and export is added
         if info.name == "General" || info.name == "Appearance" {
             Button {
-                withAnimation(.spring(response: 0.6)) {
+                withAnimation(Animation.customSlowSpring) {
                     currentCard = info
                 }
             } label: {
@@ -124,7 +124,7 @@ struct SettingsCard: View {
             .buttonStyle(CardButtonStyle())
         } else {
             Button {
-                withAnimation(.spring(response: 0.6)) {
+                withAnimation(Animation.customSlowSpring) {
                     currentCard = info
                 }
             } label: {
@@ -247,7 +247,7 @@ struct SettingsDetail: View {
                                 
                                 // CLOSE BUTTON
                                 HierarchialButton(type: .mono, size: .medium, outlined: false, square: true, onTapRun: {
-                                    withAnimation(.spring(response: 0.5)) {
+                                    withAnimation(Animation.customSlowSpring) {
                                         currentCard = nil
                                     }
                                 }) {

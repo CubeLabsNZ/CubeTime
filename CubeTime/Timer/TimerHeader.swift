@@ -95,7 +95,7 @@ struct TimerHeader: View {
                     }
                 }
                 .onTapGesture {
-                    withAnimation(.spring()) {
+                    withAnimation(Animation.customSlowSpring) {
                         toggleSessionName.toggle()
                     }
                 }
@@ -200,7 +200,7 @@ struct TimerHeader: View {
         .background(
             Color("overlay1")
                 .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-                .animation(.spring(), value: stopWatchManager.playgroundScrambleType)
+                .animation(Animation.customFastSpring, value: stopWatchManager.playgroundScrambleType)
         )
         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
     }
