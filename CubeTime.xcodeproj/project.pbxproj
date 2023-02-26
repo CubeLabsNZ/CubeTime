@@ -241,6 +241,7 @@
 				7D7A9EC3274F392700C2E125 /* SessionsView.swift */,
 				23CE093327A76D610013E227 /* SessionCard.swift */,
 				23AB648329385D310049993B /* NewSessionModalView.swift */,
+				AF8874BF29AAC8AD001E49D0 /* Tools */,
 			);
 			path = Sessions;
 			sourceTree = "<group>";
@@ -296,7 +297,6 @@
 		23DE3BD9274DDBE200254D29 /* CubeTime */ = {
 			isa = PBXGroup;
 			children = (
-				AF8874BF29AAC8AD001E49D0 /* Tools */,
 				2354882227642E2800FE8D7A /* Info.plist */,
 				23AB6488293867CB0049993B /* Ext */,
 				23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */,
