@@ -53,15 +53,14 @@ struct SessionsView: View {
                 .navigationTitle("Your Sessions")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        NavigationLink {
-                            ToolsList()
-                        } label: {
+                        NavigationLink(destination: ToolsList()) {
                             HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true) {
                                 Label("Tools", systemImage: "wrench.and.screwdriver")
                                     .labelStyle(.titleAndIcon)
                                     .imageScale(.small)
                             }
                         }
+                        .buttonStyle(AnimatedButton())
                     }
                 }
             }
