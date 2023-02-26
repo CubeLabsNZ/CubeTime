@@ -296,7 +296,7 @@ extension StopwatchManager {
             let clock = ContinuousClock()
             
             let result = clock.measure {
-                print(getBestMovingAverageOf(100))
+                print(getBestMovingAverageOf(100)?.average)
             }
             
             print(result)
@@ -308,6 +308,28 @@ extension StopwatchManager {
             }
 
             print(result2)
+            
+            let count = solvesByDate.count;
+            let solveDoubles = solvesByDate.map{ $0.timeIncPen };
+            
+            let clock3 = ContinuousClock()
+
+            let result3 = clock3.measure {
+                let a: CalculatedAverageFragment = getBestAverageOf(Int32(count), Int32(100), Int32(5), solveDoubles);
+                print(a.average);
+                
+                let b = [a];
+                
+                let allSolves = UnsafeBufferPointer(start: allSolvesPtr(b), count: 100)
+                
+//                print(Unmanaged.passUnretained(a as AnyObject).toOpaque())
+////                print(Unmanaged.passUnretained(a).toOpaque())
+//                print(allSolves)
+                
+                print(Array(allSolves))
+            }
+            
+            print(result3)
         } else {
             print("fuck you")
         }

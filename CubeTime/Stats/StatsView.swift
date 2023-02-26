@@ -39,7 +39,7 @@ struct StatsView: View {
                                 .padding(.horizontal)
                                 .padding(.top, -6)
                                 .onTapGesture {
-                                    for _ in 0..<39000 {
+                                    for _ in 0..<10000 {
                                         let solve: Solves = Solves(context: managedObjectContext)
                                         solve.time = Double.random(in: 0...10)
                                         solve.scramble = "sdlfkjsdlfksdjf"

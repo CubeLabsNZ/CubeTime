@@ -50,6 +50,7 @@
 		23DE3BF1274DDBE400254D29 /* CubeTimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BF0274DDBE400254D29 /* CubeTimeTests.swift */; };
 		23DE3BFB274DDBE400254D29 /* CubeTimeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BFA274DDBE400254D29 /* CubeTimeUITests.swift */; };
 		23DE3BFD274DDBE400254D29 /* CubeTimeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BFC274DDBE400254D29 /* CubeTimeUITestsLaunchTests.swift */; };
+		23E5643129AB4DBB00C910D6 /* getBestAverage.c++ in Sources */ = {isa = PBXBuildFile; fileRef = 23E5643029AB4DBA00C910D6 /* getBestAverage.c++ */; };
 		23E647C62775B2AC00561780 /* TimeDistribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E647C52775B2AC00561780 /* TimeDistribution.swift */; };
 		23E81E6C275D8DAE00B741E3 /* GeneralSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E6B275D8DAE00B741E3 /* GeneralSettings.swift */; };
 		23E81E6F275D8DCA00B741E3 /* AppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */; };
@@ -120,6 +121,7 @@
 		2359689227A367A0003ED9E1 /* StopwatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchManager.swift; sourceTree = "<group>"; };
 		235CDA0227A786D800F48C89 /* Updates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updates.swift; sourceTree = "<group>"; };
 		2377418729A9A05A00A4F917 /* HelperUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperUI.swift; sourceTree = "<group>"; };
+		23783DA429AB55750036FE2B /* getBestAverage.h++ */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "getBestAverage.h++"; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
 		2397131E2791032300268DFA /* AveragePhases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AveragePhases.swift; sourceTree = "<group>"; };
 		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 		23DE3BF6274DDBE400254D29 /* CubeTimeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CubeTimeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		23DE3BFA274DDBE400254D29 /* CubeTimeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeTimeUITests.swift; sourceTree = "<group>"; };
 		23DE3BFC274DDBE400254D29 /* CubeTimeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeTimeUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		23E5643029AB4DBA00C910D6 /* getBestAverage.c++ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "getBestAverage.c++"; sourceTree = "<group>"; };
 		23E647C52775B2AC00561780 /* TimeDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDistribution.swift; sourceTree = "<group>"; };
 		23E81E6B275D8DAE00B741E3 /* GeneralSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettings.swift; sourceTree = "<group>"; };
 		23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettings.swift; sourceTree = "<group>"; };
@@ -289,6 +292,8 @@
 		23CA8A0229AAF894006676BF /* StopwatchManager */ = {
 			isa = PBXGroup;
 			children = (
+				23E5643029AB4DBA00C910D6 /* getBestAverage.c++ */,
+				23783DA429AB55750036FE2B /* getBestAverage.h++ */,
 				2359689227A367A0003ED9E1 /* StopwatchManager.swift */,
 				23CA8A0929AAFA75006676BF /* StopwatchManager+PenaltyController.swift */,
 				23CA8A0729AAF96C006676BF /* StopwatchManager+Stats.swift */,
@@ -627,6 +632,7 @@
 				2337E6882767619D00438F43 /* StatsDetail.swift in Sources */,
 				23C85EAC29388C9C00C7C3EC /* StatsSubviews.swift in Sources */,
 				2377418829A9A05A00A4F917 /* HelperUI.swift in Sources */,
+				23E5643129AB4DBB00C910D6 /* getBestAverage.c++ in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
