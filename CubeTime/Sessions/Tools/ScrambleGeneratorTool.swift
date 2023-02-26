@@ -141,6 +141,16 @@ struct ScrambleGeneratorTool: View {
                 
                 ProgressView(value: Double(scrambleGenerator.scrambles?.count ?? 0), total: Double(scrambleGenerator.numScramble ?? 0))
                 
+                
+                
+                HierarchialButton(type: .coloured, size: .large, onTapRun: {
+                    let activityVC = UIActivityViewController(activityItems: scrambleGenerator.scrambles!, applicationActivities: nil)
+                    (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
+                }) {
+                    Text("Share")
+                }
+                .disabled(scrambleGenerator.scrambles?.count != scrambleGenerator.numScramble)
+                
                 Spacer()
             }.padding()
         }
