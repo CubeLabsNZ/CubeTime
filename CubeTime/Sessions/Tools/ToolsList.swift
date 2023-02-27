@@ -39,26 +39,43 @@ struct ToolOverlay: View {
     }
 }
 
-struct ToolHeader: View {
+struct ToolHeader<V: View>: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @EnvironmentObject var tabRouter: TabRouter
     let name:String
     let image:String
     @Binding var showOverlay: Tool?
     var namespace: Namespace.ID
+    
+    let content: V?
+    
+    init(name: String, image: String, showOverlay: Binding<Tool?>, namespace: Namespace.ID, @ViewBuilder content: () -> V?) {
+        self.name = name
+        self.image = image
+        self._showOverlay = showOverlay
+        self.namespace = namespace
+        self.content = content()
+    }
+    
     var body: some View {
         HStack {
-            Label(name, systemImage: image)
-                .matchedGeometryEffect(id: name, in: namespace)
-                .font(.system(size: 17, weight: .medium))
-                .padding(.leading, 8)
-                .padding(.trailing)
-                .frame(height: 35)
-                .background(
-                    Color("overlay1")
-                        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-                        .matchedGeometryEffect(id: "bg" + name, in: namespace)
-                )
+            HStack {
+                Label(name, systemImage: image)
+                    .matchedGeometryEffect(id: name, in: namespace)
+                    .font(.system(size: 17, weight: .medium))
+                    .padding(.leading, 8)
+                    .padding(.trailing)
+                
+                if let innerView = content {
+                    innerView
+                }
+            }
+            .frame(height: 35)
+            .background(
+                Color("overlay1")
+                    .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                    .matchedGeometryEffect(id: "bg" + name, in: namespace)
+            )
             
             Spacer()
             

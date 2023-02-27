@@ -108,22 +108,11 @@ struct ScrambleGeneratorTool: View {
     @Binding var showOverlay: Tool?
     var namespace: Namespace.ID
     @StateObject var scrambleGenerator = ScrambleGenerator()
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     var body: some View {
         VStack {
-            ToolHeader(name: "Scramble Generator", image: "macstudio", showOverlay: $showOverlay, namespace: namespace)
-            VStack {
-                TextField("Number of scrambles", text: Binding(get: {
-                    if let num = scrambleGenerator.numScramble {
-                        return String(num)
-                    } else {
-                        return ""
-                    }
-                }, set: { val in
-                    scrambleGenerator.numScramble = Int(val.components(separatedBy:CharacterSet.decimalDigits.inverted)
-                        .joined())
-                }))
-                
+            ToolHeader(name: "Scramble Generator", image: "macstudio", showOverlay: $showOverlay, namespace: namespace, content: {
                 
                 Picker("", selection: $scrambleGenerator.scrambleType) {
                     ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
@@ -131,37 +120,99 @@ struct ScrambleGeneratorTool: View {
                             .font(.system(size: 15, weight: .regular))
                     }
                 }
-
-                HierarchialButton(type: .coloured, size: .large, onTapRun: {
-                    scrambleGenerator.generate()
-                }) {
-                    Text("Generate!")
+            })
+            
+            VStack {
+                HStack {
+                    ZStack {
+                        TextField("Number of Scrambles...", text: Binding(get: {
+                            if let num = scrambleGenerator.numScramble {
+                                return String(num)
+                            } else {
+                                return ""
+                            }
+                        }, set: { val in
+                            if let temp = Int(val.components(separatedBy:CharacterSet.decimalDigits.inverted)
+                                .joined()) {
+                                if (temp <= 5000) {
+                                    scrambleGenerator.numScramble = temp
+                                }
+                            } else {
+                                scrambleGenerator.numScramble = nil
+                            }
+                        }))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .frame(height: 35)
+                        .disabled(scrambleGenerator.scrambles?.count != nil)
+                    }
+                    .background(
+                        RoundedRectangle(cornerRadius: 6, style: .continuous)
+                            .fill(Color.white)
+                    )
+                    .animation(Animation.customDampedSpring, value: scrambleGenerator.numScramble)
+                    
+                    if let num = scrambleGenerator.numScramble {
+                        if (num > 0 && (scrambleGenerator.scrambles?.count == nil)) {
+                            HierarchialButton(type: .coloured, size: .large, onTapRun: {
+                                scrambleGenerator.generate()
+                            }) {
+                                Text("Generate!")
+                            }
+                        }
+                    }
                 }
-                .disabled(scrambleGenerator.numScramble == nil)
                 
-                ProgressView(value: Double(scrambleGenerator.scrambles?.count ?? 0), total: Double(scrambleGenerator.numScramble ?? 0))
-                
-                
-                
-                HierarchialButton(type: .coloured, size: .large, onTapRun: {
-                    let activityVC = UIActivityViewController(activityItems: scrambleGenerator.scrambles!, applicationActivities: nil)
-                    (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
-                }) {
-                    Text("Share")
+                if let num = scrambleGenerator.numScramble {
+                    if let currentCount = scrambleGenerator.scrambles?.count {
+                        if (currentCount >= 1) {
+                            ProgressView(value: Double(scrambleGenerator.scrambles?.count ?? 0),
+                                         total: Double(num))
+                        }
+                        
+                        if (currentCount == num && num != 0) {
+                            Text("Success!")
+                                .font(.body.weight(.semibold))
+                                .foregroundColor(Color.accentColor)
+                            
+                            HierarchialButton(type: .coloured, size: .large, onTapRun: {
+                                let activityVC = UIActivityViewController(activityItems: scrambleGenerator.scrambles!, applicationActivities: nil)
+                                (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
+                            }) {
+                                Text("Share")
+                            }
+                            
+                            ScrollView {
+                                LazyVStack(alignment: .leading) {
+                                    ForEach(Array(zip(scrambleGenerator.scrambles!.indices, scrambleGenerator.scrambles!)), id: \.0) { index, scramble in
+                                        HStack(alignment: .top) {
+                                            Text("\(index+1). ")
+                                                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 15, nil)))
+                                                .offset(y: 1)
+                                            
+                                            Text(scramble)
+                                                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 17, nil)))
+                                                .textSelection(.enabled)
+                                                .padding(.bottom, 6)
+                                        }
+                                    }
+                                }
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(12)
+                                .background (
+                                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                        .fill(Color("overlay1"))
+                                )
+                            }
+                        }
+                    }
                 }
-                .disabled(scrambleGenerator.scrambles?.count != scrambleGenerator.numScramble)
+                
                 
                 Spacer()
             }.padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("base").ignoresSafeArea())
-    }
-}
-
-struct ScrambleGeneratorTool_Previews: PreviewProvider {
-    @Namespace static private var namespace
-    static var previews: some View {
-        ScrambleGeneratorTool(showOverlay: .constant(nil), namespace: namespace)
     }
 }
