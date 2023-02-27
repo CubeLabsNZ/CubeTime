@@ -67,6 +67,7 @@
 		7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7DDF2227955AFF00362DE9 /* PenButton.swift */; };
 		7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E2011275DD52600ADF01D /* Licenses.swift */; };
 		7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */; };
+		AF0CF61D29AC34B300E8CB95 /* StopwatchManagerStatsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0CF61C29AC34B300E8CB95 /* StopwatchManagerStatsTests.swift */; };
 		AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */ = {isa = PBXBuildFile; productRef = AF7697DB293C1EFA00FF1C50 /* SVGView */; };
 		AF7697DE293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */; };
 		AF7697DF293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */; };
@@ -170,6 +171,7 @@
 		7D7DDF2227955AFF00362DE9 /* PenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenButton.swift; sourceTree = "<group>"; };
 		7D7E2011275DD52600ADF01D /* Licenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Licenses.swift; sourceTree = "<group>"; };
 		7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleView.swift; sourceTree = "<group>"; };
+		AF0CF61C29AC34B300E8CB95 /* StopwatchManagerStatsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchManagerStatsTests.swift; sourceTree = "<group>"; };
 		AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RecMonoVariable.ttf; sourceTree = "<group>"; };
 		AF8874C029AAC8C0001E49D0 /* ToolsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsList.swift; sourceTree = "<group>"; };
 		AF8874C229AB0BE7001E49D0 /* TimerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerController.swift; sourceTree = "<group>"; };
@@ -364,6 +366,7 @@
 			isa = PBXGroup;
 			children = (
 				23DE3BF0274DDBE400254D29 /* CubeTimeTests.swift */,
+				AF0CF61C29AC34B300E8CB95 /* StopwatchManagerStatsTests.swift */,
 			);
 			path = CubeTimeTests;
 			sourceTree = "<group>";
@@ -637,6 +640,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				23DE3BF1274DDBE400254D29 /* CubeTimeTests.swift in Sources */,
+				AF0CF61D29AC34B300E8CB95 /* StopwatchManagerStatsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

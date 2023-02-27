@@ -23,13 +23,14 @@ double getBestAverageOf(const int width,
     if (solvesCount < width) return NAN;
     
     multimap<double, int> s;
-    double best = INFINITY;
+    double best = DINF;
     double sum = 0;
     double trimSum = 0;
     
     
     for (int i = 0; i < width - 1; i++) {
-        sum += solves[i];
+        if (solves[i] != DINF)
+            sum += solves[i];
         s.emplace(solves[i], i);
     }
     

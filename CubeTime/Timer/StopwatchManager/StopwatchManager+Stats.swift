@@ -754,7 +754,7 @@ extension StopwatchManager {
     }
      */
     
-    func getTrimSizeEachEnd(_ n: Int32) -> Int32 {
+    static func getTrimSizeEachEnd(_ n: Int32) -> Int32 {
         return (n <= 12) ? 1 : Int32(n / 20)
     }
     
@@ -762,7 +762,7 @@ extension StopwatchManager {
         let count: Int32 = Int32(solvesByDate.count);
         let solveDoubles = solvesByDate.map{ $0.timeIncPenDNFMax };
         
-        let trim: Int32 = getTrimSizeEachEnd(width)
+        let trim: Int32 = Self.getTrimSizeEachEnd(width)
         
         var countedSolvesIndices: [Int32] = Array(repeating: 0, count: Int(width - trim*2))
         var trimmedSolvesIndices: [Int32] = Array(repeating: 0, count: Int(trim*2))
