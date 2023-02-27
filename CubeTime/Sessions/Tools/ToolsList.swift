@@ -24,7 +24,6 @@ let tools = [
 
 struct ToolHeader: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
-    @EnvironmentObject var tabRouter: TabRouter
     
     let name: String
     let image: String
@@ -45,7 +44,6 @@ struct ToolHeader: View {
             Spacer()
             
             CloseButton(hasBackgroundShadow: true) {
-                tabRouter.hideTabBar = false
                 self.showingSheet = false
             }
         }
@@ -55,7 +53,6 @@ struct ToolHeader: View {
 }
 
 struct ToolsList: View {
-    @EnvironmentObject var tabRouter: TabRouter
     @State private var displayingTool: Tool? = nil
     
     @State private var showingSheet: Bool = false
@@ -84,7 +81,6 @@ struct ToolsList: View {
                     }
                     .onTapGesture {
                         withAnimation {
-                            tabRouter.hideTabBar = true
                             self.showingSheet = true
                         }
                     }
