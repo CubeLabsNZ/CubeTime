@@ -58,7 +58,7 @@ struct SortByMenu: View {
                 }
             }
         } label: {
-            HierarchialButtonBase(type: .halfcoloured, size: .large, outlined: false, square: true, hasShadow: hasShadow, hasBackground: true) {
+            HierarchialButtonBase(type: .halfcoloured, size: .large, outlined: false, square: true, hasShadow: hasShadow, hasBackground: true, expandWidth: true) {
                 Image(systemName: "line.3.horizontal.decrease")
                     .matchedGeometryEffect(id: "label", in: animation)
             }
@@ -387,7 +387,7 @@ struct TimeListView: View {
                                     }
                                 }
                             } label: {
-                                HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: true, hasShadow: true, hasBackground: true) {
+                                HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: true, hasShadow: true, hasBackground: true, expandWidth: true) {
                                     Image(systemName: "ellipsis")
                                         .imageScale(.medium)
                                 }
@@ -440,7 +440,7 @@ struct TimeListView: View {
         }
         
         .sheet(item: $solve) { item in
-            TimeDetail(solve: item, currentSolve: $solve)
+            TimeDetailView(for: item, currentSolve: $solve)
         }
         
         .sheet(item: $calculatedAverage) { item in

@@ -54,7 +54,7 @@ struct SessionsView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         NavigationLink(destination: ToolsList()) {
-                            HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true) {
+                            HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
                                 Label("Tools", systemImage: "wrench.and.screwdriver")
                                     .labelStyle(.titleAndIcon)
                                     .imageScale(.small)

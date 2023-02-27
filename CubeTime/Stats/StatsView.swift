@@ -291,7 +291,7 @@ struct StatsView: View {
             StatsDetail(solves: item, session: stopwatchManager.currentSession)
         }
         .sheet(isPresented: $showBestSinglePopup) {
-            TimeDetail(solve: stopwatchManager.bestSingle!, currentSolve: nil)
+            TimeDetailView(for: stopwatchManager.bestSingle!, currentSolve: nil)
         }
     }
 }

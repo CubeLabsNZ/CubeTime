@@ -29,7 +29,9 @@ double getBestAverageOf(const int width,
     
     
     for (int i = 0; i < width - 1; i++) {
-        sum += solves[i];
+        if (solves[i] != DINF)
+            sum += solves[i];
+        
         s.emplace(solves[i], i);
     }
     
@@ -48,9 +50,7 @@ double getBestAverageOf(const int width,
             if ((tempMin = (*(minItr++)).first) != DINF) trimSum += tempMin;
             if ((tempMax = (*(maxItr--)).first) != DINF) trimSum += tempMax;
         }
-
         
-//        printf("itr itself: %f, dinf: %f, bool equal: %i", (*maxItr).first, DINF, (*maxItr).first == DINF);
         double curAvg = 0;
         if ((*maxItr).first == DINF) {
             curAvg = INFINITY;

@@ -310,6 +310,11 @@ class StopwatchManager: ObservableObject {
         setupAudioSession()
         
         
+        
+        print("im here:")
+        Self.doSomething()
+        
+        
 //        self.currentSession = currentSession
         self.managedObjectContext = managedObjectContext
         

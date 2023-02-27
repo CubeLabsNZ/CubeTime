@@ -46,7 +46,7 @@ struct StatsDetail: View {
                 
                 if solves.average != nil || isCurrentCompSimAverage {
                     if let solveToShow = solveToShow {
-                        NavigationLink("", destination: TimeDetailViewOnly(solve: solveToShow, currentSolve: nil), isActive: $showSolve)
+//                        NavigationLink("", destination: TimeDetailViewOnly(solve: solveToShow, currentSolve: nil), isActive: $showSolve)
                     }
                     ScrollView {
                         VStack (spacing: 12) {
