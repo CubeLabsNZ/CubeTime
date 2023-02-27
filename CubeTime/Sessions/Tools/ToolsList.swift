@@ -56,6 +56,7 @@ struct ToolHeader: View {
 
 struct ToolsList: View {
     @EnvironmentObject var tabRouter: TabRouter
+    @State private var displayingTool: Tool? = nil
     
     @State private var showingSheet: Bool = false
     
