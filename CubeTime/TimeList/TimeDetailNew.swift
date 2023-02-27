@@ -145,31 +145,19 @@ struct TimeDetailView: View {
                                     
                                     #warning("doesn't update when pressed, AND doesn't update time list view either")
                                     HierarchialButton(type: .mono, size: .medium, onTapRun: {
-                                        solve.penalty = PenTypes.none.rawValue
-                                        
-                                        if managedObjectContext.hasChanges {
-                                            try! managedObjectContext.save()
-                                        }
+                                        stopwatchManager.changePen(solve: self.solve, pen: .none)
                                     }) {
                                         Label("OK", systemImage: "checkmark.circle")
                                     }
                                     
                                     HierarchialButton(type: .mono, size: .medium, onTapRun: {
-                                        solve.penalty = PenTypes.plustwo.rawValue
-                                        
-                                        if managedObjectContext.hasChanges {
-                                            try! managedObjectContext.save()
-                                        }
+                                        stopwatchManager.changePen(solve: self.solve, pen: .plustwo)
                                     }) {
                                         Label("+2", image: "+2.label")
                                     }
                                     
                                     HierarchialButton(type: .mono, size: .medium, onTapRun: {
-                                        solve.penalty = PenTypes.dnf.rawValue
-                                        
-                                        if managedObjectContext.hasChanges {
-                                            try! managedObjectContext.save()
-                                        }
+                                        stopwatchManager.changePen(solve: self.solve, pen: .dnf)
                                     }) {
                                         Label("DNF", systemImage: "xmark.circle")
                                     }
