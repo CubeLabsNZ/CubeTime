@@ -106,62 +106,49 @@ class ScrambleGenerator: ObservableObject {
 
 struct ScrambleGeneratorTool: View {
     @Binding var showOverlay: Tool?
-    var namespace: Namespace.ID
     @StateObject var scrambleGenerator = ScrambleGenerator()
     
     var body: some View {
         VStack {
-            ToolHeader(name: "Scramble Generator", image: "macstudio", showOverlay: $showOverlay, namespace: namespace)
-            VStack {
-                TextField("Number of scrambles", text: Binding(get: {
-                    if let num = scrambleGenerator.numScramble {
-                        return String(num)
-                    } else {
-                        return ""
-                    }
-                }, set: { val in
-                    scrambleGenerator.numScramble = Int(val.components(separatedBy:CharacterSet.decimalDigits.inverted)
-                        .joined())
-                }))
-                
-                
-                Picker("", selection: $scrambleGenerator.scrambleType) {
-                    ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                        Text(element.name).tag(index)
-                            .font(.system(size: 15, weight: .regular))
-                    }
+            TextField("Number of scrambles", text: Binding(get: {
+                if let num = scrambleGenerator.numScramble {
+                    return String(num)
+                } else {
+                    return ""
                 }
+            }, set: { val in
+                scrambleGenerator.numScramble = Int(val.components(separatedBy:CharacterSet.decimalDigits.inverted)
+                    .joined())
+            }))
+            
+            
+            Picker("", selection: $scrambleGenerator.scrambleType) {
+                ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                    Text(element.name).tag(index)
+                        .font(.system(size: 15, weight: .regular))
+                }
+            }
 
-                HierarchialButton(type: .coloured, size: .large, onTapRun: {
-                    scrambleGenerator.generate()
-                }) {
-                    Text("Generate!")
-                }
-                .disabled(scrambleGenerator.numScramble == nil)
-                
-                ProgressView(value: Double(scrambleGenerator.scrambles?.count ?? 0), total: Double(scrambleGenerator.numScramble ?? 0))
-                
-                
-                
-                HierarchialButton(type: .coloured, size: .large, onTapRun: {
-                    let activityVC = UIActivityViewController(activityItems: scrambleGenerator.scrambles!, applicationActivities: nil)
-                    (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
-                }) {
-                    Text("Share")
-                }
-                .disabled(scrambleGenerator.scrambles?.count != scrambleGenerator.numScramble)
-                
-                Spacer()
-            }.padding()
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color("base").ignoresSafeArea())
-    }
-}
-
-struct ScrambleGeneratorTool_Previews: PreviewProvider {
-    @Namespace static private var namespace
-    static var previews: some View {
-        ScrambleGeneratorTool(showOverlay: .constant(nil), namespace: namespace)
+            HierarchialButton(type: .coloured, size: .large, onTapRun: {
+                scrambleGenerator.generate()
+            }) {
+                Text("Generate!")
+            }
+            .disabled(scrambleGenerator.numScramble == nil)
+            
+            ProgressView(value: Double(scrambleGenerator.scrambles?.count ?? 0), total: Double(scrambleGenerator.numScramble ?? 0))
+            
+            
+            
+            HierarchialButton(type: .coloured, size: .large, onTapRun: {
+                let activityVC = UIActivityViewController(activityItems: scrambleGenerator.scrambles!, applicationActivities: nil)
+                (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
+            }) {
+                Text("Share")
+            }
+            .disabled(scrambleGenerator.scrambles?.count != scrambleGenerator.numScramble)
+            
+            Spacer()
+        }.padding()
     }
 }
