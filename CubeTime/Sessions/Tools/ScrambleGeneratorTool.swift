@@ -52,7 +52,7 @@ class ScrambleThread: Thread {
             
             semaphore.wait()
             if scrGen.scrambles.unsafelyUnwrapped.count < count {
-                DispatchQueue.main.sync {
+                DispatchQueue.main.async { [self] in
                     scrGen.scrambles!.append(s)
                     semaphore.signal()
                 }
