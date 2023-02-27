@@ -159,10 +159,14 @@ struct TimeListHeader: View {
                 searchExpanded ? nil :
                 DragGesture(minimumDistance: 0)
                     .onChanged{ _ in
-                        pressing = true
+                        withAnimation(Animation.customFastSpring) {
+                            pressing = true
+                        }
                     }
                     .onEnded{ _ in
-                        pressing = false
+                        withAnimation(Animation.customFastSpring) {
+                            pressing = false
+                        }
                         withAnimation(Animation.customEaseInOut) {
                             searchExpanded = true
                         }

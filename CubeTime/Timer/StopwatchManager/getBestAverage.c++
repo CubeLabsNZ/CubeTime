@@ -4,6 +4,8 @@
 #include <cmath>
 #include <numeric>
 
+#define DINF std::numeric_limits<double>::infinity()
+
 #include <iostream>
 
 using namespace std;
@@ -21,38 +23,42 @@ double getBestAverageOf(const int width,
     if (solvesCount < width) return NAN;
     
     multimap<double, int> s;
-    double best = 100;
-    
+    double best = INFINITY;
     double sum = 0;
+    double trimSum = 0;
     
-    for (int i = 0; i < solvesCount; i++) cout << solves[i] << " ";
-    cout << endl;
     
     for (int i = 0; i < width - 1; i++) {
         sum += solves[i];
         s.emplace(solves[i], i);
     }
     
-    double trimSum = 0;
     
-    int trimmedSolvesSize = trim*2;
-    int accountedSolvesSize = width - (trimmedSolvesSize);
-        
     for (int i = width - 1; i < solvesCount; i++) {
-        sum += solves[i];
+        if (solves[i] != DINF)
+            sum += solves[i];
+        
         s.emplace(solves[i], i);
         
         auto minItr = s.begin();
         auto maxItr = --s.end();
         
-        for (int i = 0; i < trim; ++i)
-            trimSum += ((*(minItr++)).first + (*(maxItr--)).first);
+        for (int i = 0; i < trim; ++i) {
+            double tempMin, tempMax;
+            if ((tempMin = (*(minItr++)).first) != DINF) trimSum += tempMin;
+            if ((tempMax = (*(maxItr--)).first) != DINF) trimSum += tempMax;
+        }
+
         
-        if ((*maxItr).first == INFINITY || (*maxItr).first == numeric_limits<double>::infinity()) return INFINITY;
-        
-        double avg = (double)(sum - trimSum) /(double) (width - 2*trim);
-        
-        if (avg < best) {
+//        printf("itr itself: %f, dinf: %f, bool equal: %i", (*maxItr).first, DINF, (*maxItr).first == DINF);
+        double curAvg = 0;
+        if ((*maxItr).first == DINF) {
+            curAvg = INFINITY;
+        } else {
+            curAvg = (double)(sum - trimSum) /(double) (width - 2*trim);
+        }
+       
+        if (curAvg <= best) {
             auto minItr = s.begin(), maxItr = --s.end();
             for (int i = 0; i < trim; ++i) {
                 trimmedSolvesIndices[2*i] = (*(minItr++)).second;
@@ -62,7 +68,7 @@ double getBestAverageOf(const int width,
             for (int i = 0; i < (width - trim*2); ++i)
                 countedSolvesIndices[i] = (*(minItr++)).second;
             
-            best = avg;
+            best = curAvg;
         }
         
         sum -= solves[i - width + 1];

@@ -333,5 +333,5 @@ extension Animation {
     static let customBouncySpring: Animation = .spring(response: 0.45, dampingFraction: 0.64)
     
     static let customFastEaseOut: Animation = .easeOut(duration: 0.28)
-    static let customEaseInOut: Animation = .easeInOut(duration: 0.36)
+    static let customEaseInOut: Animation = .easeInOut(duration: 0.26)
 }
