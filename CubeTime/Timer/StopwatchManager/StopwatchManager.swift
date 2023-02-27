@@ -204,6 +204,21 @@ class StopwatchManager: ObservableObject {
             filterTimeList()
         }
     }
+    @Published var hasPenaltyOnly = false {
+        didSet {
+            filterTimeList()
+        }
+    }
+    @Published var hasCommentOnly = false {
+        didSet {
+            filterTimeList()
+        }
+    }
+    @Published var scrambleTypeFilter = -1 {
+        didSet {
+            filterTimeList()
+        }
+    }
     @Published var timeListAscending = false {
         didSet {
             changedTimeListSort()

@@ -20,7 +20,6 @@ struct SortByMenu: View {
     let shadow: Bool
     var animation: Namespace.ID
     
-    @State var penonly = false
     
     var body: some View {
         Menu {
@@ -41,15 +40,20 @@ struct SortByMenu: View {
             }
 
             Section("Filters") {
-                Toggle(isOn: $penonly) {
+                Toggle(isOn: $stopwatchManager.hasPenaltyOnly) {
                     Label("Has Penalty", systemImage: "exclamationmark.triangle")
                 }
+                
+                Toggle(isOn: $stopwatchManager.hasCommentOnly) {
+                    Label("Has Comment", systemImage: "quote.opening")
+                }
 
-                Menu("Phase number") {
-                    Picker("", selection: .constant(0)) {
-                        Text("Total").tag(0)
-                        Text("1").tag(0)
-                        Text("2").tag(1)
+                Menu("Puzzle Type") {
+                    Picker("", selection: $stopwatchManager.scrambleTypeFilter) {
+                        Text("All Puzzles").tag(-1)
+                        ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                            Label(element.name, image: element.name).tag(index)
+                        }
                     }
                 }
             }
@@ -120,7 +124,7 @@ struct TimeListHeader: View {
                         .font(.body.weight(.medium))
                     
                     if searchExpanded {
-                        TextField("Search for a time...", text: .constant(""))
+                        TextField("Search for a time...", text: $stopwatchManager.timeListFilter)
                             .frame(width: .infinity)
                             .foregroundColor(Color("grey"))
                         

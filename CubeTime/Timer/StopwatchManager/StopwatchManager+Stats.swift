@@ -196,6 +196,17 @@ extension StopwatchManager {
         } else {
             timeListSolvesFiltered = timeListSolves.filter{ formatSolveTime(secs: $0.time).hasPrefix(timeListFilter) }
         }
+        
+        if hasPenaltyOnly || hasCommentOnly {
+            timeListSolvesFiltered = timeListSolvesFiltered.filter{
+                (!hasPenaltyOnly || $0.penalty > 0) &&
+                (!hasCommentOnly || !($0.comment?.isEmpty ?? true) )
+            }
+        }
+        
+        if scrambleTypeFilter >= 0 {
+            timeListSolvesFiltered = timeListSolvesFiltered.filter {$0.scramble_type == Int32(scrambleTypeFilter)}
+        }
     }
     
     func delete(solve: Solves) {
