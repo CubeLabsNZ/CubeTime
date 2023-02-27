@@ -16,10 +16,18 @@ let sessionDescriptions: [SessionTypes: String] = [
     .compsim: "A comp sim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach."
 ]
 
-struct SessionPickerMenu: View {
+
+struct SessionPickerMenu<Content: View>: View {
+    let content: Content
     let sessions: [Sessions]?
     let clickSession: (Sessions) -> ()
     
+    @inlinable init(sessions: [Sessions]?, clickSession: @escaping (Sessions) -> (), @ViewBuilder label: () -> Content = {Label("Move To", systemImage: "arrow.up.right")}) {
+        self.sessions = sessions
+        self.clickSession = clickSession
+        self.content = label()
+    }
+
     var body: some View {
         Menu {
             Text("Only compatible sessions are shown")
@@ -50,7 +58,7 @@ struct SessionPickerMenu: View {
                 Text("Loading...")
             }
         } label: {
-            Label("Move To", systemImage: "arrow.up.right")
+            content
         }
     }
 }

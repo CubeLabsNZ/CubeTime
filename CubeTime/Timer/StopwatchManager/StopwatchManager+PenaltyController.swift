@@ -60,13 +60,15 @@ extension StopwatchManager {
         solves.insert(solve, at: solves.insertionIndex(of: solve))
         
         
-        if solve.penalty == PenTypes.dnf.rawValue {
+        if solve.penalty != PenTypes.dnf.rawValue {
             solvesNoDNFsbyDate.insert(solve, at: solvesNoDNFsbyDate.insertionIndexDate(solve: solve))
             solvesNoDNFs.insert(solve, at: solvesNoDNFs.insertionIndex(of: solve))
-        } else if oldPen == PenTypes.dnf {
+        } else if solve.penalty == PenTypes.dnf.rawValue {
             solvesNoDNFsbyDate.remove(object: solve)
             solvesNoDNFs.remove(object: solve)
         }
+        
+        NSLog("insertedf at solve: \(solves.firstIndex(of: solve)), solvesnodnfs: \(solvesNoDNFs.firstIndex(of: solve))")
         
         bestSingle = getMin()
         phases = getAveragePhases()
