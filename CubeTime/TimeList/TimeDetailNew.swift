@@ -143,20 +143,24 @@ struct TimeDetailView: View {
                                     
                                     Spacer()
                                     
-                                    #warning("doesn't update when pressed, AND doesn't update time list view either")
-                                    HierarchialButton(type: .mono, size: .medium, onTapRun: {
+                                    HierarchialButton(type: solve.penalty == PenTypes.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .none)
                                     }) {
                                         Label("OK", systemImage: "checkmark.circle")
                                     }
                                     
-                                    HierarchialButton(type: .mono, size: .medium, onTapRun: {
+                                    HierarchialButton(type: solve.penalty == PenTypes.plustwo.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .plustwo)
                                     }) {
-                                        Label("+2", image: "+2.label")
+                                        Label(title: {
+                                            Text("+2")
+                                        }, icon: {
+                                            Image("+2.label")
+                                                .renderingMode(.template)
+                                        })
                                     }
                                     
-                                    HierarchialButton(type: .mono, size: .medium, onTapRun: {
+                                    HierarchialButton(type: solve.penalty == PenTypes.dnf.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .dnf)
                                     }) {
                                         Label("DNF", systemImage: "xmark.circle")
