@@ -290,7 +290,9 @@ struct TimeDetailView: View {
                                     }
                                 }
                                 
-                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {}) {
+                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                                    shareSolve(solve: solve)
+                                }) {
                                     Label("Share Solve", systemImage: "square.and.arrow.up")
                                 }
                                 
