@@ -17,10 +17,10 @@ struct TabBar: View {
                        ? Color("base")
                        : Color("overlay0")))
             
-                .shadow(color: .black.opacity(self.currentTab == .timer ? 0.00 : 0.06),
+                .shadow(color: .black.opacity(self.currentTab == .timer ? 0.00 : 0.08),
                         radius: self.currentTab != .timer ? 6 : 0,
                         x: 0,
-                        y: self.currentTab != .timer ? 2 : 0)
+                        y: self.currentTab != .timer ? 1 : 0)
 
                 .animation(Animation.customFastSpring, value: self.currentTab)
             

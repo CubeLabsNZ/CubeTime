@@ -17,7 +17,7 @@ enum SortBy: Int {
 struct SortByMenu: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    let shadow: Bool
+    let hasShadow: Bool
     var animation: Namespace.ID
     
     @State var penonly = false
@@ -54,11 +54,11 @@ struct SortByMenu: View {
                 }
             }
         } label: {
-            HierarchialButtonBase(type: .halfcoloured, size: .large, outlined: false, square: true, hasShadow: shadow, hasBackground: true) {
+            HierarchialButtonBase(type: .halfcoloured, size: .large, outlined: false, square: true, hasShadow: hasShadow, hasBackground: true) {
                 Image(systemName: "line.3.horizontal.decrease")
                     .matchedGeometryEffect(id: "label", in: animation)
             }
-            .animation(Animation.customEaseInOut, value: self.shadow)
+            .animation(Animation.customEaseInOut, value: self.hasShadow)
             .frame(width: 35, height: 35)
         }
     }
@@ -121,7 +121,7 @@ struct TimeListHeader: View {
                     
                     if searchExpanded {
                         TextField("Search for a time...", text: .constant(""))
-                            .frame(width: .infinity)
+                            .frame(maxWidth: .infinity)
                             .foregroundColor(Color("grey"))
                         
                         HStack(spacing: 8) {
@@ -171,7 +171,7 @@ struct TimeListHeader: View {
             
             .padding(.trailing, searchExpanded ? -43 : 0)
             
-            SortByMenu(shadow: !searchExpanded, animation: animation)
+            SortByMenu(hasShadow: !searchExpanded, animation: animation)
                 .offset(x: searchExpanded ? -43 : 0)
         }
         .padding(.horizontal)
