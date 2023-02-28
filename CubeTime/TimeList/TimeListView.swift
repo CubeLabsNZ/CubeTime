@@ -123,16 +123,18 @@ struct TimeListHeader: View {
                         .foregroundColor(Color.accentColor)
                         .font(.body.weight(.medium))
                     
+                    #warning("todo make search bar search for comments too?")
                     if searchExpanded {
                         TextField("Search for a time...", text: $stopwatchManager.timeListFilter)
                             .frame(maxWidth: .infinity)
-                            .foregroundColor(Color("grey"))
+                            .foregroundColor(Color(stopwatchManager.timeListFilter.isEmpty ? "grey" : "dark"))
                         
                         HStack(spacing: 8) {
                             Spacer()
                             
                             Button {
                                 withAnimation(Animation.customEaseInOut) {
+                                    stopwatchManager.timeListFilter = ""
                                     searchExpanded = false
                                 }
                             } label: {
