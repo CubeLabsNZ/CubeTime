@@ -6,20 +6,12 @@
 //
 
 import SwiftUI
-import SwiftfulLoadingIndicators
 
 struct TimerOnlyTool: View {
     @StateObject var timerController: TimerContoller = TimerContoller()
     
-    @Environment(\.colorScheme) var colourScheme
-    @Environment(\.globalGeometrySize) var globalGeometrySize
-    
-    // GET USER DEFAULTS
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
-    
     var body: some View {
-        GeometryReader { geo in
+        ZStack {
             TimerBackgroundColor()
                 .environmentObject(timerController)
                 .ignoresSafeArea(.all)
