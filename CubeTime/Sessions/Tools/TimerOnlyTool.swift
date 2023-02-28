@@ -14,13 +14,9 @@ struct TimerOnlyTool: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.globalGeometrySize) var globalGeometrySize
     
-    let name: String
-    
     // GET USER DEFAULTS
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
-    
-    @State var hideStatusBar = true
     
     var body: some View {
         GeometryReader { geo in
@@ -39,7 +35,7 @@ struct TimerOnlyTool: View {
             
             
             if (timerController.mode == .stopped) {
-                ToolHeader(name: name, image: "stopwatch", content: { EmptyView() })
+                ToolHeader(name: tools[0].name, image: tools[0].iconName, content: { EmptyView() })
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
         }

@@ -909,3 +909,19 @@ struct ContextMenuButton: View {
         }
     }
 }
+
+// src: https://stackoverflow.com/a/69694099/17569741
+struct ShareSheetViewController: UIViewControllerRepresentable {
+    @Binding var isPresenting: Bool
+    var content: () -> UIViewController
+
+    func makeUIViewController(context: Context) -> UIViewController {
+        UIViewController()
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        if isPresenting {
+            uiViewController.present(content(), animated: true, completion: nil)
+        }
+    }
+}

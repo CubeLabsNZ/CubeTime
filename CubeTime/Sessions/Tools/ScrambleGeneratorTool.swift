@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 class ScramblesListWrapper {
     var scrambles: [String] = []
 }
@@ -108,10 +109,12 @@ struct ScrambleGeneratorTool: View {
     @StateObject var scrambleGenerator = ScrambleGenerator()
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
+    @State private var showShareSheet = false
+    
     var body: some View {
         VStack {
 
-            ToolHeader(name: "Scramble Generator", image: "macstudio", content: {
+            ToolHeader(name: tools[2].name, image: tools[2].iconName, content: {
                 
                 Picker("", selection: $scrambleGenerator.scrambleType) {
                     ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
@@ -143,11 +146,12 @@ struct ScrambleGeneratorTool: View {
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
                         .frame(height: 35)
+                        .foregroundColor((scrambleGenerator.numScramble == nil || scrambleGenerator.scrambles?.count != nil) ? Color("grey") : Color("dark"))
                         .disabled(scrambleGenerator.scrambles?.count != nil)
                     }
                     .background(
                         RoundedRectangle(cornerRadius: 6, style: .continuous)
-                            .fill(Color.white)
+                            .fill(Color("indent2"))
                     )
                     .animation(Animation.customDampedSpring, value: scrambleGenerator.numScramble)
                     
@@ -175,11 +179,30 @@ struct ScrambleGeneratorTool: View {
                                 .foregroundColor(Color.accentColor)
                             
                             HierarchialButton(type: .coloured, size: .large, onTapRun: {
-                                let activityVC = UIActivityViewController(activityItems: scrambleGenerator.scrambles!, applicationActivities: nil)
-                                (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
+                                self.showShareSheet = true
                             }) {
                                 Text("Share")
                             }
+                            .background(
+                                ShareSheetViewController(isPresenting: self.$showShareSheet) {
+                                    let activityViewController = UIActivityViewController(activityItems: [scrambleGenerator.scrambles!.reduce("", {return "\($0)\n\($1)"})], applicationActivities: nil)
+                                    activityViewController.isModalInPresentation = true
+                                    
+                                    // something something ipad TODO
+                                    /* if iPad, present as popoverpresentationcontroller
+                                     
+                                     if UIDevice.current.userInterfaceIdiom == .pad {
+                                        av.popoverPresentationController?.sourceView = UIView()
+                                     }
+                                     */
+                                    
+                                    activityViewController.completionWithItemsHandler = { _, _, _, _ in
+                                        self.showShareSheet = false
+                                    }
+                                    
+                                    return activityViewController
+                                }
+                            )
                             
                             ScrollView {
                                 LazyVStack(alignment: .leading) {

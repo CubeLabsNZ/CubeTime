@@ -1,5 +1,10 @@
 import SwiftUI
 
+class ToolsViewModel: ObservableObject {
+    @Published var currentTool: Tool?
+}
+
+
 struct Tool: Identifiable, Equatable {
     var id: String {
         get { return name }
@@ -11,13 +16,12 @@ struct Tool: Identifiable, Equatable {
 }
 
 let tools: [Tool] = [
-    Tool(name: "Timer Only", iconName: "stopwatch", description: "Just a timer. No scrambles shown and solves aren't recorded."),
-    Tool(name: "Scramble Only", iconName: "cube", description: "Displays one scramble at a time. No timer shown. Tap to generate the next scramble."),
-    Tool(name: "Scramble Generator", iconName: "macstudio", description: "Generate multiple scrambles at once, to share, save or use."),
+    Tool(name: "Timer Only", iconName: "stopwatch", description: "Just a timer. No scrambles are shown. Your solves are **not** recorded and are not saved to a session."),
+    Tool(name: "Scramble Only", iconName: "cube", description: "Displays one scramble at a time. A timer is not shown. Tap to generate the next scramble."),
+    Tool(name: "Scramble Generator", iconName: "server.rack", description: "Generate multiple scrambles at once, to share, save or use."),
     Tool(name: "Average Calculator", iconName: "function", description: "Calculates WPA, BPA, and time needed for an average, etc."),
     Tool(name: "Scorecard Generator", iconName: "printer", description: "Export scorecards for use at meetups (or comps!)."),
 ]
-
 
 struct ToolsList: View {
     @StateObject var toolsViewModel = ToolsViewModel()
@@ -34,12 +38,14 @@ struct ToolsList: View {
                         Label(tool.name, systemImage: tool.iconName)
                             .font(.headline)
                         
-                        Text(tool.description)
+                        Text(.init(tool.description))
                             .foregroundColor(Color("grey"))
                             .font(.caption)
+                            .padding(.top, 2)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(12)
-                    .frame(maxWidth: .infinity, minHeight: 95, alignment: .topLeading)
+                    .frame(maxWidth: .infinity, minHeight: 65, alignment: .topLeading)
                     .background {
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
                             .fill(Color("overlay0"))
@@ -59,30 +65,33 @@ struct ToolsList: View {
                     Color("base")
                         .ignoresSafeArea()
                     
-                    if let tool = toolsViewModel.currentTool {
-                        switch (tool.name) {
-                        case "Timer Only":
-                            TimerOnlyTool(name: toolsViewModel.currentTool!.name)
-                                .environmentObject(toolsViewModel)
+                    Group {
+                        if let tool = toolsViewModel.currentTool {
+                            switch (tool.name) {
+                            case "Timer Only":
+                                TimerOnlyTool()
+                                
+                            case "Scramble Only":
+                                EmptyView()
+                                
+                            case "Scramble Generator":
+                                ScrambleGeneratorTool()
+                                    
+                                
+                            case "Average Calculator":
+                                EmptyView()
+                                
+                                
+                            case "Scorecard Generator":
+                                EmptyView()
                             
-                        case "Scramble Only":
-                            EmptyView()
-                            
-                        case "Scramble Generator":
-                            ScrambleGeneratorTool()
-                                .environmentObject(toolsViewModel)
-                            
-                        case "Average Calculator":
-                            EmptyView()
-                            
-                            
-                        case "Scorecard Generator":
-                            EmptyView()
-                        
-                        default:
-                            EmptyView()
+                            default:
+                                EmptyView()
+                            }
                         }
+
                     }
+                    .environmentObject(toolsViewModel)
                 }
             })
         }
