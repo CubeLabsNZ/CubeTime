@@ -108,12 +108,14 @@ struct ToolHeader<V: View>: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
     let name: String
     let image: String
+    let onClose: (() -> ())?
     
     let content: V?
     
-    init(name: String, image: String, @ViewBuilder content: () -> V?) {
+    init(name: String, image: String, onClose: (() -> ())?=nil, @ViewBuilder content: () -> V?) {
         self.name = name
         self.image = image
+        self.onClose = onClose
         self.content = content()
     }
     
@@ -139,6 +141,9 @@ struct ToolHeader<V: View>: View {
             
             CloseButton(hasBackgroundShadow: true) {
                 toolsViewModel.currentTool = nil
+                if let onClose = self.onClose {
+                    onClose()
+                }
             }
         }
         .padding(.horizontal)
