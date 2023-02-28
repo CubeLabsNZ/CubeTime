@@ -86,13 +86,11 @@ struct TimerHeader: View {
                     HStack {
                         SessionIconView(session: stopwatchManager.currentSession)
                         
-                        Group {
-                            if (showSessionType) {
-                                Text(stopwatchManager.currentSession.typeName)
-                                    .font(.system(size: 17, weight: .medium))
-                            }
+                        if (showSessionType) {
+                            Text(stopwatchManager.currentSession.typeName)
+                                .font(.system(size: 17, weight: .medium))
+                                .padding(.trailing, 4)
                         }
-                        .padding(.trailing, 4)
                     }
                 }
                 .onTapGesture {
@@ -178,5 +176,6 @@ struct TimerHeader: View {
                 .animation(Animation.customFastSpring, value: stopwatchManager.playgroundScrambleType)
         )
         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+        .animation(Animation.customSlowSpring, value: showSessionType)
     }
 }
