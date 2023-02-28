@@ -62,8 +62,8 @@ struct TimerOnlyToolInner: View {
             
             
             if timerController.mode == .stopped || timerController.mode == .inspecting {
-//                ToolHeader(name: name, image: "stopwatch", showOverlay: $showOverlay)
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                //ToolHeader(name: name, image: "stopwatch", content: {EmptyView()})
+                    //.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
         }
         .statusBar(hidden: hideStatusBar)

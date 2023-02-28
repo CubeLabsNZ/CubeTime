@@ -794,6 +794,24 @@ extension StopwatchManager {
             }
         }
     }
+    
+    static func doSomething() -> Void {
+        let count: Int32 = 5
+        let solveDoubles: [Double] = [1.456, .infinity, 1.335, 1.863, 2.386]
+        let width: Int32 = 5
+        
+        let trim: Int32 = 1
+        
+        var countedSolvesIndices: [Int32] = Array(repeating: 0, count: Int(width - trim*2))
+        var trimmedSolvesIndices: [Int32] = Array(repeating: 0, count: Int(trim*2))
+        
+        
+        let bestAverage: Double = getBestAverageOf(width, trim, count,
+                                                   solveDoubles,
+                                                   &countedSolvesIndices, &trimmedSolvesIndices);
+        
+        print(bestAverage)
+    }
 }
 
 

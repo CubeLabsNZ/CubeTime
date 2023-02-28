@@ -50,9 +50,7 @@ double getBestAverageOf(const int width,
             if ((tempMin = (*(minItr++)).first) != DNF) trimSum += tempMin;
             if ((tempMax = (*(maxItr--)).first) != DNF) trimSum += tempMax;
         }
-
         
-//        printf("itr itself: %f, dinf: %f, bool equal: %i", (*maxItr).first, DINF, (*maxItr).first == DINF);
         double curAvg = 0;
         if ((*maxItr).first == DNF) {
             curAvg = INFINITY;

@@ -139,7 +139,7 @@ extension View {
 }
 
 enum HierarchialButtonType {
-    case mono, coloured, halfcoloured, disabled
+    case mono, coloured, halfcoloured, disabled, red/*, green*/
 }
 
 enum HierarchialButtonSize {
@@ -164,6 +164,8 @@ struct HierarchialButton<V: View>: View {
     
     let hasShadow: Bool
     let hasBackground: Bool
+    
+    let expandWidth: Bool
         
     let onTapRun: () -> Void
     @ViewBuilder let content: () -> V
@@ -174,6 +176,7 @@ struct HierarchialButton<V: View>: View {
          square: Bool=false,
          hasShadow: Bool=true,
          hasBackground: Bool=true,
+         expandWidth: Bool=false,
          onTapRun: @escaping () -> Void,
          @ViewBuilder _ content: @escaping () -> V) {
         self.type = type
@@ -184,6 +187,8 @@ struct HierarchialButton<V: View>: View {
         
         self.hasShadow = hasShadow
         self.hasBackground = hasBackground
+        
+        self.expandWidth = expandWidth
         
         self.onTapRun = onTapRun
         self.content = content
@@ -199,6 +204,7 @@ struct HierarchialButton<V: View>: View {
                                   square: self.square,
                                   hasShadow: self.hasShadow,
                                   hasBackground: self.hasBackground,
+                                  expandWidth: expandWidth,
                                   content: self.content)
         }
         .buttonStyle(AnimatedButton())
@@ -221,6 +227,8 @@ struct HierarchialButtonBase<V: View>: View {
     let hasShadow: Bool
     let hasBackground: Bool
     
+    let expandWidth: Bool
+    
     
     init(type: HierarchialButtonType,
          size: HierarchialButtonSize,
@@ -228,6 +236,7 @@ struct HierarchialButtonBase<V: View>: View {
          square: Bool,
          hasShadow: Bool,
          hasBackground: Bool,
+         expandWidth: Bool,
          content: @escaping () -> V) {
         switch (type) {
         case .halfcoloured:
@@ -249,6 +258,11 @@ struct HierarchialButtonBase<V: View>: View {
             self.colourBg = Color("indent2")
             self.colourFg = Color("grey")
             self.colourShadow = Color.clear
+            
+        case .red:
+            self.colourBg = Color(0xFCD4D4)
+            self.colourFg = Color(0xFE5B5B)
+            self.colourShadow = Color(0xFE5B5B).opacity(0.12)
         }
         
         switch (size) {
@@ -277,6 +291,7 @@ struct HierarchialButtonBase<V: View>: View {
         
         self.hasShadow = hasShadow
         self.hasBackground = hasBackground
+        self.expandWidth = expandWidth
         
         self.content = content()
     }
@@ -305,7 +320,7 @@ struct HierarchialButtonBase<V: View>: View {
                 .padding(.horizontal, self.horizontalPadding)
         }
         .contentShape(Rectangle())
-        .fixedSize()
+        .fixedSize(horizontal: !expandWidth, vertical: true)
     }
 }
 
