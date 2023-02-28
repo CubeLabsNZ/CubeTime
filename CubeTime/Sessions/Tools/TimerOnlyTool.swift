@@ -11,33 +11,8 @@ import SwiftfulLoadingIndicators
 struct TimerOnlyTool: View {
     @StateObject var timerController: TimerContoller = TimerContoller()
     
-    @Binding var showOverlay: Tool?
-    var namespace: Namespace.ID
-    let name: String
-    
-    init(showOverlay: Binding<Tool?>, namespace: Namespace.ID) {
-        self._showOverlay = showOverlay
-        self.namespace = namespace
-        self.name = showOverlay.wrappedValue!.name
-        
-    }
-    
-    var body: some View {
-        TimerOnlyToolInner(showOverlay: $showOverlay, namespace: namespace, name: name)
-            .environmentObject(timerController)
-    }
-}
-
-struct TimerOnlyToolInner: View {
-    @EnvironmentObject var timerController: TimerContoller
-    @EnvironmentObject var tabRouter: TabRouter
-    
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.globalGeometrySize) var globalGeometrySize
-    
-    @Binding var showOverlay: Tool?
-    
-    var namespace: Namespace.ID
     
     let name: String
     
@@ -50,24 +25,25 @@ struct TimerOnlyToolInner: View {
     var body: some View {
         GeometryReader { geo in
             TimerBackgroundColor()
+                .environmentObject(timerController)
                 .ignoresSafeArea(.all)
             
             TimerTouchView()
-            
+                .environmentObject(timerController)
             
             TimerTime()
+                .environmentObject(timerController)
                 .allowsHitTesting(false)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .ignoresSafeArea(edges: .all)
             
             
-            if timerController.mode == .stopped || timerController.mode == .inspecting {
-                //ToolHeader(name: name, image: "stopwatch", content: {EmptyView()})
-                    //.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            if (timerController.mode == .stopped) {
+                ToolHeader(name: name, image: "stopwatch", content: { EmptyView() })
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
         }
-        .statusBar(hidden: hideStatusBar)
+        .statusBar(hidden: (timerController.mode != .stopped))
         .ignoresSafeArea(.keyboard)
     }
 }
-

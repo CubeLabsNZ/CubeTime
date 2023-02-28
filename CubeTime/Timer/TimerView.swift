@@ -131,7 +131,7 @@ struct BottomToolBG: View {
     let maxWidth: CGFloat
     
     var body: some View {
-        RoundedRectangle(cornerRadius: 12, style: .continuous)
+        RoundedRectangle(cornerRadius: 8, style: .continuous)
             .fill(Color("overlay0"))
             .frame(width: maxWidth, height: maxHeight)
     }
