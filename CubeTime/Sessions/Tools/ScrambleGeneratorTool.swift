@@ -105,13 +105,12 @@ class ScrambleGenerator: ObservableObject {
 }
 
 struct ScrambleGeneratorTool: View {
-    @Binding var showOverlay: Tool?
-    var namespace: Namespace.ID
     @StateObject var scrambleGenerator = ScrambleGenerator()
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
     var body: some View {
         VStack {
+
             ToolHeader(name: "Scramble Generator", image: "macstudio", showOverlay: $showOverlay, namespace: namespace, content: {
                 
                 Picker("", selection: $scrambleGenerator.scrambleType) {
