@@ -40,9 +40,7 @@ struct TimerHeader: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
-    @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
-    
-    @State private var toggleSessionName: Bool = false
+    @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionType: Bool = false
     
     var targetFocused: FocusState<Bool>.Binding?
     
@@ -51,6 +49,7 @@ struct TimerHeader: View {
     let previewMode: Bool
     
     var body: some View {
+        let sess_type = SessionTypes(rawValue: stopwatchManager.currentSession.session_type)!
         HStack {
             if previewMode {
                 ZStack(alignment: .leading) {
@@ -81,59 +80,35 @@ struct TimerHeader: View {
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 6, style: .continuous)
                         .fill(Color("overlay0"))
-                        .frame(width: (toggleSessionName ^ showSessionName) ? nil : 35, height: 35)
+                        .frame(width: (showSessionType) ? nil : 35, height: 35)
                         .shadowDark(x: 2, y: 0)
                     
                     HStack {
                         SessionIconView(session: stopwatchManager.currentSession)
                         
-                        if (toggleSessionName ^ showSessionName) {
-                            Text(stopwatchManager.currentSession.name ?? "Unknown Session Name")
-                                .font(.system(size: 17, weight: .medium))
-                                .padding(.trailing, 4)
+                        Group {
+                            if (showSessionType) {
+                                Text(stopwatchManager.currentSession.typeName)
+                                    .font(.system(size: 17, weight: .medium))
+                            }
                         }
+                        .padding(.trailing, 4)
                     }
                 }
                 .onTapGesture {
                     withAnimation(Animation.customSlowSpring) {
-                        toggleSessionName.toggle()
+                        showSessionType.toggle()
                     }
                 }
                 
-                // SESSION TYPE NAME
+                if !showSessionType {
+                    Text(stopwatchManager.currentSession.name ?? "Unknown Session Name")
+                        .font(.system(size: 17, weight: .medium))
+                        .padding(.trailing, sess_type == .standard ? nil : 4)
+                }
                 
-                switch SessionTypes(rawValue: stopwatchManager.currentSession.session_type)! {
-                case .standard:
-                    if !(toggleSessionName ^ showSessionName) {
-                        Text("STANDARD SESSION")
-                            .font(.system(size: 17, weight: .medium))
-                            .padding(.trailing)
-                    }
-                case .algtrainer:
-                    EmptyView()
-                    
-                case .multiphase:
-                    if !(toggleSessionName ^ showSessionName) {
-                        Text("MULTIPHASE")
-                            .font(.system(size: 17, weight: .medium))
-                    }
-                    
-                    HStack(spacing: 0) {
-                        Text("PHASES: ")
-                            .font(.system(size: 15, weight: .regular))
-                        
-                        Text("\(stopwatchManager.phaseCount)")
-                            .font(.system(size: 15, weight: .regular))
-                        
-                    }
-//                    .padding(.leading, 6)
-//                    .padding(.trailing)
+                switch sess_type {
                 case .playground:
-                    if !(toggleSessionName ^ showSessionName) {
-                        Text("PLAYGROUND")
-                            .font(.system(size: 17, weight: .medium))
-                    }
-                    
                     Picker("", selection: $stopwatchManager.playgroundScrambleType) {
                         ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
                             Text(element.name).tag(Int32(index))
@@ -142,16 +117,16 @@ struct TimerHeader: View {
                     }
                     .accentColor(accentColour)
                     .pickerStyle(.menu)
-//                    .padding(.leading, 6)
-//                    .padding(.trailing)
-//                    .fixedSize()
-                    
-                case .compsim:
-                    if !(toggleSessionName ^ showSessionName) {
-                        Text("COMP SIM")
-                            .font(.system(size: 17, weight: .medium))
+                case .multiphase:
+                    HStack(spacing: 0) {
+                        Text("PHASES: ")
+                            .font(.system(size: 15, weight: .regular))
+                        
+                        Text("\(stopwatchManager.phaseCount)")
+                            .font(.system(size: 15, weight: .regular))
+                        
                     }
-                    
+                case .compsim:
                     let solveth: Int = stopwatchManager.currentSolveth!+1
                     
                     Text("SOLVE \(solveth == 6 ? 1 : solveth)")
@@ -190,9 +165,9 @@ struct TimerHeader: View {
                                 .padding(.trailing, 4)
                         }
                     }
-//                    .padding(.leading, 6)
-//                    .padding(.trailing, 12)
                     .foregroundColor(accentColour)
+                default:
+                    EmptyView()
                 }
             }
         }

@@ -353,30 +353,6 @@ struct GeneralSettingsView: View {
                 
                 Group {
                     VStack (alignment: .leading) {
-                        Toggle(isOn: $showSessionName) {
-                            Text("Show Session Name")
-                                .font(.body.weight(.medium))
-                        }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
-                        .padding(.horizontal)
-                    }
-                    
-                    Text("Permanently show session name instead of session type in timer view. Pressing the session type icon will temporarily toggle in the timer view.")
-                        .font(.footnote.weight(.medium))
-                        .lineSpacing(-4)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .foregroundColor(Color(uiColor: .systemGray))
-                        .multilineTextAlignment(.leading)
-                        .padding(.horizontal)
-                }
-                
-                    
-                
-                Divider()
-                
-                
-                Group {
-                    VStack (alignment: .leading) {
                         Toggle(isOn: $showPrevTime) {
                             Text("Show Previous Time")
                                 .font(.body.weight(.medium))

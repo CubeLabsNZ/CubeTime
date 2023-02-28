@@ -65,6 +65,23 @@ struct SessionPickerMenu<Content: View>: View {
 
 
 extension Sessions {
+    var typeName: String {
+        get {
+            switch (SessionTypes(rawValue: session_type)!) {
+            case .standard:
+                return "Standard Session"
+            case .algtrainer:
+                return "Alg trainer"
+            case .multiphase:
+                return "Multiphase"
+            case .playground:
+                return "Playground"
+            case .compsim:
+                return "Comp Sim"
+            }
+        }
+    }
+    
     var shortcutName: String {
         get {
             let scrname = puzzle_types[Int(scramble_type)].name
@@ -72,13 +89,13 @@ extension Sessions {
             case .standard:
                 return scrname
             case .algtrainer:
-                return "Alg trainer - " + scrname
+                return self.typeName + " - " + scrname
             case .multiphase:
-                return "Multiphase - " + scrname
+                return self.typeName + " - " + scrname
             case .playground:
-                return "Playground"
+                return self.typeName
             case .compsim:
-                return "Comp Sim - " + scrname
+                return self.typeName + " - " + scrname
             }
         }
     }
