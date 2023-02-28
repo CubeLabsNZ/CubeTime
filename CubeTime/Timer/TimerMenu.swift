@@ -13,7 +13,7 @@ struct TimerMenu: View {
     
     @State var expanded = false
     
-    #warning("TIM TODO: make the toggles scale")
+    private let circleWidth: CGFloat = 2.5
     
     var body: some View {
         let color = expanded ? Color("overlay1") : Color.white
@@ -28,73 +28,79 @@ struct TimerMenu: View {
                         x: 0,
                         y: 1)
             
+            
+            #warning("TODO: use animatabledata to animate path from circle -> symbol")
+            #warning("TODO: make and use custom divider")
+            
             VStack {
                 if expanded {
-                    VStack (alignment: .leading) {
-                        Image(systemName: "xmark")
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                            .padding(12)
-                            .onTapGesture {
-                                expanded = false
-                            }
-                        
-                        VStack {
-                            HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {}) {
-                                Label(title: {
-                                    Text("Zen Mode")
-                                }, icon: {
-                                    Image(systemName: "blinds.vertical.closed")
-                                        .matchedGeometryEffect(id: 0, in: namespace)
-                                })
-                            }
-                            Divider()
-                            HierarchialButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {}) {
-                                Label(title: {
-                                    Text("Tools")
-                                }, icon: {
-                                    Image(systemName: "wrench.and.screwdriver")
-                                        .matchedGeometryEffect(id: 1, in: namespace)
-                                })
-                            }
-                            HierarchialButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {}) {
-                                Label(title: {
-                                    Text("Settings")
-                                }, icon: {
-                                    Image(systemName: "gearshape")
-                                        .matchedGeometryEffect(id: 2, in: namespace)
-                                })
-                            }
+                    CloseButton {
+                        expanded = false
+                    }
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    
+                    VStack {
+                        HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {}) {
+                            Label(title: {
+                                Text("Zen Mode")
+                            }, icon: {
+                                Image(systemName: "moon.stars")
+                                    .matchedGeometryEffect(id: 0, in: namespace)
+                                    .zIndex(100)
+                            })
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .padding()
-                        .font(.system(size: 18))
-//                        .transition(.scale)
-                        .transition(.scale(scale: 0, anchor: .topTrailing))
+                        Divider()
+                        HierarchialButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {}) {
+                            Label(title: {
+                                Text("Tools")
+                            }, icon: {
+                                Image(systemName: "wrench.and.screwdriver")
+                                    .matchedGeometryEffect(id: 1, in: namespace)
+                                    .zIndex(100)
+                            })
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        HierarchialButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {}) {
+                            Label(title: {
+                                Text("Settings")
+                            }, icon: {
+                                Image(systemName: "gearshape")
+                                    .matchedGeometryEffect(id: 2, in: namespace)
+                                    .zIndex(100)
+                            })
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    .padding(8)
                 } else {
-                    HStack {
-                        Spacer()
-                        Circle()
-                            .matchedGeometryEffect(id: 0, in: namespace)
-                            .frame(width: 2, height: 2)
-                        Circle()
-                            .matchedGeometryEffect(id: 1, in: namespace)
-                            .frame(width: 2, height: 2)
-                        Circle()
-                            .matchedGeometryEffect(id: 2, in: namespace)
-                            .frame(width: 2, height: 2)
-                        Spacer()
+                    HStack(spacing: 2.75) {
+                        ForEach(0..<3, id: \.self) { id in
+                            Circle()
+                                .fill(Color.accentColor)
+                                .matchedGeometryEffect(id: id, in: namespace)
+                                .frame(width: circleWidth, height: circleWidth)
+                        }
                     }
+                    .zIndex(100)
                 }
             }
-        }
-        .onTapGesture {
-            expanded = true
+            .mask(
+                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                    .frame(width: expanded ? nil : 35, height: expanded ? nil : 35)
+            )
+            
+            
+            
         }
         .contentShape(Rectangle())
         .frame(width: expanded ? nil : 35, height: expanded ? nil : 35)
         .animation(Animation.customDampedSpring, value: expanded)
         .fixedSize(horizontal: true, vertical: true)
+        
+        .onTapGesture {
+            expanded = true
+        }
     }
 }
 
