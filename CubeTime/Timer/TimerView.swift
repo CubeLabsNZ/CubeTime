@@ -530,9 +530,12 @@ struct TimerView: View {
                         .frame(maxHeight: 35)
                         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
                         .opacity(stopwatchManager.scrambleStr == nil ? 1 : 0)
+                    
+                    TimerMenu()
                 }
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .zIndex(3)
                 
                 
                 
