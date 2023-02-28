@@ -108,10 +108,12 @@ struct ScrambleGeneratorTool: View {
     @StateObject var scrambleGenerator = ScrambleGenerator()
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
+    @Binding var showingSheet: Bool
+    
     var body: some View {
         VStack {
 
-            ToolHeader(name: "Scramble Generator", image: "macstudio", showOverlay: $showOverlay, namespace: namespace, content: {
+            ToolHeader(name: "Scramble Generator", image: "macstudio", showingSheet: self.$showingSheet, content: {
                 
                 Picker("", selection: $scrambleGenerator.scrambleType) {
                     ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
@@ -198,11 +200,11 @@ struct ScrambleGeneratorTool: View {
                                 }
                                 .fixedSize(horizontal: false, vertical: true)
                                 .padding(12)
-                                .background (
-                                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                        .fill(Color("overlay1"))
-                                )
                             }
+                            .background (
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                    .fill(Color("overlay1"))
+                            )
                         }
                     }
                 }

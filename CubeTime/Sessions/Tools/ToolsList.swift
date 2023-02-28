@@ -31,11 +31,10 @@ struct ToolHeader<V: View>: View {
     
     let content: V?
     
-    init(name: String, image: String, showOverlay: Binding<Tool?>, namespace: Namespace.ID, @ViewBuilder content: () -> V?) {
+    init(name: String, image: String, showingSheet: Binding<Bool>, @ViewBuilder content: () -> V?) {
         self.name = name
         self.image = image
-        self._showOverlay = showOverlay
-        self.namespace = namespace
+        self._showingSheet = showingSheet
         self.content = content()
     }
     
@@ -43,7 +42,6 @@ struct ToolHeader<V: View>: View {
         HStack {
             HStack {
                 Label(name, systemImage: image)
-                    .matchedGeometryEffect(id: name, in: namespace)
                     .font(.system(size: 17, weight: .medium))
                     .padding(.leading, 8)
                     .padding(.trailing)
@@ -56,7 +54,6 @@ struct ToolHeader<V: View>: View {
             .background(
                 Color("overlay1")
                     .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-                    .matchedGeometryEffect(id: "bg" + name, in: namespace)
             )
             
             Spacer()
@@ -112,11 +109,7 @@ struct ToolsList: View {
                     Color("base")
                         .ignoresSafeArea()
                     
-                    VStack {
-                        ToolHeader(name: "Scramble Generator", image: "macstudio", showingSheet: self.$showingSheet)
-                        
-                        ScrambleGeneratorTool()
-                    }
+                    ScrambleGeneratorTool(showingSheet: self.$showingSheet)
                 }
             }
         }
