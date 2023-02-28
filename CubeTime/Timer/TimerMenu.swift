@@ -8,22 +8,27 @@
 import SwiftUI
 
 struct TimerMenu: View {
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     @Namespace private var namespace
+    
     @State var expanded = false
     
+    #warning("TIM TODO: make the toggles scale")
+    
     var body: some View {
+        let color = expanded ? Color("overlay1") : Color.white
         ZStack {
             RoundedRectangle(cornerRadius: 6, style: .continuous)
                 .fill(Material.ultraThinMaterial)
             
             RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .fill(Color("overlay0").opacity(0.92))
+                .fill(color.opacity(0.92))
                 .shadow(color: Color.black.opacity(0.06),
                         radius: 4,
                         x: 0,
                         y: 1)
             
-            Group {
+            VStack {
                 if expanded {
                     VStack (alignment: .leading) {
                         Image(systemName: "xmark")
@@ -34,37 +39,36 @@ struct TimerMenu: View {
                             }
                         
                         VStack {
-                            Toggle(isOn: .constant(false), label: {
+                            HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {}) {
                                 Label(title: {
                                     Text("Zen Mode")
                                 }, icon: {
                                     Image(systemName: "blinds.vertical.closed")
                                         .matchedGeometryEffect(id: 0, in: namespace)
                                 })
-                            })
-                            Toggle(isOn: .constant(false), label: {
+                            }
+                            Divider()
+                            HierarchialButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {}) {
                                 Label(title: {
-                                    Text("Practice Mode")
+                                    Text("Tools")
                                 }, icon: {
-                                    Image(systemName: "figure.climbing")
+                                    Image(systemName: "wrench.and.screwdriver")
                                         .matchedGeometryEffect(id: 1, in: namespace)
                                 })
-                            })
-                            Toggle(isOn: .constant(false), label: {
+                            }
+                            HierarchialButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {}) {
                                 Label(title: {
-                                    Text("Inspection")
+                                    Text("Settings")
                                 }, icon: {
-                                    Image(systemName: "doc.text.magnifyingglass")
+                                    Image(systemName: "gearshape")
                                         .matchedGeometryEffect(id: 2, in: namespace)
                                 })
-                            })
-                            Divider()
-                            HierarchialButton(type: .coloured, size: .large, onTapRun: {}) {
-                                Label("Settings", systemImage: "wrench")
                             }
                         }
                         .padding()
                         .font(.system(size: 18))
+//                        .transition(.scale)
+                        .transition(.scale(scale: 0, anchor: .topTrailing))
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 } else {
@@ -88,7 +92,7 @@ struct TimerMenu: View {
             expanded = true
         }
         .contentShape(Rectangle())
-        .frame(width: expanded ? 400 : 35, height: expanded ? nil : 35)
+        .frame(width: expanded ? nil : 35, height: expanded ? nil : 35)
         .animation(Animation.customDampedSpring, value: expanded)
         .fixedSize(horizontal: true, vertical: true)
     }

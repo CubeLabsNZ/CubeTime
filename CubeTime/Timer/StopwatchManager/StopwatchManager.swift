@@ -88,6 +88,14 @@ class StopwatchManager: ObservableObject {
         }
     }
     
+    @Published var zenMode = false {
+        didSet {
+            updateHideStatusBar()
+        }
+    }
+    @Published var hideUI = false
+    
+    
     @Published var scrambleStr: String? = nil {
         didSet {
             timerController.disabled = scrambleStr == nil
@@ -237,7 +245,9 @@ class StopwatchManager: ObservableObject {
     // MARK: inspection alert audio
     
     
-    
+    func updateHideStatusBar() {
+        self.hideUI = timerController.mode == .inspecting || timerController.mode == .running || self.zenMode
+    }
     
     
     
@@ -404,6 +414,9 @@ class StopwatchManager: ObservableObject {
                 default: break
 //                    timerController.timerColour = Color.Timer.normal
                 }
+            },
+            onModeChange: { newMode in
+                self.updateHideStatusBar()
             }
         )
         

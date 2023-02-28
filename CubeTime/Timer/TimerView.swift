@@ -434,7 +434,6 @@ struct TimerView: View {
     @State private var justManuallyInput: Bool = false
     @State private var showManualInputFormattedText: Bool = false
     
-    @State var hideStatusBar = true
     @State var algTrainerSubset = 0
     
     
@@ -515,7 +514,7 @@ struct TimerView: View {
                 .ignoresSafeArea(edges: .all)
             }
             
-            if timerController.mode == .stopped {
+            if !stopwatchManager.hideUI {
                 BottomTools(timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr, presentedAvg: $presentedAvg)
                 
                 // 50 for tab + 8 for padding + 16/0 for bottom bar gap
@@ -538,11 +537,18 @@ struct TimerView: View {
                 .zIndex(3)
                 
                 
+            }
+            
+            if stopwatchManager.zenMode {
+                CloseButton(hasBackgroundShadow: true, onTapRun: {
+                    stopwatchManager.zenMode = false
+                })
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+            }
                 
-                if let scr = stopwatchManager.scrambleStr {
-                    ScrambleText(scr: scr, timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr)
-                        .frame(maxHeight: .infinity, alignment: .top)
-                }
+            if let scr = stopwatchManager.scrambleStr, timerController.mode == .stopped {
+                ScrambleText(scr: scr, timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr)
+                    .frame(maxHeight: .infinity, alignment: .top)
             }
             
             
@@ -660,11 +666,10 @@ struct TimerView: View {
         .sheet(item: $presentedAvg) { item in
             StatsDetail(solves: item, session: stopwatchManager.currentSession); #warning("TODO: use SWM env object")
         }
-        .onReceive(timerController.$mode) { newMode in
-            tabRouter.hideTabBar = newMode == .inspecting || newMode == .running
-            hideStatusBar = newMode == .inspecting || newMode == .running
+        .onReceive(stopwatchManager.$hideUI) { newValue in
+            tabRouter.hideTabBar = newValue
         }
-        .statusBar(hidden: hideStatusBar)
+        .statusBar(hidden: stopwatchManager.hideUI)
         .ignoresSafeArea(.keyboard)
     }
 }
