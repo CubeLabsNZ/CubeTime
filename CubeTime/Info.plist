@@ -2,17 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIApplicationShortcutItems</key>
-	<array>
-		<dict>
-			<key>UIApplicationShortcutItemIconFile</key>
-			<string>qa-sessions</string>
-			<key>UIApplicationShortcutItemType</key>
-			<string>com.cubetime.cubetime.allsessions</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>All sessions</string>
-		</dict>
-	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -34,5 +23,16 @@
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
 	</dict>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>qa-sessions</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>All sessions</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.cubetime.cubetime.allsessions</string>
+		</dict>
+	</array>
 </dict>
 </plist>

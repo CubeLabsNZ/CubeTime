@@ -412,7 +412,6 @@ struct TimerView: View {
     // GET USER DEFAULTS
     @AppStorage("onboarding") var showOnboarding: Bool = true
     @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
-    @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
     @AppStorage(gsKeys.showPrevTime.rawValue) private var showPrevTime: Bool = false
