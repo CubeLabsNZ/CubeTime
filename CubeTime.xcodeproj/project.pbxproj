@@ -23,13 +23,11 @@
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
 		239C7E702781511300943AF2 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239C7E6F2781511300943AF2 /* Onboarding.swift */; };
 		23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */; };
-		23AB6480293609500049993B /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 23AB647F293609500049993B /* SVGKit */; };
 		23AB648429385D310049993B /* NewSessionModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AB648329385D310049993B /* NewSessionModalView.swift */; };
 		23AB648C293867EA0049993B /* 12sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648A293867EA0049993B /* 12sec-audio.wav */; };
 		23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648B293867EA0049993B /* 8sec-audio.wav */; };
 		23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; settings = {ATTRIBUTES = (Required, ); }; };
 		23B45E7329A8560400BDF49E /* TNoodleLibNative.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		23B45E7629A8592F00BDF49E /* BTree in Frameworks */ = {isa = PBXBuildFile; productRef = 23B45E7529A8592F00BDF49E /* BTree */; };
 		23C85EAC29388C9C00C7C3EC /* StatsSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */; };
 		23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA845F2783EBA1003901FB /* ReachedTargets.swift */; };
 		23CA8A0129AAF338006676BF /* TimerOnlyTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0029AAF338006676BF /* TimerOnlyTool.swift */; };
@@ -190,8 +188,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */,
-				23B45E7629A8592F00BDF49E /* BTree in Frameworks */,
-				23AB6480293609500049993B /* SVGKit in Frameworks */,
 				23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */,
 				23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */,
 			);
@@ -460,10 +456,8 @@
 			);
 			name = CubeTime;
 			packageProductDependencies = (
-				23AB647F293609500049993B /* SVGKit */,
 				23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */,
 				AF7697DB293C1EFA00FF1C50 /* SVGView */,
-				23B45E7529A8592F00BDF49E /* BTree */,
 			);
 			productName = txmer;
 			productReference = 23DE3BD7274DDBE200254D29 /* CubeTime.app */;
@@ -538,10 +532,8 @@
 			);
 			mainGroup = 23DE3BCE274DDBE200254D29;
 			packageReferences = (
-				23AB647E293609500049993B /* XCRemoteSwiftPackageReference "SVGKit" */,
 				23A1CDBB29399FE000F0895D /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */,
 				AF7697DA293C1EFA00FF1C50 /* XCRemoteSwiftPackageReference "SVGView" */,
-				23B45E7429A8592F00BDF49E /* XCRemoteSwiftPackageReference "BTree" */,
 			);
 			productRefGroup = 23DE3BD8274DDBE200254D29 /* Products */;
 			projectDirPath = "";
@@ -1035,22 +1027,6 @@
 				minimumVersion = 0.0.4;
 			};
 		};
-		23AB647E293609500049993B /* XCRemoteSwiftPackageReference "SVGKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SVGKit/SVGKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
-			};
-		};
-		23B45E7429A8592F00BDF49E /* XCRemoteSwiftPackageReference "BTree" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/attaswift/BTree";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		AF7697DA293C1EFA00FF1C50 /* XCRemoteSwiftPackageReference "SVGView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/exyte/SVGView";
@@ -1066,16 +1042,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 23A1CDBB29399FE000F0895D /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */;
 			productName = SwiftfulLoadingIndicators;
-		};
-		23AB647F293609500049993B /* SVGKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 23AB647E293609500049993B /* XCRemoteSwiftPackageReference "SVGKit" */;
-			productName = SVGKit;
-		};
-		23B45E7529A8592F00BDF49E /* BTree */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 23B45E7429A8592F00BDF49E /* XCRemoteSwiftPackageReference "BTree" */;
-			productName = BTree;
 		};
 		AF7697DB293C1EFA00FF1C50 /* SVGView */ = {
 			isa = XCSwiftPackageProductDependency;
