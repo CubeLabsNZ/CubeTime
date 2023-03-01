@@ -19,6 +19,15 @@
       }
     },
     {
+      "identity" : "flcharts",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/qwite/FLCharts/",
+      "state" : {
+        "branch" : "defaultLocalization-fix",
+        "revision" : "82a0a5544477e644240a3261aefc086747a70226"
+      }
+    },
+    {
       "identity" : "svgkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SVGKit/SVGKit",

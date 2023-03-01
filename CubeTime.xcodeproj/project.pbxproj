@@ -14,6 +14,8 @@
 		2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2319F8B8276872F200644EB3 /* TimeTrend.swift */; };
 		2326436028C4927600F6322E /* TimerHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435F28C4927600F6322E /* TimerHeader.swift */; };
 		2326436228C4929700F6322E /* PrevSolvesDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326436128C4929700F6322E /* PrevSolvesDisplay.swift */; };
+		232CCCA229AF08A900A5F3DF /* FLCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 232CCCA129AF08A900A5F3DF /* FLCharts */; };
+		232CCCA429AF094400A5F3DF /* TimeTrendDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232CCCA329AF094400A5F3DF /* TimeTrendDetail.swift */; };
 		2337E6882767619D00438F43 /* StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2337E6872767619D00438F43 /* StatsDetail.swift */; };
 		233FE7B6274F109600C6F1DF /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Helper.swift */; };
 		2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2359689227A367A0003ED9E1 /* StopwatchManager.swift */; };
@@ -116,6 +118,7 @@
 		2319F8B8276872F200644EB3 /* TimeTrend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrend.swift; sourceTree = "<group>"; };
 		2326435F28C4927600F6322E /* TimerHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerHeader.swift; sourceTree = "<group>"; };
 		2326436128C4929700F6322E /* PrevSolvesDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrevSolvesDisplay.swift; sourceTree = "<group>"; };
+		232CCCA329AF094400A5F3DF /* TimeTrendDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrendDetail.swift; sourceTree = "<group>"; };
 		2337E6872767619D00438F43 /* StatsDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsDetail.swift; sourceTree = "<group>"; };
 		233FE7B5274F109600C6F1DF /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		2354882227642E2800FE8D7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -188,6 +191,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */,
+				232CCCA229AF08A900A5F3DF /* FLCharts in Frameworks */,
 				23B45E7629A8592F00BDF49E /* BTree in Frameworks */,
 				23AB6480293609500049993B /* SVGKit in Frameworks */,
 				23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */,
@@ -219,6 +223,15 @@
 				23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		232CCCA529AF097300A5F3DF /* TimeTrend */ = {
+			isa = PBXGroup;
+			children = (
+				2319F8B8276872F200644EB3 /* TimeTrend.swift */,
+				232CCCA329AF094400A5F3DF /* TimeTrendDetail.swift */,
+			);
+			path = TimeTrend;
 			sourceTree = "<group>";
 		};
 		23A73F5C276B0AA100153748 /* Timer */ = {
@@ -413,7 +426,7 @@
 				7D7A9EBF274F38CD00C2E125 /* StatsView.swift */,
 				23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */,
 				2337E6872767619D00438F43 /* StatsDetail.swift */,
-				2319F8B8276872F200644EB3 /* TimeTrend.swift */,
+				232CCCA529AF097300A5F3DF /* TimeTrend */,
 				23E647C52775B2AC00561780 /* TimeDistribution.swift */,
 				23CA845F2783EBA1003901FB /* ReachedTargets.swift */,
 				2397131E2791032300268DFA /* AveragePhases.swift */,
@@ -461,6 +474,7 @@
 				23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */,
 				AF7697DB293C1EFA00FF1C50 /* SVGView */,
 				23B45E7529A8592F00BDF49E /* BTree */,
+				232CCCA129AF08A900A5F3DF /* FLCharts */,
 			);
 			productName = txmer;
 			productReference = 23DE3BD7274DDBE200254D29 /* CubeTime.app */;
@@ -539,6 +553,7 @@
 				23A1CDBB29399FE000F0895D /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */,
 				AF7697DA293C1EFA00FF1C50 /* XCRemoteSwiftPackageReference "SVGView" */,
 				23B45E7429A8592F00BDF49E /* XCRemoteSwiftPackageReference "BTree" */,
+				232CCCA029AF08A900A5F3DF /* XCRemoteSwiftPackageReference "FLCharts" */,
 			);
 			productRefGroup = 23DE3BD8274DDBE200254D29 /* Products */;
 			projectDirPath = "";
@@ -632,6 +647,7 @@
 				23F4113829ADDA77002C4E23 /* ToolsViewModel.swift in Sources */,
 				23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */,
 				23034725278BD22600553A7D /* TimeDetail.swift in Sources */,
+				232CCCA429AF094400A5F3DF /* TimeTrendDetail.swift in Sources */,
 				2326436228C4929700F6322E /* PrevSolvesDisplay.swift in Sources */,
 				239C7E702781511300943AF2 /* Onboarding.swift in Sources */,
 				23AB648429385D310049993B /* NewSessionModalView.swift in Sources */,
@@ -1023,6 +1039,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		232CCCA029AF08A900A5F3DF /* XCRemoteSwiftPackageReference "FLCharts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/qwite/FLCharts/";
+			requirement = {
+				branch = "defaultLocalization-fix";
+				kind = branch;
+			};
+		};
 		23A1CDBB29399FE000F0895D /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftfulThinking/SwiftfulLoadingIndicators";
@@ -1058,6 +1082,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		232CCCA129AF08A900A5F3DF /* FLCharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 232CCCA029AF08A900A5F3DF /* XCRemoteSwiftPackageReference "FLCharts" */;
+			productName = FLCharts;
+		};
 		23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 23A1CDBB29399FE000F0895D /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */;

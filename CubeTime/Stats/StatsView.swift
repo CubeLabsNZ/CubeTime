@@ -26,6 +26,8 @@ struct StatsView: View {
     @State var showBestSinglePopup = false
     
     
+    @State var showTimeTrendModal: Bool = false
+    
     var body: some View {
         NavigationView {
             GeometryReader { geo in
@@ -273,6 +275,9 @@ struct StatsView: View {
                                         .offset(y: -4)
                                         .drawingGroup()
                                 }
+                                .onTapGesture {
+                                    self.showTimeTrendModal = true
+                                }
                                  
                                 
 //                                StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? 150 : 310), true, false) {
@@ -295,6 +300,9 @@ struct StatsView: View {
         }
         .sheet(isPresented: $showBestSinglePopup) {
             TimeDetailView(for: stopwatchManager.bestSingle!, currentSolve: nil)
+        }
+        .sheet(isPresented: self.$showTimeTrendModal) {
+            TimeTrendModal()
         }
     }
 }
