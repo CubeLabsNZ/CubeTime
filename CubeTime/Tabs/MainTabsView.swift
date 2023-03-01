@@ -50,8 +50,7 @@ struct MainTabsView: View {
                 case .solves:
                     TimeListView()
                 case .stats:
-                    TimeTrendModal()
-//                    StatsView()
+                    StatsView()
                 case .sessions:
                     SessionsView()
                 case .settings:
