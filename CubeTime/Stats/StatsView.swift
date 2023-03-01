@@ -259,15 +259,16 @@ struct StatsView: View {
                                 
                                 let timeTrendData = (compsim
                                                      ? allCompsimAveragesByDate.map { $0.average! }
-                                                     : stopwatchManager.solvesNoDNFsbyDate.map { timeWithPlusTwoForSolve($0) })
+                                                     : stopwatchManager.solvesNoDNFsbyDate.map { $0.timeIncPen })
                                 
-                                let timeDistributionData = (compsim
-                                                            ? allCompsimAveragesByDate.map{ $0.average! }.sorted(by: <)
-                                                            : stopwatchManager.solvesNoDNFs.map { timeWithPlusTwoForSolve($0) })
+//                                let timeDistributionData = (compsim
+//                                                            ? allCompsimAveragesByDate.map{ $0.average! }.sorted(by: <)
+//                                                            : stopwatchManager.solvesNoDNFs.map { $0.timeIncPen })
                                 
+                                
+                                #warning("TODO: add settings customisation to choose how many solves to show")
                                 StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 310), true, false) {
-                                    TimeTrend(data: timeTrendData, title: nil)
-//                                        .frame(width: geo.size.width)
+                                    TimeTrend(data: Array(timeTrendData.prefix(80)), title: nil)
                                         .padding(.horizontal, 12)
                                         .offset(y: -4)
                                         .drawingGroup()
