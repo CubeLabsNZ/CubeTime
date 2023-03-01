@@ -73,7 +73,7 @@ class StopwatchManager: ObservableObject {
             self.targetStr = filteredStrFromTime((currentSession as? CompSimSession)?.target)
             self.phaseCount = Int((currentSession as? MultiphaseSession)?.phase_count ?? 0)
             
-            rescramble()
+            scrambleController?.scrambleType = currentSession.scramble_type
             tryUpdateCurrentSolveth()
             statsGetFromCache()
             currentSession.last_used = Date()
@@ -87,15 +87,6 @@ class StopwatchManager: ObservableObject {
             NSLog("END DIDSET currentsession, now \(currentSession)")
         }
     }
-    
-    @Published var scrambleStr: String? = nil {
-        didSet {
-            timerController.disabled = scrambleStr == nil
-        }
-    }
-    @Published var scrambleSVG: String? = nil
-    
-    
     
     @Published var showDeleteSolveConfirmation = false
     @Published var showPenOptions = false
@@ -112,14 +103,6 @@ class StopwatchManager: ObservableObject {
     var penType: PenTypes = .none
 
     
-    
-    // MARK: scrambler
-    var scrambleWorkItem: DispatchWorkItem?
-    
-    
-    // MARK: private
-    var prevScrambleStr: String! = nil
-    
     #warning("TODO: remove")
     var nilSolve: Bool = true
     
@@ -134,7 +117,7 @@ class StopwatchManager: ObservableObject {
                 NSLog("playgroundScrambleType didset to \(playgroundScrambleType)")
                 currentSession.scramble_type = playgroundScrambleType
                 try! managedObjectContext.save()
-                rescramble()
+                scrambleController?.scrambleType = playgroundScrambleType
             }
         }
     }
@@ -303,6 +286,7 @@ class StopwatchManager: ObservableObject {
         assert(currentSession != nil)
     }
     
+    var scrambleController: ScrambleController! = nil
     var timerController: TimerContoller! = nil; #warning("figure out way to not make it ! optional")
     
     init (currentSession: Sessions?, managedObjectContext: NSManagedObjectContext) {
@@ -365,7 +349,7 @@ class StopwatchManager: ObservableObject {
                 // .puzzle_id
                 self.solveItem.session = self.currentSession
                 // Use the current scramble if stopped from manual input
-                self.solveItem.scramble = time == nil ? self.prevScrambleStr : self.scrambleStr
+                self.solveItem.scramble = time == nil ? self.scrambleController.prevScrambleStr : self.scrambleController.scrambleStr
                 self.solveItem.scramble_type = self.currentSession.scramble_type
                 self.solveItem.scramble_subtype = 0
                 self.solveItem.time = secondsElapsed
@@ -373,7 +357,7 @@ class StopwatchManager: ObservableObject {
                 
                 // Rescramble if from manual input
                 if time != nil {
-                    self.rescramble()
+                    self.scrambleController.rescramble()
                 }
                 
                 self.updateStats()
@@ -386,7 +370,7 @@ class StopwatchManager: ObservableObject {
                 }
             },
             preTimerStart: {
-                self.rescramble()
+                self.scrambleController.rescramble()
             },
             onGesture: { [self] direction in
                 switch direction {
@@ -398,11 +382,8 @@ class StopwatchManager: ObservableObject {
                     askToDelete()
                 case .right:
                     timerController.feedbackStyle?.impactOccurred()
-//                    timerController.timerColour = Color.Timer.normal
-//                    timerController.prevDownStoppedTimer = false
-                    rescramble()
+                    scrambleController.rescramble()
                 default: break
-//                    timerController.timerColour = Color.Timer.normal
                 }
             }
         )
@@ -413,8 +394,12 @@ class StopwatchManager: ObservableObject {
             loadSessionsHistory()
         }
         
+        self.scrambleController = ScrambleController(scrambleType: self.currentSession!.scramble_type, onSetScrambleStr: { newScr in
+            self.timerController.disabled = newScr == nil
+        })
+        
         statsGetFromCache()
-        self.rescramble()
+        scrambleController.rescramble()
         
         updateFont()
         

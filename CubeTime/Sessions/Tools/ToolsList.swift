@@ -72,7 +72,7 @@ struct ToolsList: View {
                                 TimerOnlyTool()
                                 
                             case "Scramble Only":
-                                EmptyView()
+                                ScrambleOnlyTool()
                                 
                             case "Scramble Generator":
                                 ScrambleGeneratorTool()

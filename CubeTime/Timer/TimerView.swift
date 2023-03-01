@@ -140,6 +140,7 @@ struct BottomToolBG: View {
 struct BottomTool: View {
     @Environment(\.colorScheme) private var colourScheme
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var scrambleController: ScrambleController
     @Binding var scrambleSheetStr: SheetStrWrapper?
     @Binding var presentedAvg: CalculatedAverage?
     
@@ -166,8 +167,8 @@ struct BottomTool: View {
             
             switch toolType {
             case .drawScramble:
-                if let svg = stopwatchManager.scrambleSVG {
-                    if let scr = stopwatchManager.scrambleStr {
+                if let svg = scrambleController.scrambleSVG {
+                    if let scr = scrambleController.scrambleStr {
                         SVGView(string: svg)
                             .padding(2)
                             .frame(width: maxWidth, height: maxHeight)
@@ -403,6 +404,7 @@ struct ScrambleText: View {
 struct TimerView: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var timerController: TimerContoller
+    @EnvironmentObject var scrambleController: ScrambleController
     @EnvironmentObject var tabRouter: TabRouter
     
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -529,21 +531,21 @@ struct TimerView: View {
                     LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
                         .frame(maxHeight: 35)
                         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
-                        .opacity(stopwatchManager.scrambleStr == nil ? 1 : 0)
+                        .opacity(scrambleController.scrambleStr == nil ? 1 : 0)
                 }
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 
                 
                 
-                if let scr = stopwatchManager.scrambleStr {
+                if let scr = scrambleController.scrambleStr {
                     ScrambleText(scr: scr, timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr)
                         .frame(maxHeight: .infinity, alignment: .top)
                 }
             }
             
             
-            if stopwatchManager.scrambleStr != nil && (typingMode || stopwatchManager.showPenOptions) {
+            if scrambleController.scrambleStr != nil && (typingMode || stopwatchManager.showPenOptions) {
                 HStack {
                     let showPlus = stopwatchManager.currentSession.session_type != SessionTypes.multiphase.rawValue && !justManuallyInput && (inputMode != .typing || manualInputTime != "")
                     
@@ -628,7 +630,7 @@ struct TimerView: View {
                         }
                     }
                 }
-                .disabled(stopwatchManager.scrambleStr == nil)
+                .disabled(scrambleController.scrambleStr == nil)
                 .ignoresSafeArea(edges: .all)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .offset(y: 45)
@@ -652,7 +654,7 @@ struct TimerView: View {
             }
         }
         .sheet(item: $scrambleSheetStr) { str in
-            TimeScrambleDetail(str.str, stopwatchManager.scrambleSVG)
+            TimeScrambleDetail(str.str, scrambleController.scrambleSVG)
         }
         .sheet(item: $presentedAvg) { item in
             StatsDetail(solves: item, session: stopwatchManager.currentSession); #warning("TODO: use SWM env object")

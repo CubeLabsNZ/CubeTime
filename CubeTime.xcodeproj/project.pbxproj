@@ -37,7 +37,7 @@
 		23CA8A0629AAF947006676BF /* StopwatchManager+FeedbackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0529AAF947006676BF /* StopwatchManager+FeedbackController.swift */; };
 		23CA8A0829AAF96C006676BF /* StopwatchManager+Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0729AAF96C006676BF /* StopwatchManager+Stats.swift */; };
 		23CA8A0A29AAFA75006676BF /* StopwatchManager+PenaltyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0929AAFA75006676BF /* StopwatchManager+PenaltyController.swift */; };
-		23CA8A0C29AAFABD006676BF /* StopwatchManager+ScrambleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0B29AAFABD006676BF /* StopwatchManager+ScrambleController.swift */; };
+		23CA8A0C29AAFABD006676BF /* ScrambleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0B29AAFABD006676BF /* ScrambleController.swift */; };
 		23CB6D0E29AC3DFB00C60EF8 /* TimeDetailNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CB6D0D29AC3DFB00C60EF8 /* TimeDetailNew.swift */; };
 		23CE093427A76D610013E227 /* SessionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CE093327A76D610013E227 /* SessionCard.swift */; };
 		23D01FE327A4AA5D0019FCE5 /* Splash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */; };
@@ -77,6 +77,7 @@
 		AF8874C129AAC8C0001E49D0 /* ToolsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C029AAC8C0001E49D0 /* ToolsList.swift */; };
 		AF8874C329AB0BE7001E49D0 /* TimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C229AB0BE7001E49D0 /* TimerController.swift */; };
 		AF8874C529AB3736001E49D0 /* ScrambleGeneratorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */; };
+		AF8A157429AF15B500F6818E /* ScrambleOnlyTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,7 +139,7 @@
 		23CA8A0529AAF947006676BF /* StopwatchManager+FeedbackController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StopwatchManager+FeedbackController.swift"; sourceTree = "<group>"; };
 		23CA8A0729AAF96C006676BF /* StopwatchManager+Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StopwatchManager+Stats.swift"; sourceTree = "<group>"; };
 		23CA8A0929AAFA75006676BF /* StopwatchManager+PenaltyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StopwatchManager+PenaltyController.swift"; sourceTree = "<group>"; };
-		23CA8A0B29AAFABD006676BF /* StopwatchManager+ScrambleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StopwatchManager+ScrambleController.swift"; sourceTree = "<group>"; };
+		23CA8A0B29AAFABD006676BF /* ScrambleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleController.swift; sourceTree = "<group>"; };
 		23CB6D0D29AC3DFB00C60EF8 /* TimeDetailNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDetailNew.swift; sourceTree = "<group>"; };
 		23CE093327A76D610013E227 /* SessionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCard.swift; sourceTree = "<group>"; };
 		23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Splash.storyboard; sourceTree = "<group>"; };
@@ -180,6 +181,7 @@
 		AF8874C029AAC8C0001E49D0 /* ToolsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsList.swift; sourceTree = "<group>"; };
 		AF8874C229AB0BE7001E49D0 /* TimerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerController.swift; sourceTree = "<group>"; };
 		AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleGeneratorTool.swift; sourceTree = "<group>"; };
+		AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleOnlyTool.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -303,7 +305,7 @@
 				23CA8A0729AAF96C006676BF /* StopwatchManager+Stats.swift */,
 				23CA8A0329AAF8BA006676BF /* StopwatchManager+RCMFont.swift */,
 				23CA8A0529AAF947006676BF /* StopwatchManager+FeedbackController.swift */,
-				23CA8A0B29AAFABD006676BF /* StopwatchManager+ScrambleController.swift */,
+				23CA8A0B29AAFABD006676BF /* ScrambleController.swift */,
 				AF8874C229AB0BE7001E49D0 /* TimerController.swift */,
 			);
 			path = StopwatchManager;
@@ -435,6 +437,7 @@
 				AF8874C029AAC8C0001E49D0 /* ToolsList.swift */,
 				23CA8A0029AAF338006676BF /* TimerOnlyTool.swift */,
 				AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */,
+				AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -603,6 +606,7 @@
 				23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */,
 				23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */,
 				AF8874C129AAC8C0001E49D0 /* ToolsList.swift in Sources */,
+				AF8A157429AF15B500F6818E /* ScrambleOnlyTool.swift in Sources */,
 				2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */,
 				23E81E6C275D8DAE00B741E3 /* GeneralSettings.swift in Sources */,
 				7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */,
@@ -626,7 +630,7 @@
 				2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */,
 				7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */,
 				233FE7B6274F109600C6F1DF /* Helper.swift in Sources */,
-				23CA8A0C29AAFABD006676BF /* StopwatchManager+ScrambleController.swift in Sources */,
+				23CA8A0C29AAFABD006676BF /* ScrambleController.swift in Sources */,
 				7D7A9EC6274F396E00C2E125 /* SettingsView.swift in Sources */,
 				2326436028C4927600F6322E /* TimerHeader.swift in Sources */,
 				23F4113829ADDA77002C4E23 /* ToolsViewModel.swift in Sources */,

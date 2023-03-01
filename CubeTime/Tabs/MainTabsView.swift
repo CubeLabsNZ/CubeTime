@@ -47,6 +47,7 @@ struct MainTabsView: View {
                     TimerView()
                         .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
                         .environmentObject(stopwatchManager.timerController)
+                        .environmentObject(stopwatchManager.scrambleController)
                 case .solves:
                     TimeListView()
                 case .stats:

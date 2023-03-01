@@ -1,7 +1,30 @@
 import Foundation
 import SwiftUI
 
-extension StopwatchManager {
+class ScrambleController: ObservableObject {
+    @Published var scrambleType: Int32 {
+        didSet {
+            rescramble()
+        }
+    }
+    
+    var scrambleWorkItem: DispatchWorkItem?
+    var prevScrambleStr: String! = nil
+    
+    let onSetScrambleStr: ((_ newScr: String?) -> ())?
+    
+    @Published var scrambleSVG: String? = nil
+    @Published var scrambleStr: String? = nil {
+        didSet {
+            onSetScrambleStr?(scrambleStr)
+        }
+    }
+    
+    init(scrambleType: Int32 = 1, onSetScrambleStr: ((_ newScr: String?) -> ())? = nil) {
+        self.scrambleType = scrambleType
+        self.onSetScrambleStr = onSetScrambleStr
+    }
+    
     func safeGetScramble() -> String {
         var isolate: OpaquePointer? = nil
         var thread: OpaquePointer? = nil
@@ -9,7 +32,7 @@ extension StopwatchManager {
         
         graal_create_isolate(nil, &isolate, &thread)
                 
-        let s = String(cString: tnoodle_lib_scramble(thread, currentSession.scramble_type))
+        let s = String(cString: tnoodle_lib_scramble(thread, scrambleType))
         
         graal_tear_down_isolate(thread);
             
@@ -31,11 +54,11 @@ extension StopwatchManager {
             #endif
             
             
-            let scrTypeAtWorkStart = self.currentSession.scramble_type
+            let scrTypeAtWorkStart = self.scrambleType
             let scramble = self.safeGetScramble()
 
             #warning("TODO switch to mutex or something")
-            if scrTypeAtWorkStart == self.currentSession.scramble_type {
+            if scrTypeAtWorkStart == self.scrambleType {
                 DispatchQueue.main.async {
                     self.scrambleStr = scramble
                 }

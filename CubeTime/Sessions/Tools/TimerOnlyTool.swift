@@ -13,14 +13,11 @@ struct TimerOnlyTool: View {
     var body: some View {
         ZStack {
             TimerBackgroundColor()
-                .environmentObject(timerController)
                 .ignoresSafeArea(.all)
             
             TimerTouchView()
-                .environmentObject(timerController)
             
             TimerTime()
-                .environmentObject(timerController)
                 .allowsHitTesting(false)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .ignoresSafeArea(edges: .all)
@@ -31,6 +28,7 @@ struct TimerOnlyTool: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
         }
+        .environmentObject(timerController)
         .statusBar(hidden: (timerController.mode != .stopped))
         .ignoresSafeArea(.keyboard)
     }
