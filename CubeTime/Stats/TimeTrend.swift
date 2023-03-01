@@ -262,15 +262,8 @@ extension CGPoint {
         return value
     }
     
-    static func getMidPoint(point1: CGPoint, point2: CGPoint) -> CGPoint {
-        return CGPoint(
-            x: point1.x + (point2.x - point1.x) / 2,
-            y: point1.y + (point2.y - point1.y) / 2
-        )
-    }
-    
-    func dist(to: CGPoint) -> CGFloat {
-        return sqrt((pow(self.x - to.x, 2) + pow(self.y - to.y, 2)))
+    func dist(to point: CGPoint) -> CGFloat {
+        return sqrt((pow(self.x - point.x, 2) + pow(self.y - point.y, 2)))
     }
     
     static func midPointForPoints(p1:CGPoint, p2:CGPoint) -> CGPoint {
@@ -303,39 +296,10 @@ extension View {
 }
 
 
-class ChartData: ObservableObject, Identifiable {
-    @Published var points: [(String,Double)]
-    var valuesGiven: Bool = false
-    var ID = UUID()
-    
-    init<N: BinaryFloatingPoint>(points:[N]) {
-        self.points = points.map{("", Double($0))}
-    }
-    
-    init<N: BinaryInteger>(values:[(String,N)]){
-        self.points = values.map{($0.0, Double($0.1))}
-        self.valuesGiven = true
-    }
-    
-    init<N: BinaryFloatingPoint>(values:[(String,N)]){
-        self.points = values.map{($0.0, Double($0.1))}
-        self.valuesGiven = true
-    }
-    
-    func onlyPoints() -> [Double] {
-        return self.points.map{ $0.1 }
-    }
-}
-
-
-
-
-
-
 struct Line: View {
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @AppStorage(asKeys.graphAnimation.rawValue) private var graphAnimation: Bool = true
-    @ObservedObject var data: ChartData
+    var data: [Double]
     @Binding var frame: CGRect
     @Binding var minDataValue: Double?
     @Binding var maxDataValue: Double?
@@ -346,15 +310,15 @@ struct Line: View {
     var index: Int = 0
     let padding: CGFloat = 30
     var stepWidth: CGFloat {
-        if data.points.count < 2 {
+        if data.count < 2 {
             return 0
         }
-        return frame.size.width / CGFloat(data.points.count-1)
+        return frame.size.width / CGFloat(data.count-1)
     }
     var stepHeight: CGFloat {
         var min: Double?
         var max: Double?
-        let points = self.data.onlyPoints()
+        let points = self.data
         if minDataValue != nil && maxDataValue != nil {
             min = minDataValue!
             max = maxDataValue!
@@ -374,7 +338,7 @@ struct Line: View {
         return 0
     }
     var path: Path {
-        let points = self.data.onlyPoints()
+        let points = self.data
         return Path.quadCurvedPathWithPoints(points: points, step: CGPoint(x: stepWidth, y: stepHeight), globalOffset: minDataValue)
     }
     
@@ -394,20 +358,20 @@ struct Line: View {
 
 struct Legend: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    @ObservedObject var data: ChartData
+    var data: [Double]
     @Binding var frame: CGRect
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     var specifier: String = "%.2f"
     let padding:CGFloat = 3
     
     var stepWidth: CGFloat {
-        if data.points.count < 2 {
+        if data.count < 2 {
             return 0
         }
-        return frame.size.width / CGFloat(data.points.count-1)
+        return frame.size.width / CGFloat(data.count-1)
     }
     var stepHeight: CGFloat {
-        let points = self.data.onlyPoints()
+        let points = self.data
         if let min = points.min(), let max = points.max(), min != max {
             if (min < 0){
                 return (frame.size.height-padding) / CGFloat(max - min)
@@ -419,7 +383,7 @@ struct Legend: View {
     }
     
     var min: CGFloat {
-        let points = self.data.onlyPoints()
+        let points = self.data
         return CGFloat(points.min() ?? 0)
     }
     
@@ -479,7 +443,7 @@ struct Legend: View {
     }
     
     func getYLegend() -> [Double]? {
-        let points = self.data.onlyPoints()
+        let points = self.data
         guard let max = points.max() else { return nil }
         guard let min = points.min() else { return nil }
         let step = Double(max - min)/4
@@ -493,7 +457,7 @@ struct TimeTrend: View {
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
     
-    @ObservedObject var data: ChartData
+    var data: [Double]
     var title: String?
     var legend: String?
     
@@ -503,13 +467,13 @@ struct TimeTrend: View {
     @State private var hideHorizontalLines: Bool = false
     
     init(data: [Double], title: String? = nil, legend: String? = nil) {
-        self.data = ChartData(points: data)
+        self.data = data
         self.title = title
         self.legend = legend
     }
     
     var body: some View {
-        if data.points.map({ $0.1 }).count > 1 {
+        if data.count > 1 {
             GeometryReader { geometry in
                 VStack(alignment: .leading, spacing: 8) {
                     ZStack {
