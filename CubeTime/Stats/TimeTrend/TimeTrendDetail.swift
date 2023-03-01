@@ -31,26 +31,35 @@ class TimeTrendViewController: UIViewController {
         Key(key: "c", color: .blue),
     ]
     
+    let width: CGFloat
+    let height: CGFloat
+    
+    init(width: CGFloat, height: CGFloat) {
+        self.width = width
+        self.height = height
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("sdfsdf")
+    }
+    
     var lineChart: FLChart!
     
     var someBarButton: UIBarButtonItem?
-    var label: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        self.label = UILabel()
-//        label.backgroundColor = .green
-//        label.frame = CGRect(x: 50, y: 10, width: 200, height: 100)
-//        label.text = "test label"
-//        self.view.addSubview(label)
+        
         
         self.lineChart = FLChart(data: FLChartData(title: "TEST",
                                                    data: self.rawData,
                                                    legendKeys: self.chartKeys,
                                                    unitOfMeasure: "cm"),
                             type: .line())
-        lineChart.frame = CGRect(x: 50, y: 10, width: 200, height: 100)
+        lineChart.frame = CGRect(x: 16, y: 24, width: width - 32, height: height - 48 - 50)
 
         self.view.addSubview(lineChart)
         
@@ -67,7 +76,8 @@ struct TimeTrendModal: UIViewControllerRepresentable {
     @Environment(\.globalGeometrySize) private var globalGeometrySize
     
     func makeUIViewController(context: Context) -> some UIViewController {
-        return TimeTrendViewController()
+        return TimeTrendViewController(width: context.environment.globalGeometrySize.width,
+                                       height: context.environment.globalGeometrySize.height)
     }
     
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
