@@ -301,8 +301,8 @@ struct StatsView: View {
         .sheet(isPresented: $showBestSinglePopup) {
             TimeDetailView(for: stopwatchManager.bestSingle!, currentSolve: nil)
         }
-        .sheet(isPresented: self.$showTimeTrendModal) {
-            TimeTrendModal()
-        }
+//        .sheet(isPresented: self.$showTimeTrendModal) {
+//            TimeTrendModal()
+//        }
     }
 }
