@@ -109,16 +109,17 @@ extension Path {
         return ret
     }
     
-    static func quadCurvedPathWithPoints(points:[Double], step: CGPoint, globalOffset: Double? = nil) -> Path {
+    static func quadCurvedPathWithPoints(points: [Double], step: CGPoint) -> Path {
         var path = Path()
         if (points.count < 2){
             return path
         }
         
-        let offset = globalOffset ?? points.min()!
-        //        guard let offset = points.min() else { return path }
+        let offset = points.min()!
         var p1 = CGPoint(x: 0, y: CGFloat(points[0]-offset)*step.y)
+        
         path.move(to: p1)
+        
         for pointIndex in 1..<points.count {
             let p2 = CGPoint(x: step.x * CGFloat(pointIndex), y: step.y*CGFloat(points[pointIndex]-offset))
             let midPoint = CGPoint.midPointForPoints(p1: p1, p2: p2)
@@ -126,6 +127,7 @@ extension Path {
             path.addQuadCurve(to: p2, control: CGPoint.controlPointForPoints(p1: midPoint, p2: p2))
             p1 = p2
         }
+        
         return path
     }
 }
@@ -299,30 +301,28 @@ extension View {
 struct Line: View {
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @AppStorage(asKeys.graphAnimation.rawValue) private var graphAnimation: Bool = true
-    var data: [Double]
-    @Binding var frame: CGRect
-    @Binding var minDataValue: Double?
-    @Binding var maxDataValue: Double?
-    @State private var showFull: Bool = false
-    @State var showBackground: Bool = true
     
+    var data: [Double]
+    var frame: CGRect
+    
+    @State private var showFull: Bool = false
     
     var index: Int = 0
     let padding: CGFloat = 30
+    
     var stepWidth: CGFloat {
         if data.count < 2 {
             return 0
         }
         return frame.size.width / CGFloat(data.count-1)
     }
+    
     var stepHeight: CGFloat {
         var min: Double?
         var max: Double?
         let points = self.data
-        if minDataValue != nil && maxDataValue != nil {
-            min = minDataValue!
-            max = maxDataValue!
-        } else if let minPoint = points.min(), let maxPoint = points.max(), minPoint != maxPoint {
+        
+        if let minPoint = points.min(), let maxPoint = points.max(), minPoint != maxPoint {
             min = minPoint
             max = maxPoint
         } else {
@@ -337,9 +337,10 @@ struct Line: View {
         }
         return 0
     }
+    
     var path: Path {
         let points = self.data
-        return Path.quadCurvedPathWithPoints(points: points, step: CGPoint(x: stepWidth, y: stepHeight), globalOffset: minDataValue)
+        return Path.quadCurvedPathWithPoints(points: points, step: CGPoint(x: stepWidth, y: stepHeight))
     }
     
     var body: some View {
@@ -359,7 +360,8 @@ struct Line: View {
 struct Legend: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     var data: [Double]
-    @Binding var frame: CGRect
+    var frame: CGRect
+    
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     var specifier: String = "%.2f"
     let padding:CGFloat = 3
@@ -461,10 +463,6 @@ struct TimeTrend: View {
     var title: String?
     var legend: String?
     
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
-    @State private var opacity:Double = 0
-    @State private var currentDataNumber: Double = 0
-    @State private var hideHorizontalLines: Bool = false
     
     init(data: [Double], title: String? = nil, legend: String? = nil) {
         self.data = data
@@ -479,21 +477,23 @@ struct TimeTrend: View {
                     ZStack {
                         GeometryReader { reader in
                             withAnimation(.easeOut(duration: 1.2)) {
-                                Legend(data: self.data, frame: .constant(reader.frame(in: .local)))
+                                Legend(data: self.data, frame: reader.frame(in: .local))
                                     .transition(.opacity)
                             }
                             
                             
-                            Line(data: self.data,
-                                 frame: .constant(CGRect(x: 0, y: 0, width: reader.frame(in: .local).width - 30, height: reader.frame(in: .local).height + 25)),
-                                 minDataValue: .constant(nil),
-                                 maxDataValue: .constant(nil),
-                                 showBackground: false
-                            )
-                                .if(graphGlow) { view in
-                                    view.colouredGlow(gradientSelected: gradientSelected)
+                            Group {
+                                if (graphGlow) {
+                                    Line(data: self.data,
+                                         frame: CGRect(x: 0, y: 0, width: reader.frame(in: .local).width - 30, height: reader.frame(in: .local).height + 25))
+                                    .colouredGlow(gradientSelected: gradientSelected)
+                                } else {
+                                    Line(data: self.data,
+                                         frame: CGRect(x: 0, y: 0, width: reader.frame(in: .local).width - 30, height: reader.frame(in: .local).height + 25))
+                                    
                                 }
-                                .offset(x: 30, y: 6)
+                            }
+                            .offset(x: 30, y: 6)
                         }
                         .frame(width: geometry.frame(in: .local).size.width, height: 240)
                         .offset(x: 0, y: 40 )

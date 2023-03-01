@@ -38,6 +38,7 @@ struct StatsView: View {
                             SessionHeader()
                                 .padding(.horizontal)
                                 .padding(.top, -6)
+                                #if DEBUG
                                 .onTapGesture {
                                     for _ in 0..<10000 {
                                         let solve: Solves = Solves(context: managedObjectContext)
@@ -53,6 +54,7 @@ struct StatsView: View {
                                     }
                                     print("finished")
                                 }
+                                #endif
 
                             let compsim: Bool = SessionTypes(rawValue: stopwatchManager.currentSession.session_type)! == .compsim
                             
