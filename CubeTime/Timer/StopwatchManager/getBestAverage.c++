@@ -35,8 +35,6 @@ double getBestAverageOf(const int width,
     
     
     for (int i = width - 1; i < solvesCount; i++) {
-        printf("added element: %f\n", solves[i]);
-        
         if (solves[i] != DNF)
             sum += solves[i];
         
@@ -70,9 +68,6 @@ double getBestAverageOf(const int width,
             
             bestAvg = curAvg;
         }
-        
-        printf("current avg: %f, best avg: %f, current sum: %f\n", curAvg, bestAvg, sum);
-        printf("removed element: %f\n", solves[i - width + 1]);
         
         if (solves[i - width + 1] != DNF) {
             sum -= solves[i - width + 1];
