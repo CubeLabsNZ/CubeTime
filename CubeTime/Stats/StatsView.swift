@@ -264,7 +264,7 @@ struct StatsView: View {
                                                             : stopwatchManager.solvesNoDNFs.map { timeWithPlusTwoForSolve($0) })
                                 
                                 StatsBlock("TIME TREND", (timeTrendData.count < 2 ? 150 : 310), true, false) {
-                                    TimeTrend(data: timeTrendData, title: nil, style: ChartStyle(.white, .black, Color.black.opacity(0.24)))
+                                    TimeTrend(data: timeTrendData, title: nil)
 //                                        .frame(width: geo.size.width)
                                         .padding(.horizontal, 12)
                                         .offset(y: -4)

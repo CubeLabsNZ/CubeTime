@@ -1,25 +1,6 @@
 import Foundation
 import SwiftUI
 
-extension Color {
-    init(hexString: String) {
-        let hex = hexString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int = UInt64()
-        Scanner(string: hex).scanHexInt64(&int)
-        let r, g, b: UInt64
-        switch hex.count {
-        case 3: // RGB (12-bit)
-            (r, g, b) = ((int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6: // RGB (24-bit)
-            (r, g, b) = (int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8: // ARGB (32-bit)
-            (r, g, b) = (int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            (r, g, b) = (0, 0, 0)
-        }
-        self.init(red: Double(r) / 255, green: Double(g) / 255, blue: Double(b) / 255)
-    }
-}
 extension Path {
     func trimmedPath(for percent: CGFloat) -> Path {
         // percent difference between points
@@ -128,36 +109,16 @@ extension Path {
         return ret
     }
     
-    static func quadCurvedPathWithPoints(points:[Double], step:CGPoint, globalOffset: Double? = nil) -> Path {
+    static func quadCurvedPathWithPoints(points:[Double], step: CGPoint, globalOffset: Double? = nil) -> Path {
         var path = Path()
         if (points.count < 2){
             return path
         }
-        let offset = globalOffset ?? points.min()!
-        //        guard let offset = points.min() else { return path }
-        var p1 = CGPoint(x: 0, y: CGFloat(points[0]-offset)*step.y)
-        path.move(to: p1)
-        for pointIndex in 1..<points.count {
-            let p2 = CGPoint(x: step.x * CGFloat(pointIndex), y: step.y*CGFloat(points[pointIndex]-offset))
-            let midPoint = CGPoint.midPointForPoints(p1: p1, p2: p2)
-            path.addQuadCurve(to: midPoint, control: CGPoint.controlPointForPoints(p1: midPoint, p2: p1))
-            path.addQuadCurve(to: p2, control: CGPoint.controlPointForPoints(p1: midPoint, p2: p2))
-            p1 = p2
-        }
-        return path
-    }
-    
-    static func quadClosedCurvedPathWithPoints(points:[Double], step:CGPoint, globalOffset: Double? = nil) -> Path {
-        var path = Path()
-        if (points.count < 2){
-            return path
-        }
-        let offset = globalOffset ?? points.min()!
         
+        let offset = globalOffset ?? points.min()!
         //        guard let offset = points.min() else { return path }
-        path.move(to: .zero)
         var p1 = CGPoint(x: 0, y: CGFloat(points[0]-offset)*step.y)
-        path.addLine(to: p1)
+        path.move(to: p1)
         for pointIndex in 1..<points.count {
             let p2 = CGPoint(x: step.x * CGFloat(pointIndex), y: step.y*CGFloat(points[pointIndex]-offset))
             let midPoint = CGPoint.midPointForPoints(p1: p1, p2: p2)
@@ -165,44 +126,10 @@ extension Path {
             path.addQuadCurve(to: p2, control: CGPoint.controlPointForPoints(p1: midPoint, p2: p2))
             p1 = p2
         }
-        path.addLine(to: CGPoint(x: p1.x, y: 0))
-        path.closeSubpath()
         return path
     }
-    
-    static func linePathWithPoints(points:[Double], step:CGPoint) -> Path {
-        var path = Path()
-        if (points.count < 2){
-            return path
-        }
-        guard let offset = points.min() else { return path }
-        let p1 = CGPoint(x: 0, y: CGFloat(points[0]-offset)*step.y)
-        path.move(to: p1)
-        for pointIndex in 1..<points.count {
-            let p2 = CGPoint(x: step.x * CGFloat(pointIndex), y: step.y*CGFloat(points[pointIndex]-offset))
-            path.addLine(to: p2)
-        }
-        return path
-    }
-    
-    static func closedLinePathWithPoints(points:[Double], step:CGPoint) -> Path {
-        var path = Path()
-        if (points.count < 2){
-            return path
-        }
-        guard let offset = points.min() else { return path }
-        var p1 = CGPoint(x: 0, y: CGFloat(points[0]-offset)*step.y)
-        path.move(to: p1)
-        for pointIndex in 1..<points.count {
-            p1 = CGPoint(x: step.x * CGFloat(pointIndex), y: step.y*CGFloat(points[pointIndex]-offset))
-            path.addLine(to: p1)
-        }
-        path.addLine(to: CGPoint(x: p1.x, y: 0))
-        path.closeSubpath()
-        return path
-    }
-    
 }
+
 extension CGPoint {
     func point(to: CGPoint, x: CGFloat) -> CGPoint {
         let a = (to.y - self.y) / (to.x - self.x)
@@ -362,6 +289,8 @@ extension CGPoint {
         return controlPoint
     }
 }
+
+
 extension View {
     func colouredGlow(gradientSelected: Int) -> some View {
         ForEach(0..<2) { i in
@@ -370,19 +299,6 @@ extension View {
                 .mask(self.blur(radius: 12))
                 .overlay(self.blur(radius: 5 - CGFloat(i * 5)))
         }
-    }
-}
-
-
-class ChartStyle {
-    var backgroundColor: Color
-    var textColor: Color
-    var dropShadowColor: Color
-    
-    init(_ backgroundColor: Color, _ textColor: Color, _ dropShadowColor: Color){
-        self.backgroundColor = backgroundColor
-        self.textColor = textColor
-        self.dropShadowColor = dropShadowColor
     }
 }
 
@@ -396,26 +312,13 @@ class ChartData: ObservableObject, Identifiable {
         self.points = points.map{("", Double($0))}
     }
     
-//    #warning("TODO: : what is this")
-//
-//    init<N: RawGraphData>(data:[N]) {
-//        self.points = data.compactMap{$0.graphData == nil ? nil : ("", $0.graphData!)}
-//    }
-    
     init<N: BinaryInteger>(values:[(String,N)]){
         self.points = values.map{($0.0, Double($0.1))}
         self.valuesGiven = true
     }
+    
     init<N: BinaryFloatingPoint>(values:[(String,N)]){
         self.points = values.map{($0.0, Double($0.1))}
-        self.valuesGiven = true
-    }
-    init<N: BinaryInteger>(numberValues:[(N,N)]){
-        self.points = numberValues.map{(String($0.0), Double($0.1))}
-        self.valuesGiven = true
-    }
-    init<N: BinaryFloatingPoint & LosslessStringConvertible>(numberValues:[(N,N)]){
-        self.points = numberValues.map{(String($0.0), Double($0.1))}
         self.valuesGiven = true
     }
     
@@ -440,9 +343,8 @@ struct Line: View {
     @State var showBackground: Bool = true
     
     
-    var index:Int = 0
-    let padding:CGFloat = 30
-    var curvedLines: Bool = true
+    var index: Int = 0
+    let padding: CGFloat = 30
     var stepWidth: CGFloat {
         if data.points.count < 2 {
             return 0
@@ -456,16 +358,16 @@ struct Line: View {
         if minDataValue != nil && maxDataValue != nil {
             min = minDataValue!
             max = maxDataValue!
-        }else if let minPoint = points.min(), let maxPoint = points.max(), minPoint != maxPoint {
+        } else if let minPoint = points.min(), let maxPoint = points.max(), minPoint != maxPoint {
             min = minPoint
             max = maxPoint
-        }else {
+        } else {
             return 0
         }
         if let min = min, let max = max, min != max {
-            if (min <= 0){
+            if (min <= 0) {
                 return (frame.size.height-padding) / CGFloat(max - min)
-            }else{
+            } else{
                 return (frame.size.height-padding) / CGFloat(max - min)
             }
         }
@@ -473,13 +375,8 @@ struct Line: View {
     }
     var path: Path {
         let points = self.data.onlyPoints()
-        return curvedLines ? Path.quadCurvedPathWithPoints(points: points, step: CGPoint(x: stepWidth, y: stepHeight), globalOffset: minDataValue) : Path.linePathWithPoints(points: points, step: CGPoint(x: stepWidth, y: stepHeight))
+        return Path.quadCurvedPathWithPoints(points: points, step: CGPoint(x: stepWidth, y: stepHeight), globalOffset: minDataValue)
     }
-    var closedPath: Path {
-        let points = self.data.onlyPoints()
-        return curvedLines ? Path.quadClosedCurvedPathWithPoints(points: points, step: CGPoint(x: stepWidth, y: stepHeight), globalOffset: minDataValue) : Path.closedLinePathWithPoints(points: points, step: CGPoint(x: stepWidth, y: stepHeight))
-    }
-    
     
     var body: some View {
         self.path
@@ -491,12 +388,6 @@ struct Line: View {
             .onAppear {
                 self.showFull = true
             }
-//            .onAppear {
-//                withAnimation(.easeInOut(duration: graphAnimation ? 1.2 : 0)) {
-//                    self.showFull = true
-//                }
-//            }
-//            .onDisappear { self.showFull = false }
     }
 }
 
@@ -605,18 +496,16 @@ struct TimeTrend: View {
     @ObservedObject var data: ChartData
     var title: String?
     var legend: String?
-    var style: ChartStyle
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @State private var opacity:Double = 0
     @State private var currentDataNumber: Double = 0
     @State private var hideHorizontalLines: Bool = false
     
-    init(data: [Double], title: String? = nil, legend: String? = nil, style: ChartStyle) {
+    init(data: [Double], title: String? = nil, legend: String? = nil) {
         self.data = ChartData(points: data)
         self.title = title
         self.legend = legend
-        self.style = style
     }
     
     var body: some View {
