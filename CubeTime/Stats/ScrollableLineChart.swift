@@ -35,19 +35,31 @@ func makeData(_ data: [Double], _ boundsHeight: CGFloat=UIScreen.screenHeight*0.
 }
 
 struct InnerView: View {
-    var dataPoints: [Double]
-    
+    let points: [LineChartPoint]
     let gapDelta: Int
+    
+    init(rawDataPoints: [Double], gapDelta: Int = 30) {
+        self.points = makeData(tempData)
+        self.gapDelta = gapDelta
+    }
+    
+    init(premadePoints: [LineChartPoint], gapDelta: Int = 30) {
+        self.points = premadePoints
+        self.gapDelta = gapDelta
+    }
+    
     
     var body: some View {
         ScrollView(.horizontal) {
-            Canvas(rendersAsynchronously: true) { context, size in
+            Canvas { context, size in
                 var path = Path()
-                print("make data started")
-                let points = makeData(tempData)
-                print("made data")
-                
-                print(context.clipBoundingRect.minX)
+//                print("make data started")
+//                print("made data")
+//
+//                let maxX = context.clipBoundingRect.maxX
+//                let minX = context.clipBoundingRect.minX
+//
+//                print("difference: \(maxX - minX), uiscreenwidth: \(UIScreen.screenWidth)")
 
                 for (i,p) in points.enumerated() {
                     if (path.isEmpty) {
@@ -62,7 +74,7 @@ struct InnerView: View {
                                with: .color(.green),
                                style: StrokeStyle(lineWidth: 2))
             }
-            .frame(width: CGFloat(dataPoints.count * 10))
+            .frame(width: CGFloat(points.count * 10))
         }
     }
 }
