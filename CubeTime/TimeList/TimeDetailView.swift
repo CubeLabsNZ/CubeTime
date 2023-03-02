@@ -121,7 +121,7 @@ struct TimeDetailView: View {
                                 
                                 HStack {
                                     Text(date, formatter: titleDateFormat)
-                                        .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 15, nil)))
+                                        .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 15, nil)))
                                         .foregroundColor(Color("grey"))
                                     
                                     Spacer()
@@ -184,7 +184,7 @@ struct TimeDetailView: View {
                                 Spacer()
                                 
                                 Text("CubeTime.")
-                                    .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 13, nil)))
+                                    .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 13, nil)))
                                     .foregroundColor(Color("indent1"))
                             }
                             .padding(.vertical, -4)
