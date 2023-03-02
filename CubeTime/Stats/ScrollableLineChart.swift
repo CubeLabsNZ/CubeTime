@@ -72,12 +72,6 @@ class TimeDistViewController: UIViewController {
     var imageView: UIImageView!
     
     override func viewDidLoad() {
-        let axisView = UIView()
-        axisView.backgroundColor = .red
-        self.view.addSubview(axisView)
-        let viewframe = self.view.frame
-        axisView.frame = CGRect(x: viewframe.minX, y: viewframe.minY, width: 20, height: viewframe.height)
-        
         let imageSize = CGSize(width: CGFloat(points.count * gapDelta),
                                height: view.frame.height)
         
@@ -110,7 +104,10 @@ class TimeDistViewController: UIViewController {
                 trendLine.move(to: CGPointMake(points[i].point.x + dotSize/2, points[i].point.y))
             } else {
                 trendLine.addLine(to: points[i].point)
-//                trendLine.addQuadCurve(to: points[i].point, controlPoint: (points[i-1].point + points[i]) / 2)
+//                let a = points[i-1].point
+//                let b = points[i].point
+//                let mid = CGPoint(x: (a.x + b.x) / 2, y: (a.y + b.y) / 2)
+//                trendLine.addQuadCurve(to: points[i].point, controlPoint: mid)
             }
         }
         
@@ -119,6 +116,9 @@ class TimeDistViewController: UIViewController {
         trendLine.lineJoinStyle = .round
         
         trendLine.stroke()
+        
+        trendLine.addLine(to: CGPoint(x: points.last!.point.x, y: UIScreen.screenHeight*0.618))
+        trendLine.addLine(to: CGPoint(x: 0, y: UIScreen.screenHeight*0.618))
 
         for p in points {
             let circlePoint = CGRect(x: p.point.x - dotSize/2,
@@ -129,6 +129,13 @@ class TimeDistViewController: UIViewController {
             context.setFillColor(UIColor.red.cgColor)
             context.fillEllipse(in: circlePoint)
         }
+        
+        let grad = CGGradient(colorsSpace: .none, colors: [UIColor(Color.accentColor.opacity(0.6)).cgColor, UIColor(Color.accentColor.opacity(0.2)).cgColor] as CFArray, locations: [0, 1])!
+        
+//        context.saveGState()
+        trendLine.addClip()
+        
+        context.drawLinearGradient(grad, start: CGPoint(x: 0, y: 0), end: CGPoint(x: 0, y: UIScreen.screenHeight*0.618), options: [] )
         
         
         let newImage = UIGraphicsGetImageFromCurrentImageContext()!
@@ -146,7 +153,7 @@ class TimeDistViewController: UIViewController {
 //        self.view.addSubview(scrollView)
         self.view.addSubview(scrollView)
         scrollView.addSubview(imageView)
-        scrollView.frame = CGRect(x: viewframe.minX + 20, y: viewframe.minY, width: viewframe.width, height: viewframe.height)
+        scrollView.frame = view.frame
         scrollView.contentSize = newImage.size
         
         imageView.isUserInteractionEnabled = true
