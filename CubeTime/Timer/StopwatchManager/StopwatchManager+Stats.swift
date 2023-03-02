@@ -1,6 +1,5 @@
 import Foundation
 import CoreData
-import BTree
 
 extension StopwatchManager {
     static func calculateAverage(_ solves: [Solves], _ id: String, _ compsim: Bool) -> CalculatedAverage? {

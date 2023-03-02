@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TimeDetailView: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
 
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -120,7 +121,7 @@ struct TimeDetailView: View {
                                 
                                 HStack {
                                     Text(date, formatter: titleDateFormat)
-                                        .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 15, nil)))
+                                        .font(FontManager.mono15)
                                         .foregroundColor(Color("grey"))
                                     
                                     Spacer()
@@ -138,7 +139,7 @@ struct TimeDetailView: View {
                                         Text(scramble)
                                     }
                                 }
-                                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 17, nil)))
+                                .font(FontManager.mono17)
                                 .padding(.top, 28)
                                 
                                 AsyncSVGView(puzzle: solve.scramble_type, scramble: scramble)
@@ -183,7 +184,7 @@ struct TimeDetailView: View {
                                 Spacer()
                                 
                                 Text("CubeTime.")
-                                    .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 13, nil)))
+                                    .font(FontManager.mono13)
                                     .foregroundColor(Color("indent1"))
                             }
                             .padding(.vertical, -4)

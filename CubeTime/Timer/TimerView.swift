@@ -15,6 +15,7 @@ struct SheetStrWrapper: Identifiable {
 
 struct TimerTime: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
     @EnvironmentObject var timerController: TimerContoller
     @Environment(\.colorScheme) var colourScheme
     
@@ -48,10 +49,10 @@ struct TimerTime: View {
         // to prevent text clipping and other UI problems
         .ifelse (stopwatchManager.isSmallDevice) { view in
             return view
-                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 54, nil)))
+                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 54, nil)))
         } elseDo: { view in
             return view
-                .modifier(AnimatingFontSize(font: stopwatchManager.ctFontDescBold, fontSize: timerController.mode == .running ? 70 : 56))
+                .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: timerController.mode == .running ? 70 : 56))
                 .animation(Animation.customBouncySpring, value: timerController.mode == .running)
         }
     }
@@ -373,6 +374,7 @@ let padFloatingLayout = true
 
 struct ScrambleText: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
     let scr: String
     var timerSize: CGSize
     @Binding var scrambleSheetStr: SheetStrWrapper?
@@ -382,7 +384,7 @@ struct ScrambleText: View {
         let mega: Bool = stopwatchManager.currentSession.scramble_type == 7
         
         Text(scr)
-            .font(stopwatchManager.ctFontScramble)
+            .font(fontManager.ctFontScramble)
             .fixedSize(horizontal: mega, vertical: false)
             .multilineTextAlignment(mega ? .leading : .center)
             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
@@ -404,6 +406,7 @@ struct ScrambleText: View {
 struct TimerView: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var timerController: TimerContoller
+    @EnvironmentObject var fontManager: FontManager
     @EnvironmentObject var scrambleController: ScrambleController
     @EnvironmentObject var tabRouter: TabRouter
     
@@ -506,7 +509,7 @@ struct TimerView: View {
                     TextField("0.00", text: $manualInputTime)
                         .focused($manualInputFocused)
                         .frame(maxWidth: geo.size.width-32)
-                        .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 56, nil)))
+                        .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 56, nil)))
                         .multilineTextAlignment(.center)
                         .foregroundColor(timerController.timerColour)
                         .background(Color("bg"))
@@ -676,6 +679,7 @@ struct TimeScrambleDetail: View {
     @Environment(\.dismiss) var dismiss
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
     
     var scramble: String
     var svg: String?
@@ -692,7 +696,7 @@ struct TimeScrambleDetail: View {
                 VStack {
                     ScrollView {
                         Text(scramble)
-                            .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, CGFloat(windowedScrambleSize), nil)))
+                            .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, CGFloat(windowedScrambleSize), nil)))
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
                     }

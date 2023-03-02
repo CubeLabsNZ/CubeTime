@@ -9,6 +9,7 @@ import SwiftUI
 
 struct StatsDetailView: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
 
     @Environment(\.dismiss) var dismiss
 
@@ -87,7 +88,7 @@ struct StatsDetailView: View {
                                 
                                 HStack {
                                     Text(solves.name == "Comp Sim Solve" ? "COMPSIM" : solves.name.uppercased())
-                                        .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 15, nil)))
+                                        .font(FontManager.mono15)
                                         .foregroundColor(Color("grey"))
                                     
                                     Spacer()
@@ -101,7 +102,7 @@ struct StatsDetailView: View {
                                 Spacer()
                                 
                                 Text("CubeTime.")
-                                    .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 13, nil)))
+                                    .font(FontManager.mono13)
                                     .foregroundColor(Color("indent1"))
                             }
                             .padding(.vertical, -4)
@@ -184,7 +185,7 @@ struct StatsDetailView: View {
                                             
                                             
                                             Text(solve.date ?? Date(timeIntervalSince1970: 0), formatter: detailDateFormat)
-                                                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 15, nil)))
+                                                .font(FontManager.mono15)
                                                 .foregroundColor(Color("grey"))
                                         }
                                         .padding(.top, 8)
@@ -204,7 +205,7 @@ struct StatsDetailView: View {
                                             Spacer()
                                         }
                                         .padding(.top, 4)
-                                        .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 16, nil)))
+                                        .font(FontManager.mono16)
                                         .padding(.bottom, (index != solves.accountedSolves!.indices.last!) ? 8 : 0)
                                     }
                                     .onTapGesture {
