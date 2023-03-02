@@ -4,7 +4,7 @@
 //
 //  Created by Tim Xie on 2/03/23.
 //
-
+import UIKit
 import SwiftUI
 
 private let dotDiameter: CGFloat = 6
@@ -72,19 +72,35 @@ class TimeDistViewController: UIViewController {
     var imageView: UIImageView!
     
     override func viewDidLoad() {
-        let imageSize = CGSize(width: 1200, height: view.frame.height)
+        let imageSize = CGSize(width: CGFloat(points.count * gapDelta),
+                               height: view.frame.height)
         
-        
-        
-        UIGraphicsBeginImageContext(imageSize)
+        UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
         let context = UIGraphicsGetCurrentContext()!
-        
         
         let height = getStandardisedYLocation(value: averageValue,
                                               min: limits.min,
                                               max: limits.max,
                                               boundsHeight: UIScreen.screenHeight*0.618)
         
+        
+        let trendLine: UIBezierPath = UIBezierPath()
+        
+        for i in 0 ..< points.count {
+            if (trendLine.isEmpty) {
+                trendLine.move(to: CGPointMake(points[i].point.x + dotSize/2, points[i].point.y))
+            } else {
+                trendLine.addLine(to: points[i].point)
+//                trendLine.addQuadCurve(to: points[i].point, controlPoint: (points[i-1].point + points[i]) / 2)
+            }
+        }
+        
+        trendLine.lineWidth = 3
+        trendLine.lineCapStyle = .round
+        trendLine.lineJoinStyle = .round
+        
+        trendLine.stroke()
+
         for p in points {
             let circlePoint = CGRect(x: p.point.x - dotSize/2,
                                      y: p.point.y - dotSize/2,
@@ -111,9 +127,7 @@ class TimeDistViewController: UIViewController {
 //        self.view.addSubview(scrollView)
         self.view.addSubview(scrollView)
         scrollView.addSubview(imageView)
-        
         scrollView.frame = self.view.frame
-        
         scrollView.contentSize = newImage.size
         
         imageView.isUserInteractionEnabled = true
