@@ -149,7 +149,7 @@ struct TimeDistribution: View {
                                     Text("\(data[datum].1)")
                                         .position(x: xloc, y: (220 - max_height * CGFloat(data[datum].1)) - 10)
                                         .multilineTextAlignment(.center)
-                                        .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 10, nil)))
+                                        .font(FontManager.mono10Bold)
                                 }
                                 .if(graphGlow) { view in
                                     view.colouredGlow(gradientSelected: gradientSelected)
@@ -157,7 +157,7 @@ struct TimeDistribution: View {
                             
                             Text((datum == 0 ? "<" : (datum == data.count-1 ? ">" : ""))+formatLegendTime(secs: data[datum].0, dp: 1)+(datum != 0 && datum != data.count-1 ? "+" : ""))
                                 .foregroundColor(Color(uiColor: .systemGray2))
-                                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 10, nil)))
+                                .font(FontManager.mono10)
                                 .position(x: xloc, y: 240)
                         }
                         .padding(.horizontal)
@@ -169,7 +169,7 @@ struct TimeDistribution: View {
                             .foregroundColor(Color(uiColor: .systemGray))
                         
                         Text(formatSolveTime(secs: stopwatchManager.normalMedian.0!))
-                            .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 11, nil)))
+                            .font(FontManager.mono11Bold)
                             .foregroundColor(Color(uiColor: .systemGray))
                     }
                     .position(x: medianxloc, y: -16)
@@ -179,7 +179,7 @@ struct TimeDistribution: View {
             }
         } else {
             Text("not enough solves to\ndisplay graph")
-                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 17, nil)))
+                .font(FontManager.mono17)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color(uiColor: .systemGray))
         }

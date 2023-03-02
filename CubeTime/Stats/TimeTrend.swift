@@ -398,7 +398,7 @@ struct Legend: View {
                         Text(formatLegendTime(secs: self.getYLegendSafe(height: height), dp: 1))
                             .offset(x: 2, y: self.getYposition(height: height))
                             .foregroundColor(Color("grey"))
-                            .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 10, nil)))
+                            .font(FontManager.mono10)
 
                     }
                     .offset(y: 3)
@@ -507,7 +507,7 @@ struct TimeTrend: View {
             .offset(y: 6)
         } else {
             Text("not enough solves to\ndisplay graph")
-                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 17, nil)))
+                .font(FontManager.mono17)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color(uiColor: .systemGray))
                 .offset(y: 5)

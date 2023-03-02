@@ -37,6 +37,30 @@ class FontManager: ObservableObject {
     @Published var ctFontDescBold: CTFontDescriptor!
     @Published var ctFontDesc: CTFontDescriptor!
     
+    
+    static func fontFor(size: CGFloat, variations: [Int: Int]) -> Font {
+        let desc = CTFontDescriptorCreateWithAttributes([
+            kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
+            kCTFontVariationAttribute: variations
+        ] as! CFDictionary)
+        
+        return Font(CTFontCreateWithFontDescriptor(desc, size, nil))
+    }
+    
+    static func fontFor(size: CGFloat, weight: Int) -> Font {
+        return fontFor(size: size, variations: [2003265652: weight, 1128354636: 0, 1129468758: 0])
+    }
+    
+    static let mono10 = fontFor(size: 10, weight: 600)
+    static let mono10Bold = fontFor(size: 10, weight: 800)
+    static let mono11Bold = fontFor(size: 11, weight: 800)
+    static let mono13 = fontFor(size: 13, weight: 600)
+    static let mono15 = fontFor(size: 15, weight: 600)
+    static let mono15Bold = fontFor(size: 15, weight: 800)
+    static let mono16 = fontFor(size: 16, weight: 600)
+    static let mono17 = fontFor(size: 17, weight: 600)
+    
+    
     init() {
         updateFont()
     }

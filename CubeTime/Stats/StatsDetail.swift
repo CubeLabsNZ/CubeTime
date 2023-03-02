@@ -111,7 +111,7 @@ struct StatsDetail: View {
                                                 
                                                 Spacer()
                                             }
-                                            .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 16, nil)))
+                                            .font(FontManager.mono16)
                                             .padding(.horizontal)
                                             .padding(.bottom, (index != solves.accountedSolves!.indices.last!) ? 8 : 0)
                                         }

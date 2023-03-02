@@ -151,7 +151,7 @@ struct StatsView: View {
                                                     .padding(.top, 20)
                                             } else {
                                                 Text("not enough solves to\ndisplay graph")
-                                                    .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 17, nil)))
+                                                    .font(FontManager.mono17)
                                                     .multilineTextAlignment(.center)
                                                     .foregroundColor(Color("grey"))
                                             }
@@ -240,7 +240,7 @@ struct StatsView: View {
                                                 .offset(y: offsetReachedTargets)
                                         } else {
                                             Text("not enough solves to\ndisplay graph")
-                                                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 17, nil)))
+                                                .font(FontManager.mono17)
                                                 .multilineTextAlignment(.center)
                                                 .foregroundColor(Color("grey"))
                                         }
