@@ -52,7 +52,7 @@ struct TimeDetailView: View {
         self.titleDateFormat = DateFormatter()
         titleDateFormat.locale = Locale(identifier: "en_US_POSIX")
         titleDateFormat.timeZone = TimeZone(secondsFromGMT: 0)
-        titleDateFormat.dateFormat = "h:mm a, dd/mm/yyyy"
+        titleDateFormat.dateFormat = "h:mm a, dd/MM/yyyy"
         
         
         self._sessionsCanMoveTo = sessionsCanMoveTo ?? .constant(nil)
