@@ -51,8 +51,7 @@ struct MainTabsView: View {
                 case .solves:
                     TimeListView()
                 case .stats:
-                    InnerView(rawDataPoints: tempData)
-//                    StatsView()
+                    StatsView()
                 case .sessions:
                     SessionsView()
                 case .settings:

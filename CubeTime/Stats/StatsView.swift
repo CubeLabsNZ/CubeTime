@@ -301,8 +301,11 @@ struct StatsView: View {
         .sheet(isPresented: $showBestSinglePopup) {
             TimeDetailView(for: stopwatchManager.bestSingle!, currentSolve: nil)
         }
-//        .sheet(isPresented: self.$showTimeTrendModal) {
-//            TimeTrendModal()
-//        }
+        .sheet(isPresented: self.$showTimeTrendModal) {
+            let timesOnly = stopwatchManager.solvesNoDNFsbyDate.map { $0.timeIncPen }
+            InnerView(rawDataPoints: timesOnly,
+                      limits: (timesOnly.max()!, timesOnly.min()!),
+                      averageValue: stopwatchManager.sessionMean!)
+        }
     }
 }
