@@ -65,17 +65,16 @@ struct StatsView: View {
                                 if !compsim {
                                     HStack(spacing: 10) {
                                         StatsBlock(title: "CURRENT STATS", blockHeight: blockHeightLarge) {
-                                            StatsBlockSmallText(["AO5", "AO12", "AO100"], [stopwatchManager.currentAo5, stopwatchManager.currentAo12, stopwatchManager.currentAo100], $presentedAvg)
+                                            StatsBlockSmallText(titles: ["AO5", "AO12", "AO100"], data: [stopwatchManager.currentAo5, stopwatchManager.currentAo12, stopwatchManager.currentAo100], presentedAvg: $presentedAvg, blockHeight: blockHeightLarge)
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
                                         VStack(spacing: 10) {
-                                            StatsBlock(title: "SOLVE COUNT", blockHeight: blockHeightSmall) {
+                                            StatsBlock(title: "SOLVE COUNT", blockHeight: blockHeightSmall, isTappable: false) {
                                                 StatsBlockText(displayText: "\(stopwatchManager.getNumberOfSolves())", nilCondition: true)
                                             }
-                                            .offset(y: 1)
                                             
-                                            StatsBlock(title: "SESSION MEAN", blockHeight: blockHeightSmall) {
+                                            StatsBlock(title: "SESSION MEAN", blockHeight: blockHeightSmall, isTappable: false) {
                                                 if let sessionMean = stopwatchManager.sessionMean {
                                                     StatsBlockText(displayText: formatSolveTime(secs: sessionMean), nilCondition: true)
                                                 } else {
@@ -103,7 +102,7 @@ struct StatsView: View {
                                             }
                                             
                                             StatsBlock(title: "BEST STATS", blockHeight: blockHeightMedium) {
-                                                StatsBlockSmallText(["AO12", "AO100"], [stopwatchManager.bestAo12, stopwatchManager.bestAo100], $presentedAvg)
+                                                StatsBlockSmallText(titles: ["AO12", "AO100"], data: [stopwatchManager.bestAo12, stopwatchManager.bestAo100], presentedAvg: $presentedAvg, blockHeight: blockHeightMedium)
                                             }
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)

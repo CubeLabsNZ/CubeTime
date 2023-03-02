@@ -8,16 +8,24 @@ struct StatsBlock<Content: View>: View {
     let dataView: Content
     let title: String
     let blockHeight: CGFloat?
+    
     let isBigBlock: Bool
     let isColoured: Bool
+    let isTappable: Bool
     
     
-    init(title: String, blockHeight: CGFloat?, isBigBlock: Bool=false, isColoured: Bool=false, @ViewBuilder _ dataView: () -> Content) {
+    init(title: String,
+         blockHeight: CGFloat?,
+         isBigBlock: Bool=false,
+         isColoured: Bool=false,
+         isTappable: Bool=true,
+         @ViewBuilder _ dataView: () -> Content) {
         self.title = title
         self.blockHeight = blockHeight
         
         self.isBigBlock = isBigBlock
         self.isColoured = isColoured
+        self.isTappable = isTappable
         
         self.dataView = dataView()
     }
@@ -27,9 +35,7 @@ struct StatsBlock<Content: View>: View {
             Text(title)
                 .font(.footnote.weight(.medium))
                 .foregroundColor(
-                    title == "CURRENT STATS"
-                    ? Color("dark")
-                    : isColoured
+                    isColoured
                     ? Color.white
                     : Color("grey")
                 )
@@ -43,7 +49,7 @@ struct StatsBlock<Content: View>: View {
         .background(
             (isColoured
              ? AnyView(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
-             : AnyView(title == "CURRENT STATS"
+             : AnyView(isTappable
                    ? Color("overlay0")
                    : Color("overlay1")))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -153,17 +159,21 @@ struct StatsBlockDetailText: View {
 
 struct StatsBlockSmallText: View {
     @Environment(\.colorScheme) var colourScheme
-    @ScaledMetric private var bigSpacing: CGFloat = 2
     @ScaledMetric private var spacing: CGFloat = -4
         
-    var titles: [String]
-    var data: [CalculatedAverage?]
+    let titles: [String]
+    let data: [CalculatedAverage?]
     @Binding var presentedAvg: CalculatedAverage?
+    let blockHeight: CGFloat
     
-    init(_ titles: [String], _ data: [CalculatedAverage?], _ presentedAvg: Binding<CalculatedAverage?>) {
+    init(titles: [String],
+         data: [CalculatedAverage?],
+         presentedAvg: Binding<CalculatedAverage?>,
+         blockHeight: CGFloat) {
         self.titles = titles
         self.data = data
         self._presentedAvg = presentedAvg
+        self.blockHeight = blockHeight
     }
     
     var body: some View {
@@ -195,8 +205,14 @@ struct StatsBlockSmallText: View {
                         presentedAvg = data[index]
                     }
                 }
+                
+                if (index < titles.count-1) {
+                    Spacer(minLength: 0)
+                }
             }
         }
-        .offset(y: 12)
+        .frame(height: blockHeight-28-20)
+        .padding(.top, 28)
+        .padding(.bottom, 20)
     }
 }
