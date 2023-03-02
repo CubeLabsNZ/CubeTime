@@ -72,6 +72,12 @@ class TimeDistViewController: UIViewController {
     var imageView: UIImageView!
     
     override func viewDidLoad() {
+        let axisView = UIView()
+        axisView.backgroundColor = .red
+        self.view.addSubview(axisView)
+        let viewframe = self.view.frame
+        axisView.frame = CGRect(x: viewframe.minX, y: viewframe.minY, width: 20, height: viewframe.height)
+        
         let imageSize = CGSize(width: CGFloat(points.count * gapDelta),
                                height: view.frame.height)
         
@@ -140,7 +146,7 @@ class TimeDistViewController: UIViewController {
 //        self.view.addSubview(scrollView)
         self.view.addSubview(scrollView)
         scrollView.addSubview(imageView)
-        scrollView.frame = self.view.frame
+        scrollView.frame = CGRect(x: viewframe.minX + 20, y: viewframe.minY, width: viewframe.width, height: viewframe.height)
         scrollView.contentSize = newImage.size
         
         imageView.isUserInteractionEnabled = true
