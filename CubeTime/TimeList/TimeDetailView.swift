@@ -53,7 +53,7 @@ struct TimeDetailView: View {
         self.titleDateFormat = DateFormatter()
         titleDateFormat.locale = Locale(identifier: "en_US_POSIX")
         titleDateFormat.timeZone = TimeZone(secondsFromGMT: 0)
-        titleDateFormat.dateFormat = "h:mm a, dd/mm/yyyy"
+        titleDateFormat.dateFormat = "h:mm a, dd/MM/yyyy"
         
         
         self._sessionsCanMoveTo = sessionsCanMoveTo ?? .constant(nil)
@@ -63,6 +63,7 @@ struct TimeDetailView: View {
     
     var body: some View {
         let sess_type = stopwatchManager.currentSession.session_type
+        
         NavigationView {
             ZStack {
                 Color("base")
@@ -120,7 +121,7 @@ struct TimeDetailView: View {
                                 
                                 HStack {
                                     Text(date, formatter: titleDateFormat)
-                                        .font(.system(size: 15, weight: .regular, design: .monospaced))
+                                        .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 15, nil)))
                                         .foregroundColor(Color("grey"))
                                     
                                     Spacer()
@@ -140,7 +141,6 @@ struct TimeDetailView: View {
                                 }
                                 .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 17, nil)))
                                 .padding(.top, 28)
-            //                    .font(.system(size: 17, weight: .medium, design: .monospaced))
                                 
                                 AsyncSVGView(puzzle: solve.scramble_type, scramble: scramble)
                                     .frame(maxWidth: 240)
@@ -149,10 +149,6 @@ struct TimeDetailView: View {
                                 
                                 
                                 HStack(spacing: 6) {
-                                    Text("CubeTime.")
-                                        .foregroundColor(Color("indent1"))
-                                        .font(.custom("RecursiveSansLnrSt-Regular", size: 16))
-                                    
                                     Spacer()
                                     
                                     HierarchialButton(type: solve.penalty == PenTypes.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
@@ -182,6 +178,83 @@ struct TimeDetailView: View {
                             .padding(12)
                             .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
                             .padding(.top)
+                            
+                            
+                            HStack {
+                                Spacer()
+                                
+                                Text("CubeTime.")
+                                    .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 13, nil)))
+                                    .foregroundColor(Color("indent1"))
+                            }
+                            .padding(.vertical, -4)
+
+                            
+                            
+                            
+                            // BUTTONS
+                            
+                            HStack(spacing: 8) {
+                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                                    copySolve(solve: solve)
+                                    
+                                    withAnimation(Animation.customSlowSpring.delay(0.25)) {
+                                        self.offsetValue = 0
+                                    }
+                                    
+                                    withAnimation(Animation.customFastEaseOut.delay(2.25)) {
+                                        self.offsetValue = -25
+                                    }
+                                }) {
+                                    HStack(spacing: 8) {
+                                        ZStack {
+                                            if self.offsetValue != 0 {
+                                                Image(systemName: "doc.on.doc")
+                                                    .font(.subheadline.weight(.medium))
+                                                    .foregroundColor(Color.accentColor)
+                                                   
+                                            }
+                                            
+                                            
+                                            Image(systemName: "checkmark")
+                                                .font(.subheadline.weight(.semibold))
+                                                .clipShape(Rectangle().offset(x: self.offsetValue))
+                                        }
+                                        .frame(width: 20)
+                                        
+                                        Text("Copy Solve")
+                                    }
+                                }
+                                
+                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                                    shareSolve(solve: solve)
+                                }) {
+                                    Label("Share Solve", systemImage: "square.and.arrow.up")
+                                }
+                                
+                                HierarchialButton(type: .red, size: .large, square: true, onTapRun: {
+                                    if currentSolve == nil {
+                                        dismiss()
+                                    }
+
+                                    currentSolve = nil
+
+                                    withAnimation {
+                                        stopwatchManager.delete(solve: solve)
+                                    }
+                                }) {
+                                    Image(systemName: "trash")
+                                }
+                                .frame(width: 35)
+                            }
+                            .padding(.top, 16)
+                            
+                            // END BUTTONS
+                            
+                            
+                            
+                            
+                            
                             
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("SESSION")
@@ -289,62 +362,6 @@ struct TimeDetailView: View {
                             }
                             .padding(12)
                             .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
-                            
-                            
-                            HStack(spacing: 8) {
-                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
-                                    copySolve(solve: solve)
-                                    
-                                    withAnimation(Animation.customSlowSpring.delay(0.25)) {
-                                        self.offsetValue = 0
-                                    }
-                                    
-                                    withAnimation(Animation.customFastEaseOut.delay(2.25)) {
-                                        self.offsetValue = -25
-                                    }
-                                }) {
-                                    HStack(spacing: 8) {
-                                        ZStack {
-                                            if self.offsetValue != 0 {
-                                                Image(systemName: "doc.on.doc")
-                                                    .font(.subheadline.weight(.medium))
-                                                    .foregroundColor(Color.accentColor)
-                                                   
-                                            }
-                                            
-                                            
-                                            Image(systemName: "checkmark")
-                                                .font(.subheadline.weight(.semibold))
-                                                .clipShape(Rectangle().offset(x: self.offsetValue))
-                                        }
-                                        .frame(width: 20)
-                                        
-                                        Text("Copy Solve")
-                                    }
-                                }
-                                
-                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
-                                    shareSolve(solve: solve)
-                                }) {
-                                    Label("Share Solve", systemImage: "square.and.arrow.up")
-                                }
-                                
-                                HierarchialButton(type: .red, size: .large, square: true, onTapRun: {
-                                    if currentSolve == nil {
-                                        dismiss()
-                                    }
-
-                                    currentSolve = nil
-
-                                    withAnimation {
-                                        stopwatchManager.delete(solve: solve)
-                                    }
-                                }) {
-                                    Image(systemName: "trash")
-                                }
-                                .frame(width: 35)
-                            }
-                            .padding(.top, 16)
                             
                             Spacer()
                         }

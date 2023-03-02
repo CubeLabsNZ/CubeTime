@@ -446,7 +446,7 @@ struct TimeListView: View {
         }
         
         .sheet(item: $calculatedAverage) { item in
-            StatsDetail(solves: item, session: stopwatchManager.currentSession)
+            StatsDetailView(solves: item, session: stopwatchManager.currentSession)
         }
         
         .task {

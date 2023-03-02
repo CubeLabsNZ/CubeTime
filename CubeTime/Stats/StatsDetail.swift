@@ -51,7 +51,7 @@ struct StatsDetail: View {
                     }
                     ScrollView {
                         VStack (spacing: 12) {
-                            if !isCurrentCompSimAverage {
+                            if !isCurrentCompSimAverage {   /// WHY???????
                                 HStack {
                                     Text(formatSolveTime(secs: solves.average!, penType: solves.totalPen))
                                         .font(.largeTitle.weight(.bold))
@@ -66,37 +66,6 @@ struct StatsDetail: View {
                                 .padding(.top, isCurrentCompSimAverage ? 10 : -10)
                             
                             VStack {
-                                HStack {
-                                    if SessionTypes(rawValue: session.session_type)! == .playground {
-                                        Image(systemName: "square.filled.on.square")
-                                            .symbolRenderingMode(.hierarchical)
-                                            .font(.system(size: 26, weight: .semibold))
-                                            .foregroundColor(colourScheme == .light ? .black : .white)
-                                        
-                                        Text("Playground")
-                                            .font(.body.weight(.semibold))
-                                    } else {
-                                        Image(puzzle_types[Int(session.scramble_type)].name)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 32, height: 32)
-                                            .padding(.leading, 2)
-                                            .padding(.trailing, 4)
-                                        
-                                        Text(puzzle_types[Int(session.scramble_type)].name)
-                                            .font(.body.weight(.semibold))
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    Text((["2x2", "3x3", "Square-1", "Pyraminx", "Skewb", "3x3 OH", "3x3 BLD"].contains(puzzle_types[Int(session.scramble_type)].name)) ? "RANDOM STATE" : "RANDOM MOVES")
-                                        .font(.footnote.weight(.semibold))
-                                        .offset(y: 2)
-                                                                        
-                                }
-                                .padding([.leading, .top], 12)
-                                .padding(.trailing)
-                                
                                 VStack(spacing: 0) {
                                     ForEach(Array(zip(solves.accountedSolves!.indices, solves.accountedSolves!.sorted(by: { $0.date! > $1.date! }))), id: \.0) {index, solve in
                                         VStack(spacing: 0) {
@@ -157,50 +126,6 @@ struct StatsDetail: View {
                             .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
                             .padding(.top, -10)
                             .padding(.horizontal)
-                        }
-                        .offset(y: -6)
-                        .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle(solves.name == "Comp Sim Solve" ? "Comp Sim" : solves.name)
-                        .toolbar {
-                            ToolbarItem(placement: .navigationBarLeading) {
-                                Button {
-                                    dismiss()
-                                } label: {
-                                    Text("Done")
-                                }
-                            }
-                            ToolbarItem(placement: .navigationBarTrailing) {
-                                Button {
-                                    copySolve(solves: solves)
-                                    
-                                    withAnimation(Animation.customSlowSpring.delay(0.25)) {
-                                        self.offsetValue = 0
-                                    }
-                                    
-                                    withAnimation(Animation.customFastEaseOut.delay(2.25)) {
-                                        self.offsetValue = -25
-                                    }
-                                    
-                                    
-                                    
-
-                                } label: {
-                                    ZStack {
-                                        if self.offsetValue != 0 {
-                                            Image(systemName: "doc.on.doc")
-                                                .font(.subheadline.weight(.medium))
-                                                .foregroundColor(accentColour)
-                                               
-                                        }
-                                        
-                                        
-                                        Image(systemName: "checkmark")
-                                            .font(Font.system(.footnote, design: .rounded).weight(.bold))
-                                            .clipShape(Rectangle().offset(x: self.offsetValue))
-                                    }
-                                    .frame(width: 20)
-                                }
-                            }
                         }
                     }
                 } else {

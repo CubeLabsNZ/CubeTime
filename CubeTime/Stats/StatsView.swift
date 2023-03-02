@@ -66,17 +66,16 @@ struct StatsView: View {
                                 if !compsim {
                                     HStack(spacing: 10) {
                                         StatsBlock(title: "CURRENT STATS", blockHeight: blockHeightLarge) {
-                                            StatsBlockSmallText(["AO5", "AO12", "AO100"], [stopwatchManager.currentAo5, stopwatchManager.currentAo12, stopwatchManager.currentAo100], $presentedAvg)
+                                            StatsBlockSmallText(titles: ["AO5", "AO12", "AO100"], data: [stopwatchManager.currentAo5, stopwatchManager.currentAo12, stopwatchManager.currentAo100], presentedAvg: $presentedAvg, blockHeight: blockHeightLarge)
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
                                         VStack(spacing: 10) {
-                                            StatsBlock(title: "SOLVE COUNT", blockHeight: blockHeightSmall) {
+                                            StatsBlock(title: "SOLVE COUNT", blockHeight: blockHeightSmall, isTappable: false) {
                                                 StatsBlockText(displayText: "\(stopwatchManager.getNumberOfSolves())", nilCondition: true)
                                             }
-                                            .offset(y: 1)
                                             
-                                            StatsBlock(title: "SESSION MEAN", blockHeight: blockHeightSmall) {
+                                            StatsBlock(title: "SESSION MEAN", blockHeight: blockHeightSmall, isTappable: false) {
                                                 if let sessionMean = stopwatchManager.sessionMean {
                                                     StatsBlockText(displayText: formatSolveTime(secs: sessionMean), nilCondition: true)
                                                 } else {
@@ -104,18 +103,33 @@ struct StatsView: View {
                                             }
                                             
                                             StatsBlock(title: "BEST STATS", blockHeight: blockHeightMedium) {
-                                                StatsBlockSmallText(["AO12", "AO100"], [stopwatchManager.bestAo12, stopwatchManager.bestAo100], $presentedAvg)
+                                                StatsBlockSmallText(titles: ["AO12", "AO100"], data: [stopwatchManager.bestAo12, stopwatchManager.bestAo100], presentedAvg: $presentedAvg, blockHeight: blockHeightMedium)
                                             }
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
-                                        StatsBlock(title: "BEST AO5", blockHeight: blockHeightExtraLarge) {
+                                        ZStack(alignment: .topLeading) {
                                             if let bestAo5 = stopwatchManager.bestAo5 {
-                                                StatsBlockText(displayText: formatSolveTime(secs: bestAo5.average ?? 0, penType: bestAo5.totalPen), colouredText: true, displayDetail: true, nilCondition: true)
+                                                StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
+                                                    StatsBlockDetailText(calculatedAverage: bestAo5, colouredBlock: false)
+                                                }
                                                 
-                                                StatsBlockDetailText(calculatedAverage: bestAo5, colouredBlock: false)
+                                                StatsBlock(title: "BEST AO5", blockHeight: blockHeightSmall) {
+                                                    StatsBlockText(displayText: formatSolveTime(secs: bestAo5.average ?? 0, penType: bestAo5.totalPen), colouredText: true, displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
+                                                }
+                                                
+                                                
                                             } else {
-                                                StatsBlockText(displayText: "", nilCondition: false)
+                                                StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
+                                                    HStack {
+                                                        Text("")
+                                                        Spacer()
+                                                    }
+                                                }
+                                                
+                                                StatsBlock(title: "BEST AO5", blockHeight: blockHeightSmall) {
+                                                    StatsBlockText(displayText: "", nilCondition: false)
+                                                }
                                             }
                                         }
                                         .onTapGesture {
@@ -272,8 +286,6 @@ struct StatsView: View {
                                 #warning("TODO: add settings customisation to choose how many solves to show")
                                 StatsBlock(title: "TIME TREND", blockHeight: (timeTrendData.count < 2 ? 150 : 310), isBigBlock: true) {
                                     TimeTrend(data: Array(timeTrendData.prefix(80)), title: nil)
-                                        .padding(.horizontal, 12)
-                                        .offset(y: -4)
                                         .drawingGroup()
                                 }
                                 .onTapGesture {
@@ -297,7 +309,7 @@ struct StatsView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .sheet(item: $presentedAvg) { item in
-            StatsDetail(solves: item, session: stopwatchManager.currentSession)
+            StatsDetailView(solves: item, session: stopwatchManager.currentSession)
         }
         .sheet(isPresented: $showBestSinglePopup) {
             TimeDetailView(for: stopwatchManager.bestSingle!, currentSolve: nil)

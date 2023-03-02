@@ -660,7 +660,9 @@ struct TimerView: View {
             TimeScrambleDetail(str.str, scrambleController.scrambleSVG)
         }
         .sheet(item: $presentedAvg) { item in
-            StatsDetail(solves: item, session: stopwatchManager.currentSession); #warning("TODO: use SWM env object")
+            StatsDetailView(solves: item, session: stopwatchManager.currentSession)
+
+#warning("TODO: use SWM env object")
         }
         .onReceive(timerController.$mode) { newMode in
             tabRouter.hideTabBar = newMode == .inspecting || newMode == .running
