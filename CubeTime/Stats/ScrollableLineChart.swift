@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+private let dotDiameter: CGFloat = 6
+
 struct LineChartPoint {
     var point: CGPoint
     var rawValue: Double
@@ -16,6 +18,11 @@ struct LineChartPoint {
         self.point = CGPoint()
         self.point.y = getStandardisedYLocation(value: value, min: min, max: max, boundsHeight: boundsHeight)
         self.point.x = position
+    }
+    
+    func pointIn(_ other: CGPoint) -> Bool {
+        let rect = CGRect(x: point.x - dotDiameter / 2, y: point.y - dotDiameter / 2, width: dotDiameter, height: dotDiameter)
+        return rect.contains(other)
     }
 }
 
@@ -36,6 +43,122 @@ func makeData(_ data: [Double], _ limits: (min: Double, max: Double), _ boundsHe
     return data.enumerated().map({ (i, e) in
         return LineChartPoint(value: e, position: Double(i*30), min: limits.min, max: limits.max, boundsHeight: boundsHeight)
     })
+}
+
+
+class TimeDistViewController: UIViewController {
+    let points: [LineChartPoint]
+    let gapDelta: Int
+    let averageValue: Double
+    
+    let limits: (min: Double, max: Double)
+    
+    
+    
+    private let dotSize: CGFloat = 6
+    
+    init(points: [LineChartPoint], gapDelta: Int, averageValue: Double, limits: (min: Double, max: Double)) {
+        self.points = points
+        self.gapDelta = gapDelta
+        self.averageValue = averageValue
+        self.limits = limits
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    var imageView: UIImageView!
+    
+    override func viewDidLoad() {
+        let imageSize = CGSize(width: 1200, height: view.frame.height)
+        
+        
+        
+        UIGraphicsBeginImageContext(imageSize)
+        let context = UIGraphicsGetCurrentContext()!
+        
+        
+        let height = getStandardisedYLocation(value: averageValue,
+                                              min: limits.min,
+                                              max: limits.max,
+                                              boundsHeight: UIScreen.screenHeight*0.618)
+        
+        for p in points {
+            let circlePoint = CGRect(x: p.point.x - dotSize/2,
+                                     y: p.point.y - dotSize/2,
+                                     width: dotSize,
+                                     height: dotSize)
+            
+            context.setFillColor(UIColor.red.cgColor)
+            context.fillEllipse(in: circlePoint)
+        }
+        
+        
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()!
+
+        let scrollView = UIScrollView()
+        imageView = UIImageView(image: newImage)
+//        imageView.contentMode = .scaleToFill
+//
+//        var fr = imageView.frame
+//        fr.size = newImage.size
+//        imageView.frame = fr
+        
+        
+        
+//        self.view.addSubview(scrollView)
+        self.view.addSubview(scrollView)
+        scrollView.addSubview(imageView)
+        
+        scrollView.frame = self.view.frame
+        
+        scrollView.contentSize = newImage.size
+        
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(
+            UITapGestureRecognizer(target: self, action: #selector(clicked(g: )))
+        )
+    }
+    
+    @objc func clicked(g: UITapGestureRecognizer) {
+        let p = g.location(in: imageView)
+        let pointWhere = points.first(where: {$0.pointIn(p)})
+        NSLog("\(pointWhere)")
+    }
+}
+
+
+struct DetailTimeDist: UIViewControllerRepresentable {
+    let points: [LineChartPoint]
+    let gapDelta: Int
+    let averageValue: Double
+    
+    let limits: (min: Double, max: Double)
+    
+    init(rawDataPoints: [Double], limits: (min: Double, max: Double), averageValue: Double, gapDelta: Int = 30) {
+        self.points = makeData(rawDataPoints, limits)
+        self.averageValue = averageValue
+        self.limits = limits
+        self.gapDelta = gapDelta
+    }
+    
+    init(premadePoints: [LineChartPoint], limits: (min: Double, max: Double), averageValue: Double, gapDelta: Int = 30) {
+        self.points = premadePoints
+        self.averageValue = averageValue
+        self.limits = limits
+        self.gapDelta = gapDelta
+    }
+    
+    func makeUIViewController(context: Context) -> some UIViewController {
+        let view = TimeDistViewController(points: points, gapDelta: gapDelta, averageValue: averageValue, limits: limits)
+        return view
+    }
+    
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+        
+    }
 }
 
 struct InnerView: View {
@@ -59,7 +182,6 @@ struct InnerView: View {
         self.gapDelta = gapDelta
     }
     
-    private let dotSize: CGFloat = 6
     
     
     var body: some View {
@@ -72,7 +194,7 @@ struct InnerView: View {
                                                       max: limits.max,
                                                       boundsHeight: UIScreen.screenHeight*0.618)
                 
-                averageLine.move(to: CGPoint(x: dotSize,
+                averageLine.move(to: CGPoint(x: dotDiameter,
                                              y: height))
                 averageLine.addLine(to: CGPoint(x: CGFloat(points.count * 30),
                                                 y: height))
@@ -91,16 +213,16 @@ struct InnerView: View {
                     
                     if (path.isEmpty) {
                         circlePoint = CGRect(x: p.point.x,
-                                             y: p.point.y - dotSize/2,
-                                             width: dotSize,
-                                             height: dotSize)
+                                             y: p.point.y - dotDiameter/2,
+                                             width: dotDiameter,
+                                             height: dotDiameter)
                         
-                        path.move(to: CGPointMake(p.point.x + dotSize/2, p.point.y))
+                        path.move(to: CGPointMake(p.point.x + dotDiameter/2, p.point.y))
                     } else {
-                        circlePoint = CGRect(x: p.point.x - dotSize/2,
-                                             y: p.point.y - dotSize/2,
-                                             width: dotSize,
-                                             height: dotSize)
+                        circlePoint = CGRect(x: p.point.x - dotDiameter/2,
+                                             y: p.point.y - dotDiameter/2,
+                                             width: dotDiameter,
+                                             height: dotDiameter)
                         
                         path.addLine(to: p.point)
                     }
