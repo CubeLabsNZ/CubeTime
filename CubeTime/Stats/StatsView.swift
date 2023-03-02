@@ -308,7 +308,7 @@ struct StatsView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .sheet(item: $presentedAvg) { item in
-            StatsDetail(solves: item, session: stopwatchManager.currentSession)
+            StatsDetailView(solves: item, session: stopwatchManager.currentSession)
         }
         .sheet(isPresented: $showBestSinglePopup) {
             TimeDetailView(for: stopwatchManager.bestSingle!, currentSolve: nil)
