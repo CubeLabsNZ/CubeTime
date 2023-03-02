@@ -20,6 +20,7 @@ struct CubeTime: App {
     private let moc: NSManagedObjectContext
     
     @StateObject var stopwatchManager: StopwatchManager
+    @StateObject var fontManager: FontManager = FontManager()
     @StateObject var tabRouter: TabRouter = TabRouter.shared
     
     @State var showUpdates: Bool = false
@@ -96,7 +97,6 @@ struct CubeTime: App {
         WindowGroup {
             MainView()
                 .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
-                    let _ = NSLog("SDHFLKDF")
                     Updates(showUpdates: $showUpdates)
                 }
                 .sheet(isPresented: $showOnboarding, onDismiss: {
@@ -112,6 +112,7 @@ struct CubeTime: App {
                 }
                 .environment(\.managedObjectContext, moc)
                 .environmentObject(stopwatchManager)
+                .environmentObject(fontManager)
                 .environmentObject(tabRouter)
 //                .onAppear {
 //                    self.deviceManager.deviceOrientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation

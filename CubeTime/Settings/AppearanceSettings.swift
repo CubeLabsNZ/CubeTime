@@ -43,6 +43,7 @@ struct AppearanceSettingsView: View {
     
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
     
     var body: some View {
         VStack(spacing: 16) {
@@ -328,7 +329,7 @@ struct AppearanceSettingsView: View {
                     
                     VStack {
                         Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
-                            .font(stopwatchManager.ctFontScramble)
+                            .font(fontManager.ctFontScramble)
                             .padding()
                         
                         
@@ -384,8 +385,7 @@ struct AppearanceSettingsView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 12)
                     .onChange(of: fontWeight) { newValue in
-                        stopwatchManager.fontWeight = newValue
-                        stopwatchManager.updateFont()
+                        fontManager.fontWeight = newValue
                     }
                     
                     VStack(alignment: .leading, spacing: 0) {
@@ -411,8 +411,7 @@ struct AppearanceSettingsView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 12)
                     .onChange(of: fontCasual) { newValue in
-                        stopwatchManager.fontCasual = newValue
-                        stopwatchManager.updateFont()
+                        fontManager.fontCasual = newValue
                     }
                     
                     VStack(alignment: .leading, spacing: 0) {
@@ -427,8 +426,7 @@ struct AppearanceSettingsView: View {
                         .padding(.bottom, 12)
                     }
                     .onChange(of: fontCursive) { newValue in
-                        stopwatchManager.fontCursive = newValue
-                        stopwatchManager.updateFont()
+                        fontManager.fontCursive = newValue
                     }
                 }
             }
@@ -439,8 +437,7 @@ struct AppearanceSettingsView: View {
         .padding(.horizontal)
         .preferredColorScheme(overrideSystemAppearance ? darkMode ? .dark : .light : nil)
             .onChange(of: scrambleSize) { newValue in
-                stopwatchManager.scrambleSize = newValue
-                stopwatchManager.updateFont()
+                fontManager.scrambleSize = newValue
             }
     }
 }
@@ -448,6 +445,7 @@ struct AppearanceSettingsView: View {
 
 struct TimerPreview: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.globalGeometrySize) var globalGeometrySize
@@ -463,7 +461,7 @@ struct TimerPreview: View {
             
             Text("0.000")
                 .foregroundColor(Color(uiColor: .systemGray))
-                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold,
+                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold,
                                                           smallDeviceNames.contains(getModelName()) ? 54 : 56
                                                           , nil)))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -490,7 +488,7 @@ struct TimerPreview: View {
             
             VStack {
                 Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
-                    .font(stopwatchManager.ctFontScramble)
+                    .font(fontManager.ctFontScramble)
                     .frame(maxHeight: globalGeometrySize.height/3)
                     .multilineTextAlignment(.center)
                     

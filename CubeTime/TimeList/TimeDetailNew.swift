@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TimeDetailView: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
 
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -137,7 +138,7 @@ struct TimeDetailView: View {
                                         Text(scramble)
                                     }
                                 }
-                                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 17, nil)))
+                                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 17, nil)))
                                 .padding(.top, 28)
             //                    .font(.system(size: 17, weight: .medium, design: .monospaced))
                                 

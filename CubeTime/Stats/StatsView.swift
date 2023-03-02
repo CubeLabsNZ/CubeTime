@@ -7,6 +7,7 @@ struct StatsView: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
     
     
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
@@ -136,7 +137,7 @@ struct StatsView: View {
                                                     .padding(.top, 20)
                                             } else {
                                                 Text("not enough solves to\ndisplay graph")
-                                                    .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 17, nil)))
+                                                    .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 17, nil)))
                                                     .multilineTextAlignment(.center)
                                                     .foregroundColor(Color("grey"))
                                             }
@@ -225,7 +226,7 @@ struct StatsView: View {
                                                 .offset(y: offsetReachedTargets)
                                         } else {
                                             Text("not enough solves to\ndisplay graph")
-                                                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 17, nil)))
+                                                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 17, nil)))
                                                 .multilineTextAlignment(.center)
                                                 .foregroundColor(Color("grey"))
                                         }

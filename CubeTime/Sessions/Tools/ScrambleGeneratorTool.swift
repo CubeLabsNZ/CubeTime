@@ -122,6 +122,7 @@ class ScrambleGenerator: ObservableObject {
 struct ScrambleGeneratorTool: View {
     @StateObject var scrambleGenerator = ScrambleGenerator()
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
     
     @State private var showShareSheet = false
     
@@ -224,11 +225,11 @@ struct ScrambleGeneratorTool: View {
                                     ForEach(Array(zip(scrambleGenerator.scrambles!.indices, scrambleGenerator.scrambles!)), id: \.0) { index, scramble in
                                         HStack(alignment: .top) {
                                             Text("\(index+1). ")
-                                                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 15, nil)))
+                                                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 15, nil)))
                                                 .offset(y: 1)
                                             
                                             Text(scramble)
-                                                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 17, nil)))
+                                                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 17, nil)))
                                                 .textSelection(.enabled)
                                                 .padding(.bottom, 6)
                                         }

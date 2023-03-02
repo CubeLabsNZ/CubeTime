@@ -59,10 +59,6 @@ class StopwatchManager: ObservableObject {
     
     // MARK: get user defaults
     var showPrevTime: Bool = UserDefaults.standard.bool(forKey: gsKeys.showPrevTime.rawValue)
-    var fontWeight: Double = UserDefaults.standard.double(forKey: asKeys.fontWeight.rawValue)
-    var fontCasual: Double = UserDefaults.standard.double(forKey: asKeys.fontCasual.rawValue)
-    var fontCursive: Bool = UserDefaults.standard.bool(forKey: asKeys.fontCursive.rawValue)
-    var scrambleSize: Int = UserDefaults.standard.integer(forKey: asKeys.scrambleSize.rawValue)
 
     
     
@@ -95,10 +91,6 @@ class StopwatchManager: ObservableObject {
     
     @Published var solveItem: Solves!
     
-    
-    @Published var ctFontScramble: Font!
-    @Published var ctFontDescBold: CTFontDescriptor!
-    @Published var ctFontDesc: CTFontDescriptor!
     
     var penType: PenTypes = .none
 
@@ -400,8 +392,6 @@ class StopwatchManager: ObservableObject {
         
         statsGetFromCache()
         scrambleController.rescramble()
-        
-        updateFont()
         
         tryUpdateCurrentSolveth()
         

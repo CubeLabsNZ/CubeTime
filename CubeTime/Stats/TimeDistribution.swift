@@ -79,6 +79,7 @@ struct TimeDistribution: View {
     @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
 
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
     
     var count: Int
     var data: Array<(Double, Int)>
@@ -148,7 +149,7 @@ struct TimeDistribution: View {
                                     Text("\(data[datum].1)")
                                         .position(x: xloc, y: (220 - max_height * CGFloat(data[datum].1)) - 10)
                                         .multilineTextAlignment(.center)
-                                        .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 10, nil)))
+                                        .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 10, nil)))
                                 }
                                 .if(graphGlow) { view in
                                     view.colouredGlow(gradientSelected: gradientSelected)
@@ -156,7 +157,7 @@ struct TimeDistribution: View {
                             
                             Text((datum == 0 ? "<" : (datum == data.count-1 ? ">" : ""))+formatLegendTime(secs: data[datum].0, dp: 1)+(datum != 0 && datum != data.count-1 ? "+" : ""))
                                 .foregroundColor(Color(uiColor: .systemGray2))
-                                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 10, nil)))
+                                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 10, nil)))
                                 .position(x: xloc, y: 240)
                         }
                         .padding(.horizontal)
@@ -168,7 +169,7 @@ struct TimeDistribution: View {
                             .foregroundColor(Color(uiColor: .systemGray))
                         
                         Text(formatSolveTime(secs: stopwatchManager.normalMedian.0!))
-                            .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 11, nil)))
+                            .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 11, nil)))
                             .foregroundColor(Color(uiColor: .systemGray))
                     }
                     .position(x: medianxloc, y: -16)
@@ -178,7 +179,7 @@ struct TimeDistribution: View {
             }
         } else {
             Text("not enough solves to\ndisplay graph")
-                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 17, nil)))
+                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, 17, nil)))
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color(uiColor: .systemGray))
         }
