@@ -72,6 +72,18 @@ class TimeDistViewController: UIViewController {
     var imageView: UIImageView!
     
     override func viewDidLoad() {
+        let textView = UITextView()
+        textView.text = formatSolveTime(secs: limits.min)
+        let size = textView.sizeThatFits(CGSize(width: Double.infinity, height: .infinity))
+        textView.frame = CGRect(x: self.view.frame.width - size.width, y: UIScreen.screenHeight*0.618 - size.height / 2, width: size.width, height: size.height)
+        
+        textView.backgroundColor = .white
+        textView.layer.zPosition = 2
+        
+        self.view.addSubview(textView)
+        
+        NSLog("FRAME TEXT \(textView.frame)")
+    
         let imageSize = CGSize(width: CGFloat(points.count * gapDelta),
                                height: view.frame.height)
         
