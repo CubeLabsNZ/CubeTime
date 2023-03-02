@@ -9,105 +9,60 @@ import SwiftUI
 
 let tempData = getRandomData()
 
-struct ScrollableLineChart: View {
-    var body: some View {
-        ScrollView(.horizontal) {
-            LazyHStack {
-                ForEach(tempData, id: \.self) { point in
-                    Text("\(point)")
-                }
-            }
-        }
-    }
-}
-
 struct LineChartPoint {
-    private var graphicalValue: Double
-    private var rawValue: Double
+    var graphicalValue: Double  // y-pos
+    var rawValue: Double
     
-    init(value: Double) {
-        self.graphicalValue = value
+    init(value: Double, max: Double, min: Double, boundsHeight: CGFloat) {
         self.rawValue = value
-    }
-    
-    var point: Double {
-        get {
-            return graphicalValue
-        }
-        
-        set {
-            self.rawValue = newValue
-            self.graphicalValue = rawValue * 0.8
-        }
+        self.graphicalValue = ((value - min) / (max - min)) * boundsHeight
     }
 }
 
 func getRandomData() -> [Double] {
     var temp: [Double] = []
-    for _ in 0..<50000 {
+    for _ in 0..<10000 {
         temp.append(Double.random(in: 0...2))
     }
     
     return temp
 }
 
+func makeData(_ data: [Double], _ boundsHeight: CGFloat=UIScreen.screenHeight*0.618) -> [LineChartPoint] {
+    let max: Double = data.max()!
+    let min: Double = data.min()!
+    return data.map({ LineChartPoint(value: $0, max: max, min: min, boundsHeight: boundsHeight) })
+}
+
 struct InnerView: View {
     var dataPoints: [Double]
-    var min: Double
-    var max: Double
+    
+    let gapDelta: Int
     
     var body: some View {
         ScrollView(.horizontal) {
-            LazyHStack {
-                ForEach(0..<10000) { i in
-                    Text("\(i)").padding()
-                }
-//                Canvas(rendersAsynchronously: true) { context, size in
-//                    var path = Path()
-//                    let points = self.dataPoints
-//
-//                    for (index, point) in points.enumerated() {
-//                        if (path.isEmpty) {
-//                            path.move(to: CGPointMake(CGFloat(index*10), point*100))
-//                        } else {
-//                            path.addLine(to: CGPointMake(CGFloat(index*10), point*100))
-//                        }
-//                    }
-//
-//
-//                    context.stroke(path,
-//                                   with: .color(.green),
-//                                   style: StrokeStyle(lineWidth: 2))
-//                }
-                .frame(width: CGFloat(dataPoints.count * 10))
-                .background(
-                    GeometryReader { proxy in
-                        let _ = print(proxy.size)
-                        let offset = proxy.frame(in: .named("scroll")).origin.y
-                        Color.clear.preference(key: ScrollViewOffsetKey.self, value: offset)
+            Canvas(rendersAsynchronously: true) { context, size in
+                var path = Path()
+                print("make data started")
+                let points = makeData(tempData)
+                print("made data")
+                
+                print(context.clipBoundingRect.minX)
+
+                for (i,p) in points.enumerated() {
+                    if (path.isEmpty) {
+                        path.move(to: CGPointMake(CGFloat(i*gapDelta), p.graphicalValue))
+                    } else {
+                        path.addLine(to: CGPointMake(CGFloat(i*gapDelta), p.graphicalValue))
                     }
-                )
+                }
 
+
+                context.stroke(path,
+                               with: .color(.green),
+                               style: StrokeStyle(lineWidth: 2))
             }
-            .onPreferenceChange(ScrollViewOffsetKey.self) { value in
-                print(value)
-            }
+            .frame(width: CGFloat(dataPoints.count * 10))
         }
-        .coordinateSpace(name: "scroll")
-    }
-}
-
-struct ScrollableLineChart_Previews: PreviewProvider {
-    static var previews: some View {
-        InnerView(dataPoints: tempData, min: tempData.min()!, max: tempData.max()!)
-    }
-}
-
-struct ScrollViewOffsetKey: PreferenceKey {
-    typealias Value = CGFloat
-    
-    static var defaultValue = CGFloat.zero
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value += nextValue()
     }
 }
