@@ -47,7 +47,11 @@ class TimerContoller: ObservableObject {
     
     @Published var secondsStr = formatSolveTime(secs: 0)
     @Published var inspectionSecs = 0
-    @Published var mode: stopWatchMode = .stopped
+    @Published var mode: stopWatchMode = .stopped {
+        didSet {
+            onModeChange?(mode)
+        }
+    }
     @Published var timerColour: Color = Color.Timer.normal
     
     var timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
