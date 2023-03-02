@@ -8,58 +8,47 @@ struct StatsBlock<Content: View>: View {
     let dataView: Content
     let title: String
     let blockHeight: CGFloat?
-    let bigBlock: Bool
-    let coloured: Bool
+    let isBigBlock: Bool
+    let isColoured: Bool
     
     
-    init(_ title: String, _ blockHeight: CGFloat?, _ bigBlock: Bool, _ coloured: Bool, @ViewBuilder _ dataView: () -> Content) {
-        self.dataView = dataView()
+    init(title: String, blockHeight: CGFloat?, isBigBlock: Bool=false, isColoured: Bool=false, @ViewBuilder _ dataView: () -> Content) {
         self.title = title
-        self.bigBlock = bigBlock
-        self.coloured = coloured
         self.blockHeight = blockHeight
+        
+        self.isBigBlock = isBigBlock
+        self.isColoured = isColoured
+        
+        self.dataView = dataView()
     }
     
     var body: some View {
-        VStack {
-            ZStack {
-                VStack {
-                    HStack {
-                        Text(title)
-                            .font(.footnote.weight(.medium))
-                            .foregroundColor(
-                                title == "CURRENT STATS"
-                                ? Color("dark")
-                                : coloured
-                                ? Color.white
-                                  : Color("grey")
-                            )
-                        
-                        Spacer()
-                    }
-                    Spacer()
-                }
-                .padding(.top, 9)
-                .padding(.leading, 12)
-                
-                dataView
-            }
+        ZStack(alignment: .leading) {
+            Text(title)
+                .font(.footnote.weight(.medium))
+                .foregroundColor(
+                    title == "CURRENT STATS"
+                    ? Color("dark")
+                    : isColoured
+                    ? Color.white
+                    : Color("grey")
+                )
+                .frame(height: blockHeight, alignment: .topLeading)
+                .padding(.top, 20)
+            
+            dataView
         }
         .frame(height: blockHeight)
-        .if(coloured) { view in
-            view.background(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected)                                        .clipShape(RoundedRectangle(cornerRadius: 12)))
-        }
-        .if(!coloured) { view in
-            view.background(
-                (title == "CURRENT STATS"
-                    ? Color("overlay0")
-                    : Color("overlay1"))
+        .padding(.horizontal, 12)
+        .background(
+            (isColoured
+             ? AnyView(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
+             : AnyView(title == "CURRENT STATS"
+                   ? Color("overlay0")
+                   : Color("overlay1")))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
-            )
-        }
-        .if(bigBlock) { view in
-            view.padding(.horizontal)
-        }
+        )
+        .padding(.horizontal, isBigBlock ? nil : 0)
     }
 }
 
@@ -79,7 +68,7 @@ struct StatsBlockText: View {
     @ScaledMetric private var blockHeightSmall = 75
     
     
-    init(_ displayText: String, _ colouredText: Bool, _ colouredBlock: Bool, _ displayDetail: Bool, _ nilCondition: Bool) {
+    init(displayText: String, colouredText: Bool=false, colouredBlock: Bool=false, displayDetail: Bool=false, nilCondition: Bool) {
         self.displayText = displayText
         self.colouredText = colouredText
         self.colouredBlock = colouredBlock
@@ -88,57 +77,35 @@ struct StatsBlockText: View {
     }
     
     var body: some View {
-        VStack {
-            VStack {
-                Spacer()
-                
-                HStack {
-                    if nilCondition {
+        HStack {
+            if nilCondition {
+                Group {
+                    if (colouredText) {
                         Text(displayText)
-                            .font(.largeTitle.weight(.bold))
-                            .frame(minWidth: 0, maxWidth: globalGeometrySize.width/2 - 42, alignment: .leading)
-                            .modifier(DynamicText())
-                            .padding(.bottom, 2)
-                        
-                            .if(!colouredText) { view in
-                                view.foregroundColor(
-                                    colouredBlock
-                                    ? .white
-                                    : Color("dark")
-                                )
-                            }
-                            .if(colouredText) { view in
-                                view.gradientForeground(gradientSelected: gradientSelected)
-                            }
-                        
-                            
-                        
+                            .gradientForeground(gradientSelected: gradientSelected)
                     } else {
-                        VStack {
-                            Text("-")
-                                .font(.title.weight(.medium))
-                                .foregroundColor(colouredBlock
-                                                 ? Color(0xF6F7FC) // hardcoded
-                                                 : Color("grey"))
-                                .padding(.top, 20)
-                            
-                            Spacer()
-                        }
+                        Text(displayText)
+                            .foregroundColor(
+                                colouredBlock
+                                ? .white
+                                : Color("dark")
+                            )
                     }
-                    
-                    Spacer()
                 }
-                .frame(minWidth: 0, maxWidth: .infinity)
+                .font(.largeTitle.weight(.bold))
+                .modifier(DynamicText())
+            } else {
+                Text("-")
+                    .font(.title.weight(.medium))
+                    .foregroundColor(colouredBlock
+                                     ? Color(0xF6F7FC) // hardcoded
+                                     : Color("grey"))
             }
-            .padding(.bottom, 4)
-            .padding(.leading, 12)
-            .frame(height: blockHeightSmall)
             
-            
-            if displayDetail {
-                Spacer()
-            }
+            Spacer()
         }
+        .frame(height: blockHeightSmall)
+        .padding(.top, 20)
     }
 }
 
