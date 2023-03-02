@@ -496,18 +496,20 @@ struct TimeTrend: View {
                             .offset(x: 30, y: 6)
                         }
                         .frame(width: geometry.frame(in: .local).size.width, height: 240)
-                        .offset(x: 0, y: 40 )
+                        .offset(x: 0, y: 40)
                         
                     }
                     .frame(width: geometry.frame(in: .local).size.width, height: 240)
                 }
             }
+            .offset(y: 6)
         } else {
             Text("not enough solves to\ndisplay graph")
                 .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 17, nil)))
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color(uiColor: .systemGray))
                 .offset(y: 5)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }

@@ -65,15 +65,21 @@ struct StatsBlockText: View {
     let displayDetail: Bool
     let nilCondition: Bool
     
-    @ScaledMetric private var blockHeightSmall = 75
+    @ScaledMetric private var blockHeight: CGFloat
     
     
-    init(displayText: String, colouredText: Bool=false, colouredBlock: Bool=false, displayDetail: Bool=false, nilCondition: Bool) {
+    init(displayText: String,
+         colouredText: Bool=false,
+         colouredBlock: Bool=false,
+         displayDetail: Bool=false,
+         nilCondition: Bool,
+         blockHeight: CGFloat=75) {
         self.displayText = displayText
         self.colouredText = colouredText
         self.colouredBlock = colouredBlock
         self.displayDetail = displayDetail
         self.nilCondition = nilCondition
+        self._blockHeight = ScaledMetric(wrappedValue: blockHeight)
     }
     
     var body: some View {
@@ -104,8 +110,8 @@ struct StatsBlockText: View {
             
             Spacer()
         }
-        .frame(height: blockHeightSmall)
-        .padding(.top, 20)
+        .frame(height: blockHeight-28, alignment: .center)
+        .padding(.top, 28)
     }
 }
 
@@ -115,13 +121,14 @@ struct StatsBlockDetailText: View {
     let colouredBlock: Bool
     
     var body: some View {
-        let _ = NSLog("calculated average : \(calculatedAverage.name)")
         HStack {
             VStack(alignment: .leading, spacing: 0) {
                 Spacer()
+                
                 ForEach(calculatedAverage.accountedSolves!, id: \.self) { solve in
                     let discarded = calculatedAverage.trimmedSolves!.contains(solve)
                     let time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+                    
                     Text(discarded ? "("+time+")" : time)
                         .font(.body)
                         .foregroundColor(
@@ -137,10 +144,10 @@ struct StatsBlockDetailText: View {
                         .padding(.bottom, 2)
                 }
             }
+            
             Spacer()
         }
-        .padding(.bottom, 9)
-        .padding(.leading, 12)
+        .padding(.bottom, 20)
     }
 }
 
@@ -160,7 +167,7 @@ struct StatsBlockSmallText: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: bigSpacing) {
+        VStack(alignment: .leading) {
             ForEach(Array(zip(titles.indices, titles)), id: \.0) { index, title in
                 HStack {
                     VStack(alignment: .leading, spacing: spacing) {
@@ -182,7 +189,6 @@ struct StatsBlockSmallText: View {
                     
                     Spacer()
                 }
-                .padding(.leading, 12)
                 .contentShape(Rectangle())
                 .onTapGesture {
                     if data[index] != nil {
@@ -191,6 +197,6 @@ struct StatsBlockSmallText: View {
                 }
             }
         }
-        .padding(.top, 16)
+        .offset(y: 12)
     }
 }

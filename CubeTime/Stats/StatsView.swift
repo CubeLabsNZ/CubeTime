@@ -108,13 +108,28 @@ struct StatsView: View {
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
-                                        StatsBlock(title: "BEST AO5", blockHeight: blockHeightExtraLarge) {
+                                        ZStack(alignment: .topLeading) {
                                             if let bestAo5 = stopwatchManager.bestAo5 {
-                                                StatsBlockText(displayText: formatSolveTime(secs: bestAo5.average ?? 0, penType: bestAo5.totalPen), colouredText: true, displayDetail: true, nilCondition: true)
+                                                StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
+                                                    StatsBlockDetailText(calculatedAverage: bestAo5, colouredBlock: false)
+                                                }
                                                 
-                                                StatsBlockDetailText(calculatedAverage: bestAo5, colouredBlock: false)
+                                                StatsBlock(title: "BEST AO5", blockHeight: blockHeightSmall) {
+                                                    StatsBlockText(displayText: formatSolveTime(secs: bestAo5.average ?? 0, penType: bestAo5.totalPen), colouredText: true, displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
+                                                }
+                                                
+                                                
                                             } else {
-                                                StatsBlockText(displayText: "", nilCondition: false)
+                                                StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
+                                                    HStack {
+                                                        Text("")
+                                                        Spacer()
+                                                    }
+                                                }
+                                                
+                                                StatsBlock(title: "BEST AO5", blockHeight: blockHeightSmall) {
+                                                    StatsBlockText(displayText: "", nilCondition: false)
+                                                }
                                             }
                                         }
                                         .onTapGesture {
@@ -271,8 +286,6 @@ struct StatsView: View {
                                 #warning("TODO: add settings customisation to choose how many solves to show")
                                 StatsBlock(title: "TIME TREND", blockHeight: (timeTrendData.count < 2 ? 150 : 310), isBigBlock: true) {
                                     TimeTrend(data: Array(timeTrendData.prefix(80)), title: nil)
-                                        .padding(.horizontal, 12)
-                                        .offset(y: -4)
                                         .drawingGroup()
                                 }
                                 .onTapGesture {
