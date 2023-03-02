@@ -83,6 +83,19 @@ class TimeDistViewController: UIViewController {
                                               max: limits.max,
                                               boundsHeight: UIScreen.screenHeight*0.618)
         
+        context.move(to: CGPoint(x: 0, y: UIScreen.screenHeight*0.618))
+        
+        context.setLineDash(phase: 0, lengths: [12, 6])
+        context.setStrokeColor(UIColor(Color("grey")).cgColor)
+        context.setLineWidth(2)
+        context.setLineJoin(.round)
+        context.setLineCap(.round)
+        context.addLine(to: CGPoint(x: 1200, y: UIScreen.screenHeight*0.618))
+
+        context.drawPath(using: .stroke)
+        
+        context.setLineDash(phase: 0, lengths: [])
+        context.setStrokeColor(UIColor(Color.accentColor).cgColor)
         
         let trendLine: UIBezierPath = UIBezierPath()
         
