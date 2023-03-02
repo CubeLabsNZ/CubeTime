@@ -23,6 +23,7 @@
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
 		239C7E702781511300943AF2 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239C7E6F2781511300943AF2 /* Onboarding.swift */; };
 		23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */; };
+		23AAF99629B0219200C5C1FF /* ScrollableLineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AAF99529B0219200C5C1FF /* ScrollableLineChart.swift */; };
 		23AB648429385D310049993B /* NewSessionModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AB648329385D310049993B /* NewSessionModalView.swift */; };
 		23AB648C293867EA0049993B /* 12sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648A293867EA0049993B /* 12sec-audio.wav */; };
 		23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648B293867EA0049993B /* 8sec-audio.wav */; };
@@ -125,6 +126,7 @@
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
 		2397131E2791032300268DFA /* AveragePhases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AveragePhases.swift; sourceTree = "<group>"; };
 		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
+		23AAF99529B0219200C5C1FF /* ScrollableLineChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableLineChart.swift; sourceTree = "<group>"; };
 		23AB648329385D310049993B /* NewSessionModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSessionModalView.swift; sourceTree = "<group>"; };
 		23AB648A293867EA0049993B /* 12sec-audio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "12sec-audio.wav"; sourceTree = "<group>"; };
 		23AB648B293867EA0049993B /* 8sec-audio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "8sec-audio.wav"; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 				23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */,
 				2337E6872767619D00438F43 /* StatsDetail.swift */,
 				2319F8B8276872F200644EB3 /* TimeTrend.swift */,
+				23AAF99529B0219200C5C1FF /* ScrollableLineChart.swift */,
 				23E647C52775B2AC00561780 /* TimeDistribution.swift */,
 				23CA845F2783EBA1003901FB /* ReachedTargets.swift */,
 				2397131E2791032300268DFA /* AveragePhases.swift */,
@@ -590,6 +593,7 @@
 				2397131F2791032300268DFA /* AveragePhases.swift in Sources */,
 				23CA8A0829AAF96C006676BF /* StopwatchManager+Stats.swift in Sources */,
 				23DE3BE4274DDBE300254D29 /* Persistence.swift in Sources */,
+				23AAF99629B0219200C5C1FF /* ScrollableLineChart.swift in Sources */,
 				7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */,
 				7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */,
 				23CA8A0429AAF8BA006676BF /* StopwatchManager+RCMFont.swift in Sources */,
