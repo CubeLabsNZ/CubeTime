@@ -634,7 +634,7 @@ extension StopwatchManager {
     }
     
     
-    func getTimeNeededForTarget() -> Double? {
+    func getTimeNeededForTarget() -> TimeNeededForTarget? {
         if let compsimSession = currentSession as? CompSimSession {
             let solveGroups = (compsimSession.solvegroups!.array as! [CompSimSolveGroup])
             
@@ -646,11 +646,11 @@ extension StopwatchManager {
                     let timeNeededForTarget = (compsimSession as CompSimSession).target * 3 - (sortedGroup.dropFirst().dropLast().reduce(0) {$0 + timeWithPlusTwoForSolve($1)})
                     
                     if timeNeededForTarget < sortedGroup.last!.time {
-                        return -1 // not possible
+                        return .notPossible
                     } else if timeNeededForTarget > sortedGroup.first!.time && !sortedGroup.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) {
-                        return -2 // guaranteed
+                        return .guaranteed
                     } else {
-                        return timeNeededForTarget // standard return
+                        return .value(timeNeededForTarget)
                     }
                 }
             }

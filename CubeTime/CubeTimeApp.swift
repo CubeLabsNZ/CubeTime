@@ -157,6 +157,11 @@ struct MainView: View {
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @StateObject var tabRouter: TabRouter = TabRouter.shared
     
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+    @Environment(\.scenePhase) var scenePhase
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
     @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
@@ -165,7 +170,36 @@ struct MainView: View {
     var body: some View {
         GeometryReader { geo in
             Group {
-                MainTabsView()
+                if horizontalSizeClass == .compact {
+                    ZStack {
+                        switch tabRouter.currentTab {
+                        case .timer:
+                            TimerView()
+                                .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
+                                .environmentObject(stopwatchManager.timerController)
+                        case .solves:
+                            TimeListView()
+                        case .stats:
+                            StatsView()
+                        case .sessions:
+                            SessionsView()
+                        case .settings:
+                            SettingsView()
+                        }
+                        
+                        
+                        if !tabRouter.hideTabBar {
+                            TabBar(currentTab: $tabRouter.currentTab)
+                                .frame(maxHeight: .infinity, alignment: .bottom)
+                                .padding(.bottom, UIDevice.hasBottomBar ? CGFloat(0) : nil)
+                                .padding(.bottom, 0)
+                                .ignoresSafeArea(.keyboard)
+                        }
+                    }
+                } else {
+                    TimerView()
+                        .environmentObject(stopwatchManager.timerController)
+                }
             }
             .tint(accentColour)
             .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)

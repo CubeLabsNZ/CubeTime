@@ -105,7 +105,9 @@ struct BottomTools: View {
     var body: some View {
         HStack(alignment: .bottom) {
             if showScramble {
-                BottomTool(toolType: .drawScramble, parentGeo: timerSize, scrambleSheetStr: $scrambleSheetStr)
+                BottomToolContainer {
+                    TimerDrawScramble(scrambleSheetStr: $scrambleSheetStr)
+                }
             }
             
             if showScramble && showStats {
@@ -113,11 +115,15 @@ struct BottomTools: View {
             }
             
             if showStats {
-                BottomTool(toolType: SessionTypes(rawValue: stopwatchManager.currentSession.session_type)! != .compsim
-                           ? .statsStandard
-                           : .statsCompsim,
-                           parentGeo: timerSize,
-                           presentedAvg: $presentedAvg)
+                BottomToolContainer {
+                    Group {
+                        if stopwatchManager.currentSession.session_type == SessionTypes.compsim.rawValue {
+                            TimerStatsCompSim()
+                        } else {
+                            TimerStatsStandard(presentedAvg: $presentedAvg)
+                        }
+                    }
+                }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
@@ -127,247 +133,168 @@ struct BottomTools: View {
 }
 
 struct BottomToolBG: View {
-    let maxHeight: CGFloat
-    let maxWidth: CGFloat
-    
     var body: some View {
         RoundedRectangle(cornerRadius: 12, style: .continuous)
             .fill(Color("overlay0"))
-            .frame(width: maxWidth, height: maxHeight)
     }
 }
 
-struct BottomTool: View {
-    @Environment(\.colorScheme) private var colourScheme
-    @EnvironmentObject var stopwatchManager: StopwatchManager
-    @Binding var scrambleSheetStr: SheetStrWrapper?
-    @Binding var presentedAvg: CalculatedAverage?
+struct BottomToolContainer<Content: View>: View {
+    let content: Content
     
-    
-    let toolType: TimerTool
-    let maxHeight: CGFloat
-    let maxWidth: CGFloat
-    
-    init(toolType: TimerTool,
-         parentGeo: CGSize,
-         scrambleSheetStr: Binding<SheetStrWrapper?>?=nil,
-         presentedAvg: Binding<CalculatedAverage?>?=nil) {
-        self._scrambleSheetStr = scrambleSheetStr ?? Binding.constant(nil)
-        self._presentedAvg = presentedAvg ?? Binding.constant(nil)
-        self.toolType = toolType
-        self.maxHeight = 120
-        self.maxWidth = min(((parentGeo.width - 32) / 2), 170)
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
     }
-    
     
     var body: some View {
         ZStack {
-            BottomToolBG(maxHeight: maxHeight, maxWidth: maxWidth)
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color("overlay0"))
             
-            switch toolType {
-            case .drawScramble:
-                if let svg = stopwatchManager.scrambleSVG {
-                    if let scr = stopwatchManager.scrambleStr {
-                        SVGView(string: svg)
-                            .padding(2)
-                            .frame(width: maxWidth, height: maxHeight)
-                            .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
-                            .aspectRatio(contentMode: .fit)
-                            .onTapGesture {
-                                scrambleSheetStr = SheetStrWrapper(str: scr)
-                            }
-                    }
-                } else {
-                    LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
-                        .frame(width: maxWidth, height: maxHeight, alignment: .center)
-                }
-                
-            case .statsStandard:
-                VStack(spacing: 6) {
-                    HStack(spacing: 0) {
-                        // ao5
-                        VStack(spacing: 0) {
-                            Text("AO5")
-                                .font(.system(size: 13, weight: .medium))
-                            
-                            if let currentAo5 = stopwatchManager.currentAo5 {
-                                Text(formatSolveTime(secs: currentAo5.average!, penType: currentAo5.totalPen))
-                                    .font(.system(size: 24, weight: .bold))
-                                    .frame(maxWidth: maxWidth/2-8)
-                                    .modifier(DynamicText())
-                            } else {
-                                Text("-")
-                                    .font(.system(size: 24, weight: .medium, design: .default))
-                                    .foregroundColor(Color("grey"))
-                            }
-                            
-                        }
-                        .frame(minWidth: 0, maxWidth: .infinity)
+            content
+        }
+        .frame(maxWidth: 170)
+        .frame(height: 120)
+    }
+}
+
+struct TimerDrawScramble: View {
+    @EnvironmentObject var stopwatchManager: StopwatchManager
+    @Binding var scrambleSheetStr: SheetStrWrapper?
+    
+    var body: some View {
+        GeometryReader { geo in
+            if let svg = stopwatchManager.scrambleSVG {
+                if let scr = stopwatchManager.scrambleStr {
+                    SVGView(string: svg)
+                        .padding(2)
+//                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .frame(width: geo.size.width, height: geo.size.height) // For some reason above doesnt work
+                        .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
+                        .aspectRatio(contentMode: .fit)
                         .onTapGesture {
-                            if stopwatchManager.currentAo5 != nil {
-                                presentedAvg = stopwatchManager.currentAo5
-                            }
+                            scrambleSheetStr = SheetStrWrapper(str: scr)
                         }
-                        
-                        // ao12
-                        VStack(spacing: 0) {
-                            Text("AO12")
-                                .font(.system(size: 13, weight: .medium))
-                            
-                            if let currentAo12 = stopwatchManager.currentAo12 {
-                                Text(formatSolveTime(secs: currentAo12.average!, penType: currentAo12.totalPen))
-                                    .font(.system(size: 24, weight: .bold))
-                                    .frame(maxWidth: maxWidth/2-8)
-                                    .modifier(DynamicText())
-                            } else {
-                                Text("-")
-                                    .font(.system(size: 24, weight: .medium, design: .default))
-                                    .foregroundColor(Color("grey"))
-                            }
-                        }
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                        .onTapGesture {
-                            if stopwatchManager.currentAo12 != nil {
-                                presentedAvg = stopwatchManager.currentAo12
-                            }
-                        }
-                    }
-                    
-                    Divider()
-                        .frame(width: maxWidth - 48)
-                    
-                    HStack(spacing: 0) {
-                        // ao100
-                        VStack(spacing: 0) {
-                            Text("AO100")
-                                .font(.system(size: 13, weight: .medium))
-                            
-                            if let currentAo100 = stopwatchManager.currentAo100 {
-                                Text(formatSolveTime(secs: currentAo100.average!, penType: currentAo100.totalPen))
-                                    .font(.system(size: 24, weight: .bold))
-                                    .frame(maxWidth: maxWidth/2-8)
-                                    .modifier(DynamicText())
-                            } else {
-                                Text("-")
-                                    .font(.system(size: 24, weight: .medium, design: .default))
-                                    .foregroundColor(Color("grey"))
-                            }
-                        }
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                        .onTapGesture {
-                            if stopwatchManager.currentAo100 != nil {
-                                presentedAvg = stopwatchManager.currentAo100
-                            }
-                        }
-                        
-                        // mean
-                        VStack(spacing: 0) {
-                            Text("MEAN")
-                                .font(.system(size: 13, weight: .medium))
-                            
-                            if let sessionMean = stopwatchManager.sessionMean {
-                                Text(formatSolveTime(secs: sessionMean))
-                                    .font(.system(size: 24, weight: .bold))
-                                    .frame(maxWidth: maxWidth/2-8)
-                                    .modifier(DynamicText())
-                            } else {
-                                Text("-")
-                                    .font(.system(size: 24, weight: .medium, design: .default))
-                                    .foregroundColor(Color("grey"))
-                            }
-                        }
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                    }
                 }
-                .frame(width: maxWidth, height: maxHeight)
-                
-                
-                
-                
-                
-            case .statsCompsim:
-                VStack(spacing: 6) {
-                    HStack {
-                        // bpa
-                        VStack(spacing: 0) {
-                            Text("BPA")
-                                .font(.system(size: 13, weight: .medium))
-                            
-                            if let bpa = stopwatchManager.bpa {
-                                Text(formatSolveTime(secs: bpa))
-                                    .font(.system(size: 24, weight: .bold))
-                                    .frame(maxWidth: maxWidth/2-8)
-                                    .modifier(DynamicText())
-                            } else {
-                                Text("...")
-                                    .font(.system(size: 24, weight: .medium, design: .default))
-                                    .foregroundColor(Color("grey"))
-                            }
-                            
-                        }
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                        
-                        // wpa
-                        VStack(spacing: 0) {
-                            Text("WPA")
-                                .font(.system(size: 13, weight: .medium))
-                            
-                            if let wpa = stopwatchManager.wpa {
-                                if wpa == -1 {
-                                    Text("DNF")
-                                        .font(.system(size: 24, weight: .bold))
-                                        .modifier(DynamicText())
-                                } else {
-                                    Text(formatSolveTime(secs: wpa))
-                                        .font(.system(size: 24, weight: .bold))
-                                        .frame(maxWidth: maxWidth/2-8)
-                                        .modifier(DynamicText())
-                                }
-                                
-                                
-                                
-                            } else {
-                                Text("...")
-                                    .font(.system(size: 24, weight: .medium, design: .default))
-                                    .foregroundColor(Color("grey"))
-                            }
-                        }
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                    }
-                    
-                    Divider()
-                        .frame(width: maxWidth - 48)
-                    
-                    // reach target
-                    VStack(spacing: 0) {
-                        Text("TO REACH TARGET")
-                            .font(.system(size: 13, weight: .medium))
-                        
-                        if let timeNeededForTarget = stopwatchManager.timeNeededForTarget {
-                            if timeNeededForTarget == -1 {
-                                Text("Not Possible")
-                                    .font(.system(size: 22, weight: .bold))
-                                    .modifier(DynamicText())
-                            } else if timeNeededForTarget == -2 {
-                                Text("Guaranteed")
-                                    .font(.system(size: 22, weight: .bold))
-                                    .modifier(DynamicText())
-                            } else {
-                                Text("...")
-                                    .font(.system(size: 24, weight: .medium, design: .default))
-                                    .foregroundColor(Color("grey"))
-                            }
-                        }
-                    }
-                }
+            } else {
+                LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             }
         }
-        .frame(width: maxWidth, height: maxHeight)
     }
 }
 
 
-let padFloatingLayout = true
+struct TimerStatRaw: View {
+    let name: String
+    let value: String?
+    let placeholderText: String
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            Text(name)
+                .font(.system(size: 13, weight: .medium))
+            
+            if let value = value {
+                Text(value)
+                    .font(.system(size: 24, weight: .bold))
+                    .modifier(DynamicText())
+            } else {
+                Text(placeholderText)
+                    .font(.system(size: 24, weight: .medium, design: .default))
+                    .foregroundColor(Color("grey"))
+            }
+            
+        }
+        .frame(minWidth: 0, maxWidth: .infinity)
+    }
+}
+
+struct TimerStat: View {
+    let name: String
+    let average: CalculatedAverage?
+    let value: String?
+    let placeholderText: String
+    @Binding var presentedAvg: CalculatedAverage?
+
+    init(name: String, average: CalculatedAverage?, placeholderText: String = "-", presentedAvg: Binding<CalculatedAverage?>) {
+        self.name = name
+        self.average = average
+        self.placeholderText = placeholderText
+        self._presentedAvg = presentedAvg
+        if let average = average {
+            self.value = formatSolveTime(secs: average.average!, penType: average.totalPen)
+        } else {
+            self.value = nil
+        }
+    }
+
+    var body: some View {
+        TimerStatRaw(name: name, value: value, placeholderText: placeholderText)
+            .onTapGesture {
+                if average != nil {
+                    presentedAvg = average
+                }
+            }
+    }
+}
+
+struct TimerStatsStandard: View {
+    @EnvironmentObject var stopwatchManager: StopwatchManager
+    @Binding var presentedAvg: CalculatedAverage?
+    
+    var body: some View {
+        VStack(spacing: 6) {
+            HStack(spacing: 0) {
+                TimerStat(name: "AO5", average: stopwatchManager.currentAo5, presentedAvg: $presentedAvg)
+                TimerStat(name: "AO12", average: stopwatchManager.currentAo12, presentedAvg: $presentedAvg)
+            }
+            
+            Divider()
+                .padding(.horizontal, 24)
+            
+            
+            HStack(spacing: 0) {
+                TimerStat(name: "AO100", average: stopwatchManager.currentAo5, presentedAvg: $presentedAvg)
+                TimerStatRaw(name: "MEAN", value: stopwatchManager.sessionMean == nil ? nil : formatSolveTime(secs: stopwatchManager.sessionMean!), placeholderText: "-")
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+struct TimerStatsCompSim: View {
+    @EnvironmentObject var stopwatchManager: StopwatchManager
+
+    
+    var body: some View {
+        let timeNeededText: String? = {
+            if let timeNeededForTarget = stopwatchManager.timeNeededForTarget {
+                switch timeNeededForTarget {
+                case .notPossible:
+                    return "Not Possible"
+                case .guaranteed:
+                    return "Guaranteed"
+                case .value(let double):
+                    return formatSolveTime(secs: double)
+                }
+            }
+            return nil
+        }()
+    
+        VStack(spacing: 6) {
+            HStack {
+                TimerStatRaw(name: "BPA", value: stopwatchManager.bpa == nil ? nil : formatSolveTime(secs: stopwatchManager.bpa!), placeholderText: "...")
+                TimerStatRaw(name: "WPA", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!), placeholderText: "...")
+            }
+            
+            Divider()
+                .padding(.horizontal, 24)
+            
+            TimerStatRaw(name: "TO REACH TARGET", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!), placeholderText: "...")
+        }
+    }
+}
 
 
 struct ScrambleText: View {

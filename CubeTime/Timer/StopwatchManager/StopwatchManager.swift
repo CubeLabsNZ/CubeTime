@@ -52,6 +52,11 @@ func setupAudioSession() {
     }
 }
 
+enum TimeNeededForTarget {
+    case notPossible, guaranteed
+    case value(Double)
+}
+
 // MARK: --
 // MARK: SWM
 class StopwatchManager: ObservableObject {
@@ -161,7 +166,7 @@ class StopwatchManager: ObservableObject {
     @Published var bpa: Double?
     @Published var wpa: Double?
     
-    @Published var timeNeededForTarget: Double?
+    @Published var timeNeededForTarget: TimeNeededForTarget?
     
     // Stats not on timer
     @Published var bestAo5: CalculatedAverage?
