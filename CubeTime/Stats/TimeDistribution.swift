@@ -125,7 +125,7 @@ struct TimeDistribution: View {
                         path.move(to: CGPoint(x: medianxloc, y: 225))
                         path.addLine(to: CGPoint(x: medianxloc, y: -11))
                     }
-                    .stroke(Color(uiColor: .systemGray), style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [5, 10]))
+                    .stroke(Color("grey"), style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [5, 10]))
                     
                     ForEach(0..<data.count, id: \.self) { datum in
                         let xloc: CGFloat = (geometry.size.width / (count < 8 ? CGFloat(count+2) : 10)) * CGFloat(datum)
@@ -166,11 +166,11 @@ struct TimeDistribution: View {
                     HStack (spacing: 0) {
                         Text("MEDIAN: ")
                             .font(.system(size: 11, weight: .bold, design: .default))
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                         
                         Text(formatSolveTime(secs: stopwatchManager.normalMedian.0!))
                             .font(FontManager.mono11Bold)
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                     }
                     .position(x: medianxloc, y: -16)
                 }
@@ -181,7 +181,7 @@ struct TimeDistribution: View {
             Text("not enough solves to\ndisplay graph")
                 .font(FontManager.mono17)
                 .multilineTextAlignment(.center)
-                .foregroundColor(Color(uiColor: .systemGray))
+                .foregroundColor(Color("grey"))
         }
     }
 }

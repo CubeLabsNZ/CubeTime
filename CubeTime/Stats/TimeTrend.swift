@@ -509,7 +509,7 @@ struct TimeTrend: View {
             Text("not enough solves to\ndisplay graph")
                 .font(FontManager.mono17)
                 .multilineTextAlignment(.center)
-                .foregroundColor(Color(uiColor: .systemGray))
+                .foregroundColor(Color("grey"))
                 .offset(y: 5)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

@@ -82,7 +82,7 @@ struct TimeDetailView: View {
                                         let rawTime = formatSolveTime(secs: solve.time)
                                         Text("(\(rawTime))")
                                             .font(.title3.weight(.semibold))
-                                            .foregroundColor(Color(uiColor: .systemGray))
+                                            .foregroundColor(Color("grey"))
                                             .padding(.leading, 8)
                                             .offset(y: -4)
                                         
@@ -93,7 +93,7 @@ struct TimeDetailView: View {
                                         
                                         Text("(\(time))")
                                             .font(.title3.weight(.semibold))
-                                            .foregroundColor(Color(uiColor: .systemGray))
+                                            .foregroundColor(Color("grey"))
                                             .padding(.leading, 8)
                                             .offset(y: -4)
                                     default:

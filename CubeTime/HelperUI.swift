@@ -90,9 +90,9 @@ class SetValues {
 
 extension Color {
     struct Timer {
-        static let normal: Color = Color.primary
-        static let heldDown: Color = Color.red
-        static let canStart: Color = Color.green
+        static let normal: Color = Color("dark")
+        static let heldDown: Color = Color("red")
+        static let canStart: Color = Color("green")
         static let loading: Color = Color("grey")
     }
     
@@ -139,7 +139,7 @@ extension View {
 }
 
 enum HierarchialButtonType {
-    case mono, coloured, halfcoloured, disabled, red/*, green*/
+    case mono, coloured, halfcoloured, disabled, red, green
 }
 
 enum HierarchialButtonSize {
@@ -245,7 +245,7 @@ struct HierarchialButtonBase<V: View>: View {
             self.colourShadow = Color.black.opacity(0.06)
             
         case .coloured:
-            self.colourBg = Color("accent4")
+            self.colourBg = Color.accentColor.opacity(0.20)
             self.colourFg = Color.accentColor
             self.colourShadow = Color.accentColor.opacity(0.08)
             
@@ -255,15 +255,23 @@ struct HierarchialButtonBase<V: View>: View {
             self.colourShadow = Color.black.opacity(0.06)
             
         case .disabled:
-            self.colourBg = Color("indent1")
+            self.colourBg = Color("grey").opacity(0.15)
             self.colourFg = Color("grey")
             self.colourShadow = Color.clear
             
         case .red:
-            self.colourBg = Color(0xFCD4D4)
-            self.colourFg = Color(0xFE5B5B)
-            self.colourShadow = Color(0xFE5B5B).opacity(0.12)
+            self.colourBg = Color("red").opacity(0.25)
+            self.colourFg = Color("red")
+            self.colourShadow = Color("red").opacity(0.16)
+            
+        case .green:
+            self.colourBg = Color("green").opacity(0.25)
+            self.colourFg = Color("green")
+            self.colourShadow = Color("green").opacity(0.16)
+
         }
+        
+    
         
         switch (size) {
         case .small:
@@ -356,9 +364,15 @@ extension Animation {
 struct ThemedDivider: View {
     @Environment(\.colorScheme) private var colourScheme
     
+    let isHorizontal: Bool
+    
+    init(isHorizontal: Bool = true) {
+        self.isHorizontal = isHorizontal
+    }
+    
     var body: some View {
         Capsule()
             .fill(colourScheme == .light ? Color("indent0") : Color("grey"))
-            .frame(height: 1.15)
+            .frame(width: isHorizontal ? nil : 1.15, height: isHorizontal ? 1.15 : nil)
     }
 }

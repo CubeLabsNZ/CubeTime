@@ -19,12 +19,12 @@ struct ReachedTargets: View {
         GeometryReader { geometry in
             ZStack (alignment: .leading) {
                 Capsule()
-                    .fill(.red)
+                    .fill(Color("red"))
                     .frame(width: geometry.size.width, height: 6)
                 
                 
                 Rectangle()
-                    .fill(.green)
+                    .fill(Color("green"))
                     .frame(width: geometry.size.width * CGFloat(reachedPercentage), height: 6)
                     .cornerRadius(10, corners: [.topLeft, .bottomLeft])
                     .cornerRadius(reachedPercentage == 1 ? 10 : 0, corners: [.topRight, .bottomRight])
