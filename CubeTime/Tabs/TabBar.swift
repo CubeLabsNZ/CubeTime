@@ -120,7 +120,7 @@ struct TabIcon: View {
                                         ? Color("accent3")
                                         : colourScheme == .dark
                                           ? Color.clear
-                                          : Color("indent1"),
+                                          : Color("indent0"),
                                         radius: 2,
                                         x: 0, y: 0.5)
                             

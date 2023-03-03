@@ -140,7 +140,7 @@ struct StatsBlockDetailText: View {
                         .foregroundColor(
                             discarded
                             ? colouredBlock
-                              ? Color("indent2")
+                              ? Color("indent1")
                               : Color("grey")
                             : colouredBlock
                               ? .white

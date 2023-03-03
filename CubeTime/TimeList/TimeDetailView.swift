@@ -114,9 +114,7 @@ struct TimeDetailView: View {
                                     .offset(y: -4)
                                 }
                                 
-                                Capsule()
-                                    .fill(Color("indent1"))
-                                    .frame(height: 1)
+                                ThemedDivider()
                                 
                                 
                                 HStack {
@@ -185,7 +183,7 @@ struct TimeDetailView: View {
                                 
                                 Text("CubeTime.")
                                     .font(FontManager.mono13)
-                                    .foregroundColor(Color("indent1"))
+                                    .foregroundColor(Color("indent0"))
                             }
                             .padding(.vertical, -4)
 
@@ -260,9 +258,7 @@ struct TimeDetailView: View {
                                 Text("SESSION")
                                     .font(.subheadline.weight(.semibold))
                                 
-                                Capsule()
-                                    .fill(Color("indent1"))
-                                    .frame(height: 1)
+                                ThemedDivider()
                                 
                                 HStack {
                                     Image(systemName: "square.on.square")
@@ -309,9 +305,7 @@ struct TimeDetailView: View {
                                 Text("COMMENT")
                                     .font(.subheadline.weight(.semibold))
                                 
-                                Capsule()
-                                    .fill(Color("indent1"))
-                                    .frame(height: 1)
+                                ThemedDivider()
                                 
                                 
                                 

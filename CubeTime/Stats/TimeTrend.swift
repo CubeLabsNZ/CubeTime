@@ -407,7 +407,7 @@ struct Legend: View {
                     
                     withAnimation(.easeOut(duration: 0.2)) {
                         self.line(atHeight: self.getYLegendSafe(height: height), width: self.frame.width)
-                            .stroke(Color("indent0"), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5,height == 0 ? 0 : 10]))
+                            .stroke(Color("grey"), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5,height == 0 ? 0 : 10]))
                             .rotationEffect(.degrees(180), anchor: .center)
                             .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
                             .clipped()
@@ -417,7 +417,7 @@ struct Legend: View {
             }
             
             Rectangle()
-                .fill(Color("indent0"))
+                .fill(Color("grey"))
                 .frame(width: 1, height: self.frame.height + 6)
                 .offset(x: 30, y: 3)
         }

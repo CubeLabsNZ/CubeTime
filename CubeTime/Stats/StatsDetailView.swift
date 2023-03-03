@@ -63,7 +63,7 @@ struct StatsDetailView: View {
                                             Text("Playground")
                                                 .font(.title3.weight(.semibold))
                                             
-                                            Image("square.filled.on.square")
+                                            Image(systemName: "square.on.square")
                                                 .resizable()
                                                 .frame(width: 22, height: 22)
 
@@ -81,10 +81,7 @@ struct StatsDetailView: View {
                                     .offset(y: -4)
                                 }
                                 
-                                Capsule()
-                                    .fill(Color("indent1"))
-                                    .frame(height: 1)
-                                
+                                ThemedDivider()
                                 
                                 HStack {
                                     Text(solves.name == "Comp Sim Solve" ? "COMPSIM" : solves.name.uppercased())
@@ -103,7 +100,7 @@ struct StatsDetailView: View {
                                 
                                 Text("CubeTime.")
                                     .font(FontManager.mono13)
-                                    .foregroundColor(Color("indent1"))
+                                    .foregroundColor(Color("indent0"))
                             }
                             .padding(.vertical, -4)
                             
@@ -160,9 +157,7 @@ struct StatsDetailView: View {
                                 Text("TIMES")
                                     .font(.subheadline.weight(.semibold))
                                 
-                                Capsule()
-                                    .fill(Color("indent1"))
-                                    .frame(height: 1)
+                                ThemedDivider()
                                 
                                 ForEach(Array(zip(solves.accountedSolves!.indices, solves.accountedSolves!.sorted(by: { $0.date! > $1.date! }))), id: \.0) { index, solve in
                                     VStack(spacing: 0) {

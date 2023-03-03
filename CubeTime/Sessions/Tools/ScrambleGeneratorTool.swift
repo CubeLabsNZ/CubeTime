@@ -165,7 +165,7 @@ struct ScrambleGeneratorTool: View {
                     }
                     .background(
                         RoundedRectangle(cornerRadius: 6, style: .continuous)
-                            .fill(Color("indent2"))
+                            .fill(Color("indent1"))
                     )
                     .animation(Animation.customDampedSpring, value: scrambleGenerator.numScramble)
                     

@@ -112,7 +112,7 @@ struct ShadowLight: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .shadow(color: env == .dark ? .clear : Color("indent2").opacity(0.5), radius: 6, x: x, y: y)
+            .shadow(color: env == .dark ? .clear : Color("indent1").opacity(0.5), radius: 6, x: x, y: y)
     }
 }
 
@@ -124,7 +124,7 @@ struct ShadowDark: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .shadow(color: env == .dark ? .clear : Color("indent2"), radius: 4, x: x, y: y)
+            .shadow(color: env == .dark ? .clear : Color("indent1"), radius: 4, x: x, y: y)
     }
 }
 
@@ -255,7 +255,7 @@ struct HierarchialButtonBase<V: View>: View {
             self.colourShadow = Color.black.opacity(0.06)
             
         case .disabled:
-            self.colourBg = Color("indent2")
+            self.colourBg = Color("indent1")
             self.colourFg = Color("grey")
             self.colourShadow = Color.clear
             
@@ -349,4 +349,16 @@ extension Animation {
     
     static let customFastEaseOut: Animation = .easeOut(duration: 0.28)
     static let customEaseInOut: Animation = .easeInOut(duration: 0.26)
+}
+
+
+
+struct ThemedDivider: View {
+    @Environment(\.colorScheme) private var colourScheme
+    
+    var body: some View {
+        Capsule()
+            .fill(colourScheme == .light ? Color("indent0") : Color("grey"))
+            .frame(height: 1.15)
+    }
 }

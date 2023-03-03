@@ -569,7 +569,7 @@ struct TimerView: View {
                         
                         if showPlus {
                             Rectangle()
-                                .fill(Color("indent1"))
+                                .fill(Color("indent0"))
                                 .frame(width: 1.5, height: 20)
                                 .padding(.horizontal, 12)
                         }
