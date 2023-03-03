@@ -132,6 +132,17 @@ class TimeDistViewController: UIViewController {
         trendLine.addLine(to: CGPoint(x: points.last!.point.x, y: UIScreen.screenHeight*0.618))
         trendLine.addLine(to: CGPoint(x: 0, y: UIScreen.screenHeight*0.618))
 
+        
+        let grad = CGGradient(colorsSpace: .none, colors: [UIColor(Color.accentColor.opacity(0.6)).cgColor, UIColor(Color.accentColor.opacity(0.2)).cgColor] as CFArray, locations: [0, 1])!
+        
+//        context.saveGState()
+        trendLine.addClip()
+        
+        context.drawLinearGradient(grad, start: CGPoint(x: 0, y: 0), end: CGPoint(x: 0, y: UIScreen.screenHeight*0.618), options: [] )
+        
+        
+        context.resetClip()
+        
         for p in points {
             let circlePoint = CGRect(x: p.point.x - dotSize/2,
                                      y: p.point.y - dotSize/2,
@@ -142,12 +153,6 @@ class TimeDistViewController: UIViewController {
             context.fillEllipse(in: circlePoint)
         }
         
-        let grad = CGGradient(colorsSpace: .none, colors: [UIColor(Color.accentColor.opacity(0.6)).cgColor, UIColor(Color.accentColor.opacity(0.2)).cgColor] as CFArray, locations: [0, 1])!
-        
-//        context.saveGState()
-        trendLine.addClip()
-        
-        context.drawLinearGradient(grad, start: CGPoint(x: 0, y: 0), end: CGPoint(x: 0, y: UIScreen.screenHeight*0.618), options: [] )
         
         
         let newImage = UIGraphicsGetImageFromCurrentImageContext()!
@@ -182,7 +187,7 @@ class TimeDistViewController: UIViewController {
 }
 
 
-struct DetailTimeDist: UIViewControllerRepresentable {
+struct DetailTimeTrendBase: UIViewControllerRepresentable {
     let points: [LineChartPoint]
     let gapDelta: Int
     let averageValue: Double
@@ -213,82 +218,26 @@ struct DetailTimeDist: UIViewControllerRepresentable {
     }
 }
 
-struct InnerView: View {
-    let points: [LineChartPoint]
-    let gapDelta: Int
+
+struct DetailTimeTrend: View {
+    @Environment(\.dismiss) var dismiss
+
+    let rawDataPoints: [Double]
+    let limits: (min: Double, max: Double)
     let averageValue: Double
     
-    let limits: (min: Double, max: Double)
-    
-    init(rawDataPoints: [Double], limits: (min: Double, max: Double), averageValue: Double, gapDelta: Int = 30) {
-        self.points = makeData(rawDataPoints, limits)
-        self.averageValue = averageValue
-        self.limits = limits
-        self.gapDelta = gapDelta
-    }
-    
-    init(premadePoints: [LineChartPoint], limits: (min: Double, max: Double), averageValue: Double, gapDelta: Int = 30) {
-        self.points = premadePoints
-        self.averageValue = averageValue
-        self.limits = limits
-        self.gapDelta = gapDelta
-    }
-    
-    
-    
     var body: some View {
-        ScrollView(.horizontal) {
-            Canvas { context, size in
-                var averageLine = Path()
-                
-                let height = getStandardisedYLocation(value: averageValue,
-                                                      min: limits.min,
-                                                      max: limits.max,
-                                                      boundsHeight: UIScreen.screenHeight*0.618)
-                
-                averageLine.move(to: CGPoint(x: dotDiameter,
-                                             y: height))
-                averageLine.addLine(to: CGPoint(x: CGFloat(points.count * 30),
-                                                y: height))
-                
-                var path = Path()
-                //                print("make data started")
-                //                print("made data")
-                //
-                //                let maxX = context.clipBoundingRect.maxX
-                //                let minX = context.clipBoundingRect.minX
-                //
-                //                print("difference: \(maxX - minX), uiscreenwidth: \(UIScreen.screenWidth)")
-                
-                for p in points {
-                    let circlePoint: CGRect!
-                    
-                    if (path.isEmpty) {
-                        circlePoint = CGRect(x: p.point.x,
-                                             y: p.point.y - dotDiameter/2,
-                                             width: dotDiameter,
-                                             height: dotDiameter)
-                        
-                        path.move(to: CGPointMake(p.point.x + dotDiameter/2, p.point.y))
-                    } else {
-                        circlePoint = CGRect(x: p.point.x - dotDiameter/2,
-                                             y: p.point.y - dotDiameter/2,
-                                             width: dotDiameter,
-                                             height: dotDiameter)
-                        
-                        path.addLine(to: p.point)
+        NavigationView {
+            DetailTimeTrendBase(rawDataPoints: rawDataPoints, limits: limits, averageValue: averageValue)
+                .toolbar {
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Text("Done")
+                        }
                     }
-                    
-                    context.fill(Circle().path(in: circlePoint), with: .color(.red))
                 }
-                
-                context.stroke(path,
-                               with: .color(.green),
-                               style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
-                
-                context.stroke(averageLine, with: .color(.gray), style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
-            }
-            .frame(width: CGFloat(points.count * 30))
         }
     }
 }

@@ -316,9 +316,9 @@ struct StatsView: View {
         }
         .sheet(isPresented: self.$showTimeTrendModal) {
             let timesOnly = stopwatchManager.solvesNoDNFsbyDate.map { $0.timeIncPen }
-            DetailTimeDist(rawDataPoints: timesOnly,
-                      limits: (timesOnly.max()!, timesOnly.min()!),
-                      averageValue: stopwatchManager.sessionMean!)
+                DetailTimeTrend(rawDataPoints: timesOnly,
+                          limits: (timesOnly.max()!, timesOnly.min()!),
+                          averageValue: stopwatchManager.sessionMean!)
         }
     }
 }
