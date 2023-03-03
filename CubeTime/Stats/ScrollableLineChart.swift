@@ -72,20 +72,24 @@ class TimeDistViewController: UIViewController {
     var imageView: UIImageView!
     
     override func viewDidLoad() {
-        let textView = UITextView()
-        textView.text = formatSolveTime(secs: limits.min)
-        let size = textView.sizeThatFits(CGSize(width: Double.infinity, height: .infinity))
-        textView.frame = CGRect(x: self.view.frame.width - size.width, y: UIScreen.screenHeight*0.618 - size.height / 2, width: size.width, height: size.height)
+//        let textView = UITextView()
+//        textView.text = formatSolveTime(secs: limits.min)
+//        let size = textView.sizeThatFits(CGSize(width: Double.infinity, height: .infinity))
+//        textView.frame = CGRect(x: self.view.frame.width - size.width, y: UIScreen.screenHeight*0.618 - size.height / 2, width: size.width, height: size.height)
+//
+//        textView.backgroundColor = .white
+//        textView.layer.zPosition = 2
+//
+//        self.view.addSubview(textView)
+//
+//        NSLog("FRAME TEXT \(textView.frame)")
         
-        textView.backgroundColor = .white
-        textView.layer.zPosition = 2
-        
-        self.view.addSubview(textView)
-        
-        NSLog("FRAME TEXT \(textView.frame)")
+        let rawImageHeight = UIScreen.screenHeight*0.618
+        let imageHeight: CGFloat = rawImageHeight + 10
+        let imagePadding: CGFloat = 5
     
         let imageSize = CGSize(width: CGFloat(points.count * gapDelta),
-                               height: view.frame.height)
+                               height: imageHeight)
         
         UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
         let context = UIGraphicsGetCurrentContext()!
@@ -93,16 +97,16 @@ class TimeDistViewController: UIViewController {
         let height = getStandardisedYLocation(value: averageValue,
                                               min: limits.min,
                                               max: limits.max,
-                                              boundsHeight: UIScreen.screenHeight*0.618)
+                                              boundsHeight: rawImageHeight)
         
-        context.move(to: CGPoint(x: 0, y: UIScreen.screenHeight*0.618))
+        context.move(to: CGPoint(x: 0, y: imageHeight - imagePadding))
         
         context.setLineDash(phase: 0, lengths: [12, 6])
         context.setStrokeColor(UIColor(Color("grey")).cgColor)
         context.setLineWidth(2)
         context.setLineJoin(.round)
         context.setLineCap(.round)
-        context.addLine(to: CGPoint(x: 1200, y: UIScreen.screenHeight*0.618))
+        context.addLine(to: CGPoint(x: 1200, y: imageHeight - imagePadding))
 
         context.drawPath(using: .stroke)
         
@@ -112,10 +116,11 @@ class TimeDistViewController: UIViewController {
         let trendLine: UIBezierPath = UIBezierPath()
         
         for i in 0 ..< points.count {
+            let p = points[i].point
             if (trendLine.isEmpty) {
-                trendLine.move(to: CGPointMake(points[i].point.x + dotSize/2, points[i].point.y))
+                trendLine.move(to: CGPointMake(p.x + dotSize/2, p.y + imagePadding))
             } else {
-                trendLine.addLine(to: points[i].point)
+                trendLine.addLine(to: CGPointMake(p.x, p.y + imagePadding))
 //                let a = points[i-1].point
 //                let b = points[i].point
 //                let mid = CGPoint(x: (a.x + b.x) / 2, y: (a.y + b.y) / 2)
@@ -129,8 +134,8 @@ class TimeDistViewController: UIViewController {
         
         trendLine.stroke()
         
-        trendLine.addLine(to: CGPoint(x: points.last!.point.x, y: UIScreen.screenHeight*0.618))
-        trendLine.addLine(to: CGPoint(x: 0, y: UIScreen.screenHeight*0.618))
+        trendLine.addLine(to: CGPoint(x: points.last!.point.x, y: imageHeight - imagePadding))
+        trendLine.addLine(to: CGPoint(x: 0, y: imageHeight - imagePadding))
 
         
         let grad = CGGradient(colorsSpace: .none, colors: [UIColor(Color.accentColor.opacity(0.6)).cgColor, UIColor(Color.accentColor.opacity(0.2)).cgColor] as CFArray, locations: [0, 1])!
@@ -138,14 +143,14 @@ class TimeDistViewController: UIViewController {
 //        context.saveGState()
         trendLine.addClip()
         
-        context.drawLinearGradient(grad, start: CGPoint(x: 0, y: 0), end: CGPoint(x: 0, y: UIScreen.screenHeight*0.618), options: [] )
+        context.drawLinearGradient(grad, start: CGPoint(x: 0, y: 0), end: CGPoint(x: 0, y: imageHeight - imagePadding), options: [] )
         
         
         context.resetClip()
         
         for p in points {
             let circlePoint = CGRect(x: p.point.x - dotSize/2,
-                                     y: p.point.y - dotSize/2,
+                                     y: p.point.y - dotSize/2 + imagePadding,
                                      width: dotSize,
                                      height: dotSize)
             
@@ -161,9 +166,10 @@ class TimeDistViewController: UIViewController {
         imageView = UIImageView(image: newImage)
 //        imageView.contentMode = .scaleToFill
 //
-//        var fr = imageView.frame
+        let fr = imageView.frame
 //        fr.size = newImage.size
-//        imageView.frame = fr
+        let newY = (self.view.frame.height - fr.height) / 2
+        imageView.frame = CGRect(x: fr.minX, y: newY, width: fr.width, height: fr.height)
         
         
         
@@ -180,7 +186,8 @@ class TimeDistViewController: UIViewController {
     }
     
     @objc func clicked(g: UITapGestureRecognizer) {
-        let p = g.location(in: imageView)
+        var p = g.location(in: imageView)
+        p.y += 5
         let pointWhere = points.first(where: {$0.pointIn(p)})
         NSLog("\(pointWhere)")
     }
