@@ -43,7 +43,7 @@ struct TimeBar: View {
                         
                     } else if solvegroup.solves!.count < 5 {
                         // Current average
-                        currentCalculatedAverage = CalculatedAverage(name: "Current Average", average: nil, accountedSolves: (solvegroup.solves!.array as! [Solves]), totalPen: .none, trimmedSolves: [])
+//                        currentCalculatedAverage = CalculatedAverage(name: "Current Average", average: nil, accountedSolves: (solvegroup.solves!.array as! [Solves]), totalPen: .none, trimmedSolves: [])
                     } else {
                         currentCalculatedAverage = calculatedAverage
                     }
