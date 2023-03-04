@@ -23,7 +23,7 @@
 		23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */; };
 		23AAF99629B0219200C5C1FF /* ScrollableLineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AAF99529B0219200C5C1FF /* ScrollableLineChart.swift */; };
 		23AAF99829B072F900C5C1FF /* StatsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AAF99729B072F900C5C1FF /* StatsDetailView.swift */; };
-		23AB648429385D310049993B /* NewSessionModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AB648329385D310049993B /* NewSessionModalView.swift */; };
+		23AB648429385D310049993B /* NewSessionRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AB648329385D310049993B /* NewSessionRootView.swift */; };
 		23AB648C293867EA0049993B /* 12sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648A293867EA0049993B /* 12sec-audio.wav */; };
 		23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648B293867EA0049993B /* 8sec-audio.wav */; };
 		23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -126,7 +126,7 @@
 		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		23AAF99529B0219200C5C1FF /* ScrollableLineChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableLineChart.swift; sourceTree = "<group>"; };
 		23AAF99729B072F900C5C1FF /* StatsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsDetailView.swift; sourceTree = "<group>"; };
-		23AB648329385D310049993B /* NewSessionModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSessionModalView.swift; sourceTree = "<group>"; };
+		23AB648329385D310049993B /* NewSessionRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSessionRootView.swift; sourceTree = "<group>"; };
 		23AB648A293867EA0049993B /* 12sec-audio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "12sec-audio.wav"; sourceTree = "<group>"; };
 		23AB648B293867EA0049993B /* 8sec-audio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "8sec-audio.wav"; sourceTree = "<group>"; };
 		23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "3rdparty-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -259,9 +259,9 @@
 			isa = PBXGroup;
 			children = (
 				7D7A9EC3274F392700C2E125 /* SessionsView.swift */,
-				23D7722329B1E3540044AFBA /* NewSessionView.swift */,
 				23CE093327A76D610013E227 /* SessionCard.swift */,
-				23AB648329385D310049993B /* NewSessionModalView.swift */,
+				23AB648329385D310049993B /* NewSessionRootView.swift */,
+				23D7722329B1E3540044AFBA /* NewSessionView.swift */,
 				AF8874BF29AAC8AD001E49D0 /* Tools */,
 			);
 			path = Sessions;
@@ -635,7 +635,7 @@
 				23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */,
 				2326436228C4929700F6322E /* PrevSolvesDisplay.swift in Sources */,
 				239C7E702781511300943AF2 /* Onboarding.swift in Sources */,
-				23AB648429385D310049993B /* NewSessionModalView.swift in Sources */,
+				23AB648429385D310049993B /* NewSessionRootView.swift in Sources */,
 				23CE093427A76D610013E227 /* SessionCard.swift in Sources */,
 				23C85EAC29388C9C00C7C3EC /* StatsSubviews.swift in Sources */,
 				2377418829A9A05A00A4F917 /* HelperUI.swift in Sources */,

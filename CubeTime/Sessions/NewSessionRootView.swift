@@ -2,7 +2,7 @@ import SwiftUI
 import CoreData
 import Combine
 
-struct NewSessionModalView: View {
+struct NewSessionRootView: View {
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.globalGeometrySize) var globalGeometrySize
@@ -14,50 +14,47 @@ struct NewSessionModalView: View {
     @State private var showNewMultiphaseView = false
     @State private var showNewPlaygroundView = false
     @State private var showNewCompsimView = false
-
+    
     @Binding var showNewSessionPopUp: Bool
     
     
     var body: some View {
-        VStack {
-            NavigationView {
+        NavigationView {
+            ZStack {
+                Color("base")
+                    .ignoresSafeArea()
+                
+                
                 VStack {
                     #warning("BUG: ADD NEW SESSION TEXT DOES NOT DISPLAY ON IPOD TOUCH")
                     VStack(alignment: .center) {
                         Text("Add New Session")
-                            .font(.system(size: 34, weight: .bold, design: .default))
+                            .font(.largeTitle.bold())
                             .padding(.bottom, 8)
                             .padding(.top, globalGeometrySize.height/12)
                     }
                     
                     
-                    
                     VStack(alignment: .leading, spacing: 48) {
                         NewSessionTypeCardGroup(title: "Normal Sessions") {
+                            NewSessionTypeCard(name: "Standard Session", icon: SessionTypeIcon(iconName: "timer.square"), show: $showNewStandardSessionView)
                             
-                            NewSessionTypeCard(name: "Standard Session", icon: "timer.square", iconProps: SessionTypeIconProps(), show: $showNewStandardSessionView)
-                        
-                            Divider()
+                            ThemedDivider()
                                 .padding(.leading, 48)
                             
-                            NewSessionTypeCard(name: "Multiphase", icon: "square.stack", iconProps: SessionTypeIconProps(size: 24, leaPadding: 10, traPadding: 6), show: $showNewMultiphaseView)
+                            NewSessionTypeCard(name: "Multiphase", icon: SessionTypeIcon(size: 24, iconName: "square.stack", padding: (10, 6)), show: $showNewMultiphaseView)
                             
-                            Divider()
+                            ThemedDivider()
                                 .padding(.leading, 48)
                             
-                            NewSessionTypeCard(name: "Playground", icon: "square.on.square", iconProps: SessionTypeIconProps(size: 24), show: $showNewPlaygroundView)
+                            NewSessionTypeCard(name: "Playground", icon: SessionTypeIcon(size: 24, iconName: "square.on.square"), show: $showNewPlaygroundView)
                         }
                         
                         
                         NewSessionTypeCardGroup(title: "Other Sessions") {
-//                            NewSessionTypeCard(name: "Algorithm Trainer", icon: "command.square", iconProps: SessionTypeIconProps(), show: $showNewAlgTrainerView)
-//
-//                            Divider()
-//                                .padding(.leading, 48)
-                            
-                            NewSessionTypeCard(name: "Comp Sim", icon: "globe.asia.australia", iconProps: SessionTypeIconProps(weight: .medium), show: $showNewCompsimView)
+                            //  NewSessionTypeCard(name: "Algorithm Trainer", icon: "command.square", iconProps: SessionTypeIconProps(), show: $showNewAlgTrainerView)
+                            NewSessionTypeCard(name: "Comp Sim", icon: SessionTypeIcon(iconName: "globe.asia.australia", weight: .medium), show: $showNewCompsimView)
                         }
-                        
                         
                         
                         NavigationLink("", destination: NewSessionView(sessionType: SessionTypes.standard, typeName: "Standard", showNewSessionPopUp: $showNewSessionPopUp), isActive: $showNewStandardSessionView)
@@ -69,24 +66,23 @@ struct NewSessionModalView: View {
                         
                     }
                 }
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationBarHidden(true)
-                .overlay(
-                    VStack {
-                        HStack {
-                            Spacer()
-                            
-                            CloseButton {
-                                dismiss()
-                            }
-                            .padding([.top, .trailing])
-                        }
-                        Spacer()
-                    }
-                )
+                
             }
-//            .navigationViewStyle(StackNavigationViewStyle())
-            .accentColor(accentColour)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(true)
+            .overlay(
+                VStack {
+                    HStack {
+                        Spacer()
+                        
+                        CloseButton {
+                            dismiss()
+                        }
+                        .padding([.top, .trailing])
+                    }
+                    Spacer()
+                }
+            )
         }
     }
 }

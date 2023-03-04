@@ -275,10 +275,9 @@ struct TimeListView: View {
                                     }
                                     
                                     if groups.count > 1 {
-                                        Divider()
-                                            .padding(.horizontal)
+                                        ThemedDivider()
+                                            .padding(.horizontal, 8)
                                     }
-                                    
                                 } else {
                                     // re-enable when we have a graphic
 //                                    Text("display the empty message")

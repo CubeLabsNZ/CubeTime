@@ -55,7 +55,7 @@ struct NewSessionView: View {
                                 .padding([.horizontal, .bottom])
                         }
                     }
-                    .modifier(NewStandardSessionViewBlocks())
+                    .modifier(CardBlockBackground())
                     .frame(minHeight: otherBigFrameHeight)
                     
                     if sessionType == .multiphase {
@@ -73,7 +73,7 @@ struct NewSessionView: View {
                             .padding()
                         }
                         .frame(height: frameHeight)
-                        .modifier(NewStandardSessionViewBlocks())
+                        .modifier(CardBlockBackground())
                     } else if sessionType == .compsim {
                         CompSimTargetEntry(targetStr: $targetStr)
                     }

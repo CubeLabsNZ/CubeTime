@@ -866,20 +866,22 @@ func timeWithPlusTwoForSolve(_ solve: Solves) -> Double {
 
 // MARK: - SESSION HELPERS, VIEWMODIFIERS AND STRUCTS
 // session type icon
-struct SessionTypeIconProps {
+struct SessionTypeIcon {
     var size: CGFloat = 26
-    var leaPadding: CGFloat = 8
-    var traPadding: CGFloat = 4
+    var iconName: String = ""
+    var padding: (leading: CGFloat, trailing: CGFloat) = (8, 4)
     var weight: Font.Weight = .regular
 }
 
+#warning("TODO: change timedetailview and statsdetailview to also use this")
+#warning("TODO: check if .style continuous makes a difference?")
 // rounded viewblock modifier
-struct NewStandardSessionViewBlocks: ViewModifier {
+struct CardBlockBackground: ViewModifier {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     func body(content: Content) -> some View {
         content
-            .background(colorScheme == .light ? Color.white : Color(uiColor: .systemGray6))
-            .cornerRadius(10)
+            .background(Color("overlay1"))
+            .cornerRadius(8)
             .padding(.horizontal)
     }
 }

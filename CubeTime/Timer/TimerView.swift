@@ -235,7 +235,7 @@ struct BottomTool: View {
                         }
                     }
                     
-                    Divider()
+                    ThemedDivider()
                         .frame(width: maxWidth - 48)
                     
                     HStack(spacing: 0) {
@@ -337,7 +337,7 @@ struct BottomTool: View {
                         .frame(minWidth: 0, maxWidth: .infinity)
                     }
                     
-                    Divider()
+                    ThemedDivider()
                         .frame(width: maxWidth - 48)
                     
                     // reach target

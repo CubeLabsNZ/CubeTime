@@ -67,7 +67,7 @@ struct SessionsView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .sheet(isPresented: $showNewSessionPopUp) {
-            NewSessionModalView(showNewSessionPopUp: $showNewSessionPopUp)
+            NewSessionRootView(showNewSessionPopUp: $showNewSessionPopUp)
                 .environment(\.managedObjectContext, managedObjectContext)
         }
     }
@@ -125,7 +125,7 @@ struct CustomiseSessionView: View {
                             SessionNameField(name: $name)
                         }
                         .frame(height: bigFrameHeight)
-                        .modifier(NewStandardSessionViewBlocks())
+                        .modifier(CardBlockBackground())
                         
                         if sessionItem.session_type == SessionTypes.compsim.rawValue {
                             CompSimTargetEntry(targetStr: $targetStr)
@@ -221,7 +221,7 @@ struct EventPicker: View {
         }
         .padding()
         .frame(height: frameHeight)
-        .modifier(NewStandardSessionViewBlocks())
+        .modifier(CardBlockBackground())
         
         
         LazyVGrid(columns: sessionEventTypeColumns, spacing: 0) {
@@ -242,7 +242,7 @@ struct EventPicker: View {
         }
         .padding()
         .frame(height: 180)
-        .modifier(NewStandardSessionViewBlocks())
+        .modifier(CardBlockBackground())
     }
 }
 
@@ -254,7 +254,7 @@ struct SessionNameField: View {
             .padding(12)
             .font(.title2.weight(.semibold))
             .multilineTextAlignment(TextAlignment.center)
-            .background(Color(uiColor: UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0)))
+            .background(Color("indent1"))
             .cornerRadius(10)
             .padding([.horizontal, .bottom])
     }
@@ -283,7 +283,7 @@ struct PinSessionToggle: View {
         .tint(.yellow)
         .padding()
         .frame(height: frameHeight)
-        .modifier(NewStandardSessionViewBlocks())
+        .modifier(CardBlockBackground())
     }
 }
 
@@ -306,40 +306,41 @@ struct CompSimTargetEntry: View {
             .padding()
         }
         .frame(height: frameHeight)
-        .modifier(NewStandardSessionViewBlocks())
+        .modifier(CardBlockBackground())
     }
 }
 
 /// **Customise Sessions **
 
 struct NewSessionTypeCard: View {
-    @Environment(\.colorScheme) var colourScheme
     let name: String
-    let icon: String
-    let iconProps: SessionTypeIconProps
+    let icon: SessionTypeIcon
     @Binding var show: Bool
     
     var body: some View {
         HStack {
-            Image(systemName: icon)
-                .font(.system(size: iconProps.size, weight: iconProps.weight))
-                .foregroundColor(colourScheme == .light ? .black : .white)
-                .padding(.leading, iconProps.leaPadding)
-                .padding(.trailing, iconProps.traPadding)
-                .padding(.vertical, 8)
+            Group {
+                Image(systemName: icon.iconName)
+                    .font(.system(size: icon.size, weight: icon.weight))
+                    .padding(.leading, icon.padding.leading)
+                    .padding(.trailing, icon.padding.trailing)
+                    .padding(.vertical, 8)
+                
+                Text(name)
+                    .font(.body)
+            }
+            .foregroundColor(Color("dark"))
             
-            Text(name)
-                .font(.body)
-                .foregroundColor(colourScheme == .light ? .black : .white)
             
             Spacer()
         }
-        .background(Color(uiColor: colourScheme == .dark ? .black : .systemGray6))
+        .background(Color("overlay0"))
         .onTapGesture {
             show = true
         }
     }
 }
+
 
 struct NewSessionTypeCardGroup<Content: View>: View {
     @Environment(\.colorScheme) var colourScheme
@@ -355,16 +356,15 @@ struct NewSessionTypeCardGroup<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(title)
-                .font(.system(size: 22, weight: .bold, design: .default))
+                .font(.title2.weight(.bold))
                 .padding(.bottom, 8)
                 .padding(.leading, 4)
             
             VStack(spacing: 0) {
                 content()
             }
-            .background(Color(uiColor: colourScheme == .dark ? .black : .systemGray6))
-            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-            .cornerRadius(10)
+            .background(Color("overlay0"))
+            .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
         }
         .padding(.horizontal)
     }
