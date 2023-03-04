@@ -2,10 +2,10 @@
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/65262710/146141635-06fff458-003e-45af-b7ee-6860d7b4ea72.png"
-       width="300"
-       height="300">
+       width="200"
+       height="200">
 <p align="center">
-<h4 align="center">SPEEDCUBING TIMER & UTILITIES</h4>
+<h4 align="center">SPEEDCUBING TIMER & UTILITY APP</h4>
 <p align="center">
   <a href="https://apps.apple.com/us/app/cubetime/id1600392245">
     <img src="https://user-images.githubusercontent.com/24711088/146530953-94bc8542-8a1a-49a5-9faf-75c63281f2fc.png"
@@ -37,12 +37,7 @@
    * Clean tab bar for effortless navigation
 
 ## Screenshots
-### Dark Mode
-![dark mode screenshot](https://user-images.githubusercontent.com/65262710/146157994-ee501ac8-1c26-424b-9826-34cb8f1727f9.png)
-
-### Light Mode
-![light mode screenshot](https://user-images.githubusercontent.com/65262710/146157963-54d03464-625d-4dfe-a411-d36af00e3484.png)
-
+Coming soon!
 
 ## Features
 ### App Features
