@@ -87,11 +87,9 @@ Here's an outline of some of the major upcoming features
   * Trackpad support
   * Multitasking window support
 - Cloudkit for time syncing
-- Multiperson nearby competition modes, so you can cube along with your friends
-- Audio analysis for pauses during solves
 - Support for bluetooth cubes
 - Support for stackmats
-- ~~Draw scramble functionality, along with a native implementation of a scrambler built from scatch~~
+- ~~Draw scramble functionality~~
 - Importing sessions and solves from common timers, such as ChaoTimer and csTimer
 - Easy to use export to save your sessions
 
