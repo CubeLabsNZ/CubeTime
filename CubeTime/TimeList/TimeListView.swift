@@ -260,9 +260,8 @@ struct TimeListView: View {
                             }
                             .padding(.horizontal)
                         } else {
+                            let groups = stopwatchManager.compsimSolveGroups!
                             LazyVStack(spacing: 12) {
-                                let groups = ((stopwatchManager.currentSession as! CompSimSession).solvegroups!.array as! [CompSimSolveGroup])
-                                    
                                 if groups.count != 0 {
                                     TimeBar(solvegroup: groups.last!, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode, current: true)
                                     

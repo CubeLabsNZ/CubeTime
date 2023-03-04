@@ -69,15 +69,16 @@ struct TimeBar: View {
                             let grey: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.systemGray, .font: UIFont.systemFont(ofSize: 17, weight: .medium)]
                             let normal: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 17, weight: .medium)]
                           
-                            
-                            for (index, solve) in Array((solvegroup.solves!.array as! [Solves]).enumerated()) {
-                                if calculatedAverage.trimmedSolves!.contains(solve) {
-                                    finalStr.append(NSMutableAttributedString(string: "(" + formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)) + ")", attributes: grey))
-                                } else {
-                                    finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)), attributes: normal))
-                                }
-                                if index < solvegroup.solves!.count-1 {
-                                    finalStr.append(NSMutableAttributedString(string: ", "))
+                            if let ar = solvegroup.solves {
+                                for (index, solve) in Array((ar.array as! [Solves]).enumerated()) {
+                                    if calculatedAverage.trimmedSolves!.contains(solve) {
+                                        finalStr.append(NSMutableAttributedString(string: "(" + formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)) + ")", attributes: grey))
+                                    } else {
+                                        finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)), attributes: normal))
+                                    }
+                                    if index < solvegroup.solves!.count-1 {
+                                        finalStr.append(NSMutableAttributedString(string: ", "))
+                                    }
                                 }
                             }
                             
@@ -168,8 +169,7 @@ struct TimeBar: View {
         .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 10, style: .continuous))
         .contextMenu {
             Button (role: .destructive) {
-                managedObjectContext.delete(solvegroup)
-                try! managedObjectContext.save()
+                stopwatchManager.delete(solveGroup: solvegroup)
                 
                 
                 // timeListManager.refilter() /// and delete this im using this temporarily to update
