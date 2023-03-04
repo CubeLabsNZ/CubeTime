@@ -121,9 +121,10 @@ struct TimerHeader: View {
                             .font(.system(size: 15, weight: .regular))
                         
                         Text("\(stopwatchManager.phaseCount)")
-                            .font(.system(size: 15, weight: .regular))
+                            .font(.system(size: 15, weight: .medium))
                         
                     }
+                    .padding(.trailing)
                 case .compsim:
                     let solveth: Int = stopwatchManager.currentSolveth!+1
                     
@@ -131,8 +132,8 @@ struct TimerHeader: View {
                         .font(.system(size: 15, weight: .regular))
                         .padding(.horizontal, 2)
                     
-                    Divider()
-                        .padding(.vertical, 4)
+                    ThemedDivider(isHorizontal: false)
+                        .padding(.vertical, 6)
                     
                     HStack (spacing: 10) {
                         Image(systemName: "target")
@@ -162,6 +163,8 @@ struct TimerHeader: View {
                                 }))
                                 .padding(.trailing, 4)
                         }
+                        .padding(.leading, 2)
+                        .padding(.trailing, 12)
                     }
                     .foregroundColor(accentColour)
                 default:

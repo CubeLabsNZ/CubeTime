@@ -132,7 +132,7 @@ struct BottomToolBG: View {
     let maxWidth: CGFloat
     
     var body: some View {
-        RoundedRectangle(cornerRadius: 8, style: .continuous)
+        RoundedRectangle(cornerRadius: 12, style: .continuous)
             .fill(Color("overlay0"))
             .frame(width: maxWidth, height: maxHeight)
     }
@@ -356,9 +356,13 @@ struct BottomTool: View {
                                     .modifier(DynamicText())
                             } else {
                                 Text("...")
-                                    .font(.system(size: 24, weight: .medium, design: .default))
+                                    .font(.system(size: 24, weight: .medium))
                                     .foregroundColor(Color("grey"))
                             }
+                        } else {
+                            Text("...")
+                                .font(.system(size: 24, weight: .medium))
+                                .foregroundColor(Color("grey"))
                         }
                     }
                 }
