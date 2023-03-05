@@ -435,8 +435,8 @@
 				23F4113729ADDA77002C4E23 /* ToolsViewModel.swift */,
 				AF8874C029AAC8C0001E49D0 /* ToolsList.swift */,
 				23CA8A0029AAF338006676BF /* TimerOnlyTool.swift */,
-				AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */,
 				AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */,
+				AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";

@@ -12,15 +12,20 @@ struct ScrambleOnlyTool: View {
     @StateObject var scrambleController = ScrambleController()
     
     var body: some View {
-        GeometryReader { geo in
-            
+        ZStack {
             if let scr = scrambleController.scrambleStr {
-                ScrambleText(scr: scr, timerSize: geo.size, scrambleSheetStr: .constant(nil))
-                    .frame(maxHeight: .infinity, alignment: .top)
+                Text(scr)
+                    .recursiveMono(fontSize: 24, weight: 500)
+                    .padding(.horizontal)
             } else {
                 LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             }
+            
+            Color.white.opacity(0.0001)
+                .onTapGesture {
+                    scrambleController.rescramble()
+                }
+            
             
             ToolHeader(name: tools[1].name, image: tools[1].iconName, content: {
                 Picker("", selection: $scrambleController.scrambleType) {
@@ -30,14 +35,9 @@ struct ScrambleOnlyTool: View {
                     }
                 }
             })
-            .allowsHitTesting(true)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
-        .contentShape(Rectangle())
         .onAppear {
-            scrambleController.rescramble()
-        }
-        .onTapGesture {
             scrambleController.rescramble()
         }
     }

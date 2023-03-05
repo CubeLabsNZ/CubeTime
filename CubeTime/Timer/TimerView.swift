@@ -402,7 +402,6 @@ struct ScrambleText: View {
                 scrambleSheetStr = SheetStrWrapper(str: scr)
             }
             .padding(.horizontal)
-            .padding(.leading, 0)
             .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
     }
 }
