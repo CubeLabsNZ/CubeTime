@@ -95,8 +95,8 @@ enum TimerTool {
 
 struct BottomTools: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    @AppStorage(gsKeys.showScramble.rawValue) private var showScramble: Bool = true
-    @AppStorage(gsKeys.showStats.rawValue) private var showStats: Bool = true
+    @AppStorage(generalSettingsKey.showScramble.rawValue) private var showScramble: Bool = true
+    @AppStorage(generalSettingsKey.showStats.rawValue) private var showStats: Bool = true
     
     let timerSize: CGSize
     @Binding var scrambleSheetStr: SheetStrWrapper?
@@ -419,11 +419,10 @@ struct TimerView: View {
     
     // GET USER DEFAULTS
     @AppStorage("onboarding") var showOnboarding: Bool = true
-    @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
-    @AppStorage(gsKeys.showPrevTime.rawValue) private var showPrevTime: Bool = false
-    @AppStorage(gsKeys.inputMode.rawValue) private var inputMode: InputMode = .timer
+    @AppStorage(generalSettingsKey.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
+    @AppStorage(appearanceSettingsKey.scrambleSize.rawValue) private var scrambleSize: Int = 18
+    @AppStorage(generalSettingsKey.showPrevTime.rawValue) private var showPrevTime: Bool = false
+    @AppStorage(generalSettingsKey.inputMode.rawValue) private var inputMode: InputMode = .timer
     
     
     // FOCUS STATES
@@ -670,13 +669,12 @@ struct TimerView: View {
 struct TimeScrambleDetail: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.dismiss) var dismiss
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
     
     var scramble: String
     var svg: String?
-    @State var windowedScrambleSize: Int = UserDefaults.standard.integer(forKey: asKeys.scrambleSize.rawValue)
+    @State var windowedScrambleSize: Int = UserDefaults.standard.integer(forKey: appearanceSettingsKey.scrambleSize.rawValue)
     
     init(_ scramble: String, _ svg: String?) {
         self.scramble = scramble
@@ -717,7 +715,7 @@ struct TimeScrambleDetail: View {
                             } label: {
                                 Image(systemName: "textformat.size.smaller")
                                     .font(.system(size: 17, weight: .medium, design: .rounded))
-                                    .foregroundColor(accentColour)
+                                    .foregroundColor(Color.accentColor)
                             }
                             
                             
@@ -726,7 +724,7 @@ struct TimeScrambleDetail: View {
                             } label: {
                                 Image(systemName: "textformat.size.larger")
                                     .font(.system(size: 17, weight: .medium, design: .rounded))
-                                    .foregroundColor(accentColour)
+                                    .foregroundColor(Color.accentColor)
                             }
                         }
                     }

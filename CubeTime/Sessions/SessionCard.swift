@@ -9,8 +9,6 @@ struct SessionCard: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    
     @State private var isShowingDeleteDialog = false
     @State private var isShowingCustomizeDialog = false
     
@@ -70,35 +68,35 @@ struct SessionCard: View {
                             ZStack {
                                 if session_type != .standard {
                                     RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                        .fill(accentColour.opacity(0.33))
+                                        .fill(Color.accentColor.opacity(0.33))
                                         .frame(width: 40, height: 40)
                                         .padding(.trailing, 12)
                                 }
                                 
-                                switch session_type {
-                                case .algtrainer:
-                                    Image(systemName: "command.square")
-                                        .font(.system(size: 26, weight: .semibold))
-                                        .foregroundColor(accentColour)
-                                        .padding(.trailing, 12)
-                                case .playground:
-                                    Image(systemName: "square.on.square")
-                                        .font(.system(size: 22, weight: .semibold))
-                                        .foregroundColor(accentColour)
-                                        .padding(.trailing, 12)
-                                case .multiphase:
-                                    Image(systemName: "square.stack")
-                                        .font(.system(size: 22, weight: .semibold))
-                                        .foregroundColor(accentColour)
-                                        .padding(.trailing, 12)
-                                case .compsim:
-                                    Image(systemName: "globe.asia.australia")
-                                        .font(.system(size: 26, weight: .bold))
-                                        .foregroundColor(accentColour)
-                                        .padding(.trailing, 12)
-                                default:
-                                    EmptyView()
+                                Group {
+                                    switch session_type {
+                                    case .algtrainer:
+                                        Image(systemName: "command.square")
+                                            .font(.system(size: 26, weight: .semibold))
+                                        
+                                    case .playground:
+                                        Image(systemName: "square.on.square")
+                                            .font(.system(size: 22, weight: .semibold))
+                                        
+                                    case .multiphase:
+                                        Image(systemName: "square.stack")
+                                            .font(.system(size: 22, weight: .semibold))
+                                        
+                                    case .compsim:
+                                        Image(systemName: "globe.asia.australia")
+                                            .font(.system(size: 26, weight: .bold))
+                                        
+                                    default:
+                                        EmptyView()
+                                    }
                                 }
+                                .foregroundColor(Color.accentColor)
+                                .padding(.trailing, 12)
                             }
                             
                             

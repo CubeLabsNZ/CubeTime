@@ -54,39 +54,39 @@ struct CubeTime: App {
         userDefaults.register(
             defaults: [
                 // timer settings
-                gsKeys.inspection.rawValue: false,
-                gsKeys.inspectionCountsDown.rawValue: false,
-                gsKeys.showCancelInspection.rawValue: true,
-                gsKeys.inspectionAlert.rawValue: true,
-                gsKeys.inspectionAlertType.rawValue: 0,
+                generalSettingsKey.inspection.rawValue: false,
+                generalSettingsKey.inspectionCountsDown.rawValue: false,
+                generalSettingsKey.showCancelInspection.rawValue: true,
+                generalSettingsKey.inspectionAlert.rawValue: true,
+                generalSettingsKey.inspectionAlertType.rawValue: 0,
                 
-                gsKeys.freeze.rawValue: 0.5,
-                gsKeys.timeDpWhenRunning.rawValue: 3,
-                gsKeys.showSessionName.rawValue: false,
+                generalSettingsKey.freeze.rawValue: 0.5,
+                generalSettingsKey.timeDpWhenRunning.rawValue: 3,
+                generalSettingsKey.showSessionName.rawValue: false,
                 
                 // timer tools
-                gsKeys.showScramble.rawValue: true,
-                gsKeys.showStats.rawValue: true,
+                generalSettingsKey.showScramble.rawValue: true,
+                generalSettingsKey.showStats.rawValue: true,
                 
                 // accessibility
-                gsKeys.hapBool.rawValue: true,
-                gsKeys.hapType.rawValue: UIImpactFeedbackGenerator.FeedbackStyle.rigid.rawValue,
-                gsKeys.forceAppZoom.rawValue: false,
-                gsKeys.appZoom.rawValue: 3,
-                gsKeys.gestureDistance.rawValue: 50,
+                generalSettingsKey.hapBool.rawValue: true,
+                generalSettingsKey.hapType.rawValue: UIImpactFeedbackGenerator.FeedbackStyle.rigid.rawValue,
+                generalSettingsKey.forceAppZoom.rawValue: false,
+                generalSettingsKey.appZoom.rawValue: 3,
+                generalSettingsKey.gestureDistance.rawValue: 50,
                 
                 // show previous time afte solve deleted
-                gsKeys.showPrevTime.rawValue: false,
+                generalSettingsKey.showPrevTime.rawValue: false,
                 
                 // statistics
-                gsKeys.displayDP.rawValue: 3,
+                generalSettingsKey.displayDP.rawValue: 3,
                 
                 // colours
-                asKeys.graphGlow.rawValue: true,
+                appearanceSettingsKey.graphGlow.rawValue: true,
                 
-                asKeys.scrambleSize.rawValue: 18,
-                asKeys.fontWeight.rawValue: 516.0,
-                asKeys.fontCasual.rawValue: 0.0,
+                appearanceSettingsKey.scrambleSize.rawValue: 18,
+                appearanceSettingsKey.fontWeight.rawValue: 516.0,
+                appearanceSettingsKey.fontCasual.rawValue: 0.0,
             ]
         )
         
@@ -157,12 +157,11 @@ extension EnvironmentValues {
 }
 
 struct MainView: View {
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @StateObject var tabRouter: TabRouter = TabRouter.shared
     
     
-    @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
-    @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
+    @AppStorage(appearanceSettingsKey.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
+    @AppStorage(appearanceSettingsKey.dmBool.rawValue) private var darkMode: Bool = false
 
         
     var body: some View {
@@ -170,7 +169,7 @@ struct MainView: View {
             Group {
                 MainTabsView()
             }
-            .tint(accentColour)
+            .tint(Color.accentColor)
             .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
             .environment(\.globalGeometrySize, geo.size)
             .environmentObject(tabRouter)

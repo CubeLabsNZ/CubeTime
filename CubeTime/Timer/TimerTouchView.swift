@@ -31,7 +31,7 @@ class TimerUIView: UIViewController {
     
     // iPad keyboard support
     
-    private let userHoldTime: Double = UserDefaults.standard.double(forKey: gsKeys.freeze.rawValue)
+    private let userHoldTime: Double = UserDefaults.standard.double(forKey: generalSettingsKey.freeze.rawValue)
     
     private var isLongPress = false
     private var keyDownThatStopped: UIKeyboardHIDUsage? = nil
@@ -82,8 +82,8 @@ struct TimerTouchView: UIViewControllerRepresentable {
     
     @EnvironmentObject var timerController: TimerContoller
     
-    @AppStorage(gsKeys.freeze.rawValue) private var userHoldTime: Double = 0.5
-    @AppStorage(gsKeys.gestureDistance.rawValue) private var gestureThreshold: Double = 50
+    @AppStorage(generalSettingsKey.freeze.rawValue) private var userHoldTime: Double = 0.5
+    @AppStorage(generalSettingsKey.gestureDistance.rawValue) private var gestureThreshold: Double = 50
     
     init () {
     }

@@ -3,7 +3,6 @@ import CoreData
 import Combine
 
 struct NewSessionRootView: View {
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.dismiss) var dismiss

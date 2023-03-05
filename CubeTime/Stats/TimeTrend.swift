@@ -299,8 +299,8 @@ extension View {
 
 
 struct Line: View {
-    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
-    @AppStorage(asKeys.graphAnimation.rawValue) private var graphAnimation: Bool = true
+    @AppStorage(appearanceSettingsKey.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    @AppStorage(appearanceSettingsKey.graphAnimation.rawValue) private var graphAnimation: Bool = true
     
     var data: [Double]
     var frame: CGRect
@@ -458,8 +458,8 @@ struct Legend: View {
 struct TimeTrend: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
-    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
-    @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
+    @AppStorage(appearanceSettingsKey.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    @AppStorage(appearanceSettingsKey.graphGlow.rawValue) private var graphGlow: Bool = true
     
     @ScaledMetric(relativeTo: .body) var monospacedFontSizeBody: CGFloat = 17
 

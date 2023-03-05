@@ -1,7 +1,7 @@
 import SwiftUI
 
 
-enum gsKeys: String {
+enum generalSettingsKey: String {
     case freeze,
          inspection, inspectionCountsDown, showCancelInspection, inspectionAlert, inspectionAlertType,
          inputMode,
@@ -32,41 +32,39 @@ extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
 
 struct GeneralSettingsView: View {
     // timer settings
-    @AppStorage(gsKeys.inspection.rawValue) private var inspectionTime: Bool = false
-    @AppStorage(gsKeys.inspectionCountsDown.rawValue) private var insCountDown: Bool = false
-    @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
-    @AppStorage(gsKeys.inspectionAlert.rawValue) private var inspectionAlert: Bool = true
-    @AppStorage(gsKeys.inspectionAlertType.rawValue) private var inspectionAlertType: Int = 0
+    @AppStorage(generalSettingsKey.inspection.rawValue) private var inspectionTime: Bool = false
+    @AppStorage(generalSettingsKey.inspectionCountsDown.rawValue) private var insCountDown: Bool = false
+    @AppStorage(generalSettingsKey.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
+    @AppStorage(generalSettingsKey.inspectionAlert.rawValue) private var inspectionAlert: Bool = true
+    @AppStorage(generalSettingsKey.inspectionAlertType.rawValue) private var inspectionAlertType: Int = 0
     
-    @AppStorage(gsKeys.inputMode.rawValue) private var inputMode: InputMode = InputMode.timer
+    @AppStorage(generalSettingsKey.inputMode.rawValue) private var inputMode: InputMode = InputMode.timer
     
-    @AppStorage(gsKeys.freeze.rawValue) private var holdDownTime: Double = 0.5
-    @AppStorage(gsKeys.timeDpWhenRunning.rawValue) private var timerDP: Int = 3
-    @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
+    @AppStorage(generalSettingsKey.freeze.rawValue) private var holdDownTime: Double = 0.5
+    @AppStorage(generalSettingsKey.timeDpWhenRunning.rawValue) private var timerDP: Int = 3
+    @AppStorage(generalSettingsKey.showSessionName.rawValue) private var showSessionName: Bool = false
     
     // timer tools
-    @AppStorage(gsKeys.showScramble.rawValue) private var showScramble: Bool = true
-    @AppStorage(gsKeys.showStats.rawValue) private var showStats: Bool = true
+    @AppStorage(generalSettingsKey.showScramble.rawValue) private var showScramble: Bool = true
+    @AppStorage(generalSettingsKey.showStats.rawValue) private var showStats: Bool = true
     
     // accessibility
-    @AppStorage(gsKeys.hapBool.rawValue) private var hapticFeedback: Bool = true
-    @AppStorage(gsKeys.hapType.rawValue) private var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
-    @AppStorage(gsKeys.forceAppZoom.rawValue) private var forceAppZoom: Bool = false
-    @AppStorage(gsKeys.appZoom.rawValue) private var appZoom: AppZoomWrapper = AppZoomWrapper(rawValue: 3)
-    @AppStorage(gsKeys.gestureDistance.rawValue) private var gestureActivationDistance: Double = 50
+    @AppStorage(generalSettingsKey.hapBool.rawValue) private var hapticFeedback: Bool = true
+    @AppStorage(generalSettingsKey.hapType.rawValue) private var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
+    @AppStorage(generalSettingsKey.forceAppZoom.rawValue) private var forceAppZoom: Bool = false
+    @AppStorage(generalSettingsKey.appZoom.rawValue) private var appZoom: AppZoomWrapper = AppZoomWrapper(rawValue: 3)
+    @AppStorage(generalSettingsKey.gestureDistance.rawValue) private var gestureActivationDistance: Double = 50
     
     // show previous time after delete
-    @AppStorage(gsKeys.showPrevTime.rawValue) private var showPrevTime: Bool = false
+    @AppStorage(generalSettingsKey.showPrevTime.rawValue) private var showPrevTime: Bool = false
     
     // statistics
-    @AppStorage(gsKeys.displayDP.rawValue) private var displayDP: Int = 3
+    @AppStorage(generalSettingsKey.displayDP.rawValue) private var displayDP: Int = 3
     
     
         
     @Environment(\.colorScheme) var colourScheme
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
     
     let hapticNames: [UIImpactFeedbackGenerator.FeedbackStyle: String] = [
@@ -83,7 +81,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Image(systemName: "timer")
                         .font(.subheadline.weight(.bold))
-                        .foregroundColor(accentColour)
+                        .foregroundColor(Color.accentColor)
                     Text("Timer Settings")
                         .font(.body.weight(.bold))
                     
@@ -97,7 +95,7 @@ struct GeneralSettingsView: View {
                             Text("Inspection Time")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         
                     }
                     .padding(.horizontal)
@@ -112,7 +110,7 @@ struct GeneralSettingsView: View {
                             Text("Inspection Counts Down")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         .padding(.horizontal)
                         .onChange(of: insCountDown) { newValue in
                             stopwatchManager.timerController.insCountDown = newValue
@@ -122,7 +120,7 @@ struct GeneralSettingsView: View {
                             Text("Show Cancel Inspection")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         .padding(.horizontal)
                         
                         Text("Display a cancel inspection button when inspecting.")
@@ -138,7 +136,7 @@ struct GeneralSettingsView: View {
                             Text("Inpsection Alert")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         .padding(.horizontal)
                         .onChange(of: inspectionAlert) { newValue in
                             stopwatchManager.timerController.inspectionAlert = newValue
@@ -228,7 +226,7 @@ struct GeneralSettingsView: View {
                                 .frame(width: 100, alignment: .trailing)
                                 .font(.body)
                         }
-                        .accentColor(accentColour)
+                        .accentColor(Color.accentColor)
                     }
                     
                     if inputMode == .timer {
@@ -251,7 +249,7 @@ struct GeneralSettingsView: View {
                                     .font(.body)
                                     .frame(width: 100, alignment: .trailing)
                             }
-                            .accentColor(accentColour)
+                            .accentColor(Color.accentColor)
                         }
                         .onChange(of: timerDP) { newValue in
                             stopwatchManager.timerController.timeDP = newValue
@@ -274,7 +272,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Image(systemName: "wrench")
                         .font(.subheadline.weight(.bold))
-                        .foregroundColor(accentColour)
+                        .foregroundColor(Color.accentColor)
                     Text("Timer Tools")
                         .font(.body.weight(.bold))
 
@@ -289,7 +287,7 @@ struct GeneralSettingsView: View {
                         Text("Show draw scramble on timer")
                             .font(.body.weight(.medium))
                     }
-                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                    .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                     
                 }
                 .padding(.horizontal)
@@ -303,7 +301,7 @@ struct GeneralSettingsView: View {
 //                    .onChange(of: showStats) { newValue in
 //                        stopwatchManager.updateStats()
 //                    }
-                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                    .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                     
                 }
                 .padding(.horizontal)
@@ -337,7 +335,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Image(systemName: "rectangle.and.pencil.and.ellipsis")
                         .font(.subheadline.weight(.bold))
-                        .foregroundColor(accentColour)
+                        .foregroundColor(Color.accentColor)
                     Text("Timer Interface")
                         .font(.body.weight(.bold))
 
@@ -351,7 +349,7 @@ struct GeneralSettingsView: View {
                             Text("Show Previous Time")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         .padding(.horizontal)
                         .onChange(of: showPrevTime) { newValue in
                             stopwatchManager.showPrevTime = newValue
@@ -420,7 +418,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Image(systemName: "eye")
                         .font(.subheadline.weight(.bold))
-                        .foregroundColor(accentColour)
+                        .foregroundColor(Color.accentColor)
                     Text("Accessibility")
                         .font(.body.weight(.bold))
 
@@ -460,7 +458,7 @@ struct GeneralSettingsView: View {
                                 .frame(width: 100, alignment: .trailing)
                                 .font(.body)
                         }
-                        .accentColor(accentColour)
+                        .accentColor(Color.accentColor)
                     }
                     .padding(.horizontal)
                     .onChange(of: feedbackType) { newValue in
@@ -503,7 +501,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Image(systemName: "chart.bar.xaxis")
                         .font(.subheadline.weight(.bold))
-                        .foregroundColor(accentColour)
+                        .foregroundColor(Color.accentColor)
                     Text("Statistics")
                         .font(.body.weight(.bold))
 
@@ -529,7 +527,7 @@ struct GeneralSettingsView: View {
                             .font(.body)
                             .frame(width: 100, alignment: .trailing)
                     }
-                    .accentColor(accentColour)
+                    .accentColor(Color.accentColor)
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 12)

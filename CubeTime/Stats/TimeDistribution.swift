@@ -75,8 +75,8 @@ func getTruncatedMinMax(numbers: Array<(Double, Int)>) -> (Double?, Double?) {
 
 
 struct TimeDistribution: View {
-    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
-    @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
+    @AppStorage(appearanceSettingsKey.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    @AppStorage(appearanceSettingsKey.graphGlow.rawValue) private var graphGlow: Bool = true
 
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager

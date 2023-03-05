@@ -1,15 +1,7 @@
 import SwiftUI
 
-
-struct settingsBlocks: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3))
-    }
-}
-
-enum asKeys: String {
-    case accentColour, overrideDM, dmBool, staticGradient, gradientSelected, graphGlow, graphAnimation, scrambleSize, fontWeight, fontCasual, fontCursive
+enum appearanceSettingsKey: String {
+    case overrideDM, dmBool, staticGradient, gradientSelected, graphGlow, graphAnimation, scrambleSize, fontWeight, fontCasual, fontCursive
 }
 
 
@@ -20,26 +12,23 @@ struct AppearanceSettingsView: View {
     @State private var showFontSizeOptions: Bool = false
     @State private var showPreview: Bool = false
     
-    let accentColours: [Color] = [.cyan, .blue, .indigo, .purple, .red]
-    
     private let columns = [GridItem(spacing: 16), GridItem(spacing: 16)]
     
     // colours
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    @AppStorage(asKeys.staticGradient.rawValue) private var staticGradient: Bool = true
-    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
-    @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
-    @AppStorage(asKeys.graphAnimation.rawValue) private var graphAnimation: Bool = true
+    @AppStorage(appearanceSettingsKey.staticGradient.rawValue) private var staticGradient: Bool = true
+    @AppStorage(appearanceSettingsKey.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    @AppStorage(appearanceSettingsKey.graphGlow.rawValue) private var graphGlow: Bool = true
+    @AppStorage(appearanceSettingsKey.graphAnimation.rawValue) private var graphAnimation: Bool = true
     
     // system settings (appearance)
-    @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
-    @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
+    @AppStorage(appearanceSettingsKey.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
+    @AppStorage(appearanceSettingsKey.dmBool.rawValue) private var darkMode: Bool = false
     
     
-    @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
-    @AppStorage(asKeys.fontWeight.rawValue) private var fontWeight: Double = 516.0
-    @AppStorage(asKeys.fontCasual.rawValue) private var fontCasual: Double = 0.0
-    @AppStorage(asKeys.fontCursive.rawValue) private var fontCursive: Bool = false
+    @AppStorage(appearanceSettingsKey.scrambleSize.rawValue) private var scrambleSize: Int = 18
+    @AppStorage(appearanceSettingsKey.fontWeight.rawValue) private var fontWeight: Double = 516.0
+    @AppStorage(appearanceSettingsKey.fontCasual.rawValue) private var fontCasual: Double = 0.0
+    @AppStorage(appearanceSettingsKey.fontCursive.rawValue) private var fontCursive: Bool = false
     
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
@@ -52,7 +41,7 @@ struct AppearanceSettingsView: View {
                     Image(systemName: "paintbrush.pointed.fill")
                         .font(.subheadline.weight(.bold))
 
-                        .foregroundColor(accentColour)
+                        .foregroundColor(Color.accentColor)
                     Text("Colours")
                         .font(.body.weight(.bold))
                     
@@ -217,7 +206,7 @@ struct AppearanceSettingsView: View {
                                 Text("Graph Glow")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                                .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 10)
@@ -238,7 +227,7 @@ struct AppearanceSettingsView: View {
                                 Text("Graph Animation")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                                .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 10)
@@ -268,7 +257,7 @@ struct AppearanceSettingsView: View {
                 HStack {
                     Image(systemName: "command")
                         .font(.subheadline.weight(.bold))
-                        .foregroundColor(accentColour)
+                        .foregroundColor(Color.accentColor)
                     Text("System Settings")
                         .font(.body.weight(.bold))
                     
@@ -283,7 +272,7 @@ struct AppearanceSettingsView: View {
                             Text("Override System Appearance")
                                 .font(.body.weight(.medium))
                         }
-                            .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                            .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         
                     }
                     .padding(.horizontal)
@@ -295,7 +284,7 @@ struct AppearanceSettingsView: View {
                                 Text("Dark Mode")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                                .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 12)
@@ -317,7 +306,7 @@ struct AppearanceSettingsView: View {
                 HStack {
                     Image(systemName: "textformat")
                         .font(.subheadline.weight(.bold))
-                        .foregroundColor(accentColour)
+                        .foregroundColor(Color.accentColor)
                     Text("Font Settings")
                         .font(.body.weight(.bold))
                     
@@ -442,7 +431,7 @@ struct AppearanceSettingsView: View {
                                 Text("Cursive Font")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                                .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 12)
@@ -472,7 +461,7 @@ struct TimerPreview: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.globalGeometrySize) var globalGeometrySize
     
-    @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
+    @AppStorage(appearanceSettingsKey.scrambleSize.rawValue) private var scrambleSize: Int = 18
     
     
     var body: some View {

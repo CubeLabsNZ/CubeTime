@@ -4,8 +4,6 @@ import Combine
 
 // MARK: - MAIN SESSION VIEW
 struct SessionsView: View {
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
@@ -76,7 +74,6 @@ struct SessionsView: View {
 
 // MARK: - CUSTOMISE SESSIONS
 struct CustomiseSessionView: View {
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
@@ -178,7 +175,7 @@ struct CustomiseSessionView: View {
                 }
             }
         }
-        .accentColor(accentColour)
+        .accentColor(Color.accentColor)
         .ignoresSafeArea(.keyboard)
     }
 }
@@ -186,7 +183,6 @@ struct CustomiseSessionView: View {
 
 // MARK: - HELPER FUNCTIONS
 struct EventPicker: View {
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @Binding var sessionEventType: Int32
     
     var body: some View {
@@ -210,7 +206,7 @@ struct EventPicker: View {
                         .frame(maxWidth: 120, alignment: .trailing)
 
                 }
-                .accentColor(accentColour)
+                .accentColor(Color.accentColor)
                 
             }
             .frame(maxWidth: .infinity)

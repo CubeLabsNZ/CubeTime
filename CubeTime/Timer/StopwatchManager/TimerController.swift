@@ -47,20 +47,20 @@ class TimerContoller: ObservableObject {
     @Published var mode: stopWatchMode = .stopped
     @Published var timerColour: Color = Color.Timer.normal
     
-    var timeDP: Int = UserDefaults.standard.integer(forKey: gsKeys.timeDpWhenRunning.rawValue)
+    var timeDP: Int = UserDefaults.standard.integer(forKey: generalSettingsKey.timeDpWhenRunning.rawValue)
     
     #warning("TODO: find a better way of this that doesnt need onChange in settings.")
-    var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspection.rawValue)
-    var insCountDown: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionCountsDown.rawValue)
-    var inspectionAlert: Bool = UserDefaults.standard.bool(forKey: gsKeys.inspectionAlert.rawValue)
-    var inspectionAlertType: Int = UserDefaults.standard.integer(forKey: gsKeys.inspectionAlertType.rawValue)
+    var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.inspection.rawValue)
+    var insCountDown: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.inspectionCountsDown.rawValue)
+    var inspectionAlert: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.inspectionAlert.rawValue)
+    var inspectionAlertType: Int = UserDefaults.standard.integer(forKey: generalSettingsKey.inspectionAlertType.rawValue)
     
-    var hapticType: Int = UserDefaults.standard.integer(forKey: gsKeys.hapType.rawValue) {
+    var hapticType: Int = UserDefaults.standard.integer(forKey: generalSettingsKey.hapType.rawValue) {
         didSet {
             calculateFeedbackStyle()
         }
     }
-    var hapticEnabled: Bool = UserDefaults.standard.bool(forKey: gsKeys.hapBool.rawValue) {
+    var hapticEnabled: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.hapBool.rawValue) {
         didSet {
             calculateFeedbackStyle()
         }

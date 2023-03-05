@@ -193,9 +193,6 @@ struct TimeListView: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    
     @State var solve: Solves?
     @State var calculatedAverage: CalculatedAverage?
     

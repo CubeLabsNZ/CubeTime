@@ -557,7 +557,7 @@ func formatSolveTime(secs: Double, penType: PenTypes? = PenTypes.none) -> String
         return "DNF"
     }
     
-    let dp = UserDefaults.standard.integer(forKey: gsKeys.displayDP.rawValue)
+    let dp = UserDefaults.standard.integer(forKey: generalSettingsKey.displayDP.rawValue)
     let secsfmt = penType == .plustwo ? ".\(dp)f+" : ".\(dp)f"
     
     if secs < 60 {

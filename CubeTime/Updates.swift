@@ -106,7 +106,6 @@ struct Updates: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
     
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @Binding var showUpdates: Bool
     
     let currentVersion: String = "\((Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String))"

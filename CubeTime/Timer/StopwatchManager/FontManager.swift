@@ -10,22 +10,22 @@ import SwiftUI
 import CoreText
 
 class FontManager: ObservableObject {
-    var fontWeight: Double = UserDefaults.standard.double(forKey: asKeys.fontWeight.rawValue) {
+    var fontWeight: Double = UserDefaults.standard.double(forKey: appearanceSettingsKey.fontWeight.rawValue) {
         didSet {
             updateFont()
         }
     }
-    var fontCasual: Double = UserDefaults.standard.double(forKey: asKeys.fontCasual.rawValue) {
+    var fontCasual: Double = UserDefaults.standard.double(forKey: appearanceSettingsKey.fontCasual.rawValue) {
         didSet {
             updateFont()
         }
     }
-    var fontCursive: Bool = UserDefaults.standard.bool(forKey: asKeys.fontCursive.rawValue) {
+    var fontCursive: Bool = UserDefaults.standard.bool(forKey: appearanceSettingsKey.fontCursive.rawValue) {
         didSet {
             updateFont()
         }
     }
-    var scrambleSize: Int = UserDefaults.standard.integer(forKey: asKeys.scrambleSize.rawValue) {
+    var scrambleSize: Int = UserDefaults.standard.integer(forKey: appearanceSettingsKey.scrambleSize.rawValue) {
         didSet {
             updateFont()
         }

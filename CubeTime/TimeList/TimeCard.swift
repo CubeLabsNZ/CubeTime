@@ -9,8 +9,6 @@ struct TimeCard: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    
     var solve: Solves
     
     let formattedTime: String
@@ -95,7 +93,7 @@ struct TimeCard: View {
                     .font(.body.weight(.bold))
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(accentColour)
+                        .foregroundColor(Color.accentColor)
                 }
             }
         }

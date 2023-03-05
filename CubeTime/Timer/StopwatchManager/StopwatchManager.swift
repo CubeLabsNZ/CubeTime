@@ -60,7 +60,7 @@ class StopwatchManager: ObservableObject {
     let managedObjectContext: NSManagedObjectContext
     
     // MARK: get user defaults
-    var showPrevTime: Bool = UserDefaults.standard.bool(forKey: gsKeys.showPrevTime.rawValue)
+    var showPrevTime: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.showPrevTime.rawValue)
 
     
     

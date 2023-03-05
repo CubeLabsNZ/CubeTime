@@ -10,7 +10,7 @@ struct StatsView: View {
     @EnvironmentObject var fontManager: FontManager
     
     
-    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    @AppStorage(appearanceSettingsKey.gradientSelected.rawValue) private var gradientSelected: Int = 6
     
     // Accessibility Scaling
     @ScaledMetric var blockHeightSmall = 75

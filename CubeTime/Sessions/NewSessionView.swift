@@ -6,8 +6,6 @@ struct NewSessionView: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    
     let sessionType: SessionTypes
     let typeName: String
     @Binding var showNewSessionPopUp: Bool

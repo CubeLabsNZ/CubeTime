@@ -38,9 +38,7 @@ struct TimerHeader: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var tabRouter: TabRouter
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    
-    @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionType: Bool = false
+    @AppStorage(generalSettingsKey.showSessionName.rawValue) private var showSessionType: Bool = false
     
     var targetFocused: FocusState<Bool>.Binding?
     
@@ -113,7 +111,7 @@ struct TimerHeader: View {
                                 .font(.system(size: 15, weight: .regular))
                         }
                     }
-                    .accentColor(accentColour)
+                    .accentColor(Color.accentColor)
                     .pickerStyle(.menu)
                 case .multiphase:
                     HStack(spacing: 0) {
@@ -138,7 +136,7 @@ struct TimerHeader: View {
                     HStack (spacing: 10) {
                         Image(systemName: "target")
                             .font(.system(size: 15))
-                            .foregroundColor(accentColour)
+                            .foregroundColor(Color.accentColor)
                         
                         ZStack {
                             Text(stopwatchManager.targetStr == "" ? "0.00" : stopwatchManager.targetStr)
@@ -153,7 +151,7 @@ struct TimerHeader: View {
                                 .submitLabel(.done)
                                 .focused(targetFocused!)
                                 .multilineTextAlignment(.leading)
-                                .tint(accentColour)
+                                .tint(Color.accentColor)
                                 .modifier(TimeMaskTextField(text: $stopwatchManager.targetStr, onReceiveAlso: { text in
                                     if let time = timeFromStr(text) {
                                         (stopwatchManager.currentSession as! CompSimSession).target = time
@@ -166,7 +164,7 @@ struct TimerHeader: View {
                         .padding(.leading, 2)
                         .padding(.trailing, 12)
                     }
-                    .foregroundColor(accentColour)
+                    .foregroundColor(Color.accentColor)
                 default:
                     EmptyView()
                 }

@@ -42,7 +42,6 @@ struct LicensePopUpView: View {
 
 struct LicensesPopUpView: View {
     @Environment(\.dismiss) var dismiss
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @State var showLicense = false
     @Binding var showLicenses: Bool
     @State var projectLicense: ProjectLicense?
@@ -89,7 +88,7 @@ struct LicensesPopUpView: View {
                 }
             }
         }
-        .accentColor(accentColour)
+        .accentColor(Color.accentColor)
     }
 }
 
