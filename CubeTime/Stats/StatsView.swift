@@ -21,6 +21,8 @@ struct StatsView: View {
     @ScaledMetric var blockHeightReachedTargets = 50
     @ScaledMetric var offsetReachedTargets = 30
     
+    @ScaledMetric(relativeTo: .body) var monospacedFontSizeBody: CGFloat = 17
+
     
     @State var isShowingStatsView: Bool = false
     @State var presentedAvg: CalculatedAverage? = nil
@@ -151,7 +153,7 @@ struct StatsView: View {
                                                     .padding(.top, 20)
                                             } else {
                                                 Text("not enough solves to\ndisplay graph")
-                                                    .font(FontManager.mono17)
+                                                    .recursiveMono(fontSize: 17, weight: .medium)
                                                     .multilineTextAlignment(.center)
                                                     .foregroundColor(Color("grey"))
                                             }
@@ -240,7 +242,7 @@ struct StatsView: View {
                                                 .offset(y: offsetReachedTargets)
                                         } else {
                                             Text("not enough solves to\ndisplay graph")
-                                                .font(FontManager.mono17)
+                                                .recursiveMono(fontSize: 17, weight: .medium)
                                                 .multilineTextAlignment(.center)
                                                 .foregroundColor(Color("grey"))
                                         }

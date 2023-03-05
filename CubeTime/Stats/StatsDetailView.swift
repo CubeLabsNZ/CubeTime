@@ -85,7 +85,7 @@ struct StatsDetailView: View {
                                 
                                 HStack {
                                     Text(solves.name == "Comp Sim Solve" ? "COMPSIM" : solves.name.uppercased())
-                                        .font(FontManager.mono15)
+                                        .recursiveMono(fontSize: 15, weight: .regular)
                                         .foregroundColor(Color("grey"))
                                     
                                     Spacer()
@@ -99,7 +99,7 @@ struct StatsDetailView: View {
                                 Spacer()
                                 
                                 Text("CubeTime.")
-                                    .font(FontManager.mono13)
+                                    .recursiveMono(fontSize: 13, weight: .semibold)
                                     .foregroundColor(Color("indent0"))
                             }
                             .padding(.vertical, -4)
@@ -163,24 +163,27 @@ struct StatsDetailView: View {
                                     VStack(spacing: 0) {
                                         HStack(alignment: .bottom) {
                                             Text("\(index+1).")
-                                                .font(.subheadline.weight(.bold))
+                                                .font(.callout.weight(.bold))
                                                 .foregroundColor(Color.accentColor)
                                             
                                             if solves.trimmedSolves!.contains(solve) {
                                                 Text("(" + formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!) + ")")
-                                                    .font(.body.weight(.bold))
+                                                    .offset(y: 1)
+                                                    .font(.title3.weight(.bold))
                                                     .foregroundColor(Color("grey"))
                                                 
                                             } else {
                                                 Text(formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!))
-                                                    .font(.body.weight(.bold))
+                                                    .offset(y: 1)
+                                                    .font(.title3.weight(.bold))
                                             }
+                                                
                                             
                                             Spacer()
                                             
                                             
                                             Text(solve.date ?? Date(timeIntervalSince1970: 0), formatter: detailDateFormat)
-                                                .font(FontManager.mono15)
+                                                .recursiveMono(fontSize: 15, weight: .regular)
                                                 .foregroundColor(Color("grey"))
                                         }
                                         .padding(.top, 8)
@@ -200,7 +203,7 @@ struct StatsDetailView: View {
                                             Spacer()
                                         }
                                         .padding(.top, 4)
-                                        .font(FontManager.mono16)
+                                        .recursiveMono(fontSize: 17, weight: .regular)
                                         .padding(.bottom, (index != solves.accountedSolves!.indices.last!) ? 8 : 0)
                                     }
                                     .onTapGesture {

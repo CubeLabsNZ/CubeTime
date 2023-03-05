@@ -54,11 +54,6 @@ class FontManager: ObservableObject {
     static let mono10 = fontFor(size: 10, weight: 600)
     static let mono10Bold = fontFor(size: 10, weight: 800)
     static let mono11Bold = fontFor(size: 11, weight: 800)
-    static let mono13 = fontFor(size: 13, weight: 600)
-    static let mono15 = fontFor(size: 15, weight: 600)
-    static let mono15Bold = fontFor(size: 15, weight: 800)
-    static let mono16 = fontFor(size: 16, weight: 600)
-    static let mono17 = fontFor(size: 17, weight: 600)
     
     
     init() {
@@ -81,5 +76,42 @@ class FontManager: ObservableObject {
         ] as! CFDictionary)
         
         ctFontScramble = Font(CTFontCreateWithFontDescriptor(ctFontDesc, CGFloat(scrambleSize), nil))
+    }
+}
+
+struct RecursiveMono: ViewModifier {
+    @ScaledMetric var fontSize: CGFloat
+    let weight: Int
+    
+    init(fontSize: CGFloat, weight: Int) {
+        self._fontSize = ScaledMetric(wrappedValue: fontSize)
+        self.weight = weight
+    }
+    
+    func body(content: Content) -> some View {
+        content
+            .font(FontManager.fontFor(size: fontSize, weight: weight))
+    }
+}
+
+extension View {
+    func recursiveMono(fontSize: CGFloat, weight: Int) -> some View {
+        modifier(RecursiveMono(fontSize: fontSize, weight: weight))
+    }
+    
+    func recursiveMono(fontSize: CGFloat, weight: Font.Weight) -> some View {
+        switch (weight) {
+        case .regular:
+            return modifier(RecursiveMono(fontSize: fontSize, weight: 400))
+        case .medium:
+            return modifier(RecursiveMono(fontSize: fontSize, weight: 500))
+        case .semibold:
+            return modifier(RecursiveMono(fontSize: fontSize, weight: 600))
+        case .bold:
+            return modifier(RecursiveMono(fontSize: fontSize, weight: 700))
+            
+        default:
+            return modifier(RecursiveMono(fontSize: fontSize, weight: 400))
+        }
     }
 }

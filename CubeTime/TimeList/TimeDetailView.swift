@@ -119,7 +119,7 @@ struct TimeDetailView: View {
                                 
                                 HStack {
                                     Text(date, formatter: titleDateFormat)
-                                        .font(FontManager.mono15)
+                                        .recursiveMono(fontSize: 15, weight: .regular)
                                         .foregroundColor(Color("grey"))
                                     
                                     Spacer()
@@ -137,7 +137,7 @@ struct TimeDetailView: View {
                                         Text(scramble)
                                     }
                                 }
-                                .font(FontManager.mono17)
+                                .recursiveMono(fontSize: 17, weight: .medium)
                                 .padding(.top, 28)
                                 
                                 AsyncSVGView(puzzle: solve.scramble_type, scramble: scramble)
@@ -182,7 +182,7 @@ struct TimeDetailView: View {
                                 Spacer()
                                 
                                 Text("CubeTime.")
-                                    .font(FontManager.mono13)
+                                    .recursiveMono(fontSize: 13, weight: .semibold)
                                     .foregroundColor(Color("indent0"))
                             }
                             .padding(.vertical, -4)

@@ -81,6 +81,8 @@ struct TimeDistribution: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
     
+    @ScaledMetric(relativeTo: .body) var monospacedFontSizeBody: CGFloat = 17
+    
     var count: Int
     var data: Array<(Double, Int)>
     var max_height: CGFloat
@@ -179,7 +181,7 @@ struct TimeDistribution: View {
             }
         } else {
             Text("not enough solves to\ndisplay graph")
-                .font(FontManager.mono17)
+                .recursiveMono(fontSize: 17, weight: .medium)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color("grey"))
         }

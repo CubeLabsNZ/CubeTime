@@ -126,6 +126,8 @@ struct ScrambleGeneratorTool: View {
     
     @State private var showShareSheet = false
     
+    @ScaledMetric(relativeTo: .body) var monospacedFontSizeBody: CGFloat = 17
+    
     var body: some View {
         VStack {
 
@@ -224,12 +226,13 @@ struct ScrambleGeneratorTool: View {
                                 LazyVStack(alignment: .leading) {
                                     ForEach(Array(zip(scrambleGenerator.scrambles!.indices, scrambleGenerator.scrambles!)), id: \.0) { index, scramble in
                                         HStack(alignment: .top) {
-                                            Text("\(index+1). ")
-                                                .font(FontManager.mono15Bold)
+                                            Text("\(index+1).")
+                                                .font(.subheadline.weight(.semibold))
+                                                .foregroundColor(Color.accentColor)
                                                 .offset(y: 1)
                                             
                                             Text(scramble)
-                                                .font(FontManager.mono17)
+                                                .recursiveMono(fontSize: 17, weight: .medium)
                                                 .textSelection(.enabled)
                                                 .padding(.bottom, 6)
                                         }

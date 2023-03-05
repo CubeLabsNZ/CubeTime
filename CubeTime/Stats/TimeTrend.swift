@@ -461,6 +461,9 @@ struct TimeTrend: View {
     @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
     
+    @ScaledMetric(relativeTo: .body) var monospacedFontSizeBody: CGFloat = 17
+
+    
     var data: [Double]
     var title: String?
     var legend: String?
@@ -507,7 +510,7 @@ struct TimeTrend: View {
             .offset(y: 6)
         } else {
             Text("not enough solves to\ndisplay graph")
-                .font(FontManager.mono17)
+                .recursiveMono(fontSize: 17, weight: .medium)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color("grey"))
                 .offset(y: 5)
