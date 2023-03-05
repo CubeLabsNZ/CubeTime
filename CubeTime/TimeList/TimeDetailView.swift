@@ -364,7 +364,7 @@ struct TimeDetailView: View {
                     }
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button {
+                            DoneButton(onTapRun: {
                                 currentSolve = nil
                                 
                                 dismiss()
@@ -372,9 +372,7 @@ struct TimeDetailView: View {
                                 if managedObjectContext.hasChanges {
                                     try! managedObjectContext.save()
                                 }
-                            } label: {
-                                Text("Done")
-                            }
+                            })
                         }
                     }
                     .navigationBarTitleDisplayMode(.inline)

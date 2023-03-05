@@ -733,11 +733,9 @@ struct TimeScrambleDetail: View {
                     }
                     
                     ToolbarItem(placement: .confirmationAction) {
-                        Button {
+                        DoneButton(onTapRun: {
                             dismiss()
-                        } label: {
-                            Text("Done")
-                        }
+                        })
                     }
                 }
             }

@@ -222,11 +222,9 @@ struct StatsDetailView: View {
                     }
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button {
+                            DoneButton(onTapRun: {
                                 dismiss()
-                            } label: {
-                                Text("Done")
-                            }
+                            })
                         }
                     }
                     .navigationBarTitleDisplayMode(.inline)

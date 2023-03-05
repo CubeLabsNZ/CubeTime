@@ -149,7 +149,7 @@ struct CustomiseSessionView: View {
                         }
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
+                        DoneButton(onTapRun: {
                             sessionItem.name = name
                             sessionItem.pinned = pinnedSession
                             
@@ -172,9 +172,7 @@ struct CustomiseSessionView: View {
                             try! managedObjectContext.save()
                             
                             dismiss()
-                        } label: {
-                            Text("Done")
-                        }
+                        })
                         .disabled(self.name.isEmpty || (sessionItem.session_type == SessionTypes.compsim.rawValue && targetStr.isEmpty))
                     }
                 }

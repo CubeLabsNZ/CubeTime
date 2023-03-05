@@ -238,11 +238,9 @@ struct DetailTimeTrend: View {
             DetailTimeTrendBase(rawDataPoints: rawDataPoints, limits: limits, averageValue: averageValue)
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Button {
+                        DoneButton(onTapRun: {
                             dismiss()
-                        } label: {
-                            Text("Done")
-                        }
+                        })
                     }
                 }
         }

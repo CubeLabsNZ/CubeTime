@@ -348,6 +348,24 @@ struct CloseButton: View {
     }
 }
 
+struct DoneButton: View {
+    let onTapRun: () -> ()
+    
+    init(onTapRun: @escaping () -> ()) {
+        self.onTapRun = onTapRun
+    }
+    
+    var body: some View {
+        Button {
+            self.onTapRun()
+        } label: {
+            Text("Done")
+                .font(.body.weight(.medium))
+        }
+    }
+}
+
+
 extension Animation {
     static let customFastSpring: Animation = .spring(response: 0.3, dampingFraction: 0.72)
     static let customSlowSpring: Animation = .spring(response: 0.45, dampingFraction: 0.76)
