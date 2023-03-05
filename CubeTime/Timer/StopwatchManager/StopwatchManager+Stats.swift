@@ -233,6 +233,16 @@ extension StopwatchManager {
         })
     }
     
+    func delete(solveGroup: CompSimSolveGroup) {
+        compsimSolveGroups.remove(object: solveGroup)
+        managedObjectContext.delete(solveGroup)
+        try! managedObjectContext.save()
+        
+        statsGetFromCache() // TODO not this :sob:
+        stateID = UUID()
+        // so much for cache stats
+    }
+    
     func removingSolve(solve: Solves, removeFunc: (Solves) -> ()) {
         #warning("TODO:  check best AOs")
         var recalcAO100 = false
@@ -287,6 +297,11 @@ extension StopwatchManager {
     func statsGetFromCache() {
         #warning("TODO:  get from cache actually")
         let sessionSolves = currentSession.solves!.allObjects as! [Solves]
+        var compSim = false
+        if let currentSession = currentSession as? CompSimSession {
+            compSim = true
+            compsimSolveGroups = (currentSession.solvegroups!.array as! [CompSimSolveGroup])
+        }
         
         solves = sessionSolves.sorted(by: {$0.timeIncPen < $1.timeIncPen})
         solvesByDate = sessionSolves.sorted(by: {$0.date! < $1.date!})
@@ -299,11 +314,11 @@ extension StopwatchManager {
         solvesNoDNFs = solves
         solvesNoDNFs.removeAll(where: { $0.penalty == PenTypes.dnf.rawValue })
         
-        
-        bestAo5 = getBestAverage(of: 5)
-        bestAo12 = getBestAverage(of: 12)
-        bestAo100 = getBestAverage(of: 100)
-        
+        if !compSim {
+            bestAo5 = getBestAverage(of: 5)
+            bestAo12 = getBestAverage(of: 12)
+            bestAo100 = getBestAverage(of: 100)
+        }
         
         
         currentAo5 = getCurrentAverageOf(5)
@@ -315,11 +330,14 @@ extension StopwatchManager {
         sessionMean = getSessionMean()
         
         normalMedian = getNormalMedian()
-        compSimCount = getNumberOfAverages()
-        reachedTargets = getReachedTargets()
         
-        currentCompsimAverage = getCurrentCompsimAverage()
-        bestCompsimAverage = getBestCompsimAverageAndArrayOfCompsimAverages().0
+        if compSim {
+            compSimCount = getNumberOfAverages()
+            reachedTargets = getReachedTargets()
+            
+            currentCompsimAverage = getCurrentCompsimAverage()
+            bestCompsimAverage = getBestCompsimAverageAndArrayOfCompsimAverages().0
+        }
         
         currentMeanOfTen = getCurrentMeanOfTen()
         bestMeanOfTen = getBestMeanOfTen()

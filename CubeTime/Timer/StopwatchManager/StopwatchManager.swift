@@ -171,6 +171,11 @@ class StopwatchManager: ObservableObject {
     @Published var solvesNoDNFsbyDate: [Solves]!
     
     
+    
+    
+    @Published var compsimSolveGroups: [CompSimSolveGroup]!
+    
+    
     // Couple time list functions
     var timeListSolves: [Solves]!
     @Published var timeListSolvesFiltered: [Solves]!
