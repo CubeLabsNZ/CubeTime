@@ -89,6 +89,8 @@ struct CubeTime: App {
                 asKeys.fontCasual.rawValue: 0.0,
             ]
         )
+        
+        setNavBarAppearance()
     }
     
     

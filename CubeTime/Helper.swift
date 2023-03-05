@@ -944,3 +944,24 @@ struct ShareSheetViewController: UIViewControllerRepresentable {
         }
     }
 }
+
+
+func offsetImage(image: UIImage, offsetX: CGFloat=0, offsetY: CGFloat=0) -> UIImage? {
+    UIGraphicsBeginImageContextWithOptions(CGSize(width: image.size.width + abs(offsetX), height: image.size.height + abs(offsetY)), false, 0)
+    image.draw(in: CGRect(x: offsetX, y: offsetY, width: image.size.width, height: image.size.height))
+
+    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+
+    return newImage
+}
+
+
+func setNavBarAppearance() -> Void {
+    let navBarAppearance = UINavigationBar.appearance()
+    var customBackImage = UIImage(systemName: "arrow.backward")
+    customBackImage = offsetImage(image: customBackImage!, offsetX: 10, offsetY: -1.5)
+    navBarAppearance.backIndicatorImage = customBackImage
+    navBarAppearance.backIndicatorTransitionMaskImage = customBackImage
+    navBarAppearance.tintColor = UIColor.black
+}
