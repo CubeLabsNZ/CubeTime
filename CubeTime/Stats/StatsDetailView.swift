@@ -21,19 +21,12 @@ struct StatsDetailView: View {
     let solves: CalculatedAverage
     let session: Sessions
     
-    private let detailDateFormat: DateFormatter
-    
     private let isCurrentCompSimAverage: Bool
 
     
     init(solves: CalculatedAverage, session: Sessions) {
         self.solves = solves
         self.session = session
-        
-        self.detailDateFormat = DateFormatter()
-        detailDateFormat.locale = Locale(identifier: "en_US_POSIX")
-        detailDateFormat.timeZone = TimeZone(secondsFromGMT: 0)
-        detailDateFormat.dateFormat = "h:mm a, dd/MM/yyyy"
         
         self.isCurrentCompSimAverage = solves.name == "Current Average"
     }
@@ -181,10 +174,15 @@ struct StatsDetailView: View {
                                             
                                             Spacer()
                                             
-                                            
-                                            Text(solve.date ?? Date(timeIntervalSince1970: 0), formatter: detailDateFormat)
-                                                .recursiveMono(fontSize: 15, weight: .regular)
-                                                .foregroundColor(Color("grey"))
+                                            if let date = solve.date {
+                                                Text(date, formatter: getSolveDateFormatter(date))
+                                                    .recursiveMono(fontSize: 15, weight: .regular)
+                                                    .foregroundColor(Color("grey"))
+                                            } else {
+                                                Text("...")
+                                                    .recursiveMono(fontSize: 15, weight: .regular)
+                                                    .foregroundColor(Color("grey"))
+                                            }
                                         }
                                         .padding(.top, 8)
                                         

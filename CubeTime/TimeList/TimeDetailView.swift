@@ -1,5 +1,19 @@
 import SwiftUI
 
+
+func getSolveDateFormatter(_ date: Date) -> DateFormatter {
+    let dateFormatter: DateFormatter = DateFormatter()
+    dateFormatter.locale = Locale(identifier: "en_NZ")
+    
+    if (Calendar.current.isDateInToday(date)) {
+        dateFormatter.dateFormat = "h:mm a"
+    } else {
+        dateFormatter.dateFormat = "dd/MM/yy"
+    }
+    
+    return dateFormatter
+}
+
 struct TimeDetailView: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
@@ -7,8 +21,6 @@ struct TimeDetailView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var managedObjectContext
     
-    
-    private let titleDateFormat: DateFormatter
     
     private var solve: Solves
     
@@ -48,13 +60,6 @@ struct TimeDetailView: View {
         
         self._currentSolve = currentSolve ?? Binding.constant(nil)
         _userComment = State(initialValue: solve.comment ?? "")
-        
-        
-        self.titleDateFormat = DateFormatter()
-        titleDateFormat.locale = Locale(identifier: "en_US_POSIX")
-        titleDateFormat.timeZone = TimeZone(secondsFromGMT: 0)
-        titleDateFormat.dateFormat = "h:mm a, dd/MM/yyyy"
-        
         
         self._sessionsCanMoveTo = sessionsCanMoveTo ?? .constant(nil)
         self._sessionsCanMoveTo_playground = sessionsCanMoveTo_playground ??  .constant(nil)
@@ -118,7 +123,7 @@ struct TimeDetailView: View {
                                 
                                 
                                 HStack {
-                                    Text(date, formatter: titleDateFormat)
+                                    Text(date, formatter: getSolveDateFormatter(date))
                                         .recursiveMono(fontSize: 15, weight: .regular)
                                         .foregroundColor(Color("grey"))
                                     
