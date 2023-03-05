@@ -50,10 +50,11 @@ struct AppearanceSettingsView: View {
             VStack {
                 HStack {
                     Image(systemName: "paintbrush.pointed.fill")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
+                        .font(.subheadline.weight(.bold))
+
                         .foregroundColor(accentColour)
                     Text("Colours")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
+                        .font(.body.weight(.bold))
                     
                     Spacer()
                 }
@@ -61,6 +62,8 @@ struct AppearanceSettingsView: View {
                 .padding(.bottom)
                 
                 VStack(spacing: 0) {
+                    
+                    #if false
                     HStack {
                         Text("Accent Colour")
                             .font(.body.weight(.medium))
@@ -116,18 +119,20 @@ struct AppearanceSettingsView: View {
                     
                     Divider()
                         .padding(.vertical, 10)
+                    #endif
+                    
                     
                     
                     VStack(alignment: .leading, spacing: 0) {
                         HStack(alignment: .center) {
-                            Text("Theme")
+                            Text("Gradient")
                                 .font(.body.weight(.medium))
                             
                             Spacer()
                             
                             Image(systemName: "chevron.right")
                                 .font(.footnote.weight(.bold))
-                                .foregroundColor(Color(uiColor: .systemGray3))
+                                .foregroundColor(Color("grey"))
                                 .rotationEffect(.degrees(showThemeOptions ? 90 : 0))
                         }
                         .contentShape(Rectangle())
@@ -139,11 +144,11 @@ struct AppearanceSettingsView: View {
                         .padding(.horizontal)
                         
                         
-                        Text("Customise the app theme and gradients.\nNote: separate from the accent colour.")
+                        Text("Customise the gradients used in stats.")
                             .font(.footnote.weight(.medium))
                             .lineSpacing(-4)
                             .fixedSize(horizontal: false, vertical: true)
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
                             .padding(.bottom, 12)
@@ -170,7 +175,7 @@ struct AppearanceSettingsView: View {
                                     .lineSpacing(-4)
 //                                Text("By default, the gradient is dynamic and changes throughout the day. If turned off, the gradient will only be of static colours.")
                                     .fixedSize(horizontal: false, vertical: true)
-                                    .foregroundColor(Color(uiColor: .systemGray))
+                                    .foregroundColor(Color("grey"))
                                     .multilineTextAlignment(.leading)
                                     .padding(.bottom, 12)
                                  */
@@ -221,7 +226,7 @@ struct AppearanceSettingsView: View {
                             .font(.footnote.weight(.medium))
                             .lineSpacing(-4)
                             .fixedSize(horizontal: false, vertical: true)
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
                             .padding(.bottom, 12)
@@ -242,22 +247,30 @@ struct AppearanceSettingsView: View {
                             .font(.footnote.weight(.medium))
                             .lineSpacing(-4)
                             .fixedSize(horizontal: false, vertical: true)
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
                             .padding(.bottom, 12)
                     }
                 }
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
+            
+            
+            
+            
+            
+            
+            
+            
             
             VStack {
                 HStack {
                     Image(systemName: "command")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
+                        .font(.subheadline.weight(.bold))
                         .foregroundColor(accentColour)
                     Text("System Settings")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
+                        .font(.body.weight(.bold))
                     
                     Spacer()
                 }
@@ -289,16 +302,24 @@ struct AppearanceSettingsView: View {
                     }
                 }
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             VStack {
                 HStack {
                     Image(systemName: "textformat")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
+                        .font(.subheadline.weight(.bold))
                         .foregroundColor(accentColour)
                     Text("Font Settings")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
+                        .font(.body.weight(.bold))
                     
                     Spacer()
                 }
@@ -322,7 +343,7 @@ struct AppearanceSettingsView: View {
                         .font(.footnote.weight(.medium))
                         .lineSpacing(-4)
                         .fixedSize(horizontal: false, vertical: true)
-                        .foregroundColor(Color(uiColor: .systemGray))
+                        .foregroundColor(Color("grey"))
                         .multilineTextAlignment(.leading)
                         .padding(.horizontal)
                     
@@ -336,12 +357,13 @@ struct AppearanceSettingsView: View {
                         Text("Tap for Fullscreen Preview")
                             .font(.footnote.weight(.medium))
                             .lineSpacing(-4)
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .padding([.trailing, .bottom], 8)
                         
                     }
+                    .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     .background(
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
@@ -370,14 +392,14 @@ struct AppearanceSettingsView: View {
                         HStack {
                             Text("MIN")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color(uiColor: .systemGray2))
+                                .foregroundColor(Color("indent0"))
                             
                             Slider(value: $fontWeight, in: 300...800, step: 1.0)
                                 .padding(.horizontal, 4)
                             
                             Text("MAX")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color(uiColor: .systemGray2))
+                                .foregroundColor(Color("indent0"))
                             
                         }
                         
@@ -396,14 +418,14 @@ struct AppearanceSettingsView: View {
                         HStack {
                             Text("MIN")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color(uiColor: .systemGray2))
+                                .foregroundColor(Color("indent0"))
                             
                             Slider(value: $fontCasual, in: 0...1, step: 0.01)
                                 .padding(.horizontal, 4)
                             
                             Text("MAX")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color(uiColor: .systemGray2))
+                                .foregroundColor(Color("indent0"))
                             
                         }
                         
@@ -430,7 +452,7 @@ struct AppearanceSettingsView: View {
                     }
                 }
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
             
             
         }
@@ -460,7 +482,7 @@ struct TimerPreview: View {
                 .ignoresSafeArea()
             
             Text("0.000")
-                .foregroundColor(Color(uiColor: .systemGray))
+                .foregroundColor(Color("grey"))
                 .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold,
                                                           smallDeviceNames.contains(getModelName()) ? 54 : 56
                                                           , nil)))

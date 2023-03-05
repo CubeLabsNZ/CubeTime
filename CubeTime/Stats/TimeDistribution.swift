@@ -158,7 +158,7 @@ struct TimeDistribution: View {
                                 }
                             
                             Text((datum == 0 ? "<" : (datum == data.count-1 ? ">" : ""))+formatLegendTime(secs: data[datum].0, dp: 1)+(datum != 0 && datum != data.count-1 ? "+" : ""))
-                                .foregroundColor(Color(uiColor: .systemGray2))
+                                .foregroundColor(Color("indent0"))
                                 .font(FontManager.mono10)
                                 .position(x: xloc, y: 240)
                         }

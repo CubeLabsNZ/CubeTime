@@ -83,11 +83,9 @@ struct LicensesPopUpView: View {
             .navigationTitle("Licenses")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
+                    DoneButton(onTapRun: {
                         dismiss()
-                    } label: {
-                        Text("Done")
-                    }
+                    })
                 }
             }
         }
@@ -118,14 +116,14 @@ struct AboutSettingsView: View {
                     
                     Text("v" + versionString)
                         .font(.subheadline.weight(.semibold))
-                        .foregroundColor(Color(uiColor: .systemGray))
+                        .foregroundColor(Color("grey"))
                 }
             }
             .frame(height: iconSize)
             .padding(.bottom, 12)
             
             
-            Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\nClick below for more info on source licenses and our privacy policy:")
+            Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\n\nClick below for more info on source licenses and our privacy policy:")
                 .multilineTextAlignment(.leading)
                             
             Button("Open licenses") {
@@ -134,7 +132,7 @@ struct AboutSettingsView: View {
             
             Text("\nThis project is made possible by [speedcube.co.nz](https://www.speedcube.co.nz/).\nShow some support by buying your cubes from them!\n")
             
-            Text("Support us directly by donating on Ko-Fi!")
+            Text("or support us directly by donating on Ko-Fi:")
             
             Button {
                 guard let kofiLink = URL(string: "https://ko-fi.com/cubetime"),
@@ -157,7 +155,7 @@ struct AboutSettingsView: View {
                 }
             }
             
-            Text("\nIf you run into any issues, please visit our GitHub page and submit an issue! \nhttps://github.com/CubeStuffs/CubeTime/Issues")
+            Text("\nIf you run into any issues, please visit our GitHub page and submit an issue. \nhttps://github.com/CubeStuffs/CubeTime/issues")
             
             Text("\nIf you need a refresher on the primary features, you can see the welcome page again.")
             Button("Show welcome page") {

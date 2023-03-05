@@ -383,8 +383,6 @@ extension Animation {
 
 
 struct ThemedDivider: View {
-    @Environment(\.colorScheme) private var colourScheme
-    
     let isHorizontal: Bool
     
     init(isHorizontal: Bool = true) {
@@ -393,7 +391,7 @@ struct ThemedDivider: View {
     
     var body: some View {
         Capsule()
-            .fill(colourScheme == .light ? Color("indent0") : Color("grey"))
+            .fill(Color("indent0"))
             .frame(width: isHorizontal ? nil : 1.15, height: isHorizontal ? 1.15 : nil)
     }
 }

@@ -82,10 +82,10 @@ struct GeneralSettingsView: View {
             VStack(alignment: .leading) {
                 HStack {
                     Image(systemName: "timer")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
+                        .font(.subheadline.weight(.bold))
                         .foregroundColor(accentColour)
                     Text("Timer Settings")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
+                        .font(.body.weight(.bold))
                     
                     Spacer()
                 }
@@ -129,7 +129,7 @@ struct GeneralSettingsView: View {
                             .font(.footnote.weight(.medium))
                             .lineSpacing(-4)
                             .fixedSize(horizontal: false, vertical: true)
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
                         
@@ -148,7 +148,7 @@ struct GeneralSettingsView: View {
                             .font(.footnote.weight(.medium))
                             .lineSpacing(-4)
                             .fixedSize(horizontal: false, vertical: true)
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
                         
@@ -176,7 +176,7 @@ struct GeneralSettingsView: View {
                                 .font(.footnote.weight(.medium))
                                 .lineSpacing(-4)
                                 .fixedSize(horizontal: false, vertical: true)
-                                .foregroundColor(Color(uiColor: .systemGray))
+                                .foregroundColor(Color("grey"))
                                 .multilineTextAlignment(.leading)
                                 .padding(.horizontal)
                         }
@@ -186,29 +186,25 @@ struct GeneralSettingsView: View {
                 
                 
                 
-                Divider()
+                ThemedDivider()
+                    .padding(.leading)
                 
-                VStack (alignment: .leading) {
-                    HStack {
-                        Text("Hold Down Time: ")
-                            .font(.body.weight(.medium))
-                        Text(String(format: "%.2fs", holdDownTime))
-                        
-                        Spacer()
-                        
-                        Stepper("", value: $holdDownTime, in: 0.05...1.0, step: 0.05)
-                    }
-                    .padding(.horizontal)
+                
+                
+                HStack {
+                    Text("Hold Down Time: ")
+                        .font(.body.weight(.medium))
+                    Text(String(format: "%.2fs", holdDownTime))
+                    
+                    Spacer()
+                    
+                    Stepper("", value: $holdDownTime, in: 0.05...1.0, step: 0.05)
                 }
+                .padding(.horizontal)
                 
                 
-                
-                
-                
-                Divider()
-                
-                
-                
+                ThemedDivider()
+                    .padding(.leading)
                 
                 
                 
@@ -264,26 +260,24 @@ struct GeneralSettingsView: View {
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 12)
-                
-                
-                
-               
-                
-                
-                
-                
-                
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
+            
+            
+            
+            
+            
+            
+            
             
             VStack(alignment: .leading) {
                 HStack {
                     Image(systemName: "wrench")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
+                        .font(.subheadline.weight(.bold))
                         .foregroundColor(accentColour)
                     Text("Timer Tools")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
-                    
+                        .font(.body.weight(.bold))
+
                     Spacer()
                 }
                 .padding([.horizontal, .top], 10)
@@ -318,12 +312,12 @@ struct GeneralSettingsView: View {
                     .font(.footnote.weight(.medium))
                     .lineSpacing(-4)
                     .fixedSize(horizontal: false, vertical: true)
-                    .foregroundColor(Color(uiColor: .systemGray))
+                    .foregroundColor(Color("grey"))
                     .multilineTextAlignment(.leading)
                     .padding(.horizontal)
                     .padding(.bottom, 12)
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
             
             
             
@@ -342,11 +336,11 @@ struct GeneralSettingsView: View {
             VStack(alignment: .leading) {
                 HStack {
                     Image(systemName: "rectangle.and.pencil.and.ellipsis")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
+                        .font(.subheadline.weight(.bold))
                         .foregroundColor(accentColour)
                     Text("Timer Interface")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
-                    
+                        .font(.body.weight(.bold))
+
                     Spacer()
                 }
                 .padding([.horizontal, .top], 10)
@@ -368,15 +362,10 @@ struct GeneralSettingsView: View {
                         .font(.footnote.weight(.medium))
                         .lineSpacing(-4)
                         .fixedSize(horizontal: false, vertical: true)
-                        .foregroundColor(Color(uiColor: .systemGray))
+                        .foregroundColor(Color("grey"))
                         .multilineTextAlignment(.leading)
                         .padding(.horizontal)
                 }
-                
-                
-                
-                
-                Divider()
                 
                 
                 /*
@@ -408,15 +397,8 @@ struct GeneralSettingsView: View {
                     .padding(.horizontal)
                 }
                  */
-                
-                
-                
-                
-                
-                
-                
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
             
             
             
@@ -437,11 +419,11 @@ struct GeneralSettingsView: View {
             VStack {
                 HStack {
                     Image(systemName: "eye")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
+                        .font(.subheadline.weight(.bold))
                         .foregroundColor(accentColour)
                     Text("Accessibility")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
-                    
+                        .font(.body.weight(.bold))
+
                     Spacer()
                 }
                 .padding([.horizontal, .top], 10)
@@ -487,7 +469,8 @@ struct GeneralSettingsView: View {
                 }
                 
                
-                Divider()
+                ThemedDivider()
+                    .padding(.leading)
                 
                 
                 VStack(alignment: .leading, spacing: 0) {
@@ -498,14 +481,14 @@ struct GeneralSettingsView: View {
                     HStack {
                         Text("MIN")
                             .font(Font.system(.footnote, design: .rounded))
-                            .foregroundColor(Color(uiColor: .systemGray2))
+                            .foregroundColor(Color("indent0"))
                         
                         Slider(value: $gestureActivationDistance, in: 20...300)
                             .padding(.horizontal, 4)
                         
                         Text("MAX")
                             .font(Font.system(.footnote, design: .rounded))
-                            .foregroundColor(Color(uiColor: .systemGray2))
+                            .foregroundColor(Color("indent0"))
                         
                     }
                     
@@ -514,16 +497,16 @@ struct GeneralSettingsView: View {
                 .padding(.bottom, 12)
                 
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
             
             VStack {
                 HStack {
                     Image(systemName: "chart.bar.xaxis")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
+                        .font(.subheadline.weight(.bold))
                         .foregroundColor(accentColour)
                     Text("Statistics")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
-                    
+                        .font(.body.weight(.bold))
+
                     Spacer()
                 }
                 .padding([.horizontal, .top], 10)
@@ -551,12 +534,7 @@ struct GeneralSettingsView: View {
                 .padding(.horizontal)
                 .padding(.bottom, 12)
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
-            
-            
-            
-            
-            
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
         }
         .padding(.horizontal)
         

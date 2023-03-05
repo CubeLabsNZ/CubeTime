@@ -79,7 +79,7 @@ struct AveragePhases: View {
                         
                         
                         Text("("+String(format: "%.1f", (phase / phaseTimes.reduce(0, +))*100)+"%)")
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                             .font(.system(size: 17))
                         
                         Spacer()

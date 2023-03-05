@@ -180,7 +180,7 @@ struct Update: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text("v\(version)")
-                .foregroundColor(Color(uiColor: .systemGray))
+                .foregroundColor(Color("grey"))
                 .font(.subheadline).fontWeight(.medium)
             
             if let bugFixes = bugFixes {
