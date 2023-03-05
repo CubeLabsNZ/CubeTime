@@ -187,59 +187,57 @@ struct CustomiseSessionView: View {
 // MARK: - HELPER FUNCTIONS
 struct EventPicker: View {
     @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
-    
     @Binding var sessionEventType: Int32
     
-    let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
-    
     var body: some View {
-        HStack {
-            Text("Session Event")
-                .font(.body.weight(.medium))
-            
-            
-            Spacer()
-            
-            Menu {
-                Picker("", selection: $sessionEventType) {
-                    ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
-                        Text(element.name).tag(Int32(index))
-                            .font(.body)
+        VStack(spacing: 16) {
+            HStack {
+                Text("Session Event")
+                    .font(.body.weight(.medium))
+                
+                Spacer()
+                
+                Menu {
+                    Picker("", selection: $sessionEventType) {
+                        ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
+                            Text(element.name).tag(Int32(index))
+                                .font(.body)
+                        }
                     }
-                }
-            } label: {
-                Text(puzzle_types[Int(sessionEventType)].name)
-                    .font(.body)
-                    .frame(maxWidth: 120, alignment: .trailing)
-
-            }
-            .accentColor(accentColour)
-            
-        }
-        .padding()
-        .frame(height: frameHeight)
-        .modifier(CardBlockBackground())
-        
-        
-        LazyVGrid(columns: sessionEventTypeColumns, spacing: 0) {
-            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                Button {
-                    sessionEventType = Int32(index)
                 } label: {
-                    ZStack {
-                        Image("circular-" + element.name)
-                        
-                        Circle()
-                            .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
-                            .frame(width: 54, height: 54)
-                            .offset(x: -0.2)
+                    Text(puzzle_types[Int(sessionEventType)].name)
+                        .font(.body)
+                        .frame(maxWidth: 120, alignment: .trailing)
+
+                }
+                .accentColor(accentColour)
+                
+            }
+            .frame(maxWidth: .infinity)
+            .padding([.horizontal, .top])
+            
+            ThemedDivider()
+                .padding(.horizontal)
+            
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 48), spacing: 8)], spacing: 8) {
+                ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                    HierarchialButton(type: (index == sessionEventType) ? .halfcoloured : .mono,
+                                      size: .ultraLarge,
+                                      square: true,
+                                      onTapRun: {
+                        sessionEventType = Int32(index)
+                    }) {
+                        Image(element.name)
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 32, height: 32)
                     }
                 }
             }
+            .frame(maxWidth: .infinity)
+            .padding([.horizontal, .bottom])
         }
-        .padding()
-        .frame(height: 180)
+        .frame(maxWidth: .infinity)
         .modifier(CardBlockBackground())
     }
 }
@@ -253,7 +251,7 @@ struct SessionNameField: View {
             .font(.title2.weight(.semibold))
             .multilineTextAlignment(TextAlignment.center)
             .background(Color("indent1"))
-            .cornerRadius(10)
+            .cornerRadius(8)
             .padding([.horizontal, .bottom])
     }
 }

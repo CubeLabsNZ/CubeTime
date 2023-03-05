@@ -48,8 +48,8 @@ struct NewSessionView: View {
                                 view.padding(.top)
                             }
                         
-                        if let session_desc = sessionDescriptions[sessionType] {
-                            Text(session_desc)
+                        if let sessionDescription = sessionDescriptions[sessionType] {
+                            Text(sessionDescription)
                                 .multilineTextAlignment(.leading)
                                 .foregroundColor(Color("grey"))
                                 .padding([.horizontal, .bottom])
@@ -77,8 +77,6 @@ struct NewSessionView: View {
                     } else if sessionType == .compsim {
                         CompSimTargetEntry(targetStr: $targetStr)
                     }
-                    
-                    
                     
                     if sessionType != .playground {
                         EventPicker(sessionEventType: $sessionEventType)

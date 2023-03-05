@@ -143,7 +143,7 @@ enum HierarchialButtonType {
 }
 
 enum HierarchialButtonSize {
-    case small, medium, large
+    case small, medium, large, ultraLarge
 }
 
 struct AnimatedButton: ButtonStyle {
@@ -290,8 +290,11 @@ struct HierarchialButtonBase<V: View>: View {
             self.frameHeight = 35
             self.horizontalPadding = 12
             self.fontType = Font.body.weight(.medium)
-            
-            
+        
+        case .ultraLarge:
+            self.frameHeight = 48
+            self.horizontalPadding = 16
+            self.fontType = Font.title3.weight(.semibold)
             
         }
         
