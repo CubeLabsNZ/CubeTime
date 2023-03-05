@@ -288,9 +288,6 @@ extension StopwatchManager {
         try! managedObjectContext.save()
         
         timerController.secondsStr = formatSolveTime(secs: showPrevTime ? (self.solvesByDate.last?.time ?? 0) : 0)
-        
-        
-        print("delete called")
     }
     
         
@@ -403,7 +400,6 @@ extension StopwatchManager {
                 self.bestAo5 = currentAo5
                 self.bestAo5?.name = "Best ao5"
                 #warning("TODO:  unhardcode")
-                NSLog("updated best ao5: \(self.bestAo5 == currentAo5)")
             }
         }
         if let currentAo12 = currentAo12 {
@@ -636,8 +632,6 @@ extension StopwatchManager {
                 if lastGroupSolves.count == 4 {
                     let sortedGroup = lastGroupSolves.sorted(by: Self.sortWithDNFsLast)
                     
-                    print(sortedGroup.map{$0.time})
-                    
                     let bpa = (sortedGroup.dropFirst().reduce(0) {$0 + $1.timeIncPen}) / 3.00
                     
                     let wpa = sortedGroup.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) ? -1 : (sortedGroup.dropLast().reduce(0) {$0 + $1.timeIncPen}) / 3.00
@@ -810,24 +804,6 @@ extension StopwatchManager {
                                          trimmedSolves: trimmedSolves)
             }
         }
-    }
-    
-    static func doSomething() -> Void {
-        let count: Int32 = 5
-        let solveDoubles: [Double] = [1.456, .infinity, 1.335, 1.863, 2.386]
-        let width: Int32 = 5
-        
-        let trim: Int32 = 1
-        
-        var countedSolvesIndices: [Int32] = Array(repeating: 0, count: Int(width - trim*2))
-        var trimmedSolvesIndices: [Int32] = Array(repeating: 0, count: Int(trim*2))
-        
-        
-        let bestAverage: Double = getBestAverageOf(width, trim, count,
-                                                   solveDoubles,
-                                                   &countedSolvesIndices, &trimmedSolvesIndices);
-        
-        print(bestAverage)
     }
 }
 

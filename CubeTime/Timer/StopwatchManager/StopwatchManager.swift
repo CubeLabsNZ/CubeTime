@@ -48,7 +48,9 @@ func setupAudioSession() {
     do {
         try audioSession.setCategory(AVAudioSession.Category.playback)
     } catch let error as NSError {
-        print(error.description)
+        #if DEBUG
+        NSLog(error.description)
+        #endif
     }
 }
 
@@ -65,7 +67,11 @@ class StopwatchManager: ObservableObject {
     // MARK: published variables
     @Published var currentSession: Sessions! {
         didSet {
+            #if DEBUG
             NSLog("BEGIN DIDSET currentsession, now \(currentSession)")
+            #endif
+            
+            
             self.targetStr = filteredStrFromTime((currentSession as? CompSimSession)?.target)
             self.phaseCount = Int((currentSession as? MultiphaseSession)?.phase_count ?? 0)
             
@@ -80,7 +86,11 @@ class StopwatchManager: ObservableObject {
             } else {
                 timerController.phaseCount = nil
             }
+            
+            
+            #if DEBUG
             NSLog("END DIDSET currentsession, now \(currentSession)")
+            #endif
         }
     }
     
@@ -106,7 +116,6 @@ class StopwatchManager: ObservableObject {
     @Published var playgroundScrambleType: Int32 {
         didSet {
             if (playgroundScrambleType != -1){
-                NSLog("playgroundScrambleType didset to \(playgroundScrambleType)")
                 currentSession.scramble_type = playgroundScrambleType
                 try! managedObjectContext.save()
                 scrambleController?.scrambleType = playgroundScrambleType
@@ -225,7 +234,10 @@ class StopwatchManager: ObservableObject {
     
     
     func addSessionQuickActions() {
-        NSLog("adding actions")
+        #if DEBUG
+        NSLog("Adding quick actions")
+        #endif
+        
         let req = NSFetchRequest<Sessions>(entityName: "Sessions")
         req.predicate = NSPredicate(format: "last_used != nil")
         req.sortDescriptors = [
@@ -287,13 +299,11 @@ class StopwatchManager: ObservableObject {
     var timerController: TimerContoller! = nil; #warning("figure out way to not make it ! optional")
     
     init (currentSession: Sessions?, managedObjectContext: NSManagedObjectContext) {
-        print("initialising audio...")
+        #if DEBUG
+        NSLog("Initialising Audio...")
+        #endif
+        
         setupAudioSession()
-        
-        
-        
-        print("im here:")
-        Self.doSomething()
         
         
 //        self.currentSession = currentSession
@@ -400,7 +410,9 @@ class StopwatchManager: ObservableObject {
         
         tryUpdateCurrentSolveth()
         
-        print("swm initialised")
+        #if DEBUG
+        NSLog("Stopwatch Manager Initialised")
+        #endif
     }
     
     

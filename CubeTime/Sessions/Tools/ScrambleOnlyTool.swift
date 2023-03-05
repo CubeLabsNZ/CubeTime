@@ -35,10 +35,9 @@ struct ScrambleOnlyTool: View {
         }
         .contentShape(Rectangle())
         .onAppear {
-//            scrambleController.rescramble()
+            scrambleController.rescramble()
         }
         .onTapGesture {
-            NSLog("TAP")
             scrambleController.rescramble()
         }
     }

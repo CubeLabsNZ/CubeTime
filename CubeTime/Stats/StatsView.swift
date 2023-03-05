@@ -57,7 +57,7 @@ struct StatsView: View {
                                         
                                         try! managedObjectContext.save()
                                     }
-                                    print("finished")
+                                    NSLog("finished")
                                 }
                                 #endif
 

@@ -388,12 +388,10 @@ struct TimeDetailView: View {
         .task {
             // Don't even.
             if sess_type == SessionTypes.playground.rawValue {
-                NSLog("ses is pg")
                 if sessionsCanMoveTo_playground != nil {
                     return
                 }
                 sessionsCanMoveTo_playground_s = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: solve.scramble_type, currentSession: stopwatchManager.currentSession)
-                NSLog("set canmoveto_p = \(sessionsCanMoveTo_playground)")
             } else {
                 if sessionsCanMoveTo != nil {
                     return

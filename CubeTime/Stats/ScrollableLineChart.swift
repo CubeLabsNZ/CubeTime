@@ -189,7 +189,7 @@ class TimeDistViewController: UIViewController {
         var p = g.location(in: imageView)
         p.y += 5
         let pointWhere = points.first(where: {$0.pointIn(p)})
-        NSLog("\(pointWhere)")
+        print(pointWhere ?? "nil")
     }
 }
 

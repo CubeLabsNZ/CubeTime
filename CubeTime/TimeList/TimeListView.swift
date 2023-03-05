@@ -448,13 +448,11 @@ struct TimeListView: View {
         }
         
         .task {
-            print("Task")
             updateSessionsCanMoveTo()
         }
         
         .onChange(of: stopwatchManager.currentSession) { newValue in
             #warning("make sure this actually is needed")
-            print("CHANGED SESSION - TimeListView")
             updateSessionsCanMoveTo()
         }
         

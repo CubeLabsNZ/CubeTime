@@ -42,7 +42,7 @@ class ScrambleController: ObservableObject {
     
     func rescramble() {
         #if DEBUG
-        NSLog("rescramble")
+        NSLog("Rescramble called")
         #endif
         
         prevScrambleStr = scrambleStr
@@ -57,7 +57,6 @@ class ScrambleController: ObservableObject {
             let scrTypeAtWorkStart = self.scrambleType
             let scramble = self.safeGetScramble()
 
-            #warning("TODO switch to mutex or something")
             if scrTypeAtWorkStart == self.scrambleType {
                 DispatchQueue.main.async {
                     self.scrambleStr = scramble

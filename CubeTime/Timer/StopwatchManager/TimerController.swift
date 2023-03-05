@@ -160,7 +160,7 @@ class TimerContoller: ObservableObject {
     
     func start() {
         #if DEBUG
-        NSLog("starting")
+        NSLog("TC: Starting")
         #endif
         mode = .running
 
@@ -183,8 +183,9 @@ class TimerContoller: ObservableObject {
     
     func stop(_ time: Double?) {
         #if DEBUG
-        NSLog("stopping")
+        NSLog("TC: Stopping")
         #endif
+        
         timer?.invalidate()
         
         if let time = time {
@@ -208,8 +209,9 @@ class TimerContoller: ObservableObject {
     
     func touchDown() {
         #if DEBUG
-        NSLog("touch down")
+        NSLog("TC: Touch down")
         #endif
+        
         if mode != .stopped || !disabled || prevDownStoppedTimer {
             timerColour = Color.Timer.heldDown
         }
@@ -245,8 +247,9 @@ class TimerContoller: ObservableObject {
     
     func touchUp() {
         #if DEBUG
-        NSLog("touchup")
+        NSLog("TC: Touchup")
         #endif
+        
         if mode != .stopped || !disabled {
             timerColour = Color.Timer.normal
             
@@ -266,12 +269,12 @@ class TimerContoller: ObservableObject {
     
     func longPressStart() {
         #if DEBUG
-        NSLog("long press start")
+        NSLog("TC: long press start")
         #endif
         
         if inspectionEnabled ? mode == .inspecting : mode == .stopped && !prevDownStoppedTimer && ( mode != .stopped || !disabled ) {
             #if DEBUG
-            NSLog("timer can start")
+            NSLog("TC: * Timer can start")
             #endif
             
             timerColour = Color.Timer.canStart
@@ -281,8 +284,9 @@ class TimerContoller: ObservableObject {
     
     func longPressEnd() {
         #if DEBUG
-        NSLog("long press end")
+        NSLog("TC: Long press end")
         #endif
+        
         if mode != .stopped || !disabled {
             timerColour = Color.Timer.normal
         } else if prevDownStoppedTimer && disabled {
