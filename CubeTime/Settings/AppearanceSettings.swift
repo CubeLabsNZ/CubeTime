@@ -192,7 +192,7 @@ struct AppearanceSettingsView: View {
                         }
                     }
                     
-                    Divider()
+                    ThemedDivider()
                         .padding(.vertical, 10)
                     
                     

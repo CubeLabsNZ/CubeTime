@@ -102,12 +102,16 @@ struct TimeListHeader: View {
     @State var searchExpanded = false
     @State var pressing = false
     
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    
     @Namespace private var animation
     
     var body: some View {
         HStack(spacing: 8) {
             if !searchExpanded {
-                SessionHeader()
+                if (!(UIDevice.deviceIsPad && hSizeClass == .regular)) {
+                    SessionHeader()
+                }
             }
             
             // search bar
@@ -179,17 +183,21 @@ struct TimeListHeader: View {
             
             SortByMenu(hasShadow: !searchExpanded, animation: animation)
                 .offset(x: searchExpanded ? -43 : 0)
+            
+            if (UIDevice.deviceIsPad && hSizeClass == .regular) {
+                Spacer(minLength: 0)
+            }
         }
         .padding(.horizontal)
     }
 }
 
 
-
 struct TimeListView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.sizeCategory) var sizeCategory
+    @Environment(\.horizontalSizeClass) var hSizeClass
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
@@ -201,7 +209,7 @@ struct TimeListView: View {
     @State var isSelectMode = false
     @State var selectedSolves: Set<Solves> = []
     
-    @State var isClearningSession = false
+    @State var isCleaningSession = false
     
     private var columns: [GridItem] {
         if sizeCategory > ContentSizeCategory.extraLarge {
@@ -212,21 +220,6 @@ struct TimeListView: View {
             return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
         }
     }
-    
-    
-    /* TODO: COMBINE THIS WITH THE ABOVE
-    private var columns: [GridItem] {
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
-        } else {
-            if globalGeometrySize.width > globalGeometrySize.width/2 {
-                return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
-            } else {
-                return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
-            }
-        }
-    }
-     */
     
     func updateSessionsCanMoveTo() {
         if stopwatchManager.currentSession.session_type == SessionTypes.playground.rawValue || stopwatchManager.currentSession.session_type == SessionTypes.compsim.rawValue {
@@ -240,7 +233,7 @@ struct TimeListView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color("base")
+                Color((UIDevice.deviceIsPad && hSizeClass == .regular) ? "overlay1" : "base")
                     .ignoresSafeArea()
                 
                 ScrollView {
@@ -276,34 +269,23 @@ struct TimeListView: View {
                                     }
                                 } else {
                                     // re-enable when we have a graphic
-//                                    Text("display the empty message")
                                 }
                                 
-                                
-                                
                                 #warning("TODO:  sorting")
-                                
-                                
-                                
                                 
                                 ForEach(groups, id: \.self) { item in
                                     if item != groups.last! {
                                         TimeBar(solvegroup: item, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode, current: false)
                                     }
                                 }
-                                 
-                                 
-                                 
                             }
                             .padding(.horizontal)
-                         
-                         
                         }
-                         
                     }
                     .padding(.top, -6)
                 }
                 .navigationTitle(isSelectMode ? "Select Solves" : "Session Times")
+                .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {
                         #warning("MAKE THIS PICKER MENU")
@@ -311,7 +293,7 @@ struct TimeListView: View {
                             Menu {
                                 if selectedSolves.count == 0 {
                                     Button(role: .destructive) {
-                                        isClearningSession = true
+                                        isCleaningSession = true
                                     } label: {
                                         Label("Clear Session", systemImage: "xmark.bin")
                                     }
@@ -421,12 +403,14 @@ struct TimeListView: View {
                         }
                     }
                 }
-                .safeAreaInset(safeArea: .tabBar)
+                .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
+                    view.safeAreaInset(safeArea: .tabBar)
+                }
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
         
-        .confirmationDialog("Clear session?", isPresented: $isClearningSession, titleVisibility: .visible) {
+        .confirmationDialog("Clear session?", isPresented: $isCleaningSession, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
                 stopwatchManager.clearSession()
                 isSelectMode = false

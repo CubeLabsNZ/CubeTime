@@ -50,7 +50,9 @@ struct TimerMenu: View {
                             })
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        Divider()
+                        
+                        ThemedDivider()
+                        
                         HierarchialButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {}) {
                             Label(title: {
                                 Text("Tools")

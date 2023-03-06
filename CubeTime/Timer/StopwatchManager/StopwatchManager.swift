@@ -100,6 +100,7 @@ class StopwatchManager: ObservableObject {
     
     @Published var solveItem: Solves!
     
+    @Published var currentPadFloatingStage: Int = 1
     
     var penType: PenTypes = .none
 

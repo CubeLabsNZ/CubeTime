@@ -24,11 +24,12 @@ let tools: [Tool] = [
 ]
 
 struct ToolsList: View {
+    @Environment(\.horizontalSizeClass) var hSizeClass
     @StateObject var toolsViewModel = ToolsViewModel()
 
     var body: some View {
         ZStack {
-            Color("base")
+            Color((UIDevice.deviceIsPad && hSizeClass == .regular) ? "overlay1" : "base")
                 .ignoresSafeArea()
             
             

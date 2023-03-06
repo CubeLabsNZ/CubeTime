@@ -6,6 +6,7 @@ import Combine
 struct SessionsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
+    @Environment(\.horizontalSizeClass) var hSizeClass
     
     @State var showNewSessionPopUp = false
     
@@ -22,7 +23,7 @@ struct SessionsView: View {
         NavigationView {
             GeometryReader { geo in
                 ZStack(alignment: .bottomLeading) {
-                    Color("base")
+                    Color((UIDevice.deviceIsPad && hSizeClass == .regular) ? "overlay1" : "base")
                         .ignoresSafeArea()
                     
                     ScrollView {
@@ -32,7 +33,9 @@ struct SessionsView: View {
                             }
                         }
                     }
-                    .safeAreaInset(safeArea: .tabBar, avoidBottomBy: 50)
+                    .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
+                        view.safeAreaInset(safeArea: .tabBar, avoidBottomBy: 50)
+                    }
                     
                     HierarchialButton(type: .coloured, size: .large, onTapRun: {
                         showNewSessionPopUp = true
@@ -44,21 +47,31 @@ struct SessionsView: View {
                             Text("New Session")
                         }
                     }
-                    .padding(.bottom, 58)
-                    .padding(.bottom, UIDevice.hasBottomBar ? 0 : nil)
+                    .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
+                        view
+                            .padding(.bottom, 58)
+                            .padding(.bottom, UIDevice.hasBottomBar ? 0 : nil)
+                    }
+                    .if(UIDevice.deviceIsPad && hSizeClass == .regular) { view in
+                        view
+                            .padding(.bottom, 8)
+                    }
                     .padding(.horizontal)
                 }
                 .navigationTitle("Your Sessions")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        NavigationLink(destination: ToolsList()) {
-                            HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
-                                Label("Tools", systemImage: "wrench.and.screwdriver")
-                                    .labelStyle(.titleAndIcon)
-                                    .imageScale(.small)
+                .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
+                .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
+                    view.toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            NavigationLink(destination: ToolsList()) {
+                                HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
+                                    Label("Tools", systemImage: "wrench.and.screwdriver")
+                                        .labelStyle(.titleAndIcon)
+                                        .imageScale(.small)
+                                }
                             }
+                            .buttonStyle(AnimatedButton())
                         }
-                        .buttonStyle(AnimatedButton())
                     }
                 }
             }

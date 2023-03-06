@@ -94,6 +94,7 @@ enum TimerTool {
 }
 
 struct BottomTools: View {
+    @Environment(\.horizontalSizeClass) var hSizeClass
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @Preference(\.showScramble) private var showScramble
     @Preference(\.showStats) private var showStats
@@ -117,18 +118,18 @@ struct BottomTools: View {
             
             if showStats {
                 BottomToolContainer {
-                    Group {
-                        if stopwatchManager.currentSession.session_type == SessionTypes.compsim.rawValue {
-                            TimerStatsCompSim()
-                        } else {
-                            TimerStatsStandard(presentedAvg: $presentedAvg)
-                        }
+                    if stopwatchManager.currentSession.session_type == SessionTypes.compsim.rawValue {
+                        TimerStatsCompSim()
+                    } else {
+                        TimerStatsStandard(presentedAvg: $presentedAvg)
                     }
                 }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-        .safeAreaInset(safeArea: .tabBar)
+        .padding(.bottom, (UIDevice.deviceIsPad && hSizeClass == .regular) ? 50 - 18 : 50 + 8)
+        // 18 = height of drag part
+        // 8 = top padding for phone
         .padding(.horizontal)
     }
 }
@@ -299,7 +300,23 @@ struct TimerStatsCompSim: View {
 }
 
 
+struct AvoidFloatingPanel: ViewModifier {
+    @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var timerController: TimerContoller
+
+    
+    func body(content: Content) -> some View {
+        let condition = stopwatchManager.currentPadFloatingStage == 2 && timerController.mode == .stopped
+        
+        content
+            .padding(.leading, condition ? 360 : 0)
+            .padding(.leading, condition ? nil : 0)
+    }
+}
+
+
 struct ScrambleText: View {
+    @Environment(\.horizontalSizeClass) var hSizeClass
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
     let scr: String
@@ -320,14 +337,37 @@ struct ScrambleText: View {
             .if(mega) { view in
                 view.minimumScaleFactor(0.00001).scaledToFit()
             }
-            .frame(maxWidth: timerSize.width, maxHeight: timerSize.height/3)
+            .frame(maxWidth: timerSize.width,
+                   maxHeight: timerSize.height/3)
             .onTapGesture {
                 scrambleSheetStr = SheetStrWrapper(str: scr)
             }
             .padding(.horizontal)
-            .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+            .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8) + ((UIDevice.deviceIsPad && hSizeClass == .regular) ? 50 : 0))
+            .modifier(AvoidFloatingPanel())
     }
 }
+
+
+struct PadTimerHeader: View {
+    var targetFocused: FocusState<Bool>.Binding
+    @Binding var showSessions: Bool
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            TimerHeader(targetFocused: targetFocused, previewMode: false)
+            
+            Spacer()
+            
+            HierarchialButton(type: showSessions ? .halfcoloured : .mono, size: .large, square: true, onTapRun: {
+                self.showSessions.toggle()
+            }) {
+                Image(systemName: "line.3.horizontal.circle")
+            }
+        }
+    }
+}
+
 
 struct TimerView: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
@@ -339,6 +379,7 @@ struct TimerView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.globalGeometrySize) var globalGeometrySize
+    @Environment(\.horizontalSizeClass) var hSizeClass
     
     // GET USER DEFAULTS
     @AppStorage("onboarding") var showOnboarding: Bool = true
@@ -366,13 +407,14 @@ struct TimerView: View {
     
     @State var algTrainerSubset = 0
     
+    @State private var showSessions: Bool = false
     
-    
-#warning("TODO: find a way to not use an initialiser")
+    #warning("TODO: find a way to not use an initialiser")
     
     
     var body: some View {
         let typingMode = inputMode == .typing && stopwatchManager.currentSession.session_type != SessionTypes.multiphase.rawValue
+        
         
         GeometryReader { geo in
             TimerBackgroundColor()
@@ -409,6 +451,7 @@ struct TimerView: View {
             if !((typingMode || showInputField) && !showManualInputFormattedText) {
                 VStack(alignment: .center, spacing: 0) {
                     TimerTime()
+                        .modifier(AvoidFloatingPanel())
                         .allowsHitTesting(false)
                     
                     if timerController.mode == .inspecting && showCancelInspection {
@@ -442,27 +485,58 @@ struct TimerView: View {
             
             if !stopwatchManager.hideUI {
                 BottomTools(timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr, presentedAvg: $presentedAvg)
+                    .modifier(AvoidFloatingPanel())
                 
                 // 50 for tab + 8 for padding + 16/0 for bottom bar gap
                 
+                let stageMaxHeight: CGFloat = geo.size.height-CGFloat(50)
+                let stages: [CGFloat] = [35, 35+16+55, stageMaxHeight]
                 
-                HStack(alignment: .top, spacing: 6) {
-                    TimerHeader(targetFocused: $targetFocused, previewMode: false)
-                    
-                    Spacer()
-                    
-                    LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
-                        .frame(maxHeight: 35)
-                        .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
-                        .opacity(scrambleController.scrambleStr == nil ? 1 : 0)
-                    
-                    TimerMenu()
+                if (UIDevice.deviceIsPad && hSizeClass == .regular) {
+                    HStack(alignment: .top) {
+                        FloatingPanel(currentStage: $stopwatchManager.currentPadFloatingStage, maxHeight: stageMaxHeight, stages: stages) {
+                            PadTimerHeader(targetFocused: self.$targetFocused, showSessions: $showSessions)
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                PadTimerHeader(targetFocused: self.$targetFocused, showSessions: $showSessions)
+                                
+                                PrevSolvesDisplay(count: 3)
+                                    .padding(.horizontal, 8)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                PadTimerHeader(targetFocused: self.$targetFocused, showSessions: $showSessions)
+                                
+                                if (self.showSessions) {
+                                    SessionsView()
+                                } else {
+                                    TimeListView()
+                                }
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        TimerMenu()
+                    }
+                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .zIndex(3)
+                } else {
+                    HStack(alignment: .top, spacing: 6) {
+                        TimerHeader(targetFocused: $targetFocused, previewMode: false)
+                        
+                        Spacer()
+                        
+                        LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
+                            .frame(maxHeight: 35)
+                            .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+                            .opacity(scrambleController.scrambleStr == nil ? 1 : 0)
+                    }
+                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    .zIndex(3)
                 }
-                .padding(.horizontal)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                .zIndex(3)
-                
-                
             }
             
             if stopwatchManager.zenMode {
