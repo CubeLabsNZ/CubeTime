@@ -95,8 +95,8 @@ enum TimerTool {
 
 struct BottomTools: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    @AppStorage(generalSettingsKey.showScramble.rawValue) private var showScramble: Bool = true
-    @AppStorage(generalSettingsKey.showStats.rawValue) private var showStats: Bool = true
+    @Preference(\.showScramble) private var showScramble
+    @Preference(\.showStats) private var showStats
     
     let timerSize: CGSize
     @Binding var scrambleSheetStr: SheetStrWrapper?
@@ -342,10 +342,10 @@ struct TimerView: View {
     
     // GET USER DEFAULTS
     @AppStorage("onboarding") var showOnboarding: Bool = true
-    @AppStorage(generalSettingsKey.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
-    @AppStorage(appearanceSettingsKey.scrambleSize.rawValue) private var scrambleSize: Int = 18
-    @AppStorage(generalSettingsKey.showPrevTime.rawValue) private var showPrevTime: Bool = false
-    @AppStorage(generalSettingsKey.inputMode.rawValue) private var inputMode: InputMode = .timer
+    @Preference(\.showCancelInspection) private var showCancelInspection
+    @Preference(\.scrambleSize) private var scrambleSize
+    @Preference(\.showPrevTime) private var showPrevTime
+    @Preference(\.inputMode) private var inputMode
     
     
     // FOCUS STATES
@@ -604,7 +604,7 @@ struct TimeScrambleDetail: View {
     
     var scramble: String
     var svg: String?
-    @State var windowedScrambleSize: Int = UserDefaults.standard.integer(forKey: appearanceSettingsKey.scrambleSize.rawValue)
+    @State var windowedScrambleSize: Int = SettingsManager.standard.scrambleSize
     
     init(_ scramble: String, _ svg: String?) {
         self.scramble = scramble

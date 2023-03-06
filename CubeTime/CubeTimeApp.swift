@@ -51,44 +51,6 @@ struct CubeTime: App {
         self._showUpdates = State(initialValue: currentVersion != newVersion && !showOnboarding)
         UserDefaults.standard.set(newVersion, forKey: "currentVersion")
         
-        userDefaults.register(
-            defaults: [
-                // timer settings
-                generalSettingsKey.inspection.rawValue: false,
-                generalSettingsKey.inspectionCountsDown.rawValue: false,
-                generalSettingsKey.showCancelInspection.rawValue: true,
-                generalSettingsKey.inspectionAlert.rawValue: true,
-                generalSettingsKey.inspectionAlertType.rawValue: 0,
-                
-                generalSettingsKey.freeze.rawValue: 0.5,
-                generalSettingsKey.timeDpWhenRunning.rawValue: 3,
-                generalSettingsKey.showSessionName.rawValue: false,
-                
-                // timer tools
-                generalSettingsKey.showScramble.rawValue: true,
-                generalSettingsKey.showStats.rawValue: true,
-                
-                // accessibility
-                generalSettingsKey.hapBool.rawValue: true,
-                generalSettingsKey.hapType.rawValue: UIImpactFeedbackGenerator.FeedbackStyle.rigid.rawValue,
-                generalSettingsKey.forceAppZoom.rawValue: false,
-                generalSettingsKey.appZoom.rawValue: 3,
-                generalSettingsKey.gestureDistance.rawValue: 50,
-                
-                // show previous time afte solve deleted
-                generalSettingsKey.showPrevTime.rawValue: false,
-                
-                // statistics
-                generalSettingsKey.displayDP.rawValue: 3,
-                
-                // colours
-                appearanceSettingsKey.graphGlow.rawValue: true,
-                
-                appearanceSettingsKey.scrambleSize.rawValue: 18,
-                appearanceSettingsKey.fontWeight.rawValue: 516.0,
-                appearanceSettingsKey.fontCasual.rawValue: 0.0,
-            ]
-        )
         
         setNavBarAppearance()
     }
@@ -165,8 +127,8 @@ struct MainView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    @AppStorage(appearanceSettingsKey.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
-    @AppStorage(appearanceSettingsKey.dmBool.rawValue) private var darkMode: Bool = false
+    @Preference(\.overrideDM) private var overrideSystemAppearance
+    @Preference(\.dmBool) private var darkMode
 
         
     var body: some View {

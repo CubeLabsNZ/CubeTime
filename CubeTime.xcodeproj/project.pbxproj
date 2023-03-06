@@ -26,7 +26,7 @@
 		23AB648429385D310049993B /* NewSessionRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AB648329385D310049993B /* NewSessionRootView.swift */; };
 		23AB648C293867EA0049993B /* 12sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648A293867EA0049993B /* 12sec-audio.wav */; };
 		23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648B293867EA0049993B /* 8sec-audio.wav */; };
-		23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; settings = {ATTRIBUTES = (Required, ); }; };
+		23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; };
 		23B45E7329A8560400BDF49E /* TNoodleLibNative.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		23C85EAC29388C9C00C7C3EC /* StatsSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */; };
 		23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA845F2783EBA1003901FB /* ReachedTargets.swift */; };
@@ -78,6 +78,7 @@
 		AF8874C329AB0BE7001E49D0 /* TimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C229AB0BE7001E49D0 /* TimerController.swift */; };
 		AF8874C529AB3736001E49D0 /* ScrambleGeneratorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */; };
 		AF8A157429AF15B500F6818E /* ScrambleOnlyTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */; };
+		AF8B305B29B5C7010023D23B /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8B305A29B5C7010023D23B /* SettingsManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -184,6 +185,7 @@
 		AF8874C229AB0BE7001E49D0 /* TimerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerController.swift; sourceTree = "<group>"; };
 		AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleGeneratorTool.swift; sourceTree = "<group>"; };
 		AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleOnlyTool.swift; sourceTree = "<group>"; };
+		AF8B305A29B5C7010023D23B /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,8 +193,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */,
 				23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */,
+				AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */,
 				23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -405,6 +407,7 @@
 				23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */,
 				23E81E72275D8DEA00B741E3 /* AboutSettings.swift */,
 				7D7E2011275DD52600ADF01D /* Licenses.swift */,
+				AF8B305A29B5C7010023D23B /* SettingsManager.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -598,6 +601,7 @@
 				23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */,
 				23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */,
 				AF8874C129AAC8C0001E49D0 /* ToolsList.swift in Sources */,
+				AF8B305B29B5C7010023D23B /* SettingsManager.swift in Sources */,
 				AF8A157429AF15B500F6818E /* ScrambleOnlyTool.swift in Sources */,
 				2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */,
 				23E81E6C275D8DAE00B741E3 /* GeneralSettings.swift in Sources */,
@@ -799,13 +803,12 @@
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/CubeTime/3rdparty",
 					"$(PROJECT_DIR)",
 				);
 				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/include";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = CubeTime/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CubeTime;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -819,7 +822,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/lib";
+				LIBRARY_SEARCH_PATHS = "";
 				LLVM_LTO = YES_THIN;
 				MARKETING_VERSION = 2.0;
 				ONLY_ACTIVE_ARCH = YES;
@@ -847,13 +850,12 @@
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/CubeTime/3rdparty",
 					"$(PROJECT_DIR)",
 				);
 				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/include";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = CubeTime/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CubeTime;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -867,7 +869,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/CubeTime/3rdparty/tnoodle-lib/lib";
+				LIBRARY_SEARCH_PATHS = "";
 				LLVM_LTO = YES_THIN;
 				MARKETING_VERSION = 2.0;
 				ONLY_ACTIVE_ARCH = YES;

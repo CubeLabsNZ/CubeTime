@@ -287,7 +287,7 @@ extension StopwatchManager {
         
         try! managedObjectContext.save()
         
-        timerController.secondsStr = formatSolveTime(secs: showPrevTime ? (self.solvesByDate.last?.time ?? 0) : 0)
+        timerController.secondsStr = formatSolveTime(secs: SettingsManager.standard.showPrevTime ? (self.solvesByDate.last?.time ?? 0) : 0)
     }
     
         

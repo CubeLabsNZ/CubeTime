@@ -15,6 +15,7 @@ let inspectionDnfTime = 17
 let inspectionPlusTwoTime = 15
 
 class TimerContoller: ObservableObject {
+    let sm = SettingsManager.standard
     
     let onStartInspection: (() -> ())?
     let onInspectionSecondsChange: ((_ inspectionSecs: Int) -> ())?
@@ -22,7 +23,7 @@ class TimerContoller: ObservableObject {
     let onTouchUp: (() -> ())?
     let preTimerStart: (() -> ())?
     let onGesture: ((_ direction: UISwipeGestureRecognizer.Direction) -> ())?
-    let onModeChange: ((_ mode: stopWatchMode) -> ())?
+    let onModeChange: ((_ mode: TimerState) -> ())?
     
     init(
         onStartInspection: (() -> ())? = nil,
@@ -31,7 +32,7 @@ class TimerContoller: ObservableObject {
         onTouchUp: (() -> ())? = nil,
         preTimerStart: (() -> ())? = nil,
         onGesture: ((_ direction: UISwipeGestureRecognizer.Direction) -> ())? = nil,
-        onModeChange: ((_ mode: stopWatchMode) -> ())? = nil
+        onModeChange: ((_ mode: TimerState) -> ())? = nil
     ) {
         self.onStartInspection = onStartInspection
         self.onInspectionSecondsChange = onInspectionSecondsChange
@@ -42,47 +43,33 @@ class TimerContoller: ObservableObject {
         self.onModeChange = onModeChange
     }
     
-    
-    // TODO: NOW: set multiphaseCount when currentsessionchanged
-    
+        
     @Published var secondsStr = formatSolveTime(secs: 0)
     @Published var inspectionSecs = 0
-    @Published var mode: stopWatchMode = .stopped {
+    @Published var mode: TimerState = .stopped {
         didSet {
             onModeChange?(mode)
         }
     }
     @Published var timerColour: Color = Color.Timer.normal
-    
-    var timeDP: Int = UserDefaults.standard.integer(forKey: generalSettingsKey.timeDpWhenRunning.rawValue)
-    
-    #warning("TODO: find a better way of this that doesnt need onChange in settings.")
-    var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.inspection.rawValue)
-    var insCountDown: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.inspectionCountsDown.rawValue)
-    var inspectionAlert: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.inspectionAlert.rawValue)
-    var inspectionAlertType: Int = UserDefaults.standard.integer(forKey: generalSettingsKey.inspectionAlertType.rawValue)
-    
-    var hapticType: Int = UserDefaults.standard.integer(forKey: generalSettingsKey.hapType.rawValue) {
-        didSet {
-            calculateFeedbackStyle()
+        
+    var feedbackStyle: UIImpactFeedbackGenerator? {
+        get {
+            sm.hapticEnabled ? UIImpactFeedbackGenerator(style: sm.hapticType) : nil
         }
     }
-    var hapticEnabled: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.hapBool.rawValue) {
-        didSet {
-            calculateFeedbackStyle()
-        }
-    }
-    
-    var feedbackStyle: UIImpactFeedbackGenerator?
     
     private let systemSoundID: SystemSoundID = 1057
     private let inspectionAlert_8 = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "8sec-audio", ofType: "wav")!))
     private let inspectionAlert_12 = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "12sec-audio", ofType: "wav")!))
     
+    private var isModeBeforeStart: Bool {
+        get {
+            sm.inspection ? mode == .inspecting : mode == .stopped
+        }
+    }
     
-    private var justInspected = false
     var prevDownStoppedTimer = false
-    var canGesture: Bool = true
     
     
     private var timer: Timer?
@@ -96,36 +83,38 @@ class TimerContoller: ObservableObject {
     
     
     // EDITABLE
-    var disabled = false {
+    var preventStart = false {
         didSet {
-            if disabled && mode == .stopped {
+            if preventStart && mode == .stopped {
                 self.timerColour = Color.Timer.loading
-            } else if !disabled {
+            } else if !preventStart {
                 self.timerColour = Color.Timer.normal
             }
         }
     }
     var phaseCount: Int? = nil
     
-    
-    // TODO: make this didset
-    func calculateFeedbackStyle() {
-        self.feedbackStyle = hapticEnabled ? UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!) : nil
-    }
-    
     func handleGesture(direction: UISwipeGestureRecognizer.Direction) {
-        onGesture?(direction)
+        prevDownStoppedTimer = false
+        NSLog("HERE1 \(!preventStart) || \(mode != .stopped)")
+        if !preventStart || mode != .stopped {
+            NSLog("HERE2")
+            timerColour = Color.Timer.normal
+        }
+        if mode == .stopped {
+            onGesture?(direction)
+        }
     }
     
     func startInspection() {
         timer?.invalidate()
         onStartInspection?()
-        secondsStr = insCountDown ? "15" : "0"
+        secondsStr = sm.inspectionCountsDown ? "15" : "0"
         inspectionSecs = 0
         mode = .inspecting
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
             inspectionSecs += 1
-            if insCountDown {
+            if sm.inspectionCountsDown {
                 if inspectionSecs == 16 {
                     self.secondsStr = "-"
                 } else if inspectionSecs < 16 {
@@ -138,8 +127,8 @@ class TimerContoller: ObservableObject {
             onInspectionSecondsChange?(inspectionSecs)
             
             
-            if inspectionAlert && (inspectionSecs == 8 || inspectionSecs == 12) {
-                if inspectionAlertType == 1 {
+            if sm.inspectionAlert && (inspectionSecs == 8 || inspectionSecs == 12) {
+                if sm.inspectionAlertType == 1 {
                     AudioServicesPlayAlertSound(systemSoundID)
                 } else {
                     if inspectionSecs == 8 {
@@ -157,8 +146,7 @@ class TimerContoller: ObservableObject {
         timer?.invalidate()
         inspectionSecs = 0
         secondsElapsed = 0
-        justInspected = false
-        secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: timeDP)
+        secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: sm.timeDpWhenRunning)
         
     }
 
@@ -177,13 +165,13 @@ class TimerContoller: ObservableObject {
         secondsStr = formatSolveTime(secs: 0)
         timerStartTime = Date()
 
-        if timeDP != -1 {
+        if sm.timeDpWhenRunning == -1 {
+            self.secondsStr = "..."
+        } else {
             timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { [self] timer in
                 self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
-                self.secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: timeDP)
+                self.secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: sm.timeDpWhenRunning)
             }
-        } else {
-            self.secondsStr = "..."
         }
     }
     
@@ -198,6 +186,7 @@ class TimerContoller: ObservableObject {
         if let time = time {
             self.secondsElapsed = time
         } else {
+            prevDownStoppedTimer = true
             self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
         }
         
@@ -210,7 +199,6 @@ class TimerContoller: ObservableObject {
             currentMPCount = 1
             phaseTimes = []
         }
-
     }
     
     
@@ -219,67 +207,28 @@ class TimerContoller: ObservableObject {
         NSLog("TC: Touch down")
         #endif
         
-        if mode != .stopped || !disabled || prevDownStoppedTimer {
+        if mode != .stopped || !preventStart {
             timerColour = Color.Timer.heldDown
         }
         
-        if mode == .running {
-            
-            justInspected = false
-            
-            if let phaseCount = phaseCount {
-                
-                if phaseCount != currentMPCount {
-                    canGesture = false
-                    
-                    currentMPCount += 1
-                    lap()
-                } else {
-                    canGesture = true
-                    
-                    lap()
-                    prevDownStoppedTimer = true
-                    justInspected = false
-                    stop(nil)
-                }
-            } else {
-                canGesture = true
-                prevDownStoppedTimer = true
-                justInspected = false
-                stop(nil)
-            }
+        if mode != .running {
+            return
+        }
+        
+        if let phaseCount = phaseCount, phaseCount != currentMPCount {
+            lap()
+        } else {
+            stop(nil)
         }
     }
     
-    
-    func touchUp() {
-        #if DEBUG
-        NSLog("TC: Touchup")
-        #endif
-        
-        if mode != .stopped || !disabled {
-            timerColour = Color.Timer.normal
-            
-            if inspectionEnabled && mode == .stopped && !prevDownStoppedTimer {
-                startInspection()
-                justInspected = true
-            }
-        } else if prevDownStoppedTimer && disabled {
-            timerColour = Color.Timer.loading
-        }
-        
-        onTouchUp?()
-        
-        prevDownStoppedTimer = false
-    }
-    
-    
+
     func longPressStart() {
         #if DEBUG
         NSLog("TC: long press start")
         #endif
         
-        if inspectionEnabled ? mode == .inspecting : mode == .stopped && !prevDownStoppedTimer && ( mode != .stopped || !disabled ) {
+        if isModeBeforeStart && !prevDownStoppedTimer && !preventStart {
             #if DEBUG
             NSLog("TC: * Timer can start")
             #endif
@@ -289,36 +238,58 @@ class TimerContoller: ObservableObject {
         }
     }
     
-    func longPressEnd() {
-        #if DEBUG
-        NSLog("TC: Long press end")
-        #endif
-        
-        if mode != .stopped || !disabled {
+    
+    func touchUpCommon() {
+        if mode != .stopped || !preventStart {
             timerColour = Color.Timer.normal
-        } else if prevDownStoppedTimer && disabled {
+        } else if prevDownStoppedTimer && preventStart {
             timerColour = Color.Timer.loading
         }
         
         onTouchUp?()
+    }
+    
+    func touchUp() {
+        #if DEBUG
+        NSLog("TC: Touchup")
+        #endif
         
-        if !prevDownStoppedTimer && ( mode != .stopped || !disabled ) {
-            if inspectionEnabled ? mode == .inspecting : mode == .stopped {
-                start()
-                preTimerStart?()
-            } else if inspectionEnabled && mode == .stopped && !justInspected {
-                startInspection()
-                justInspected = true
-            }
+        touchUpCommon()
+        
+        if sm.inspection && mode == .stopped && !prevDownStoppedTimer && !preventStart {
+            startInspection()
         }
         
         prevDownStoppedTimer = false
     }
     
+    func longPressEnd() {
+        #if DEBUG
+        NSLog("TC: Long press end")
+        #endif
+        
+        touchUpCommon()
+        
+        if prevDownStoppedTimer {
+            prevDownStoppedTimer = false
+            return
+        }
+        
+        if preventStart {
+            return
+        }
+        
+        if isModeBeforeStart {
+            start()
+            preTimerStart?()
+        } else if sm.inspection {
+            startInspection()
+        }
+    }
     
     // multiphase
     func lap() {
+        currentMPCount += 1
         phaseTimes.append(-timerStartTime!.timeIntervalSinceNow)
     }
-    
 }

@@ -38,7 +38,7 @@ struct TimerHeader: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var tabRouter: TabRouter
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    @AppStorage(generalSettingsKey.showSessionName.rawValue) private var showSessionType: Bool = false
+    @Preference(\.showSessionType) private var showSessionType
     
     var targetFocused: FocusState<Bool>.Binding?
     

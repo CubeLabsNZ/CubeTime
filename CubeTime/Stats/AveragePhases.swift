@@ -32,7 +32,7 @@ extension UIColor {
 
 
 struct AveragePhases: View {
-    @AppStorage(appearanceSettingsKey.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    @Preference(\.gradientSelected) private var gradientSelected
     @Environment(\.colorScheme) private var colourScheme
     
     

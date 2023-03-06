@@ -5,7 +5,7 @@ import SwiftUI
 import AVKit
 import AVFoundation
 
-enum stopWatchMode {
+enum TimerState {
     case running
     case stopped
     case inspecting
@@ -64,19 +64,10 @@ enum TimeNeededForTarget {
 class StopwatchManager: ObservableObject {
     let managedObjectContext: NSManagedObjectContext
     
-    // MARK: get user defaults
-    var showPrevTime: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.showPrevTime.rawValue)
-
-    
     
     // MARK: published variables
     @Published var currentSession: Sessions! {
         didSet {
-            #if DEBUG
-            NSLog("BEGIN DIDSET currentsession, now \(currentSession)")
-            #endif
-            
-            
             self.targetStr = filteredStrFromTime((currentSession as? CompSimSession)?.target)
             self.phaseCount = Int((currentSession as? MultiphaseSession)?.phase_count ?? 0)
             
@@ -91,11 +82,6 @@ class StopwatchManager: ObservableObject {
             } else {
                 timerController.phaseCount = nil
             }
-            
-            
-            #if DEBUG
-            NSLog("END DIDSET currentsession, now \(currentSession)")
-            #endif
         }
     }
     
@@ -404,7 +390,9 @@ class StopwatchManager: ObservableObject {
                     askToDelete()
                 case .right:
                     timerController.feedbackStyle?.impactOccurred()
-                    scrambleController.rescramble()
+                    if !timerController.preventStart {
+                        scrambleController.rescramble()
+                    }
                 default: break
                 }
             },
@@ -420,7 +408,7 @@ class StopwatchManager: ObservableObject {
         }
         
         self.scrambleController = ScrambleController(scrambleType: self.currentSession!.scramble_type, onSetScrambleStr: { newScr in
-            self.timerController.disabled = newScr == nil
+            self.timerController.preventStart = newScr == nil
         })
         
         statsGetFromCache()

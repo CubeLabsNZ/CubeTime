@@ -7,8 +7,9 @@ class TimerUIView: UIViewController {
     let timerController: TimerContoller
 
         
-    required init(timerController: TimerContoller) {
+    required init(timerController: TimerContoller, userHoldTime: Double) {
         self.timerController = timerController
+        self.userHoldTime = userHoldTime
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -31,7 +32,7 @@ class TimerUIView: UIViewController {
     
     // iPad keyboard support
     
-    private let userHoldTime: Double = UserDefaults.standard.double(forKey: generalSettingsKey.freeze.rawValue)
+    var userHoldTime: Double
     
     private var isLongPress = false
     private var keyDownThatStopped: UIKeyboardHIDUsage? = nil
@@ -82,19 +83,19 @@ struct TimerTouchView: UIViewControllerRepresentable {
     
     @EnvironmentObject var timerController: TimerContoller
     
-    @AppStorage(generalSettingsKey.freeze.rawValue) private var userHoldTime: Double = 0.5
-    @AppStorage(generalSettingsKey.gestureDistance.rawValue) private var gestureThreshold: Double = 50
+    @Preference(\.holdDownTime) private var holdDownTime
+    @Preference(\.gestureDistance) private var gestureThreshold
     
     init () {
     }
     
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<TimerTouchView>) -> TimerUIView {
-        let v = TimerUIView(timerController: timerController)
+        let v = TimerUIView(timerController: timerController, userHoldTime: holdDownTime)
         
         let longPressGesture = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.longPress))
         longPressGesture.allowableMovement = gestureThreshold
-        longPressGesture.minimumPressDuration = userHoldTime
+        longPressGesture.minimumPressDuration = holdDownTime
         
         //        longPressGesture.requiresExclusiveTouchType = ?
         
@@ -117,6 +118,7 @@ struct TimerTouchView: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiView: TimerUIView, context: UIViewControllerRepresentableContext<TimerTouchView>) {
+        uiView.userHoldTime = holdDownTime
         /*
         if stopwatchManager.scrambleStr == nil {
             for gesture in uiView.gestureRecognizers! {
@@ -155,15 +157,10 @@ struct TimerTouchView: UIViewControllerRepresentable {
         
         @objc func swipe(_ gestureRecognizer: UISwipeGestureRecognizer) {
             #if DEBUG
-            NSLog("SWIPED: \(timerController.canGesture), \(timerController.mode), DIR: \(gestureRecognizer.direction)")
+            NSLog("SWIPED: \(timerController.mode), DIR: \(gestureRecognizer.direction)")
             #endif
             
-            if timerController.canGesture && timerController.mode != .inspecting {
-                timerController.feedbackStyle?.impactOccurred()
-                timerController.handleGesture(direction: gestureRecognizer.direction)
-                timerController.prevDownStoppedTimer = false
-            }
-            timerController.timerColour = Color.Timer.normal
+            timerController.handleGesture(direction: gestureRecognizer.direction)
         }
         
         /*
