@@ -22,6 +22,7 @@ class TimerContoller: ObservableObject {
     let onTouchUp: (() -> ())?
     let preTimerStart: (() -> ())?
     let onGesture: ((_ direction: UISwipeGestureRecognizer.Direction) -> ())?
+    let onModeChange: ((_ mode: stopWatchMode) -> ())?
     
     init(
         onStartInspection: (() -> ())? = nil,
@@ -29,7 +30,8 @@ class TimerContoller: ObservableObject {
         onStop: ((_ time: Double?, _ secondsElapsed: Double, _ phaseTimes: [Double]) -> ())? = nil,
         onTouchUp: (() -> ())? = nil,
         preTimerStart: (() -> ())? = nil,
-        onGesture: ((_ direction: UISwipeGestureRecognizer.Direction) -> ())? = nil
+        onGesture: ((_ direction: UISwipeGestureRecognizer.Direction) -> ())? = nil,
+        onModeChange: ((_ mode: stopWatchMode) -> ())? = nil
     ) {
         self.onStartInspection = onStartInspection
         self.onInspectionSecondsChange = onInspectionSecondsChange
@@ -37,6 +39,7 @@ class TimerContoller: ObservableObject {
         self.onTouchUp = onTouchUp
         self.preTimerStart = preTimerStart
         self.onGesture = onGesture
+        self.onModeChange = onModeChange
     }
     
     
@@ -44,7 +47,11 @@ class TimerContoller: ObservableObject {
     
     @Published var secondsStr = formatSolveTime(secs: 0)
     @Published var inspectionSecs = 0
-    @Published var mode: stopWatchMode = .stopped
+    @Published var mode: stopWatchMode = .stopped {
+        didSet {
+            onModeChange?(mode)
+        }
+    }
     @Published var timerColour: Color = Color.Timer.normal
     
     var timeDP: Int = UserDefaults.standard.integer(forKey: generalSettingsKey.timeDpWhenRunning.rawValue)

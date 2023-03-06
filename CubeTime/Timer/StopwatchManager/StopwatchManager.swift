@@ -54,6 +54,11 @@ func setupAudioSession() {
     }
 }
 
+enum TimeNeededForTarget {
+    case notPossible, guaranteed
+    case value(Double)
+}
+
 // MARK: --
 // MARK: SWM
 class StopwatchManager: ObservableObject {
@@ -94,6 +99,14 @@ class StopwatchManager: ObservableObject {
         }
     }
     
+    @Published var zenMode = false {
+        didSet {
+            updateHideStatusBar()
+        }
+    }
+    @Published var hideUI = false
+    
+
     @Published var showDeleteSolveConfirmation = false
     @Published var showPenOptions = false
     
@@ -137,7 +150,7 @@ class StopwatchManager: ObservableObject {
     @Published var bpa: Double?
     @Published var wpa: Double?
     
-    @Published var timeNeededForTarget: Double?
+    @Published var timeNeededForTarget: TimeNeededForTarget?
     
     // Stats not on timer
     @Published var bestAo5: CalculatedAverage?
@@ -226,7 +239,9 @@ class StopwatchManager: ObservableObject {
     // MARK: inspection alert audio
     
     
-    
+    func updateHideStatusBar() {
+        self.hideUI = timerController.mode == .inspecting || timerController.mode == .running || self.zenMode
+    }
     
     
     
@@ -392,6 +407,9 @@ class StopwatchManager: ObservableObject {
                     scrambleController.rescramble()
                 default: break
                 }
+            },
+            onModeChange: { newMode in
+                self.updateHideStatusBar()
             }
         )
         
