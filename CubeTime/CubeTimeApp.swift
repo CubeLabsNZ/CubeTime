@@ -177,6 +177,7 @@ struct MainView: View {
                             TimerView()
                                 .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
                                 .environmentObject(stopwatchManager.timerController)
+                                .environmentObject(stopwatchManager.scrambleController)
                         case .solves:
                             TimeListView()
                         case .stats:
@@ -199,6 +200,7 @@ struct MainView: View {
                 } else {
                     TimerView()
                         .environmentObject(stopwatchManager.timerController)
+                        .environmentObject(stopwatchManager.scrambleController)
                 }
             }
             .tint(accentColour)

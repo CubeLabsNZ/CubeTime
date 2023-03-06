@@ -159,13 +159,13 @@ struct BottomToolContainer<Content: View>: View {
 }
 
 struct TimerDrawScramble: View {
-    @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var scrambleController: ScrambleController
     @Binding var scrambleSheetStr: SheetStrWrapper?
     
     var body: some View {
         GeometryReader { geo in
-            if let svg = stopwatchManager.scrambleSVG {
-                if let scr = stopwatchManager.scrambleStr {
+            if let svg = scrambleController.scrambleSVG {
+                if let scr = scrambleController.scrambleStr {
                     SVGView(string: svg)
                         .padding(2)
 //                        .frame(maxWidth: .infinity, maxHeight: .infinity)
