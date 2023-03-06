@@ -5,7 +5,7 @@ import SwiftUI
 import AVKit
 import AVFoundation
 
-enum stopWatchMode {
+enum TimerState {
     case running
     case stopped
     case inspecting
@@ -404,7 +404,9 @@ class StopwatchManager: ObservableObject {
                     askToDelete()
                 case .right:
                     timerController.feedbackStyle?.impactOccurred()
-                    scrambleController.rescramble()
+                    if !timerController.preventStart {
+                        scrambleController.rescramble()
+                    }
                 default: break
                 }
             },
@@ -420,7 +422,7 @@ class StopwatchManager: ObservableObject {
         }
         
         self.scrambleController = ScrambleController(scrambleType: self.currentSession!.scramble_type, onSetScrambleStr: { newScr in
-            self.timerController.disabled = newScr == nil
+            self.timerController.preventStart = newScr == nil
         })
         
         statsGetFromCache()

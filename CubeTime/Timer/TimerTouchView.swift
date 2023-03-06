@@ -155,15 +155,10 @@ struct TimerTouchView: UIViewControllerRepresentable {
         
         @objc func swipe(_ gestureRecognizer: UISwipeGestureRecognizer) {
             #if DEBUG
-            NSLog("SWIPED: \(timerController.canGesture), \(timerController.mode), DIR: \(gestureRecognizer.direction)")
+            NSLog("SWIPED: \(timerController.mode), DIR: \(gestureRecognizer.direction)")
             #endif
             
-            if timerController.canGesture && timerController.mode != .inspecting {
-                timerController.feedbackStyle?.impactOccurred()
-                timerController.handleGesture(direction: gestureRecognizer.direction)
-                timerController.prevDownStoppedTimer = false
-            }
-            timerController.timerColour = Color.Timer.normal
+            timerController.handleGesture(direction: gestureRecognizer.direction)
         }
         
         /*
