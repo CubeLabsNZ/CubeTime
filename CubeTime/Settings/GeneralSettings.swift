@@ -1,20 +1,5 @@
 import SwiftUI
 
-
-enum generalSettingsKey: String {
-    case freeze,
-         inspection, inspectionCountsDown, showCancelInspection, inspectionAlert, inspectionAlertType,
-         inputMode,
-         timeDpWhenRunning,
-         showSessionName,
-         hapBool, hapType,
-         gestureDistance,
-         showScramble, showStats,
-         appZoom, forceAppZoom,
-         showPrevTime,
-         displayDP
-}
-
 enum InputMode: String, Codable, CaseIterable {
     case timer = "Timer"
     case typing = "Typing"
@@ -26,40 +11,35 @@ extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
     var localizedName: String { "\(self)" }
 }
 
-
-
-
-
 struct GeneralSettingsView: View {
     // timer settings
-    @AppStorage(generalSettingsKey.inspection.rawValue) private var inspectionTime: Bool = false
-    @AppStorage(generalSettingsKey.inspectionCountsDown.rawValue) private var insCountDown: Bool = false
-    @AppStorage(generalSettingsKey.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
-    @AppStorage(generalSettingsKey.inspectionAlert.rawValue) private var inspectionAlert: Bool = true
-    @AppStorage(generalSettingsKey.inspectionAlertType.rawValue) private var inspectionAlertType: Int = 0
+    @Preference(\.inspection) private var inspectionTime
+    @Preference(\.inspectionCountsDown) private var insCountDown
+    @Preference(\.showCancelInspection) private var showCancelInspection
+    @Preference(\.inspectionAlert) private var inspectionAlert
+    @Preference(\.inspectionAlertType) private var inspectionAlertType
     
-    @AppStorage(generalSettingsKey.inputMode.rawValue) private var inputMode: InputMode = InputMode.timer
+    @Preference(\.inputMode) private var inputMode
     
-    @AppStorage(generalSettingsKey.freeze.rawValue) private var holdDownTime: Double = 0.5
-    @AppStorage(generalSettingsKey.timeDpWhenRunning.rawValue) private var timerDP: Int = 3
-    @AppStorage(generalSettingsKey.showSessionName.rawValue) private var showSessionName: Bool = false
+    @Preference(\.holdDownTime) private var holdDownTime
+    @Preference(\.timeDpWhenRunning) private var timerDP
     
     // timer tools
-    @AppStorage(generalSettingsKey.showScramble.rawValue) private var showScramble: Bool = true
-    @AppStorage(generalSettingsKey.showStats.rawValue) private var showStats: Bool = true
+    @Preference(\.showScramble) private var showScramble
+    @Preference(\.showStats) private var showStats
     
     // accessibility
-    @AppStorage(generalSettingsKey.hapBool.rawValue) private var hapticFeedback: Bool = true
-    @AppStorage(generalSettingsKey.hapType.rawValue) private var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
-    @AppStorage(generalSettingsKey.forceAppZoom.rawValue) private var forceAppZoom: Bool = false
-    @AppStorage(generalSettingsKey.appZoom.rawValue) private var appZoom: AppZoomWrapper = AppZoomWrapper(rawValue: 3)
-    @AppStorage(generalSettingsKey.gestureDistance.rawValue) private var gestureActivationDistance: Double = 50
+    @Preference(\.hapticEnabled) private var hapticFeedback
+    @Preference(\.hapticType) private var feedbackType
+    @Preference(\.forceAppZoom) private var forceAppZoom
+    @Preference(\.appZoom) private var appZoom
+    @Preference(\.gestureDistance) private var gestureActivationDistance
     
     // show previous time after delete
-    @AppStorage(generalSettingsKey.showPrevTime.rawValue) private var showPrevTime: Bool = false
+    @Preference(\.showPrevTime) private var showPrevTime
     
     // statistics
-    @AppStorage(generalSettingsKey.displayDP.rawValue) private var displayDP: Int = 3
+    @Preference(\.displayDP) private var displayDP
     
     
         
@@ -99,9 +79,6 @@ struct GeneralSettingsView: View {
                         
                     }
                     .padding(.horizontal)
-                    .onChange(of: inspectionTime) { newValue in
-                        stopwatchManager.timerController.inspectionEnabled = newValue
-                    }
                     
                     
                    
@@ -112,9 +89,6 @@ struct GeneralSettingsView: View {
                         }
                         .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         .padding(.horizontal)
-                        .onChange(of: insCountDown) { newValue in
-                            stopwatchManager.timerController.insCountDown = newValue
-                        }
                         
                         Toggle(isOn: $showCancelInspection) {
                             Text("Show Cancel Inspection")
@@ -138,9 +112,6 @@ struct GeneralSettingsView: View {
                         }
                         .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         .padding(.horizontal)
-                        .onChange(of: inspectionAlert) { newValue in
-                            stopwatchManager.timerController.inspectionAlert = newValue
-                        }
                         
                         Text("Play an audible alert when 8 or 12 seconds is reached.")
                             .font(.footnote.weight(.medium))
@@ -163,9 +134,6 @@ struct GeneralSettingsView: View {
                                 }
                                 .frame(maxWidth: 120)
                                 .pickerStyle(.segmented)
-                                .onChange(of: inspectionAlertType) { newValue in
-                                    stopwatchManager.timerController.inspectionAlertType = newValue
-                                }
                             }
                             .padding(.horizontal)
                             
@@ -250,9 +218,6 @@ struct GeneralSettingsView: View {
                                     .frame(width: 100, alignment: .trailing)
                             }
                             .accentColor(Color.accentColor)
-                        }
-                        .onChange(of: timerDP) { newValue in
-                            stopwatchManager.timerController.timeDP = newValue
                         }
                     }
                 }
@@ -351,9 +316,6 @@ struct GeneralSettingsView: View {
                         }
                         .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         .padding(.horizontal)
-                        .onChange(of: showPrevTime) { newValue in
-                            stopwatchManager.showPrevTime = newValue
-                        }
                     }
                     
                     Text("Show the previous time after a solve is deleted by swipe gesture. With this option off, the default time of 0.00 or 0.000 will be shown instead.")
@@ -434,9 +396,6 @@ struct GeneralSettingsView: View {
                     }
                 }
                 .padding(.horizontal)
-                .onChange(of: hapticFeedback) { newValue in
-                    stopwatchManager.timerController.hapticEnabled = newValue
-                }
                 
                 if hapticFeedback {
                     HStack {
@@ -461,9 +420,6 @@ struct GeneralSettingsView: View {
                         .accentColor(Color.accentColor)
                     }
                     .padding(.horizontal)
-                    .onChange(of: feedbackType) { newValue in
-                        stopwatchManager.timerController.hapticType = newValue.rawValue
-                    }
                 }
                 
                

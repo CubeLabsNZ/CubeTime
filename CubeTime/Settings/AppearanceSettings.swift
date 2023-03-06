@@ -1,10 +1,5 @@
 import SwiftUI
 
-enum appearanceSettingsKey: String {
-    case overrideDM, dmBool, staticGradient, gradientSelected, graphGlow, graphAnimation, scrambleSize, fontWeight, fontCasual, fontCursive
-}
-
-
 struct AppearanceSettingsView: View {
     @Environment(\.colorScheme) var colourScheme
     
@@ -15,20 +10,21 @@ struct AppearanceSettingsView: View {
     private let columns = [GridItem(spacing: 16), GridItem(spacing: 16)]
     
     // colours
-    @AppStorage(appearanceSettingsKey.staticGradient.rawValue) private var staticGradient: Bool = true
-    @AppStorage(appearanceSettingsKey.gradientSelected.rawValue) private var gradientSelected: Int = 6
-    @AppStorage(appearanceSettingsKey.graphGlow.rawValue) private var graphGlow: Bool = true
-    @AppStorage(appearanceSettingsKey.graphAnimation.rawValue) private var graphAnimation: Bool = true
+    @Preference(\.staticGradient) private var staticGradient
+    @Preference(\.gradientSelected) private var gradientSelected
+    
+    @Preference(\.graphGlow) private var graphGlow
+    @Preference(\.graphAnimation) private var graphAnimation
     
     // system settings (appearance)
-    @AppStorage(appearanceSettingsKey.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
-    @AppStorage(appearanceSettingsKey.dmBool.rawValue) private var darkMode: Bool = false
+    @Preference(\.overrideDM) private var overrideSystemAppearance
+    @Preference(\.dmBool) private var darkMode
     
     
-    @AppStorage(appearanceSettingsKey.scrambleSize.rawValue) private var scrambleSize: Int = 18
-    @AppStorage(appearanceSettingsKey.fontWeight.rawValue) private var fontWeight: Double = 516.0
-    @AppStorage(appearanceSettingsKey.fontCasual.rawValue) private var fontCasual: Double = 0.0
-    @AppStorage(appearanceSettingsKey.fontCursive.rawValue) private var fontCursive: Bool = false
+    @Preference(\.scrambleSize) private var scrambleSize
+    @Preference(\.fontWeight) private var fontWeight
+    @Preference(\.fontCasual) private var fontCasual
+    @Preference(\.fontCursive) private var fontCursive
     
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
@@ -395,9 +391,6 @@ struct AppearanceSettingsView: View {
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 12)
-                    .onChange(of: fontWeight) { newValue in
-                        fontManager.fontWeight = newValue
-                    }
                     
                     VStack(alignment: .leading, spacing: 0) {
                         Text("Font Casualness")
@@ -421,9 +414,6 @@ struct AppearanceSettingsView: View {
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 12)
-                    .onChange(of: fontCasual) { newValue in
-                        fontManager.fontCasual = newValue
-                    }
                     
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
@@ -436,9 +426,6 @@ struct AppearanceSettingsView: View {
                         .padding(.horizontal)
                         .padding(.bottom, 12)
                     }
-                    .onChange(of: fontCursive) { newValue in
-                        fontManager.fontCursive = newValue
-                    }
                 }
             }
             .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
@@ -447,9 +434,6 @@ struct AppearanceSettingsView: View {
         }
         .padding(.horizontal)
         .preferredColorScheme(overrideSystemAppearance ? darkMode ? .dark : .light : nil)
-            .onChange(of: scrambleSize) { newValue in
-                fontManager.scrambleSize = newValue
-            }
     }
 }
 
@@ -461,7 +445,7 @@ struct TimerPreview: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.globalGeometrySize) var globalGeometrySize
     
-    @AppStorage(appearanceSettingsKey.scrambleSize.rawValue) private var scrambleSize: Int = 18
+    @Preference(\.scrambleSize) private var scrambleSize
     
     
     var body: some View {

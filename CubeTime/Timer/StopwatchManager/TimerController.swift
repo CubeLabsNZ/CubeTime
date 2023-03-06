@@ -15,6 +15,7 @@ let inspectionDnfTime = 17
 let inspectionPlusTwoTime = 15
 
 class TimerContoller: ObservableObject {
+    let sm = SettingsManager.standard
     
     let onStartInspection: (() -> ())?
     let onInspectionSecondsChange: ((_ inspectionSecs: Int) -> ())?
@@ -51,27 +52,12 @@ class TimerContoller: ObservableObject {
         }
     }
     @Published var timerColour: Color = Color.Timer.normal
-    
-    var timeDP: Int = UserDefaults.standard.integer(forKey: generalSettingsKey.timeDpWhenRunning.rawValue)
-    
-    #warning("TODO: find a better way of this that doesnt need onChange in settings.")
-    var inspectionEnabled: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.inspection.rawValue)
-    var insCountDown: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.inspectionCountsDown.rawValue)
-    var inspectionAlert: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.inspectionAlert.rawValue)
-    var inspectionAlertType: Int = UserDefaults.standard.integer(forKey: generalSettingsKey.inspectionAlertType.rawValue)
-    
-    var hapticType: Int = UserDefaults.standard.integer(forKey: generalSettingsKey.hapType.rawValue) {
-        didSet {
-            calculateFeedbackStyle()
+        
+    var feedbackStyle: UIImpactFeedbackGenerator? {
+        get {
+            sm.hapticEnabled ? UIImpactFeedbackGenerator(style: sm.hapticType) : nil
         }
     }
-    var hapticEnabled: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.hapBool.rawValue) {
-        didSet {
-            calculateFeedbackStyle()
-        }
-    }
-    
-    var feedbackStyle: UIImpactFeedbackGenerator?
     
     private let systemSoundID: SystemSoundID = 1057
     private let inspectionAlert_8 = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "8sec-audio", ofType: "wav")!))
@@ -79,7 +65,7 @@ class TimerContoller: ObservableObject {
     
     private var isModeBeforeStart: Bool {
         get {
-            inspectionEnabled ? mode == .inspecting : mode == .stopped
+            sm.inspection ? mode == .inspecting : mode == .stopped
         }
     }
     
@@ -108,11 +94,6 @@ class TimerContoller: ObservableObject {
     }
     var phaseCount: Int? = nil
     
-    
-    func calculateFeedbackStyle() {
-        self.feedbackStyle = hapticEnabled ? UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.init(rawValue: hapticType)!) : nil
-    }
-    
     func handleGesture(direction: UISwipeGestureRecognizer.Direction) {
         prevDownStoppedTimer = false
         NSLog("HERE1 \(!preventStart) || \(mode != .stopped)")
@@ -128,12 +109,12 @@ class TimerContoller: ObservableObject {
     func startInspection() {
         timer?.invalidate()
         onStartInspection?()
-        secondsStr = insCountDown ? "15" : "0"
+        secondsStr = sm.inspectionCountsDown ? "15" : "0"
         inspectionSecs = 0
         mode = .inspecting
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
             inspectionSecs += 1
-            if insCountDown {
+            if sm.inspectionCountsDown {
                 if inspectionSecs == 16 {
                     self.secondsStr = "-"
                 } else if inspectionSecs < 16 {
@@ -146,8 +127,8 @@ class TimerContoller: ObservableObject {
             onInspectionSecondsChange?(inspectionSecs)
             
             
-            if inspectionAlert && (inspectionSecs == 8 || inspectionSecs == 12) {
-                if inspectionAlertType == 1 {
+            if sm.inspectionAlert && (inspectionSecs == 8 || inspectionSecs == 12) {
+                if sm.inspectionAlertType == 1 {
                     AudioServicesPlayAlertSound(systemSoundID)
                 } else {
                     if inspectionSecs == 8 {
@@ -165,7 +146,7 @@ class TimerContoller: ObservableObject {
         timer?.invalidate()
         inspectionSecs = 0
         secondsElapsed = 0
-        secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: timeDP)
+        secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: sm.timeDpWhenRunning)
         
     }
 
@@ -184,12 +165,12 @@ class TimerContoller: ObservableObject {
         secondsStr = formatSolveTime(secs: 0)
         timerStartTime = Date()
 
-        if timeDP == -1 {
+        if sm.timeDpWhenRunning == -1 {
             self.secondsStr = "..."
         } else {
             timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { [self] timer in
                 self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
-                self.secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: timeDP)
+                self.secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: sm.timeDpWhenRunning)
             }
         }
     }
@@ -275,7 +256,7 @@ class TimerContoller: ObservableObject {
         
         touchUpCommon()
         
-        if inspectionEnabled && mode == .stopped && !prevDownStoppedTimer && !preventStart {
+        if sm.inspection && mode == .stopped && !prevDownStoppedTimer && !preventStart {
             startInspection()
         }
         
@@ -301,7 +282,7 @@ class TimerContoller: ObservableObject {
         if isModeBeforeStart {
             start()
             preTimerStart?()
-        } else if inspectionEnabled {
+        } else if sm.inspection {
             startInspection()
         }
     }

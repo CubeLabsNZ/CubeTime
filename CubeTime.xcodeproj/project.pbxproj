@@ -78,6 +78,7 @@
 		AF8874C329AB0BE7001E49D0 /* TimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C229AB0BE7001E49D0 /* TimerController.swift */; };
 		AF8874C529AB3736001E49D0 /* ScrambleGeneratorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */; };
 		AF8A157429AF15B500F6818E /* ScrambleOnlyTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */; };
+		AF8B305B29B5C7010023D23B /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8B305A29B5C7010023D23B /* SettingsManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -184,6 +185,7 @@
 		AF8874C229AB0BE7001E49D0 /* TimerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerController.swift; sourceTree = "<group>"; };
 		AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleGeneratorTool.swift; sourceTree = "<group>"; };
 		AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleOnlyTool.swift; sourceTree = "<group>"; };
+		AF8B305A29B5C7010023D23B /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -405,6 +407,7 @@
 				23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */,
 				23E81E72275D8DEA00B741E3 /* AboutSettings.swift */,
 				7D7E2011275DD52600ADF01D /* Licenses.swift */,
+				AF8B305A29B5C7010023D23B /* SettingsManager.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -598,6 +601,7 @@
 				23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */,
 				23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */,
 				AF8874C129AAC8C0001E49D0 /* ToolsList.swift in Sources */,
+				AF8B305B29B5C7010023D23B /* SettingsManager.swift in Sources */,
 				AF8A157429AF15B500F6818E /* ScrambleOnlyTool.swift in Sources */,
 				2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */,
 				23E81E6C275D8DAE00B741E3 /* GeneralSettings.swift in Sources */,

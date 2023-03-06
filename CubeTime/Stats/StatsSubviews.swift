@@ -3,7 +3,7 @@ import CoreData
 
 struct StatsBlock<Content: View>: View {
     @Environment(\.colorScheme) var colourScheme
-    @AppStorage(appearanceSettingsKey.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    @Preference(\.gradientSelected) private var gradientSelected
     
     let dataView: Content
     let title: String
@@ -63,7 +63,7 @@ struct StatsBlock<Content: View>: View {
 struct StatsBlockText: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.globalGeometrySize) var globalGeometrySize
-    @AppStorage(appearanceSettingsKey.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    @Preference(\.gradientSelected) private var gradientSelected
     
     let displayText: String
     let colouredText: Bool

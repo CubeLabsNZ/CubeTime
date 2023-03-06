@@ -64,19 +64,10 @@ enum TimeNeededForTarget {
 class StopwatchManager: ObservableObject {
     let managedObjectContext: NSManagedObjectContext
     
-    // MARK: get user defaults
-    var showPrevTime: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.showPrevTime.rawValue)
-
-    
     
     // MARK: published variables
     @Published var currentSession: Sessions! {
         didSet {
-            #if DEBUG
-            NSLog("BEGIN DIDSET currentsession, now \(currentSession)")
-            #endif
-            
-            
             self.targetStr = filteredStrFromTime((currentSession as? CompSimSession)?.target)
             self.phaseCount = Int((currentSession as? MultiphaseSession)?.phase_count ?? 0)
             
@@ -91,11 +82,6 @@ class StopwatchManager: ObservableObject {
             } else {
                 timerController.phaseCount = nil
             }
-            
-            
-            #if DEBUG
-            NSLog("END DIDSET currentsession, now \(currentSession)")
-            #endif
         }
     }
     

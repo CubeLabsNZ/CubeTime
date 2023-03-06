@@ -7,31 +7,11 @@
 
 import Foundation
 import SwiftUI
+import Combine
 import CoreText
 
 class FontManager: ObservableObject {
-    var fontWeight: Double = UserDefaults.standard.double(forKey: appearanceSettingsKey.fontWeight.rawValue) {
-        didSet {
-            updateFont()
-        }
-    }
-    var fontCasual: Double = UserDefaults.standard.double(forKey: appearanceSettingsKey.fontCasual.rawValue) {
-        didSet {
-            updateFont()
-        }
-    }
-    var fontCursive: Bool = UserDefaults.standard.bool(forKey: appearanceSettingsKey.fontCursive.rawValue) {
-        didSet {
-            updateFont()
-        }
-    }
-    var scrambleSize: Int = UserDefaults.standard.integer(forKey: appearanceSettingsKey.scrambleSize.rawValue) {
-        didSet {
-            updateFont()
-        }
-    }
-    
-    
+    let sm = SettingsManager.standard
     
     @Published var ctFontScramble: Font!
     @Published var ctFontDescBold: CTFontDescriptor!
@@ -55,15 +35,25 @@ class FontManager: ObservableObject {
     static let mono10Bold = fontFor(size: 10, weight: 800)
     static let mono11Bold = fontFor(size: 11, weight: 800)
     
+    let changeOnKeys: [PartialKeyPath<SettingsManager>] = [\.fontWeight, \.fontCursive, \.fontCasual, \.scrambleSize]
+    
+    var subscriber: AnyCancellable?
     
     init() {
+        subscriber = sm.preferencesChangedSubject
+            .filter { item in
+                (self.changeOnKeys as [AnyKeyPath]).contains(item)
+            }
+            .sink(receiveValue: { [weak self] i in
+            self?.updateFont()
+        })
         updateFont()
     }
     
     private func updateFont() {
             // weight, casual, cursive
-        let variations = [2003265652: fontWeight, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
-        let variationsTimer = [2003265652: fontWeight + 200, 1128354636: fontCasual, 1129468758: fontCursive ? 1 : 0]
+        let variations = [2003265652: sm.fontWeight, 1128354636: sm.fontCasual, 1129468758: sm.fontCursive ? 1 : 0]
+        let variationsTimer = [2003265652: sm.fontWeight + 200, 1128354636: sm.fontCasual, 1129468758: sm.fontCursive ? 1 : 0]
         
         ctFontDesc = CTFontDescriptorCreateWithAttributes([
             kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
@@ -75,7 +65,7 @@ class FontManager: ObservableObject {
             kCTFontVariationAttribute: variationsTimer
         ] as! CFDictionary)
         
-        ctFontScramble = Font(CTFontCreateWithFontDescriptor(ctFontDesc, CGFloat(scrambleSize), nil))
+        ctFontScramble = Font(CTFontCreateWithFontDescriptor(ctFontDesc, CGFloat(sm.scrambleSize), nil))
     }
 }
 
