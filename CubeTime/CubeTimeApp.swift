@@ -60,13 +60,16 @@ struct CubeTime: App {
     var body: some Scene {
         WindowGroup {
             MainView()
+                .accentColor(Color("accent"))
                 .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
                     Updates(showUpdates: $showUpdates)
+                        .tint(Color("accent"))
                 }
                 .sheet(isPresented: $showOnboarding, onDismiss: {
                     pageIndex = 0
                 }) {
                     OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
+                        .tint(Color("accent"))
                 }
                 .if(dynamicTypeSize != DynamicTypeSize.large) { view in
                     view
@@ -167,7 +170,7 @@ struct MainView: View {
                         .environmentObject(stopwatchManager.scrambleController)
                 }
             }
-            .tint(Color.accentColor)
+//            .tint(Color.accentColor)
             .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
             .environment(\.globalGeometrySize, geo.size)
             .environmentObject(tabRouter)

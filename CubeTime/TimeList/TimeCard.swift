@@ -93,7 +93,7 @@ struct TimeCard: View {
                     .font(.body.weight(.bold))
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(Color.accentColor)
+                        .foregroundColor(Color("accent"))
                 }
             }
         }

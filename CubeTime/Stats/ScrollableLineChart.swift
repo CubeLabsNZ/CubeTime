@@ -111,7 +111,7 @@ class TimeDistViewController: UIViewController {
         context.drawPath(using: .stroke)
         
         context.setLineDash(phase: 0, lengths: [])
-        context.setStrokeColor(UIColor(Color.accentColor).cgColor)
+        context.setStrokeColor(UIColor(Color("accent")).cgColor)
         
         let trendLine: UIBezierPath = UIBezierPath()
         
@@ -138,7 +138,7 @@ class TimeDistViewController: UIViewController {
         trendLine.addLine(to: CGPoint(x: 0, y: imageHeight - imagePadding))
 
         
-        let grad = CGGradient(colorsSpace: .none, colors: [UIColor(Color.accentColor.opacity(0.6)).cgColor, UIColor(Color.accentColor.opacity(0.2)).cgColor] as CFArray, locations: [0, 1])!
+        let grad = CGGradient(colorsSpace: .none, colors: [UIColor(Color("accent").opacity(0.6)).cgColor, UIColor(Color("accent").opacity(0.2)).cgColor] as CFArray, locations: [0, 1])!
         
 //        context.saveGState()
         trendLine.addClip()

@@ -88,7 +88,6 @@ struct LicensesPopUpView: View {
                 }
             }
         }
-        .accentColor(Color.accentColor)
     }
 }
 
@@ -164,6 +163,7 @@ struct AboutSettingsView: View {
         .padding(.horizontal)
         .sheet(isPresented: $showLicenses) {
             LicensesPopUpView(showLicenses: $showLicenses)
+                .tint(Color("accent"))
         }
     }
 }

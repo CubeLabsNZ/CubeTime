@@ -192,7 +192,7 @@ struct ScrambleGeneratorTool: View {
                         if (currentCount == num && num != 0) {
                             Text("Success!")
                                 .font(.body.weight(.semibold))
-                                .foregroundColor(Color.accentColor)
+                                .foregroundColor(Color("accent"))
                             
                             HierarchialButton(type: .coloured, size: .large, onTapRun: {
                                 self.showShareSheet = true
@@ -228,7 +228,7 @@ struct ScrambleGeneratorTool: View {
                                         HStack(alignment: .top) {
                                             Text("\(index+1).")
                                                 .font(.subheadline.weight(.semibold))
-                                                .foregroundColor(Color.accentColor)
+                                                .foregroundColor(Color("accent"))
                                                 .offset(y: 1)
                                             
                                             Text(scramble)

@@ -111,7 +111,6 @@ struct TimerHeader: View {
                                 .font(.system(size: 15, weight: .regular))
                         }
                     }
-                    .accentColor(Color.accentColor)
                     .pickerStyle(.menu)
                 case .multiphase:
                     HStack(spacing: 0) {
@@ -136,7 +135,7 @@ struct TimerHeader: View {
                     HStack (spacing: 10) {
                         Image(systemName: "target")
                             .font(.system(size: 15))
-                            .foregroundColor(Color.accentColor)
+                            .foregroundColor(Color("accent"))
                         
                         ZStack {
                             Text(stopwatchManager.targetStr == "" ? "0.00" : stopwatchManager.targetStr)
@@ -151,7 +150,6 @@ struct TimerHeader: View {
                                 .submitLabel(.done)
                                 .focused(targetFocused!)
                                 .multilineTextAlignment(.leading)
-                                .tint(Color.accentColor)
                                 .modifier(TimeMaskTextField(text: $stopwatchManager.targetStr, onReceiveAlso: { text in
                                     if let time = timeFromStr(text) {
                                         (stopwatchManager.currentSession as! CompSimSession).target = time
@@ -164,7 +162,7 @@ struct TimerHeader: View {
                         .padding(.leading, 2)
                         .padding(.trailing, 12)
                     }
-                    .foregroundColor(Color.accentColor)
+                    .foregroundColor(Color("accent"))
                 default:
                     EmptyView()
                 }

@@ -312,15 +312,18 @@ struct StatsView: View {
         .navigationViewStyle(StackNavigationViewStyle())
         .sheet(item: $presentedAvg) { item in
             StatsDetailView(solves: item, session: stopwatchManager.currentSession)
+                .tint(Color("accent"))
         }
         .sheet(isPresented: $showBestSinglePopup) {
             TimeDetailView(for: stopwatchManager.bestSingle!, currentSolve: nil)
+                .tint(Color("accent"))
         }
         .sheet(isPresented: self.$showTimeTrendModal) {
             let timesOnly = stopwatchManager.solvesNoDNFsbyDate.map { $0.timeIncPen }
             DetailTimeTrend(rawDataPoints: timesOnly,
                             limits: (timesOnly.max()!, timesOnly.min()!),
                             averageValue: stopwatchManager.sessionMean!)
+                .tint(Color("accent"))
         }
     }
 }
