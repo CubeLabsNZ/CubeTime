@@ -19,7 +19,7 @@ struct ScrambleOnlyTool: View {
                     .recursiveMono(fontSize: 24, weight: .medium)
                     .padding(.horizontal)
             } else {
-                LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
+                LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
             }
             
             Color.white.opacity(0.0001)

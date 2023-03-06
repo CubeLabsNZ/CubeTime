@@ -37,7 +37,7 @@ struct AppearanceSettingsView: View {
                     Image(systemName: "paintbrush.pointed.fill")
                         .font(.subheadline.weight(.bold))
 
-                        .foregroundColor(Color.accentColor)
+                        .foregroundColor(Color("accent"))
                     Text("Colours")
                         .font(.body.weight(.bold))
                     
@@ -202,7 +202,7 @@ struct AppearanceSettingsView: View {
                                 Text("Graph Glow")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
+                                .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 10)
@@ -223,7 +223,7 @@ struct AppearanceSettingsView: View {
                                 Text("Graph Animation")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
+                                .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 10)
@@ -253,7 +253,7 @@ struct AppearanceSettingsView: View {
                 HStack {
                     Image(systemName: "command")
                         .font(.subheadline.weight(.bold))
-                        .foregroundColor(Color.accentColor)
+                        .foregroundColor(Color("accent"))
                     Text("System Settings")
                         .font(.body.weight(.bold))
                     
@@ -268,7 +268,7 @@ struct AppearanceSettingsView: View {
                             Text("Override System Appearance")
                                 .font(.body.weight(.medium))
                         }
-                            .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
+                            .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         
                     }
                     .padding(.horizontal)
@@ -280,7 +280,7 @@ struct AppearanceSettingsView: View {
                                 Text("Dark Mode")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
+                                .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 12)
@@ -302,7 +302,7 @@ struct AppearanceSettingsView: View {
                 HStack {
                     Image(systemName: "textformat")
                         .font(.subheadline.weight(.bold))
-                        .foregroundColor(Color.accentColor)
+                        .foregroundColor(Color("accent"))
                     Text("Font Settings")
                         .font(.body.weight(.bold))
                     
@@ -421,7 +421,7 @@ struct AppearanceSettingsView: View {
                                 Text("Cursive Font")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
+                                .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 12)

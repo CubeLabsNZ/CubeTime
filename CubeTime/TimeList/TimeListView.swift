@@ -120,7 +120,7 @@ struct TimeListHeader: View {
                 HStack {
                     Image(systemName: "magnifyingglass")
                         .padding(.horizontal, searchExpanded ? 9 : 0)
-                        .foregroundColor(Color.accentColor)
+                        .foregroundColor(Color("accent"))
                         .font(.body.weight(.medium))
                     
                     #warning("todo make search bar search for comments too?")
@@ -143,7 +143,7 @@ struct TimeListHeader: View {
                         }
                         .font(.body)
                         .buttonStyle(AnimatedButton())
-                        .foregroundColor(searchExpanded ? Color.accentColor : Color.clear)
+                        .foregroundColor(searchExpanded ? Color("accent") : Color.clear)
                         .padding(.horizontal, 8)
                     }
                 }
@@ -438,10 +438,12 @@ struct TimeListView: View {
         
         .sheet(item: $solve) { item in
             TimeDetailView(for: item, currentSolve: $solve)
+                .tint(Color("accent"))
         }
         
         .sheet(item: $calculatedAverage) { item in
             StatsDetailView(solves: item, session: stopwatchManager.currentSession)
+                .tint(Color("accent"))
         }
         
         .task {

@@ -61,7 +61,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Image(systemName: "timer")
                         .font(.subheadline.weight(.bold))
-                        .foregroundColor(Color.accentColor)
+                        .foregroundColor(Color("accent"))
                     Text("Timer Settings")
                         .font(.body.weight(.bold))
                     
@@ -75,7 +75,7 @@ struct GeneralSettingsView: View {
                             Text("Inspection Time")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
+                        .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         
                     }
                     .padding(.horizontal)
@@ -87,14 +87,14 @@ struct GeneralSettingsView: View {
                             Text("Inspection Counts Down")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
+                        .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         .padding(.horizontal)
                         
                         Toggle(isOn: $showCancelInspection) {
                             Text("Show Cancel Inspection")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
+                        .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         .padding(.horizontal)
                         
                         Text("Display a cancel inspection button when inspecting.")
@@ -110,7 +110,7 @@ struct GeneralSettingsView: View {
                             Text("Inpsection Alert")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
+                        .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         .padding(.horizontal)
                         
                         Text("Play an audible alert when 8 or 12 seconds is reached.")
@@ -194,7 +194,6 @@ struct GeneralSettingsView: View {
                                 .frame(width: 100, alignment: .trailing)
                                 .font(.body)
                         }
-                        .accentColor(Color.accentColor)
                     }
                     
                     if inputMode == .timer {
@@ -217,7 +216,6 @@ struct GeneralSettingsView: View {
                                     .font(.body)
                                     .frame(width: 100, alignment: .trailing)
                             }
-                            .accentColor(Color.accentColor)
                         }
                     }
                 }
@@ -237,7 +235,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Image(systemName: "wrench")
                         .font(.subheadline.weight(.bold))
-                        .foregroundColor(Color.accentColor)
+                        .foregroundColor(Color("accent"))
                     Text("Timer Tools")
                         .font(.body.weight(.bold))
 
@@ -252,7 +250,7 @@ struct GeneralSettingsView: View {
                         Text("Show draw scramble on timer")
                             .font(.body.weight(.medium))
                     }
-                    .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
+                    .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                     
                 }
                 .padding(.horizontal)
@@ -266,7 +264,7 @@ struct GeneralSettingsView: View {
 //                    .onChange(of: showStats) { newValue in
 //                        stopwatchManager.updateStats()
 //                    }
-                    .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
+                    .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                     
                 }
                 .padding(.horizontal)
@@ -300,7 +298,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Image(systemName: "rectangle.and.pencil.and.ellipsis")
                         .font(.subheadline.weight(.bold))
-                        .foregroundColor(Color.accentColor)
+                        .foregroundColor(Color("accent"))
                     Text("Timer Interface")
                         .font(.body.weight(.bold))
 
@@ -314,7 +312,7 @@ struct GeneralSettingsView: View {
                             Text("Show Previous Time")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
+                        .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         .padding(.horizontal)
                     }
                     
@@ -351,7 +349,6 @@ struct GeneralSettingsView: View {
                             }
                         }
                         .pickerStyle(.menu)
-                        .accentColor(accentColour)
                         .font(.body)
                     }
                     .padding(.horizontal)
@@ -380,7 +377,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Image(systemName: "eye")
                         .font(.subheadline.weight(.bold))
-                        .foregroundColor(Color.accentColor)
+                        .foregroundColor(Color("accent"))
                     Text("Accessibility")
                         .font(.body.weight(.bold))
 
@@ -417,7 +414,6 @@ struct GeneralSettingsView: View {
                                 .frame(width: 100, alignment: .trailing)
                                 .font(.body)
                         }
-                        .accentColor(Color.accentColor)
                     }
                     .padding(.horizontal)
                 }
@@ -457,7 +453,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Image(systemName: "chart.bar.xaxis")
                         .font(.subheadline.weight(.bold))
-                        .foregroundColor(Color.accentColor)
+                        .foregroundColor(Color("accent"))
                     Text("Statistics")
                         .font(.body.weight(.bold))
 
@@ -483,7 +479,6 @@ struct GeneralSettingsView: View {
                             .font(.body)
                             .frame(width: 100, alignment: .trailing)
                     }
-                    .accentColor(Color.accentColor)
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 12)

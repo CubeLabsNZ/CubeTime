@@ -66,6 +66,7 @@ struct SessionsView: View {
         .navigationViewStyle(StackNavigationViewStyle())
         .sheet(isPresented: $showNewSessionPopUp) {
             NewSessionRootView(showNewSessionPopUp: $showNewSessionPopUp)
+                .tint(Color("accent"))
                 .environment(\.managedObjectContext, managedObjectContext)
         }
     }
@@ -175,7 +176,6 @@ struct CustomiseSessionView: View {
                 }
             }
         }
-        .accentColor(Color.accentColor)
         .ignoresSafeArea(.keyboard)
     }
 }
@@ -206,8 +206,6 @@ struct EventPicker: View {
                         .frame(maxWidth: 120, alignment: .trailing)
 
                 }
-                .accentColor(Color.accentColor)
-                
             }
             .frame(maxWidth: .infinity)
             .padding([.horizontal, .top])

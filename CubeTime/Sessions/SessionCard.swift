@@ -68,7 +68,7 @@ struct SessionCard: View {
                             ZStack {
                                 if session_type != .standard {
                                     RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                        .fill(Color.accentColor.opacity(0.33))
+                                        .fill(Color("accent").opacity(0.33))
                                         .frame(width: 40, height: 40)
                                         .padding(.trailing, 12)
                                 }
@@ -95,7 +95,7 @@ struct SessionCard: View {
                                         EmptyView()
                                     }
                                 }
-                                .foregroundColor(Color.accentColor)
+                                .foregroundColor(Color("accent"))
                                 .padding(.trailing, 12)
                             }
                             
@@ -209,6 +209,7 @@ struct SessionCard: View {
         
         .sheet(isPresented: $isShowingCustomizeDialog) {
             CustomiseSessionView(sessionItem: item)
+                .tint(Color("accent"))
         }
         
         .confirmationDialog(String("Are you sure you want to delete \"\(name)\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {

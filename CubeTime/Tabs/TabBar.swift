@@ -112,7 +112,7 @@ struct TabIcon: View {
                             Capsule()
                                 .fill(currentTab == .timer
                                       ? colourScheme == .dark
-                                        ? Color.accentColor
+                                        ? Color("accent")
                                         : Color("accent2")
                                       : Color("dark"))
                                 .matchedGeometryEffect(id: "littleguy", in: namespace, properties: .frame)
