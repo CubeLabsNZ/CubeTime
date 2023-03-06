@@ -31,7 +31,7 @@ class TimerUIView: UIViewController {
     
     // iPad keyboard support
     
-    private let userHoldTime: Double = UserDefaults.standard.double(forKey: gsKeys.freeze.rawValue)
+    private let userHoldTime: Double = UserDefaults.standard.double(forKey: generalSettingsKey.freeze.rawValue)
     
     private var isLongPress = false
     private var keyDownThatStopped: UIKeyboardHIDUsage? = nil
@@ -45,9 +45,7 @@ class TimerUIView: UIViewController {
             timerController.touchDown()
         } else if key.keyCode == .keyboardSpacebar {
             timerController.touchDown()
-            NSLog("Pressed space, touch down")
             let newTaskTimerReady = DispatchWorkItem {
-                NSLog("Pressed space for long press start - islongpress = true")
                 self.timerController.longPressStart()
                 self.isLongPress = true
             }
@@ -65,14 +63,11 @@ class TimerUIView: UIViewController {
             keyDownThatStopped = nil
             timerController.touchUp() // In case any key previously stopped
         } else if keyDownThatStopped == nil && key.keyCode == .keyboardSpacebar {
-            NSLog("Press ended space")
             taskTimerReady?.cancel()
             if isLongPress {
-                NSLog("was long press")
                 timerController.longPressEnd()
                 isLongPress = false
             } else {
-                NSLog("was short press")
                 timerController.touchUp()
             }
         } else {
@@ -87,8 +82,8 @@ struct TimerTouchView: UIViewControllerRepresentable {
     
     @EnvironmentObject var timerController: TimerContoller
     
-    @AppStorage(gsKeys.freeze.rawValue) private var userHoldTime: Double = 0.5
-    @AppStorage(gsKeys.gestureDistance.rawValue) private var gestureThreshold: Double = 50
+    @AppStorage(generalSettingsKey.freeze.rawValue) private var userHoldTime: Double = 0.5
+    @AppStorage(generalSettingsKey.gestureDistance.rawValue) private var gestureThreshold: Double = 50
     
     init () {
     }
@@ -159,7 +154,10 @@ struct TimerTouchView: UIViewControllerRepresentable {
         }
         
         @objc func swipe(_ gestureRecognizer: UISwipeGestureRecognizer) {
+            #if DEBUG
             NSLog("SWIPED: \(timerController.canGesture), \(timerController.mode), DIR: \(gestureRecognizer.direction)")
+            #endif
+            
             if timerController.canGesture && timerController.mode != .inspecting {
                 timerController.feedbackStyle?.impactOccurred()
                 timerController.handleGesture(direction: gestureRecognizer.direction)

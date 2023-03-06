@@ -1,40 +1,121 @@
 import SwiftUI
 
+class ToolsViewModel: ObservableObject {
+    @Published var currentTool: Tool?
+}
+
+
 struct Tool: Identifiable, Equatable {
     var id: String {
-        get {
-            return name
-        }
+        get { return name }
     }
     
     let name: String
     let iconName: String
     let description: String
-//    let view: some View
-//    let view: Any
 }
 
-let tools = [
-    Tool(name: "Timer Only", iconName: "stopwatch", description: "Just a timer. No scrambles shown and solves aren't recorded."),
-    Tool(name: "Scramble Only Mode", iconName: "cube", description: "Displays one scramble at a time. No timer shown. Tap to generate the next scramble."),
-    Tool(name: "Scramble Generator", iconName: "macstudio", description: "Generate multiple scrambles at once, to share, save or use."),
-    Tool(name: "Average calculator", iconName: "function", description: "Calculates WPA, BPA, and time needed for an average, etc."),
+let tools: [Tool] = [
+    Tool(name: "Timer Only", iconName: "stopwatch", description: "Just a timer. No scrambles are shown. Your solves are **not** recorded and are not saved to a session."),
+    Tool(name: "Scramble Only", iconName: "cube", description: "Displays one scramble at a time. A timer is not shown. Tap to generate the next scramble."),
+    Tool(name: "Scramble Generator", iconName: "server.rack", description: "Generate multiple scrambles at once, to share, save or use."),
+    Tool(name: "Average Calculator", iconName: "function", description: "Calculates WPA, BPA, and time needed for an average, etc."),
     Tool(name: "Scorecard Generator", iconName: "printer", description: "Export scorecards for use at meetups (or comps!)."),
 ]
 
-struct ToolHeader<V: View>: View {
-    @Environment(\.globalGeometrySize) var globalGeometrySize
-    let name:String
-    let image:String
-        @Binding var showingSheet: Bool
+struct ToolsList: View {
+    @StateObject var toolsViewModel = ToolsViewModel()
 
+    var body: some View {
+        ZStack {
+            Color("base")
+                .ignoresSafeArea()
+            
+            
+            VStack(spacing: 8) {
+                ForEach(tools) { tool in
+                    VStack(alignment: .leading, spacing: 4) {
+                        Label(tool.name, systemImage: tool.iconName)
+                            .font(.headline)
+                        
+                        Text(.init(tool.description))
+                            .foregroundColor(Color("grey"))
+                            .font(.caption)
+                            .padding(.top, 2)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(12)
+                    .frame(maxWidth: .infinity, minHeight: 65, alignment: .topLeading)
+                    .background {
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(Color("overlay0"))
+                    }
+                    .onTapGesture {
+                        withAnimation {
+                            toolsViewModel.currentTool = tool
+                        }
+                    }
+                }
+                
+                Spacer()
+            }
+            .padding()
+            .fullScreenCover(item: $toolsViewModel.currentTool, content: {_ in
+                ZStack {
+                    Color("base")
+                        .ignoresSafeArea()
+                    
+                    Group {
+                        if let tool = toolsViewModel.currentTool {
+                            switch (tool.name) {
+                            case "Timer Only":
+                                TimerOnlyTool()
+                                
+                            case "Scramble Only":
+                                ScrambleOnlyTool()
+                                
+                            case "Scramble Generator":
+                                ScrambleGeneratorTool()
+                                    
+                                
+                            case "Average Calculator":
+                                EmptyView()
+                                
+                                
+                            case "Scorecard Generator":
+                                EmptyView()
+                            
+                            default:
+                                EmptyView()
+                            }
+                        }
+
+                    }
+                    .environmentObject(toolsViewModel)
+                }
+            })
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+        .navigationBarTitle("Tools")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+
+struct ToolHeader<V: View>: View {
+    @EnvironmentObject private var toolsViewModel: ToolsViewModel
+    
+    @Environment(\.globalGeometrySize) var globalGeometrySize
+    let name: String
+    let image: String
+    let onClose: (() -> ())?
     
     let content: V?
     
-    init(name: String, image: String, showingSheet: Binding<Bool>, @ViewBuilder content: () -> V?) {
+    init(name: String, image: String, onClose: (() -> ())?=nil, @ViewBuilder content: () -> V?) {
         self.name = name
         self.image = image
-        self._showingSheet = showingSheet
+        self.onClose = onClose
         self.content = content()
     }
     
@@ -59,62 +140,13 @@ struct ToolHeader<V: View>: View {
             Spacer()
             
             CloseButton(hasBackgroundShadow: true) {
-                self.showingSheet = false
+                toolsViewModel.currentTool = nil
+                if let onClose = self.onClose {
+                    onClose()
+                }
             }
         }
         .padding(.horizontal)
         .frame(maxWidth: .infinity)
-    }
-}
-
-struct ToolsList: View {
-    @State private var displayingTool: Tool? = nil
-    
-    @State private var showingSheet: Bool = false
-    
-    var body: some View {
-        ZStack {
-            Color("base")
-                .ignoresSafeArea()
-            
-            
-            VStack(spacing: 8) {
-                ForEach(tools) { tool in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Label(tool.name, systemImage: tool.iconName)
-                            .font(.headline)
-                        
-                        Text(tool.description)
-                            .foregroundColor(Color("grey"))
-                            .font(.caption)
-                    }
-                    .padding(12)
-                    .frame(maxWidth: .infinity, minHeight: 95, alignment: .topLeading)
-                    .background {
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(Color("overlay0"))
-                    }
-                    .onTapGesture {
-                        withAnimation {
-                            self.showingSheet = true
-                        }
-                    }
-                }
-                
-                Spacer()
-            }
-            .padding()
-            .fullScreenCover(isPresented: self.$showingSheet) {
-                ZStack(alignment: .top) {
-                    Color("base")
-                        .ignoresSafeArea()
-                    
-                    ScrambleGeneratorTool(showingSheet: self.$showingSheet)
-                }
-            }
-        }
-        .navigationViewStyle(StackNavigationViewStyle())
-        .navigationBarTitle("Tools")
-        .navigationBarTitleDisplayMode(.inline)
     }
 }

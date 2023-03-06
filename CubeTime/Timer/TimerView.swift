@@ -15,17 +15,18 @@ struct SheetStrWrapper: Identifiable {
 
 struct TimerTime: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
     @EnvironmentObject var timerController: TimerContoller
     @Environment(\.colorScheme) var colourScheme
     
     @inlinable func getTimerColor() -> Color {
-        #warning("move this to timer controller?")
+#warning("move this to timer controller?")
         if timerController.mode == .inspecting && colourScheme == .dark && timerController.timerColour == Color.Timer.normal {
             switch timerController.inspectionSecs {
             case ..<8: return Color.Timer.normal
-            case 8..<12: return Color(uiColor: .systemYellow)
-            case 12..<15: return Color(uiColor: .systemOrange)
-            default: return Color(uiColor: .systemRed)
+            case 8..<12: return Color("yellow")
+            case 12..<15: return Color("orange")
+            default: return Color("red")
             }
         } else {
             return timerController.timerColour
@@ -33,7 +34,7 @@ struct TimerTime: View {
     }
     
     var body: some View {
-        #warning("move this to timer controller?")
+#warning("move this to timer controller?")
         Text(timerController.secondsStr
              + (timerController.mode == .inspecting
                 ? ((timerController.inspectionSecs >= 17
@@ -48,10 +49,10 @@ struct TimerTime: View {
         // to prevent text clipping and other UI problems
         .ifelse (stopwatchManager.isSmallDevice) { view in
             return view
-                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 54, nil)))
+                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 54, nil)))
         } elseDo: { view in
             return view
-                .modifier(AnimatingFontSize(font: stopwatchManager.ctFontDescBold, fontSize: timerController.mode == .running ? 70 : 56))
+                .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: timerController.mode == .running ? 70 : 56))
                 .animation(Animation.customBouncySpring, value: timerController.mode == .running)
         }
     }
@@ -94,8 +95,8 @@ enum TimerTool {
 
 struct BottomTools: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    @AppStorage(gsKeys.showScramble.rawValue) private var showScramble: Bool = true
-    @AppStorage(gsKeys.showStats.rawValue) private var showStats: Bool = true
+    @AppStorage(generalSettingsKey.showScramble.rawValue) private var showScramble: Bool = true
+    @AppStorage(generalSettingsKey.showStats.rawValue) private var showStats: Bool = true
     
     let timerSize: CGSize
     @Binding var scrambleSheetStr: SheetStrWrapper?
@@ -138,6 +139,7 @@ struct BottomToolBG: View {
             .fill(Color("overlay0"))
     }
 }
+
 
 struct BottomToolContainer<Content: View>: View {
     let content: Content
@@ -299,6 +301,7 @@ struct TimerStatsCompSim: View {
 
 struct ScrambleText: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
     let scr: String
     var timerSize: CGSize
     @Binding var scrambleSheetStr: SheetStrWrapper?
@@ -308,12 +311,12 @@ struct ScrambleText: View {
         let mega: Bool = stopwatchManager.currentSession.scramble_type == 7
         
         Text(scr)
-            .font(stopwatchManager.ctFontScramble)
+            .font(fontManager.ctFontScramble)
             .fixedSize(horizontal: mega, vertical: false)
             .multilineTextAlignment(mega ? .leading : .center)
             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
             .textSelection(.enabled)
-
+        
             .if(mega) { view in
                 view.minimumScaleFactor(0.00001).scaledToFit()
             }
@@ -322,7 +325,6 @@ struct ScrambleText: View {
                 scrambleSheetStr = SheetStrWrapper(str: scr)
             }
             .padding(.horizontal)
-            .padding(.leading, 0)
             .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
     }
 }
@@ -330,6 +332,8 @@ struct ScrambleText: View {
 struct TimerView: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var timerController: TimerContoller
+    @EnvironmentObject var fontManager: FontManager
+    @EnvironmentObject var scrambleController: ScrambleController
     @EnvironmentObject var tabRouter: TabRouter
     
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -338,11 +342,10 @@ struct TimerView: View {
     
     // GET USER DEFAULTS
     @AppStorage("onboarding") var showOnboarding: Bool = true
-    @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
-    @AppStorage(gsKeys.showPrevTime.rawValue) private var showPrevTime: Bool = false
-    @AppStorage(gsKeys.inputMode.rawValue) private var inputMode: InputMode = .timer
+    @AppStorage(generalSettingsKey.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
+    @AppStorage(appearanceSettingsKey.scrambleSize.rawValue) private var scrambleSize: Int = 18
+    @AppStorage(generalSettingsKey.showPrevTime.rawValue) private var showPrevTime: Bool = false
+    @AppStorage(generalSettingsKey.inputMode.rawValue) private var inputMode: InputMode = .timer
     
     
     // FOCUS STATES
@@ -409,14 +412,10 @@ struct TimerView: View {
                         .allowsHitTesting(false)
                     
                     if timerController.mode == .inspecting && showCancelInspection {
-                        PenaltyBar(90) {
-                            Button {
-                                timerController.interruptInspection()
-                            } label: {
-                                Text("Cancel")
-                                    .font(.system(size: 21, weight: .semibold, design: .rounded))
-                                    .foregroundColor(Color(uiColor: colourScheme == .light ? .black : .white))
-                            }
+                        HierarchialButton(type: .mono, size: .medium, onTapRun: {
+                            timerController.interruptInspection()
+                        }) {
+                            Text("Cancel")
                         }
                     }
                 }
@@ -430,7 +429,7 @@ struct TimerView: View {
                     TextField("0.00", text: $manualInputTime)
                         .focused($manualInputFocused)
                         .frame(maxWidth: geo.size.width-32)
-                        .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 56, nil)))
+                        .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 56, nil)))
                         .multilineTextAlignment(.center)
                         .foregroundColor(timerController.timerColour)
                         .background(Color("bg"))
@@ -455,7 +454,7 @@ struct TimerView: View {
                     LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
                         .frame(maxHeight: 35)
                         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
-                        .opacity(stopwatchManager.scrambleStr == nil ? 1 : 0)
+                        .opacity(scrambleController.scrambleStr == nil ? 1 : 0)
                     
                     TimerMenu()
                 }
@@ -472,102 +471,95 @@ struct TimerView: View {
                 })
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
             }
-                
-            if let scr = stopwatchManager.scrambleStr, timerController.mode == .stopped {
+            if let scr = scrambleController.scrambleStr, timerController.mode == .stopped {
                 ScrambleText(scr: scr, timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr)
                     .frame(maxHeight: .infinity, alignment: .top)
             }
             
             
-            if stopwatchManager.scrambleStr != nil && (typingMode || stopwatchManager.showPenOptions) {
+            if scrambleController.scrambleStr != nil && (typingMode || stopwatchManager.showPenOptions) {
                 HStack {
                     let showPlus = stopwatchManager.currentSession.session_type != SessionTypes.multiphase.rawValue && !justManuallyInput && (inputMode != .typing || manualInputTime != "")
                     
-                    if stopwatchManager.solveItem != nil && !manualInputFocused {
-                        PenaltyBar(122) {
-                            HStack {
-                                PenaltyButton(penType: .plustwo, penSymbol: "+2", imageSymbol: true, canType: false, colour: Color.yellow)
+                    
+                    PenaltyBar {
+                        HStack(spacing: 12) {
+                            if stopwatchManager.solveItem != nil && !manualInputFocused {
+                                PenaltyButton(penType: .plustwo, penSymbol: "+2", imageSymbol: true, canType: false, colour: Color("orange"))
                                 
-                                PenaltyButton(penType: .dnf, penSymbol: "xmark.circle", imageSymbol: false, canType: false, colour: Color.red)
+                                PenaltyButton(penType: .dnf, penSymbol: "xmark.circle", imageSymbol: false, canType: false, colour: Color("red"))
                                     .frame(maxWidth: .infinity)
                                 
-                                PenaltyButton(penType: .none, penSymbol: "checkmark.circle", imageSymbol: false, canType: false, colour: Color.green)
+                                PenaltyButton(penType: .none, penSymbol: "checkmark.circle", imageSymbol: false, canType: false, colour: Color("green"))
+                                
+                                if (showPlus) {
+                                    ThemedDivider(isHorizontal: false)
+                                        .padding(.vertical, 6)
+                                }
                             }
-                            // I don't know why there has to be uneven padding :(
-                            .padding(.leading, 4)
-                            .padding(.trailing, 1)
-                        }
-                        
-                        if showPlus {
-                            Rectangle()
-                                .fill(Color("indent1"))
-                                .frame(width: 1.5, height: 20)
-                                .padding(.horizontal, 12)
-                        }
-                    }
-                    
-                    
-                    if showPlus {
-                        if !typingMode {
-                            PenaltyBar(manualInputFocused ? 68 : 34) {
-                                Button {
-                                    // IF CURRENT MODE = INPUT
-                                    if manualInputFocused {
-                                        if manualInputTime != "" {
-                                            // record entered time time
-                                            timerController.stop(timeFromStr(manualInputTime))
+                            if (showPlus) {
+                                if !typingMode {
+                                    Button {
+                                        // IF CURRENT MODE = INPUT
+                                        if manualInputFocused {
+                                            if manualInputTime != "" {
+                                                // record entered time time
+                                                timerController.stop(timeFromStr(manualInputTime))
+                                                
+                                                // remove focus and reset time
+                                                showInputField = false
+                                                manualInputFocused = false
+                                                manualInputTime = ""
+                                            }
+                                        } else {
+                                            showInputField = true
                                             
-                                            // remove focus and reset time
-                                            showInputField = false
-                                            manualInputFocused = false
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                                manualInputFocused = true
+                                            }
+                                            
                                             manualInputTime = ""
+                                            
                                         }
-                                    } else {
-                                        showInputField = true
-                                        
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                                            manualInputFocused = true
+                                    } label: {
+                                        if manualInputFocused {
+                                            Text("Done")
+                                                .font(.body.weight(.medium))
+                                                .padding(.horizontal, 8)
+                                        } else {
+                                            Image(systemName: "plus.circle")
+                                                .font(.system(size: 22, weight: .semibold, design: .rounded))
                                         }
-                                        
-                                        manualInputTime = ""
-                                        
                                     }
-                                } label: {
-                                    if manualInputFocused {
+                                    .disabled(manualInputFocused ? (manualInputTime == "") : false)
+                                } else if typingMode {
+                                    Button {
+                                        timerController.stop(timeFromStr(manualInputTime))
+                                        
+                                        // remove focus and reset time
+                                        manualInputFocused = false
+                                        justManuallyInput = true
+                                        
+                                        stopwatchManager.displayPenOptions()
+                                        
+                                        showManualInputFormattedText = true
+                                        
+                                    } label: {
                                         Text("Done")
-                                            .font(.system(size: 21, weight: .semibold, design: .rounded))
-                                    } else {
-                                        Image(systemName: "plus.circle")
-                                            .font(.system(size: 24, weight: .semibold, design: .rounded))
+                                            .font(.body.weight(.medium))
+                                            .padding(.horizontal, 8)
                                     }
-                                }
-                                .disabled(manualInputFocused ? (manualInputTime == "") : false)
-                            }
-                        } else if typingMode {
-                            PenaltyBar(68) {
-                                Button {
-                                    timerController.stop(timeFromStr(manualInputTime))
-                                    
-                                    // remove focus and reset time
-                                    manualInputFocused = false
-                                    justManuallyInput = true
-                                    
-                                    stopwatchManager.displayPenOptions()
-                                    
-                                    showManualInputFormattedText = true
-                                    
-                                } label: {
-                                    Text("Done")
-                                        .font(.system(size: 21, weight: .semibold, design: .rounded))
                                 }
                             }
                         }
+                        .padding(.horizontal, 5)
                     }
+                    
                 }
-                .disabled(stopwatchManager.scrambleStr == nil)
+                .disabled(scrambleController.scrambleStr == nil)
                 .ignoresSafeArea(edges: .all)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                .offset(y: 45)
+                .offset(y: 40)
             }
             
             
@@ -580,18 +572,20 @@ struct TimerView: View {
                 timerController.secondsElapsed = 0
                 //                stopwatchManager.secondsStr = formatSolveTime(secs: 0)
                 timerController.secondsStr = formatSolveTime(secs: showPrevTime
-                                                              ? (stopwatchManager.solvesByDate.last?.time ?? 0)
-                                                              : 0)
+                                                             ? (stopwatchManager.solvesByDate.last?.time ?? 0)
+                                                             : 0)
             }
             Button("Cancel", role: .cancel) {
                 
             }
         }
         .sheet(item: $scrambleSheetStr) { str in
-            TimeScrambleDetail(str.str, stopwatchManager.scrambleSVG)
+            TimeScrambleDetail(str.str, scrambleController.scrambleSVG)
         }
         .sheet(item: $presentedAvg) { item in
-            StatsDetail(solves: item, session: stopwatchManager.currentSession); #warning("TODO: use SWM env object")
+            StatsDetailView(solves: item, session: stopwatchManager.currentSession)
+            
+#warning("TODO: use SWM env object")
         }
         .onReceive(stopwatchManager.$hideUI) { newValue in
             tabRouter.hideTabBar = newValue
@@ -605,12 +599,12 @@ struct TimerView: View {
 struct TimeScrambleDetail: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.dismiss) var dismiss
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
     
     var scramble: String
     var svg: String?
-    @State var windowedScrambleSize: Int = UserDefaults.standard.integer(forKey: asKeys.scrambleSize.rawValue)
+    @State var windowedScrambleSize: Int = UserDefaults.standard.integer(forKey: appearanceSettingsKey.scrambleSize.rawValue)
     
     init(_ scramble: String, _ svg: String?) {
         self.scramble = scramble
@@ -623,7 +617,7 @@ struct TimeScrambleDetail: View {
                 VStack {
                     ScrollView {
                         Text(scramble)
-                            .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, CGFloat(windowedScrambleSize), nil)))
+                            .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, CGFloat(windowedScrambleSize), nil)))
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
                     }
@@ -651,7 +645,7 @@ struct TimeScrambleDetail: View {
                             } label: {
                                 Image(systemName: "textformat.size.smaller")
                                     .font(.system(size: 17, weight: .medium, design: .rounded))
-                                    .foregroundColor(accentColour)
+                                    .foregroundColor(Color.accentColor)
                             }
                             
                             
@@ -660,17 +654,15 @@ struct TimeScrambleDetail: View {
                             } label: {
                                 Image(systemName: "textformat.size.larger")
                                     .font(.system(size: 17, weight: .medium, design: .rounded))
-                                    .foregroundColor(accentColour)
+                                    .foregroundColor(Color.accentColor)
                             }
                         }
                     }
                     
                     ToolbarItem(placement: .confirmationAction) {
-                        Button {
+                        DoneButton(onTapRun: {
                             dismiss()
-                        } label: {
-                            Text("Done")
-                        }
+                        })
                     }
                 }
             }

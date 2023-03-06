@@ -68,8 +68,6 @@ extension StopwatchManager {
             solvesNoDNFs.remove(object: solve)
         }
         
-        NSLog("insertedf at solve: \(solves.firstIndex(of: solve)), solvesnodnfs: \(solvesNoDNFs.firstIndex(of: solve))")
-        
         bestSingle = getMin()
         phases = getAveragePhases()
         

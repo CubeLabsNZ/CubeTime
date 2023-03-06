@@ -106,7 +106,6 @@ struct Updates: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
     
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @Binding var showUpdates: Bool
     
     let currentVersion: String = "\((Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String))"
@@ -180,7 +179,7 @@ struct Update: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text("v\(version)")
-                .foregroundColor(Color(uiColor: .systemGray))
+                .foregroundColor(Color("grey"))
                 .font(.subheadline).fontWeight(.medium)
             
             if let bugFixes = bugFixes {

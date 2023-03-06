@@ -557,7 +557,7 @@ func formatSolveTime(secs: Double, penType: PenTypes? = PenTypes.none) -> String
         return "DNF"
     }
     
-    let dp = UserDefaults.standard.integer(forKey: gsKeys.displayDP.rawValue)
+    let dp = UserDefaults.standard.integer(forKey: generalSettingsKey.displayDP.rawValue)
     let secsfmt = penType == .plustwo ? ".\(dp)f+" : ".\(dp)f"
     
     if secs < 60 {
@@ -726,7 +726,7 @@ struct TimeMaskTextField: ViewModifier {
         content
             .keyboardType(text.count > 2 ? .numberPad : .decimalPad)
             .onChange(of: text) { newValue in
-                let _ = NSLog("Onrecieve, text: \(text)")
+                NSLog("ONRECEIVE, text: \(text)")
                 refilter()
                 
                 onReceiveAlso?(text)
@@ -866,20 +866,22 @@ func timeWithPlusTwoForSolve(_ solve: Solves) -> Double {
 
 // MARK: - SESSION HELPERS, VIEWMODIFIERS AND STRUCTS
 // session type icon
-struct SessionTypeIconProps {
+struct SessionTypeIcon {
     var size: CGFloat = 26
-    var leaPadding: CGFloat = 8
-    var traPadding: CGFloat = 4
+    var iconName: String = ""
+    var padding: (leading: CGFloat, trailing: CGFloat) = (8, 4)
     var weight: Font.Weight = .regular
 }
 
+#warning("TODO: change timedetailview and statsdetailview to also use this")
+#warning("TODO: check if .style continuous makes a difference?")
 // rounded viewblock modifier
-struct NewStandardSessionViewBlocks: ViewModifier {
+struct CardBlockBackground: ViewModifier {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     func body(content: Content) -> some View {
         content
-            .background(colorScheme == .light ? Color.white : Color(uiColor: .systemGray6))
-            .cornerRadius(10)
+            .background(Color("overlay1"))
+            .cornerRadius(8)
             .padding(.horizontal)
     }
 }
@@ -925,4 +927,41 @@ struct ContextMenuButton: View {
             self.action()
         }
     }
+}
+
+// src: https://stackoverflow.com/a/69694099/17569741
+struct ShareSheetViewController: UIViewControllerRepresentable {
+    @Binding var isPresenting: Bool
+    var content: () -> UIViewController
+
+    func makeUIViewController(context: Context) -> UIViewController {
+        UIViewController()
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        if isPresenting {
+            uiViewController.present(content(), animated: true, completion: nil)
+        }
+    }
+}
+
+
+func offsetImage(image: UIImage, offsetX: CGFloat=0, offsetY: CGFloat=0) -> UIImage? {
+    UIGraphicsBeginImageContextWithOptions(CGSize(width: image.size.width + abs(offsetX), height: image.size.height + abs(offsetY)), false, 0)
+    image.draw(in: CGRect(x: offsetX, y: offsetY, width: image.size.width, height: image.size.height))
+
+    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+
+    return newImage
+}
+
+
+func setNavBarAppearance() -> Void {
+    let navBarAppearance = UINavigationBar.appearance()
+    var customBackImage = UIImage(systemName: "arrow.backward")
+    customBackImage = offsetImage(image: customBackImage!, offsetX: 10, offsetY: -1.5)
+    navBarAppearance.backIndicatorImage = customBackImage
+    navBarAppearance.backIndicatorTransitionMaskImage = customBackImage
+    navBarAppearance.tintColor = UIColor.black
 }

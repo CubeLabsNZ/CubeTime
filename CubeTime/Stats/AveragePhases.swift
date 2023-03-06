@@ -32,7 +32,7 @@ extension UIColor {
 
 
 struct AveragePhases: View {
-    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    @AppStorage(appearanceSettingsKey.gradientSelected.rawValue) private var gradientSelected: Int = 6
     @Environment(\.colorScheme) private var colourScheme
     
     
@@ -79,7 +79,7 @@ struct AveragePhases: View {
                         
                         
                         Text("("+String(format: "%.1f", (phase / phaseTimes.reduce(0, +))*100)+"%)")
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                             .font(.system(size: 17))
                         
                         Spacer()

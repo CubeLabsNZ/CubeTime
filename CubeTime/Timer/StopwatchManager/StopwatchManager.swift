@@ -48,7 +48,9 @@ func setupAudioSession() {
     do {
         try audioSession.setCategory(AVAudioSession.Category.playback)
     } catch let error as NSError {
-        print(error.description)
+        #if DEBUG
+        NSLog(error.description)
+        #endif
     }
 }
 
@@ -63,22 +65,22 @@ class StopwatchManager: ObservableObject {
     let managedObjectContext: NSManagedObjectContext
     
     // MARK: get user defaults
-    var showPrevTime: Bool = UserDefaults.standard.bool(forKey: gsKeys.showPrevTime.rawValue)
-    var fontWeight: Double = UserDefaults.standard.double(forKey: asKeys.fontWeight.rawValue)
-    var fontCasual: Double = UserDefaults.standard.double(forKey: asKeys.fontCasual.rawValue)
-    var fontCursive: Bool = UserDefaults.standard.bool(forKey: asKeys.fontCursive.rawValue)
-    var scrambleSize: Int = UserDefaults.standard.integer(forKey: asKeys.scrambleSize.rawValue)
+    var showPrevTime: Bool = UserDefaults.standard.bool(forKey: generalSettingsKey.showPrevTime.rawValue)
 
     
     
     // MARK: published variables
     @Published var currentSession: Sessions! {
         didSet {
+            #if DEBUG
             NSLog("BEGIN DIDSET currentsession, now \(currentSession)")
+            #endif
+            
+            
             self.targetStr = filteredStrFromTime((currentSession as? CompSimSession)?.target)
             self.phaseCount = Int((currentSession as? MultiphaseSession)?.phase_count ?? 0)
             
-            rescramble()
+            scrambleController?.scrambleType = currentSession.scramble_type
             tryUpdateCurrentSolveth()
             statsGetFromCache()
             currentSession.last_used = Date()
@@ -89,7 +91,11 @@ class StopwatchManager: ObservableObject {
             } else {
                 timerController.phaseCount = nil
             }
+            
+            
+            #if DEBUG
             NSLog("END DIDSET currentsession, now \(currentSession)")
+            #endif
         }
     }
     
@@ -100,16 +106,7 @@ class StopwatchManager: ObservableObject {
     }
     @Published var hideUI = false
     
-    
-    @Published var scrambleStr: String? = nil {
-        didSet {
-            timerController.disabled = scrambleStr == nil
-        }
-    }
-    @Published var scrambleSVG: String? = nil
-    
-    
-    
+
     @Published var showDeleteSolveConfirmation = false
     @Published var showPenOptions = false
     
@@ -118,20 +115,8 @@ class StopwatchManager: ObservableObject {
     @Published var solveItem: Solves!
     
     
-    @Published var ctFontScramble: Font!
-    @Published var ctFontDescBold: CTFontDescriptor!
-    @Published var ctFontDesc: CTFontDescriptor!
-    
     var penType: PenTypes = .none
 
-    
-    
-    // MARK: scrambler
-    var scrambleWorkItem: DispatchWorkItem?
-    
-    
-    // MARK: private
-    var prevScrambleStr: String! = nil
     
     #warning("TODO: remove")
     var nilSolve: Bool = true
@@ -144,10 +129,9 @@ class StopwatchManager: ObservableObject {
     @Published var playgroundScrambleType: Int32 {
         didSet {
             if (playgroundScrambleType != -1){
-                NSLog("playgroundScrambleType didset to \(playgroundScrambleType)")
                 currentSession.scramble_type = playgroundScrambleType
                 try! managedObjectContext.save()
-                rescramble()
+                scrambleController?.scrambleType = playgroundScrambleType
             }
         }
     }
@@ -209,6 +193,11 @@ class StopwatchManager: ObservableObject {
     @Published var solvesNoDNFsbyDate: [Solves]!
     
     
+    
+    
+    @Published var compsimSolveGroups: [CompSimSolveGroup]!
+    
+    
     // Couple time list functions
     var timeListSolves: [Solves]!
     @Published var timeListSolvesFiltered: [Solves]!
@@ -260,7 +249,10 @@ class StopwatchManager: ObservableObject {
     
     
     func addSessionQuickActions() {
-        NSLog("adding actions")
+        #if DEBUG
+        NSLog("Adding quick actions")
+        #endif
+        
         let req = NSFetchRequest<Sessions>(entityName: "Sessions")
         req.predicate = NSPredicate(format: "last_used != nil")
         req.sortDescriptors = [
@@ -318,16 +310,15 @@ class StopwatchManager: ObservableObject {
         assert(currentSession != nil)
     }
     
+    var scrambleController: ScrambleController! = nil
     var timerController: TimerContoller! = nil; #warning("figure out way to not make it ! optional")
     
     init (currentSession: Sessions?, managedObjectContext: NSManagedObjectContext) {
-        print("initialising audio...")
+        #if DEBUG
+        NSLog("Initialising Audio...")
+        #endif
+        
         setupAudioSession()
-        
-        
-        
-        print("im here:")
-        Self.doSomething()
         
         
 //        self.currentSession = currentSession
@@ -380,7 +371,7 @@ class StopwatchManager: ObservableObject {
                 // .puzzle_id
                 self.solveItem.session = self.currentSession
                 // Use the current scramble if stopped from manual input
-                self.solveItem.scramble = time == nil ? self.prevScrambleStr : self.scrambleStr
+                self.solveItem.scramble = time == nil ? self.scrambleController.prevScrambleStr : self.scrambleController.scrambleStr
                 self.solveItem.scramble_type = self.currentSession.scramble_type
                 self.solveItem.scramble_subtype = 0
                 self.solveItem.time = secondsElapsed
@@ -388,7 +379,7 @@ class StopwatchManager: ObservableObject {
                 
                 // Rescramble if from manual input
                 if time != nil {
-                    self.rescramble()
+                    self.scrambleController.rescramble()
                 }
                 
                 self.updateStats()
@@ -401,7 +392,7 @@ class StopwatchManager: ObservableObject {
                 }
             },
             preTimerStart: {
-                self.rescramble()
+                self.scrambleController.rescramble()
             },
             onGesture: { [self] direction in
                 switch direction {
@@ -413,11 +404,8 @@ class StopwatchManager: ObservableObject {
                     askToDelete()
                 case .right:
                     timerController.feedbackStyle?.impactOccurred()
-//                    timerController.timerColour = Color.Timer.normal
-//                    timerController.prevDownStoppedTimer = false
-                    rescramble()
+                    scrambleController.rescramble()
                 default: break
-//                    timerController.timerColour = Color.Timer.normal
                 }
             },
             onModeChange: { newMode in
@@ -431,14 +419,18 @@ class StopwatchManager: ObservableObject {
             loadSessionsHistory()
         }
         
-        statsGetFromCache()
-        self.rescramble()
+        self.scrambleController = ScrambleController(scrambleType: self.currentSession!.scramble_type, onSetScrambleStr: { newScr in
+            self.timerController.disabled = newScr == nil
+        })
         
-        updateFont()
+        statsGetFromCache()
+        scrambleController.rescramble()
         
         tryUpdateCurrentSolveth()
         
-        print("swm initialised")
+        #if DEBUG
+        NSLog("Stopwatch Manager Initialised")
+        #endif
     }
     
     

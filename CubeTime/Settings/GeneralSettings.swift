@@ -1,7 +1,7 @@
 import SwiftUI
 
 
-enum gsKeys: String {
+enum generalSettingsKey: String {
     case freeze,
          inspection, inspectionCountsDown, showCancelInspection, inspectionAlert, inspectionAlertType,
          inputMode,
@@ -32,41 +32,39 @@ extension UIImpactFeedbackGenerator.FeedbackStyle: CaseIterable {
 
 struct GeneralSettingsView: View {
     // timer settings
-    @AppStorage(gsKeys.inspection.rawValue) private var inspectionTime: Bool = false
-    @AppStorage(gsKeys.inspectionCountsDown.rawValue) private var insCountDown: Bool = false
-    @AppStorage(gsKeys.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
-    @AppStorage(gsKeys.inspectionAlert.rawValue) private var inspectionAlert: Bool = true
-    @AppStorage(gsKeys.inspectionAlertType.rawValue) private var inspectionAlertType: Int = 0
+    @AppStorage(generalSettingsKey.inspection.rawValue) private var inspectionTime: Bool = false
+    @AppStorage(generalSettingsKey.inspectionCountsDown.rawValue) private var insCountDown: Bool = false
+    @AppStorage(generalSettingsKey.showCancelInspection.rawValue) private var showCancelInspection: Bool = true
+    @AppStorage(generalSettingsKey.inspectionAlert.rawValue) private var inspectionAlert: Bool = true
+    @AppStorage(generalSettingsKey.inspectionAlertType.rawValue) private var inspectionAlertType: Int = 0
     
-    @AppStorage(gsKeys.inputMode.rawValue) private var inputMode: InputMode = InputMode.timer
+    @AppStorage(generalSettingsKey.inputMode.rawValue) private var inputMode: InputMode = InputMode.timer
     
-    @AppStorage(gsKeys.freeze.rawValue) private var holdDownTime: Double = 0.5
-    @AppStorage(gsKeys.timeDpWhenRunning.rawValue) private var timerDP: Int = 3
-    @AppStorage(gsKeys.showSessionName.rawValue) private var showSessionName: Bool = false
+    @AppStorage(generalSettingsKey.freeze.rawValue) private var holdDownTime: Double = 0.5
+    @AppStorage(generalSettingsKey.timeDpWhenRunning.rawValue) private var timerDP: Int = 3
+    @AppStorage(generalSettingsKey.showSessionName.rawValue) private var showSessionName: Bool = false
     
     // timer tools
-    @AppStorage(gsKeys.showScramble.rawValue) private var showScramble: Bool = true
-    @AppStorage(gsKeys.showStats.rawValue) private var showStats: Bool = true
+    @AppStorage(generalSettingsKey.showScramble.rawValue) private var showScramble: Bool = true
+    @AppStorage(generalSettingsKey.showStats.rawValue) private var showStats: Bool = true
     
     // accessibility
-    @AppStorage(gsKeys.hapBool.rawValue) private var hapticFeedback: Bool = true
-    @AppStorage(gsKeys.hapType.rawValue) private var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
-    @AppStorage(gsKeys.forceAppZoom.rawValue) private var forceAppZoom: Bool = false
-    @AppStorage(gsKeys.appZoom.rawValue) private var appZoom: AppZoomWrapper = AppZoomWrapper(rawValue: 3)
-    @AppStorage(gsKeys.gestureDistance.rawValue) private var gestureActivationDistance: Double = 50
+    @AppStorage(generalSettingsKey.hapBool.rawValue) private var hapticFeedback: Bool = true
+    @AppStorage(generalSettingsKey.hapType.rawValue) private var feedbackType: UIImpactFeedbackGenerator.FeedbackStyle = .rigid
+    @AppStorage(generalSettingsKey.forceAppZoom.rawValue) private var forceAppZoom: Bool = false
+    @AppStorage(generalSettingsKey.appZoom.rawValue) private var appZoom: AppZoomWrapper = AppZoomWrapper(rawValue: 3)
+    @AppStorage(generalSettingsKey.gestureDistance.rawValue) private var gestureActivationDistance: Double = 50
     
     // show previous time after delete
-    @AppStorage(gsKeys.showPrevTime.rawValue) private var showPrevTime: Bool = false
+    @AppStorage(generalSettingsKey.showPrevTime.rawValue) private var showPrevTime: Bool = false
     
     // statistics
-    @AppStorage(gsKeys.displayDP.rawValue) private var displayDP: Int = 3
+    @AppStorage(generalSettingsKey.displayDP.rawValue) private var displayDP: Int = 3
     
     
         
     @Environment(\.colorScheme) var colourScheme
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
     
     let hapticNames: [UIImpactFeedbackGenerator.FeedbackStyle: String] = [
@@ -82,10 +80,10 @@ struct GeneralSettingsView: View {
             VStack(alignment: .leading) {
                 HStack {
                     Image(systemName: "timer")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
-                        .foregroundColor(accentColour)
+                        .font(.subheadline.weight(.bold))
+                        .foregroundColor(Color.accentColor)
                     Text("Timer Settings")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
+                        .font(.body.weight(.bold))
                     
                     Spacer()
                 }
@@ -97,7 +95,7 @@ struct GeneralSettingsView: View {
                             Text("Inspection Time")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         
                     }
                     .padding(.horizontal)
@@ -112,7 +110,7 @@ struct GeneralSettingsView: View {
                             Text("Inspection Counts Down")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         .padding(.horizontal)
                         .onChange(of: insCountDown) { newValue in
                             stopwatchManager.timerController.insCountDown = newValue
@@ -122,14 +120,14 @@ struct GeneralSettingsView: View {
                             Text("Show Cancel Inspection")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         .padding(.horizontal)
                         
                         Text("Display a cancel inspection button when inspecting.")
                             .font(.footnote.weight(.medium))
                             .lineSpacing(-4)
                             .fixedSize(horizontal: false, vertical: true)
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
                         
@@ -138,7 +136,7 @@ struct GeneralSettingsView: View {
                             Text("Inpsection Alert")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         .padding(.horizontal)
                         .onChange(of: inspectionAlert) { newValue in
                             stopwatchManager.timerController.inspectionAlert = newValue
@@ -148,7 +146,7 @@ struct GeneralSettingsView: View {
                             .font(.footnote.weight(.medium))
                             .lineSpacing(-4)
                             .fixedSize(horizontal: false, vertical: true)
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
                         
@@ -176,7 +174,7 @@ struct GeneralSettingsView: View {
                                 .font(.footnote.weight(.medium))
                                 .lineSpacing(-4)
                                 .fixedSize(horizontal: false, vertical: true)
-                                .foregroundColor(Color(uiColor: .systemGray))
+                                .foregroundColor(Color("grey"))
                                 .multilineTextAlignment(.leading)
                                 .padding(.horizontal)
                         }
@@ -186,29 +184,25 @@ struct GeneralSettingsView: View {
                 
                 
                 
-                Divider()
+                ThemedDivider()
+                    .padding(.leading)
                 
-                VStack (alignment: .leading) {
-                    HStack {
-                        Text("Hold Down Time: ")
-                            .font(.body.weight(.medium))
-                        Text(String(format: "%.2fs", holdDownTime))
-                        
-                        Spacer()
-                        
-                        Stepper("", value: $holdDownTime, in: 0.05...1.0, step: 0.05)
-                    }
-                    .padding(.horizontal)
+                
+                
+                HStack {
+                    Text("Hold Down Time: ")
+                        .font(.body.weight(.medium))
+                    Text(String(format: "%.2fs", holdDownTime))
+                    
+                    Spacer()
+                    
+                    Stepper("", value: $holdDownTime, in: 0.05...1.0, step: 0.05)
                 }
+                .padding(.horizontal)
                 
                 
-                
-                
-                
-                Divider()
-                
-                
-                
+                ThemedDivider()
+                    .padding(.leading)
                 
                 
                 
@@ -232,7 +226,7 @@ struct GeneralSettingsView: View {
                                 .frame(width: 100, alignment: .trailing)
                                 .font(.body)
                         }
-                        .accentColor(accentColour)
+                        .accentColor(Color.accentColor)
                     }
                     
                     if inputMode == .timer {
@@ -255,7 +249,7 @@ struct GeneralSettingsView: View {
                                     .font(.body)
                                     .frame(width: 100, alignment: .trailing)
                             }
-                            .accentColor(accentColour)
+                            .accentColor(Color.accentColor)
                         }
                         .onChange(of: timerDP) { newValue in
                             stopwatchManager.timerController.timeDP = newValue
@@ -264,26 +258,24 @@ struct GeneralSettingsView: View {
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 12)
-                
-                
-                
-               
-                
-                
-                
-                
-                
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
+            
+            
+            
+            
+            
+            
+            
             
             VStack(alignment: .leading) {
                 HStack {
                     Image(systemName: "wrench")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
-                        .foregroundColor(accentColour)
+                        .font(.subheadline.weight(.bold))
+                        .foregroundColor(Color.accentColor)
                     Text("Timer Tools")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
-                    
+                        .font(.body.weight(.bold))
+
                     Spacer()
                 }
                 .padding([.horizontal, .top], 10)
@@ -295,7 +287,7 @@ struct GeneralSettingsView: View {
                         Text("Show draw scramble on timer")
                             .font(.body.weight(.medium))
                     }
-                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                    .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                     
                 }
                 .padding(.horizontal)
@@ -309,7 +301,7 @@ struct GeneralSettingsView: View {
 //                    .onChange(of: showStats) { newValue in
 //                        stopwatchManager.updateStats()
 //                    }
-                    .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                    .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                     
                 }
                 .padding(.horizontal)
@@ -318,12 +310,12 @@ struct GeneralSettingsView: View {
                     .font(.footnote.weight(.medium))
                     .lineSpacing(-4)
                     .fixedSize(horizontal: false, vertical: true)
-                    .foregroundColor(Color(uiColor: .systemGray))
+                    .foregroundColor(Color("grey"))
                     .multilineTextAlignment(.leading)
                     .padding(.horizontal)
                     .padding(.bottom, 12)
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
             
             
             
@@ -342,11 +334,11 @@ struct GeneralSettingsView: View {
             VStack(alignment: .leading) {
                 HStack {
                     Image(systemName: "rectangle.and.pencil.and.ellipsis")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
-                        .foregroundColor(accentColour)
+                        .font(.subheadline.weight(.bold))
+                        .foregroundColor(Color.accentColor)
                     Text("Timer Interface")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
-                    
+                        .font(.body.weight(.bold))
+
                     Spacer()
                 }
                 .padding([.horizontal, .top], 10)
@@ -357,7 +349,7 @@ struct GeneralSettingsView: View {
                             Text("Show Previous Time")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                        .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         .padding(.horizontal)
                         .onChange(of: showPrevTime) { newValue in
                             stopwatchManager.showPrevTime = newValue
@@ -368,15 +360,10 @@ struct GeneralSettingsView: View {
                         .font(.footnote.weight(.medium))
                         .lineSpacing(-4)
                         .fixedSize(horizontal: false, vertical: true)
-                        .foregroundColor(Color(uiColor: .systemGray))
+                        .foregroundColor(Color("grey"))
                         .multilineTextAlignment(.leading)
                         .padding(.horizontal)
                 }
-                
-                
-                
-                
-                Divider()
                 
                 
                 /*
@@ -408,15 +395,8 @@ struct GeneralSettingsView: View {
                     .padding(.horizontal)
                 }
                  */
-                
-                
-                
-                
-                
-                
-                
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
             
             
             
@@ -437,11 +417,11 @@ struct GeneralSettingsView: View {
             VStack {
                 HStack {
                     Image(systemName: "eye")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
-                        .foregroundColor(accentColour)
+                        .font(.subheadline.weight(.bold))
+                        .foregroundColor(Color.accentColor)
                     Text("Accessibility")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
-                    
+                        .font(.body.weight(.bold))
+
                     Spacer()
                 }
                 .padding([.horizontal, .top], 10)
@@ -478,7 +458,7 @@ struct GeneralSettingsView: View {
                                 .frame(width: 100, alignment: .trailing)
                                 .font(.body)
                         }
-                        .accentColor(accentColour)
+                        .accentColor(Color.accentColor)
                     }
                     .padding(.horizontal)
                     .onChange(of: feedbackType) { newValue in
@@ -487,7 +467,8 @@ struct GeneralSettingsView: View {
                 }
                 
                
-                Divider()
+                ThemedDivider()
+                    .padding(.leading)
                 
                 
                 VStack(alignment: .leading, spacing: 0) {
@@ -498,14 +479,14 @@ struct GeneralSettingsView: View {
                     HStack {
                         Text("MIN")
                             .font(Font.system(.footnote, design: .rounded))
-                            .foregroundColor(Color(uiColor: .systemGray2))
+                            .foregroundColor(Color("indent0"))
                         
                         Slider(value: $gestureActivationDistance, in: 20...300)
                             .padding(.horizontal, 4)
                         
                         Text("MAX")
                             .font(Font.system(.footnote, design: .rounded))
-                            .foregroundColor(Color(uiColor: .systemGray2))
+                            .foregroundColor(Color("indent0"))
                         
                     }
                     
@@ -514,16 +495,16 @@ struct GeneralSettingsView: View {
                 .padding(.bottom, 12)
                 
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
             
             VStack {
                 HStack {
                     Image(systemName: "chart.bar.xaxis")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
-                        .foregroundColor(accentColour)
+                        .font(.subheadline.weight(.bold))
+                        .foregroundColor(Color.accentColor)
                     Text("Statistics")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
-                    
+                        .font(.body.weight(.bold))
+
                     Spacer()
                 }
                 .padding([.horizontal, .top], 10)
@@ -546,17 +527,12 @@ struct GeneralSettingsView: View {
                             .font(.body)
                             .frame(width: 100, alignment: .trailing)
                     }
-                    .accentColor(accentColour)
+                    .accentColor(Color.accentColor)
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 12)
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
-            
-            
-            
-            
-            
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
         }
         .padding(.horizontal)
         

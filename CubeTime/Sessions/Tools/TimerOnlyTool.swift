@@ -6,54 +6,16 @@
 //
 
 import SwiftUI
-import SwiftfulLoadingIndicators
 
 struct TimerOnlyTool: View {
     @StateObject var timerController: TimerContoller = TimerContoller()
     
-    @Binding var showOverlay: Tool?
-    var namespace: Namespace.ID
-    let name: String
-    
-    init(showOverlay: Binding<Tool?>, namespace: Namespace.ID) {
-        self._showOverlay = showOverlay
-        self.namespace = namespace
-        self.name = showOverlay.wrappedValue!.name
-        
-    }
-    
     var body: some View {
-        TimerOnlyToolInner(showOverlay: $showOverlay, namespace: namespace, name: name)
-            .environmentObject(timerController)
-    }
-}
-
-struct TimerOnlyToolInner: View {
-    @EnvironmentObject var timerController: TimerContoller
-    @EnvironmentObject var tabRouter: TabRouter
-    
-    @Environment(\.colorScheme) var colourScheme
-    @Environment(\.globalGeometrySize) var globalGeometrySize
-    
-    @Binding var showOverlay: Tool?
-    
-    var namespace: Namespace.ID
-    
-    let name: String
-    
-    // GET USER DEFAULTS
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
-    
-    @State var hideStatusBar = true
-    
-    var body: some View {
-        GeometryReader { geo in
+        ZStack {
             TimerBackgroundColor()
                 .ignoresSafeArea(.all)
             
             TimerTouchView()
-            
             
             TimerTime()
                 .allowsHitTesting(false)
@@ -61,13 +23,13 @@ struct TimerOnlyToolInner: View {
                 .ignoresSafeArea(edges: .all)
             
             
-            if timerController.mode == .stopped || timerController.mode == .inspecting {
-                //ToolHeader(name: name, image: "stopwatch", content: {EmptyView()})
-                    //.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            if (timerController.mode == .stopped) {
+                ToolHeader(name: tools[0].name, image: tools[0].iconName, content: { EmptyView() })
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
         }
-        .statusBar(hidden: hideStatusBar)
+        .environmentObject(timerController)
+        .statusBar(hidden: (timerController.mode != .stopped))
         .ignoresSafeArea(.keyboard)
     }
 }
-
