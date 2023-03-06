@@ -347,7 +347,6 @@
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */,
 				7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */,
-				7D69E0632751FDBB007211CC /* 3rdparty */,
 				23A73F5D276B0AC800153748 /* Tabs */,
 				23A73F5C276B0AA100153748 /* Timer */,
 				23A73F5E276B0AED00153748 /* TimeList */,
@@ -420,13 +419,6 @@
 				2397131E2791032300268DFA /* AveragePhases.swift */,
 			);
 			path = Stats;
-			sourceTree = "<group>";
-		};
-		7D69E0632751FDBB007211CC /* 3rdparty */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = 3rdparty;
 			sourceTree = "<group>";
 		};
 		AF8874BF29AAC8AD001E49D0 /* Tools */ = {

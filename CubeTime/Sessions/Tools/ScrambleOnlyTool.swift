@@ -15,7 +15,8 @@ struct ScrambleOnlyTool: View {
         ZStack {
             if let scr = scrambleController.scrambleStr {
                 Text(scr)
-                    .recursiveMono(fontSize: 24, weight: 500)
+                    .multilineTextAlignment(.center)
+                    .recursiveMono(fontSize: 24, weight: .medium)
                     .padding(.horizontal)
             } else {
                 LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
