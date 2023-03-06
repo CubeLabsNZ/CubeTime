@@ -1,6 +1,5 @@
 import Foundation
 import CoreData
-import BTree
 
 extension StopwatchManager {
     static func calculateAverage(_ solves: [Solves], _ id: String, _ compsim: Bool) -> CalculatedAverage? {
@@ -234,6 +233,16 @@ extension StopwatchManager {
         })
     }
     
+    func delete(solveGroup: CompSimSolveGroup) {
+        compsimSolveGroups.remove(object: solveGroup)
+        managedObjectContext.delete(solveGroup)
+        try! managedObjectContext.save()
+        
+        statsGetFromCache() // TODO not this :sob:
+        stateID = UUID()
+        // so much for cache stats
+    }
+    
     func removingSolve(solve: Solves, removeFunc: (Solves) -> ()) {
         #warning("TODO:  check best AOs")
         var recalcAO100 = false
@@ -279,15 +288,17 @@ extension StopwatchManager {
         try! managedObjectContext.save()
         
         timerController.secondsStr = formatSolveTime(secs: showPrevTime ? (self.solvesByDate.last?.time ?? 0) : 0)
-        
-        
-        print("delete called")
     }
     
         
     func statsGetFromCache() {
         #warning("TODO:  get from cache actually")
         let sessionSolves = currentSession.solves!.allObjects as! [Solves]
+        var compSim = false
+        if let currentSession = currentSession as? CompSimSession {
+            compSim = true
+            compsimSolveGroups = (currentSession.solvegroups!.array as! [CompSimSolveGroup])
+        }
         
         solves = sessionSolves.sorted(by: {$0.timeIncPen < $1.timeIncPen})
         solvesByDate = sessionSolves.sorted(by: {$0.date! < $1.date!})
@@ -300,11 +311,11 @@ extension StopwatchManager {
         solvesNoDNFs = solves
         solvesNoDNFs.removeAll(where: { $0.penalty == PenTypes.dnf.rawValue })
         
-        
-        bestAo5 = getBestAverage(of: 5)
-        bestAo12 = getBestAverage(of: 12)
-        bestAo100 = getBestAverage(of: 100)
-        
+        if !compSim {
+            bestAo5 = getBestAverage(of: 5)
+            bestAo12 = getBestAverage(of: 12)
+            bestAo100 = getBestAverage(of: 100)
+        }
         
         
         currentAo5 = getCurrentAverageOf(5)
@@ -316,11 +327,14 @@ extension StopwatchManager {
         sessionMean = getSessionMean()
         
         normalMedian = getNormalMedian()
-        compSimCount = getNumberOfAverages()
-        reachedTargets = getReachedTargets()
         
-        currentCompsimAverage = getCurrentCompsimAverage()
-        bestCompsimAverage = getBestCompsimAverageAndArrayOfCompsimAverages().0
+        if compSim {
+            compSimCount = getNumberOfAverages()
+            reachedTargets = getReachedTargets()
+            
+            currentCompsimAverage = getCurrentCompsimAverage()
+            bestCompsimAverage = getBestCompsimAverageAndArrayOfCompsimAverages().0
+        }
         
         currentMeanOfTen = getCurrentMeanOfTen()
         bestMeanOfTen = getBestMeanOfTen()
@@ -386,7 +400,6 @@ extension StopwatchManager {
                 self.bestAo5 = currentAo5
                 self.bestAo5?.name = "Best ao5"
                 #warning("TODO:  unhardcode")
-                NSLog("updated best ao5: \(self.bestAo5 == currentAo5)")
             }
         }
         if let currentAo12 = currentAo12 {
@@ -619,11 +632,9 @@ extension StopwatchManager {
                 if lastGroupSolves.count == 4 {
                     let sortedGroup = lastGroupSolves.sorted(by: Self.sortWithDNFsLast)
                     
-                    print(sortedGroup.map{$0.time})
+                    let bpa = (sortedGroup.dropFirst().reduce(0) {$0 + $1.timeIncPen}) / 3.00
                     
-                    let bpa = (sortedGroup.dropFirst().reduce(0) {$0 + timeWithPlusTwoForSolve($1)}) / 3.00
-                    
-                    let wpa = sortedGroup.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) ? -1 : (sortedGroup.dropLast().reduce(0) {$0 + timeWithPlusTwoForSolve($1)}) / 3.00
+                    let wpa = sortedGroup.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) ? -1 : (sortedGroup.dropLast().reduce(0) {$0 + $1.timeIncPen}) / 3.00
                     
                     return (bpa, wpa)
                 }
@@ -643,7 +654,7 @@ extension StopwatchManager {
                 if lastGroupSolves.count == 4 {
                     let sortedGroup = lastGroupSolves.sorted(by: Self.sortWithDNFsLast)
                     
-                    let timeNeededForTarget = (compsimSession as CompSimSession).target * 3 - (sortedGroup.dropFirst().dropLast().reduce(0) {$0 + timeWithPlusTwoForSolve($1)})
+                    let timeNeededForTarget = (compsimSession as CompSimSession).target * 3 - (sortedGroup.dropFirst().dropLast().reduce(0) {$0 + $1.timeIncPen})
                     
                     if timeNeededForTarget < sortedGroup.last!.time {
                         return .notPossible
@@ -793,24 +804,6 @@ extension StopwatchManager {
                                          trimmedSolves: trimmedSolves)
             }
         }
-    }
-    
-    static func doSomething() -> Void {
-        let count: Int32 = 5
-        let solveDoubles: [Double] = [1.456, .infinity, 1.335, 1.863, 2.386]
-        let width: Int32 = 5
-        
-        let trim: Int32 = 1
-        
-        var countedSolvesIndices: [Int32] = Array(repeating: 0, count: Int(width - trim*2))
-        var trimmedSolvesIndices: [Int32] = Array(repeating: 0, count: Int(trim*2))
-        
-        
-        let bestAverage: Double = getBestAverageOf(width, trim, count,
-                                                   solveDoubles,
-                                                   &countedSolvesIndices, &trimmedSolvesIndices);
-        
-        print(bestAverage)
     }
 }
 

@@ -9,8 +9,6 @@ struct TimeCard: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    
     var solve: Solves
     
     let formattedTime: String
@@ -66,7 +64,7 @@ struct TimeCard: View {
             #warning("TODO:  check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectangle")
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(isSelected
-                      ? Color("indent1")
+                      ? Color("indent0")
                       : Color("overlay0"))
                 .frame(maxWidth: cardWidth, minHeight: cardHeight, maxHeight: cardHeight)
 
@@ -95,7 +93,7 @@ struct TimeCard: View {
                     .font(.body.weight(.bold))
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(accentColour)
+                        .foregroundColor(Color.accentColor)
                 }
             }
         }

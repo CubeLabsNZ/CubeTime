@@ -123,16 +123,18 @@ struct TimeListHeader: View {
                         .foregroundColor(Color.accentColor)
                         .font(.body.weight(.medium))
                     
+                    #warning("todo make search bar search for comments too?")
                     if searchExpanded {
                         TextField("Search for a time...", text: $stopwatchManager.timeListFilter)
                             .frame(maxWidth: .infinity)
-                            .foregroundColor(Color("grey"))
+                            .foregroundColor(Color(stopwatchManager.timeListFilter.isEmpty ? "grey" : "dark"))
                         
                         HStack(spacing: 8) {
                             Spacer()
                             
                             Button {
                                 withAnimation(Animation.customEaseInOut) {
+                                    stopwatchManager.timeListFilter = ""
                                     searchExpanded = false
                                 }
                             } label: {
@@ -190,9 +192,6 @@ struct TimeListView: View {
     @Environment(\.sizeCategory) var sizeCategory
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    
-    
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     
     @State var solve: Solves?
     @State var calculatedAverage: CalculatedAverage?
@@ -258,9 +257,8 @@ struct TimeListView: View {
                             }
                             .padding(.horizontal)
                         } else {
+                            let groups = stopwatchManager.compsimSolveGroups!
                             LazyVStack(spacing: 12) {
-                                let groups = ((stopwatchManager.currentSession as! CompSimSession).solvegroups!.array as! [CompSimSolveGroup])
-                                    
                                 if groups.count != 0 {
                                     TimeBar(solvegroup: groups.last!, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode, current: true)
                                     
@@ -273,10 +271,9 @@ struct TimeListView: View {
                                     }
                                     
                                     if groups.count > 1 {
-                                        Divider()
-                                            .padding(.horizontal)
+                                        ThemedDivider()
+                                            .padding(.horizontal, 8)
                                     }
-                                    
                                 } else {
                                     // re-enable when we have a graphic
 //                                    Text("display the empty message")
@@ -444,17 +441,15 @@ struct TimeListView: View {
         }
         
         .sheet(item: $calculatedAverage) { item in
-            StatsDetail(solves: item, session: stopwatchManager.currentSession)
+            StatsDetailView(solves: item, session: stopwatchManager.currentSession)
         }
         
         .task {
-            print("Task")
             updateSessionsCanMoveTo()
         }
         
         .onChange(of: stopwatchManager.currentSession) { newValue in
             #warning("make sure this actually is needed")
-            print("CHANGED SESSION - TimeListView")
             updateSessionsCanMoveTo()
         }
         

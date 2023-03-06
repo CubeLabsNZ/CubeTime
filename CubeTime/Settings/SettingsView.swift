@@ -16,10 +16,6 @@ struct AnimatingFontSizeV2: AnimatableModifier {
 
 struct SettingsView: View {
     @State var currentCard: SettingsCardInfo?
-    
-    @Environment(\.colorScheme) var colourScheme
-    
-    
     @Namespace var namespace
     
     
@@ -71,8 +67,6 @@ struct SettingsCard: View {
     var info: SettingsCardInfo
     var namespace: Namespace.ID
     
-    @Environment(\.colorScheme) var colourScheme
-    
     
     var body: some View {
         // this if statement is temporary for when there are only 3 blocks
@@ -85,11 +79,11 @@ struct SettingsCard: View {
                 }
             } label: {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(Color("overlay0"))
                         .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
                         .frame(height: globalGeometrySize.height/3.5, alignment: .center)
-                        .shadow(color: .black.opacity(0.1), radius: 8, x: 3, y: 3)
+                        .shadowLight(x: 0, y: 3)
                     
                     VStack {
                         HStack {
@@ -121,7 +115,7 @@ struct SettingsCard: View {
                     .frame(height: globalGeometrySize.height/3.5, alignment: .center)
                 }
             }
-            .buttonStyle(CardButtonStyle())
+            .buttonStyle(AnimatedButton())
         } else {
             Button {
                 withAnimation(Animation.customSlowSpring) {
@@ -129,11 +123,11 @@ struct SettingsCard: View {
                 }
             } label: {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(Color("overlay0"))
                         .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
                         .frame(height: globalGeometrySize.height/7, alignment: .center)
-                        .shadow(color: .black.opacity(0.1), radius: 8, x: 3, y: 3)
+                        .shadowLight(x: 0, y: 3)
                     
                     VStack {
                         HStack {
@@ -160,7 +154,7 @@ struct SettingsCard: View {
                     .frame(height: globalGeometrySize.height/7, alignment: .center)
                 }
             }
-            .buttonStyle(CardButtonStyle())
+            .buttonStyle(AnimatedButton())
         }
     }
 }
@@ -169,7 +163,6 @@ struct SettingsDetail: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
     
     @Binding var currentCard: SettingsCardInfo?
-    @Environment(\.colorScheme) var colourScheme
     
     var namespace: Namespace.ID
     
@@ -198,7 +191,7 @@ struct SettingsDetail: View {
                         }
                     }
                     .safeAreaInset(edge: .top, spacing: 0) {
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
                             .fill(Color.clear)
                             .frame(maxHeight: globalGeometrySize.height / 7)
                             .padding(.bottom)
@@ -207,11 +200,12 @@ struct SettingsDetail: View {
 
                     VStack {
                         ZStack {
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .fill(Color(uiColor: colourScheme == .light ? .white : .systemGray6))
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .fill(Color("overlay0"))
                                 .matchedGeometryEffect(id: "bg " + currentCard!.name, in: namespace)
                                 .ignoresSafeArea()
-                                .shadow(color: .black.opacity(0.16), radius: 8, x: 0, y: 3)
+                                .shadowLight(x: 0, y: 3)
+                            
                             VStack {
                                 Spacer()
                                 
@@ -259,13 +253,5 @@ struct SettingsDetail: View {
                 }
             }
         }
-    }
-}
-
-struct CardButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        return configuration.label
-            .scaleEffect(configuration.isPressed ? 0.96 : 1)
-            .animation(.easeIn, value: configuration.isPressed)
     }
 }

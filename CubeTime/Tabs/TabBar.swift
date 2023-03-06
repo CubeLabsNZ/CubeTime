@@ -15,10 +15,10 @@ struct TabBar: View {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill((self.currentTab == .timer
                        ? Color("base")
-                       : Color("overlay0")))
+                       : colourScheme == .light ? Color("overlay0") : Color(0x303032)))
             
-                .shadow(color: .black.opacity(self.currentTab == .timer ? 0.00 : 0.08),
-                        radius: self.currentTab != .timer ? 6 : 0,
+                .shadow(color: .black.opacity(self.currentTab == .timer ? 0.00 : 0.10),
+                        radius: self.currentTab != .timer ? 8 : 0,
                         x: 0,
                         y: self.currentTab != .timer ? 1 : 0)
 
@@ -120,7 +120,7 @@ struct TabIcon: View {
                                         ? Color("accent3")
                                         : colourScheme == .dark
                                           ? Color.clear
-                                          : Color("indent1"),
+                                          : Color("indent0"),
                                         radius: 2,
                                         x: 0, y: 0.5)
                             

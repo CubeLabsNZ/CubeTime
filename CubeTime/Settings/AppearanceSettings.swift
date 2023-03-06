@@ -1,15 +1,7 @@
 import SwiftUI
 
-
-struct settingsBlocks: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3))
-    }
-}
-
-enum asKeys: String {
-    case accentColour, overrideDM, dmBool, staticGradient, gradientSelected, graphGlow, graphAnimation, scrambleSize, fontWeight, fontCasual, fontCursive
+enum appearanceSettingsKey: String {
+    case overrideDM, dmBool, staticGradient, gradientSelected, graphGlow, graphAnimation, scrambleSize, fontWeight, fontCasual, fontCursive
 }
 
 
@@ -20,39 +12,38 @@ struct AppearanceSettingsView: View {
     @State private var showFontSizeOptions: Bool = false
     @State private var showPreview: Bool = false
     
-    let accentColours: [Color] = [.cyan, .blue, .indigo, .purple, .red]
-    
     private let columns = [GridItem(spacing: 16), GridItem(spacing: 16)]
     
     // colours
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    @AppStorage(asKeys.staticGradient.rawValue) private var staticGradient: Bool = true
-    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
-    @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
-    @AppStorage(asKeys.graphAnimation.rawValue) private var graphAnimation: Bool = true
+    @AppStorage(appearanceSettingsKey.staticGradient.rawValue) private var staticGradient: Bool = true
+    @AppStorage(appearanceSettingsKey.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    @AppStorage(appearanceSettingsKey.graphGlow.rawValue) private var graphGlow: Bool = true
+    @AppStorage(appearanceSettingsKey.graphAnimation.rawValue) private var graphAnimation: Bool = true
     
     // system settings (appearance)
-    @AppStorage(asKeys.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
-    @AppStorage(asKeys.dmBool.rawValue) private var darkMode: Bool = false
+    @AppStorage(appearanceSettingsKey.overrideDM.rawValue) private var overrideSystemAppearance: Bool = false
+    @AppStorage(appearanceSettingsKey.dmBool.rawValue) private var darkMode: Bool = false
     
     
-    @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
-    @AppStorage(asKeys.fontWeight.rawValue) private var fontWeight: Double = 516.0
-    @AppStorage(asKeys.fontCasual.rawValue) private var fontCasual: Double = 0.0
-    @AppStorage(asKeys.fontCursive.rawValue) private var fontCursive: Bool = false
+    @AppStorage(appearanceSettingsKey.scrambleSize.rawValue) private var scrambleSize: Int = 18
+    @AppStorage(appearanceSettingsKey.fontWeight.rawValue) private var fontWeight: Double = 516.0
+    @AppStorage(appearanceSettingsKey.fontCasual.rawValue) private var fontCasual: Double = 0.0
+    @AppStorage(appearanceSettingsKey.fontCursive.rawValue) private var fontCursive: Bool = false
     
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
     
     var body: some View {
         VStack(spacing: 16) {
             VStack {
                 HStack {
                     Image(systemName: "paintbrush.pointed.fill")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
-                        .foregroundColor(accentColour)
+                        .font(.subheadline.weight(.bold))
+
+                        .foregroundColor(Color.accentColor)
                     Text("Colours")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
+                        .font(.body.weight(.bold))
                     
                     Spacer()
                 }
@@ -60,6 +51,8 @@ struct AppearanceSettingsView: View {
                 .padding(.bottom)
                 
                 VStack(spacing: 0) {
+                    
+                    #if false
                     HStack {
                         Text("Accent Colour")
                             .font(.body.weight(.medium))
@@ -115,18 +108,20 @@ struct AppearanceSettingsView: View {
                     
                     Divider()
                         .padding(.vertical, 10)
+                    #endif
+                    
                     
                     
                     VStack(alignment: .leading, spacing: 0) {
                         HStack(alignment: .center) {
-                            Text("Theme")
+                            Text("Gradient")
                                 .font(.body.weight(.medium))
                             
                             Spacer()
                             
                             Image(systemName: "chevron.right")
                                 .font(.footnote.weight(.bold))
-                                .foregroundColor(Color(uiColor: .systemGray3))
+                                .foregroundColor(Color("grey"))
                                 .rotationEffect(.degrees(showThemeOptions ? 90 : 0))
                         }
                         .contentShape(Rectangle())
@@ -138,11 +133,11 @@ struct AppearanceSettingsView: View {
                         .padding(.horizontal)
                         
                         
-                        Text("Customise the app theme and gradients.\nNote: separate from the accent colour.")
+                        Text("Customise the gradients used in stats.")
                             .font(.footnote.weight(.medium))
                             .lineSpacing(-4)
                             .fixedSize(horizontal: false, vertical: true)
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
                             .padding(.bottom, 12)
@@ -169,7 +164,7 @@ struct AppearanceSettingsView: View {
                                     .lineSpacing(-4)
 //                                Text("By default, the gradient is dynamic and changes throughout the day. If turned off, the gradient will only be of static colours.")
                                     .fixedSize(horizontal: false, vertical: true)
-                                    .foregroundColor(Color(uiColor: .systemGray))
+                                    .foregroundColor(Color("grey"))
                                     .multilineTextAlignment(.leading)
                                     .padding(.bottom, 12)
                                  */
@@ -211,7 +206,7 @@ struct AppearanceSettingsView: View {
                                 Text("Graph Glow")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                                .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 10)
@@ -220,7 +215,7 @@ struct AppearanceSettingsView: View {
                             .font(.footnote.weight(.medium))
                             .lineSpacing(-4)
                             .fixedSize(horizontal: false, vertical: true)
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
                             .padding(.bottom, 12)
@@ -232,7 +227,7 @@ struct AppearanceSettingsView: View {
                                 Text("Graph Animation")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                                .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 10)
@@ -241,22 +236,30 @@ struct AppearanceSettingsView: View {
                             .font(.footnote.weight(.medium))
                             .lineSpacing(-4)
                             .fixedSize(horizontal: false, vertical: true)
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
                             .padding(.bottom, 12)
                     }
                 }
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
+            
+            
+            
+            
+            
+            
+            
+            
             
             VStack {
                 HStack {
                     Image(systemName: "command")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
-                        .foregroundColor(accentColour)
+                        .font(.subheadline.weight(.bold))
+                        .foregroundColor(Color.accentColor)
                     Text("System Settings")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
+                        .font(.body.weight(.bold))
                     
                     Spacer()
                 }
@@ -269,7 +272,7 @@ struct AppearanceSettingsView: View {
                             Text("Override System Appearance")
                                 .font(.body.weight(.medium))
                         }
-                            .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                            .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         
                     }
                     .padding(.horizontal)
@@ -281,23 +284,31 @@ struct AppearanceSettingsView: View {
                                 Text("Dark Mode")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                                .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 12)
                     }
                 }
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             VStack {
                 HStack {
                     Image(systemName: "textformat")
-                        .font(Font.system(.subheadline, design: .rounded).weight(.bold))
-                        .foregroundColor(accentColour)
+                        .font(.subheadline.weight(.bold))
+                        .foregroundColor(Color.accentColor)
                     Text("Font Settings")
-                        .font(Font.system(.body, design: .rounded).weight(.bold))
+                        .font(.body.weight(.bold))
                     
                     Spacer()
                 }
@@ -321,26 +332,27 @@ struct AppearanceSettingsView: View {
                         .font(.footnote.weight(.medium))
                         .lineSpacing(-4)
                         .fixedSize(horizontal: false, vertical: true)
-                        .foregroundColor(Color(uiColor: .systemGray))
+                        .foregroundColor(Color("grey"))
                         .multilineTextAlignment(.leading)
                         .padding(.horizontal)
                     
                     
                     VStack {
                         Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
-                            .font(stopwatchManager.ctFontScramble)
+                            .font(fontManager.ctFontScramble)
                             .padding()
                         
                         
                         Text("Tap for Fullscreen Preview")
                             .font(.footnote.weight(.medium))
                             .lineSpacing(-4)
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .padding([.trailing, .bottom], 8)
                         
                     }
+                    .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     .background(
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
@@ -369,14 +381,14 @@ struct AppearanceSettingsView: View {
                         HStack {
                             Text("MIN")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color(uiColor: .systemGray2))
+                                .foregroundColor(Color("indent0"))
                             
                             Slider(value: $fontWeight, in: 300...800, step: 1.0)
                                 .padding(.horizontal, 4)
                             
                             Text("MAX")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color(uiColor: .systemGray2))
+                                .foregroundColor(Color("indent0"))
                             
                         }
                         
@@ -384,8 +396,7 @@ struct AppearanceSettingsView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 12)
                     .onChange(of: fontWeight) { newValue in
-                        stopwatchManager.fontWeight = newValue
-                        stopwatchManager.updateFont()
+                        fontManager.fontWeight = newValue
                     }
                     
                     VStack(alignment: .leading, spacing: 0) {
@@ -396,14 +407,14 @@ struct AppearanceSettingsView: View {
                         HStack {
                             Text("MIN")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color(uiColor: .systemGray2))
+                                .foregroundColor(Color("indent0"))
                             
                             Slider(value: $fontCasual, in: 0...1, step: 0.01)
                                 .padding(.horizontal, 4)
                             
                             Text("MAX")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color(uiColor: .systemGray2))
+                                .foregroundColor(Color("indent0"))
                             
                         }
                         
@@ -411,8 +422,7 @@ struct AppearanceSettingsView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 12)
                     .onChange(of: fontCasual) { newValue in
-                        stopwatchManager.fontCasual = newValue
-                        stopwatchManager.updateFont()
+                        fontManager.fontCasual = newValue
                     }
                     
                     VStack(alignment: .leading, spacing: 0) {
@@ -421,26 +431,24 @@ struct AppearanceSettingsView: View {
                                 Text("Cursive Font")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: accentColour))
+                                .toggleStyle(SwitchToggleStyle(tint: Color.accentColor))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 12)
                     }
                     .onChange(of: fontCursive) { newValue in
-                        stopwatchManager.fontCursive = newValue
-                        stopwatchManager.updateFont()
+                        fontManager.fontCursive = newValue
                     }
                 }
             }
-            .background(Color(uiColor: colourScheme == .light ? .white : .systemGray6).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)).shadow(color: Color.black.opacity(colourScheme == .light ? 0.06 : 0), radius: 6, x: 0, y: 3))
+            .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
             
             
         }
         .padding(.horizontal)
         .preferredColorScheme(overrideSystemAppearance ? darkMode ? .dark : .light : nil)
             .onChange(of: scrambleSize) { newValue in
-                stopwatchManager.scrambleSize = newValue
-                stopwatchManager.updateFont()
+                fontManager.scrambleSize = newValue
             }
     }
 }
@@ -448,11 +456,12 @@ struct AppearanceSettingsView: View {
 
 struct TimerPreview: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.globalGeometrySize) var globalGeometrySize
     
-    @AppStorage(asKeys.scrambleSize.rawValue) private var scrambleSize: Int = 18
+    @AppStorage(appearanceSettingsKey.scrambleSize.rawValue) private var scrambleSize: Int = 18
     
     
     var body: some View {
@@ -462,8 +471,8 @@ struct TimerPreview: View {
                 .ignoresSafeArea()
             
             Text("0.000")
-                .foregroundColor(Color(uiColor: .systemGray))
-                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold,
+                .foregroundColor(Color("grey"))
+                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold,
                                                           smallDeviceNames.contains(getModelName()) ? 54 : 56
                                                           , nil)))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -490,7 +499,7 @@ struct TimerPreview: View {
             
             VStack {
                 Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
-                    .font(stopwatchManager.ctFontScramble)
+                    .font(fontManager.ctFontScramble)
                     .frame(maxHeight: globalGeometrySize.height/3)
                     .multilineTextAlignment(.center)
                     

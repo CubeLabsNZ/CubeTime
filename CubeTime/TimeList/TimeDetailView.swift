@@ -1,13 +1,26 @@
 import SwiftUI
 
+
+func getSolveDateFormatter(_ date: Date) -> DateFormatter {
+    let dateFormatter: DateFormatter = DateFormatter()
+    dateFormatter.locale = Locale(identifier: "en_NZ")
+    
+    if (Calendar.current.isDateInToday(date)) {
+        dateFormatter.dateFormat = "h:mm a"
+    } else {
+        dateFormatter.dateFormat = "dd/MM/yy"
+    }
+    
+    return dateFormatter
+}
+
 struct TimeDetailView: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
 
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var managedObjectContext
     
-    
-    private let titleDateFormat: DateFormatter
     
     private var solve: Solves
     
@@ -48,13 +61,6 @@ struct TimeDetailView: View {
         self._currentSolve = currentSolve ?? Binding.constant(nil)
         _userComment = State(initialValue: solve.comment ?? "")
         
-        
-        self.titleDateFormat = DateFormatter()
-        titleDateFormat.locale = Locale(identifier: "en_US_POSIX")
-        titleDateFormat.timeZone = TimeZone(secondsFromGMT: 0)
-        titleDateFormat.dateFormat = "h:mm a, dd/mm/yyyy"
-        
-        
         self._sessionsCanMoveTo = sessionsCanMoveTo ?? .constant(nil)
         self._sessionsCanMoveTo_playground = sessionsCanMoveTo_playground ??  .constant(nil)
     }
@@ -62,6 +68,7 @@ struct TimeDetailView: View {
     
     var body: some View {
         let sess_type = stopwatchManager.currentSession.session_type
+        
         NavigationView {
             ZStack {
                 Color("base")
@@ -80,7 +87,7 @@ struct TimeDetailView: View {
                                         let rawTime = formatSolveTime(secs: solve.time)
                                         Text("(\(rawTime))")
                                             .font(.title3.weight(.semibold))
-                                            .foregroundColor(Color(uiColor: .systemGray))
+                                            .foregroundColor(Color("grey"))
                                             .padding(.leading, 8)
                                             .offset(y: -4)
                                         
@@ -91,7 +98,7 @@ struct TimeDetailView: View {
                                         
                                         Text("(\(time))")
                                             .font(.title3.weight(.semibold))
-                                            .foregroundColor(Color(uiColor: .systemGray))
+                                            .foregroundColor(Color("grey"))
                                             .padding(.leading, 8)
                                             .offset(y: -4)
                                     default:
@@ -112,14 +119,12 @@ struct TimeDetailView: View {
                                     .offset(y: -4)
                                 }
                                 
-                                Capsule()
-                                    .fill(Color("indent1"))
-                                    .frame(height: 1)
+                                ThemedDivider()
                                 
                                 
                                 HStack {
-                                    Text(date, formatter: titleDateFormat)
-                                        .font(.system(size: 15, weight: .regular, design: .monospaced))
+                                    Text(date, formatter: getSolveDateFormatter(date))
+                                        .recursiveMono(fontSize: 15, weight: .regular)
                                         .foregroundColor(Color("grey"))
                                     
                                     Spacer()
@@ -137,9 +142,8 @@ struct TimeDetailView: View {
                                         Text(scramble)
                                     }
                                 }
-                                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 17, nil)))
+                                .recursiveMono(fontSize: 17, weight: .medium)
                                 .padding(.top, 28)
-            //                    .font(.system(size: 17, weight: .medium, design: .monospaced))
                                 
                                 AsyncSVGView(puzzle: solve.scramble_type, scramble: scramble)
                                     .frame(maxWidth: 240)
@@ -148,10 +152,6 @@ struct TimeDetailView: View {
                                 
                                 
                                 HStack(spacing: 6) {
-                                    Text("CubeTime.")
-                                        .foregroundColor(Color("indent1"))
-                                        .font(.custom("RecursiveSansLnrSt-Regular", size: 16))
-                                    
                                     Spacer()
                                     
                                     HierarchialButton(type: solve.penalty == PenTypes.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
@@ -182,113 +182,20 @@ struct TimeDetailView: View {
                             .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
                             .padding(.top)
                             
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("SESSION")
-                                    .font(.subheadline.weight(.semibold))
+                            
+                            HStack {
+                                Spacer()
                                 
-                                Capsule()
-                                    .fill(Color("indent1"))
-                                    .frame(height: 1)
-                                
-                                HStack {
-                                    Image(systemName: "square.on.square")
-                                    
-                                    Text(stopwatchManager.currentSession.name ?? "Unknown session name")
-                                }
-                                .padding(.vertical, 6)
-                                .font(.body.weight(.medium))
-                                
-                                let sessions = { () -> [Sessions]? in
-                                    if sess_type != SessionTypes.playground.rawValue {
-                                        if let sessionsCanMoveTo = sessionsCanMoveTo {
-                                            return sessionsCanMoveTo
-                                        } else {
-                                            return sessionsCanMoveTo_s
-                                        }
-                                    } else {
-                                        if let sessionsCanMoveTo_playground = sessionsCanMoveTo_playground {
-                                            return sessionsCanMoveTo_playground
-                                        } else {
-                                            return sessionsCanMoveTo_playground_s
-                                        }
-                                    }
-                                }()
-                                
-                                SessionPickerMenu(sessions: sessions) { session in
-                                    withAnimation(Animation.customDampedSpring) {
-                                        stopwatchManager.moveSolve(solve: solve, to: session)
-                                    }
-                                    currentSolve = nil
-                                    dismiss()
-                                } label: {
-                                    HierarchialButtonBase(type: .mono, size: .medium, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
-                                        Label("Move to…", systemImage: "arrow.up.right")
-                                    }
-                                }
-                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                Text("CubeTime.")
+                                    .recursiveMono(fontSize: 13, weight: .regular)
+                                    .foregroundColor(Color("indent0"))
                             }
-                            .padding(12)
-                            .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
+                            .padding(.vertical, -4)
+
                             
                             
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("COMMENT")
-                                    .font(.subheadline.weight(.semibold))
-                                
-                                Capsule()
-                                    .fill(Color("indent1"))
-                                    .frame(height: 1)
-                                
-                                
-                                
-                                
-                                ZStack {
-                                    Group {
-                                        if #available(iOS 16.0, *) {
-                                            TextEditor(text: $userComment)
-                                                .scrollContentBackground(.hidden)
-                                        } else {
-                                            TextEditor(text: $userComment)
-                                                .onAppear {
-                                                    let textViewAppearance = UITextView.appearance()
-                                                    
-                                                    textViewAppearance.backgroundColor = .clear
-                                                    textViewAppearance.textContainerInset =
-                                                         UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 0)
-                                                }
-                                                .background(Color.red)
-                                        }
-                                    }
-                                    .toolbar {
-                                        ToolbarItemGroup(placement: .keyboard) {
-                                            Button("Comment") {
-                                                commentFocus = false
-                                            }
-                                        }
-                                    }
-                                    .focused($commentFocus)
-                                    .onChange(of: userComment) { newValue in
-                                        solve.comment = newValue
-                                    }
-                                    
-                                    
-                                    if userComment == "" {
-                                        Text("Comment something…")
-                                            .padding(.vertical, 16)
-                                            .foregroundColor(Color("grey"))
-                                            .font(.subheadline.weight(.regular))
-                                            .frame(maxWidth: .infinity, alignment: .center)
-                                            .allowsHitTesting(false)
-                                    }
-                                    
-                                    Text(userComment)
-                                        .padding(.vertical, 16)
-                                        .opacity(0)
-                                }
-                            }
-                            .padding(12)
-                            .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
                             
+                            // BUTTONS
                             
                             HStack(spacing: 8) {
                                 HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
@@ -345,6 +252,116 @@ struct TimeDetailView: View {
                             }
                             .padding(.top, 16)
                             
+                            // END BUTTONS
+                            
+                            
+                            
+                            
+                            
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("SESSION")
+                                    .font(.subheadline.weight(.semibold))
+                                
+                                ThemedDivider()
+                                
+                                HStack {
+                                    Image(systemName: "square.on.square")
+                                    
+                                    Text(stopwatchManager.currentSession.name ?? "Unknown session name")
+                                }
+                                .padding(.vertical, 6)
+                                .font(.body.weight(.medium))
+                                
+                                let sessions = { () -> [Sessions]? in
+                                    if sess_type != SessionTypes.playground.rawValue {
+                                        if let sessionsCanMoveTo = sessionsCanMoveTo {
+                                            return sessionsCanMoveTo
+                                        } else {
+                                            return sessionsCanMoveTo_s
+                                        }
+                                    } else {
+                                        if let sessionsCanMoveTo_playground = sessionsCanMoveTo_playground {
+                                            return sessionsCanMoveTo_playground
+                                        } else {
+                                            return sessionsCanMoveTo_playground_s
+                                        }
+                                    }
+                                }()
+                                
+                                SessionPickerMenu(sessions: sessions) { session in
+                                    withAnimation(Animation.customDampedSpring) {
+                                        stopwatchManager.moveSolve(solve: solve, to: session)
+                                    }
+                                    currentSolve = nil
+                                    dismiss()
+                                } label: {
+                                    HierarchialButtonBase(type: .mono, size: .medium, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
+                                        Label("Move to…", systemImage: "arrow.up.right")
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                            }
+                            .padding(12)
+                            .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
+                            
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("COMMENT")
+                                    .font(.subheadline.weight(.semibold))
+                                
+                                ThemedDivider()
+                                
+                                
+                                
+                                
+                                ZStack {
+                                    Group {
+                                        if #available(iOS 16.0, *) {
+                                            TextEditor(text: $userComment)
+                                                .scrollContentBackground(.hidden)
+                                        } else {
+                                            TextEditor(text: $userComment)
+                                                .onAppear {
+                                                    let textViewAppearance = UITextView.appearance()
+                                                    
+                                                    textViewAppearance.backgroundColor = .clear
+                                                    textViewAppearance.textContainerInset =
+                                                         UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 0)
+                                                }
+                                                .background(Color.red)
+                                        }
+                                    }
+                                    .toolbar {
+                                        ToolbarItemGroup(placement: .keyboard) {
+                                            Button("Comment") {
+                                                commentFocus = false
+                                            }
+                                        }
+                                    }
+                                    .focused($commentFocus)
+                                    .onChange(of: userComment) { newValue in
+                                        solve.comment = newValue
+                                    }
+                                    
+                                    
+                                    if userComment == "" {
+                                        Text("Comment something…")
+                                            .padding(.vertical, 16)
+                                            .foregroundColor(Color("grey"))
+                                            .font(.subheadline.weight(.regular))
+                                            .frame(maxWidth: .infinity, alignment: .center)
+                                            .allowsHitTesting(false)
+                                    }
+                                    
+                                    Text(userComment)
+                                        .padding(.vertical, 16)
+                                        .opacity(0)
+                                }
+                            }
+                            .padding(12)
+                            .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
+                            
                             Spacer()
                         }
                         .padding(.horizontal)
@@ -352,7 +369,7 @@ struct TimeDetailView: View {
                     }
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button {
+                            DoneButton(onTapRun: {
                                 currentSolve = nil
                                 
                                 dismiss()
@@ -360,9 +377,7 @@ struct TimeDetailView: View {
                                 if managedObjectContext.hasChanges {
                                     try! managedObjectContext.save()
                                 }
-                            } label: {
-                                Text("Done")
-                            }
+                            })
                         }
                     }
                     .navigationBarTitleDisplayMode(.inline)
@@ -373,12 +388,10 @@ struct TimeDetailView: View {
         .task {
             // Don't even.
             if sess_type == SessionTypes.playground.rawValue {
-                NSLog("ses is pg")
                 if sessionsCanMoveTo_playground != nil {
                     return
                 }
                 sessionsCanMoveTo_playground_s = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: solve.scramble_type, currentSession: stopwatchManager.currentSession)
-                NSLog("set canmoveto_p = \(sessionsCanMoveTo_playground)")
             } else {
                 if sessionsCanMoveTo != nil {
                     return

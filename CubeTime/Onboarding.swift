@@ -337,7 +337,7 @@ struct PageSix: View {
                             
                             Text("The default normal session. Set to a chosen puzzle type.")
                                 .font(.body)
-                                .foregroundColor(Color(uiColor: .systemGray))
+                                .foregroundColor(Color("grey"))
                         }
                     }
                     
@@ -354,7 +354,7 @@ struct PageSix: View {
                             
                             Text("Train yourself on a set of algorithms.")
                                 .font(.system(size: 17, weight: .regular))
-                                .foregroundColor(Color(uiColor: .systemGray))
+                                .foregroundColor(Color("grey"))
                         }
                     }
                      */
@@ -371,7 +371,7 @@ struct PageSix: View {
                             
                             Text("Be able to time phases during a solve. Tap during a solve to record phases.")
                                 .font(.body)
-                                .foregroundColor(Color(uiColor: .systemGray))
+                                .foregroundColor(Color("grey"))
                         }
                     }
                     
@@ -387,7 +387,7 @@ struct PageSix: View {
                             
                             Text("A versatile session. You can change the scramble type within the session.")
                                 .font(.body)
-                                .foregroundColor(Color(uiColor: .systemGray))
+                                .foregroundColor(Color("grey"))
                         }
                     }
                     
@@ -403,7 +403,7 @@ struct PageSix: View {
                             
                             Text("Record non-rolling averages of 5. Simulates a competition.")
                                 .font(.body)
-                                .foregroundColor(Color(uiColor: .systemGray))
+                                .foregroundColor(Color("grey"))
                         }
                     }
                 }
@@ -466,13 +466,13 @@ struct PageSeven: View {
             Text("CubeTime is open-source and GPLv3 licensed.\n")
                 .font(.subheadline).fontWeight(.medium)
                 .multilineTextAlignment(.center)
-                .foregroundColor(Color(uiColor: .systemGray))
+                .foregroundColor(Color("grey"))
                 .padding(.horizontal)
         
             Text("You can view our source code at\nhttps://github.com/CubeStuffs/CubeTime")
                 .font(.subheadline).fontWeight(.light)
                 .multilineTextAlignment(.center)
-                .foregroundColor(Color(uiColor: .systemGray))
+                .foregroundColor(Color("grey"))
                 .padding(.horizontal)
                 .padding(.bottom)
         }

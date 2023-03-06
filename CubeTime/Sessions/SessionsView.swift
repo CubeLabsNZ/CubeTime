@@ -4,8 +4,6 @@ import Combine
 
 // MARK: - MAIN SESSION VIEW
 struct SessionsView: View {
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     
@@ -67,7 +65,7 @@ struct SessionsView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .sheet(isPresented: $showNewSessionPopUp) {
-            NewSessionModalView(showNewSessionPopUp: $showNewSessionPopUp)
+            NewSessionRootView(showNewSessionPopUp: $showNewSessionPopUp)
                 .environment(\.managedObjectContext, managedObjectContext)
         }
     }
@@ -76,7 +74,6 @@ struct SessionsView: View {
 
 // MARK: - CUSTOMISE SESSIONS
 struct CustomiseSessionView: View {
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
@@ -125,7 +122,7 @@ struct CustomiseSessionView: View {
                             SessionNameField(name: $name)
                         }
                         .frame(height: bigFrameHeight)
-                        .modifier(NewStandardSessionViewBlocks())
+                        .modifier(CardBlockBackground())
                         
                         if sessionItem.session_type == SessionTypes.compsim.rawValue {
                             CompSimTargetEntry(targetStr: $targetStr)
@@ -149,7 +146,7 @@ struct CustomiseSessionView: View {
                         }
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
+                        DoneButton(onTapRun: {
                             sessionItem.name = name
                             sessionItem.pinned = pinnedSession
                             
@@ -172,141 +169,13 @@ struct CustomiseSessionView: View {
                             try! managedObjectContext.save()
                             
                             dismiss()
-                        } label: {
-                            Text("Done")
-                        }
+                        })
                         .disabled(self.name.isEmpty || (sessionItem.session_type == SessionTypes.compsim.rawValue && targetStr.isEmpty))
                     }
                 }
             }
         }
-        .accentColor(accentColour)
-        .ignoresSafeArea(.keyboard)
-    }
-}
-
-
-// MARK: - NEW SESSION
-struct NewSessionView: View {
-    @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
-    
-    @EnvironmentObject var stopwatchManager: StopwatchManager
-    
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    
-    let sessionType: SessionTypes
-    let typeName: String
-    @Binding var showNewSessionPopUp: Bool
-    
-    // All sessions
-    @State private var name: String = ""
-    @State var pinnedSession: Bool = false
-    
-    // Non-Playground
-    @State private var sessionEventType: Int32 = 0
-    
-    // Multiphase
-    @State private var phaseCount: Int = 2
-    
-    // Comp sim
-    @State private var targetStr: String = ""
-    
-    
-    @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
-    @ScaledMetric(relativeTo: .title2) var bigFrameHeight: CGFloat = 220
-    @ScaledMetric(relativeTo: .title2) var otherBigFrameHeight: CGFloat = 80
-
-    
-    var body: some View {
-        ZStack {
-            Color("base")
-                .ignoresSafeArea()
-            
-            ScrollView {
-                VStack (spacing: 16) {
-                    VStack (alignment: .center, spacing: 0) {
-                        if sessionType != SessionTypes.playground {
-                            PuzzleHeaderImage(imageName: puzzle_types[Int(sessionEventType)].name)
-                        }
-                        
-                        SessionNameField(name: $name)
-                            .if(sessionType == SessionTypes.playground) { view in
-                                view.padding(.top)
-                            }
-                        
-                        if let session_desc = sessionDescriptions[sessionType] {
-                            Text(session_desc)
-                                .multilineTextAlignment(.leading)
-                                .foregroundColor(Color("grey"))
-                                .padding([.horizontal, .bottom])
-                        }
-                    }
-                    .modifier(NewStandardSessionViewBlocks())
-                    .frame(minHeight: otherBigFrameHeight)
-                    
-                    if sessionType == .multiphase {
-                        VStack(spacing: 0) {
-                            HStack(spacing: 0) {
-                                Text("Phases: ")
-                                    .font(.body.weight(.medium))
-                                Text("\(phaseCount)")
-                                
-                                Spacer()
-                                
-                                Stepper("", value: $phaseCount, in: 2...8)
-                                
-                            }
-                            .padding()
-                        }
-                        .frame(height: frameHeight)
-                        .modifier(NewStandardSessionViewBlocks())
-                    } else if sessionType == .compsim {
-                        CompSimTargetEntry(targetStr: $targetStr)
-                    }
-                    
-                    
-                    
-                    if sessionType != .playground {
-                        EventPicker(sessionEventType: $sessionEventType)
-                    }
-                    
-                    PinSessionToggle(pinnedSession: $pinnedSession)
-                    
-                    Spacer()
-                }
-            }
-//            .ignoresSafeArea(.keyboard)
-            .navigationBarTitle("New \(typeName) Session", displayMode: .inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        let sessionItem = sessionTypeForID[sessionType, default: Sessions.self].init(context: managedObjectContext)
-                        NSLog("creating sesion item!: \(sessionItem)")
-                        sessionItem.name = name
-                        sessionItem.pinned = pinnedSession
-                        sessionItem.session_type = sessionType.rawValue
-                        
-                        if let sessionItem = sessionItem as? MultiphaseSession {
-                            sessionItem.phase_count = Int16(phaseCount)
-                        } else if let sessionItem = sessionItem as? CompSimSession {
-                            sessionItem.target = timeFromStr(targetStr)!
-                        }
-                        
-                        if sessionType != .playground {
-                            sessionItem.scramble_type = sessionEventType
-                        }
-                        
-                        try! managedObjectContext.save()
-                        stopwatchManager.currentSession = sessionItem
-                        showNewSessionPopUp = false
-                    } label: {
-                        Text("Create")
-                    }
-                    .disabled(name.isEmpty || (sessionType == .compsim && targetStr.isEmpty))
-                }
-            }
-        }
+        .accentColor(Color.accentColor)
         .ignoresSafeArea(.keyboard)
     }
 }
@@ -314,61 +183,58 @@ struct NewSessionView: View {
 
 // MARK: - HELPER FUNCTIONS
 struct EventPicker: View {
-    @AppStorage(asKeys.accentColour.rawValue) private var accentColour: Color = .accentColor
-    @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
-    
     @Binding var sessionEventType: Int32
     
-    let sessionEventTypeColumns = [GridItem(.adaptive(minimum: 40))]
-    
     var body: some View {
-        HStack {
-            Text("Session Event")
-                .font(.body.weight(.medium))
-            
-            
-            Spacer()
-            
-            Menu {
-                Picker("", selection: $sessionEventType) {
-                    ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
-                        Text(element.name).tag(Int32(index))
-                            .font(.body)
+        VStack(spacing: 16) {
+            HStack {
+                Text("Session Event")
+                    .font(.body.weight(.medium))
+                
+                Spacer()
+                
+                Menu {
+                    Picker("", selection: $sessionEventType) {
+                        ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
+                            Text(element.name).tag(Int32(index))
+                                .font(.body)
+                        }
                     }
-                }
-            } label: {
-                Text(puzzle_types[Int(sessionEventType)].name)
-                    .font(.body)
-                    .frame(maxWidth: 120, alignment: .trailing)
-
-            }
-            .accentColor(accentColour)
-            
-        }
-        .padding()
-        .frame(height: frameHeight)
-        .modifier(NewStandardSessionViewBlocks())
-        
-        
-        LazyVGrid(columns: sessionEventTypeColumns, spacing: 0) {
-            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                Button {
-                    sessionEventType = Int32(index)
                 } label: {
-                    ZStack {
-                        Image("circular-" + element.name)
-                        
-                        Circle()
-                            .strokeBorder(Color(uiColor: .systemGray3), lineWidth: (index == sessionEventType) ? 3 : 0)
-                            .frame(width: 54, height: 54)
-                            .offset(x: -0.2)
+                    Text(puzzle_types[Int(sessionEventType)].name)
+                        .font(.body)
+                        .frame(maxWidth: 120, alignment: .trailing)
+
+                }
+                .accentColor(Color.accentColor)
+                
+            }
+            .frame(maxWidth: .infinity)
+            .padding([.horizontal, .top])
+            
+            ThemedDivider()
+                .padding(.horizontal)
+            
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 48), spacing: 8)], spacing: 8) {
+                ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                    HierarchialButton(type: (index == sessionEventType) ? .halfcoloured : .mono,
+                                      size: .ultraLarge,
+                                      square: true,
+                                      onTapRun: {
+                        sessionEventType = Int32(index)
+                    }) {
+                        Image(element.name)
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 32, height: 32)
                     }
                 }
             }
+            .frame(maxWidth: .infinity)
+            .padding([.horizontal, .bottom])
         }
-        .padding()
-        .frame(height: 180)
-        .modifier(NewStandardSessionViewBlocks())
+        .frame(maxWidth: .infinity)
+        .modifier(CardBlockBackground())
     }
 }
 
@@ -380,8 +246,8 @@ struct SessionNameField: View {
             .padding(12)
             .font(.title2.weight(.semibold))
             .multilineTextAlignment(TextAlignment.center)
-            .background(Color(uiColor: UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0)))
-            .cornerRadius(10)
+            .background(Color("indent1"))
+            .cornerRadius(8)
             .padding([.horizontal, .bottom])
     }
 }
@@ -409,7 +275,7 @@ struct PinSessionToggle: View {
         .tint(.yellow)
         .padding()
         .frame(height: frameHeight)
-        .modifier(NewStandardSessionViewBlocks())
+        .modifier(CardBlockBackground())
     }
 }
 
@@ -432,40 +298,41 @@ struct CompSimTargetEntry: View {
             .padding()
         }
         .frame(height: frameHeight)
-        .modifier(NewStandardSessionViewBlocks())
+        .modifier(CardBlockBackground())
     }
 }
 
 /// **Customise Sessions **
 
 struct NewSessionTypeCard: View {
-    @Environment(\.colorScheme) var colourScheme
     let name: String
-    let icon: String
-    let iconProps: SessionTypeIconProps
+    let icon: SessionTypeIcon
     @Binding var show: Bool
     
     var body: some View {
         HStack {
-            Image(systemName: icon)
-                .font(.system(size: iconProps.size, weight: iconProps.weight))
-                .foregroundColor(colourScheme == .light ? .black : .white)
-                .padding(.leading, iconProps.leaPadding)
-                .padding(.trailing, iconProps.traPadding)
-                .padding(.vertical, 8)
+            Group {
+                Image(systemName: icon.iconName)
+                    .font(.system(size: icon.size, weight: icon.weight))
+                    .padding(.leading, icon.padding.leading)
+                    .padding(.trailing, icon.padding.trailing)
+                    .padding(.vertical, 8)
+                
+                Text(name)
+                    .font(.body)
+            }
+            .foregroundColor(Color("dark"))
             
-            Text(name)
-                .font(.body)
-                .foregroundColor(colourScheme == .light ? .black : .white)
             
             Spacer()
         }
-        .background(Color(uiColor: colourScheme == .dark ? .black : .systemGray6))
+        .background(Color("overlay0"))
         .onTapGesture {
             show = true
         }
     }
 }
+
 
 struct NewSessionTypeCardGroup<Content: View>: View {
     @Environment(\.colorScheme) var colourScheme
@@ -481,16 +348,15 @@ struct NewSessionTypeCardGroup<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(title)
-                .font(.system(size: 22, weight: .bold, design: .default))
+                .font(.title2.weight(.bold))
                 .padding(.bottom, 8)
                 .padding(.leading, 4)
             
             VStack(spacing: 0) {
                 content()
             }
-            .background(Color(uiColor: colourScheme == .dark ? .black : .systemGray6))
-            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-            .cornerRadius(10)
+            .background(Color("overlay0"))
+            .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
         }
         .padding(.horizontal)
     }

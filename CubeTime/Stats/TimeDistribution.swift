@@ -75,10 +75,13 @@ func getTruncatedMinMax(numbers: Array<(Double, Int)>) -> (Double?, Double?) {
 
 
 struct TimeDistribution: View {
-    @AppStorage(asKeys.gradientSelected.rawValue) private var gradientSelected: Int = 6
-    @AppStorage(asKeys.graphGlow.rawValue) private var graphGlow: Bool = true
+    @AppStorage(appearanceSettingsKey.gradientSelected.rawValue) private var gradientSelected: Int = 6
+    @AppStorage(appearanceSettingsKey.graphGlow.rawValue) private var graphGlow: Bool = true
 
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
+    
+    @ScaledMetric(relativeTo: .body) var monospacedFontSizeBody: CGFloat = 17
     
     var count: Int
     var data: Array<(Double, Int)>
@@ -124,7 +127,7 @@ struct TimeDistribution: View {
                         path.move(to: CGPoint(x: medianxloc, y: 225))
                         path.addLine(to: CGPoint(x: medianxloc, y: -11))
                     }
-                    .stroke(Color(uiColor: .systemGray), style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [5, 10]))
+                    .stroke(Color("grey"), style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [5, 10]))
                     
                     ForEach(0..<data.count, id: \.self) { datum in
                         let xloc: CGFloat = (geometry.size.width / (count < 8 ? CGFloat(count+2) : 10)) * CGFloat(datum)
@@ -148,15 +151,15 @@ struct TimeDistribution: View {
                                     Text("\(data[datum].1)")
                                         .position(x: xloc, y: (220 - max_height * CGFloat(data[datum].1)) - 10)
                                         .multilineTextAlignment(.center)
-                                        .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 10, nil)))
+                                        .font(FontManager.mono10Bold)
                                 }
                                 .if(graphGlow) { view in
                                     view.colouredGlow(gradientSelected: gradientSelected)
                                 }
                             
                             Text((datum == 0 ? "<" : (datum == data.count-1 ? ">" : ""))+formatLegendTime(secs: data[datum].0, dp: 1)+(datum != 0 && datum != data.count-1 ? "+" : ""))
-                                .foregroundColor(Color(uiColor: .systemGray2))
-                                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 10, nil)))
+                                .foregroundColor(Color("indent0"))
+                                .font(FontManager.mono10)
                                 .position(x: xloc, y: 240)
                         }
                         .padding(.horizontal)
@@ -165,11 +168,11 @@ struct TimeDistribution: View {
                     HStack (spacing: 0) {
                         Text("MEDIAN: ")
                             .font(.system(size: 11, weight: .bold, design: .default))
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .foregroundColor(Color("grey"))
                         
                         Text(formatSolveTime(secs: stopwatchManager.normalMedian.0!))
-                            .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDescBold, 11, nil)))
-                            .foregroundColor(Color(uiColor: .systemGray))
+                            .font(FontManager.mono11Bold)
+                            .foregroundColor(Color("grey"))
                     }
                     .position(x: medianxloc, y: -16)
                 }
@@ -178,9 +181,9 @@ struct TimeDistribution: View {
             }
         } else {
             Text("not enough solves to\ndisplay graph")
-                .font(Font(CTFontCreateWithFontDescriptor(stopwatchManager.ctFontDesc, 17, nil)))
+                .recursiveMono(fontSize: 17, weight: .medium)
                 .multilineTextAlignment(.center)
-                .foregroundColor(Color(uiColor: .systemGray))
+                .foregroundColor(Color("grey"))
         }
     }
 }

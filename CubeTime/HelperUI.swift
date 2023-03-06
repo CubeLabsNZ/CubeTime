@@ -90,9 +90,9 @@ class SetValues {
 
 extension Color {
     struct Timer {
-        static let normal: Color = Color.primary
-        static let heldDown: Color = Color.red
-        static let canStart: Color = Color.green
+        static let normal: Color = Color("dark")
+        static let heldDown: Color = Color("red")
+        static let canStart: Color = Color("green")
         static let loading: Color = Color("grey")
     }
     
@@ -112,7 +112,7 @@ struct ShadowLight: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .shadow(color: env == .dark ? .clear : Color("indent2").opacity(0.5), radius: 6, x: x, y: y)
+            .shadow(color: env == .dark ? .clear : Color("indent1").opacity(0.5), radius: 6, x: x, y: y)
     }
 }
 
@@ -124,7 +124,7 @@ struct ShadowDark: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .shadow(color: env == .dark ? .clear : Color("indent2"), radius: 4, x: x, y: y)
+            .shadow(color: env == .dark ? .clear : Color("indent1"), radius: 4, x: x, y: y)
     }
 }
 
@@ -139,11 +139,11 @@ extension View {
 }
 
 enum HierarchialButtonType {
-    case mono, coloured, halfcoloured, disabled, red/*, green*/
+    case mono, coloured, halfcoloured, disabled, red, green
 }
 
 enum HierarchialButtonSize {
-    case small, medium, large
+    case small, medium, large, ultraLarge
 }
 
 struct AnimatedButton: ButtonStyle {
@@ -245,7 +245,7 @@ struct HierarchialButtonBase<V: View>: View {
             self.colourShadow = Color.black.opacity(0.06)
             
         case .coloured:
-            self.colourBg = Color("accent4")
+            self.colourBg = Color.accentColor.opacity(0.20)
             self.colourFg = Color.accentColor
             self.colourShadow = Color.accentColor.opacity(0.08)
             
@@ -255,15 +255,23 @@ struct HierarchialButtonBase<V: View>: View {
             self.colourShadow = Color.black.opacity(0.06)
             
         case .disabled:
-            self.colourBg = Color("indent2")
+            self.colourBg = Color("grey").opacity(0.15)
             self.colourFg = Color("grey")
             self.colourShadow = Color.clear
             
         case .red:
-            self.colourBg = Color(0xFCD4D4)
-            self.colourFg = Color(0xFE5B5B)
-            self.colourShadow = Color(0xFE5B5B).opacity(0.12)
+            self.colourBg = Color("red").opacity(0.25)
+            self.colourFg = Color("red")
+            self.colourShadow = Color("red").opacity(0.16)
+            
+        case .green:
+            self.colourBg = Color("green").opacity(0.25)
+            self.colourFg = Color("green")
+            self.colourShadow = Color("green").opacity(0.16)
+
         }
+        
+    
         
         switch (size) {
         case .small:
@@ -282,8 +290,11 @@ struct HierarchialButtonBase<V: View>: View {
             self.frameHeight = 35
             self.horizontalPadding = 12
             self.fontType = Font.body.weight(.medium)
-            
-            
+        
+        case .ultraLarge:
+            self.frameHeight = 48
+            self.horizontalPadding = 16
+            self.fontType = Font.title3.weight(.semibold)
             
         }
         
@@ -340,6 +351,24 @@ struct CloseButton: View {
     }
 }
 
+struct DoneButton: View {
+    let onTapRun: () -> ()
+    
+    init(onTapRun: @escaping () -> ()) {
+        self.onTapRun = onTapRun
+    }
+    
+    var body: some View {
+        Button {
+            self.onTapRun()
+        } label: {
+            Text("Done")
+                .font(.body.weight(.medium))
+        }
+    }
+}
+
+
 extension Animation {
     static let customFastSpring: Animation = .spring(response: 0.3, dampingFraction: 0.72)
     static let customSlowSpring: Animation = .spring(response: 0.45, dampingFraction: 0.76)
@@ -349,4 +378,20 @@ extension Animation {
     
     static let customFastEaseOut: Animation = .easeOut(duration: 0.28)
     static let customEaseInOut: Animation = .easeInOut(duration: 0.26)
+}
+
+
+
+struct ThemedDivider: View {
+    let isHorizontal: Bool
+    
+    init(isHorizontal: Bool = true) {
+        self.isHorizontal = isHorizontal
+    }
+    
+    var body: some View {
+        Capsule()
+            .fill(Color("indent0"))
+            .frame(width: isHorizontal ? nil : 1.15, height: isHorizontal ? 1.15 : nil)
+    }
 }
