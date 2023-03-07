@@ -52,7 +52,8 @@ struct TimerTime: View {
                 .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 54, nil)))
         } elseDo: { view in
             return view
-                .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: timerController.mode == .running ? 70 : 56))
+                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 70, nil)))
+                .scaleEffect(timerController.mode == .running ? 1 : (56/70))
                 .animation(Animation.customBouncySpring, value: timerController.mode == .running)
         }
     }
@@ -173,7 +174,7 @@ struct TimerDrawScramble: View {
                         .padding(2)
 //                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .frame(width: geo.size.width, height: geo.size.height) // For some reason above doesnt work
-                        .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
+//                        .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
                         .aspectRatio(contentMode: .fit)
                         .onTapGesture {
                             scrambleSheetStr = SheetStrWrapper(str: scr)
