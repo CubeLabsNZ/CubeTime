@@ -30,13 +30,6 @@ struct TimeDetailView: View {
     private let scramble: String
     private let phases: Array<Double>?
     
-    #warning("TODO: i dont know what im doing")
-    @Binding var sessionsCanMoveTo: [Sessions]?
-    @Binding var sessionsCanMoveTo_playground: [Sessions]?
-    
-    @State var sessionsCanMoveTo_s: [Sessions]? = nil
-    @State var sessionsCanMoveTo_playground_s: [Sessions]? = nil
-    
     @State private var userComment: String
     @State private var offsetValue: CGFloat = -25
     
@@ -60,9 +53,6 @@ struct TimeDetailView: View {
         
         self._currentSolve = currentSolve ?? Binding.constant(nil)
         _userComment = State(initialValue: solve.comment ?? "")
-        
-        self._sessionsCanMoveTo = sessionsCanMoveTo ?? .constant(nil)
-        self._sessionsCanMoveTo_playground = sessionsCanMoveTo_playground ??  .constant(nil)
     }
     
     
@@ -273,23 +263,7 @@ struct TimeDetailView: View {
                                 .padding(.vertical, 6)
                                 .font(.body.weight(.medium))
                                 
-                                let sessions = { () -> [Sessions]? in
-                                    if sess_type != SessionTypes.playground.rawValue {
-                                        if let sessionsCanMoveTo = sessionsCanMoveTo {
-                                            return sessionsCanMoveTo
-                                        } else {
-                                            return sessionsCanMoveTo_s
-                                        }
-                                    } else {
-                                        if let sessionsCanMoveTo_playground = sessionsCanMoveTo_playground {
-                                            return sessionsCanMoveTo_playground
-                                        } else {
-                                            return sessionsCanMoveTo_playground_s
-                                        }
-                                    }
-                                }()
-                                
-                                SessionPickerMenu(sessions: sessions) { session in
+                                SessionPickerMenu(sessions: sess_type == SessionTypes.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scramble_type)] : stopwatchManager.sessionsCanMoveTo) { session in
                                     withAnimation(Animation.customDampedSpring) {
                                         stopwatchManager.moveSolve(solve: solve, to: session)
                                     }
@@ -383,20 +357,6 @@ struct TimeDetailView: View {
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationTitle("Time Detail")
                 }
-            }
-        }
-        .task {
-            // Don't even.
-            if sess_type == SessionTypes.playground.rawValue {
-                if sessionsCanMoveTo_playground != nil {
-                    return
-                }
-                sessionsCanMoveTo_playground_s = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: solve.scramble_type, currentSession: stopwatchManager.currentSession)
-            } else {
-                if sessionsCanMoveTo != nil {
-                    return
-                }
-                sessionsCanMoveTo_s = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: solve.scramble_type, currentSession: stopwatchManager.currentSession)
             }
         }
     }

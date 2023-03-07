@@ -43,11 +43,7 @@ struct TimeCard: View {
         }
     }
     
-    
-    @Binding var sessionsCanMoveTo: [Sessions]?
-    @State var sessionsCanMoveTo_playground: [Sessions]? = nil
-    
-    init(solve: Solves, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<Set<Solves>>, sessionsCanMoveTo: Binding<[Sessions]?>? = nil) {
+    init(solve: Solves, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<Set<Solves>>) {
         self.solve = solve
         self.formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
         self.pen = PenTypes(rawValue: solve.penalty)!
@@ -55,7 +51,6 @@ struct TimeCard: View {
         self._isSelectMode = isSelectMode
         self._selectedSolves = selectedSolves
         self.isSelected = selectedSolves.wrappedValue.contains(solve)
-        self._sessionsCanMoveTo = sessionsCanMoveTo ?? Binding.constant(nil)
     }
     
     var body: some View {
@@ -141,7 +136,7 @@ struct TimeCard: View {
             }
             
             if sess_type != SessionTypes.compsim.rawValue {
-                SessionPickerMenu(sessions: sess_type == SessionTypes.playground.rawValue ? sessionsCanMoveTo_playground : sessionsCanMoveTo) { session in
+                SessionPickerMenu(sessions: sess_type == SessionTypes.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scramble_type)] : stopwatchManager.sessionsCanMoveTo) { session in
                     withAnimation(Animation.customDampedSpring) {
                         stopwatchManager.moveSolve(solve: solve, to: session)
                     }
@@ -167,13 +162,6 @@ struct TimeCard: View {
                     Image(systemName: "trash")
                 }
             }
-        }
-        .if(sess_type == SessionTypes.playground.rawValue) { view in
-            view
-                .task {
-                    #warning("Optimize this :sob:")
-                    sessionsCanMoveTo_playground = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: solve.scramble_type, currentSession: stopwatchManager.currentSession)
-                }
         }
     }
 }

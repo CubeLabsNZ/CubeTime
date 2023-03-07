@@ -203,7 +203,7 @@ struct TimeListView: View {
     @State var solve: Solves?
     @State var calculatedAverage: CalculatedAverage?
     
-    @State var sessionsCanMoveTo: [Sessions]?
+    @State var sessionsCanMoveToPlaygroundContextMenu: [Sessions]?
     
     @State var isSelectMode = false
     @State var selectedSolves: Set<Solves> = []
@@ -219,17 +219,8 @@ struct TimeListView: View {
             return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
         }
     }
-    
-    func updateSessionsCanMoveTo() {
-        if stopwatchManager.currentSession.session_type == SessionTypes.playground.rawValue || stopwatchManager.currentSession.session_type == SessionTypes.compsim.rawValue {
-            return
-        }
-        
-        
-        sessionsCanMoveTo = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: stopwatchManager.currentSession.scramble_type, currentSession: stopwatchManager.currentSession)
-    }
-    
     var body: some View {
+        let sess_type = stopwatchManager.currentSession.session_type
         NavigationView {
             ZStack {
                 Color((UIDevice.deviceIsPad && hSizeClass == .regular) ? "overlay1" : "base")
@@ -244,7 +235,7 @@ struct TimeListView: View {
                         if sessType != SessionTypes.compsim.rawValue {
                             LazyVGrid(columns: columns, spacing: 12) {
                                 ForEach(stopwatchManager.timeListSolvesFiltered, id: \.self) { item in
-                                    TimeCard(solve: item, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves, sessionsCanMoveTo: sessType != SessionTypes.playground.rawValue ? $sessionsCanMoveTo : nil)
+                                    TimeCard(solve: item, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
                                 }
                             }
                             .padding(.horizontal)
@@ -340,7 +331,7 @@ struct TimeListView: View {
                                     }
                                     
                                     if stopwatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
-                                        SessionPickerMenu(sessions: sessionsCanMoveTo) { session in
+                                        SessionPickerMenu(sessions: sess_type == SessionTypes.playground.rawValue ? sessionsCanMoveToPlaygroundContextMenu : stopwatchManager.sessionsCanMoveTo) { session in
                                             for object in selectedSolves {
                                                 withAnimation(Animation.customDampedSpring) {
                                                     stopwatchManager.moveSolve(solve: object, to: session)
@@ -429,15 +420,6 @@ struct TimeListView: View {
                 .tint(Color("accent"))
         }
         
-        .task {
-            updateSessionsCanMoveTo()
-        }
-        
-        .onChange(of: stopwatchManager.currentSession) { newValue in
-            #warning("make sure this actually is needed")
-            updateSessionsCanMoveTo()
-        }
-        
         .onChange(of: selectedSolves) { newValue in
             if newValue.count == 0 {
                 isSelectMode = false
@@ -449,16 +431,17 @@ struct TimeListView: View {
             }
             
             let uniqueScrambles = Set(selectedSolves.map{$0.scramble_type})
-            let scr_type: Int32!
+            
+            #if DEBUG
+            NSLog("TIMELISTVIEW SELECT: \(uniqueScrambles)")
+            #endif
             
             if uniqueScrambles.count > 1 {
-                scr_type = -1
+                sessionsCanMoveToPlaygroundContextMenu = stopwatchManager.allPlaygroundSessions
             } else {
-                scr_type = uniqueScrambles.first!
+                let scr_type = uniqueScrambles.first!
+                sessionsCanMoveToPlaygroundContextMenu = stopwatchManager.sessionsCanMoveToPlayground[Int(scr_type)]
             }
-            
-            sessionsCanMoveTo = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: scr_type, currentSession: stopwatchManager.currentSession)
-            
         }
     }
 }
