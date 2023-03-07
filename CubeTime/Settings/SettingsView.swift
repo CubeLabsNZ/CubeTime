@@ -14,45 +14,65 @@ struct AnimatingFontSizeV2: AnimatableModifier {
     }
 }
 
+
+struct SettingsViewInner: View {
+    @Binding var currentCard: SettingsCardInfo?
+    let namespace: Namespace.ID
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        ZStack {
+            Color((UIDevice.deviceIsPad && hSizeClass == .regular) ? "overlay1" : "base")
+                .ignoresSafeArea()
+            
+            VStack(spacing: 16) {
+                HStack(spacing: 16) {
+                    SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
+                    SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
+                }
+                /* bring this back (the 4 grid) once importexport added
+                HStack (spacing: 16) {
+                    SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
+//                            SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
+                }
+                 */
+                
+                SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
+                
+                
+                Spacer()
+            }
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
+            .safeAreaInset(safeArea: .tabBar)
+            .padding(.vertical, 6)
+            .padding(.horizontal)
+            .if((UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
+                view
+                    .toolbar {
+                        ToolbarItemGroup(placement: .navigationBarTrailing) {
+                            DoneButton(onTapRun: {
+                                dismiss()
+                            })
+                        }
+                    }
+            }
+        }
+        .zIndex(1)
+    }
+}
+
 struct SettingsView: View {
     @State var currentCard: SettingsCardInfo?
     @Namespace var namespace
     
-    
-    let settingsColumns = [GridItem(spacing: 16), GridItem()]
-    
     var body: some View {
         ZStack {
             NavigationView {
-                ZStack {
-                    Color("base")
-                        .ignoresSafeArea()
-                    
-                    VStack(spacing: 16) {
-                        HStack(spacing: 16) {
-                            SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
-                            SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
-                        }
-                        /* bring this back (the 4 grid) once importexport added
-                        HStack (spacing: 16) {
-                            SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
-//                            SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
-                        }
-                         */
-                        
-                        SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
-                        
-                        
-                        Spacer()
-                    }
-                    .navigationBarTitle("Settings")
-                    .safeAreaInset(safeArea: .tabBar)
-                    .padding(.vertical, 6)
-                    .padding(.horizontal)
-                }
+                SettingsViewInner(currentCard: self.$currentCard, namespace: namespace)
             }
             .navigationViewStyle(StackNavigationViewStyle())
-            .zIndex(1)
             .overlay(
                 SettingsDetail(currentCard: $currentCard, namespace: namespace)
             )
@@ -166,11 +186,19 @@ struct SettingsDetail: View {
     
     var namespace: Namespace.ID
     
+    
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    
+            
+
+    
+    
+    
     var body: some View {
         if currentCard != nil {
             GeometryReader { geo in
                 ZStack {
-                    Color("base")
+                    Color((UIDevice.deviceIsPad && hSizeClass == .regular) ? "overlay1" : "base")
                         .ignoresSafeArea()
                         .zIndex(0)
                     

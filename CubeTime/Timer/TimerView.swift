@@ -365,6 +365,8 @@ struct PadTimerHeader: View {
                 Image(systemName: "line.3.horizontal.circle")
             }
         }
+        .frame(maxWidth: .infinity)
+        .frame(height: 35)
     }
 }
 
@@ -519,8 +521,8 @@ struct TimerView: View {
                         
                         TimerMenu()
                     }
-                    .padding(.horizontal)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .padding(.horizontal)
                     .zIndex(3)
                 } else {
                     HStack(alignment: .top, spacing: 6) {
@@ -533,18 +535,23 @@ struct TimerView: View {
                             .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
                             .opacity(scrambleController.scrambleStr == nil ? 1 : 0)
                     }
-                    .padding(.horizontal)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    .padding(.horizontal)
                     .zIndex(3)
                 }
             }
             
             if stopwatchManager.zenMode {
                 CloseButton(hasBackgroundShadow: true, onTapRun: {
-                    stopwatchManager.zenMode = false
+                    withAnimation(.customEaseInOut) {
+                        stopwatchManager.zenMode = false
+                    }
                 })
+                .padding([.trailing, .top])
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
             }
+            
+            
             if let scr = scrambleController.scrambleStr, timerController.mode == .stopped {
                 ScrambleText(scr: scr, timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr)
                     .frame(maxHeight: .infinity, alignment: .top)

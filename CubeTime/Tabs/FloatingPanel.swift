@@ -1,8 +1,7 @@
 import SwiftUI
 
 struct FloatingPanel: View {
-    //    @SceneStorage("CubeStuffs.FloatingPanel.height") private var height: Double = 50
-    @State private var height: Double
+    @State private var height: CGFloat
     
     @Binding var stage: Int
     
@@ -13,7 +12,7 @@ struct FloatingPanel: View {
     private var maxHeight: CGFloat
     
     var stages: [CGFloat]
-    let items: [AnyView]
+    let views: [AnyView]
     
 #warning("TODO: use that one func for each tupleview type when making a real package")
     
@@ -32,7 +31,7 @@ struct FloatingPanel: View {
             
             let c = content().value
             
-            self.items = [AnyView(c.0), AnyView(c.1), AnyView(c.2)]
+            self.views = [AnyView(c.0), AnyView(c.1), AnyView(c.2)]
         }
     
     var body: some View {
@@ -42,6 +41,7 @@ struct FloatingPanel: View {
                     .fill(Color("overlay1"))
                     .frame(width: 360, height: height + 18)
                     .shadowDark(x: 0, y: 3)
+                    .zIndex(1)
                 
                 ZStack {
                     Capsule()
@@ -55,7 +55,7 @@ struct FloatingPanel: View {
                         .fill(Color("overlay1"))
                         .frame(width: 360, height: 18)
                 )
-                .zIndex(100)
+                .zIndex(2)
                 .gesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged { value in
@@ -72,7 +72,7 @@ struct FloatingPanel: View {
                             }
                             let nearest = stages.nearest(to: height)!.0
                             if (nearest != oldStage) {
-                                withAnimation {
+                                withAnimation(.customSlowSpring) {
                                     stage = nearest
                                 }
                                 oldStage = nearest
@@ -80,7 +80,7 @@ struct FloatingPanel: View {
                         }
                     
                         .onEnded() { value in
-                            withAnimation(.spring()) {
+                            withAnimation(.customSlowSpring) {
                                 self.isPressed = false
                                 let n = stages.nearest(to: height + value.predictedEndTranslation.height)!
                                 stage = n.0
@@ -92,19 +92,20 @@ struct FloatingPanel: View {
             .frame(width: 360, height: height + 18)
             
             
-            
-            ZStack(alignment: .topLeading) {
+            // view
+            ZStack(alignment: .top) {
                 Rectangle()
                     .fill(Color("overlay1"))
                     .frame(width: 360, height: height)
                     .cornerRadius(6, corners: [.topLeft, .topRight])
 
-                // view
-                items[stage]
-                    .frame(height: height, alignment: .topLeading)
+                views[stage]
+                    .frame(width: 360, height: height, alignment: .top)
                     .clipped()
                     .animation(.none, value: stage)
+                    .zIndex(100)
             }
+            .zIndex(3)
         }
         .frame(width: 360)
     }

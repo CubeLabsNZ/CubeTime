@@ -233,9 +233,9 @@
 				2326435F28C4927600F6322E /* TimerHeader.swift */,
 				7D7DDF2227955AFF00362DE9 /* PenButton.swift */,
 				7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */,
+				AF6EAC1F29ADDA1C00171F73 /* TimerMenu.swift */,
 				7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */,
 				2326436128C4929700F6322E /* PrevSolvesDisplay.swift */,
-				AF6EAC1F29ADDA1C00171F73 /* TimerMenu.swift */,
 			);
 			path = Timer;
 			sourceTree = "<group>";

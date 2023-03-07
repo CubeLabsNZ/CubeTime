@@ -60,7 +60,7 @@ struct CubeTime: App {
     var body: some Scene {
         WindowGroup {
             MainView()
-                .accentColor(Color("accent"))
+                .tint(Color("accent"))
                 .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
                     Updates(showUpdates: $showUpdates)
                         .tint(Color("accent"))

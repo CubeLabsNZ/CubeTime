@@ -183,12 +183,11 @@ struct TimeListHeader: View {
             
             SortByMenu(hasShadow: !searchExpanded, animation: animation)
                 .offset(x: searchExpanded ? -43 : 0)
-            
-            if (UIDevice.deviceIsPad && hSizeClass == .regular) {
-                Spacer(minLength: 0)
-            }
         }
         .padding(.horizontal)
+        .if((UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
+            view.frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
 }
 

@@ -120,6 +120,10 @@ struct AboutSettingsView: View {
             .frame(height: iconSize)
             .padding(.bottom, 12)
             
+            #if DEBUG
+            Text("DEBUG BUILD").font(.system(size: 20, weight: .black, design: .monospaced))
+            #endif
+            
             
             Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\n\nClick below for more info on source licenses and our privacy policy:")
                 .multilineTextAlignment(.leading)
@@ -148,6 +152,7 @@ struct AboutSettingsView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: parentGeo.size.width * 0.618)
+                        .frame(maxHeight: 40)
                     
                     Spacer()
                 }
