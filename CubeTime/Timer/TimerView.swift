@@ -352,7 +352,8 @@ struct ScrambleText: View {
 
 struct PadTimerHeader: View {
     var targetFocused: FocusState<Bool>.Binding
-    @Binding var showSessions: Bool
+    var showSessions: Binding<Bool>?
+    
     
     var body: some View {
         HStack(spacing: 0) {
@@ -360,10 +361,12 @@ struct PadTimerHeader: View {
             
             Spacer()
             
-            HierarchialButton(type: showSessions ? .halfcoloured : .mono, size: .large, square: true, onTapRun: {
-                self.showSessions.toggle()
-            }) {
-                Image(systemName: "line.3.horizontal.circle")
+            if let showSessions = showSessions {
+                HierarchialButton(type: .mono, size: .large, square: true, onTapRun: {
+                    showSessions.wrappedValue.toggle()
+                }) {
+                    Image(systemName: showSessions.wrappedValue ? "hourglass.circle" : "line.3.horizontal.circle")
+                }
             }
         }
         .frame(maxWidth: .infinity)
@@ -498,10 +501,10 @@ struct TimerView: View {
                 if (UIDevice.deviceIsPad && hSizeClass == .regular) {
                     HStack(alignment: .top) {
                         FloatingPanel(currentStage: $stopwatchManager.currentPadFloatingStage, maxHeight: stageMaxHeight, stages: stages) {
-                            PadTimerHeader(targetFocused: self.$targetFocused, showSessions: $showSessions)
+                            PadTimerHeader(targetFocused: self.$targetFocused, showSessions: nil)
                             
                             VStack(alignment: .leading, spacing: 8) {
-                                PadTimerHeader(targetFocused: self.$targetFocused, showSessions: $showSessions)
+                                PadTimerHeader(targetFocused: self.$targetFocused, showSessions: nil)
                                 
                                 PrevSolvesDisplay(count: 3)
                                     .padding(.horizontal, 8)
