@@ -101,13 +101,6 @@ struct TimeCard: View {
 
 
         .contextMenu {
-//            Button {
-//            } label: {
-//                Label("Move To", systemImage: "arrow.up.forward.circle")
-//            }
-//
-            
-            
             Button {
                 copySolve(solve: solve)
             } label: {

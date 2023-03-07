@@ -158,7 +158,7 @@ struct TimeListHeader: View {
             }
             .frame(width: searchExpanded ? nil : 35, height: 35)
             .fixedSize(horizontal: !searchExpanded, vertical: true)
-            
+
             .scaleEffect(pressing ? 0.96 : 1.00)
             .opacity(pressing ? 0.80 : 1.00)
             .gesture(
@@ -238,6 +238,7 @@ struct TimeListView: View {
                 ScrollView {
                     LazyVStack {
                         TimeListHeader()
+                            .padding(.top, 4)
 
                         let sessType = stopwatchManager.currentSession.session_type
                         
@@ -367,9 +368,12 @@ struct TimeListView: View {
                             } label: {
                                 HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: true, hasShadow: true, hasBackground: true, expandWidth: true) {
                                     Image(systemName: "ellipsis")
+                                        .frame(width: 28, height: 28)
                                         .imageScale(.medium)
                                 }
+                                .frame(width: 28, height: 28)
                             }
+                            .frame(width: 28, height: 28)
                         }
                     }
                     

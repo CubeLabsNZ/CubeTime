@@ -385,6 +385,7 @@ struct TimeDetailView: View {
                 }
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
         .task {
             // Don't even.
             if sess_type == SessionTypes.playground.rawValue {

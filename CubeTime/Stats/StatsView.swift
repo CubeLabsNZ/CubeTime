@@ -5,12 +5,13 @@ struct StatsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.globalGeometrySize) var globalGeometrySize
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    @Environment(\.dismiss) var dismiss
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
     
-    
-    @Preference(\.gradientSelected) private var gradientSelected
+    @StateObject var gradientManager = GradientManager()
     
     // Accessibility Scaling
     @ScaledMetric var blockHeightSmall = 75
@@ -304,8 +305,20 @@ struct StatsView: View {
                             .frame(minWidth: 0, maxWidth: .infinity)
                         }
                     }
-                    .navigationTitle("Your Solves")
+                    .environmentObject(gradientManager)
+                    .navigationTitle("Stats")
+                    .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
                     .safeAreaInset(safeArea: .tabBar)
+                    .if((UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
+                        view
+                            .toolbar {
+                                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                                    DoneButton(onTapRun: {
+                                        dismiss()
+                                    })
+                                }
+                            }
+                    }
                 }
             }
         }

@@ -15,8 +15,7 @@ struct StatsDetailView: View {
 
     @State var offsetValue: CGFloat = -25
 
-    @State var showSolve = false
-    @State var solveToShow: Solves?
+    @State var solveDetail: Solves?
 
     let solves: CalculatedAverage
     let session: Sessions
@@ -205,8 +204,7 @@ struct StatsDetailView: View {
                                         .padding(.bottom, (index != solves.accountedSolves!.indices.last!) ? 8 : 0)
                                     }
                                     .onTapGesture {
-                                        solveToShow = solve
-                                        showSolve = true
+                                        solveDetail = solve
                                     }
                                 }
 
@@ -230,6 +228,10 @@ struct StatsDetailView: View {
                     }
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationTitle(solves.name == "Comp Sim Solve" ? "Comp Sim" : solves.name)
+                    
+                    .sheet(item: $solveDetail) { item in
+                        TimeDetailView(for: item, currentSolve: $solveDetail)
+                    }
                 }
             }
         }

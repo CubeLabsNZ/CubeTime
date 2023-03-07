@@ -32,19 +32,15 @@ extension UIColor {
 
 
 struct AveragePhases: View {
-    @Preference(\.gradientSelected) private var gradientSelected
     @Environment(\.colorScheme) private var colourScheme
     
-    
-    
-    
-    private let gradients: [[Color]] = CustomGradientColours.gradientColours
+    @EnvironmentObject var gradientManager: GradientManager
     
     var phaseTimes: [Double]
     
     
     var body: some View {
-        let selectedGradient = gradients[gradientSelected]
+        let selectedGradient = getGradientColours(gradientSelected: gradientManager.appGradient)
         
         let gradientStart: UIColor = UIColor(selectedGradient[0])
         let gradientEnd: UIColor = UIColor(selectedGradient[1])

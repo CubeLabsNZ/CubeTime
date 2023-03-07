@@ -121,7 +121,11 @@ struct BottomTools: View {
                     if stopwatchManager.currentSession.session_type == SessionTypes.compsim.rawValue {
                         TimerStatsCompSim()
                     } else {
-                        TimerStatsStandard(presentedAvg: $presentedAvg)
+                        if (UIDevice.deviceIsPad && hSizeClass == .regular) {
+                            TimerStatsPad()
+                        } else {
+                            TimerStatsStandard(presentedAvg: $presentedAvg)
+                        }
                     }
                 }
             }
@@ -218,12 +222,14 @@ struct TimerStat: View {
     let average: CalculatedAverage?
     let value: String?
     let placeholderText: String
+    let hasIndividualGesture: Bool
     @Binding var presentedAvg: CalculatedAverage?
 
-    init(name: String, average: CalculatedAverage?, placeholderText: String = "-", presentedAvg: Binding<CalculatedAverage?>) {
+    init(name: String, average: CalculatedAverage?, placeholderText: String = "-", presentedAvg: Binding<CalculatedAverage?>, hasIndividualGesture: Bool=true) {
         self.name = name
         self.average = average
         self.placeholderText = placeholderText
+        self.hasIndividualGesture = hasIndividualGesture
         self._presentedAvg = presentedAvg
         if let average = average {
             self.value = formatSolveTime(secs: average.average!, penType: average.totalPen)
@@ -233,12 +239,16 @@ struct TimerStat: View {
     }
 
     var body: some View {
-        TimerStatRaw(name: name, value: value, placeholderText: placeholderText)
-            .onTapGesture {
-                if average != nil {
-                    presentedAvg = average
+        if (hasIndividualGesture) {
+            TimerStatRaw(name: name, value: value, placeholderText: placeholderText)
+                .onTapGesture {
+                    if average != nil {
+                        presentedAvg = average
+                    }
                 }
-            }
+        } else {
+            TimerStatRaw(name: name, value: value, placeholderText: placeholderText)
+        }
     }
 }
 
@@ -265,6 +275,37 @@ struct TimerStatsStandard: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
+
+struct TimerStatsPad: View {
+    @EnvironmentObject var stopwatchManager: StopwatchManager
+    @State private var showStats: Bool = false
+    
+    var body: some View {
+        VStack(spacing: 6) {
+            HStack(spacing: 0) {
+                TimerStat(name: "AO5", average: stopwatchManager.currentAo5, presentedAvg: .constant(nil), hasIndividualGesture: false)
+                TimerStat(name: "AO12", average: stopwatchManager.currentAo12, presentedAvg: .constant(nil), hasIndividualGesture: false)
+            }
+            
+            Divider()
+                .padding(.horizontal, 24)
+            
+            
+            HStack(spacing: 0) {
+                TimerStat(name: "AO100", average: stopwatchManager.currentAo5, presentedAvg: .constant(nil), hasIndividualGesture: false)
+                TimerStatRaw(name: "MEAN", value: stopwatchManager.sessionMean == nil ? nil : formatSolveTime(secs: stopwatchManager.sessionMean!), placeholderText: "-")
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onTapGesture {
+            self.showStats = true
+        }
+        .sheet(isPresented: self.$showStats) {
+            StatsView()
+        }
+    }
+}
+
 
 struct TimerStatsCompSim: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
@@ -343,7 +384,7 @@ struct ScrambleText: View {
                 scrambleSheetStr = SheetStrWrapper(str: scr)
             }
             .padding(.horizontal)
-            .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8) + ((UIDevice.deviceIsPad && hSizeClass == .regular) ? 50 : 0))
+            .offset(y: 35 + (UIDevice.hasBottomBar ? 0 : 8) + ((UIDevice.deviceIsPad && hSizeClass == .regular) ? 50 : 0))
             .modifier(AvoidFloatingPanel())
     }
 }
@@ -377,6 +418,8 @@ struct TimerView: View {
     @EnvironmentObject var fontManager: FontManager
     @EnvironmentObject var scrambleController: ScrambleController
     @EnvironmentObject var tabRouter: TabRouter
+    
+    @StateObject var gm = GradientManager()
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
@@ -532,7 +575,7 @@ struct TimerView: View {
                         
                         LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
                             .frame(maxHeight: 35)
-                            .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+                            .padding(.top, UIDevice.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
                             .opacity(scrambleController.scrambleStr == nil ? 1 : 0)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
