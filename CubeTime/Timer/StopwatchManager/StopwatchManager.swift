@@ -257,6 +257,7 @@ class StopwatchManager: ObservableObject {
     
     
     // Couple time list functions
+    @Published var timeListSolvesSelected = Set<(Solves)>()
     var timeListSolves: [Solves]!
     @Published var timeListSolvesFiltered: [Solves]!
     @Published var timeListFilter = "" {

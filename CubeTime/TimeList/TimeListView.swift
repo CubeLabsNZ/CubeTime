@@ -206,7 +206,6 @@ struct TimeListView: View {
     @State var sessionsCanMoveToPlaygroundContextMenu: [Sessions]?
     
     @State var isSelectMode = false
-    @State var selectedSolves: Set<Solves> = []
     
     @State var isCleaningSession = false
     
@@ -233,7 +232,7 @@ struct TimeListView: View {
                         VStack {
                             TimeListHeader()
                             
-                            TimeListInner()
+                            TimeListInner(isSelectMode: $isSelectMode, currentSolve: $solve)
                         }
                     } else {
                         ScrollView {
@@ -248,7 +247,7 @@ struct TimeListView: View {
                                         if groups.last!.solves!.array.count != 0 {
                                             LazyVGrid(columns: columns, spacing: 12) {
                                                 ForEach(groups.last!.solves!.array as! [Solves], id: \.self) { solve in
-                                                    TimeCard(solve: solve, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
+                                                    TimeCard(solve: solve, currentSolve: $solve, isSelectMode: $isSelectMode)
                                                 }
                                             }
                                         }
@@ -282,7 +281,7 @@ struct TimeListView: View {
                         #warning("MAKE THIS PICKER MENU")
                         if isSelectMode {
                             Menu {
-                                if selectedSolves.count == 0 {
+                                if stopwatchManager.timeListSolvesSelected.count == 0 {
                                     Button(role: .destructive) {
                                         isCleaningSession = true
                                     } label: {
@@ -290,40 +289,40 @@ struct TimeListView: View {
                                     }
                                 } else {
                                     Button {
-                                        copySolve(solves: selectedSolves)
+                                        copySolve(solves: stopwatchManager.timeListSolvesSelected)
                                         
-                                        selectedSolves.removeAll()
+                                        stopwatchManager.timeListSolvesSelected.removeAll()
                                     } label: {
                                         Label("Copy", systemImage: "doc.on.doc")
                                     }
                                     
                                     Menu {
                                         Button {
-                                            for object in selectedSolves {
+                                            for object in stopwatchManager.timeListSolvesSelected {
                                                 stopwatchManager.changePen(solve: object, pen: .none)
                                             }
                                             
-                                            selectedSolves.removeAll()
+                                            stopwatchManager.timeListSolvesSelected.removeAll()
                                         } label: {
                                             Label("No Penalty", systemImage: "checkmark.circle")
                                         }
                                         
                                         Button {
-                                            for object in selectedSolves {
+                                            for object in stopwatchManager.timeListSolvesSelected {
                                                 stopwatchManager.changePen(solve: object, pen: .plustwo)
                                             }
                                             
-                                            selectedSolves.removeAll()
+                                            stopwatchManager.timeListSolvesSelected.removeAll()
                                         } label: {
                                             Label("+2", image: "+2.label")
                                         }
                                         
                                         Button {
-                                            for object in selectedSolves {
+                                            for object in stopwatchManager.timeListSolvesSelected {
                                                 stopwatchManager.changePen(solve: object, pen: .dnf)
                                             }
                                             
-                                            selectedSolves.removeAll()
+                                            stopwatchManager.timeListSolvesSelected.removeAll()
                                         } label: {
                                             Label("DNF", systemImage: "xmark.circle")
                                         }
@@ -333,13 +332,12 @@ struct TimeListView: View {
                                     
                                     if stopwatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
                                         SessionPickerMenu(sessions: sess_type == SessionTypes.playground.rawValue ? sessionsCanMoveToPlaygroundContextMenu : stopwatchManager.sessionsCanMoveTo) { session in
-                                            for object in selectedSolves {
+                                            for object in stopwatchManager.timeListSolvesSelected {
                                                 withAnimation(Animation.customDampedSpring) {
                                                     stopwatchManager.moveSolve(solve: object, to: session)
                                                 }
-                                                
-                                                selectedSolves.removeAll()
                                             }
+                                            stopwatchManager.timeListSolvesSelected.removeAll()
                                         }
                                     }
                                     
@@ -347,11 +345,11 @@ struct TimeListView: View {
                                     
                                     Button(role: .destructive) {
                                         isSelectMode = false
-                                        for object in selectedSolves {
+                                        for object in stopwatchManager.timeListSolvesSelected {
                                             stopwatchManager.delete(solve: object)
                                         }
                                         
-                                        selectedSolves.removeAll()
+                                        stopwatchManager.timeListSolvesSelected.removeAll()
                                     } label: {
                                         Label("Delete", systemImage: "trash")
                                     }
@@ -370,7 +368,7 @@ struct TimeListView: View {
                             if isSelectMode {
                                 HierarchialButton(type: .coloured, size: .small, onTapRun: {
                                     withAnimation(Animation.customDampedSpring) {
-                                        selectedSolves = Set(stopwatchManager.timeListSolvesFiltered)
+                                        stopwatchManager.timeListSolvesSelected = Set(stopwatchManager.timeListSolvesFiltered)
                                     }
                                 }) {
                                     Text("Select All")
@@ -379,7 +377,7 @@ struct TimeListView: View {
                                 HierarchialButton(type: .disabled, size: .small, onTapRun: {
                                     isSelectMode = false
                                     withAnimation(Animation.customDampedSpring) {
-                                        selectedSolves.removeAll()
+                                        stopwatchManager.timeListSolvesSelected.removeAll()
                                     }
                                 }) {
                                     Text("Cancel")
@@ -421,7 +419,7 @@ struct TimeListView: View {
                 .tint(Color("accent"))
         }
         
-        .onChange(of: selectedSolves) { newValue in
+        .onChange(of: stopwatchManager.timeListSolvesSelected) { newValue in
             if newValue.count == 0 {
                 isSelectMode = false
                 return
@@ -431,7 +429,7 @@ struct TimeListView: View {
                 return
             }
             
-            let uniqueScrambles = Set(selectedSolves.map{$0.scramble_type})
+            let uniqueScrambles = Set(stopwatchManager.timeListSolvesSelected.map{$0.scramble_type})
             
             #if DEBUG
             NSLog("TIMELISTVIEW SELECT: \(uniqueScrambles)")
