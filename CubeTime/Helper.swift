@@ -262,7 +262,7 @@ extension CompSimSolveGroup: RawGraphData {
     }
     
     var avg: CalculatedAverage? {
-        return StopwatchManager.calculateAverage(self.solves!.array as! [Solves], "Comp Sim Group", true)
+        return StopwatchManager.getCalculatedAverage(forSolves: self.solves!.array as! [Solves], name: "Comp Sim Group", isCompsim: true)
     }
 }
 

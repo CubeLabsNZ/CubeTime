@@ -271,18 +271,14 @@ struct HierarchialButtonBase<V: View>: View {
     
     var body: some View {
         ZStack {
-            /* temporarily disabled due to hover effect issue
             if (self.hasBackground) {
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
                     .fill(Material.thinMaterial)
                     .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
             }
-             */
             
             RoundedRectangle(cornerRadius: 6, style: .continuous)
-            /* opacity is removed temporarily when material is disabled*/
-                .fill(self.hasBackground ? self.colourBg : Color.white.opacity(0.001))
-//                .fill(self.hasBackground ? self.colourBg.opacity(0.92) : Color.white.opacity(0.001))
+                .fill(self.hasBackground ? self.colourBg.opacity(0.92) : Color.white.opacity(0.001))
                 .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
                 .shadow(color: self.hasShadow
                         ? self.colourShadow

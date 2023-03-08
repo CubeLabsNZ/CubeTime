@@ -20,7 +20,7 @@ struct TimerMenu: View {
     private let circleWidth: CGFloat = 3.25
     
     var body: some View {
-        let color = expanded ? Color("overlay1") : Color.white
+        let color = expanded ? Color("overlay1") : Color("overlay0")
         ZStack {
             RoundedRectangle(cornerRadius: 6, style: .continuous)
                 .fill(Material.ultraThinMaterial)

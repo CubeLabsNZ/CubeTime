@@ -20,7 +20,7 @@ struct StatsView: View {
     @ScaledMetric var blockHeightExtraLarge = 215
     
     @ScaledMetric var blockHeightReachedTargets = 50
-    @ScaledMetric var offsetReachedTargets = 30
+    
     
     @ScaledMetric(relativeTo: .body) var monospacedFontSizeBody: CGFloat = 17
 
@@ -94,7 +94,7 @@ struct StatsView: View {
                                     
                                     HStack(spacing: 10) {
                                         VStack (spacing: 10) {
-                                            StatsBlock(title: "BEST SINGLE", blockHeight: blockHeightSmall, isColoured: true) {
+                                            StatsBlock(title: "BEST SINGLE", blockHeight: blockHeightSmall, background: .coloured) {
                                                 if let bestSingle = stopwatchManager.bestSingle {
                                                     StatsBlockText(displayText: formatSolveTime(secs: bestSingle.time, penType: PenTypes(rawValue: bestSingle.penalty)!), colouredBlock: true, displayDetail: false, nilCondition: true)
                                                 } else {
@@ -154,13 +154,27 @@ struct StatsView: View {
                                 } else {
                                     HStack(spacing: 10) {
                                         VStack(spacing: 10) {
-                                            StatsBlock(title: "CURRENT AVG", blockHeight: blockHeightExtraLarge) {
+                                            ZStack(alignment: .topLeading) {
                                                 if let currentCompsimAverage = stopwatchManager.currentCompsimAverage {
-                                                    StatsBlockText(displayText: formatSolveTime(secs: currentCompsimAverage.average ?? 0, penType: currentCompsimAverage.totalPen), displayDetail: true, nilCondition: true)
-                                                        
-                                                    StatsBlockDetailText(calculatedAverage: currentCompsimAverage, colouredBlock: false)
+                                                    StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
+                                                        StatsBlockDetailText(calculatedAverage: currentCompsimAverage, colouredBlock: false)
+                                                    }
+                                                    
+                                                    StatsBlock(title: "CURRENT COMPSIM", blockHeight: blockHeightSmall) {
+                                                        StatsBlockText(displayText: formatSolveTime(secs: currentCompsimAverage.average ?? 0, penType: currentCompsimAverage.totalPen), displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
+                                                    }
                                                 } else {
-                                                    StatsBlockText(displayText: "", nilCondition: false)
+                                                    StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
+                                                        HStack {
+                                                            Text("")
+                                                            Spacer()
+                                                        }
+                                                    }
+                                                    
+                                                    StatsBlock(title: "CURRENT COMPSIM", blockHeight: blockHeightSmall) {
+                                                        StatsBlockText(displayText: "", nilCondition: false)
+                                                    }
+
                                                 }
                                             }
                                             .onTapGesture {
@@ -168,6 +182,32 @@ struct StatsView: View {
                                                     presentedAvg = stopwatchManager.currentCompsimAverage
                                                 }
                                             }
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
                                             
                                             StatsBlock(title: "AVERAGES", blockHeight: blockHeightSmall) {
                                                 StatsBlockText(displayText: String(describing: stopwatchManager.compSimCount!), nilCondition: true)
@@ -189,14 +229,41 @@ struct StatsView: View {
                                                 }
                                             }
                                             
-                                            StatsBlock(title: "BEST AVG", blockHeight: blockHeightExtraLarge, isColoured: true) {
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            ZStack(alignment: .topLeading) {
                                                 if let bestCompsimAverage = stopwatchManager.bestCompsimAverage {
-                                                    StatsBlockText(displayText: formatSolveTime(secs: bestCompsimAverage.average ?? 0, penType: bestCompsimAverage.totalPen), colouredBlock: true, displayDetail: true, nilCondition: true)
+                                                    StatsBlock(title: "", blockHeight: blockHeightExtraLarge, background: .coloured) {
+                                                        StatsBlockDetailText(calculatedAverage: bestCompsimAverage, colouredBlock: true)
+                                                    }
                                                     
-                                                    StatsBlockDetailText(calculatedAverage: bestCompsimAverage, colouredBlock: true)
-
+                                                    StatsBlock(title: "BEST COMPSIM", blockHeight: blockHeightSmall, background: .clear) {
+                                                        StatsBlockText(displayText: formatSolveTime(secs: bestCompsimAverage.average ?? 0, penType: bestCompsimAverage.totalPen), colouredBlock: true, displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
+                                                    }
                                                 } else {
-                                                    StatsBlockText(displayText: "", nilCondition: false)
+                                                    StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
+                                                        HStack {
+                                                            Text("")
+                                                            Spacer()
+                                                        }
+                                                    }
+                                                    
+                                                    StatsBlock(title: "BEST COMPSIM", blockHeight: blockHeightSmall) {
+                                                        StatsBlockText(displayText: "", nilCondition: false)
+                                                    }
+
                                                 }
                                             }
                                             .onTapGesture {
@@ -218,26 +285,19 @@ struct StatsView: View {
                                             .frame(minWidth: 0, maxWidth: .infinity)
                                         
                                         StatsBlock(title: "REACHED", blockHeight: blockHeightSmall) {
-                                           
-                                            
-                                            StatsBlockText(displayText: String(describing: stopwatchManager.reachedTargets!) + "/" + String(describing: stopwatchManager.compSimCount!), nilCondition: (stopwatchManager.bestSingle != nil))
+                                            if (stopwatchManager.compSimCount == 0) {
+                                                StatsBlockText(displayText: "", nilCondition: false)
+                                            } else {
+                                                StatsBlockText(displayText: String(describing: stopwatchManager.reachedTargets!) + "/" + String(describing: stopwatchManager.compSimCount!), nilCondition: (stopwatchManager.bestSingle != nil))
+                                            }
                                         }
                                             .frame(minWidth: 0, maxWidth: .infinity)
                                     }
                                     .padding(.horizontal)
                                     
                                     
-                                    StatsBlock(title: "REACHED TARGETS", blockHeight: stopwatchManager.compSimCount == 0 ? 150 : 50, isBigBlock: true) {
-                                        if stopwatchManager.compSimCount != 0 {
-                                            ReachedTargets(Float(stopwatchManager.reachedTargets)/Float(stopwatchManager.compSimCount))
-                                                .padding(.horizontal, 12)
-                                                .offset(y: offsetReachedTargets)
-                                        } else {
-                                            Text("not enough solves to\ndisplay graph")
-                                                .recursiveMono(fontSize: 17, weight: .medium)
-                                                .multilineTextAlignment(.center)
-                                                .foregroundColor(Color("grey"))
-                                        }
+                                    StatsBlock(title: "REACHED TARGETS", blockHeight: 50, isBigBlock: true) {
+                                        ReachedTargets(reachedCount: stopwatchManager.reachedTargets, totalCount: stopwatchManager.compSimCount)
                                     }
                                     .padding(.bottom, 8)
                                     

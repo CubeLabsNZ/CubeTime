@@ -8,27 +8,32 @@
 import SwiftUI
 
 struct ReachedTargets: View {
+    @ScaledMetric var offset = 30
     
-    var reachedPercentage: Float
-    
-    init(_ amount: Float) {
-        reachedPercentage = amount
-    }
+    let reachedCount: Int
+    let totalCount: Int
 
     var body: some View {
         GeometryReader { geometry in
-            ZStack (alignment: .leading) {
+            if (totalCount > 0) {
+                ZStack (alignment: .leading) {
+                    Capsule()
+                        .fill(Color("red"))
+                        .frame(width: geometry.size.width, height: 6)
+                    
+                    
+                    Rectangle()
+                        .fill(Color("green"))
+                        .frame(width: geometry.size.width * (CGFloat(reachedCount) / CGFloat(totalCount)), height: 6)
+                        .cornerRadius(10, corners: [.topLeft, .bottomLeft])
+                        .cornerRadius((Float(reachedCount) / Float(totalCount)) == 1 ? 10 : 0, corners: [.topRight, .bottomRight])
+                }
+            } else {
                 Capsule()
-                    .fill(Color("red"))
+                    .fill(Color("indent1"))
                     .frame(width: geometry.size.width, height: 6)
-                
-                
-                Rectangle()
-                    .fill(Color("green"))
-                    .frame(width: geometry.size.width * CGFloat(reachedPercentage), height: 6)
-                    .cornerRadius(10, corners: [.topLeft, .bottomLeft])
-                    .cornerRadius(reachedPercentage == 1 ? 10 : 0, corners: [.topRight, .bottomRight])
             }
         }
+        .offset(y: offset)
     }
 }
