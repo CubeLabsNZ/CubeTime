@@ -226,53 +226,54 @@ struct TimeListView: View {
                 Color((UIDevice.deviceIsPad && hSizeClass == .regular) ? "overlay1" : "base")
                     .ignoresSafeArea()
                 
-                ScrollView {
-                    LazyVStack {
-                        TimeListHeader()
-
-                        let sessType = stopwatchManager.currentSession.session_type
-                        
-                        if sessType != SessionTypes.compsim.rawValue {
-                            LazyVGrid(columns: columns, spacing: 12) {
-                                ForEach(stopwatchManager.timeListSolvesFiltered, id: \.self) { item in
-                                    TimeCard(solve: item, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
-                                }
-                            }
-                            .padding(.horizontal)
-                        } else {
-                            let groups = stopwatchManager.compsimSolveGroups!
-                            LazyVStack(spacing: 12) {
-                                if groups.count != 0 {
-                                    TimeBar(solvegroup: groups.last!, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode, current: true)
-                                    
-                                    if groups.last!.solves!.array.count != 0 {
-                                        LazyVGrid(columns: columns, spacing: 12) {
-                                            ForEach(groups.last!.solves!.array as! [Solves], id: \.self) { solve in
-                                                TimeCard(solve: solve, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
+                let sessType = stopwatchManager.currentSession.session_type
+                
+                Group {
+                    if sessType != SessionTypes.compsim.rawValue {
+                        VStack {
+                            TimeListHeader()
+                            
+                            TimeListInner()
+                        }
+                    } else {
+                        ScrollView {
+                            LazyVStack {
+                                TimeListHeader()
+                                
+                                let groups = stopwatchManager.compsimSolveGroups!
+                                LazyVStack(spacing: 12) {
+                                    if groups.count != 0 {
+                                        TimeBar(solvegroup: groups.last!, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode, current: true)
+                                        
+                                        if groups.last!.solves!.array.count != 0 {
+                                            LazyVGrid(columns: columns, spacing: 12) {
+                                                ForEach(groups.last!.solves!.array as! [Solves], id: \.self) { solve in
+                                                    TimeCard(solve: solve, currentSolve: $solve, isSelectMode: $isSelectMode, selectedSolves: $selectedSolves)
+                                                }
                                             }
                                         }
+                                        
+                                        if groups.count > 1 {
+                                            ThemedDivider()
+                                                .padding(.horizontal, 8)
+                                        }
+                                    } else {
+                                        // re-enable when we have a graphic
                                     }
                                     
-                                    if groups.count > 1 {
-                                        ThemedDivider()
-                                            .padding(.horizontal, 8)
-                                    }
-                                } else {
-                                    // re-enable when we have a graphic
-                                }
-                                
-                                #warning("TODO:  sorting")
-                                
-                                ForEach(groups, id: \.self) { item in
-                                    if item != groups.last! {
-                                        TimeBar(solvegroup: item, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode, current: false)
+#warning("TODO:  sorting")
+                                    
+                                    ForEach(groups, id: \.self) { item in
+                                        if item != groups.last! {
+                                            TimeBar(solvegroup: item, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode, current: false)
+                                        }
                                     }
                                 }
+                                .padding(.horizontal)
                             }
-                            .padding(.horizontal)
                         }
+                        .padding(.top, -6)
                     }
-                    .padding(.top, -6)
                 }
                 .navigationTitle(isSelectMode ? "Select Solves" : "Session Times")
                 .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
