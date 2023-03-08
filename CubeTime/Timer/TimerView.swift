@@ -264,7 +264,7 @@ struct TimerStatsStandard: View {
                 TimerStat(name: "AO12", average: stopwatchManager.currentAo12, presentedAvg: $presentedAvg)
             }
             
-            Divider()
+            ThemedDivider()
                 .padding(.horizontal, 24)
             
             
@@ -288,7 +288,7 @@ struct TimerStatsPad: View {
                 TimerStat(name: "AO12", average: stopwatchManager.currentAo12, presentedAvg: .constant(nil), hasIndividualGesture: false)
             }
             
-            Divider()
+            ThemedDivider()
                 .padding(.horizontal, 24)
             
             
@@ -333,7 +333,7 @@ struct TimerStatsCompSim: View {
                 TimerStatRaw(name: "WPA", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!), placeholderText: "...")
             }
             
-            Divider()
+            ThemedDivider()
                 .padding(.horizontal, 24)
             
             TimerStatRaw(name: "TO REACH TARGET", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!), placeholderText: "...")

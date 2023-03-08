@@ -957,7 +957,7 @@ func offsetImage(image: UIImage, offsetX: CGFloat=0, offsetY: CGFloat=0) -> UIIm
 }
 
 
-func setNavBarAppearance() -> Void {
+func setupNavbarAppearance() -> Void {
     let navBarAppearance = UINavigationBar.appearance()
     var customBackImage = UIImage(systemName: "arrow.backward")
     customBackImage = offsetImage(image: customBackImage!, offsetX: 10, offsetY: -1.5)
@@ -965,4 +965,20 @@ func setNavBarAppearance() -> Void {
     navBarAppearance.backIndicatorTransitionMaskImage = customBackImage
 //    navBarAppearance.backgroundColor = UIColor(named: "overlay1")
     #warning("BUG: enabling this fixes background blur effect, BUT buttons on timelistview are cut off on top?")
+}
+
+
+#warning("todo: fix; doesn't seem to be working ios 16?")
+func setupColourScheme(_ mode: UIUserInterfaceStyle?) -> Void {
+    if let mode = mode {
+        keyWindow?.overrideUserInterfaceStyle = mode
+    }
+}
+
+var keyWindow: UIWindow? {
+    return UIApplication.shared.connectedScenes
+        .filter({ $0.activationState == .foregroundActive })
+        .first(where: { $0 is UIWindowScene })
+        .flatMap({ $0 as? UIWindowScene })?.windows
+        .first(where: \.isKeyWindow)
 }

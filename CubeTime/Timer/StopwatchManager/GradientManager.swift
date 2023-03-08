@@ -20,25 +20,27 @@ func getGradient(gradientSelected: Int, isStaticGradient: Bool) -> LinearGradien
                      endPoint: .bottomTrailing)
 }
 
-func getGradientColours(gradientSelected: Int) -> [Color] {
-    return dynamicGradients[gradientSelected]
+func getGradientColours(gradientSelected: Int, isStaticGradient: Bool) -> [Color] {
+    return isStaticGradient
+    ? staticGradient
+    : dynamicGradients[gradientSelected]
 }
 
 let dynamicGradients: [[Color]] = [
-    [Color(0x0093c1), Color(0x05537a)], // light blue - dark blue
-    [Color(0x52c8cd), Color(0x007caa)], // aqua - light blue
-    [Color(0xe6e29a), Color(0x3ec4d0)], // pale yellow/white ish - aqua
-    [Color(0xffd325), Color(0x94d7be)], // yellow - green
-    [Color(0xff9e45), Color(0xffd63c)], // pale orange-yellow
+    [Color(0x05537a), Color(0x0093c1)], // light blue - dark blue
+    [Color(0x007caa), Color(0x52c8cd)], // aqua - light blue
+    [Color(0x3ec4d0), Color(0xe6e29a)], // pale yellow/white ish - aqua
+    [Color(0x94d7be), Color(0xffd325)], // yellow - green
+    [Color(0xffd63c), Color(0xff9e45)], // pale orange-yellow
     
-    [Color(0xfc7018), Color(0xffc337)], // darker orange - yellow
-    [Color(0xfb5b5c), Color(0xff9528)], // pink-orange
-    [Color(0xd35082), Color(0xf77d4f)], // magenta-orange
-    [Color(0x8548ba), Color(0xd95378)], // purple-pink
-    [Color(0x3f248f), Color(0x702f86)], // dark blue-purple
+    [Color(0xffc337), Color(0xfc7018)], // darker orange - yellow
+    [Color(0xff9528), Color(0xfb5b5c)], // pink-orange
+    [Color(0xf77d4f), Color(0xd35082)], // magenta-orange
+    [Color(0xd95378), Color(0x8548ba)], // purple-pink
+    [Color(0x702f86), Color(0x3f248f)], // dark blue-purple
 ]
 
-let staticGradient: [Color] = [Color(0x3E6BF8), Color(0x9DBCFF)]
+let staticGradient: [Color] = [Color(0x91B0FF), Color(0x365DEB)]
 
 
 

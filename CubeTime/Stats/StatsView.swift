@@ -10,8 +10,8 @@ struct StatsView: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
+    @EnvironmentObject var gradientManager: GradientManager
     
-    @StateObject var gradientManager = GradientManager()
     
     // Accessibility Scaling
     @ScaledMetric var blockHeightSmall = 75
@@ -148,16 +148,7 @@ struct StatsView: View {
                                     
                                     if SessionTypes(rawValue: stopwatchManager.currentSession.session_type)! == .multiphase {
                                         StatsBlock(title: "AVERAGE PHASES", blockHeight: stopwatchManager.solvesNoDNFs.count == 0 ? 150 : nil, isBigBlock: true) {
-                                            
-                                            if stopwatchManager.solvesNoDNFsbyDate.count > 0 {
-                                                AveragePhases(phaseTimes: stopwatchManager.phases!)
-                                                    .padding(.top, 20)
-                                            } else {
-                                                Text("not enough solves to\ndisplay graph")
-                                                    .recursiveMono(fontSize: 17, weight: .medium)
-                                                    .multilineTextAlignment(.center)
-                                                    .foregroundColor(Color("grey"))
-                                            }
+                                                AveragePhases(phaseTimes: stopwatchManager.phases!, count: stopwatchManager.solvesNoDNFsbyDate.count)
                                         }
                                     }
                                 } else {

@@ -125,57 +125,6 @@ extension StopwatchManager {
         
         return Self.calculateAverage(solvesByDate.suffix(period), "Current ao", false)
     }
-    
-    
-    /*
-    func getBestMovingAverageOf(_ period: Int) -> CalculatedAverage? {
-        precondition(period > 1)
-        if solvesByDate.count < period {
-            return nil
-        }
-        
-        let trim = period >= 100 ? 5 : 1
-        
-        
-        var lowestAverage: Double?
-        var lowestValues: [Solves]?
-        var lowsetTrimmedSolves: [Solves]?
-        var totalPen = PenTypes.none
-        var lowestTotalPen = PenTypes.none
-        
-        for i in period..<solves.count+1 {
-            var solves = solvesByDate[i - period..<i]
-            solves.sort(by: Self.sortWithDNFsLast)
-            
-            let trimmedSolves = solves.suffix(trim) + solves.prefix(trim)
-            
-            let trimmed = solves.dropFirst(trim).dropLast(trim)
-            
-//            if trimmed.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) {
-//                continue
-//            }
-            totalPen = trimmed.last!.penalty == PenTypes.dnf.rawValue ? PenTypes.dnf : PenTypes.none
-            let sum = trimmed.reduce(0, {$0 + $1.timeIncPen})
-            
-            let result = Double(sum) / Double(period-(trim*2))
-            if lowestAverage == nil
-                || (
-                    result < lowestAverage!
-                    && (
-                        (totalPen, lowestTotalPen) == (PenTypes.dnf, PenTypes.dnf)
-                        || (totalPen, lowestTotalPen) == (PenTypes.none, PenTypes.none)
-                    )
-                )
-                || (totalPen, lowestTotalPen) == (PenTypes.none, PenTypes.dnf) {
-                lowestValues = solvesByDate[i - period ..< i].sorted(by: {$0.date! > $1.date!})
-                lowestAverage = result
-                lowestTotalPen = totalPen
-                lowsetTrimmedSolves = Array(trimmedSolves)
-            }
-        }
-        return CalculatedAverage(name: "Best ao\(period)", average: lowestAverage, accountedSolves: lowestValues, totalPen: lowestTotalPen, trimmedSolves: lowsetTrimmedSolves)
-    }
-     */
 }
 
 
@@ -439,8 +388,7 @@ extension StopwatchManager {
             let times = (solvesNoDNFs as! [MultiphaseSolve]).map({ $0.phases! })
             
             
-            var summedPhases = [Double](repeating: 0, count: Int(phaseCount))
-                        
+            var summedPhases = [Double](repeating: 0, count: phaseCount)
             
             for phase in times {
                 var paddedPhase = phase
@@ -449,7 +397,7 @@ extension StopwatchManager {
                 let mappedPhase = paddedPhase.chunked().map { $0[1] - $0[0] }
                 
                
-                for i in 0..<Int(phaseCount) {
+                for i in 0..<phaseCount {
                     summedPhases[i] += mappedPhase[i]
                 }
             }

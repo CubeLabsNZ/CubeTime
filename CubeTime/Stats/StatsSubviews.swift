@@ -40,8 +40,8 @@ struct StatsBlock<Content: View>: View {
                     ? Color.white
                     : Color("grey")
                 )
-                .frame(height: blockHeight, alignment: .topLeading)
-                .padding(.top, 20)
+                .frame(maxHeight: .infinity, alignment: .topLeading)
+                .padding(.top, 8)
             
             dataView
         }

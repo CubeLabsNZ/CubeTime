@@ -44,9 +44,12 @@ struct TimeDetailView: View {
         self.time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
         self.puzzle_type = puzzle_types[Int(solve.scramble_type)]
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
-            
-        if let multiphaseSolve = (solve as? MultiphaseSolve) {
-            self.phases = multiphaseSolve.phases ?? [0.00, 0.00, 0.00, 0.00]
+                
+        if let multiphaseSolve = (solve as? MultiphaseSolve), let phases = multiphaseSolve.phases {
+            var phaseLengths = phases
+            phaseLengths.insert(0, at: 0)
+            phaseLengths = phaseLengths.chunked().map({ $0[1] - $0[0] })
+            self.phases = phaseLengths
         } else {
             self.phases = nil
         }
@@ -246,9 +249,6 @@ struct TimeDetailView: View {
                             
                             
                             
-                            
-                            
-                            
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("SESSION")
                                     .font(.subheadline.weight(.semibold))
@@ -280,14 +280,28 @@ struct TimeDetailView: View {
                             .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
                             
                             
+                            if (stopwatchManager.currentSession.session_type == SessionTypes.multiphase.rawValue) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("PHASES")
+                                        .font(.subheadline.weight(.semibold))
+                                    
+                                    ThemedDivider()
+                                    
+                                    #warning("TODO: ERROR CHECKING")
+                                    AveragePhases(phaseTimes: phases!, count: phases!.count)
+                                        .padding(.top, -24)
+                                        .padding(.bottom, -12)
+                                }
+                                .padding(12)
+                                .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
+                            }
+                            
+                            
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("COMMENT")
                                     .font(.subheadline.weight(.semibold))
                                 
                                 ThemedDivider()
-                                
-                                
-                                
                                 
                                 ZStack {
                                     Group {
@@ -335,6 +349,8 @@ struct TimeDetailView: View {
                             }
                             .padding(12)
                             .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
+                            
+                            
                             
                             Spacer()
                         }
