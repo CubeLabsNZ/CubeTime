@@ -82,8 +82,79 @@ class StopwatchManager: ObservableObject {
             } else {
                 timerController.phaseCount = nil
             }
+            if currentSession.session_type == SessionTypes.playground.rawValue {
+                updateSessionsCanMoveToPlayground()
+            } else {
+                updateSessionsCanMoveTo()
+            }
         }
     }
+    
+    func updateSessionsCanMoveTo() {
+        var phaseCount: Int16 = -1
+        if let multiphaseSession = currentSession as? MultiphaseSession {
+            phaseCount = multiphaseSession.phase_count
+        }
+        
+        let req = NSFetchRequest<Sessions>(entityName: "Sessions")
+        req.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Sessions.pinned, ascending: false),
+            NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
+        ]
+        req.predicate = NSPredicate(format: """
+            session_type != \(SessionTypes.compsim.rawValue)
+            AND
+            (
+                session_type == \(SessionTypes.playground.rawValue) OR
+                scramble_type == %i
+            )
+            AND
+            (
+                session_type != \(SessionTypes.multiphase.rawValue) OR
+                phase_count == %i
+            )
+            AND
+            self != %@
+        """, currentSession.scramble_type, phaseCount, currentSession)
+        
+        sessionsCanMoveTo = try! managedObjectContext.fetch(req)
+    }
+    
+    func updateSessionsCanMoveToPlayground() {
+        let req = NSFetchRequest<Sessions>(entityName: "Sessions")
+        req.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Sessions.pinned, ascending: false),
+            NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
+        ]
+        req.predicate = NSPredicate(format: """
+            session_type != \(SessionTypes.compsim.rawValue) AND
+            self != %@
+        """, currentSession)
+        
+        let results = try! managedObjectContext.fetch(req)
+        sessionsCanMoveToPlayground = Array(repeating: [], count: puzzle_types.count)
+        
+        for result in results {
+            if result.session_type == SessionTypes.playground.rawValue {
+                for i in sessionsCanMoveToPlayground.indices {
+                    sessionsCanMoveToPlayground[i].append(result)
+                }
+            } else {
+                sessionsCanMoveToPlayground[Int(result.scramble_type)].append(result)
+            }
+        }
+        
+        req.predicate = NSPredicate(format: """
+            session_type == \(SessionTypes.playground.rawValue) AND
+            self != %@
+        """, currentSession)
+        
+        allPlaygroundSessions = try! managedObjectContext.fetch(req)
+    }
+    
+    @Published var sessionsCanMoveTo: [Sessions]!
+    @Published var sessionsCanMoveToPlayground: [[Sessions]]!
+    @Published var allPlaygroundSessions: [Sessions]!
     
     @Published var zenMode = false {
         didSet {

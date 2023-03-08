@@ -52,7 +52,8 @@ struct TimerTime: View {
                 .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 54, nil)))
         } elseDo: { view in
             return view
-                .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: timerController.mode == .running ? 70 : 56))
+                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 70, nil)))
+                .scaleEffect(timerController.mode == .running ? 1 : (56/70))
                 .animation(Animation.customBouncySpring, value: timerController.mode == .running)
         }
     }
@@ -177,7 +178,7 @@ struct TimerDrawScramble: View {
                         .padding(2)
 //                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .frame(width: geo.size.width, height: geo.size.height) // For some reason above doesnt work
-                        .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
+//                        .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
                         .aspectRatio(contentMode: .fit)
                         .onTapGesture {
                             scrambleSheetStr = SheetStrWrapper(str: scr)
@@ -392,7 +393,8 @@ struct ScrambleText: View {
 
 struct PadTimerHeader: View {
     var targetFocused: FocusState<Bool>.Binding
-    @Binding var showSessions: Bool
+    var showSessions: Binding<Bool>?
+    
     
     var body: some View {
         HStack(spacing: 0) {
@@ -400,10 +402,12 @@ struct PadTimerHeader: View {
             
             Spacer()
             
-            HierarchialButton(type: showSessions ? .halfcoloured : .mono, size: .large, square: true, onTapRun: {
-                self.showSessions.toggle()
-            }) {
-                Image(systemName: "line.3.horizontal.circle")
+            if let showSessions = showSessions {
+                HierarchialButton(type: .mono, size: .large, square: true, onTapRun: {
+                    showSessions.wrappedValue.toggle()
+                }) {
+                    Image(systemName: showSessions.wrappedValue ? "hourglass.circle" : "line.3.horizontal.circle")
+                }
             }
         }
         .frame(maxWidth: .infinity)
@@ -540,10 +544,10 @@ struct TimerView: View {
                 if (UIDevice.deviceIsPad && hSizeClass == .regular) {
                     HStack(alignment: .top) {
                         FloatingPanel(currentStage: $stopwatchManager.currentPadFloatingStage, maxHeight: stageMaxHeight, stages: stages) {
-                            PadTimerHeader(targetFocused: self.$targetFocused, showSessions: $showSessions)
+                            PadTimerHeader(targetFocused: self.$targetFocused, showSessions: nil)
                             
                             VStack(alignment: .leading, spacing: 8) {
-                                PadTimerHeader(targetFocused: self.$targetFocused, showSessions: $showSessions)
+                                PadTimerHeader(targetFocused: self.$targetFocused, showSessions: nil)
                                 
                                 PrevSolvesDisplay(count: 3)
                                     .padding(.horizontal, 8)
