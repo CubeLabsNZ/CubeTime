@@ -78,11 +78,8 @@ final class SettingsManager {
     @UserDefault("dmBool")
     var dmBool: Bool = false
     
-    @UserDefault("staticGradient")
-    var staticGradient: Bool = true
-    
-    @UserDefault("gradientSelected")
-    var gradientSelected: Int = 6
+    @UserDefault("isStaticGradient")
+    var isStaticGradient: Bool = true
     
     @UserDefault("graphGlow")
     var graphGlow: Bool = true

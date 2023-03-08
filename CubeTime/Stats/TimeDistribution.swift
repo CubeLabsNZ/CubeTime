@@ -75,11 +75,13 @@ func getTruncatedMinMax(numbers: Array<(Double, Int)>) -> (Double?, Double?) {
 
 
 struct TimeDistribution: View {
-    @Preference(\.gradientSelected) private var gradientSelected
     @Preference(\.graphGlow) private var graphGlow
+    @Preference(\.isStaticGradient) private var isStaticGradient
+
 
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
+    @EnvironmentObject var gradientManager: GradientManager
     
     @ScaledMetric(relativeTo: .body) var monospacedFontSizeBody: CGFloat = 17
     
@@ -133,7 +135,7 @@ struct TimeDistribution: View {
                         let xloc: CGFloat = (geometry.size.width / (count < 8 ? CGFloat(count+2) : 10)) * CGFloat(datum)
                         ZStack {
                             Rectangle()
-                                .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
+                                .fill(getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient))
                                 .frame(width: geometry.size.width, height: 260)
                                 .mask {
                                     Path { path in
@@ -144,7 +146,7 @@ struct TimeDistribution: View {
                                 }
                             
                             Rectangle()
-                                .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
+                                .fill(getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient))
                                 .frame(width: geometry.size.width, height: 260)
                                 .offset(x: -20, y: -20)
                                 .mask {
@@ -154,7 +156,7 @@ struct TimeDistribution: View {
                                         .font(FontManager.mono10Bold)
                                 }
                                 .if(graphGlow) { view in
-                                    view.colouredGlow(gradientSelected: gradientSelected)
+                                    view.colouredGlow(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient)
                                 }
                             
                             Text((datum == 0 ? "<" : (datum == data.count-1 ? ">" : ""))+formatLegendTime(secs: data[datum].0, dp: 1)+(datum != 0 && datum != data.count-1 ? "+" : ""))

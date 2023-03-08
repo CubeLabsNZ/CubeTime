@@ -385,8 +385,8 @@ extension View {
 
 // gradient view extension
 extension View {
-    public func gradientForeground(gradientSelected: Int) -> some View {
-        self.overlay(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
+    public func gradientForeground(gradientSelected: Int, isStaticGradient: Bool) -> some View {
+        self.overlay(getGradient(gradientSelected: gradientSelected, isStaticGradient: isStaticGradient))
             .mask(self)
     }
 }

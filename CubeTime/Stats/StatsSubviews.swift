@@ -3,7 +3,8 @@ import CoreData
 
 struct StatsBlock<Content: View>: View {
     @Environment(\.colorScheme) var colourScheme
-    @Preference(\.gradientSelected) private var gradientSelected
+    @Preference(\.isStaticGradient) private var isStaticGradient
+    @EnvironmentObject var gradientManager: GradientManager
     
     let dataView: Content
     let title: String
@@ -48,7 +49,7 @@ struct StatsBlock<Content: View>: View {
         .padding(.horizontal, 12)
         .background(
             (isColoured
-             ? AnyView(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
+             ? AnyView(getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient))
              : AnyView(isTappable
                    ? Color("overlay0")
                    : Color("overlay1")))
@@ -63,7 +64,9 @@ struct StatsBlock<Content: View>: View {
 struct StatsBlockText: View {
     @Environment(\.colorScheme) var colourScheme
     @Environment(\.globalGeometrySize) var globalGeometrySize
-    @Preference(\.gradientSelected) private var gradientSelected
+    @EnvironmentObject var gradientManager: GradientManager
+    @Preference(\.isStaticGradient) private var isStaticGradient
+
     
     let displayText: String
     let colouredText: Bool
@@ -94,7 +97,7 @@ struct StatsBlockText: View {
                 Group {
                     if (colouredText) {
                         Text(displayText)
-                            .gradientForeground(gradientSelected: gradientSelected)
+                            .gradientForeground(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient)
                     } else {
                         Text(displayText)
                             .foregroundColor(

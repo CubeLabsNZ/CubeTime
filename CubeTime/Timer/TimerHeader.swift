@@ -174,7 +174,7 @@ struct TimerHeader: View {
                 .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
                 .animation(Animation.customFastSpring, value: stopwatchManager.playgroundScrambleType)
         )
-        .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+        .padding(.top, UIDevice.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
         .animation(Animation.customSlowSpring, value: showSessionType)
     }
 }

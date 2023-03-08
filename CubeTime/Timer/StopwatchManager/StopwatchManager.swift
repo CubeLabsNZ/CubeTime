@@ -300,6 +300,11 @@ class StopwatchManager: ObservableObject {
     
     func updateHideStatusBar() {
         self.hideUI = timerController.mode == .inspecting || timerController.mode == .running || self.zenMode
+        /* if worse comes to worst
+        if (timerController.mode == .running) {
+            currentPadFloatingStage = 1
+        }
+        */
     }
     
     

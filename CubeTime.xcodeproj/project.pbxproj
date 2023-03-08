@@ -19,6 +19,7 @@
 		235CDA0327A786D800F48C89 /* Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235CDA0227A786D800F48C89 /* Updates.swift */; };
 		2377418829A9A05A00A4F917 /* HelperUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2377418729A9A05A00A4F917 /* HelperUI.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
+		238FB42029B8175C008EC1D4 /* GradientManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238FB41F29B8175C008EC1D4 /* GradientManager.swift */; };
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
 		239C7E702781511300943AF2 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239C7E6F2781511300943AF2 /* Onboarding.swift */; };
 		23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */; };
@@ -32,7 +33,6 @@
 		23C85EAC29388C9C00C7C3EC /* StatsSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */; };
 		23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA845F2783EBA1003901FB /* ReachedTargets.swift */; };
 		23CA8A0129AAF338006676BF /* TimerOnlyTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0029AAF338006676BF /* TimerOnlyTool.swift */; };
-		23CA8A0629AAF947006676BF /* StopwatchManager+FeedbackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0529AAF947006676BF /* StopwatchManager+FeedbackController.swift */; };
 		23CA8A0829AAF96C006676BF /* StopwatchManager+Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0729AAF96C006676BF /* StopwatchManager+Stats.swift */; };
 		23CA8A0A29AAFA75006676BF /* StopwatchManager+PenaltyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0929AAFA75006676BF /* StopwatchManager+PenaltyController.swift */; };
 		23CA8A0C29AAFABD006676BF /* ScrambleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0B29AAFABD006676BF /* ScrambleController.swift */; };
@@ -126,6 +126,7 @@
 		2377418729A9A05A00A4F917 /* HelperUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperUI.swift; sourceTree = "<group>"; };
 		23783DA429AB55750036FE2B /* getBestAverage.h++ */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "getBestAverage.h++"; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
+		238FB41F29B8175C008EC1D4 /* GradientManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientManager.swift; sourceTree = "<group>"; };
 		2397131E2791032300268DFA /* AveragePhases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AveragePhases.swift; sourceTree = "<group>"; };
 		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		23AAF99529B0219200C5C1FF /* ScrollableLineChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableLineChart.swift; sourceTree = "<group>"; };
@@ -138,7 +139,6 @@
 		23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsSubviews.swift; sourceTree = "<group>"; };
 		23CA845F2783EBA1003901FB /* ReachedTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachedTargets.swift; sourceTree = "<group>"; };
 		23CA8A0029AAF338006676BF /* TimerOnlyTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerOnlyTool.swift; sourceTree = "<group>"; };
-		23CA8A0529AAF947006676BF /* StopwatchManager+FeedbackController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StopwatchManager+FeedbackController.swift"; sourceTree = "<group>"; };
 		23CA8A0729AAF96C006676BF /* StopwatchManager+Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StopwatchManager+Stats.swift"; sourceTree = "<group>"; };
 		23CA8A0929AAFA75006676BF /* StopwatchManager+PenaltyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StopwatchManager+PenaltyController.swift"; sourceTree = "<group>"; };
 		23CA8A0B29AAFABD006676BF /* ScrambleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleController.swift; sourceTree = "<group>"; };
@@ -309,10 +309,10 @@
 				2359689227A367A0003ED9E1 /* StopwatchManager.swift */,
 				23CA8A0929AAFA75006676BF /* StopwatchManager+PenaltyController.swift */,
 				23CA8A0729AAF96C006676BF /* StopwatchManager+Stats.swift */,
-				23CA8A0529AAF947006676BF /* StopwatchManager+FeedbackController.swift */,
 				23CA8A0B29AAFABD006676BF /* ScrambleController.swift */,
 				AF8874C229AB0BE7001E49D0 /* TimerController.swift */,
 				AF81757629B07712004838B9 /* FontManager.swift */,
+				238FB41F29B8175C008EC1D4 /* GradientManager.swift */,
 			);
 			path = StopwatchManager;
 			sourceTree = "<group>";
@@ -598,6 +598,7 @@
 				23AAF99629B0219200C5C1FF /* ScrollableLineChart.swift in Sources */,
 				7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */,
 				7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */,
+				238FB42029B8175C008EC1D4 /* GradientManager.swift in Sources */,
 				AF6EAC2029ADDA1C00171F73 /* TimerMenu.swift in Sources */,
 				23CA8A0129AAF338006676BF /* TimerOnlyTool.swift in Sources */,
 				7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */,
@@ -612,7 +613,6 @@
 				7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */,
 				7D7A9EC0274F38CD00C2E125 /* StatsView.swift in Sources */,
 				23E81E6F275D8DCA00B741E3 /* AppearanceSettings.swift in Sources */,
-				23CA8A0629AAF947006676BF /* StopwatchManager+FeedbackController.swift in Sources */,
 				23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */,
 				7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */,
 				AF8874C529AB3736001E49D0 /* ScrambleGeneratorTool.swift in Sources */,

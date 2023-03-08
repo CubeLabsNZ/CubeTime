@@ -7,12 +7,8 @@ struct AppearanceSettingsView: View {
     @State private var showFontSizeOptions: Bool = false
     @State private var showPreview: Bool = false
     
-    private let columns = [GridItem(spacing: 16), GridItem(spacing: 16)]
-    
-    // colours
-    @Preference(\.staticGradient) private var staticGradient
-    @Preference(\.gradientSelected) private var gradientSelected
-    
+    // gradients
+    @Preference(\.isStaticGradient) private var isStaticGradient
     @Preference(\.graphGlow) private var graphGlow
     @Preference(\.graphAnimation) private var graphAnimation
     
@@ -29,6 +25,7 @@ struct AppearanceSettingsView: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
+    @StateObject var gradientManager = GradientManager()
     
     var body: some View {
         VStack(spacing: 16) {
@@ -47,67 +44,6 @@ struct AppearanceSettingsView: View {
                 .padding(.bottom)
                 
                 VStack(spacing: 0) {
-                    
-                    #if false
-                    HStack {
-                        Text("Accent Colour")
-                            .font(.body.weight(.medium))
-                        
-                        Spacer()
-                        
-                    }
-                    .padding(.horizontal)
-                    
-                    HStack {
-                        HStack(spacing: 6) {
-                            ForEach(accentColours, id: \.self) { colour in
-                                
-                                // See extension in Helper.swift
-                                let isSameColor = UIColor(colour).colorsEqual(UIColor(accentColour))
-                                
-                                ZStack {
-                                    
-                                    Circle()
-                                        .strokeBorder(colour.opacity(0.25), lineWidth: isSameColor ? 2 : 0)
-//                                            .strokeBorder(colour.opacity(0.25), lineWidth: 2)
-                                        .frame(width: 31, height: 31)
-                                     
-                                    
-                                    
-                                    Image(systemName: "circle.fill")
-                                        .foregroundColor(colour)
-                                        .font(.system(size: 24))
-                                        .shadow(color: isSameColor ? .black.opacity(0.16) : .clear, radius: 6, x: 0, y: 2)
-                                        .drawingGroup()
-                                        .onTapGesture {
-                                            accentColour = colour
-                                        }
-    //                                    .padding(.horizontal, 3)
-                                    
-                                    if isSameColor {
-                                        Image(systemName: "checkmark")
-                                            .font(.system(size: 13, weight: .bold))
-                                            .foregroundColor(.white)
-                                    }
-                                }
-                            }
-                            
-                            Spacer()
-                            
-                            ColorPicker("", selection: $accentColour, supportsOpacity: false)
-                            
-                        }
-                        .padding(.bottom, 4)
-                        .padding(.top, 8)
-                    }
-                    .padding(.horizontal)
-                    
-                    Divider()
-                        .padding(.vertical, 10)
-                    #endif
-                    
-                    
-                    
                     VStack(alignment: .leading, spacing: 0) {
                         HStack(alignment: .center) {
                             Text("Gradient")
@@ -129,7 +65,7 @@ struct AppearanceSettingsView: View {
                         .padding(.horizontal)
                         
                         
-                        Text("Customise the gradients used in stats.")
+                        Text("Customise the gradients used in stats. By default, the gradient is set to \"Static\". You can choose to set it to \"Dynamic\", where the gradient will change throughout the day.")
                             .font(.footnote.weight(.medium))
                             .lineSpacing(-4)
                             .fixedSize(horizontal: false, vertical: true)
@@ -141,52 +77,58 @@ struct AppearanceSettingsView: View {
                         
                         if showThemeOptions {
                             VStack(alignment: .leading, spacing: 0) {
-                                /* add this switch back when dynamic gradient added
-                                HStack {
-                                    Toggle(isOn: $staticGradient) {
-                                        Text("Use Static Gradient")
-                                            .font(.body.weight(.medium))
-                                    }
-                                        .toggleStyle(SwitchToggleStyle(tint: accentColour))
-                                    
-                                }
-                                .padding(.horizontal)
-                                .padding(.bottom, 10)
-                                 */
-                                
-                                /*
-                                Text("By default, the gradient is static. Dynamic gradient coming soon!")
-                                    .font(.footnote.weight(.medium))
-                                    .lineSpacing(-4)
-//                                Text("By default, the gradient is dynamic and changes throughout the day. If turned off, the gradient will only be of static colours.")
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .foregroundColor(Color("grey"))
-                                    .multilineTextAlignment(.leading)
-                                    .padding(.bottom, 12)
-                                 */
-                                
-                                if staticGradient {
-                                    LazyVGrid(columns: columns, spacing: 16) {
-                                        ForEach(CustomGradientColours.gradientColours, id: \.self) { gradient in
-                                            ZStack {
-                                                RoundedRectangle(cornerRadius: 12, style: .continuous)
-//                                                Rectangle()
-                                                    .fill(LinearGradient(gradient: Gradient(colors: gradient), startPoint: .topLeading, endPoint: .bottomTrailing))
-                                                    .frame(height: 50)
-                                                    .onTapGesture {
-                                                        gradientSelected = CustomGradientColours.gradientColours.firstIndex(of: gradient)!
-                                                    }
-                                                if CustomGradientColours.gradientColours[gradientSelected] == gradient {
-                                                    Image(systemName: "checkmark")
-                                                        .font(.system(size: 15, weight: .black))
-                                                        .foregroundColor(.white)
+                                HStack(spacing: 16) {
+                                    VStack(spacing: 4) {
+                                        Text("STATIC GRADIENT")
+                                            .foregroundColor(Color("grey"))
+                                            .font(.footnote.weight(.semibold))
+                                        
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                                .fill(getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: true))
+                                                .frame(height: 50)
+                                                .onTapGesture {
+                                                    isStaticGradient = true
                                                 }
+                                            
+                                            if (isStaticGradient) {
+                                                Image(systemName: "checkmark")
+                                                    .font(.system(size: 15, weight: .black))
+                                                    .foregroundColor(.white)
                                             }
                                         }
                                     }
-                                    .padding(.bottom)
+
+                                    VStack(spacing: 2) {
+                                        Text("DYNAMIC GRADIENT")
+                                            .foregroundColor(Color("grey"))
+                                            .font(.footnote.weight(.semibold))
+                                        
+                                        ZStack {
+                                            HStack(spacing: 0) {
+                                                ForEach(0..<10, id: \.self) { index in
+                                                    Rectangle()
+                                                        .fill(getGradient(gradientSelected: index, isStaticGradient: false))
+                                                        .frame(height: 150)
+                                                }
+                                            }
+                                            .frame(height: 50)
+                                            .rotationEffect(Angle(degrees: 20))
+                                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                                            .onTapGesture {
+                                                isStaticGradient = false
+                                            }
+                                            
+                                            if (!isStaticGradient) {
+                                                Image(systemName: "checkmark")
+                                                    .font(.system(size: 15, weight: .black))
+                                                    .foregroundColor(.white)
+                                            }
+                                        }
+                                    }
                                 }
                             }
+                            .clipped()
                             .padding(.horizontal)
                             .padding(.top, 10)
                         }
@@ -491,7 +433,7 @@ struct TimerPreview: View {
                 Spacer()
             }
             .padding(.horizontal)
-            .offset(y: 35 + (SetValues.hasBottomBar ? 0 : 8))
+            .offset(y: 35 + (UIDevice.hasBottomBar ? 0 : 8))
         }
     }
 }
