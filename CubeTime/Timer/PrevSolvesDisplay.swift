@@ -12,7 +12,7 @@ struct PrevSolvesDisplay: View {
                     ? stopwatchManager.solvesByDate.suffix(count!)
                     : stopwatchManager.solvesByDate, id: \.self) { solve in
                 #warning("TODO:  popup")
-                TimeCard(solve: solve, currentSolve: $solve, isSelectMode: .constant(false), selectedSolves: .constant([]))
+                TimeCard(solve: solve, currentSolve: $solve)
             }
         }
         .sheet(item: self.$solve) { item in

@@ -247,7 +247,7 @@ struct TimeListView: View {
                                         if groups.last!.solves!.array.count != 0 {
                                             LazyVGrid(columns: columns, spacing: 12) {
                                                 ForEach(groups.last!.solves!.array as! [Solves], id: \.self) { solve in
-                                                    TimeCard(solve: solve, currentSolve: $solve, isSelectMode: $isSelectMode)
+                                                    TimeCard(solve: solve, currentSolve: $solve)
                                                 }
                                             }
                                         }
@@ -437,7 +437,7 @@ struct TimeListView: View {
             
             if uniqueScrambles.count > 1 {
                 sessionsCanMoveToPlaygroundContextMenu = stopwatchManager.allPlaygroundSessions
-            } else {
+            } else if uniqueScrambles.count == 1 {
                 let scr_type = uniqueScrambles.first!
                 sessionsCanMoveToPlaygroundContextMenu = stopwatchManager.sessionsCanMoveToPlayground[Int(scr_type)]
             }

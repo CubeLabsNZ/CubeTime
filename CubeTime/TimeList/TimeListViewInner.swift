@@ -3,7 +3,41 @@ import UIKit
 import SwiftUI
 import Combine
 
+class MyCell : UICollectionViewCell {
+    let label = UILabel()
+
+    required init?(coder: NSCoder) {
+        fatalError("nope!")
+    }
+    
+    override init(frame: CGRect) {
+        NSLog("MYCELL INIT: x \(frame.minX), y \(frame.minY)")
+        super.init(frame: frame)
+        // create a new label and add it to the cell's content view
+//        let label = UILabel(frame: cell.contentView.bounds)
+        label.frame = CGRect(origin: .zero, size: frame.size)
+        label.textAlignment = .center
+//        let solve = stopwatchManager.timeListSolvesFiltered[indexPath.item]
+//        label.text = solve.timeText
+        label.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
+        label.isUserInteractionEnabled = false
+        contentView.addSubview(label)
+
+        // configure the cell's appearance (optional)
+        layer.backgroundColor = UIColor(named: isSelected ? "indent0" : "overlay0")!.cgColor
+        layer.cornerRadius = 8
+        layer.cornerCurve = .continuous
+    }
+    
+    override func updateConfiguration(using state: UICellConfigurationState) {
+        NSLog("CELL UPDATE CONFIGURATIon")
+        layer.backgroundColor = UIColor(named: isSelected ? "indent0" : "overlay0")!.cgColor
+    }
+}
+
 final class TimeListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+    typealias DataSource = UICollectionViewDiffableDataSource<Int, Solves>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Solves>
     private let timeResuseIdentifier = "TimeCard"
     
     private var cardHeight: CGFloat {
@@ -45,6 +79,8 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     var subscriber: AnyCancellable?
     var subscriber2: AnyCancellable?
     
+    lazy var dataSource = makeDataSource()
+    
     init(stopwatchManager: StopwatchManager, onClickSolve: @escaping (Solves) -> ()) {
         self.stopwatchManager = stopwatchManager
         self.onClickSolve = onClickSolve
@@ -57,7 +93,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         subscriber = stopwatchManager.$timeListSolvesFiltered
             .sink(receiveValue: { [weak self] i in
                 NSLog("timelistsolvesfiltered cahnges")
-                self?.collectionView.reloadData()
+                self?.applySnapshot()
             })
     }
     
@@ -65,44 +101,56 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         fatalError("init(coder:) has not been implemented")
     }
     
+    let solveCellRegistration = UICollectionView.CellRegistration<MyCell, Solves> { cell, _, item in
+        // 3
+        cell.label.text = item.timeText
+        NSLog("DID cell something")
+    }
+    
+    func makeDataSource() -> DataSource {
+        // 1
+        return DataSource(collectionView: collectionView) {
+            collectionView, indexPath, item -> UICollectionViewCell? in
+            // 2
+            return collectionView.dequeueConfiguredReusableCell(
+                using: self.solveCellRegistration, for: indexPath, item: item)
+        }
+    }
+    
+    func applyInitialSnapshots() {
+        var categorySnapshot = Snapshot()
+        
+        categorySnapshot.appendSections([0])
+        categorySnapshot.appendItems(stopwatchManager.timeListSolvesFiltered, toSection: 0)
+        
+        dataSource.apply(categorySnapshot, animatingDifferences: false)
+    }
+    
+    func applySnapshot(animatingDifferences: Bool = true) {
+        var categorySnapshot = Snapshot()
+        
+        categorySnapshot.appendSections([0])
+        categorySnapshot.appendItems(stopwatchManager.timeListSolvesFiltered, toSection: 0)
+        
+        dataSource.apply(categorySnapshot, animatingDifferences: animatingDifferences)
+    }
+    
     override func viewDidLoad() {
         NSLog("VIEWDID LOAD TIMELISTINNER")
         super.viewDidLoad()
         self.collectionView.layer.backgroundColor = UIColor.clear.cgColor
         
-        self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: timeResuseIdentifier)
+//        self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: timeResuseIdentifier)
         self.collectionView.contentInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
         self.collectionView.allowsSelection = true
         self.collectionView.allowsMultipleSelection = false
+        applyInitialSnapshots()
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return stopwatchManager.timeListSolvesFiltered.count
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: timeResuseIdentifier, for: indexPath)
-        
-        // remove any existing labels from the cell's content view
-        cell.contentView.subviews.forEach { $0.removeFromSuperview() }
-        
-        // create a new label and add it to the cell's content view
-        let label = UILabel(frame: cell.contentView.bounds)
-        label.textAlignment = .center
-        let solve = stopwatchManager.timeListSolvesFiltered[indexPath.item]
-        label.text = solve.timeText
-        label.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
-        label.isUserInteractionEnabled = false
-        cell.contentView.addSubview(label)
-        
-        // configure the cell's appearance (optional)
-        cell.layer.backgroundColor = UIColor(named: cell.isSelected ? "indent0" : "overlay0")!.cgColor
-        cell.layer.cornerRadius = 8
-        cell.layer.cornerCurve = .continuous
-        
-        return cell
     }
     
     override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
