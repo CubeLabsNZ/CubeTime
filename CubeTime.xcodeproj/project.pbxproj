@@ -163,6 +163,7 @@
 		23E81E72275D8DEA00B741E3 /* AboutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettings.swift; sourceTree = "<group>"; };
 		23EB8A1D2779B6D3000F6663 /* TimeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBar.swift; sourceTree = "<group>"; };
 		23F4113729ADDA77002C4E23 /* ToolsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsViewModel.swift; sourceTree = "<group>"; };
+		73B7136529BA3FF00064E02F /* CubeTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CubeTime.entitlements; sourceTree = "<group>"; };
 		7D2B805D279422BD0006AEDD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTouchView.swift; sourceTree = "<group>"; };
 		7D5521DB2799657300B418BE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -339,6 +340,7 @@
 		23DE3BD9274DDBE200254D29 /* CubeTime */ = {
 			isa = PBXGroup;
 			children = (
+				73B7136529BA3FF00064E02F /* CubeTime.entitlements */,
 				2354882227642E2800FE8D7A /* Info.plist */,
 				23AB6488293867CB0049993B /* Ext */,
 				23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */,
@@ -795,6 +797,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = accent;
+				CODE_SIGN_ENTITLEMENTS = CubeTime/CubeTime.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"CubeTime/Preview Content\"";
@@ -842,6 +846,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = accent;
+				CODE_SIGN_ENTITLEMENTS = CubeTime/CubeTime.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"CubeTime/Preview Content\"";
