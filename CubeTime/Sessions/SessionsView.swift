@@ -23,8 +23,7 @@ struct SessionsView: View {
         NavigationView {
             GeometryReader { geo in
                 ZStack(alignment: .bottomLeading) {
-                    Color((UIDevice.deviceIsPad && hSizeClass == .regular) ? "overlay1" : "base")
-                        .ignoresSafeArea()
+                    BackgroundColour()
                     
                     ScrollView {
                         VStack (spacing: 10) {
@@ -125,8 +124,7 @@ struct CustomiseSessionView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color("base")
-                    .ignoresSafeArea()
+                BackgroundColour()
                 
                 ScrollView {
                     VStack(spacing: 16) {

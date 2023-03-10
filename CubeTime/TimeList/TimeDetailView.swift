@@ -64,8 +64,7 @@ struct TimeDetailView: View {
         
         NavigationView {
             ZStack {
-                Color("base")
-                    .ignoresSafeArea()
+                BackgroundColour()
                 
                 GeometryReader { geo in
                     ScrollView {

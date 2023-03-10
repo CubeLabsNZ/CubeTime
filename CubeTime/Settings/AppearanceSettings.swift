@@ -58,6 +58,7 @@ struct AppearanceSettingsView: View {
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
+                            print("HERE")
                             withAnimation(Animation.customSlowSpring) {
                                 showThemeOptions.toggle()
                             }
@@ -138,6 +139,7 @@ struct AppearanceSettingsView: View {
                     
                     ThemedDivider()
                         .padding(.vertical, 10)
+                        .padding(.leading)
                     
                     
                     VStack(alignment: .leading, spacing: 0) {
@@ -317,14 +319,14 @@ struct AppearanceSettingsView: View {
                         HStack {
                             Text("MIN")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color("indent0"))
+                                .foregroundColor(Color("grey"))
                             
                             Slider(value: $fontWeight, in: 300...800, step: 1.0)
                                 .padding(.horizontal, 4)
                             
                             Text("MAX")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color("indent0"))
+                                .foregroundColor(Color("grey"))
                             
                         }
                         
@@ -340,14 +342,14 @@ struct AppearanceSettingsView: View {
                         HStack {
                             Text("MIN")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color("indent0"))
+                                .foregroundColor(Color("grey"))
                             
                             Slider(value: $fontCasual, in: 0...1, step: 0.01)
                                 .padding(.horizontal, 4)
                             
                             Text("MAX")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color("indent0"))
+                                .foregroundColor(Color("grey"))
                             
                         }
                         

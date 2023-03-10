@@ -178,3 +178,29 @@ struct TimerHeader: View {
         .animation(Animation.customSlowSpring, value: showSessionType)
     }
 }
+
+
+
+struct PadTimerHeader: View {
+    var targetFocused: FocusState<Bool>.Binding
+    var showSessions: Binding<Bool>?
+    
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            TimerHeader(targetFocused: targetFocused, previewMode: false)
+            
+            Spacer()
+            
+            if let showSessions = showSessions {
+                HierarchialButton(type: .mono, size: .large, square: true, onTapRun: {
+                    showSessions.wrappedValue.toggle()
+                }) {
+                    Image(systemName: showSessions.wrappedValue ? "hourglass.circle" : "line.3.horizontal.circle")
+                }
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 35)
+    }
+}

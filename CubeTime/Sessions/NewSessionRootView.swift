@@ -20,9 +20,7 @@ struct NewSessionRootView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color("base")
-                    .ignoresSafeArea()
-                
+                BackgroundColour()
                 
                 VStack {
                     #warning("BUG: ADD NEW SESSION TEXT DOES NOT DISPLAY ON IPOD TOUCH")

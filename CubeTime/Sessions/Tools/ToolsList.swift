@@ -29,9 +29,7 @@ struct ToolsList: View {
 
     var body: some View {
         ZStack {
-            Color((UIDevice.deviceIsPad && hSizeClass == .regular) ? "overlay1" : "base")
-                .ignoresSafeArea()
-            
+            BackgroundColour()
             
             VStack(spacing: 8) {
                 ForEach(tools) { tool in
@@ -64,7 +62,6 @@ struct ToolsList: View {
             .fullScreenCover(item: $toolsViewModel.currentTool, content: {_ in
                 ZStack {
                     Color("base")
-                        .ignoresSafeArea()
                     
                     Group {
                         if let tool = toolsViewModel.currentTool {

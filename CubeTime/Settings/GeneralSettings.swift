@@ -421,14 +421,14 @@ struct GeneralSettingsView: View {
                     HStack {
                         Text("MIN")
                             .font(Font.system(.footnote, design: .rounded))
-                            .foregroundColor(Color("indent0"))
+                            .foregroundColor(Color("grey"))
                         
                         Slider(value: $gestureActivationDistance, in: 20...300)
                             .padding(.horizontal, 4)
                         
                         Text("MAX")
                             .font(Font.system(.footnote, design: .rounded))
-                            .foregroundColor(Color("indent0"))
+                            .foregroundColor(Color("grey"))
                         
                     }
                     

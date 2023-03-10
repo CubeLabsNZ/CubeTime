@@ -3,7 +3,6 @@ import CoreData
 
 struct StatsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.dismiss) var dismiss
@@ -36,8 +35,7 @@ struct StatsView: View {
         NavigationView {
             GeometryReader { geo in
                 ZStack {
-                    Color("base")
-                        .ignoresSafeArea()
+                    BackgroundColour()
                     
                     ScrollView {
                         VStack {

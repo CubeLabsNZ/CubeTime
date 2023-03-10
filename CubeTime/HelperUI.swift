@@ -358,3 +358,25 @@ struct ThemedDivider: View {
             .frame(width: isHorizontal ? nil : 1.15, height: isHorizontal ? 1.15 : nil)
     }
 }
+
+
+
+struct BackgroundColour: View {
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    @Environment(\.colorScheme) var colourScheme
+    
+    var body: some View {
+        Group {
+            if (!UIDevice.deviceIsPad || hSizeClass == .compact) { // if phone or small split screen ipad, then NO modals
+                Color("base")
+            } else {
+                if (colourScheme == .dark) {
+                    Color("indent1")
+                } else {
+                    Color("base")
+                }
+            }
+        }
+        .ignoresSafeArea()
+    }
+}

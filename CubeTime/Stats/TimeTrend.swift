@@ -400,7 +400,7 @@ struct Legend: View {
                         Text(formatLegendTime(secs: self.getYLegendSafe(height: height), dp: 1))
                             .offset(x: 2, y: self.getYposition(height: height))
                             .foregroundColor(Color("grey"))
-                            .font(FontManager.mono10)
+                            .recursiveMono(fontSize: 10, weight: .regular)
 
                     }
                     .offset(y: 3)

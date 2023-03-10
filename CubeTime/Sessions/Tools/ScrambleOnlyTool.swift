@@ -43,9 +43,3 @@ struct ScrambleOnlyTool: View {
         }
     }
 }
-
-struct ScrambleOnlyTool_Previews: PreviewProvider {
-    static var previews: some View {
-        ScrambleOnlyTool()
-    }
-}

@@ -27,12 +27,11 @@ struct NewSessionView: View {
     @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
     @ScaledMetric(relativeTo: .title2) var bigFrameHeight: CGFloat = 220
     @ScaledMetric(relativeTo: .title2) var otherBigFrameHeight: CGFloat = 80
-
+    
     
     var body: some View {
         ZStack {
-            Color("base")
-                .ignoresSafeArea()
+            BackgroundColour()
             
             ScrollView {
                 VStack (spacing: 16) {
@@ -85,7 +84,7 @@ struct NewSessionView: View {
                     Spacer()
                 }
             }
-//            .ignoresSafeArea(.keyboard)
+            //            .ignoresSafeArea(.keyboard)
             .navigationBarTitle("New \(typeName) Session", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
