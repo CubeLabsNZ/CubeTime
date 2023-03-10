@@ -146,13 +146,13 @@ struct TimeDetailView: View {
                                 HStack(spacing: 6) {
                                     Spacer()
                                     
-                                    HierarchialButton(type: solve.penalty == PenTypes.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    HierarchicalButton(type: solve.penalty == PenTypes.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .none)
                                     }) {
                                         Label("OK", systemImage: "checkmark.circle")
                                     }
                                     
-                                    HierarchialButton(type: solve.penalty == PenTypes.plustwo.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    HierarchicalButton(type: solve.penalty == PenTypes.plustwo.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .plustwo)
                                     }) {
                                         Label(title: {
@@ -163,7 +163,7 @@ struct TimeDetailView: View {
                                         })
                                     }
                                     
-                                    HierarchialButton(type: solve.penalty == PenTypes.dnf.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    HierarchicalButton(type: solve.penalty == PenTypes.dnf.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .dnf)
                                     }) {
                                         Label("DNF", systemImage: "xmark.circle")
@@ -190,7 +190,7 @@ struct TimeDetailView: View {
                             // BUTTONS
                             
                             HStack(spacing: 8) {
-                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                                HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
                                     copySolve(solve: solve)
                                     
                                     withAnimation(Animation.customSlowSpring.delay(0.25)) {
@@ -221,13 +221,13 @@ struct TimeDetailView: View {
                                     }
                                 }
                                 
-                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                                HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
                                     shareSolve(solve: solve)
                                 }) {
                                     Label("Share Solve", systemImage: "square.and.arrow.up")
                                 }
                                 
-                                HierarchialButton(type: .red, size: .large, square: true, onTapRun: {
+                                HierarchicalButton(type: .red, size: .large, square: true, onTapRun: {
                                     if currentSolve == nil {
                                         dismiss()
                                     }
@@ -269,7 +269,7 @@ struct TimeDetailView: View {
                                     currentSolve = nil
                                     dismiss()
                                 } label: {
-                                    HierarchialButtonBase(type: .mono, size: .medium, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
+                                    HierarchicalButtonBase(type: .mono, size: .medium, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
                                         Label("Move to…", systemImage: "arrow.up.right")
                                     }
                                 }

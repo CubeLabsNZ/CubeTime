@@ -22,7 +22,7 @@ extension StopwatchManager {
         let solvesTrimmed: [Solves] = solvesSorted.prefix(trim) + solvesSorted.suffix(trim)
         
         return CalculatedAverage(
-            name: "\(name)" + (isCompsim ? "\(count)" : ""),
+            name: "\(name)" + (isCompsim ? "" : "\(count)"),
             average: calculateAverage(forSortedSolves: solvesSorted, count: count, trim: trim),
             accountedSolves: solvesSorted.suffix(count),
             totalPen: isDNF ? .dnf : .none,

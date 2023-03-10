@@ -21,6 +21,11 @@ struct StatsView: View {
     @ScaledMetric var blockHeightReachedTargets = 50
     
     
+    @ScaledMetric var blockGraphEmpty = 150
+    @ScaledMetric var blockGraphTimeTrend = 310
+    @ScaledMetric var blockGraphTimeDistribution = 300
+    
+    
     @ScaledMetric(relativeTo: .body) var monospacedFontSizeBody: CGFloat = 17
 
     
@@ -145,7 +150,7 @@ struct StatsView: View {
                                     
                                     
                                     if SessionTypes(rawValue: stopwatchManager.currentSession.session_type)! == .multiphase {
-                                        StatsBlock(title: "AVERAGE PHASES", blockHeight: stopwatchManager.solvesNoDNFs.count == 0 ? 150 : nil, isBigBlock: true) {
+                                        StatsBlock(title: "AVERAGE PHASES", blockHeight: stopwatchManager.solvesNoDNFs.count == 0 ? blockGraphEmpty : nil, isBigBlock: true) {
                                                 AveragePhases(phaseTimes: stopwatchManager.phases!, count: stopwatchManager.solvesNoDNFsbyDate.count)
                                         }
                                     }
@@ -336,7 +341,7 @@ struct StatsView: View {
                                 
                                 
                                 #warning("TODO: add settings customisation to choose how many solves to show")
-                                StatsBlock(title: "TIME TREND", blockHeight: (timeTrendData.count < 2 ? 150 : 310), isBigBlock: true) {
+                                StatsBlock(title: "TIME TREND", blockHeight: (timeTrendData.count < 2 ? blockGraphEmpty : blockGraphTimeTrend), isBigBlock: true) {
                                     TimeTrend(data: Array(timeTrendData.prefix(80)), title: nil)
                                         .drawingGroup()
                                 }
@@ -345,7 +350,7 @@ struct StatsView: View {
                                 }
                                  
                                 
-//                                StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? 150 : 310), true, false) {
+//                                StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? blockGraphEmpty : blockGraphTimeDistribution), true, false) {
 //                                    TimeDistribution(solves: timeDistributionData)
 //                                        .drawingGroup()
 //                                        .frame(height: timeDistributionData.count < 4 ? 150 : 300)

@@ -69,13 +69,12 @@ struct TimerBackgroundColor: View {
             switch timerController.inspectionSecs {
             case 8..<12:
                 Color.Inspection.eight
-                    .ignoresSafeArea()
+                
             case 12..<15:
                 Color.Inspection.twelve
-                    .ignoresSafeArea()
+                
             case let x where x >= 15:
                 Color.Inspection.penalty
-                    .ignoresSafeArea()
             default:
                 Color("base")
             }
@@ -150,6 +149,9 @@ struct TimerView: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.horizontalSizeClass) var hSizeClass
     
+    @Environment(\.dismiss) var dismiss
+
+    
     // GET USER DEFAULTS
     @AppStorage("onboarding") var showOnboarding: Bool = true
     @Preference(\.showCancelInspection) private var showCancelInspection
@@ -184,14 +186,13 @@ struct TimerView: View {
     var body: some View {
         let typingMode = inputMode == .typing && stopwatchManager.currentSession.session_type != SessionTypes.multiphase.rawValue
         
-        
         GeometryReader { geo in
             TimerBackgroundColor()
-                .ignoresSafeArea(.all)
+                .ignoresSafeArea()
             
             
             if typingMode || targetFocused || manualInputFocused {
-                Color.white.opacity(0.000001)
+                Color.white.opacity(0.0001)
                     .onTapGesture {
                         if inputMode == .timer {
                             manualInputFocused = false
@@ -211,6 +212,8 @@ struct TimerView: View {
                                 manualInputFocused = false
                             }
                         }
+                        
+                        stopwatchManager.showPenOptions = false
                     }
             } else {
                 TimerTouchView()
@@ -224,7 +227,7 @@ struct TimerView: View {
                         .allowsHitTesting(false)
                     
                     if timerController.mode == .inspecting && showCancelInspection {
-                        HierarchialButton(type: .mono, size: .medium, onTapRun: {
+                        HierarchicalButton(type: .mono, size: .medium, onTapRun: {
                             timerController.interruptInspection()
                         }) {
                             Text("Cancel")
@@ -232,24 +235,22 @@ struct TimerView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                .ignoresSafeArea(edges: .all)
+                .ignoresSafeArea()
             }
             
             
             if (typingMode || showInputField) && !showManualInputFormattedText {
-                Group {
-                    TextField("0.00", text: $manualInputTime)
-                        .focused($manualInputFocused)
-                        .frame(maxWidth: geo.size.width-32)
-                        .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 56, nil)))
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(timerController.timerColour)
-                        .background(Color("bg"))
-                        .modifier(DynamicText())
-                        .modifier(TimeMaskTextField(text: $manualInputTime))
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                .ignoresSafeArea(edges: .all)
+                TextField("0.00", text: $manualInputTime)
+                    .focused($manualInputFocused)
+                    .frame(maxWidth: geo.size.width-32)
+                    .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 56, nil)))
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(timerController.timerColour)
+                    .background(Color("base"))
+                    .modifier(DynamicText())
+                    .modifier(TimeMaskTextField(text: $manualInputTime))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .ignoresSafeArea()
             }
             
             if !stopwatchManager.hideUI {
@@ -404,8 +405,9 @@ struct TimerView: View {
                     }
                     
                 }
+                .modifier(AvoidFloatingPanel())
                 .disabled(scrambleController.scrambleStr == nil)
-                .ignoresSafeArea(edges: .all)
+                .ignoresSafeArea()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .offset(y: 40)
             }
@@ -427,11 +429,17 @@ struct TimerView: View {
                 
             }
         }
-        .sheet(item: $scrambleSheetStr) { str in
-            TimeScrambleDetail(str.str, scrambleController.scrambleSVG)
+        .sheet(item: $scrambleSheetStr, onDismiss: {
+            scrambleSheetStr = nil
+            dismiss()
+        }) { str in
+            #warning("crashes if you PULL DOWN on one sheet presented by draw scramble and quickly tap on scramble text")
+            TimeScrambleDetail(binding: $scrambleSheetStr, str.str, scrambleController.scrambleSVG)
                 .tint(Color("accent"))
         }
-        .sheet(item: $presentedAvg) { item in
+        .sheet(item: $presentedAvg, onDismiss: {
+            self.presentedAvg = nil
+        }) { item in
             StatsDetailView(solves: item, session: stopwatchManager.currentSession)
                 .tint(Color("accent"))
             
@@ -452,12 +460,15 @@ struct TimeScrambleDetail: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
     
-    var scramble: String
+    @Binding var scramble: SheetStrWrapper?
+    
+    var scrambleString: String
     var svg: String?
     @State var windowedScrambleSize: Int = SettingsManager.standard.scrambleSize
     
-    init(_ scramble: String, _ svg: String?) {
-        self.scramble = scramble
+    init(binding: Binding<SheetStrWrapper?>, _ scrambleString: String, _ svg: String?) {
+        self._scramble = binding
+        self.scrambleString = scrambleString
         self.svg = svg
     }
     
@@ -466,7 +477,7 @@ struct TimeScrambleDetail: View {
             GeometryReader { geo in
                 VStack {
                     ScrollView {
-                        Text(scramble)
+                        Text(scrambleString)
                             .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDesc, CGFloat(windowedScrambleSize), nil)))
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
@@ -481,10 +492,9 @@ struct TimeScrambleDetail: View {
                             .padding(.vertical)
                     } else {
                         LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .medium, speed: .normal)
-                        
-                        //                    ProgressView()
                     }
                 }
+                .frame(maxWidth: .infinity)
                 .navigationTitle("Scramble")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -512,6 +522,7 @@ struct TimeScrambleDetail: View {
                     ToolbarItem(placement: .confirmationAction) {
                         DoneButton(onTapRun: {
                             dismiss()
+                            scramble = nil
                         })
                     }
                 }

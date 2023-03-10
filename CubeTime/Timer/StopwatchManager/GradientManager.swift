@@ -27,20 +27,20 @@ func getGradientColours(gradientSelected: Int, isStaticGradient: Bool) -> [Color
 }
 
 let dynamicGradients: [[Color]] = [
-    [Color(0x05537a), Color(0x0093c1)], // light blue - dark blue
-    [Color(0x007caa), Color(0x52c8cd)], // aqua - light blue
-    [Color(0x3ec4d0), Color(0xe6e29a)], // pale yellow/white ish - aqua
-    [Color(0x94d7be), Color(0xffd325)], // yellow - green
-    [Color(0xffd63c), Color(0xff9e45)], // pale orange-yellow
+    [Color(hex: 0x05537a), Color(hex: 0x0093c1)], // light blue - dark blue
+    [Color(hex: 0x007caa), Color(hex: 0x52c8cd)], // aqua - light blue
+    [Color(hex: 0x3ec4d0), Color(hex: 0xe6e29a)], // pale yellow/white ish - aqua
+    [Color(hex: 0x94d7be), Color(hex: 0xffd325)], // yellow - green
+    [Color(hex: 0xffd63c), Color(hex: 0xff9e45)], // pale orange-yellow
     
-    [Color(0xffc337), Color(0xfc7018)], // darker orange - yellow
-    [Color(0xff9528), Color(0xfb5b5c)], // pink-orange
-    [Color(0xf77d4f), Color(0xd35082)], // magenta-orange
-    [Color(0xd95378), Color(0x8548ba)], // purple-pink
-    [Color(0x702f86), Color(0x3f248f)], // dark blue-purple
+    [Color(hex: 0xffc337), Color(hex: 0xfc7018)], // darker orange - yellow
+    [Color(hex: 0xff9528), Color(hex: 0xfb5b5c)], // pink-orange
+    [Color(hex: 0xf77d4f), Color(hex: 0xd35082)], // magenta-orange
+    [Color(hex: 0xd95378), Color(hex: 0x8548ba)], // purple-pink
+    [Color(hex: 0x702f86), Color(hex: 0x3f248f)], // dark blue-purple
 ]
 
-let staticGradient: [Color] = [Color(0x91B0FF), Color(0x365DEB)]
+let staticGradient: [Color] = [Color(hex: 0x91B0FF), Color(hex: 0x365DEB)]
 
 
 

@@ -160,10 +160,12 @@ struct AboutSettingsView: View {
             
             Text("\nIf you run into any issues, please visit our GitHub page and submit an issue. \nhttps://github.com/CubeStuffs/CubeTime/issues")
             
+            #if false
             Text("\nIf you need a refresher on the primary features, you can see the welcome page again.")
             Button("Show welcome page") {
                 showOnboarding = true
             }
+            #endif
         }
         .padding(.horizontal)
         .sheet(isPresented: $showLicenses) {

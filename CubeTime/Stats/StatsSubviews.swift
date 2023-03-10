@@ -128,7 +128,7 @@ struct StatsBlockText: View {
                 Text("-")
                     .font(.title.weight(.medium))
                     .foregroundColor(colouredBlock
-                                     ? Color(0xF6F7FC) // hardcoded
+                                     ? Color(hex: 0xF6F7FC) // hardcoded
                                      : Color("grey"))
             }
             

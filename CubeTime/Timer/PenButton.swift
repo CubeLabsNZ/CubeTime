@@ -53,7 +53,7 @@ struct PenaltyBar<Content: View>: View {
     var body: some View {
         buttons
             .frame(height: 35)
-            .background(Color("indent1"))
+            .background(Color("overlay1"))
             .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
             .fixedSize()
     }

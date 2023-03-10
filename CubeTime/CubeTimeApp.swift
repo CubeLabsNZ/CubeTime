@@ -71,12 +71,15 @@ struct CubeTime: App {
                     Updates(showUpdates: $showUpdates)
                         .tint(Color("accent"))
                 }
+#if false
                 .sheet(isPresented: $showOnboarding, onDismiss: {
                     pageIndex = 0
                 }) {
                     OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
                         .tint(Color("accent"))
                 }
+#endif
+            
                 .if(dynamicTypeSize != DynamicTypeSize.large) { view in
                     view
                         .alert(isPresented: $showUpdates) {

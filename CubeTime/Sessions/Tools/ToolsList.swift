@@ -26,42 +26,46 @@ let tools: [Tool] = [
 struct ToolsList: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
     @StateObject var toolsViewModel = ToolsViewModel()
+    @ScaledMetric(wrappedValue: 65, relativeTo: .title3) private var blockHeight: CGFloat
 
     var body: some View {
         ZStack {
             BackgroundColour()
             
-            VStack(spacing: 8) {
-                ForEach(tools) { tool in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Label(tool.name, systemImage: tool.iconName)
-                            .font(.headline)
-                        
-                        Text(.init(tool.description))
-                            .foregroundColor(Color("grey"))
-                            .font(.caption)
-                            .padding(.top, 2)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    .padding(12)
-                    .frame(maxWidth: .infinity, minHeight: 65, alignment: .topLeading)
-                    .background {
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(Color("overlay0"))
-                    }
-                    .onTapGesture {
-                        withAnimation {
-                            toolsViewModel.currentTool = tool
+            ScrollView {
+                VStack(spacing: 12) {
+                    ForEach(tools) { tool in
+                        VStack(alignment: .leading, spacing: 4) {
+                            Label(tool.name, systemImage: tool.iconName)
+                                .font(.title3.weight(.semibold))
+                            
+                            Text(.init(tool.description))
+                                .foregroundColor(Color("grey"))
+                                .font(.callout)
+                                .padding(.top, 2)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .padding(12)
+                        .frame(maxWidth: .infinity, minHeight: blockHeight, alignment: .topLeading)
+                        .background {
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .fill(Color("overlay0"))
+                        }
+                        .onTapGesture {
+                            withAnimation {
+                                toolsViewModel.currentTool = tool
+                            }
                         }
                     }
+                    
+                    Spacer()
                 }
-                
-                Spacer()
+                .padding()
             }
-            .padding()
             .fullScreenCover(item: $toolsViewModel.currentTool, content: {_ in
                 ZStack {
                     Color("base")
+                        .ignoresSafeArea()
                     
                     Group {
                         if let tool = toolsViewModel.currentTool {
@@ -77,7 +81,7 @@ struct ToolsList: View {
                                     
                                 
                             case "Average Calculator":
-                                EmptyView()
+                                AverageCalculatorTool()
                                 
                                 
                             case "Scorecard Generator":

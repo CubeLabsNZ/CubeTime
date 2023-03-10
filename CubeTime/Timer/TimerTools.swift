@@ -28,7 +28,7 @@ struct BottomTools: View {
             }
             
             if showScramble && showStats {
-                Spacer()
+                Spacer(minLength: 0)
             }
             
             if showStats {
@@ -53,14 +53,6 @@ struct BottomTools: View {
     }
 }
 
-struct BottomToolBG: View {
-    var body: some View {
-        RoundedRectangle(cornerRadius: 12, style: .continuous)
-            .fill(Color("overlay0"))
-    }
-}
-
-
 struct BottomToolContainer<Content: View>: View {
     let content: Content
     
@@ -70,10 +62,14 @@ struct BottomToolContainer<Content: View>: View {
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Color("overlay0"))
-            
-            content
+            Group {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color("overlay0"))
+                
+                content
+            }
+            .frame(maxWidth: 170)
+            .frame(height: 120)
         }
         .frame(maxWidth: 170)
         .frame(height: 120)
@@ -90,9 +86,7 @@ struct TimerDrawScramble: View {
                 if let scr = scrambleController.scrambleStr {
                     SVGView(string: svg)
                         .padding(2)
-//                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .frame(width: geo.size.width, height: geo.size.height) // For some reason above doesnt work
-//                        .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
+                        .frame(width: geo.size.width, height: geo.size.height)
                         .aspectRatio(contentMode: .fit)
                         .onTapGesture {
                             scrambleSheetStr = SheetStrWrapper(str: scr)
@@ -121,14 +115,13 @@ struct TimerStatRaw: View {
                 Text(value)
                     .font(.system(size: 24, weight: .bold))
                     .modifier(DynamicText())
+                    
             } else {
                 Text(placeholderText)
                     .font(.system(size: 24, weight: .medium, design: .default))
                     .foregroundColor(Color("grey"))
             }
-            
         }
-        .frame(minWidth: 0, maxWidth: .infinity)
     }
 }
 
@@ -172,22 +165,27 @@ struct TimerStatsStandard: View {
     @Binding var presentedAvg: CalculatedAverage?
     
     var body: some View {
-        VStack(spacing: 6) {
-            HStack(spacing: 0) {
+        VStack(spacing: 0) {
+            HStack(spacing: 6) {
                 TimerStat(name: "AO5", average: stopwatchManager.currentAo5, presentedAvg: $presentedAvg)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 TimerStat(name: "AO12", average: stopwatchManager.currentAo12, presentedAvg: $presentedAvg)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .frame(maxHeight: .infinity)
             
             ThemedDivider()
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 18)
             
-            
-            HStack(spacing: 0) {
-                TimerStat(name: "AO100", average: stopwatchManager.currentAo5, presentedAvg: $presentedAvg)
+            HStack(spacing: 4) {
+                TimerStat(name: "AO100", average: stopwatchManager.currentAo100, presentedAvg: $presentedAvg)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 TimerStatRaw(name: "MEAN", value: stopwatchManager.sessionMean == nil ? nil : formatSolveTime(secs: stopwatchManager.sessionMean!), placeholderText: "-")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .frame(maxHeight: .infinity)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 6)
     }
 }
 
@@ -199,7 +197,9 @@ struct TimerStatsPad: View {
         VStack(spacing: 6) {
             HStack(spacing: 0) {
                 TimerStat(name: "AO5", average: stopwatchManager.currentAo5, presentedAvg: .constant(nil), hasIndividualGesture: false)
+                    .frame(maxWidth: .infinity)
                 TimerStat(name: "AO12", average: stopwatchManager.currentAo12, presentedAvg: .constant(nil), hasIndividualGesture: false)
+                    .frame(maxWidth: .infinity)
             }
             
             ThemedDivider()
@@ -207,8 +207,10 @@ struct TimerStatsPad: View {
             
             
             HStack(spacing: 0) {
-                TimerStat(name: "AO100", average: stopwatchManager.currentAo5, presentedAvg: .constant(nil), hasIndividualGesture: false)
+                TimerStat(name: "AO100", average: stopwatchManager.currentAo100, presentedAvg: .constant(nil), hasIndividualGesture: false)
+                    .frame(maxWidth: .infinity)
                 TimerStatRaw(name: "MEAN", value: stopwatchManager.sessionMean == nil ? nil : formatSolveTime(secs: stopwatchManager.sessionMean!), placeholderText: "-")
+                    .frame(maxWidth: .infinity)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

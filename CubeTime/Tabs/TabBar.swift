@@ -45,7 +45,7 @@ struct TabBar: View {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill((self.currentTab == .timer
                        ? Color("base")
-                       : colourScheme == .light ? Color("overlay0") : Color(0x303032)))
+                       : colourScheme == .light ? Color("overlay0") : Color(hex: 0x303032)))
             
                 .shadow(color: .black.opacity(self.currentTab == .timer ? 0.00 : 0.10),
                         radius: self.currentTab != .timer ? 8 : 0,

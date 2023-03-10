@@ -343,14 +343,6 @@ extension RandomAccessCollection where Element : Solves {
 //    }
 //}
 
-// view scaled font 
-@available(iOS 15, *)
-extension View {
-    func scaledCustomFont(name: String, size: CGFloat, sf: Bool, weight: Font.Weight?) -> some View {
-        return self.modifier(ScaledCustomFont(name: name, size: size, sf: sf, weight: weight))
-    }
-}
-
 // view struct extensions
 // source: https://www.avanderlee.com/swiftui/conditional-view-modifier/
 extension View {
@@ -439,7 +431,8 @@ struct AppZoomWrapper: RawRepresentable, Identifiable {
 struct DynamicText: ViewModifier {
     @inlinable func body(content: Content) -> some View {
         content
-            .scaledToFill()
+            .scaledToFit()
+//            .scaledToFill()   // i have no idea how swiftui works
             .minimumScaleFactor(0.5)
             .lineLimit(1)
     }
@@ -457,25 +450,6 @@ struct AnimatingFontSize: AnimatableModifier {
     @inlinable func body(content: Self.Content) -> some View {
         content
             .font(Font(CTFontCreateWithFontDescriptor(font, fontSize, nil)))
-    }
-}
-
-@available(iOS 15, *)
-struct ScaledCustomFont: ViewModifier {
-    @Environment(\.sizeCategory) var sizeCategory
-    
-    var name: String
-    var size: CGFloat
-    var sf: Bool
-    var weight: Font.Weight?
-    
-    func body(content: Content) -> some View {
-        let scaledSize = UIFontMetrics.default.scaledValue(for: size)
-        if sf {
-            return content.font(.system(size: scaledSize, weight: weight ?? .regular, design: .default))
-        } else {
-            return content.font(.custom(name, size: scaledSize))
-        }
     }
 }
 

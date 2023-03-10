@@ -17,6 +17,8 @@ struct TimerMenu: View {
     @State private var showTools: Bool = false
     @State private var showSettings: Bool = false
     
+    @ScaledMetric(wrappedValue: 35, relativeTo: .body) private var barHeight: CGFloat
+    
     private let circleWidth: CGFloat = 3.25
     
     var body: some View {
@@ -42,7 +44,7 @@ struct TimerMenu: View {
                     .padding(.top, 2)
                     
                     VStack(spacing: 8) {
-                        HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                        HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
                             withAnimation(.customEaseInOut) {
                                 stopwatchManager.currentPadFloatingStage = 1
                                 stopwatchManager.zenMode = true
@@ -61,7 +63,7 @@ struct TimerMenu: View {
                         ThemedDivider()
                             .padding(.horizontal, 4)
                         
-                        HierarchialButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {
+                        HierarchicalButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {
                             showTools = true
                         }) {
                             Label(title: {
@@ -73,7 +75,7 @@ struct TimerMenu: View {
                             })
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        HierarchialButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {
+                        HierarchicalButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {
                             showSettings = true
                         }) {
                             Label(title: {
@@ -101,11 +103,11 @@ struct TimerMenu: View {
             }
             .mask(
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .frame(width: expanded ? nil : 35, height: expanded ? nil : 35)
+                    .frame(width: expanded ? nil : barHeight, height: expanded ? nil : barHeight)
             )
         }
         .contentShape(Rectangle())
-        .frame(width: expanded ? nil : 35, height: expanded ? nil : 35)
+        .frame(width: expanded ? nil : barHeight, height: expanded ? nil : barHeight)
         .animation(Animation.customDampedSpring, value: expanded)
         .fixedSize(horizontal: true, vertical: true)
         

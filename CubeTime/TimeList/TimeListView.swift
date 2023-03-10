@@ -17,6 +17,8 @@ enum SortBy: Int {
 struct SortByMenu: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
+    @ScaledMetric(wrappedValue: 35, relativeTo: .body) private var frameHeight: CGFloat
+    
     let hasShadow: Bool
     var animation: Namespace.ID
     
@@ -58,18 +60,20 @@ struct SortByMenu: View {
                 }
             }
         } label: {
-            HierarchialButtonBase(type: .halfcoloured, size: .large, outlined: false, square: true, hasShadow: hasShadow, hasBackground: true, expandWidth: true) {
+            HierarchicalButtonBase(type: .halfcoloured, size: .large, outlined: false, square: true, hasShadow: hasShadow, hasBackground: true, expandWidth: true) {
                 Image(systemName: "line.3.horizontal.decrease")
                     .matchedGeometryEffect(id: "label", in: animation)
             }
             .animation(Animation.customEaseInOut, value: self.hasShadow)
-            .frame(width: 35, height: 35)
+            .frame(width: frameHeight, height: frameHeight)
         }
     }
 }
 
 
 struct SessionHeader: View {
+    @ScaledMetric(wrappedValue: 35, relativeTo: .body) private var frameHeight: CGFloat
+
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
     var body: some View {
@@ -77,17 +81,17 @@ struct SessionHeader: View {
             SessionIconView(session: stopwatchManager.currentSession)
             
             Text(stopwatchManager.currentSession.name ?? "Unknown Session Name")
-                .font(.system(size: 17, weight: .medium))
+                .font(.body.weight(.medium))
             
             Spacer()
             
             if (SessionTypes(rawValue: stopwatchManager.currentSession.session_type) != .playground) {
                 Text(puzzle_types[Int(stopwatchManager.currentSession.scramble_type)].name)
-                    .font(.system(size: 17, weight: .medium))
+                    .font(.body.weight(.medium))
                     .padding(.trailing)
             }
         }
-        .frame(height: 35)
+        .frame(height: frameHeight)
         .background(
             Color("overlay1")
                 .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
@@ -95,9 +99,11 @@ struct SessionHeader: View {
     }
 }
 
-
 struct TimeListHeader: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    
+    @ScaledMetric(wrappedValue: 35, relativeTo: .body) private var barHeight: CGFloat
+    @ScaledMetric(wrappedValue: -43, relativeTo: .body) private var offset: CGFloat
     
     @State var searchExpanded = false
     @State var pressing = false
@@ -153,10 +159,10 @@ struct TimeListHeader: View {
                 }
                 .mask(
                     RoundedRectangle(cornerRadius: 6, style: .continuous)
-                        .frame(width: searchExpanded ? nil : 35)
+                        .frame(width: searchExpanded ? nil : barHeight)
                 )
             }
-            .frame(width: searchExpanded ? nil : 35, height: 35)
+            .frame(width: searchExpanded ? nil : barHeight, height: barHeight)
             .fixedSize(horizontal: !searchExpanded, vertical: true)
 
             .scaleEffect(pressing ? 0.96 : 1.00)
@@ -179,7 +185,7 @@ struct TimeListHeader: View {
                     }
             )
             
-            .padding(.trailing, searchExpanded ? -43 : 0)
+            .padding(.trailing, searchExpanded ? offset : 0)
             
             SortByMenu(hasShadow: !searchExpanded, animation: animation)
                 .offset(x: searchExpanded ? -43 : 0)
@@ -355,7 +361,7 @@ struct TimeListView: View {
                                     }
                                 }
                             } label: {
-                                HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: true, hasShadow: true, hasBackground: true, expandWidth: true) {
+                                HierarchicalButtonBase(type: .coloured, size: .small, outlined: false, square: true, hasShadow: true, hasBackground: true, expandWidth: true) {
                                     Image(systemName: "ellipsis")
                                         .frame(width: 28, height: 28)
                                         .imageScale(.medium)
@@ -369,7 +375,7 @@ struct TimeListView: View {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         if stopwatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
                             if isSelectMode {
-                                HierarchialButton(type: .coloured, size: .small, onTapRun: {
+                                HierarchicalButton(type: .coloured, size: .small, onTapRun: {
                                     withAnimation(Animation.customDampedSpring) {
                                         stopwatchManager.timeListSolvesSelected = Set(stopwatchManager.timeListSolvesFiltered)
                                     }
@@ -377,7 +383,7 @@ struct TimeListView: View {
                                     Text("Select All")
                                 }
                                 
-                                HierarchialButton(type: .disabled, size: .small, onTapRun: {
+                                HierarchicalButton(type: .disabled, size: .small, onTapRun: {
                                     isSelectMode = false
                                     withAnimation(Animation.customDampedSpring) {
                                         stopwatchManager.timeListSolvesSelected.removeAll()
@@ -386,7 +392,7 @@ struct TimeListView: View {
                                     Text("Cancel")
                                 }
                             } else {
-                                HierarchialButton(type: .coloured, size: .small, onTapRun: {
+                                HierarchicalButton(type: .coloured, size: .small, onTapRun: {
                                     isSelectMode = true
                                 }) {
                                     Text("Select")
