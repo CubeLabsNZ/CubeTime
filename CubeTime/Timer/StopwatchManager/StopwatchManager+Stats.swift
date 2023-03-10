@@ -362,6 +362,8 @@ extension StopwatchManager {
         self.currentAo12 = getCurrentAverageOf(12)
         self.currentAo100 = getCurrentAverageOf(100)
         
+        normalMedian = getNormalMedian()
+        
         let bpawpa = getWpaBpa()
         self.bpa = bpawpa.0
         self.wpa = bpawpa.1

@@ -280,9 +280,9 @@ struct StatsView: View {
                                                      ? allCompsimAveragesByDate.map { $0.average! }
                                                      : stopwatchManager.solvesNoDNFsbyDate.map { $0.timeIncPen })
                                 
-//                                let timeDistributionData = (compsim
-//                                                            ? allCompsimAveragesByDate.map{ $0.average! }.sorted(by: <)
-//                                                            : stopwatchManager.solvesNoDNFs.map { $0.timeIncPen })
+                                let timeDistributionData = (compsim
+                                                            ? allCompsimAveragesByDate.map{ $0.average! }.sorted(by: <)
+                                                            : stopwatchManager.solvesNoDNFs.map { $0.timeIncPen })
                                 
                                 
                                 #warning("TODO: add settings customisation to choose how many solves to show")
@@ -295,11 +295,11 @@ struct StatsView: View {
                                 }
                                  
                                 
-//                                StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? 150 : 310), true, false) {
-//                                    TimeDistribution(solves: timeDistributionData)
-//                                        .drawingGroup()
+                                StatsBlock(title: "TIME DISTRIBUTION", blockHeight: (timeDistributionData.count < 4 ? 150 : 310), isBigBlock: true, isColoured: false) {
+                                    TimeDistribution(solves: timeDistributionData)
+                                        .drawingGroup()
 //                                        .frame(height: timeDistributionData.count < 4 ? 150 : 300)
-//                                }
+                                }
                             }
                             .frame(minWidth: 0, maxWidth: .infinity)
                         }
