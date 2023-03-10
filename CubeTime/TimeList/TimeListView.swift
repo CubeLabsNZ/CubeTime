@@ -371,16 +371,15 @@ struct TimeListView: View {
                             if isSelectMode {
                                 HierarchialButton(type: .coloured, size: .small, onTapRun: {
                                     withAnimation(Animation.customDampedSpring) {
-                                        stopwatchManager.timeListSolvesSelected = Set(stopwatchManager.timeListSolvesFiltered)
+                                        stopwatchManager.timeListSelectAll?()
                                     }
                                 }) {
                                     Text("Select All")
                                 }
                                 
                                 HierarchialButton(type: .disabled, size: .small, onTapRun: {
-                                    isSelectMode = false
                                     withAnimation(Animation.customDampedSpring) {
-                                        stopwatchManager.timeListSolvesSelected.removeAll()
+                                        isSelectMode = false
                                     }
                                 }) {
                                     Text("Cancel")
@@ -423,6 +422,7 @@ struct TimeListView: View {
         }
         
         .onChange(of: stopwatchManager.timeListSolvesSelected) { newValue in
+            NSLog("num of selected solves: \(newValue.count)")
             if newValue.count == 0 {
                 isSelectMode = false
                 return

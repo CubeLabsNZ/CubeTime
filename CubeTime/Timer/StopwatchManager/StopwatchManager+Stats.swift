@@ -239,7 +239,6 @@ extension StopwatchManager {
         try! managedObjectContext.save()
         
         statsGetFromCache() // TODO not this :sob:
-        stateID = UUID()
         // so much for cache stats
     }
     

@@ -291,8 +291,8 @@ class StopwatchManager: ObservableObject {
         }
     }
     
-    #warning("TODO:  fix this god awful hack")
-    @Published var stateID = UUID()
+    var timeListReloadSolve: ((Solves) -> ())?
+    var timeListSelectAll: (() -> ())?
     
     
     // MARK: inspection alert audio

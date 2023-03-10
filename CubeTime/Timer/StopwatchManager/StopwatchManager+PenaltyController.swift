@@ -55,6 +55,10 @@ extension StopwatchManager {
         
         
         solve.penalty = pen.rawValue
+        if timeListSolvesFiltered.contains(solve) {
+            NSLog("RELOADING SOLVE")
+            timeListReloadSolve?(solve)
+        }
         
         solves.remove(object: solve)
         solves.insert(solve, at: solves.insertionIndex(of: solve))
@@ -84,8 +88,6 @@ extension StopwatchManager {
         self.bestAo5 = getBestAverage(of: 5)
         self.bestAo12 = getBestAverage(of: 12)
         self.bestAo100 = getBestAverage(of: 100)
-        
-        stateID = UUID() // I'm so sorry
         
         try! managedObjectContext.save()
     }
