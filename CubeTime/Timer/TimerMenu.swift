@@ -77,7 +77,7 @@ struct TimerMenu: View {
                     HStack(spacing: 2.75) {
                         ForEach(0..<3, id: \.self) { id in
                             Circle()
-                                .fill(Color.accentColor)
+                                .fill(Color("accent"))
                                 .matchedGeometryEffect(id: id, in: namespace)
                                 .frame(width: circleWidth, height: circleWidth)
                         }

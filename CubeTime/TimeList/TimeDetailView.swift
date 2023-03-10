@@ -214,7 +214,7 @@ struct TimeDetailView: View {
                                             if self.offsetValue != 0 {
                                                 Image(systemName: "doc.on.doc")
                                                     .font(.subheadline.weight(.medium))
-                                                    .foregroundColor(Color.accentColor)
+                                                    .foregroundColor(Color("accent"))
                                                    
                                             }
                                             

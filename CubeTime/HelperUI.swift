@@ -241,13 +241,13 @@ struct HierarchialButtonBase<V: View>: View {
         switch (type) {
         case .halfcoloured:
             self.colourBg = Color("overlay0")
-            self.colourFg = Color.accentColor
+            self.colourFg = Color("accent")
             self.colourShadow = Color.black.opacity(0.06)
             
         case .coloured:
-            self.colourBg = Color.accentColor.opacity(0.20)
-            self.colourFg = Color.accentColor
-            self.colourShadow = Color.accentColor.opacity(0.08)
+            self.colourBg = Color("accent").opacity(0.20)
+            self.colourFg = Color("accent")
+            self.colourShadow = Color("accent").opacity(0.08)
             
         case .mono:
             self.colourBg = Color("overlay0")
@@ -365,6 +365,7 @@ struct DoneButton: View {
             Text("Done")
                 .font(.body.weight(.medium))
         }
+        .tint(Color("accent"))
     }
 }
 

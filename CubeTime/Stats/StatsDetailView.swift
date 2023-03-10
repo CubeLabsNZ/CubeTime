@@ -116,7 +116,7 @@ struct StatsDetailView: View {
                                             if self.offsetValue != 0 {
                                                 Image(systemName: "doc.on.doc")
                                                     .font(.subheadline.weight(.medium))
-                                                    .foregroundColor(Color.accentColor)
+                                                    .foregroundColor(Color("accent"))
                                                    
                                             }
                                             
@@ -157,7 +157,7 @@ struct StatsDetailView: View {
                                         HStack(alignment: .bottom) {
                                             Text("\(index+1).")
                                                 .font(.callout.weight(.bold))
-                                                .foregroundColor(Color.accentColor)
+                                                .foregroundColor(Color("accent"))
                                             
                                             if solves.trimmedSolves!.contains(solve) {
                                                 Text("(" + formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!) + ")")

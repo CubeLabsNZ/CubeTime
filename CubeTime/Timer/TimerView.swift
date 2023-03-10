@@ -179,7 +179,7 @@ struct TimerDrawScramble: View {
                         }
                 }
             } else {
-                LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
+                LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             }
         }
@@ -451,7 +451,7 @@ struct TimerView: View {
                     
                     Spacer()
                     
-                    LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .small, speed: .fast)
+                    LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
                         .frame(maxHeight: 35)
                         .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
                         .opacity(scrambleController.scrambleStr == nil ? 1 : 0)
@@ -581,9 +581,11 @@ struct TimerView: View {
         }
         .sheet(item: $scrambleSheetStr) { str in
             TimeScrambleDetail(str.str, scrambleController.scrambleSVG)
+                .tint(Color("accent"))
         }
         .sheet(item: $presentedAvg) { item in
             StatsDetailView(solves: item, session: stopwatchManager.currentSession)
+                .tint(Color("accent"))
             
 #warning("TODO: use SWM env object")
         }
@@ -630,7 +632,7 @@ struct TimeScrambleDetail: View {
                             .padding(.horizontal, geo.size.width * 0.1)
                             .padding(.vertical)
                     } else {
-                        LoadingIndicator(animation: .circleRunner, color: .accentColor, size: .medium, speed: .normal)
+                        LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .medium, speed: .normal)
                         
                         //                    ProgressView()
                     }
@@ -645,7 +647,7 @@ struct TimeScrambleDetail: View {
                             } label: {
                                 Image(systemName: "textformat.size.smaller")
                                     .font(.system(size: 17, weight: .medium, design: .rounded))
-                                    .foregroundColor(Color.accentColor)
+                                    .foregroundColor(Color("accent"))
                             }
                             
                             
@@ -654,7 +656,7 @@ struct TimeScrambleDetail: View {
                             } label: {
                                 Image(systemName: "textformat.size.larger")
                                     .font(.system(size: 17, weight: .medium, design: .rounded))
-                                    .foregroundColor(Color.accentColor)
+                                    .foregroundColor(Color("accent"))
                             }
                         }
                     }
