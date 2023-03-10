@@ -128,18 +128,14 @@ struct TimeListHeader: View {
                         TextField("Search for a time...", text: $stopwatchManager.timeListFilter)
                             .frame(maxWidth: .infinity)
                             .foregroundColor(Color(stopwatchManager.timeListFilter.isEmpty ? "grey" : "dark"))
-                        
-                        HStack(spacing: 8) {
-                            Spacer()
-                            
-                            Button {
-                                withAnimation(Animation.customEaseInOut) {
-                                    stopwatchManager.timeListFilter = ""
-                                    searchExpanded = false
-                                }
-                            } label: {
-                                Image(systemName: "xmark")
+
+                        Button {
+                            withAnimation(Animation.customEaseInOut) {
+                                stopwatchManager.timeListFilter = ""
+                                searchExpanded = false
                             }
+                        } label: {
+                            Image(systemName: "xmark")
                         }
                         .font(.body)
                         .buttonStyle(AnimatedButton())
