@@ -356,6 +356,12 @@ extension StopwatchManager {
     func updateStats() {
         #warning("TODO:  maybe make these async?")
         
+        if currentSession.session_type == SessionTypes.compsim.rawValue {
+            statsGetFromCache()
+            return
+        }
+        
+        
         solvesByDate.append(solveItem)
         // These stats would require severe voodoo to not recalculate (TODO switch to voodoo), and are faily cheap
         self.currentAo5 = getCurrentAverageOf(5)
