@@ -14,7 +14,6 @@ class MyCell : UICollectionViewCell {
     }
     
     override init(frame: CGRect) {
-        NSLog("CELL INIT: x \(frame.minX), y \(frame.minY)")
         super.init(frame: frame)
         label.frame = CGRect(origin: .zero, size: frame.size)
         label.textAlignment = .center
@@ -32,10 +31,6 @@ class MyCell : UICollectionViewCell {
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.82, initialSpringVelocity: 1) {
             self.layer.backgroundColor = UIColor(named: self.isSelected ? "indent0" : "overlay0")!.cgColor
         }
-    }
-    
-    deinit {
-        NSLog("CELL DEINITIALISED: x: \(frame.minX), y: \(frame.minY)")
     }
 }
 
@@ -66,7 +61,6 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     
     var mySelecting = false {
         didSet {
-            // Clear selection
             if mySelecting == false {
                 collectionView.indexPathsForSelectedItems?.forEach { indexPath in
                     collectionView.deselectItem(at: indexPath, animated: true)
@@ -75,7 +69,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
                     }
                 }
             }
-            NSLog("DIDSET mySelecting to \(mySelecting)")
+            
             collectionView.allowsSelection = mySelecting
             collectionView.allowsMultipleSelection = mySelecting
         }
@@ -85,7 +79,6 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     let onClickSolve: (Solves) -> ()
     
     var subscriber: AnyCancellable?
-//    var subscriber2: AnyCancellable?
     
     lazy var dataSource = makeDataSource()
     
@@ -100,7 +93,6 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         
         subscriber = stopwatchManager.$timeListSolvesFiltered
             .sink(receiveValue: { [weak self] i in
-                NSLog("Recieved value timelistsolvesfiltersd")
                 self?.applySnapshot(i)
             })
     }
@@ -125,7 +117,6 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
             cell.gesture.cancelsTouchesInView = false
             cell.addGestureRecognizer(cell.gesture)
             cell.viewController = self
-            NSLog("DID cell something")
         }
         
         return DataSource(collectionView: collectionView) {
@@ -155,11 +146,9 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     }
     
     override func viewDidLoad() {
-        NSLog("VIEWDID LOAD TIMELISTINNER")
         super.viewDidLoad()
         self.collectionView.layer.backgroundColor = UIColor.clear.cgColor
         
-//        self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: timeResuseIdentifier)
         self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
@@ -180,6 +169,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
             
             self.dataSource.apply(categorySnapshot, animatingDifferences: false)
         }
+        
         stopwatchManager.timeListSelectAll = { [weak self] in
             guard let self else { return }
             
@@ -192,13 +182,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         }
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        
-        print("DISAPPEAR CALLED")
-    }
-    
     deinit {
-        print("DEININT CALLED")
         stopwatchManager.timeListReloadSolve = nil
         stopwatchManager.timeListSelectAll = nil
     }
@@ -208,7 +192,6 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     }
     
     override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        NSLog("called contextmenuitem")
         guard let solve = dataSource.itemIdentifier(for: indexPath) else { return UIContextMenuConfiguration() }
         
         let copy = UIAction(title: "Copy", image: UIImage(systemName: "doc.on.doc")) { _ in
@@ -277,9 +260,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if mySelecting {
-//            DispatchQueue.main.async {
-                self.stopwatchManager.timeListSolvesSelected.insert(self.stopwatchManager.timeListSolvesFiltered[indexPath.item])
-//            }
+            self.stopwatchManager.timeListSolvesSelected.insert(self.stopwatchManager.timeListSolvesFiltered[indexPath.item])
         } else {
             onClickSolve(stopwatchManager.timeListSolvesFiltered[indexPath.item])
         }
@@ -287,18 +268,13 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         if mySelecting {
-//            DispatchQueue.main.async {
-                self.stopwatchManager.timeListSolvesSelected.remove(self.stopwatchManager.timeListSolvesFiltered[indexPath.item])
-//            }
-            NSLog("DESELETED")
+            self.stopwatchManager.timeListSolvesSelected.remove(self.stopwatchManager.timeListSolvesFiltered[indexPath.item])
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = (collectionView.frame.width - 32 - 10*2)/3
         return CGSize(width: width, height: cardHeight)
-//        return CGSize(width: 100, height: 100)
-
     }
 }
 
@@ -310,12 +286,15 @@ struct TimeListInner: UIViewControllerRepresentable {
     @Binding var currentSolve: Solves?
     
     func makeUIViewController(context: Context) -> TimeListViewController {
-        let vc = TimeListViewController(stopwatchManager: stopwatchManager, onClickSolve: { solve in
+        let timeListViewController = TimeListViewController(stopwatchManager: stopwatchManager, onClickSolve: { solve in
             currentSolve = solve
         })
-        let size = vc.view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-        vc.preferredContentSize = size
-        return vc
+        
+        let size = timeListViewController.view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        timeListViewController.preferredContentSize = size
+        timeListViewController.additionalSafeAreaInsets = .init(top: 0, left: 0, bottom: 50 + 8, right: 0)
+        
+        return timeListViewController
     }
     
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {

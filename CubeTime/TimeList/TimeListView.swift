@@ -239,7 +239,6 @@ struct TimeListView: View {
                             TimeListHeader()
                             
                             TimeListInner(isSelectMode: $isSelectMode, currentSolve: $solve)
-//                                .padding(.horizontal)
                                 .ignoresSafeArea()
                         }
                     } else {
@@ -278,6 +277,9 @@ struct TimeListView: View {
                                 }
                                 .padding(.horizontal)
                             }
+                        }
+                        .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
+                            view.safeAreaInset(safeArea: .tabBar)
                         }
                     }
                 }
@@ -400,9 +402,6 @@ struct TimeListView: View {
                             }
                         }
                     }
-                }
-                .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
-                    view.safeAreaInset(safeArea: .tabBar)
                 }
             }
         }
