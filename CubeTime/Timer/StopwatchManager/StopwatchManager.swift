@@ -257,6 +257,7 @@ class StopwatchManager: ObservableObject {
     
     
     // Couple time list functions
+    #warning("this spams purple errors ... \"publishing view updates something somethin\"")
     @Published var timeListSolvesSelected = Set<(Solves)>()
     var timeListSolves: [Solves]!
     @Published var timeListSolvesFiltered: [Solves]!

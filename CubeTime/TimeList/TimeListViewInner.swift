@@ -16,10 +16,15 @@ class TimeCardLabel: UIStackView {
         
 //        timeTextLabel.frame = frame
         timeTextLabel.textAlignment = .center
+        
+        
         timeTextLabel.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
         timeTextLabel.isUserInteractionEnabled = false
         
 //        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        checkbox.contentMode = .scaleAspectFit
+        checkbox.isHidden = true
         
         
 /*
@@ -29,23 +34,18 @@ class TimeCardLabel: UIStackView {
  }
  */
         
-        let config = UIImage.SymbolConfiguration(paletteColors: [UIColor(Color("accent")), UIColor(Color("overlay0"))])
+        let config = UIImage.SymbolConfiguration(paletteColors: [UIColor(named: "accent")!, UIColor(named: "overlay0")!])
         checkbox.preferredSymbolConfiguration = config
         
         self.axis = .vertical
         self.alignment = .center
-        self.distribution = .equalSpacing
+        self.distribution = .equalCentering
         self.spacing = 0
         
+        self.addArrangedSubview(UIView())
         self.addArrangedSubview(timeTextLabel)
         self.addArrangedSubview(checkbox)
-        
-        let constraints = [
-            timeTextLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 6),
-            checkbox.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 6)
-        ]
-
-        NSLayoutConstraint.activate(constraints)
+        self.addArrangedSubview(UIView())
         
         self.layoutIfNeeded()
     }
@@ -69,6 +69,8 @@ class TimeCardCell: UICollectionViewCell {
         super.init(frame: frame)
         
         self.layer.backgroundColor = UIColor(named: isSelected ? "indent0" : "overlay0")!.cgColor
+        self.timeCardLabel.checkbox.isHidden = !self.isSelected
+        
         self.layer.cornerRadius = 8
         self.layer.cornerCurve = .continuous
         
@@ -78,6 +80,12 @@ class TimeCardCell: UICollectionViewCell {
     override func updateConfiguration(using state: UICellConfigurationState) {
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.82, initialSpringVelocity: 1) {
             self.layer.backgroundColor = UIColor(named: self.isSelected ? "indent0" : "overlay0")!.cgColor
+            
+            if (self.timeCardLabel.checkbox.isHidden != !self.isSelected) {
+                self.timeCardLabel.checkbox.isHidden = !self.isSelected
+                
+                self.timeCardLabel.layoutIfNeeded()
+            }
         }
     }
 }
