@@ -3,28 +3,76 @@ import UIKit
 import SwiftUI
 import Combine
 
-class MyCell : UICollectionViewCell {
-    let label = UILabel()
+class TimeCardLabel: UIStackView {
+    let timeTextLabel = UILabel()
+    let checkbox = UIImageView(image: UIImage(systemName: "checkmark.circle")!)
+    
+    required init(coder: NSCoder) {
+        fatalError("error")
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+//        timeTextLabel.frame = frame
+        timeTextLabel.textAlignment = .center
+        timeTextLabel.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
+        timeTextLabel.isUserInteractionEnabled = false
+        
+//        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+/*
+ UIView.animate(withDuration: 0.25) { () -> Void in
+     let firstView = stackView.arrangedSubviews[0]
+     firstView.isHidden = true
+ }
+ */
+        
+        let config = UIImage.SymbolConfiguration(paletteColors: [UIColor(Color("accent")), UIColor(Color("overlay0"))])
+        checkbox.preferredSymbolConfiguration = config
+        
+        self.axis = .vertical
+        self.alignment = .center
+        self.distribution = .equalSpacing
+        self.spacing = 0
+        
+        self.addArrangedSubview(timeTextLabel)
+        self.addArrangedSubview(checkbox)
+        
+        let constraints = [
+            timeTextLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 6),
+            checkbox.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 6)
+        ]
+
+        NSLayoutConstraint.activate(constraints)
+        
+        self.layoutIfNeeded()
+    }
+}
+
+
+class TimeCardCell: UICollectionViewCell {
+    let timeCardLabel: TimeCardLabel
+    
     var item: Solves!
     weak var viewController: TimeListViewController?
     var gesture: UITapGestureRecognizer!
     
     required init?(coder: NSCoder) {
-        fatalError("nope!")
+        fatalError("error")
     }
     
     override init(frame: CGRect) {
-        super.init(frame: frame)
-        label.frame = CGRect(origin: .zero, size: frame.size)
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
-        label.isUserInteractionEnabled = false
-        contentView.addSubview(label)
-
-        layer.backgroundColor = UIColor(named: isSelected ? "indent0" : "overlay0")!.cgColor
-        layer.cornerRadius = 8
-        layer.cornerCurve = .continuous
+        self.timeCardLabel = TimeCardLabel(frame: CGRect(origin: .zero, size: frame.size))
         
+        super.init(frame: frame)
+        
+        self.layer.backgroundColor = UIColor(named: isSelected ? "indent0" : "overlay0")!.cgColor
+        self.layer.cornerRadius = 8
+        self.layer.cornerCurve = .continuous
+        
+        self.contentView.addSubview(timeCardLabel)
     }
     
     override func updateConfiguration(using state: UICellConfigurationState) {
@@ -102,16 +150,18 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     }
 
     @objc func handleCellTap(_ gesture: UITapGestureRecognizer) {
-        if let view = gesture.view as? MyCell, !self.collectionView.allowsSelection {
+        if let view = gesture.view as? TimeCardCell, !self.collectionView.allowsSelection {
             onClickSolve(view.item)
         }
     }
     
     func makeDataSource() -> DataSource {
-        let solveCellRegistration = UICollectionView.CellRegistration<MyCell, Solves> { [weak self] cell, _, item in
+        let solveCellRegistration = UICollectionView.CellRegistration<TimeCardCell, Solves> { [weak self] cell, _, item in
             guard let self else { return }
             
-            cell.label.text = item.timeText
+            cell.timeCardLabel.timeTextLabel.text = item.timeText
+            cell.timeCardLabel.layoutIfNeeded()
+            
             cell.item = item
             cell.gesture = UITapGestureRecognizer(target: self, action: #selector(self.handleCellTap(_:)))
             cell.gesture.cancelsTouchesInView = false
