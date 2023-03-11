@@ -130,7 +130,6 @@ struct ScrambleGeneratorTool: View {
     
     var body: some View {
         VStack {
-
             ToolHeader(name: tools[2].name, image: tools[2].iconName, onClose: scrambleGenerator.cancel, content: {
                 Picker("", selection: $scrambleGenerator.scrambleType) {
                     ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in

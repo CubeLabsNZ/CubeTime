@@ -20,8 +20,10 @@ let tools: [Tool] = [
     Tool(name: "Scramble Only", iconName: "cube", description: "Displays one scramble at a time. A timer is not shown. Tap to generate the next scramble."),
     Tool(name: "Scramble Generator", iconName: "server.rack", description: "Generate multiple scrambles at once, to share, save or use."),
     Tool(name: "Calculator", iconName: "function", description: "Simple average and mean calculator."),
+    /*
     Tool(name: "Tracker", iconName: "scope", description: "Track someone's average at a comp. Calculates times needed for a chance for a target, BPA, WPA, and more."),
     Tool(name: "Scorecard Generator", iconName: "printer", description: "Export scorecards for use at meetups (or comps!)."),
+     */
 ]
 
 struct ToolsList: View {
@@ -87,11 +89,13 @@ struct ToolsList: View {
                             case "Calculator":
                                 CalculatorTool()
                             
+                                /*
                             case "Tracker":
                                 EmptyView()
                                 
                             case "Scorecard Generator":
                                 EmptyView()
+                                 */
                             
                             default:
                                 EmptyView()
