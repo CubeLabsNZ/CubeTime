@@ -62,86 +62,84 @@ struct CalculatorTool: View {
                         if (solves.count > 0) {
                             VStack(spacing: 8) {
                                 ForEach(Array(zip(solves.indices, solves)), id: \.0) { index, solve in
-                                    if let solve = solve {
-                                        HStack {
-                                            if (solves.count > 3 && (solve == solves.min() || solve == solves.max())) {
-                                                Text("(" + formatSolveTime(secs: solve.time, penType: solve.penalty) + ")")
-                                                    .font(.body.weight(.semibold))
-                                                    .foregroundColor(Color("grey"))
-                                            } else {
-                                                Text(formatSolveTime(secs: solve.time, penType: solve.penalty))
-                                                    .font(.body.weight(.semibold))
-                                                    .foregroundColor(Color("dark"))
-                                            }
+                                    HStack {
+                                        if (solves.count > 3 && (solve == solves.min() || solve == solves.max())) {
+                                            Text("(" + formatSolveTime(secs: solve.time, penType: solve.penalty) + ")")
+                                                .font(.body.weight(.semibold))
+                                                .foregroundColor(Color("grey"))
+                                        } else {
+                                            Text(formatSolveTime(secs: solve.time, penType: solve.penalty))
+                                                .font(.body.weight(.semibold))
+                                                .foregroundColor(Color("dark"))
+                                        }
+                                        
+                                        Spacer()
+                                        
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                                .fill(Color("overlay0"))
+                                                .frame(width: showEditFor != nil && showEditFor == index ? nil : 35, height: 35)
                                             
-                                            Spacer()
-                                            
-                                                ZStack {
-                                                    RoundedRectangle(cornerRadius: 6, style: .continuous)
-                                                        .fill(Color("overlay0"))
-                                                        .frame(width: showEditFor != nil && showEditFor == index ? nil : 35, height: 35)
+                                            HStack {
+                                                if (showEditFor != nil && showEditFor == index) {
+                                                    HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
+                                                        self.solves[index].penalty = .plustwo
+                                                        showEditFor = nil
+                                                    }) {
+                                                        Image("+2.label")
+                                                            .imageScale(.medium)
+                                                    }
                                                     
-                                                    HStack {
-                                                        if (showEditFor != nil && showEditFor == index) {
-                                                            HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
-                                                                self.solves[index].penalty = .plustwo
-                                                                showEditFor = nil
-                                                            }) {
-                                                                Image("+2.label")
-                                                                    .imageScale(.medium)
-                                                            }
-                                                            
-                                                            HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
-                                                                self.solves[index].penalty = .dnf
-                                                                showEditFor = nil
-                                                            }) {
-                                                                Image(systemName: "xmark.circle")
-                                                                    .imageScale(.medium)
-                                                            }
-                                                            
-                                                            HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
-                                                                self.solves[index].penalty = .none
-                                                                showEditFor = nil
-                                                            }) {
-                                                                Image(systemName: "checkmark.circle")
-                                                                    .imageScale(.medium)
-                                                            }
-                                                            
-                                                            ThemedDivider(isHorizontal: false)
-                                                                .padding(.vertical, 8)
-                                                            
-                                                            HierarchicalButton(type: .red, size: .medium, square: true, hasShadow: false, hasBackground: false, onTapRun: {
-                                                                self.solves.remove(at: index)
-                                                                showEditFor = nil
-                                                            }) {
-                                                                Image(systemName: "trash")
-                                                                    .imageScale(.medium)
-                                                            }
-                                                        }
-                                                        
-                                                        HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
-                                                            
-                                                            if (showEditFor != nil && showEditFor == index) {
-                                                                editNumber = index
-                                                                showEditFor = nil
-                                                            } else {
-                                                                if (self.showEditFor == index) {
-                                                                    self.showEditFor = nil
-                                                                } else {
-                                                                    self.showEditFor = index
-                                                                }
-                                                            }
-                                                        }) {
-                                                            Image(systemName: "pencil")
-                                                                .imageScale(.medium)
+                                                    HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
+                                                        self.solves[index].penalty = .dnf
+                                                        showEditFor = nil
+                                                    }) {
+                                                        Image(systemName: "xmark.circle")
+                                                            .imageScale(.medium)
+                                                    }
+                                                    
+                                                    HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
+                                                        self.solves[index].penalty = .none
+                                                        showEditFor = nil
+                                                    }) {
+                                                        Image(systemName: "checkmark.circle")
+                                                            .imageScale(.medium)
+                                                    }
+                                                    
+                                                    ThemedDivider(isHorizontal: false)
+                                                        .padding(.vertical, 8)
+                                                    
+                                                    HierarchicalButton(type: .red, size: .medium, square: true, hasShadow: false, hasBackground: false, onTapRun: {
+                                                        self.solves.remove(at: index)
+                                                        showEditFor = nil
+                                                    }) {
+                                                        Image(systemName: "trash")
+                                                            .imageScale(.medium)
+                                                    }
+                                                }
+                                                
+                                                HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
+                                                    
+                                                    if (showEditFor != nil && showEditFor == index) {
+                                                        editNumber = index
+                                                        showEditFor = nil
+                                                    } else {
+                                                        if (self.showEditFor == index) {
+                                                            self.showEditFor = nil
+                                                        } else {
+                                                            self.showEditFor = index
                                                         }
                                                     }
-                                                    .padding(.horizontal, 2)
+                                                }) {
+                                                    Image(systemName: "pencil")
+                                                        .imageScale(.medium)
                                                 }
-                                                .clipped()
-                                                .animation(.customDampedSpring, value: showEditFor)
-                                                .fixedSize()
+                                            }
+                                            .padding(.horizontal, 2)
                                         }
+                                        .clipped()
+                                        .animation(.customDampedSpring, value: showEditFor)
+                                        .fixedSize()
                                     }
                                 }
                                 .clipped()
