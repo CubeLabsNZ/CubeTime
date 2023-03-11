@@ -7,6 +7,8 @@ import CoreData
 struct CubeTime: App {
     @Environment(\.scenePhase) var phase
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
+    @Preference(\.overrideDM) private var overrideSystemAppearance
+    @Preference(\.dmBool) private var darkMode
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
@@ -22,6 +24,8 @@ struct CubeTime: App {
     @StateObject var stopwatchManager: StopwatchManager
     @StateObject var fontManager: FontManager = FontManager()
     @StateObject var tabRouter: TabRouter = TabRouter.shared
+    
+    @StateObject var gradientManager = GradientManager()
     
     @State var showUpdates: Bool = false
     @State var pageIndex: Int = 0
@@ -52,7 +56,8 @@ struct CubeTime: App {
         UserDefaults.standard.set(newVersion, forKey: "currentVersion")
         
         
-        setNavBarAppearance()
+        setupNavbarAppearance()
+        setupColourScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
     }
     
     
@@ -60,17 +65,21 @@ struct CubeTime: App {
     var body: some Scene {
         WindowGroup {
             MainView()
+                .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
                 .tint(Color("accent"))
                 .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
                     Updates(showUpdates: $showUpdates)
                         .tint(Color("accent"))
                 }
+#if false
                 .sheet(isPresented: $showOnboarding, onDismiss: {
                     pageIndex = 0
                 }) {
                     OnboardingView(showOnboarding: showOnboarding, pageIndex: $pageIndex)
                         .tint(Color("accent"))
                 }
+#endif
+            
                 .if(dynamicTypeSize != DynamicTypeSize.large) { view in
                     view
                         .alert(isPresented: $showUpdates) {
@@ -81,6 +90,7 @@ struct CubeTime: App {
                 .environmentObject(stopwatchManager)
                 .environmentObject(fontManager)
                 .environmentObject(tabRouter)
+                .environmentObject(gradientManager)
 //                .onAppear {
 //                    self.deviceManager.deviceOrientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation
 //                }
@@ -129,10 +139,6 @@ struct MainView: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    
-    @Preference(\.overrideDM) private var overrideSystemAppearance
-    @Preference(\.dmBool) private var darkMode
-
         
     var body: some View {
         GeometryReader { geo in
@@ -170,8 +176,6 @@ struct MainView: View {
                         .environmentObject(stopwatchManager.scrambleController)
                 }
             }
-//            .tint(Color.accentColor)
-            .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
             .environment(\.globalGeometrySize, geo.size)
             .environmentObject(tabRouter)
         }

@@ -12,6 +12,10 @@ struct SessionCard: View {
     @State private var isShowingDeleteDialog = false
     @State private var isShowingCustomizeDialog = false
     
+    @ScaledMetric private var pinnedSessionHeight: CGFloat = 110
+    @ScaledMetric private var regularSessionHeight: CGFloat = 65
+    
+    
     var item: Sessions
     var allSessions: FetchedResults<Sessions>
     
@@ -42,7 +46,7 @@ struct SessionCard: View {
         ZStack {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(Color("indent1"))
-                .frame(height: pinned ? 110 : 65)
+                .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight)
                 .zIndex(0)
             
             
@@ -50,7 +54,8 @@ struct SessionCard: View {
                 .fill(Color("overlay0"))
                 .frame(width: stopwatchManager.currentSession == item
                        ? 16
-                       : parentGeo.size.width - 32, height: item.pinned ? 110 : 65)
+                       : parentGeo.size.width - 32,
+                       height: item.pinned ? pinnedSessionHeight : regularSessionHeight)
                 .offset(x: stopwatchManager.currentSession == item
                         ? -((parentGeo.size.width - 16)/2) + 16
                         : 0)
@@ -100,7 +105,7 @@ struct SessionCard: View {
                             }
                             
                             
-                            VStack(alignment: .leading, spacing: -2) {
+                            VStack(alignment: .leading, spacing: 0) {
                                 Text(name)
                                     .font(.title2.weight(.bold))
                                     .foregroundColor(Color("dark"))
@@ -163,7 +168,7 @@ struct SessionCard: View {
                 .padding(.vertical,  pinned ? 12 : 8)
             }
             
-            .frame(height: pinned ? 110 : 65)
+            .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight)
             
             .background(Color.clear)
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))

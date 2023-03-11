@@ -10,28 +10,10 @@ import SwiftUI
 
 
 // MARK: - COLOURS AND GRADIENTS
-// colour extensions
-extension UIColor {
-    func colorsEqual (_ rhs: UIColor) -> Bool {
-        var sred: CGFloat = 0
-        var sgreen: CGFloat = 0
-        var sblue: CGFloat = 0
-        
-        var rred: CGFloat = 0
-        var rgreen: CGFloat = 0
-        var rblue: CGFloat = 0
-        
-
-        self.getRed(&sred, green: &sgreen, blue: &sblue, alpha: nil)
-        rhs.getRed(&rred, green: &rgreen, blue: &rblue, alpha: nil)
-
-        return (Int(sred*255), Int(sgreen*255), Int(sblue*255)) == (Int(rred*255), Int(rgreen*255), Int(rblue*255))
-    }
-}
-
 extension Color: RawRepresentable {
     public typealias RawValue = String
-    init(_ hex: UInt) {
+    
+    init(hex: UInt) {
         self.init(
             red: Double((hex >> 16) & 0xff) / 255,
             green: Double((hex >> 08) & 0xff) / 255,
@@ -99,6 +81,7 @@ extension View {
     }
 }
 
+
 enum HierarchialButtonType {
     case mono, coloured, halfcoloured, disabled, red, green
 }
@@ -116,7 +99,7 @@ struct AnimatedButton: ButtonStyle {
     }
 }
 
-struct HierarchialButton<V: View>: View {
+struct HierarchicalButton<V: View>: View {
     let type: HierarchialButtonType
     let size: HierarchialButtonSize
     
@@ -159,7 +142,7 @@ struct HierarchialButton<V: View>: View {
         Button {
             self.onTapRun()
         } label: {
-            HierarchialButtonBase(type: self.type,
+            HierarchicalButtonBase(type: self.type,
                                   size: self.size,
                                   outlined: self.outlined,
                                   square: self.square,
@@ -172,14 +155,15 @@ struct HierarchialButton<V: View>: View {
     }
 }
 
-struct HierarchialButtonBase<V: View>: View {
+struct HierarchicalButtonBase<V: View>: View {
     let content: V
     
     let colourBg: Color
     let colourFg: Color
     let colourShadow: Color
     
-    let frameHeight: CGFloat
+    @ScaledMetric var frameHeight: CGFloat
+    
     let horizontalPadding: CGFloat
     let fontType: Font
     
@@ -237,24 +221,24 @@ struct HierarchialButtonBase<V: View>: View {
         
         switch (size) {
         case .small:
-            self.frameHeight = 28
+            self._frameHeight = ScaledMetric(wrappedValue: 28, relativeTo: .callout)
             self.horizontalPadding = 8
             self.fontType = Font.callout.weight(.medium)
             
             
         case .medium:
-            self.frameHeight = 32
+            self._frameHeight = ScaledMetric(wrappedValue: 32, relativeTo: .body)
             self.horizontalPadding = 10
             self.fontType = Font.body.weight(.medium)
             
             
         case .large:
-            self.frameHeight = 35
+            self._frameHeight = ScaledMetric(wrappedValue: 35, relativeTo: .body)
             self.horizontalPadding = 12
             self.fontType = Font.body.weight(.medium)
         
         case .ultraLarge:
-            self.frameHeight = 48
+            self._frameHeight = ScaledMetric(wrappedValue: 48, relativeTo: .title3)
             self.horizontalPadding = 16
             self.fontType = Font.title3.weight(.semibold)
             
@@ -271,18 +255,14 @@ struct HierarchialButtonBase<V: View>: View {
     
     var body: some View {
         ZStack {
-            /* temporarily disabled due to hover effect issue
             if (self.hasBackground) {
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
                     .fill(Material.thinMaterial)
                     .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
             }
-             */
             
             RoundedRectangle(cornerRadius: 6, style: .continuous)
-            /* opacity is removed temporarily when material is disabled*/
-                .fill(self.hasBackground ? self.colourBg : Color.white.opacity(0.001))
-//                .fill(self.hasBackground ? self.colourBg.opacity(0.92) : Color.white.opacity(0.001))
+                .fill(self.hasBackground ? self.colourBg.opacity(0.92) : Color.white.opacity(0.001))
                 .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
                 .shadow(color: self.hasShadow
                         ? self.colourShadow
@@ -311,7 +291,7 @@ struct CloseButton: View {
     }
     
     var body: some View {
-        HierarchialButton(type: .mono, size: .medium, square: true, hasShadow: hasBackgroundShadow, hasBackground: hasBackgroundShadow, onTapRun: self.onTapRun) {
+        HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: hasBackgroundShadow, hasBackground: hasBackgroundShadow, onTapRun: self.onTapRun) {
             Image(systemName: "xmark")
         }
     }
@@ -360,5 +340,27 @@ struct ThemedDivider: View {
         Capsule()
             .fill(Color("indent0"))
             .frame(width: isHorizontal ? nil : 1.15, height: isHorizontal ? 1.15 : nil)
+    }
+}
+
+
+
+struct BackgroundColour: View {
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    @Environment(\.colorScheme) var colourScheme
+    
+    var body: some View {
+        Group {
+            if (!UIDevice.deviceIsPad || hSizeClass == .compact) { // if phone or small split screen ipad, then NO modals
+                Color("base")
+            } else {
+                if (colourScheme == .dark) {
+                    Color("indent1")
+                } else {
+                    Color("base")
+                }
+            }
+        }
+        .ignoresSafeArea()
     }
 }

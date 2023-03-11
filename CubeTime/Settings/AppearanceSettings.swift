@@ -25,7 +25,7 @@ struct AppearanceSettingsView: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
-    @StateObject var gradientManager = GradientManager()
+    @EnvironmentObject var gradientManager: GradientManager
     
     var body: some View {
         VStack(spacing: 16) {
@@ -58,6 +58,7 @@ struct AppearanceSettingsView: View {
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
+                            print("HERE")
                             withAnimation(Animation.customSlowSpring) {
                                 showThemeOptions.toggle()
                             }
@@ -72,7 +73,7 @@ struct AppearanceSettingsView: View {
                             .foregroundColor(Color("grey"))
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
-                            .padding(.bottom, 12)
+                            .padding(.bottom, 4)
                             .padding(.top, 10)
                         
                         if showThemeOptions {
@@ -109,11 +110,11 @@ struct AppearanceSettingsView: View {
                                                 ForEach(0..<10, id: \.self) { index in
                                                     Rectangle()
                                                         .fill(getGradient(gradientSelected: index, isStaticGradient: false))
-                                                        .frame(height: 150)
+                                                        .frame(height: 175)
                                                 }
                                             }
                                             .frame(height: 50)
-                                            .rotationEffect(Angle(degrees: 20))
+                                            .rotationEffect(Angle(degrees: 25))
                                             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                                             .onTapGesture {
                                                 isStaticGradient = false
@@ -123,19 +124,22 @@ struct AppearanceSettingsView: View {
                                                 Image(systemName: "checkmark")
                                                     .font(.system(size: 15, weight: .black))
                                                     .foregroundColor(.white)
+                                                    .frame(width: 40)
                                             }
                                         }
                                     }
                                 }
                             }
-                            .clipped()
                             .padding(.horizontal)
                             .padding(.top, 10)
+                            .padding(.bottom, 12)
                         }
                     }
+                    .clipped()
                     
                     ThemedDivider()
                         .padding(.vertical, 10)
+                        .padding(.leading)
                     
                     
                     VStack(alignment: .leading, spacing: 0) {
@@ -144,7 +148,6 @@ struct AppearanceSettingsView: View {
                                 Text("Graph Glow")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 10)
@@ -165,7 +168,6 @@ struct AppearanceSettingsView: View {
                                 Text("Graph Animation")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 10)
@@ -210,7 +212,6 @@ struct AppearanceSettingsView: View {
                             Text("Override System Appearance")
                                 .font(.body.weight(.medium))
                         }
-                            .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         
                     }
                     .padding(.horizontal)
@@ -222,7 +223,6 @@ struct AppearanceSettingsView: View {
                                 Text("Dark Mode")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 12)
@@ -319,14 +319,14 @@ struct AppearanceSettingsView: View {
                         HStack {
                             Text("MIN")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color("indent0"))
+                                .foregroundColor(Color("grey"))
                             
                             Slider(value: $fontWeight, in: 300...800, step: 1.0)
                                 .padding(.horizontal, 4)
                             
                             Text("MAX")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color("indent0"))
+                                .foregroundColor(Color("grey"))
                             
                         }
                         
@@ -342,14 +342,14 @@ struct AppearanceSettingsView: View {
                         HStack {
                             Text("MIN")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color("indent0"))
+                                .foregroundColor(Color("grey"))
                             
                             Slider(value: $fontCasual, in: 0...1, step: 0.01)
                                 .padding(.horizontal, 4)
                             
                             Text("MAX")
                                 .font(Font.system(.footnote, design: .rounded))
-                                .foregroundColor(Color("indent0"))
+                                .foregroundColor(Color("grey"))
                             
                         }
                         
@@ -363,7 +363,6 @@ struct AppearanceSettingsView: View {
                                 Text("Cursive Font")
                                     .font(.body.weight(.medium))
                             }
-                                .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 12)

@@ -33,58 +33,68 @@ extension UIColor {
 
 struct AveragePhases: View {
     @Environment(\.colorScheme) private var colourScheme
-    
+    @Preference(\.isStaticGradient) private var isStaticGradient
     @EnvironmentObject var gradientManager: GradientManager
     
-    var phaseTimes: [Double]
-    
+    let phaseTimes: [Double]
+    let count: Int
     
     var body: some View {
-        let selectedGradient = getGradientColours(gradientSelected: gradientManager.appGradient)
+        let selectedGradient = getGradientColours(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient)
         
         let gradientStart: UIColor = UIColor(selectedGradient[0])
         let gradientEnd: UIColor = UIColor(selectedGradient[1])
         
         let phaseCount: Int = phaseTimes.count - 1
-        VStack (spacing: 0) {
-            GeometryReader { geometry in
+        
+        if (count > 0) {
+            VStack(spacing: 0) {
+                GeometryReader { geometry in
+                    
+                    let maxWidth: CGFloat = geometry.size.width - 2*CGFloat(phaseCount)
+                    
+                    HStack(spacing: 2) {
+                        ForEach(Array(zip(phaseTimes.indices, phaseTimes)), id: \.0) { index, phase in
+                            Rectangle()
+                                .fill(Color(gradientStart.toColor(gradientEnd, percentage: CGFloat(index)/CGFloat(phaseCount))))
+                                .frame(width: maxWidth * CGFloat(phase / phaseTimes.reduce(0, +)), height: 10)
+                                .cornerRadius(index == 0 ? 10 : 0, corners: [.topLeft, .bottomLeft])
+                                .cornerRadius(index == phaseCount ? 10 : 0, corners: [.topRight, .bottomRight])
+                        }
+                    }
+                }
                 
-                let maxWidth: CGFloat = geometry.size.width - 2*CGFloat(phaseCount)
-                
-                HStack(spacing: 2) {
+                VStack(spacing: 8) {
                     ForEach(Array(zip(phaseTimes.indices, phaseTimes)), id: \.0) { index, phase in
-                        Rectangle()
-                            .fill(Color(gradientStart.toColor(gradientEnd, percentage: CGFloat(index)/CGFloat(phaseCount))))
-                            .frame(width: maxWidth * CGFloat(phase / phaseTimes.reduce(0, +)), height: 10)
-                            .cornerRadius(index == 0 ? 10 : 0, corners: [.topLeft, .bottomLeft])
-                            .cornerRadius(index == phaseCount ? 10 : 0, corners: [.topRight, .bottomRight])
+                        HStack(spacing: 10) {
+                            Image(systemName: "\(index+1).circle")
+                                .foregroundColor(Color(gradientStart.toColor(gradientEnd, percentage: CGFloat(index)/CGFloat(phaseCount))))
+                                .font(.system(size: 15, weight: .bold))
+                            
+                            HStack(spacing: 12) {
+                                Text(formatSolveTime(secs: phase))
+                                    .recursiveMono(fontSize: 16, weight: .medium)
+                                
+                                Text("("+String(format: "%.1f", (phase / phaseTimes.reduce(0, +))*100)+"%)")
+                                    .foregroundColor(Color("grey"))
+                                    .recursiveMono(fontSize: 15, weight: .regular)
+                            }
+                            
+                            Spacer()
+                        }
                     }
                 }
+                .padding(.top, 8)
             }
-            
-            VStack(spacing: 8) {
-                ForEach(Array(zip(phaseTimes.indices, phaseTimes)), id: \.0) { index, phase in
-                    HStack (spacing: 8) {
-                        
-                        Image(systemName: "\(index+1).circle")
-                            .foregroundColor(Color(gradientStart.toColor(gradientEnd, percentage: CGFloat(index)/CGFloat(phaseCount))))
-                            .font(.system(size: 15, weight: .bold))
-                        
-                        Text(formatSolveTime(secs: phase))
-                            .font(.system(size: 17))
-                        
-                        
-                        Text("("+String(format: "%.1f", (phase / phaseTimes.reduce(0, +))*100)+"%)")
-                            .foregroundColor(Color("grey"))
-                            .font(.system(size: 17))
-                        
-                        Spacer()
-                    }
-                }
-            }
-            .padding(.top, 8)
+            .padding(.top, 32)
+            .padding(.bottom, 12)
+        } else {
+            Text("not enough solves to\ndisplay graph")
+                .recursiveMono(fontSize: 17, weight: .medium)
+                .multilineTextAlignment(.center)
+                .foregroundColor(Color("grey"))
+                .offset(y: 5)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 12)
     }
 }

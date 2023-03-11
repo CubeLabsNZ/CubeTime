@@ -218,6 +218,7 @@ class TimerContoller: ObservableObject {
         if let phaseCount = phaseCount, phaseCount != currentMPCount {
             lap()
         } else {
+            lap()
             stop(nil)
         }
     }
@@ -291,5 +292,6 @@ class TimerContoller: ObservableObject {
     func lap() {
         currentMPCount += 1
         phaseTimes.append(-timerStartTime!.timeIntervalSinceNow)
+        print("lapped")
     }
 }

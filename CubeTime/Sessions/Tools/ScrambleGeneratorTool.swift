@@ -173,7 +173,7 @@ struct ScrambleGeneratorTool: View {
                     
                     if let num = scrambleGenerator.numScramble {
                         if (num > 0 && (scrambleGenerator.scrambles?.count == nil)) {
-                            HierarchialButton(type: .coloured, size: .large, onTapRun: {
+                            HierarchicalButton(type: .coloured, size: .large, onTapRun: {
                                 scrambleGenerator.generate()
                             }) {
                                 Text("Generate!")
@@ -194,7 +194,7 @@ struct ScrambleGeneratorTool: View {
                                 .font(.body.weight(.semibold))
                                 .foregroundColor(Color("accent"))
                             
-                            HierarchialButton(type: .coloured, size: .large, onTapRun: {
+                            HierarchicalButton(type: .coloured, size: .large, onTapRun: {
                                 self.showShareSheet = true
                             }) {
                                 Text("Share")

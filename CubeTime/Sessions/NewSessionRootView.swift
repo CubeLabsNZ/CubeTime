@@ -1,6 +1,63 @@
 import SwiftUI
 import CoreData
-import Combine
+
+struct NewSessionTypeCard: View {
+    let name: String
+    let icon: SessionTypeIcon
+    @Binding var show: Bool
+    
+    var body: some View {
+        HStack {
+            Group {
+                Image(systemName: icon.iconName)
+                    .font(.system(size: icon.size, weight: icon.weight))
+                    .padding(.leading, icon.padding.leading)
+                    .padding(.trailing, icon.padding.trailing)
+                    .padding(.vertical, 8)
+                
+                Text(name)
+                    .font(.body)
+            }
+            .foregroundColor(Color("dark"))
+            
+            
+            Spacer()
+        }
+        .background(Color("overlay0"))
+        .onTapGesture {
+            show = true
+        }
+    }
+}
+
+
+struct NewSessionTypeCardGroup<Content: View>: View {
+    @Environment(\.colorScheme) var colourScheme
+    let title: String
+    let content: () -> Content
+    
+    
+    @inlinable init(title: String, @ViewBuilder content: @escaping () -> Content) {
+        self.title = title
+        self.content = content
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(title)
+                .font(.title2.weight(.bold))
+                .padding(.bottom, 8)
+                .padding(.leading, 4)
+            
+            VStack(spacing: 0) {
+                content()
+            }
+            .background(Color("overlay0"))
+            .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+        }
+        .padding(.horizontal)
+    }
+}
 
 struct NewSessionRootView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -20,9 +77,7 @@ struct NewSessionRootView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color("base")
-                    .ignoresSafeArea()
-                
+                BackgroundColour()
                 
                 VStack {
                     #warning("BUG: ADD NEW SESSION TEXT DOES NOT DISPLAY ON IPOD TOUCH")

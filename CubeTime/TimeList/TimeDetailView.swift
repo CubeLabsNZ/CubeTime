@@ -44,9 +44,12 @@ struct TimeDetailView: View {
         self.time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
         self.puzzle_type = puzzle_types[Int(solve.scramble_type)]
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
-            
-        if let multiphaseSolve = (solve as? MultiphaseSolve) {
-            self.phases = multiphaseSolve.phases ?? [0.00, 0.00, 0.00, 0.00]
+                
+        if let multiphaseSolve = (solve as? MultiphaseSolve), let phases = multiphaseSolve.phases {
+            var phaseLengths = phases
+            phaseLengths.insert(0, at: 0)
+            phaseLengths = phaseLengths.chunked().map({ $0[1] - $0[0] })
+            self.phases = phaseLengths
         } else {
             self.phases = nil
         }
@@ -61,8 +64,7 @@ struct TimeDetailView: View {
         
         NavigationView {
             ZStack {
-                Color("base")
-                    .ignoresSafeArea()
+                BackgroundColour()
                 
                 GeometryReader { geo in
                     ScrollView {
@@ -144,13 +146,13 @@ struct TimeDetailView: View {
                                 HStack(spacing: 6) {
                                     Spacer()
                                     
-                                    HierarchialButton(type: solve.penalty == PenTypes.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    HierarchicalButton(type: solve.penalty == PenTypes.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .none)
                                     }) {
                                         Label("OK", systemImage: "checkmark.circle")
                                     }
                                     
-                                    HierarchialButton(type: solve.penalty == PenTypes.plustwo.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    HierarchicalButton(type: solve.penalty == PenTypes.plustwo.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .plustwo)
                                     }) {
                                         Label(title: {
@@ -161,7 +163,7 @@ struct TimeDetailView: View {
                                         })
                                     }
                                     
-                                    HierarchialButton(type: solve.penalty == PenTypes.dnf.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    HierarchicalButton(type: solve.penalty == PenTypes.dnf.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .dnf)
                                     }) {
                                         Label("DNF", systemImage: "xmark.circle")
@@ -188,7 +190,7 @@ struct TimeDetailView: View {
                             // BUTTONS
                             
                             HStack(spacing: 8) {
-                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                                HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
                                     copySolve(solve: solve)
                                     
                                     withAnimation(Animation.customSlowSpring.delay(0.25)) {
@@ -219,13 +221,13 @@ struct TimeDetailView: View {
                                     }
                                 }
                                 
-                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                                HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
                                     shareSolve(solve: solve)
                                 }) {
                                     Label("Share Solve", systemImage: "square.and.arrow.up")
                                 }
                                 
-                                HierarchialButton(type: .red, size: .large, square: true, onTapRun: {
+                                HierarchicalButton(type: .red, size: .large, square: true, onTapRun: {
                                     if currentSolve == nil {
                                         dismiss()
                                     }
@@ -243,9 +245,6 @@ struct TimeDetailView: View {
                             .padding(.top, 16)
                             
                             // END BUTTONS
-                            
-                            
-                            
                             
                             
                             
@@ -270,7 +269,7 @@ struct TimeDetailView: View {
                                     currentSolve = nil
                                     dismiss()
                                 } label: {
-                                    HierarchialButtonBase(type: .mono, size: .medium, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
+                                    HierarchicalButtonBase(type: .mono, size: .medium, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
                                         Label("Move to…", systemImage: "arrow.up.right")
                                     }
                                 }
@@ -280,14 +279,28 @@ struct TimeDetailView: View {
                             .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
                             
                             
+                            if (stopwatchManager.currentSession.session_type == SessionTypes.multiphase.rawValue) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("PHASES")
+                                        .font(.subheadline.weight(.semibold))
+                                    
+                                    ThemedDivider()
+                                    
+                                    #warning("TODO: ERROR CHECKING")
+                                    AveragePhases(phaseTimes: phases!, count: phases!.count)
+                                        .padding(.top, -24)
+                                        .padding(.bottom, -12)
+                                }
+                                .padding(12)
+                                .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
+                            }
+                            
+                            
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("COMMENT")
                                     .font(.subheadline.weight(.semibold))
                                 
                                 ThemedDivider()
-                                
-                                
-                                
                                 
                                 ZStack {
                                     Group {
@@ -335,6 +348,8 @@ struct TimeDetailView: View {
                             }
                             .padding(12)
                             .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
+                            
+                            
                             
                             Spacer()
                         }

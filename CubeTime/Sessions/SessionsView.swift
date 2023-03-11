@@ -23,8 +23,7 @@ struct SessionsView: View {
         NavigationView {
             GeometryReader { geo in
                 ZStack(alignment: .bottomLeading) {
-                    Color((UIDevice.deviceIsPad && hSizeClass == .regular) ? "overlay1" : "base")
-                        .ignoresSafeArea()
+                    BackgroundColour()
                     
                     ScrollView {
                         VStack (spacing: 10) {
@@ -37,7 +36,7 @@ struct SessionsView: View {
                         view.safeAreaInset(safeArea: .tabBar, avoidBottomBy: 50)
                     }
                     
-                    HierarchialButton(type: .coloured, size: .large, onTapRun: {
+                    HierarchicalButton(type: .coloured, size: .large, onTapRun: {
                         showNewSessionPopUp = true
                     }) {
                         HStack(spacing: 6) {
@@ -64,7 +63,7 @@ struct SessionsView: View {
                     view.toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             NavigationLink(destination: ToolsList()) {
-                                HierarchialButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
+                                HierarchicalButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
                                     Label("Tools", systemImage: "wrench.and.screwdriver")
                                         .labelStyle(.titleAndIcon)
                                         .imageScale(.small)
@@ -125,8 +124,7 @@ struct CustomiseSessionView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color("base")
-                    .ignoresSafeArea()
+                BackgroundColour()
                 
                 ScrollView {
                     VStack(spacing: 16) {
@@ -196,6 +194,9 @@ struct CustomiseSessionView: View {
 
 // MARK: - HELPER FUNCTIONS
 struct EventPicker: View {
+    @ScaledMetric var spacing = 48
+    @ScaledMetric var imageSize = 32
+    
     @Binding var sessionEventType: Int32
     
     var body: some View {
@@ -226,9 +227,9 @@ struct EventPicker: View {
             ThemedDivider()
                 .padding(.horizontal)
             
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 48), spacing: 8)], spacing: 8) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: spacing), spacing: 8)], spacing: 8) {
                 ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                    HierarchialButton(type: (index == sessionEventType) ? .halfcoloured : .mono,
+                    HierarchicalButton(type: (index == sessionEventType) ? .halfcoloured : .mono,
                                       size: .ultraLarge,
                                       square: true,
                                       onTapRun: {
@@ -237,7 +238,7 @@ struct EventPicker: View {
                         Image(element.name)
                             .renderingMode(.template)
                             .resizable()
-                            .frame(width: 32, height: 32)
+                            .frame(width: imageSize, height: imageSize)
                     }
                 }
             }
@@ -310,65 +311,5 @@ struct CompSimTargetEntry: View {
         }
         .frame(height: frameHeight)
         .modifier(CardBlockBackground())
-    }
-}
-
-/// **Customise Sessions **
-
-struct NewSessionTypeCard: View {
-    let name: String
-    let icon: SessionTypeIcon
-    @Binding var show: Bool
-    
-    var body: some View {
-        HStack {
-            Group {
-                Image(systemName: icon.iconName)
-                    .font(.system(size: icon.size, weight: icon.weight))
-                    .padding(.leading, icon.padding.leading)
-                    .padding(.trailing, icon.padding.trailing)
-                    .padding(.vertical, 8)
-                
-                Text(name)
-                    .font(.body)
-            }
-            .foregroundColor(Color("dark"))
-            
-            
-            Spacer()
-        }
-        .background(Color("overlay0"))
-        .onTapGesture {
-            show = true
-        }
-    }
-}
-
-
-struct NewSessionTypeCardGroup<Content: View>: View {
-    @Environment(\.colorScheme) var colourScheme
-    let title: String
-    let content: () -> Content
-    
-    
-    @inlinable init(title: String, @ViewBuilder content: @escaping () -> Content) {
-        self.title = title
-        self.content = content
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Text(title)
-                .font(.title2.weight(.bold))
-                .padding(.bottom, 8)
-                .padding(.leading, 4)
-            
-            VStack(spacing: 0) {
-                content()
-            }
-            .background(Color("overlay0"))
-            .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-        }
-        .padding(.horizontal)
     }
 }

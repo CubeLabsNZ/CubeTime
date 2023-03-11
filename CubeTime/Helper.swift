@@ -262,7 +262,7 @@ extension CompSimSolveGroup: RawGraphData {
     }
     
     var avg: CalculatedAverage? {
-        return StopwatchManager.calculateAverage(self.solves!.array as! [Solves], "Comp Sim Group", true)
+        return StopwatchManager.getCalculatedAverage(forSolves: self.solves!.array as! [Solves], name: "Comp Sim Group", isCompsim: true)
     }
 }
 
@@ -342,14 +342,6 @@ extension RandomAccessCollection where Element : Solves {
 //        self.init(int: jint(cgsize.width), with: jint(cgsize.height))
 //    }
 //}
-
-// view scaled font 
-@available(iOS 15, *)
-extension View {
-    func scaledCustomFont(name: String, size: CGFloat, sf: Bool, weight: Font.Weight?) -> some View {
-        return self.modifier(ScaledCustomFont(name: name, size: size, sf: sf, weight: weight))
-    }
-}
 
 // view struct extensions
 // source: https://www.avanderlee.com/swiftui/conditional-view-modifier/
@@ -439,7 +431,8 @@ struct AppZoomWrapper: RawRepresentable, Identifiable {
 struct DynamicText: ViewModifier {
     @inlinable func body(content: Content) -> some View {
         content
-            .scaledToFill()
+            .scaledToFit()
+//            .scaledToFill()   // i have no idea how swiftui works
             .minimumScaleFactor(0.5)
             .lineLimit(1)
     }
@@ -457,25 +450,6 @@ struct AnimatingFontSize: AnimatableModifier {
     @inlinable func body(content: Self.Content) -> some View {
         content
             .font(Font(CTFontCreateWithFontDescriptor(font, fontSize, nil)))
-    }
-}
-
-@available(iOS 15, *)
-struct ScaledCustomFont: ViewModifier {
-    @Environment(\.sizeCategory) var sizeCategory
-    
-    var name: String
-    var size: CGFloat
-    var sf: Bool
-    var weight: Font.Weight?
-    
-    func body(content: Content) -> some View {
-        let scaledSize = UIFontMetrics.default.scaledValue(for: size)
-        if sf {
-            return content.font(.system(size: scaledSize, weight: weight ?? .regular, design: .default))
-        } else {
-            return content.font(.custom(name, size: scaledSize))
-        }
     }
 }
 
@@ -963,7 +937,7 @@ func offsetImage(image: UIImage, offsetX: CGFloat=0, offsetY: CGFloat=0) -> UIIm
 }
 
 
-func setNavBarAppearance() -> Void {
+func setupNavbarAppearance() -> Void {
     let navBarAppearance = UINavigationBar.appearance()
     var customBackImage = UIImage(systemName: "arrow.backward")
     customBackImage = offsetImage(image: customBackImage!, offsetX: 10, offsetY: -1.5)
@@ -971,4 +945,20 @@ func setNavBarAppearance() -> Void {
     navBarAppearance.backIndicatorTransitionMaskImage = customBackImage
 //    navBarAppearance.backgroundColor = UIColor(named: "overlay1")
     #warning("BUG: enabling this fixes background blur effect, BUT buttons on timelistview are cut off on top?")
+}
+
+
+#warning("todo: fix; doesn't seem to be working ios 16?")
+func setupColourScheme(_ mode: UIUserInterfaceStyle?) -> Void {
+    if let mode = mode {
+        keyWindow?.overrideUserInterfaceStyle = mode
+    }
+}
+
+var keyWindow: UIWindow? {
+    return UIApplication.shared.connectedScenes
+        .filter({ $0.activationState == .foregroundActive })
+        .first(where: { $0 is UIWindowScene })
+        .flatMap({ $0 as? UIWindowScene })?.windows
+        .first(where: \.isKeyWindow)
 }

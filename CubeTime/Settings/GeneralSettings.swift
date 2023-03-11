@@ -72,29 +72,24 @@ struct GeneralSettingsView: View {
                 Group {
                     HStack {
                         Toggle(isOn: $inspectionTime) {
-                            Text("Inspection Time")
+                            Text("Use Inspection")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
-                        
                     }
                     .padding(.horizontal)
                     
                     
-                   
                     if inspectionTime {
                         Toggle(isOn: $insCountDown) {
                             Text("Inspection Counts Down")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         .padding(.horizontal)
                         
                         Toggle(isOn: $showCancelInspection) {
                             Text("Show Cancel Inspection")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         .padding(.horizontal)
                         
                         Text("Display a cancel inspection button when inspecting.")
@@ -106,11 +101,10 @@ struct GeneralSettingsView: View {
                             .padding(.horizontal)
                         
                         
-                        Toggle(isOn: $inspectionAlert) {
+                        Toggle(isOn: $inspectionAlert.animation()) {
                             Text("Inpsection Alert")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         .padding(.horizontal)
                         
                         Text("Play an audible alert when 8 or 12 seconds is reached.")
@@ -138,7 +132,7 @@ struct GeneralSettingsView: View {
                             .padding(.horizontal)
                             
                             
-                            Text("Note: to use the 'Boop' option, your phone must not be muted. 'Boop' plays a system sound, requiring your ringer to be unmuted.")
+                            Text("To use the 'Boop' option, your phone must not be muted. 'Boop' plays a system sound, requiring your ringer to be unmuted.")
                                 .font(.footnote.weight(.medium))
                                 .lineSpacing(-4)
                                 .fixedSize(horizontal: false, vertical: true)
@@ -148,8 +142,6 @@ struct GeneralSettingsView: View {
                         }
                     }
                 }
-                
-                
                 
                 
                 ThemedDivider()
@@ -250,7 +242,6 @@ struct GeneralSettingsView: View {
                         Text("Show draw scramble on timer")
                             .font(.body.weight(.medium))
                     }
-                    .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                     
                 }
                 .padding(.horizontal)
@@ -264,7 +255,6 @@ struct GeneralSettingsView: View {
 //                    .onChange(of: showStats) { newValue in
 //                        stopwatchManager.updateStats()
 //                    }
-                    .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                     
                 }
                 .padding(.horizontal)
@@ -312,7 +302,6 @@ struct GeneralSettingsView: View {
                             Text("Show Previous Time")
                                 .font(.body.weight(.medium))
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: Color("accent")))
                         .padding(.horizontal)
                     }
                     
@@ -323,6 +312,7 @@ struct GeneralSettingsView: View {
                         .foregroundColor(Color("grey"))
                         .multilineTextAlignment(.leading)
                         .padding(.horizontal)
+                        .padding(.bottom, 12)
                 }
                 
                 
@@ -431,14 +421,14 @@ struct GeneralSettingsView: View {
                     HStack {
                         Text("MIN")
                             .font(Font.system(.footnote, design: .rounded))
-                            .foregroundColor(Color("indent0"))
+                            .foregroundColor(Color("grey"))
                         
                         Slider(value: $gestureActivationDistance, in: 20...300)
                             .padding(.horizontal, 4)
                         
                         Text("MAX")
                             .font(Font.system(.footnote, design: .rounded))
-                            .foregroundColor(Color("indent0"))
+                            .foregroundColor(Color("grey"))
                         
                     }
                     

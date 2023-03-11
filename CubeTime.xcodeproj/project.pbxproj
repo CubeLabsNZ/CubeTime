@@ -30,6 +30,8 @@
 		23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648B293867EA0049993B /* 8sec-audio.wav */; };
 		23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; };
 		23B45E7329A8560400BDF49E /* TNoodleLibNative.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		23B7AC3A29BAB2E300B5C9B4 /* TimerTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B7AC3929BAB2E300B5C9B4 /* TimerTools.swift */; };
+		23B7AC3C29BB049F00B5C9B4 /* AverageCalculatorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B7AC3B29BB049F00B5C9B4 /* AverageCalculatorTool.swift */; };
 		23C85EAC29388C9C00C7C3EC /* StatsSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */; };
 		23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA845F2783EBA1003901FB /* ReachedTargets.swift */; };
 		23CA8A0129AAF338006676BF /* TimerOnlyTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0029AAF338006676BF /* TimerOnlyTool.swift */; };
@@ -136,6 +138,8 @@
 		23AB648B293867EA0049993B /* 8sec-audio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "8sec-audio.wav"; sourceTree = "<group>"; };
 		23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "3rdparty-Bridging-Header.h"; sourceTree = "<group>"; };
 		23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodleLibNative.xcframework; sourceTree = "<group>"; };
+		23B7AC3929BAB2E300B5C9B4 /* TimerTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTools.swift; sourceTree = "<group>"; };
+		23B7AC3B29BB049F00B5C9B4 /* AverageCalculatorTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AverageCalculatorTool.swift; sourceTree = "<group>"; };
 		23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsSubviews.swift; sourceTree = "<group>"; };
 		23CA845F2783EBA1003901FB /* ReachedTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachedTargets.swift; sourceTree = "<group>"; };
 		23CA8A0029AAF338006676BF /* TimerOnlyTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerOnlyTool.swift; sourceTree = "<group>"; };
@@ -232,6 +236,7 @@
 			children = (
 				23CA8A0229AAF894006676BF /* StopwatchManager */,
 				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
+				23B7AC3929BAB2E300B5C9B4 /* TimerTools.swift */,
 				2326435F28C4927600F6322E /* TimerHeader.swift */,
 				7D7DDF2227955AFF00362DE9 /* PenButton.swift */,
 				7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */,
@@ -438,6 +443,7 @@
 				23CA8A0029AAF338006676BF /* TimerOnlyTool.swift */,
 				AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */,
 				AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */,
+				23B7AC3B29BB049F00B5C9B4 /* AverageCalculatorTool.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -618,10 +624,12 @@
 				AF8874C529AB3736001E49D0 /* ScrambleGeneratorTool.swift in Sources */,
 				23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */,
 				7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */,
+				23B7AC3A29BAB2E300B5C9B4 /* TimerTools.swift in Sources */,
 				7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */,
 				237B35502761995F00CC39BF /* SettingsCard.swift in Sources */,
 				AF649FB429B7ED320099A839 /* TimeListViewInner.swift in Sources */,
 				7D78FF8E276087AF008BB82E /* TabBar.swift in Sources */,
+				23B7AC3C29BB049F00B5C9B4 /* AverageCalculatorTool.swift in Sources */,
 				23CB6D0E29AC3DFB00C60EF8 /* TimeDetailView.swift in Sources */,
 				23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */,
 				23D7722429B1E3540044AFBA /* NewSessionView.swift in Sources */,

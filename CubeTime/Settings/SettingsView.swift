@@ -23,8 +23,7 @@ struct SettingsViewInner: View {
     
     var body: some View {
         ZStack {
-            Color((UIDevice.deviceIsPad && hSizeClass == .regular) ? "overlay1" : "base")
-                .ignoresSafeArea()
+            BackgroundColour()
             
             VStack(spacing: 16) {
                 HStack(spacing: 16) {
@@ -181,25 +180,14 @@ struct SettingsCard: View {
 
 struct SettingsDetail: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
-    
     @Binding var currentCard: SettingsCardInfo?
-    
     var namespace: Namespace.ID
-    
-    
-    @Environment(\.horizontalSizeClass) var hSizeClass
-    
-            
-
-    
-    
     
     var body: some View {
         if currentCard != nil {
             GeometryReader { geo in
                 ZStack {
-                    Color((UIDevice.deviceIsPad && hSizeClass == .regular) ? "overlay1" : "base")
-                        .ignoresSafeArea()
+                    BackgroundColour()
                         .zIndex(0)
                     
                     ScrollView {

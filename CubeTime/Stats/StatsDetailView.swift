@@ -35,8 +35,7 @@ struct StatsDetailView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color("base")
-                    .ignoresSafeArea()
+                BackgroundColour()
                 
                 GeometryReader { geo in
                     ScrollView {
@@ -99,7 +98,7 @@ struct StatsDetailView: View {
                             // BUTTONS
                             
                             HStack(spacing: 8) {
-                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                                HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
                                     copySolve(solves: solves)
                                     
                                     withAnimation(Animation.customSlowSpring.delay(0.25)) {
@@ -130,7 +129,7 @@ struct StatsDetailView: View {
                                     }
                                 }
                                 
-                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                                HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
 //                                    shareSolve(solve: solve)
                                 }) {
                                     Label("Share Average", systemImage: "square.and.arrow.up")
