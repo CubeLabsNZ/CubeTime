@@ -46,7 +46,6 @@ struct StatsView: View {
                         VStack {
                             SessionHeader()
                                 .padding(.horizontal)
-                                .padding(.top, -6)
                                 #if DEBUG
                                 .onTapGesture {
                                     for _ in 0..<10000 {

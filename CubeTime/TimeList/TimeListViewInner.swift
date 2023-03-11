@@ -14,19 +14,14 @@ class MyCell : UICollectionViewCell {
     }
     
     override init(frame: CGRect) {
-        NSLog("MYCELL INIT: x \(frame.minX), y \(frame.minY)")
+        NSLog("CELL INIT: x \(frame.minX), y \(frame.minY)")
         super.init(frame: frame)
-        // create a new label and add it to the cell's content view
-//        let label = UILabel(frame: cell.contentView.bounds)
         label.frame = CGRect(origin: .zero, size: frame.size)
         label.textAlignment = .center
-//        let solve = stopwatchManager.timeListSolvesFiltered[indexPath.item]
-//        label.text = solve.timeText
         label.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
         label.isUserInteractionEnabled = false
         contentView.addSubview(label)
 
-        // configure the cell's appearance (optional)
         layer.backgroundColor = UIColor(named: isSelected ? "indent0" : "overlay0")!.cgColor
         layer.cornerRadius = 8
         layer.cornerCurve = .continuous
@@ -37,6 +32,10 @@ class MyCell : UICollectionViewCell {
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.82, initialSpringVelocity: 1) {
             self.layer.backgroundColor = UIColor(named: self.isSelected ? "indent0" : "overlay0")!.cgColor
         }
+    }
+    
+    deinit {
+        NSLog("CELL DEINITIALISED: x: \(frame.minX), y: \(frame.minY)")
     }
 }
 
@@ -104,21 +103,6 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
                 NSLog("Recieved value timelistsolvesfiltersd")
                 self?.applySnapshot(i)
             })
-        
-//        subscriber2 = stopwatchManager.$timeListSolvesSelected
-//            .sink(receiveValue: { [weak self] newSelection in
-//                let indexPaths = newSelection.compactMap({self?.dataSource.indexPath(for: $0)})
-//
-//                if let self = self, let oldSelected = self.collectionView.indexPathsForSelectedItems {
-//                    let newlySelected = Set(indexPaths).subtracting(oldSelected)
-//                    let newlyDeselected = Set(oldSelected).subtracting(indexPaths)
-//
-//                    NSLog("newlySelected: \(newlySelected), newlyDeselected: \(newlyDeselected)")
-//
-//                    newlySelected.forEach({self.collectionView.selectItem(at: $0, animated: true, scrollPosition: [])})
-//                    newlyDeselected.forEach({self.collectionView.deselectItem(at: $0, animated: true)})
-//                }
-//            })
     }
     
     required init?(coder: NSCoder) {
@@ -132,8 +116,9 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     }
     
     func makeDataSource() -> DataSource {
-        let solveCellRegistration = UICollectionView.CellRegistration<MyCell, Solves> { cell, _, item in
-            // 3
+        let solveCellRegistration = UICollectionView.CellRegistration<MyCell, Solves> { [weak self] cell, _, item in
+            guard let self else { return }
+            
             cell.label.text = item.timeText
             cell.item = item
             cell.gesture = UITapGestureRecognizer(target: self, action: #selector(self.handleCellTap(_:)))
@@ -142,10 +127,9 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
             cell.viewController = self
             NSLog("DID cell something")
         }
-        // 1
+        
         return DataSource(collectionView: collectionView) {
             collectionView, indexPath, item -> UICollectionViewCell? in
-            // 2
             return collectionView.dequeueConfiguredReusableCell(
                 using: solveCellRegistration, for: indexPath, item: item)
         }
@@ -176,14 +160,19 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         self.collectionView.layer.backgroundColor = UIColor.clear.cgColor
         
 //        self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: timeResuseIdentifier)
-        self.collectionView.contentInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
         self.collectionView.allowsSelection = false
         self.collectionView.allowsMultipleSelection = false
+        
         applyInitialSnapshots()
-        stopwatchManager.timeListReloadSolve = { solve in
+        
+        stopwatchManager.timeListReloadSolve = { [weak self] solve in
+            guard let self else { return }
+            
             var categorySnapshot = Snapshot()
+            
             
             categorySnapshot.appendSections([0])
             categorySnapshot.appendItems(self.stopwatchManager.timeListSolvesFiltered, toSection: 0)
@@ -191,7 +180,9 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
             
             self.dataSource.apply(categorySnapshot, animatingDifferences: false)
         }
-        stopwatchManager.timeListSelectAll = {
+        stopwatchManager.timeListSelectAll = { [weak self] in
+            guard let self else { return }
+            
             for idxpath in self.collectionView.indexPathsForVisibleItems {
                 self.collectionView.selectItem(at: idxpath, animated: true, scrollPosition: [])
                 if let solve = self.dataSource.itemIdentifier(for: idxpath) {
@@ -201,7 +192,13 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         }
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        
+        print("DISAPPEAR CALLED")
+    }
+    
     deinit {
+        print("DEININT CALLED")
         stopwatchManager.timeListReloadSolve = nil
         stopwatchManager.timeListSelectAll = nil
     }

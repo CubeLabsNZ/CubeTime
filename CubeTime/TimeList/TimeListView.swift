@@ -239,6 +239,8 @@ struct TimeListView: View {
                             TimeListHeader()
                             
                             TimeListInner(isSelectMode: $isSelectMode, currentSolve: $solve)
+//                                .padding(.horizontal)
+                                .ignoresSafeArea()
                         }
                     } else {
                         ScrollView {
@@ -277,7 +279,6 @@ struct TimeListView: View {
                                 .padding(.horizontal)
                             }
                         }
-                        .padding(.top, -6)
                     }
                 }
                 .navigationTitle(isSelectMode ? "Select Solves" : "Session Times")
