@@ -12,7 +12,7 @@ struct PenaltyButton: View {
     @Environment(\.managedObjectContext) private var managedObjectContext
     @Environment(\.colorScheme) private var colourScheme
     
-    let penType: PenTypes
+    let penType: Penalty
     let penSymbol: String
     let imageSymbol: Bool
     let canType: Bool
@@ -22,7 +22,7 @@ struct PenaltyButton: View {
         Button(action: {
             let oldPen = stopwatchManager.solveItem.penalty
             stopwatchManager.solveItem.penalty = penType.rawValue
-            stopwatchManager.changedPen(PenTypes(rawValue: oldPen)!)
+            stopwatchManager.changedPen(Penalty(rawValue: oldPen)!)
             try! managedObjectContext.save()
             
         }, label: {

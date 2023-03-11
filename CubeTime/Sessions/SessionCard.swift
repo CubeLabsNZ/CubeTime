@@ -20,7 +20,7 @@ struct SessionCard: View {
     var allSessions: FetchedResults<Sessions>
     
     let pinned: Bool
-    let session_type: SessionTypes
+    let session_type: SessionType
     let name: String
     let scramble_type: Int
     let solveCount: Int
@@ -34,7 +34,7 @@ struct SessionCard: View {
         
         // Copy out the things so that it won't change to null coalesced defaults on deletion
         self.pinned = item.pinned
-        self.session_type = SessionTypes(rawValue: item.session_type)!
+        self.session_type = SessionType(rawValue: item.session_type)!
         self.name = item.name ?? "Unknown session name"
         self.scramble_type = Int(item.scramble_type)
         self.solveCount = item.solves?.count ?? -1

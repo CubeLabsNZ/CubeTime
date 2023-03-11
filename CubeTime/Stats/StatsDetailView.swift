@@ -50,7 +50,7 @@ struct StatsDetailView: View {
                                     // if playground, show playground, otherwise show puzzle type
                                     
                                     HStack(alignment: .center) {
-                                        if (SessionTypes(rawValue: session.session_type)! == .playground) {
+                                        if (SessionType(rawValue: session.session_type)! == .playground) {
                                             Text("Playground")
                                                 .font(.title3.weight(.semibold))
                                             
@@ -158,13 +158,13 @@ struct StatsDetailView: View {
                                                 .foregroundColor(Color("accent"))
                                             
                                             if solves.trimmedSolves!.contains(solve) {
-                                                Text("(" + formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!) + ")")
+                                                Text("(" + formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!) + ")")
                                                     .offset(y: 1)
                                                     .font(.title3.weight(.bold))
                                                     .foregroundColor(Color("grey"))
                                                 
                                             } else {
-                                                Text(formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!))
+                                                Text(formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!))
                                                     .offset(y: 1)
                                                     .font(.title3.weight(.bold))
                                             }

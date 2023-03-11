@@ -41,7 +41,7 @@ struct TimeDetailView: View {
     init(for solve: Solves, currentSolve: Binding<Solves?>?, sessionsCanMoveTo: Binding<[Sessions]?>? = nil, sessionsCanMoveTo_playground: Binding<[Sessions]?>? = nil) {
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
-        self.time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+        self.time = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
         self.puzzle_type = puzzle_types[Int(solve.scramble_type)]
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
                 
@@ -72,7 +72,7 @@ struct TimeDetailView: View {
                             VStack(spacing: 4) {
                                 HStack(alignment: .bottom) {
                                     switch solve.penalty {
-                                    case PenTypes.dnf.rawValue:
+                                    case Penalty.dnf.rawValue:
                                         Text("DNF")
                                             .font(.largeTitle.weight(.bold))
                                         
@@ -83,7 +83,7 @@ struct TimeDetailView: View {
                                             .padding(.leading, 8)
                                             .offset(y: -4)
                                         
-                                    case PenTypes.plustwo.rawValue:
+                                    case Penalty.plustwo.rawValue:
                                         let addedTime = formatSolveTime(secs: (solve.time + 2))
                                         Text("\(addedTime)")
                                             .font(.largeTitle.weight(.bold))
@@ -146,13 +146,13 @@ struct TimeDetailView: View {
                                 HStack(spacing: 6) {
                                     Spacer()
                                     
-                                    HierarchicalButton(type: solve.penalty == PenTypes.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    HierarchicalButton(type: solve.penalty == Penalty.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .none)
                                     }) {
                                         Label("OK", systemImage: "checkmark.circle")
                                     }
                                     
-                                    HierarchicalButton(type: solve.penalty == PenTypes.plustwo.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    HierarchicalButton(type: solve.penalty == Penalty.plustwo.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .plustwo)
                                     }) {
                                         Label(title: {
@@ -163,7 +163,7 @@ struct TimeDetailView: View {
                                         })
                                     }
                                     
-                                    HierarchicalButton(type: solve.penalty == PenTypes.dnf.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    HierarchicalButton(type: solve.penalty == Penalty.dnf.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .dnf)
                                     }) {
                                         Label("DNF", systemImage: "xmark.circle")
@@ -262,7 +262,7 @@ struct TimeDetailView: View {
                                 .padding(.vertical, 6)
                                 .font(.body.weight(.medium))
                                 
-                                SessionPickerMenu(sessions: sess_type == SessionTypes.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scramble_type)] : stopwatchManager.sessionsCanMoveTo) { session in
+                                SessionPickerMenu(sessions: sess_type == SessionType.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scramble_type)] : stopwatchManager.sessionsCanMoveTo) { session in
                                     withAnimation(Animation.customDampedSpring) {
                                         stopwatchManager.moveSolve(solve: solve, to: session)
                                     }
@@ -279,7 +279,7 @@ struct TimeDetailView: View {
                             .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
                             
                             
-                            if (stopwatchManager.currentSession.session_type == SessionTypes.multiphase.rawValue) {
+                            if (stopwatchManager.currentSession.session_type == SessionType.multiphase.rawValue) {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text("PHASES")
                                         .font(.subheadline.weight(.semibold))

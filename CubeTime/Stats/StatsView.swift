@@ -55,7 +55,7 @@ struct StatsView: View {
                                         solve.scramble = "sdlfkjsdlfksdjf"
                                         solve.date = Date()
                                         solve.scramble_type = 2
-                                        solve.penalty = PenTypes.none.rawValue
+                                        solve.penalty = Penalty.none.rawValue
                                         solve.scramble_subtype = 0
                                         solve.session = stopwatchManager.currentSession
                                         
@@ -65,7 +65,7 @@ struct StatsView: View {
                                 }
                                 #endif
 
-                            let compsim: Bool = SessionTypes(rawValue: stopwatchManager.currentSession.session_type)! == .compsim
+                            let compsim: Bool = SessionType(rawValue: stopwatchManager.currentSession.session_type)! == .compsim
                             
                             /// everything
                             VStack(spacing: 10) {
@@ -99,7 +99,7 @@ struct StatsView: View {
                                         VStack (spacing: 10) {
                                             StatsBlock(title: "BEST SINGLE", blockHeight: blockHeightSmall, background: .coloured) {
                                                 if let bestSingle = stopwatchManager.bestSingle {
-                                                    StatsBlockText(displayText: formatSolveTime(secs: bestSingle.time, penType: PenTypes(rawValue: bestSingle.penalty)!), colouredBlock: true, displayDetail: false, nilCondition: true)
+                                                    StatsBlockText(displayText: formatSolveTime(secs: bestSingle.time, penType: Penalty(rawValue: bestSingle.penalty)!), colouredBlock: true, displayDetail: false, nilCondition: true)
                                                 } else {
                                                     StatsBlockText(displayText: "", colouredBlock: true, nilCondition: false)
                                                 }
@@ -149,7 +149,7 @@ struct StatsView: View {
                                     .padding(.bottom, 8)
                                     
                                     
-                                    if SessionTypes(rawValue: stopwatchManager.currentSession.session_type)! == .multiphase {
+                                    if SessionType(rawValue: stopwatchManager.currentSession.session_type)! == .multiphase {
                                         StatsBlock(title: "AVERAGE PHASES", blockHeight: stopwatchManager.solvesNoDNFs.count == 0 ? blockGraphEmpty : nil, isBigBlock: true) {
                                                 AveragePhases(phaseTimes: stopwatchManager.phases!, count: stopwatchManager.solvesNoDNFsbyDate.count)
                                         }
@@ -308,7 +308,7 @@ struct StatsView: View {
                                     HStack(spacing: 10) {
                                         StatsBlock(title: "CURRENT MO10 AO5", blockHeight: blockHeightSmall) {
                                             if let currentMeanOfTen = stopwatchManager.currentMeanOfTen {
-                                                StatsBlockText(displayText: formatSolveTime(secs: currentMeanOfTen, penType: ((currentMeanOfTen == -1) ? .dnf : PenTypes.none)), nilCondition: true)
+                                                StatsBlockText(displayText: formatSolveTime(secs: currentMeanOfTen, penType: ((currentMeanOfTen == -1) ? .dnf : Penalty.none)), nilCondition: true)
                                                 StatsBlockText(displayText: "", nilCondition: false)
                                             } else {
                                                 StatsBlockText(displayText: "", nilCondition: false)
@@ -318,7 +318,7 @@ struct StatsView: View {
                                         
                                         StatsBlock(title: "BEST MO10 AO5", blockHeight: blockHeightSmall) {
                                             if let bestMeanOfTen = stopwatchManager.bestMeanOfTen {
-                                                StatsBlockText(displayText: formatSolveTime(secs: bestMeanOfTen, penType: ((bestMeanOfTen == -1) ? .dnf : PenTypes.none)), nilCondition: true)
+                                                StatsBlockText(displayText: formatSolveTime(secs: bestMeanOfTen, penType: ((bestMeanOfTen == -1) ? .dnf : Penalty.none)), nilCondition: true)
                                             } else {
                                                 StatsBlockText(displayText: "", nilCondition: false)
                                             }

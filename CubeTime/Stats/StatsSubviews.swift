@@ -151,7 +151,7 @@ struct StatsBlockDetailText: View {
                 
                 ForEach(calculatedAverage.accountedSolves!, id: \.self) { solve in
                     let discarded = calculatedAverage.trimmedSolves!.contains(solve)
-                    let time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+                    let time = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
                     
                     Text(discarded ? "("+time+")" : time)
                         .font(.body)

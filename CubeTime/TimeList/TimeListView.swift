@@ -85,7 +85,7 @@ struct SessionHeader: View {
             
             Spacer()
             
-            if (SessionTypes(rawValue: stopwatchManager.currentSession.session_type) != .playground) {
+            if (SessionType(rawValue: stopwatchManager.currentSession.session_type) != .playground) {
                 Text(puzzle_types[Int(stopwatchManager.currentSession.scramble_type)].name)
                     .font(.body.weight(.medium))
                     .padding(.trailing)
@@ -234,7 +234,7 @@ struct TimeListView: View {
                 let sessType = stopwatchManager.currentSession.session_type
                 
                 Group {
-                    if sessType != SessionTypes.compsim.rawValue {
+                    if sessType != SessionType.compsim.rawValue {
                         VStack {
                             TimeListHeader()
                             
@@ -336,8 +336,8 @@ struct TimeListView: View {
                                         Label("Penalty", systemImage: "exclamationmark.triangle")
                                     }
                                     
-                                    if stopwatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
-                                        SessionPickerMenu(sessions: sess_type == SessionTypes.playground.rawValue ? sessionsCanMoveToPlaygroundContextMenu : stopwatchManager.sessionsCanMoveTo) { session in
+                                    if stopwatchManager.currentSession.session_type != SessionType.compsim.rawValue {
+                                        SessionPickerMenu(sessions: sess_type == SessionType.playground.rawValue ? sessionsCanMoveToPlaygroundContextMenu : stopwatchManager.sessionsCanMoveTo) { session in
                                             for object in stopwatchManager.timeListSolvesSelected {
                                                 withAnimation(Animation.customDampedSpring) {
                                                     stopwatchManager.moveSolve(solve: object, to: session)
@@ -373,20 +373,19 @@ struct TimeListView: View {
                     }
                     
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        if stopwatchManager.currentSession.session_type != SessionTypes.compsim.rawValue {
+                        if stopwatchManager.currentSession.session_type != SessionType.compsim.rawValue {
                             if isSelectMode {
                                 HierarchicalButton(type: .coloured, size: .small, onTapRun: {
                                     withAnimation(Animation.customDampedSpring) {
-                                        stopwatchManager.timeListSolvesSelected = Set(stopwatchManager.timeListSolvesFiltered)
+                                        stopwatchManager.timeListSelectAll?()
                                     }
                                 }) {
                                     Text("Select All")
                                 }
                                 
                                 HierarchicalButton(type: .disabled, size: .small, onTapRun: {
-                                    isSelectMode = false
                                     withAnimation(Animation.customDampedSpring) {
-                                        stopwatchManager.timeListSolvesSelected.removeAll()
+                                        isSelectMode = false
                                     }
                                 }) {
                                     Text("Cancel")
@@ -429,12 +428,13 @@ struct TimeListView: View {
         }
         
         .onChange(of: stopwatchManager.timeListSolvesSelected) { newValue in
+            NSLog("num of selected solves: \(newValue.count)")
             if newValue.count == 0 {
                 isSelectMode = false
                 return
             }
             
-            if stopwatchManager.currentSession.session_type != SessionTypes.playground.rawValue {
+            if stopwatchManager.currentSession.session_type != SessionType.playground.rawValue {
                 return
             }
             

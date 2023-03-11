@@ -19,7 +19,7 @@ struct SessionIconView: View {
                 .fill(Color.clear)
                 .frame(width: isDynamicType ? size : 35, height: isDynamicType ? size : 35)
             
-            switch SessionTypes(rawValue: session.session_type)! {
+            switch SessionType(rawValue: session.session_type)! {
             case .standard:
                 Image(systemName: "timer.square")
                     .font(.system(size: isDynamicType ? iconLarge : 26, weight: .regular))
@@ -57,7 +57,7 @@ struct TimerHeader: View {
     let previewMode: Bool
     
     var body: some View {
-        let sess_type = SessionTypes(rawValue: stopwatchManager.currentSession.session_type)!
+        let sess_type = SessionType(rawValue: stopwatchManager.currentSession.session_type)!
         HStack {
             if previewMode {
                 ZStack(alignment: .leading) {

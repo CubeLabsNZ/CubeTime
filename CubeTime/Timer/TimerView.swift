@@ -184,7 +184,7 @@ struct TimerView: View {
     
     
     var body: some View {
-        let typingMode = inputMode == .typing && stopwatchManager.currentSession.session_type != SessionTypes.multiphase.rawValue
+        let typingMode = inputMode == .typing && stopwatchManager.currentSession.session_type != SessionType.multiphase.rawValue
         
         GeometryReader { geo in
             TimerBackgroundColor()
@@ -328,7 +328,7 @@ struct TimerView: View {
             
             if scrambleController.scrambleStr != nil && (typingMode || stopwatchManager.showPenOptions) {
                 HStack {
-                    let showPlus = stopwatchManager.currentSession.session_type != SessionTypes.multiphase.rawValue && !justManuallyInput && (inputMode != .typing || manualInputTime != "")
+                    let showPlus = stopwatchManager.currentSession.session_type != SessionType.multiphase.rawValue && !justManuallyInput && (inputMode != .typing || manualInputTime != "")
                     
                     
                     PenaltyBar {

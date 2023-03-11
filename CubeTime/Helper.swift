@@ -5,12 +5,12 @@ import Combine
 import CoreData
 
 // MARK: - GLOBAL LETS
-let sessionTypeForID: [SessionTypes: Sessions.Type] = [
+let sessionTypeForID: [SessionType: Sessions.Type] = [
     .multiphase: MultiphaseSession.self,
     .compsim: CompSimSession.self
 ]
 
-let sessionDescriptions: [SessionTypes: String] = [
+let sessionDescriptions: [SessionType: String] = [
     .multiphase: "A multiphase session gives you the ability to breakdown your solves into sections, such as memo/exec stages in blindfolded solving or stages in 3x3 solves.\n\nTap anywhere on the timer during a solve to record a phase lap. You can access your breakdown statistics in each time card and view overall statistics in the Stats view.",
     .playground: "A playground session allows you to quickly change the scramble type within a session without having to specify a scramble type for the whole session.",
     .compsim: "A comp sim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach."
@@ -41,7 +41,7 @@ struct SessionPickerMenu<Content: View>: View {
                         Button {
                             clickSession(session)
                         } label: {
-                            Label(session.name!, systemImage: iconNamesForType[SessionTypes(rawValue:session.session_type)!]!)
+                            Label(session.name!, systemImage: iconNamesForType[SessionType(rawValue:session.session_type)!]!)
                         }
                     }
                 }
@@ -50,7 +50,7 @@ struct SessionPickerMenu<Content: View>: View {
                         Button {
                             clickSession(session)
                         } label: {
-                            Label(session.name!, systemImage: iconNamesForType[SessionTypes(rawValue:session.session_type)!]!)
+                            Label(session.name!, systemImage: iconNamesForType[SessionType(rawValue:session.session_type)!]!)
                         }
                     }
                 }
@@ -67,7 +67,7 @@ struct SessionPickerMenu<Content: View>: View {
 extension Sessions {
     var typeName: String {
         get {
-            switch (SessionTypes(rawValue: session_type)!) {
+            switch (SessionType(rawValue: session_type)!) {
             case .standard:
                 return "Standard Session"
             case .algtrainer:
@@ -85,7 +85,7 @@ extension Sessions {
     var shortcutName: String {
         get {
             let scrname = puzzle_types[Int(scramble_type)].name
-            switch (SessionTypes(rawValue: session_type)!) {
+            switch (SessionType(rawValue: session_type)!) {
             case .standard:
                 return scrname
             case .algtrainer:
@@ -101,7 +101,7 @@ extension Sessions {
     }
 }
 
-let iconNamesForType: [SessionTypes: String] = [
+let iconNamesForType: [SessionType: String] = [
     .standard: "timer.square",
     .algtrainer: "command.square",
     .multiphase: "square.stack",
@@ -121,15 +121,15 @@ func getSessionsCanMoveTo(managedObjectContext: NSManagedObjectContext, scramble
         NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
     ]
     req.predicate = NSPredicate(format: """
-        session_type != \(SessionTypes.compsim.rawValue)
+        session_type != \(SessionType.compsim.rawValue)
         AND
         (
-            session_type == \(SessionTypes.playground.rawValue) OR
+            session_type == \(SessionType.playground.rawValue) OR
             scramble_type == %i
         )
         AND
         (
-            session_type != \(SessionTypes.multiphase.rawValue) OR
+            session_type != \(SessionType.multiphase.rawValue) OR
             phase_count == %i
         )
         AND
@@ -269,15 +269,15 @@ extension CompSimSolveGroup: RawGraphData {
 extension Solves: Comparable, RawGraphData {
     var timeIncPen: Double {
         get {
-            return self.time + (self.penalty == PenTypes.plustwo.rawValue ? 2 : 0)
+            return self.time + (self.penalty == Penalty.plustwo.rawValue ? 2 : 0)
         }
     }
     
     var timeIncPenDNFMax: Double {
         get {
-            return (self.penalty == PenTypes.dnf.rawValue
+            return (self.penalty == Penalty.dnf.rawValue
                     ? Double.infinity
-                    : (self.time + (self.penalty == PenTypes.plustwo.rawValue ? 2 : 0)))
+                    : (self.time + (self.penalty == Penalty.plustwo.rawValue ? 2 : 0)))
         }
     }
     
@@ -496,13 +496,13 @@ struct PuzzleType {
 
 
 // MARK: - ENUMS
-enum PenTypes: Int16, Hashable {
+enum Penalty: Int16, Hashable {
     case none
     case plustwo
     case dnf
 }
 
-enum SessionTypes: Int16 {
+enum SessionType: Int16 {
     case standard
     case algtrainer
     case multiphase
@@ -526,8 +526,8 @@ func formatSolveTime(secs: Double, dp: Int) -> String {
     }
 }
 
-func formatSolveTime(secs: Double, penType: PenTypes? = PenTypes.none) -> String {
-    if penType == PenTypes.dnf {
+func formatSolveTime(secs: Double, penType: Penalty? = Penalty.none) -> String {
+    if penType == Penalty.dnf {
         return "DNF"
     }
     
@@ -580,7 +580,7 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
         average: sorted.dropFirst(trim).dropLast(trim)
                 .reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(3),
         accountedSolves: sorted,
-        totalPen: sorted.filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
+        totalPen: sorted.filter {$0.penalty == Penalty.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
         trimmedSolves: trimmedSolves
     )
 }
@@ -590,7 +590,7 @@ extension Solves {
     var shareText: String {
         get {
             let scramble = self.scramble ?? "Retrieving scramble failed."
-            let time = formatSolveTime(secs: self.time, penType: PenTypes(rawValue: self.penalty)!)
+            let time = formatSolveTime(secs: self.time, penType: Penalty(rawValue: self.penalty)!)
             
             return "Generated by CubeTime.\n\(time):\t\(scramble)"
         }
@@ -598,7 +598,7 @@ extension Solves {
     
     var timeText: String {
         get {
-            return formatSolveTime(secs: self.time, penType: PenTypes(rawValue: self.penalty)!)
+            return formatSolveTime(secs: self.time, penType: Penalty(rawValue: self.penalty)!)
         }
     }
 }
@@ -619,7 +619,7 @@ func copySolve(solves: Set<Solves>) -> Void {
     var str = "Generated by CubeTime."
     for solve in solves {
         let scramble = solve.scramble ?? "Retrieving scramble failed."
-        let time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+        let time = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
         
         str += "\n\(time):\t\(scramble)"
     }
@@ -629,7 +629,7 @@ func copySolve(solves: Set<Solves>) -> Void {
 
 func copySolve(solve: Solves, phases: Array<Double>?) -> Void {
     let scramble = solve.scramble ?? "Retrieving scramble failed."
-    let time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+    let time = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
     
     var str = "Generated by CubeTime.\n\(time):\t\(scramble)"
     
@@ -661,7 +661,7 @@ func copySolve(solves: CalculatedAverage) -> Void {
         
         for pair in zip(solves.accountedSolves!.indices, solves.accountedSolves!) {
             str += "\n\(pair.0 + 1). "
-            let formattedTime = formatSolveTime(secs: pair.1.time, penType: PenTypes(rawValue: pair.1.penalty))
+            let formattedTime = formatSolveTime(secs: pair.1.time, penType: Penalty(rawValue: pair.1.penalty))
             if solves.trimmedSolves!.contains(pair.1) {
                 str += "(" + formattedTime + ")"
             } else {
@@ -839,7 +839,7 @@ extension View {
 
 @available(*, deprecated, message: "Use solve.timeIncPen instead.")
 func timeWithPlusTwoForSolve(_ solve: Solves) -> Double {
-    return solve.time + (solve.penalty == PenTypes.plustwo.rawValue ? 2 : 0)
+    return solve.time + (solve.penalty == Penalty.plustwo.rawValue ? 2 : 0)
 }
 
 

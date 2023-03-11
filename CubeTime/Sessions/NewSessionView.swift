@@ -6,7 +6,7 @@ struct NewSessionView: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    let sessionType: SessionTypes
+    let sessionType: SessionType
     let typeName: String
     @Binding var showNewSessionPopUp: Bool
     
@@ -36,12 +36,12 @@ struct NewSessionView: View {
             ScrollView {
                 VStack (spacing: 16) {
                     VStack (alignment: .center, spacing: 0) {
-                        if sessionType != SessionTypes.playground {
+                        if sessionType != SessionType.playground {
                             PuzzleHeaderImage(imageName: puzzle_types[Int(sessionEventType)].name)
                         }
                         
                         SessionNameField(name: $name)
-                            .if(sessionType == SessionTypes.playground) { view in
+                            .if(sessionType == SessionType.playground) { view in
                                 view.padding(.top)
                             }
                         

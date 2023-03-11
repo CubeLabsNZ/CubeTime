@@ -136,11 +136,11 @@ struct CustomiseSessionView: View {
                         .frame(height: bigFrameHeight)
                         .modifier(CardBlockBackground())
                         
-                        if sessionItem.session_type == SessionTypes.compsim.rawValue {
+                        if sessionItem.session_type == SessionType.compsim.rawValue {
                             CompSimTargetEntry(targetStr: $targetStr)
                         }
                         
-                        if sessionItem.session_type == SessionTypes.playground.rawValue {
+                        if sessionItem.session_type == SessionType.playground.rawValue {
                             EventPicker(sessionEventType: $sessionEventType)
                         }
                         
@@ -162,15 +162,15 @@ struct CustomiseSessionView: View {
                             sessionItem.name = name
                             sessionItem.pinned = pinnedSession
                             
-                            if sessionItem.session_type == SessionTypes.compsim.rawValue {
+                            if sessionItem.session_type == SessionType.compsim.rawValue {
                                 (sessionItem as! CompSimSession).target = timeFromStr(targetStr)!
                             }
                             
-                            if sessionItem.session_type == SessionTypes.multiphase.rawValue {
+                            if sessionItem.session_type == SessionType.multiphase.rawValue {
                                 (sessionItem as! MultiphaseSession).phase_count = Int16(phaseCount)
                             }
                             
-                            if sessionItem.session_type == SessionTypes.playground.rawValue {
+                            if sessionItem.session_type == SessionType.playground.rawValue {
                                 if sessionItem == stopwatchManager.currentSession {
                                     stopwatchManager.playgroundScrambleType = sessionEventType
                                 } else {
@@ -182,7 +182,7 @@ struct CustomiseSessionView: View {
                             
                             dismiss()
                         })
-                        .disabled(self.name.isEmpty || (sessionItem.session_type == SessionTypes.compsim.rawValue && targetStr.isEmpty))
+                        .disabled(self.name.isEmpty || (sessionItem.session_type == SessionType.compsim.rawValue && targetStr.isEmpty))
                     }
                 }
             }

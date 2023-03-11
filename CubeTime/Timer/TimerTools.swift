@@ -2,12 +2,6 @@ import SwiftUI
 import SVGView
 import SwiftfulLoadingIndicators
 
-enum TimerTool {
-    case drawScramble
-    case statsCompsim
-    case statsStandard
-}
-
 struct BottomTools: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
     @EnvironmentObject var stopwatchManager: StopwatchManager
@@ -33,7 +27,7 @@ struct BottomTools: View {
             
             if showStats {
                 BottomToolContainer {
-                    if stopwatchManager.currentSession.session_type == SessionTypes.compsim.rawValue {
+                    if stopwatchManager.currentSession.session_type == SessionType.compsim.rawValue {
                         TimerStatsCompSim()
                     } else {
                         if (UIDevice.deviceIsPad && hSizeClass == .regular) {

@@ -19,7 +19,8 @@ let tools: [Tool] = [
     Tool(name: "Timer Only", iconName: "stopwatch", description: "Just a timer. No scrambles are shown. Your solves are **not** recorded and are not saved to a session."),
     Tool(name: "Scramble Only", iconName: "cube", description: "Displays one scramble at a time. A timer is not shown. Tap to generate the next scramble."),
     Tool(name: "Scramble Generator", iconName: "server.rack", description: "Generate multiple scrambles at once, to share, save or use."),
-    Tool(name: "Average Calculator", iconName: "function", description: "Calculates WPA, BPA, and time needed for an average, etc."),
+    Tool(name: "Calculator", iconName: "function", description: "Simple average and mean calculator."),
+    Tool(name: "Tracker", iconName: "scope", description: "Track someone's average at a comp. Calculates times needed for a chance for a target, BPA, WPA, and more."),
     Tool(name: "Scorecard Generator", iconName: "printer", description: "Export scorecards for use at meetups (or comps!)."),
 ]
 
@@ -35,33 +36,37 @@ struct ToolsList: View {
             ScrollView {
                 VStack(spacing: 12) {
                     ForEach(tools) { tool in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Label(tool.name, systemImage: tool.iconName)
-                                .font(.title3.weight(.semibold))
-                            
-                            Text(.init(tool.description))
-                                .foregroundColor(Color("grey"))
-                                .font(.callout)
-                                .padding(.top, 2)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        .padding(12)
-                        .frame(maxWidth: .infinity, minHeight: blockHeight, alignment: .topLeading)
-                        .background {
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .fill(Color("overlay0"))
-                        }
-                        .onTapGesture {
+                        Button {
                             withAnimation {
                                 toolsViewModel.currentTool = tool
                             }
+                            
+                        } label: {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Label(tool.name, systemImage: tool.iconName)
+                                    .font(.title3.weight(.semibold))
+                                
+                                Text(.init(tool.description))
+                                    .foregroundColor(Color("grey"))
+                                    .font(.callout)
+                                    .padding(.top, 2)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                            .padding(12)
+                            .frame(maxWidth: .infinity, minHeight: blockHeight, alignment: .topLeading)
+                            .background {
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .fill(Color("overlay0"))
+                            }
                         }
+                        .buttonStyle(AnimatedButton())
                     }
                     
                     Spacer()
                 }
                 .padding()
             }
+            .safeAreaInset(safeArea: .tabBar)
             .fullScreenCover(item: $toolsViewModel.currentTool, content: {_ in
                 ZStack {
                     Color("base")
@@ -79,10 +84,11 @@ struct ToolsList: View {
                             case "Scramble Generator":
                                 ScrambleGeneratorTool()
                                     
-                                
-                            case "Average Calculator":
-                                AverageCalculatorTool()
-                                
+                            case "Calculator":
+                                CalculatorTool()
+                            
+                            case "Tracker":
+                                EmptyView()
                                 
                             case "Scorecard Generator":
                                 EmptyView()

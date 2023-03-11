@@ -72,9 +72,9 @@ struct TimeBar: View {
                             if let ar = solvegroup.solves {
                                 for (index, solve) in Array((ar.array as! [Solves]).enumerated()) {
                                     if calculatedAverage.trimmedSolves!.contains(solve) {
-                                        finalStr.append(NSMutableAttributedString(string: "(" + formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)) + ")", attributes: grey))
+                                        finalStr.append(NSMutableAttributedString(string: "(" + formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)) + ")", attributes: grey))
                                     } else {
-                                        finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)), attributes: normal))
+                                        finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)), attributes: normal))
                                     }
                                     if index < solvegroup.solves!.count-1 {
                                         finalStr.append(NSMutableAttributedString(string: ", "))
@@ -113,7 +113,7 @@ struct TimeBar: View {
                                 
                                 
                                 for (index, solve) in Array((solvegroup.solves!.array as! [Solves]).enumerated()) {
-                                    finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)), attributes: normal))
+                                    finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)), attributes: normal))
                                     
                                     if index < solvegroup.solves!.count - 1 {
                                         finalStr.append(NSMutableAttributedString(string: ", "))

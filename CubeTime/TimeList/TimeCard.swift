@@ -12,7 +12,7 @@ struct TimeCard: View {
     var solve: Solves
     
     let formattedTime: String
-    let pen: PenTypes
+    let pen: Penalty
     
     @Binding var currentSolve: Solves?
     
@@ -40,8 +40,8 @@ struct TimeCard: View {
     
     init(solve: Solves, currentSolve: Binding<Solves?>) {
         self.solve = solve
-        self.formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
-        self.pen = PenTypes(rawValue: solve.penalty)!
+        self.formattedTime = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
+        self.pen = Penalty(rawValue: solve.penalty)!
         self._currentSolve = currentSolve
     }
     
@@ -102,8 +102,8 @@ struct TimeCard: View {
                 Label("Penalty", systemImage: "exclamationmark.triangle")
             }
             
-            if sess_type != SessionTypes.compsim.rawValue {
-                SessionPickerMenu(sessions: sess_type == SessionTypes.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scramble_type)] : stopwatchManager.sessionsCanMoveTo) { session in
+            if sess_type != SessionType.compsim.rawValue {
+                SessionPickerMenu(sessions: sess_type == SessionType.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scramble_type)] : stopwatchManager.sessionsCanMoveTo) { session in
                     withAnimation(Animation.customDampedSpring) {
                         stopwatchManager.moveSolve(solve: solve, to: session)
                     }
