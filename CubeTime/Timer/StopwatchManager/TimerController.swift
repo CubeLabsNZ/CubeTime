@@ -51,7 +51,7 @@ class TimerContoller: ObservableObject {
             }
             .sink(receiveValue: { [weak self] _ in
                 guard let self else { return }
-                self.secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: sm.displayDP)
+                self.secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: self.sm.displayDP)
             })
     }
     
