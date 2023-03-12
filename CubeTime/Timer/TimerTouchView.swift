@@ -159,7 +159,8 @@ struct TimerTouchView: UIViewControllerRepresentable {
         //        longPressGesture.requiresExclusiveTouchType = ?
         
         let pan = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.pan))
-        pan.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirect.rawValue)]
+        pan.allowedScrollTypesMask = .all
+        pan.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirectPointer.rawValue)]
         v.view.addGestureRecognizer(pan)
         NSLog("\(SettingsManager.standard.gestureDistance)")
         

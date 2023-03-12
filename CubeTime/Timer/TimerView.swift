@@ -118,7 +118,7 @@ struct ScrambleText: View {
         Text(scr)
             .padding(4)
             
-            .background(BackgroundColour())
+            .background(TimerBackgroundColor())
             .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 4, style: .continuous))
             .contextMenu {
                 if let scrambleString = scrambleController.scrambleStr {
@@ -469,17 +469,7 @@ struct TimerView: View {
         }
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopwatchManager.showDeleteSolveConfirmation, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
-<<<<<<< HEAD
-                managedObjectContext.delete(detail.wrappedValue!); #warning("TODO: delete this line?")
-                stopwatchManager.delete(solve: detail.wrappedValue!)
-                detail.wrappedValue = nil
-                timerController.secondsElapsed = 0
-                timerController.secondsStr = formatSolveTime(secs: showPrevTime
-                                                             ? (stopwatchManager.solvesByDate.last?.time ?? 0)
-                                                             : 0)
-=======
                 stopwatchManager.deleteLastSolve()
->>>>>>> b244379203ee08f28efa4962b5a76556fa3baef9
             }
             Button("Cancel", role: .cancel) { }
         }
