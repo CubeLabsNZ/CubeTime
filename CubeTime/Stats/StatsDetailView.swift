@@ -21,9 +21,6 @@ struct StatsDetailView: View {
     let session: Sessions
     
     private let isCurrentCompSimAverage: Bool
-
-    @State private var showShareSheet: Bool = false
-    
     
     init(solves: CalculatedAverage, session: Sessions) {
         self.solves = solves
@@ -131,29 +128,7 @@ struct StatsDetailView: View {
                                     }
                                 }
                                 
-                                HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
-                                    self.showShareSheet = true
-                                }) {
-                                    Label("Share Average", systemImage: "square.and.arrow.up")
-                                }
-                                .background(
-                                    ShareSheetViewController(isPresenting: self.$showShareSheet) {
-                                        let toShare: String = getShareStr(solves: solves)
-                                        
-                                        let activityViewController = UIActivityViewController(activityItems: [toShare], applicationActivities: nil)
-                                        activityViewController.isModalInPresentation = true
-                                        
-                                        if (UIDevice.deviceIsPad) {
-                                            activityViewController.popoverPresentationController?.sourceView = UIView()
-                                        }
-                                        
-                                        activityViewController.completionWithItemsHandler = { _, _, _, _ in
-                                            self.showShareSheet = false
-                                        }
-                                        
-                                        return activityViewController
-                                    }
-                                )
+                                ShareButton(toShare: getShareStr(solves: solves), buttonText: "Share Average")
                             }
                             .padding(.top, 16)
                             

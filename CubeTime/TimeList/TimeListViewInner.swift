@@ -107,7 +107,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         }
     }()
     
-    private var columnCount: Int {
+    lazy private var columnCount: CGFloat = {
         if traitCollection.preferredContentSizeCategory > UIContentSizeCategory.extraLarge {
             return 2
         } else if traitCollection.preferredContentSizeCategory < UIContentSizeCategory.small {
@@ -115,7 +115,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         } else {
             return 3
         }
-    }
+    }()
 
     
     var mySelecting = false {
@@ -334,7 +334,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (collectionView.frame.width - 32 - 10*2)/3
+        let width: CGFloat = (collectionView.frame.width - 32 - 10*2)/columnCount
         return CGSize(width: width, height: cardHeight)
     }
 }
