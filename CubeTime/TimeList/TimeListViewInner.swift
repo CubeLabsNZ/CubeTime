@@ -3,9 +3,11 @@ import UIKit
 import SwiftUI
 import Combine
 
+let checkboxUIImage = UIImage(systemName: "checkmark.circle")!
+
 class TimeCardLabel: UIStackView {
     let timeTextLabel = UILabel()
-    let checkbox = UIImageView(image: UIImage(systemName: "checkmark.circle")!)
+    let checkbox = UIImageView(image: checkboxUIImage)
     
     required init(coder: NSCoder) {
         fatalError("error")
@@ -46,8 +48,8 @@ class TimeCardLabel: UIStackView {
         self.addArrangedSubview(timeTextLabel)
         self.addArrangedSubview(checkbox)
         self.addArrangedSubview(UIView())
-        
-        self.layoutIfNeeded()
+//
+//        self.layoutIfNeeded()
     }
 }
 
@@ -84,7 +86,7 @@ class TimeCardCell: UICollectionViewCell {
             if (self.timeCardLabel.checkbox.isHidden != !self.isSelected) {
                 self.timeCardLabel.checkbox.isHidden = !self.isSelected
                 
-                self.timeCardLabel.layoutIfNeeded()
+//                self.timeCardLabel.layoutIfNeeded()
             }
         }
     }
@@ -95,7 +97,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Solves>
     private let timeResuseIdentifier = "TimeCard"
     
-    private var cardHeight: CGFloat {
+    private lazy var cardHeight: CGFloat = {
         if traitCollection.preferredContentSizeCategory > UIContentSizeCategory.extraLarge {
             return 60
         } else if traitCollection.preferredContentSizeCategory < UIContentSizeCategory.small {
@@ -103,7 +105,8 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         } else {
             return 55
         }
-    }
+    }()
+    
     private var columnCount: Int {
         if traitCollection.preferredContentSizeCategory > UIContentSizeCategory.extraLarge {
             return 2
@@ -168,7 +171,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
             guard let self else { return }
             
             cell.timeCardLabel.timeTextLabel.text = item.timeText
-            cell.timeCardLabel.layoutIfNeeded()
+//            cell.timeCardLabel.layoutIfNeeded()
             
             cell.item = item
             cell.gesture = UITapGestureRecognizer(target: self, action: #selector(self.handleCellTap(_:)))
