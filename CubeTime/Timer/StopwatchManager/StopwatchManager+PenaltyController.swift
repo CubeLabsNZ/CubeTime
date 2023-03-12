@@ -2,6 +2,13 @@ import Foundation
 import SwiftUI
 
 extension StopwatchManager {
+    func changePen(to penalty: Penalty) {
+        guard let solveItem else { return }
+        let old = solveItem.penalty
+        solveItem.penalty = penalty.rawValue
+        changedPen(Penalty(rawValue: old)!)
+    }
+    
     func changedPen(_ oldPen: Penalty) {
         if oldPen.rawValue == solveItem.penalty {
             return
@@ -100,6 +107,18 @@ extension StopwatchManager {
         }
     }
     
+    func deleteLastSolve() {
+        guard let solveItem else {return}
+        delete(solve: solveItem)
+        timerController.secondsElapsed = 0
+        //                stopwatchManager.secondsStr = formatSolveTime(secs: 0)
+        if SettingsManager.standard.showPrevTime {
+            self.solveItem = solvesByDate.last
+        } else {
+            self.solveItem = nil
+        }
+        timerController.secondsStr = formatSolveTime(secs: self.solveItem?.time ?? 0)
+    }
     
     func askToDelete() {
         withAnimation(Animation.customSlowSpring) {

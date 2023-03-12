@@ -452,16 +452,9 @@ struct TimerView: View {
             
             
         }
-        .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopwatchManager.showDeleteSolveConfirmation, titleVisibility: .visible, presenting: $stopwatchManager.solveItem) { detail in
+        .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopwatchManager.showDeleteSolveConfirmation, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
-                managedObjectContext.delete(detail.wrappedValue!); #warning("TODO: delete this line?")
-                stopwatchManager.delete(solve: detail.wrappedValue!)
-                detail.wrappedValue = nil
-                timerController.secondsElapsed = 0
-                //                stopwatchManager.secondsStr = formatSolveTime(secs: 0)
-                timerController.secondsStr = formatSolveTime(secs: showPrevTime
-                                                             ? (stopwatchManager.solvesByDate.last?.time ?? 0)
-                                                             : 0)
+                stopwatchManager.deleteLastSolve()
             }
             Button("Cancel", role: .cancel) {
                 

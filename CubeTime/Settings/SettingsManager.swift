@@ -51,6 +51,9 @@ final class SettingsManager {
     @UserDefault("gestureDistance")
     var gestureDistance: Double = 50
     
+    @UserDefault("gestureDistanceTrackpad")
+    var gestureDistanceTrackpad: Double = 500
+    
     @UserDefault("showScramble")
     var showScramble: Bool = true
     

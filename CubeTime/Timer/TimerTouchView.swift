@@ -5,10 +5,12 @@ import UIKit
 
 class TimerUIView: UIViewController {
     let timerController: TimerContoller
+    let stopwatchManager: StopwatchManager
 
         
-    required init(timerController: TimerContoller, userHoldTime: Double) {
+    required init(timerController: TimerContoller, stopwatchManager: StopwatchManager, userHoldTime: Double) {
         self.timerController = timerController
+        self.stopwatchManager = stopwatchManager
         self.userHoldTime = userHoldTime
         super.init(nibName: nil, bundle: nil)
     }
@@ -29,6 +31,61 @@ class TimerUIView: UIViewController {
         timerController.touchUp()
     }
     
+    // Setting coming soon. Watch this space :)
+    // - backspace/del/ctrl-z = delete
+    // - plus/ctrl-n/ctrl-rightarrow = new scramble
+    // - ctrl-1,2,3 = ok, +2, dnf
+    // - option-{2,7 | M | S | K | P | C | B} = switch playground puzzle type
+    
+    override var keyCommands: [UIKeyCommand]? {
+        get {
+            if (stopwatchManager.timerController !== timerController) {return []}
+            let curPen: Penalty? = {
+                guard let pen = self.stopwatchManager.solveItem?.penalty else {return nil}
+                return Penalty(rawValue: pen)
+            }()
+            
+            NSLog("CURPEN is \(curPen)")
+            
+            return [
+                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve(key:)), input: "\u{08}", discoverabilityTitle: "Delete Solve", attributes: .destructive),
+                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve(key:)), input: UIKeyCommand.inputDelete, discoverabilityTitle: "Delete Solve", attributes: .destructive),
+                // ANSI delete (above doesnt register in simulator? not sure
+                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve(key:)), input: "\u{7F}", attributes: .destructive),
+                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve(key:)), input: "z", modifierFlags: [.command], discoverabilityTitle: "Delete Solve", attributes: .destructive),
+                
+                UIKeyCommand(title: "New Scramble", action: #selector(newScr(key:)), input: "+", discoverabilityTitle: "New Scramble"),
+                UIKeyCommand(title: "New Scramble", action: #selector(newScr(key:)), input: "n", modifierFlags: [.command], discoverabilityTitle: "New Scramble"),
+                UIKeyCommand(title: "New Scramble", action: #selector(newScr(key:)), input: UIKeyCommand.inputRightArrow, modifierFlags: [.command], discoverabilityTitle: "New Scramble"),
+                
+                UIKeyCommand(title: "Penalty None", action: #selector(penNone(key:)), input: "1", modifierFlags: [.command], discoverabilityTitle: "Penalty None", state: curPen == Penalty.none ? .on : .off),
+                UIKeyCommand(title: "Penalty +2", action: #selector(penPlus2(key:)), input: "2", modifierFlags: [.command], discoverabilityTitle: "Penalty +2", state: curPen == .plustwo ? .on : .off),
+                UIKeyCommand(title: "Penalty DNF", action: #selector(penDNF(key:)), input: "3", modifierFlags: [.command], discoverabilityTitle: "Penalty DNF", state: curPen == .dnf ? .on : .off),
+                
+                
+            ]
+        }
+    }
+    
+    @objc func deleteSolve(key: UIKeyCommand?) {
+        stopwatchManager.deleteLastSolve()
+    }
+    
+    @objc func newScr(key: UIKeyCommand?) {
+        stopwatchManager.scrambleController.rescramble()
+    }
+    
+    @objc func penNone(key: UIKeyCommand?) {
+        stopwatchManager.changePen(to: .none)
+    }
+    
+    @objc func penPlus2(key: UIKeyCommand?) {
+        stopwatchManager.changePen(to: .plustwo)
+    }
+    
+    @objc func penDNF(key: UIKeyCommand?) {
+        stopwatchManager.changePen(to: .dnf)
+    }
     
     // iPad keyboard support
     
@@ -82,6 +139,7 @@ class TimerUIView: UIViewController {
 struct TimerTouchView: UIViewControllerRepresentable {
     
     @EnvironmentObject var timerController: TimerContoller
+    @EnvironmentObject var stopwatchManager: StopwatchManager
     
     @Preference(\.holdDownTime) private var holdDownTime
     @Preference(\.gestureDistance) private var gestureThreshold
@@ -91,7 +149,7 @@ struct TimerTouchView: UIViewControllerRepresentable {
     
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<TimerTouchView>) -> TimerUIView {
-        let v = TimerUIView(timerController: timerController, userHoldTime: holdDownTime)
+        let v = TimerUIView(timerController: timerController, stopwatchManager: stopwatchManager, userHoldTime: holdDownTime)
         
         let longPressGesture = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.longPress))
         longPressGesture.allowableMovement = gestureThreshold
@@ -99,6 +157,10 @@ struct TimerTouchView: UIViewControllerRepresentable {
         
         //        longPressGesture.requiresExclusiveTouchType = ?
         
+        let pan = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.pan))
+        pan.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirect.rawValue)]
+        v.view.addGestureRecognizer(pan)
+        NSLog("\(SettingsManager.standard.gestureDistance)")
         
         for direction in [UISwipeGestureRecognizer.Direction.up, UISwipeGestureRecognizer.Direction.down, UISwipeGestureRecognizer.Direction.left, UISwipeGestureRecognizer.Direction.right] {
             let gesture = UISwipeGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.swipe))
@@ -142,6 +204,7 @@ struct TimerTouchView: UIViewControllerRepresentable {
     
     class Coordinator: NSObject {
         let timerController: TimerContoller
+        let sm = SettingsManager.standard
         
         init(timerController: TimerContoller) {
             self.timerController = timerController
@@ -163,9 +226,10 @@ struct TimerTouchView: UIViewControllerRepresentable {
             timerController.handleGesture(direction: gestureRecognizer.direction)
         }
         
-        /*
         @objc func pan(_ gestureRecogniser: UIPanGestureRecognizer) {
+            NSLog("PAN")
             if gestureRecogniser.state != .cancelled {
+                NSLog("PAN NOT CANCELLED")
                 let translation = gestureRecogniser.translation(in: gestureRecogniser.view!.superview)
                 let velocity = gestureRecogniser.velocity(in: gestureRecogniser.view!.superview)
                 
@@ -176,55 +240,32 @@ struct TimerTouchView: UIViewControllerRepresentable {
                 let v_x = velocity.x
                 let v_y = velocity.y
                 
-                
                 NSLog("\(translation.x)")
 //                NSLog("\(translation.y)")
 //                NSLog("\(velocity.x)")
 //                NSLog("\(velocity.y)")
                 
                 
-                if v_x.magnitude > 500 || v_y.magnitude > 500 {
+                if v_x.magnitude > sm.gestureDistanceTrackpad || v_y.magnitude > sm.gestureDistanceTrackpad {
                     if d_x.magnitude > d_y.magnitude {
                         if d_x > 0 {
-                            stopwatchManager.feedbackStyle?.impactOccurred()
-                            stopwatchManager.timerColour = Color.Timer.normal
-                            stopwatchManager.prevDownStoppedTimer = false
-                            stopwatchManager.rescramble()
-                            
-                            gestureRecogniser.state = .cancelled
+                            timerController.handleGesture(direction: .right)
                         } else if d_x < 0 {
-                            if stopwatchManager.canGesture && stopwatchManager.mode != .inspecting {
-                                stopwatchManager.feedbackStyle?.impactOccurred()
-                                stopwatchManager.askToDelete()
-                            } else {
-                                stopwatchManager.timerColour = Color.Timer.normal
-                            }
-                            
-                            gestureRecogniser.state = .cancelled
+                            timerController.handleGesture(direction: .left)
                         }
                     } else {
-                        // swipe down
                         if d_y > 0 {
-                            if stopwatchManager.canGesture && stopwatchManager.mode != .inspecting {
-                                stopwatchManager.feedbackStyle?.impactOccurred()
-                                stopwatchManager.displayPenOptions()
-                            } else {
-                                stopwatchManager.timerColour = Color.Timer.normal
-                            }
-                            
-                            gestureRecogniser.state = .cancelled
+                            timerController.handleGesture(direction: .up)
                         } else if d_y < 0 {
-                            // cancel any up movement
-                            gestureRecogniser.state = .cancelled
+                            timerController.handleGesture(direction: .down)
                         }
                     }
                 } else {
-                    stopwatchManager.timerColour = Color.Timer.normal
-//                    gestureRecogniser.state = .cancelled
+//                    stopwatchManager.timerColour = Color.Timer.normal
+                    gestureRecogniser.state = .cancelled
                 }
             }
         }
-         */
     }
     
     func makeCoordinator() -> Coordinator {
