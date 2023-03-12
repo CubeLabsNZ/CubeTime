@@ -197,14 +197,16 @@ struct TimerView: View {
     @FocusState private var targetFocused: Bool
     @FocusState private var manualInputFocused: Bool
     
-    // STATES
+    
     @State private var manualInputTime: String = ""
     @State private var showInputField: Bool = false
     @State private var toggleSessionName: Bool = false
     
+    // scramble sheet
     @State private var presentedAvg: CalculatedAverage?
-    @State private var scrambleSheetStr: SheetStrWrapper? = nil
+    @State private var scrambleSheetStr: SheetStrWrapper?
     @State private var showDrawScrambleSheet: Bool = false
+    
     
     @State private var justManuallyInput: Bool = false
     @State private var showManualInputFormattedText: Bool = false
@@ -224,15 +226,17 @@ struct TimerView: View {
                 .ignoresSafeArea()
             
             
-            if typingMode || targetFocused || manualInputFocused {
+            if (typingMode || targetFocused || manualInputFocused) {
                 Color.white.opacity(0.0001)
                     .onTapGesture {
-                        if inputMode == .timer {
+                        switch (inputMode) {
+                        case .timer:
                             manualInputFocused = false
                             targetFocused = false
                             showInputField = false
-                        } else {
-                            if showManualInputFormattedText {
+                            
+                        case .typing:
+                            if (showManualInputFormattedText) {
                                 showManualInputFormattedText = false
                                 manualInputFocused = true
                                 
@@ -243,8 +247,10 @@ struct TimerView: View {
                                 }
                             } else {
                                 manualInputFocused = false
+                                showManualInputFormattedText = true
                             }
                         }
+                        
                         
                         stopwatchManager.showPenOptions = false
                     }
@@ -285,6 +291,7 @@ struct TimerView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .ignoresSafeArea()
             }
+            
             
             if !stopwatchManager.hideUI {
                 BottomTools(timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr, presentedAvg: $presentedAvg)
@@ -376,7 +383,7 @@ struct TimerView: View {
                     
                     PenaltyBar {
                         HStack(spacing: 12) {
-                            if stopwatchManager.solveItem != nil && !manualInputFocused {
+                            if (stopwatchManager.solveItem != nil && !manualInputFocused && showManualInputFormattedText) {
                                 PenaltyButton(penType: .plustwo, penSymbol: "+2", imageSymbol: true, canType: false, colour: Color("orange"))
                                 
                                 PenaltyButton(penType: .dnf, penSymbol: "xmark.circle", imageSymbol: false, canType: false, colour: Color("red"))
@@ -389,8 +396,9 @@ struct TimerView: View {
                                         .padding(.vertical, 6)
                                 }
                             }
+                            
                             if (showPlus) {
-                                if !typingMode {
+                                if (!typingMode) {
                                     Button {
                                         // IF CURRENT MODE = INPUT
                                         if manualInputFocused {
@@ -424,7 +432,7 @@ struct TimerView: View {
                                         }
                                     }
                                     .disabled(manualInputFocused ? (manualInputTime == "") : false)
-                                } else if typingMode {
+                                } else if (typingMode) {
                                     Button {
                                         timerController.stop(timeFromStr(manualInputTime))
                                         
@@ -444,7 +452,9 @@ struct TimerView: View {
                                 }
                             }
                         }
-                        .padding(.horizontal, 5)
+                        .if (showPlus || (stopwatchManager.solveItem != nil && !manualInputFocused && showManualInputFormattedText)) { view in
+                            view.padding(.horizontal, 5)
+                        }
                     }
                     
                 }
@@ -463,15 +473,13 @@ struct TimerView: View {
                 stopwatchManager.delete(solve: detail.wrappedValue!)
                 detail.wrappedValue = nil
                 timerController.secondsElapsed = 0
-                //                stopwatchManager.secondsStr = formatSolveTime(secs: 0)
                 timerController.secondsStr = formatSolveTime(secs: showPrevTime
                                                              ? (stopwatchManager.solvesByDate.last?.time ?? 0)
                                                              : 0)
             }
-            Button("Cancel", role: .cancel) {
-                
-            }
+            Button("Cancel", role: .cancel) { }
         }
+        
         .sheet(item: $scrambleSheetStr, onDismiss: {
             scrambleSheetStr = nil
             dismiss()
@@ -480,17 +488,19 @@ struct TimerView: View {
             TimeScrambleDetail(binding: $scrambleSheetStr, str.str, scrambleController.scrambleSVG)
                 .tint(Color("accent"))
         }
+        
         .sheet(item: $presentedAvg, onDismiss: {
             self.presentedAvg = nil
         }) { item in
             StatsDetailView(solves: item, session: stopwatchManager.currentSession)
                 .tint(Color("accent"))
-            
-#warning("TODO: use SWM env object")
+                #warning("TODO: use SWM env object")
         }
+        
         .onReceive(stopwatchManager.$hideUI) { newValue in
             tabRouter.hideTabBar = newValue
         }
+        
         .statusBar(hidden: stopwatchManager.hideUI)
         .ignoresSafeArea(.keyboard)
     }
