@@ -30,13 +30,6 @@ struct TimeDetailView: View {
     private let scramble: String
     private let phases: Array<Double>?
     
-    #warning("TODO: i dont know what im doing")
-    @Binding var sessionsCanMoveTo: [Sessions]?
-    @Binding var sessionsCanMoveTo_playground: [Sessions]?
-    
-    @State var sessionsCanMoveTo_s: [Sessions]? = nil
-    @State var sessionsCanMoveTo_playground_s: [Sessions]? = nil
-    
     @State private var userComment: String
     @State private var offsetValue: CGFloat = -25
     
@@ -48,21 +41,21 @@ struct TimeDetailView: View {
     init(for solve: Solves, currentSolve: Binding<Solves?>?, sessionsCanMoveTo: Binding<[Sessions]?>? = nil, sessionsCanMoveTo_playground: Binding<[Sessions]?>? = nil) {
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
-        self.time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+        self.time = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
         self.puzzle_type = puzzle_types[Int(solve.scramble_type)]
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
-            
-        if let multiphaseSolve = (solve as? MultiphaseSolve) {
-            self.phases = multiphaseSolve.phases ?? [0.00, 0.00, 0.00, 0.00]
+                
+        if let multiphaseSolve = (solve as? MultiphaseSolve), let phases = multiphaseSolve.phases {
+            var phaseLengths = phases
+            phaseLengths.insert(0, at: 0)
+            phaseLengths = phaseLengths.chunked().map({ $0[1] - $0[0] })
+            self.phases = phaseLengths
         } else {
             self.phases = nil
         }
         
         self._currentSolve = currentSolve ?? Binding.constant(nil)
         _userComment = State(initialValue: solve.comment ?? "")
-        
-        self._sessionsCanMoveTo = sessionsCanMoveTo ?? .constant(nil)
-        self._sessionsCanMoveTo_playground = sessionsCanMoveTo_playground ??  .constant(nil)
     }
     
     
@@ -71,8 +64,7 @@ struct TimeDetailView: View {
         
         NavigationView {
             ZStack {
-                Color("base")
-                    .ignoresSafeArea()
+                BackgroundColour()
                 
                 GeometryReader { geo in
                     ScrollView {
@@ -80,7 +72,7 @@ struct TimeDetailView: View {
                             VStack(spacing: 4) {
                                 HStack(alignment: .bottom) {
                                     switch solve.penalty {
-                                    case PenTypes.dnf.rawValue:
+                                    case Penalty.dnf.rawValue:
                                         Text("DNF")
                                             .font(.largeTitle.weight(.bold))
                                         
@@ -91,7 +83,7 @@ struct TimeDetailView: View {
                                             .padding(.leading, 8)
                                             .offset(y: -4)
                                         
-                                    case PenTypes.plustwo.rawValue:
+                                    case Penalty.plustwo.rawValue:
                                         let addedTime = formatSolveTime(secs: (solve.time + 2))
                                         Text("\(addedTime)")
                                             .font(.largeTitle.weight(.bold))
@@ -154,13 +146,13 @@ struct TimeDetailView: View {
                                 HStack(spacing: 6) {
                                     Spacer()
                                     
-                                    HierarchialButton(type: solve.penalty == PenTypes.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    HierarchicalButton(type: solve.penalty == Penalty.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .none)
                                     }) {
                                         Label("OK", systemImage: "checkmark.circle")
                                     }
                                     
-                                    HierarchialButton(type: solve.penalty == PenTypes.plustwo.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    HierarchicalButton(type: solve.penalty == Penalty.plustwo.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .plustwo)
                                     }) {
                                         Label(title: {
@@ -171,7 +163,7 @@ struct TimeDetailView: View {
                                         })
                                     }
                                     
-                                    HierarchialButton(type: solve.penalty == PenTypes.dnf.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    HierarchicalButton(type: solve.penalty == Penalty.dnf.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .dnf)
                                     }) {
                                         Label("DNF", systemImage: "xmark.circle")
@@ -198,7 +190,7 @@ struct TimeDetailView: View {
                             // BUTTONS
                             
                             HStack(spacing: 8) {
-                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                                HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
                                     copySolve(solve: solve)
                                     
                                     withAnimation(Animation.customSlowSpring.delay(0.25)) {
@@ -229,13 +221,11 @@ struct TimeDetailView: View {
                                     }
                                 }
                                 
-                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
-                                    shareSolve(solve: solve)
-                                }) {
-                                    Label("Share Solve", systemImage: "square.and.arrow.up")
-                                }
                                 
-                                HierarchialButton(type: .red, size: .large, square: true, onTapRun: {
+                                ShareButton(toShare: getShareStr(solve: solve), buttonText: "Share Solve")
+                                
+                                
+                                HierarchicalButton(type: .red, size: .large, square: true, onTapRun: {
                                     if currentSolve == nil {
                                         dismiss()
                                     }
@@ -256,9 +246,6 @@ struct TimeDetailView: View {
                             
                             
                             
-                            
-                            
-                            
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("SESSION")
                                     .font(.subheadline.weight(.semibold))
@@ -273,30 +260,14 @@ struct TimeDetailView: View {
                                 .padding(.vertical, 6)
                                 .font(.body.weight(.medium))
                                 
-                                let sessions = { () -> [Sessions]? in
-                                    if sess_type != SessionTypes.playground.rawValue {
-                                        if let sessionsCanMoveTo = sessionsCanMoveTo {
-                                            return sessionsCanMoveTo
-                                        } else {
-                                            return sessionsCanMoveTo_s
-                                        }
-                                    } else {
-                                        if let sessionsCanMoveTo_playground = sessionsCanMoveTo_playground {
-                                            return sessionsCanMoveTo_playground
-                                        } else {
-                                            return sessionsCanMoveTo_playground_s
-                                        }
-                                    }
-                                }()
-                                
-                                SessionPickerMenu(sessions: sessions) { session in
+                                SessionPickerMenu(sessions: sess_type == SessionType.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scramble_type)] : stopwatchManager.sessionsCanMoveTo) { session in
                                     withAnimation(Animation.customDampedSpring) {
                                         stopwatchManager.moveSolve(solve: solve, to: session)
                                     }
                                     currentSolve = nil
                                     dismiss()
                                 } label: {
-                                    HierarchialButtonBase(type: .mono, size: .medium, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
+                                    HierarchicalButtonBase(type: .mono, size: .medium, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
                                         Label("Move to…", systemImage: "arrow.up.right")
                                     }
                                 }
@@ -306,14 +277,28 @@ struct TimeDetailView: View {
                             .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
                             
                             
+                            if (stopwatchManager.currentSession.session_type == SessionType.multiphase.rawValue) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("PHASES")
+                                        .font(.subheadline.weight(.semibold))
+                                    
+                                    ThemedDivider()
+                                    
+                                    #warning("TODO: ERROR CHECKING")
+                                    AveragePhases(phaseTimes: phases!, count: phases!.count)
+                                        .padding(.top, -24)
+                                        .padding(.bottom, -12)
+                                }
+                                .padding(12)
+                                .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
+                            }
+                            
+                            
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("COMMENT")
                                     .font(.subheadline.weight(.semibold))
                                 
                                 ThemedDivider()
-                                
-                                
-                                
                                 
                                 ZStack {
                                     Group {
@@ -329,9 +314,10 @@ struct TimeDetailView: View {
                                                     textViewAppearance.textContainerInset =
                                                          UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 0)
                                                 }
-                                                .background(Color.red)
+                                                .accentColor(Color("accent"))
                                         }
                                     }
+                                    .ignoresSafeArea(.keyboard, edges: [.bottom])
                                     .toolbar {
                                         ToolbarItemGroup(placement: .keyboard) {
                                             Button("Comment") {
@@ -362,6 +348,8 @@ struct TimeDetailView: View {
                             .padding(12)
                             .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
                             
+                            
+                            
                             Spacer()
                         }
                         .padding(.horizontal)
@@ -385,19 +373,6 @@ struct TimeDetailView: View {
                 }
             }
         }
-        .task {
-            // Don't even.
-            if sess_type == SessionTypes.playground.rawValue {
-                if sessionsCanMoveTo_playground != nil {
-                    return
-                }
-                sessionsCanMoveTo_playground_s = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: solve.scramble_type, currentSession: stopwatchManager.currentSession)
-            } else {
-                if sessionsCanMoveTo != nil {
-                    return
-                }
-                sessionsCanMoveTo_s = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: solve.scramble_type, currentSession: stopwatchManager.currentSession)
-            }
-        }
     }
 }
+

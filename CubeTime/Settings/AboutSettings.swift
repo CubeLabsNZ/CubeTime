@@ -120,6 +120,10 @@ struct AboutSettingsView: View {
             .frame(height: iconSize)
             .padding(.bottom, 12)
             
+            #if DEBUG
+            Text("DEBUG BUILD").font(.system(size: 20, weight: .black, design: .monospaced))
+            #endif
+            
             
             Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\n\nClick below for more info on source licenses and our privacy policy:")
                 .multilineTextAlignment(.leading)
@@ -148,6 +152,7 @@ struct AboutSettingsView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: parentGeo.size.width * 0.618)
+                        .frame(maxHeight: 40)
                     
                     Spacer()
                 }
@@ -155,10 +160,12 @@ struct AboutSettingsView: View {
             
             Text("\nIf you run into any issues, please visit our GitHub page and submit an issue. \nhttps://github.com/CubeStuffs/CubeTime/issues")
             
+            #if false
             Text("\nIf you need a refresher on the primary features, you can see the welcome page again.")
             Button("Show welcome page") {
                 showOnboarding = true
             }
+            #endif
         }
         .padding(.horizontal)
         .sheet(isPresented: $showLicenses) {

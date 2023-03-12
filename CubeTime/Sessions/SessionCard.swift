@@ -12,11 +12,15 @@ struct SessionCard: View {
     @State private var isShowingDeleteDialog = false
     @State private var isShowingCustomizeDialog = false
     
+    @ScaledMetric private var pinnedSessionHeight: CGFloat = 110
+    @ScaledMetric private var regularSessionHeight: CGFloat = 65
+    
+    
     var item: Sessions
     var allSessions: FetchedResults<Sessions>
     
     let pinned: Bool
-    let session_type: SessionTypes
+    let session_type: SessionType
     let name: String
     let scramble_type: Int
     let solveCount: Int
@@ -30,7 +34,7 @@ struct SessionCard: View {
         
         // Copy out the things so that it won't change to null coalesced defaults on deletion
         self.pinned = item.pinned
-        self.session_type = SessionTypes(rawValue: item.session_type)!
+        self.session_type = SessionType(rawValue: item.session_type)!
         self.name = item.name ?? "Unknown session name"
         self.scramble_type = Int(item.scramble_type)
         self.solveCount = item.solves?.count ?? -1
@@ -42,15 +46,14 @@ struct SessionCard: View {
         ZStack {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(Color("indent1"))
-                .frame(height: pinned ? 110 : 65)
+                .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight)
                 .zIndex(0)
             
             
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(Color("overlay0"))
-                .frame(width: stopwatchManager.currentSession == item
-                       ? 16
-                       : parentGeo.size.width - 32, height: item.pinned ? 110 : 65)
+                .frame(width: stopwatchManager.currentSession == item ? 16 : nil,
+                       height: item.pinned ? pinnedSessionHeight : regularSessionHeight)
                 .offset(x: stopwatchManager.currentSession == item
                         ? -((parentGeo.size.width - 16)/2) + 16
                         : 0)
@@ -100,7 +103,7 @@ struct SessionCard: View {
                             }
                             
                             
-                            VStack(alignment: .leading, spacing: -2) {
+                            VStack(alignment: .leading, spacing: 0) {
                                 Text(name)
                                     .font(.title2.weight(.bold))
                                     .foregroundColor(Color("dark"))
@@ -163,7 +166,7 @@ struct SessionCard: View {
                 .padding(.vertical,  pinned ? 12 : 8)
             }
             
-            .frame(height: pinned ? 110 : 65)
+            .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight)
             
             .background(Color.clear)
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))

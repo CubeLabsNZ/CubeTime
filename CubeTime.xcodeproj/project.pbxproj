@@ -10,7 +10,9 @@
 		23034729278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		2303472A278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		2303472B278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
+		231827E729B5E86B00A40C78 /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231827E629B5E86B00A40C78 /* FloatingPanel.swift */; };
 		2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2319F8B8276872F200644EB3 /* TimeTrend.swift */; };
+		231B2E2E29BDECF9007E5DC2 /* HelperButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */; };
 		2326436028C4927600F6322E /* TimerHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435F28C4927600F6322E /* TimerHeader.swift */; };
 		2326436228C4929700F6322E /* PrevSolvesDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326436128C4929700F6322E /* PrevSolvesDisplay.swift */; };
 		233FE7B6274F109600C6F1DF /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Helper.swift */; };
@@ -18,6 +20,7 @@
 		235CDA0327A786D800F48C89 /* Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235CDA0227A786D800F48C89 /* Updates.swift */; };
 		2377418829A9A05A00A4F917 /* HelperUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2377418729A9A05A00A4F917 /* HelperUI.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
+		238FB42029B8175C008EC1D4 /* GradientManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238FB41F29B8175C008EC1D4 /* GradientManager.swift */; };
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
 		239C7E702781511300943AF2 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239C7E6F2781511300943AF2 /* Onboarding.swift */; };
 		23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */; };
@@ -28,10 +31,11 @@
 		23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648B293867EA0049993B /* 8sec-audio.wav */; };
 		23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; };
 		23B45E7329A8560400BDF49E /* TNoodleLibNative.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		23B7AC3A29BAB2E300B5C9B4 /* TimerTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B7AC3929BAB2E300B5C9B4 /* TimerTools.swift */; };
+		23B7AC3C29BB049F00B5C9B4 /* CalculatorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B7AC3B29BB049F00B5C9B4 /* CalculatorTool.swift */; };
 		23C85EAC29388C9C00C7C3EC /* StatsSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */; };
 		23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA845F2783EBA1003901FB /* ReachedTargets.swift */; };
 		23CA8A0129AAF338006676BF /* TimerOnlyTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0029AAF338006676BF /* TimerOnlyTool.swift */; };
-		23CA8A0629AAF947006676BF /* StopwatchManager+FeedbackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0529AAF947006676BF /* StopwatchManager+FeedbackController.swift */; };
 		23CA8A0829AAF96C006676BF /* StopwatchManager+Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0729AAF96C006676BF /* StopwatchManager+Stats.swift */; };
 		23CA8A0A29AAFA75006676BF /* StopwatchManager+PenaltyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0929AAFA75006676BF /* StopwatchManager+PenaltyController.swift */; };
 		23CA8A0C29AAFABD006676BF /* ScrambleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CA8A0B29AAFABD006676BF /* ScrambleController.swift */; };
@@ -57,7 +61,6 @@
 		23F4113829ADDA77002C4E23 /* ToolsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F4113729ADDA77002C4E23 /* ToolsViewModel.swift */; };
 		7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2B805D279422BD0006AEDD /* AppDelegate.swift */; };
 		7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */; };
-		7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */; };
 		7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6159F82751B53E00DC9A4C /* TimeCard.swift */; };
 		7D78FF8E276087AF008BB82E /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78FF8D276087AF008BB82E /* TabBar.swift */; };
 		7D7A9EC0274F38CD00C2E125 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A9EBF274F38CD00C2E125 /* StatsView.swift */; };
@@ -68,6 +71,7 @@
 		7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E2011275DD52600ADF01D /* Licenses.swift */; };
 		7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */; };
 		AF0CF61D29AC34B300E8CB95 /* StopwatchManagerStatsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0CF61C29AC34B300E8CB95 /* StopwatchManagerStatsTests.swift */; };
+		AF649FB429B7ED320099A839 /* TimeListViewInner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF649FB329B7ED320099A839 /* TimeListViewInner.swift */; };
 		AF6EAC2029ADDA1C00171F73 /* TimerMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6EAC1F29ADDA1C00171F73 /* TimerMenu.swift */; };
 		AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */ = {isa = PBXBuildFile; productRef = AF7697DB293C1EFA00FF1C50 /* SVGView */; };
 		AF7697DE293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */; };
@@ -114,7 +118,9 @@
 
 /* Begin PBXFileReference section */
 		23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RecursiveSansLnrSt-Regular.ttf"; sourceTree = "<group>"; };
+		231827E629B5E86B00A40C78 /* FloatingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FloatingPanel.swift; path = CubeTime/Tabs/FloatingPanel.swift; sourceTree = SOURCE_ROOT; };
 		2319F8B8276872F200644EB3 /* TimeTrend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrend.swift; sourceTree = "<group>"; };
+		231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperButtons.swift; sourceTree = "<group>"; };
 		2326435F28C4927600F6322E /* TimerHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerHeader.swift; sourceTree = "<group>"; };
 		2326436128C4929700F6322E /* PrevSolvesDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrevSolvesDisplay.swift; sourceTree = "<group>"; };
 		233FE7B5274F109600C6F1DF /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
@@ -124,6 +130,7 @@
 		2377418729A9A05A00A4F917 /* HelperUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperUI.swift; sourceTree = "<group>"; };
 		23783DA429AB55750036FE2B /* getBestAverage.h++ */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "getBestAverage.h++"; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
+		238FB41F29B8175C008EC1D4 /* GradientManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientManager.swift; sourceTree = "<group>"; };
 		2397131E2791032300268DFA /* AveragePhases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AveragePhases.swift; sourceTree = "<group>"; };
 		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		23AAF99529B0219200C5C1FF /* ScrollableLineChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableLineChart.swift; sourceTree = "<group>"; };
@@ -133,10 +140,11 @@
 		23AB648B293867EA0049993B /* 8sec-audio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "8sec-audio.wav"; sourceTree = "<group>"; };
 		23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "3rdparty-Bridging-Header.h"; sourceTree = "<group>"; };
 		23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodleLibNative.xcframework; sourceTree = "<group>"; };
+		23B7AC3929BAB2E300B5C9B4 /* TimerTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTools.swift; sourceTree = "<group>"; };
+		23B7AC3B29BB049F00B5C9B4 /* CalculatorTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorTool.swift; sourceTree = "<group>"; };
 		23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsSubviews.swift; sourceTree = "<group>"; };
 		23CA845F2783EBA1003901FB /* ReachedTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachedTargets.swift; sourceTree = "<group>"; };
 		23CA8A0029AAF338006676BF /* TimerOnlyTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerOnlyTool.swift; sourceTree = "<group>"; };
-		23CA8A0529AAF947006676BF /* StopwatchManager+FeedbackController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StopwatchManager+FeedbackController.swift"; sourceTree = "<group>"; };
 		23CA8A0729AAF96C006676BF /* StopwatchManager+Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StopwatchManager+Stats.swift"; sourceTree = "<group>"; };
 		23CA8A0929AAFA75006676BF /* StopwatchManager+PenaltyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StopwatchManager+PenaltyController.swift"; sourceTree = "<group>"; };
 		23CA8A0B29AAFABD006676BF /* ScrambleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleController.swift; sourceTree = "<group>"; };
@@ -167,7 +175,6 @@
 		7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTouchView.swift; sourceTree = "<group>"; };
 		7D5521DB2799657300B418BE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		7D5521DD2799657B00B418BE /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
-		7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabsView.swift; sourceTree = "<group>"; };
 		7D6159F82751B53E00DC9A4C /* TimeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCard.swift; sourceTree = "<group>"; };
 		7D78FF8D276087AF008BB82E /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		7D7A9EBF274F38CD00C2E125 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
@@ -178,6 +185,7 @@
 		7D7E2011275DD52600ADF01D /* Licenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Licenses.swift; sourceTree = "<group>"; };
 		7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleView.swift; sourceTree = "<group>"; };
 		AF0CF61C29AC34B300E8CB95 /* StopwatchManagerStatsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchManagerStatsTests.swift; sourceTree = "<group>"; };
+		AF649FB329B7ED320099A839 /* TimeListViewInner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeListViewInner.swift; sourceTree = "<group>"; };
 		AF6EAC1F29ADDA1C00171F73 /* TimerMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerMenu.swift; sourceTree = "<group>"; };
 		AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RecMonoVariable.ttf; sourceTree = "<group>"; };
 		AF81757629B07712004838B9 /* FontManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontManager.swift; sourceTree = "<group>"; };
@@ -230,12 +238,13 @@
 			children = (
 				23CA8A0229AAF894006676BF /* StopwatchManager */,
 				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
+				23B7AC3929BAB2E300B5C9B4 /* TimerTools.swift */,
 				2326435F28C4927600F6322E /* TimerHeader.swift */,
 				7D7DDF2227955AFF00362DE9 /* PenButton.swift */,
 				7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */,
+				AF6EAC1F29ADDA1C00171F73 /* TimerMenu.swift */,
 				7D7E7C62279A69F0004C9A4E /* ScrambleView.swift */,
 				2326436128C4929700F6322E /* PrevSolvesDisplay.swift */,
-				AF6EAC1F29ADDA1C00171F73 /* TimerMenu.swift */,
 			);
 			path = Timer;
 			sourceTree = "<group>";
@@ -243,8 +252,8 @@
 		23A73F5D276B0AC800153748 /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
-				7D5C1E80274EF6FF00EAC741 /* MainTabsView.swift */,
 				7D78FF8D276087AF008BB82E /* TabBar.swift */,
+				231827E629B5E86B00A40C78 /* FloatingPanel.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -256,6 +265,7 @@
 				7D6159F82751B53E00DC9A4C /* TimeCard.swift */,
 				23EB8A1D2779B6D3000F6663 /* TimeBar.swift */,
 				23CB6D0D29AC3DFB00C60EF8 /* TimeDetailView.swift */,
+				AF649FB329B7ED320099A839 /* TimeListViewInner.swift */,
 			);
 			path = TimeList;
 			sourceTree = "<group>";
@@ -306,10 +316,10 @@
 				2359689227A367A0003ED9E1 /* StopwatchManager.swift */,
 				23CA8A0929AAFA75006676BF /* StopwatchManager+PenaltyController.swift */,
 				23CA8A0729AAF96C006676BF /* StopwatchManager+Stats.swift */,
-				23CA8A0529AAF947006676BF /* StopwatchManager+FeedbackController.swift */,
 				23CA8A0B29AAFABD006676BF /* ScrambleController.swift */,
 				AF8874C229AB0BE7001E49D0 /* TimerController.swift */,
 				AF81757629B07712004838B9 /* FontManager.swift */,
+				238FB41F29B8175C008EC1D4 /* GradientManager.swift */,
 			);
 			path = StopwatchManager;
 			sourceTree = "<group>";
@@ -348,6 +358,7 @@
 				235CDA0227A786D800F48C89 /* Updates.swift */,
 				233FE7B5274F109600C6F1DF /* Helper.swift */,
 				2377418729A9A05A00A4F917 /* HelperUI.swift */,
+				231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */,
 				23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */,
@@ -435,6 +446,7 @@
 				23CA8A0029AAF338006676BF /* TimerOnlyTool.swift */,
 				AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */,
 				AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */,
+				23B7AC3B29BB049F00B5C9B4 /* CalculatorTool.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -589,11 +601,13 @@
 			files = (
 				23CA8A0A29AAFA75006676BF /* StopwatchManager+PenaltyController.swift in Sources */,
 				2397131F2791032300268DFA /* AveragePhases.swift in Sources */,
+				231827E729B5E86B00A40C78 /* FloatingPanel.swift in Sources */,
 				23CA8A0829AAF96C006676BF /* StopwatchManager+Stats.swift in Sources */,
 				23DE3BE4274DDBE300254D29 /* Persistence.swift in Sources */,
 				23AAF99629B0219200C5C1FF /* ScrollableLineChart.swift in Sources */,
 				7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */,
 				7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */,
+				238FB42029B8175C008EC1D4 /* GradientManager.swift in Sources */,
 				AF6EAC2029ADDA1C00171F73 /* TimerMenu.swift in Sources */,
 				23CA8A0129AAF338006676BF /* TimerOnlyTool.swift in Sources */,
 				7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */,
@@ -608,16 +622,19 @@
 				7D7D2060274DE13A0016D804 /* txmerdata.xcdatamodeld in Sources */,
 				7D7A9EC0274F38CD00C2E125 /* StatsView.swift in Sources */,
 				23E81E6F275D8DCA00B741E3 /* AppearanceSettings.swift in Sources */,
-				23CA8A0629AAF947006676BF /* StopwatchManager+FeedbackController.swift in Sources */,
 				23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */,
 				7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */,
 				AF8874C529AB3736001E49D0 /* ScrambleGeneratorTool.swift in Sources */,
 				23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */,
 				7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */,
+				23B7AC3A29BAB2E300B5C9B4 /* TimerTools.swift in Sources */,
 				7D7E2012275DD52600ADF01D /* Licenses.swift in Sources */,
 				237B35502761995F00CC39BF /* SettingsCard.swift in Sources */,
+				AF649FB429B7ED320099A839 /* TimeListViewInner.swift in Sources */,
 				7D78FF8E276087AF008BB82E /* TabBar.swift in Sources */,
+				23B7AC3C29BB049F00B5C9B4 /* CalculatorTool.swift in Sources */,
 				23CB6D0E29AC3DFB00C60EF8 /* TimeDetailView.swift in Sources */,
+				231B2E2E29BDECF9007E5DC2 /* HelperButtons.swift in Sources */,
 				23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */,
 				23D7722429B1E3540044AFBA /* NewSessionView.swift in Sources */,
 				7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */,
@@ -626,7 +643,6 @@
 				23E647C62775B2AC00561780 /* TimeDistribution.swift in Sources */,
 				235CDA0327A786D800F48C89 /* Updates.swift in Sources */,
 				2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */,
-				7D5C1E81274EF6FF00EAC741 /* MainTabsView.swift in Sources */,
 				233FE7B6274F109600C6F1DF /* Helper.swift in Sources */,
 				23CA8A0C29AAFABD006676BF /* ScrambleController.swift in Sources */,
 				7D7A9EC6274F396E00C2E125 /* SettingsView.swift in Sources */,

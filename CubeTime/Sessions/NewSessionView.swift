@@ -6,7 +6,7 @@ struct NewSessionView: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    let sessionType: SessionTypes
+    let sessionType: SessionType
     let typeName: String
     @Binding var showNewSessionPopUp: Bool
     
@@ -27,22 +27,21 @@ struct NewSessionView: View {
     @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
     @ScaledMetric(relativeTo: .title2) var bigFrameHeight: CGFloat = 220
     @ScaledMetric(relativeTo: .title2) var otherBigFrameHeight: CGFloat = 80
-
+    
     
     var body: some View {
         ZStack {
-            Color("base")
-                .ignoresSafeArea()
+            BackgroundColour()
             
             ScrollView {
                 VStack (spacing: 16) {
                     VStack (alignment: .center, spacing: 0) {
-                        if sessionType != SessionTypes.playground {
+                        if sessionType != SessionType.playground {
                             PuzzleHeaderImage(imageName: puzzle_types[Int(sessionEventType)].name)
                         }
                         
                         SessionNameField(name: $name)
-                            .if(sessionType == SessionTypes.playground) { view in
+                            .if(sessionType == SessionType.playground) { view in
                                 view.padding(.top)
                             }
                         
@@ -85,7 +84,7 @@ struct NewSessionView: View {
                     Spacer()
                 }
             }
-//            .ignoresSafeArea(.keyboard)
+            //            .ignoresSafeArea(.keyboard)
             .navigationBarTitle("New \(typeName) Session", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

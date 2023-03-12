@@ -15,14 +15,12 @@ struct StatsDetailView: View {
 
     @State var offsetValue: CGFloat = -25
 
-    @State var showSolve = false
-    @State var solveToShow: Solves?
+    @State var solveDetail: Solves?
 
     let solves: CalculatedAverage
     let session: Sessions
     
     private let isCurrentCompSimAverage: Bool
-
     
     init(solves: CalculatedAverage, session: Sessions) {
         self.solves = solves
@@ -36,8 +34,7 @@ struct StatsDetailView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color("base")
-                    .ignoresSafeArea()
+                BackgroundColour()
                 
                 GeometryReader { geo in
                     ScrollView {
@@ -52,7 +49,7 @@ struct StatsDetailView: View {
                                     // if playground, show playground, otherwise show puzzle type
                                     
                                     HStack(alignment: .center) {
-                                        if (SessionTypes(rawValue: session.session_type)! == .playground) {
+                                        if (SessionType(rawValue: session.session_type)! == .playground) {
                                             Text("Playground")
                                                 .font(.title3.weight(.semibold))
                                             
@@ -100,7 +97,7 @@ struct StatsDetailView: View {
                             // BUTTONS
                             
                             HStack(spacing: 8) {
-                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                                HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
                                     copySolve(solves: solves)
                                     
                                     withAnimation(Animation.customSlowSpring.delay(0.25)) {
@@ -131,11 +128,7 @@ struct StatsDetailView: View {
                                     }
                                 }
                                 
-                                HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
-//                                    shareSolve(solve: solve)
-                                }) {
-                                    Label("Share Average", systemImage: "square.and.arrow.up")
-                                }
+                                ShareButton(toShare: getShareStr(solves: solves), buttonText: "Share Average")
                             }
                             .padding(.top, 16)
                             
@@ -160,13 +153,13 @@ struct StatsDetailView: View {
                                                 .foregroundColor(Color("accent"))
                                             
                                             if solves.trimmedSolves!.contains(solve) {
-                                                Text("(" + formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!) + ")")
+                                                Text("(" + formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!) + ")")
                                                     .offset(y: 1)
                                                     .font(.title3.weight(.bold))
                                                     .foregroundColor(Color("grey"))
                                                 
                                             } else {
-                                                Text(formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!))
+                                                Text(formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!))
                                                     .offset(y: 1)
                                                     .font(.title3.weight(.bold))
                                             }
@@ -205,8 +198,7 @@ struct StatsDetailView: View {
                                         .padding(.bottom, (index != solves.accountedSolves!.indices.last!) ? 8 : 0)
                                     }
                                     .onTapGesture {
-                                        solveToShow = solve
-                                        showSolve = true
+                                        solveDetail = solve
                                     }
                                 }
 
@@ -230,6 +222,10 @@ struct StatsDetailView: View {
                     }
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationTitle(solves.name == "Comp Sim Solve" ? "Comp Sim" : solves.name)
+                    
+                    .sheet(item: $solveDetail) { item in
+                        TimeDetailView(for: item, currentSolve: $solveDetail)
+                    }
                 }
             }
         }

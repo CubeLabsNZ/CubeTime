@@ -2,25 +2,32 @@ import Foundation
 import SwiftUI
 
 extension StopwatchManager {
-    func changedPen(_ oldPen: PenTypes) {
+    func changePen(to penalty: Penalty) {
+        guard let solveItem else { return }
+        let old = solveItem.penalty
+        solveItem.penalty = penalty.rawValue
+        changedPen(Penalty(rawValue: old)!)
+    }
+    
+    func changedPen(_ oldPen: Penalty) {
         if oldPen.rawValue == solveItem.penalty {
             return
         }
         
-        if PenTypes(rawValue: solveItem.penalty)! == .plustwo {
-            timerController.secondsStr = formatSolveTime(secs: timerController.secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
+        if Penalty(rawValue: solveItem.penalty)! == .plustwo {
+            timerController.secondsStr = formatSolveTime(secs: timerController.secondsElapsed, penType: Penalty(rawValue: solveItem.penalty)!)
         } else {
-            timerController.secondsStr = formatSolveTime(secs: timerController.secondsElapsed, penType: PenTypes(rawValue: solveItem.penalty)!)
+            timerController.secondsStr = formatSolveTime(secs: timerController.secondsElapsed, penType: Penalty(rawValue: solveItem.penalty)!)
         }
         
         solves.remove(object: solveItem)
         solves.insert(solveItem, at: solves.insertionIndex(of: solveItem))
         
         
-        if solveItem.penalty == PenTypes.dnf.rawValue {
+        if solveItem.penalty == Penalty.dnf.rawValue {
             assert(solvesNoDNFsbyDate.popLast() == solveItem)
             solvesNoDNFs.remove(object: solveItem)
-        } else if oldPen == PenTypes.dnf {
+        } else if oldPen == Penalty.dnf {
             solvesNoDNFsbyDate.append(solveItem)
             solvesNoDNFs.insert(solveItem, at: solvesNoDNFs.insertionIndex(of: solveItem))
         }
@@ -46,24 +53,28 @@ extension StopwatchManager {
     }
     
     
-    func changePen(solve: Solves, pen: PenTypes) {
+    func changePen(solve: Solves, pen: Penalty) {
         #warning("TODO:  check best AOs")
         if solve.penalty == pen.rawValue {
             return
         }
-        let oldPen = PenTypes(rawValue: solve.penalty)!
+        let oldPen = Penalty(rawValue: solve.penalty)!
         
         
         solve.penalty = pen.rawValue
+        if timeListSolvesFiltered.contains(solve) {
+            NSLog("RELOADING SOLVE")
+            timeListReloadSolve?(solve)
+        }
         
         solves.remove(object: solve)
         solves.insert(solve, at: solves.insertionIndex(of: solve))
         
         
-        if solve.penalty != PenTypes.dnf.rawValue {
+        if solve.penalty != Penalty.dnf.rawValue {
             solvesNoDNFsbyDate.insert(solve, at: solvesNoDNFsbyDate.insertionIndexDate(solve: solve))
             solvesNoDNFs.insert(solve, at: solvesNoDNFs.insertionIndex(of: solve))
-        } else if solve.penalty == PenTypes.dnf.rawValue {
+        } else if solve.penalty == Penalty.dnf.rawValue {
             solvesNoDNFsbyDate.remove(object: solve)
             solvesNoDNFs.remove(object: solve)
         }
@@ -85,8 +96,6 @@ extension StopwatchManager {
         self.bestAo12 = getBestAverage(of: 12)
         self.bestAo100 = getBestAverage(of: 100)
         
-        stateID = UUID() // I'm so sorry
-        
         try! managedObjectContext.save()
     }
 
@@ -98,6 +107,18 @@ extension StopwatchManager {
         }
     }
     
+    func deleteLastSolve() {
+        guard let solveItem else {return}
+        delete(solve: solveItem)
+        timerController.secondsElapsed = 0
+        //                stopwatchManager.secondsStr = formatSolveTime(secs: 0)
+        if SettingsManager.standard.showPrevTime {
+            self.solveItem = solvesByDate.last
+        } else {
+            self.solveItem = nil
+        }
+        timerController.secondsStr = formatSolveTime(secs: self.solveItem?.time ?? 0)
+    }
     
     func askToDelete() {
         withAnimation(Animation.customSlowSpring) {
