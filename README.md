@@ -19,6 +19,8 @@
 
 ---
 
+[![Build](https://github.com/CubeStuffs/CubeTime/actions/workflows/ios.yml/badge.svg?branch=main)](https://github.com/CubeStuffs/CubeTime/actions/workflows/ios.yml)
+
 # Contents
 1. [Overview](#overview)
 2. [Screenshots](#screenshots)
