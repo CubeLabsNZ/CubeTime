@@ -37,6 +37,7 @@ class TimerUIView: UIViewController {
     // - ctrl-1,2,3 = ok, +2, dnf
     // - option-{2,7 | M | S | K | P | C | B} = switch playground puzzle type
     
+    #warning("TODO: make this a UIMenu for mac catalyst and sections in the discoverability overlay")
     override var keyCommands: [UIKeyCommand]? {
         get {
             if (stopwatchManager.timerController !== timerController) {return []}
