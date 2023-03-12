@@ -64,6 +64,7 @@ enum TimeNeededForTarget {
 class StopwatchManager: ObservableObject {
     let managedObjectContext: NSManagedObjectContext
     
+    @Published var isScrambleLocked: Bool = false
     
     // MARK: published variables
     @Published var currentSession: Sessions! {

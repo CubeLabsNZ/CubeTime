@@ -316,7 +316,7 @@ struct TimeDetailView: View {
                                                     textViewAppearance.textContainerInset =
                                                          UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 0)
                                                 }
-                                                .background(Color.red)
+                                                .accentColor(Color("accent"))
                                         }
                                     }
                                     .toolbar {

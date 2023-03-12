@@ -21,9 +21,7 @@ struct BottomTools: View {
                 }
             }
             
-            if showScramble && showStats {
-                Spacer(minLength: 0)
-            }
+            Spacer(minLength: 0)
             
             if showStats {
                 BottomToolContainer {

@@ -105,6 +105,7 @@ struct AvoidFloatingPanel: ViewModifier {
 struct ScrambleText: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var scrambleController: ScrambleController
     @EnvironmentObject var fontManager: FontManager
     let scr: String
     var timerSize: CGSize
@@ -115,11 +116,37 @@ struct ScrambleText: View {
         let mega: Bool = stopwatchManager.currentSession.scramble_type == 7
         
         Text(scr)
+            .padding(4)
             .font(fontManager.ctFontScramble)
+            .background(BackgroundColour())
+            .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 4, style: .continuous))
+            .contextMenu {
+                if let scrambleString = scrambleController.scrambleStr {
+                    Button {
+                        copyScramble(scramble: scrambleString)
+                    } label: {
+                        Label("Copy Scramble", systemImage: "doc.on.doc")
+                    }
+                }
+                
+                if (stopwatchManager.isScrambleLocked) {
+                    Button {
+                        stopwatchManager.isScrambleLocked = false
+                    } label: {
+                        Label("Unlock Scramble", systemImage: "lock.rotation.open")
+                    }
+                } else {
+                    Button {
+                        stopwatchManager.isScrambleLocked = true
+                    } label: {
+                        Label("Lock Scramble", systemImage: "lock.rotation")
+                    }
+                }
+            }
+        
             .fixedSize(horizontal: mega, vertical: false)
             .multilineTextAlignment(mega ? .leading : .center)
             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
-            .textSelection(.enabled)
         
             .if(mega) { view in
                 view.minimumScaleFactor(0.00001).scaledToFit()
@@ -301,10 +328,17 @@ struct TimerView: View {
                         
                         Spacer()
                         
-                        LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
-                            .frame(maxHeight: 35)
-                            .padding(.top, UIDevice.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
-                            .opacity(scrambleController.scrambleStr == nil ? 1 : 0)
+                        if (stopwatchManager.isScrambleLocked) {
+                            Image(systemName: "lock.rotation")
+                                .font(.system(size: 17, weight: .medium, design: .default))
+                                .imageScale(.medium)
+                                .frame(width: 35, height: 35, alignment: .center)
+                        } else {
+                            LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
+                                .frame(maxHeight: 35)
+                                .padding(.top, UIDevice.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+                                .opacity(scrambleController.scrambleStr == nil ? 1 : 0)
+                        }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     .padding(.horizontal)

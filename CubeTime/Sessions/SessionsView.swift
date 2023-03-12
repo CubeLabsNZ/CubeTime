@@ -261,6 +261,7 @@ struct SessionNameField: View {
             .background(Color("indent1"))
             .cornerRadius(8)
             .padding([.horizontal, .bottom])
+            .accentColor(Color("accent"))
     }
 }
 
