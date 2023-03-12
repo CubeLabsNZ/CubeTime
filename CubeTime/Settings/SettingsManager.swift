@@ -124,12 +124,26 @@ struct UserDefault<Value> {
             let container = instance.userDefaults
             let key = instance[keyPath: storageKeyPath].key
             let defaultValue = instance[keyPath: storageKeyPath].defaultValue
+            #warning("TODO: this is absolutely terrible, but I spent hours trying to check if Value is any RawRepresentable to no avail...")
+            if Value.self == InputMode.self {
+                guard let pref = container.object(forKey: key) as? InputMode.RawValue else { return defaultValue }
+                return InputMode(rawValue: pref) as! Value? ?? defaultValue
+            }
+            typealias FeedbackType = UIImpactFeedbackGenerator.FeedbackStyle
+            if Value.self == FeedbackType.self {
+                guard let pref = container.object(forKey: key) as? FeedbackType.RawValue else { return defaultValue }
+                return FeedbackType(rawValue: pref) as! Value? ?? defaultValue
+            }
             return container.object(forKey: key) as? Value ?? defaultValue
         }
         set {
             let container = instance.userDefaults
             let key = instance[keyPath: storageKeyPath].key
-            container.set(newValue, forKey: key)
+            if let newValue = newValue as? (any RawRepresentable) {
+                container.set(newValue.rawValue, forKey: key)
+            } else {
+                container.set(newValue, forKey: key)
+            }
             instance.preferencesChangedSubject.send(wrappedKeyPath)
         }
     }
