@@ -31,7 +31,8 @@
 ### Information!
 
  - Free (both as in libre and gratis), copylefted software (GPLv3)
- - Fully built with SwiftUI, lightweight and modern app architecture
+ - Fully built with Swift (SwiftUI and UIKit), lightweight and modern app architecture
+   * Some stats accelerated with C++
  - Simple and modern user interface
    * Beautiful dark mode that saves battery on OLED phones
    * Clean tab bar for effortless navigation
@@ -47,14 +48,13 @@ Coming soon!
    * Customisable hold down time
    * Inspection time
    * Customisable timer update intervals and statistics display precision
+   * Draw scramble
    * Intuitive gestures for quick and easy access to actions
-     * Customisable gestures
-     * Customisable gesture activation distance
+     * Customisable activation threshold
 
 - Easy to use session support
   * featuring many modes, including:
-    * Standard sessions
-    * Alg Trainers
+    * Standard session
     * Multiphase - for blind and other events
     * Playground sessions that support all scramble types for quick access to scrambling
     * Comp Sim
@@ -62,25 +62,24 @@ Coming soon!
 
 - Simple card design for viewing your times
   * Searchable times, along with quick and easy to use sort functionality - to sort your times by date or by speed
-  * Batch select times for deletion, adding penalties, or to export or move to a different session
-  * Adding comments for special solves
+  * Batch select times for deletion, adding penalties, or to move to a different session
+  * Add comments for special solves
 
 - Extensive statistics and solve analysis:
   * Visual graphs for your sessions
     * Such as time trend, time distribution and other graphs
   * All standard calculations, including best and current averages of 5, 12 and 100, session mean, median
-  * History of PBs in each session
-  * Inspection time tracking and analysis
-  * Total time spent solving
 
 - Other tools, including special ones for Comp Sim, such as:
   * calculating your bpa and wpa
   * calculating time needed to secure certain averages
+  * batch scramble generator
+  * timer only and scramble only tool
 
      
 ### Upcoming Features
 
-You can view our [Todo List for this repo](https://github.com/orgs/CubeStuffs/projects/3) for a list of all our upcoming features. You can add suggestions in the 'Needs Triage' column. 
+You can view our [Todo List for this repo](https://github.com/orgs/CubeStuffs/projects/3) for a list of all our upcoming features. You can add suggestions by opening an issue.
 Here's an outline of some of the major upcoming features
 - iPad® support, including:
   * Keyboard shortcuts
@@ -89,7 +88,6 @@ Here's an outline of some of the major upcoming features
 - Cloudkit for time syncing
 - Support for bluetooth cubes
 - Support for stackmats
-- ~~Draw scramble functionality~~
 - Importing sessions and solves from common timers, such as ChaoTimer and csTimer
 - Easy to use export to save your sessions
 
