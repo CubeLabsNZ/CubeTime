@@ -89,7 +89,6 @@ struct TimerBackgroundColor: View {
 }
 
 
-
 struct AvoidFloatingPanel: ViewModifier {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var timerController: TimerContoller
@@ -482,7 +481,6 @@ struct TimerView: View {
             }
             Button("Cancel", role: .cancel) { }
         }
-        
         .sheet(item: $scrambleSheetStr, onDismiss: {
             scrambleSheetStr = nil
             dismiss()
