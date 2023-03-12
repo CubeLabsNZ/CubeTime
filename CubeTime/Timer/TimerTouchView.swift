@@ -234,8 +234,10 @@ struct TimerTouchView: UIViewControllerRepresentable {
             #if DEBUG
             NSLog("State: \(gestureRecogniser.state), panHasTriggeredGesture: \(panHasTriggeredGesture)")
             #endif
-            if panHasTriggeredGesture && (gestureRecogniser.state == .cancelled || gestureRecogniser.state == .ended) {
-                panHasTriggeredGesture = false
+            if panHasTriggeredGesture {
+                if (gestureRecogniser.state == .cancelled || gestureRecogniser.state == .ended) {
+                    panHasTriggeredGesture = false
+                }
                 return
             }
             if gestureRecogniser.state != .cancelled {
