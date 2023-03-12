@@ -126,8 +126,6 @@ struct TimeListHeader: View {
                     RoundedRectangle(cornerRadius: 6, style: .continuous)
                         .fill(Color("overlay0"))
                         .shadowDark(x: 0, y: 1)
-                    
-                    
                     HStack {
                         Image(systemName: "magnifyingglass")
                             .padding(.horizontal, searchExpanded ? 9 : 0)
