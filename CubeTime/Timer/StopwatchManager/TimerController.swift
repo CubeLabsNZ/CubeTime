@@ -111,9 +111,8 @@ class TimerContoller: ObservableObject {
         onStartInspection?()
         secondsStr = sm.inspectionCountsDown ? "15" : "0"
         inspectionSecs = 0
-        withAnimation(Animation.customBouncySpring) {
-            mode = .inspecting
-        }
+        mode = .inspecting
+        
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
             inspectionSecs += 1
             if sm.inspectionCountsDown {
@@ -144,9 +143,8 @@ class TimerContoller: ObservableObject {
     }
     
     func interruptInspection() {
-        withAnimation(Animation.customBouncySpring) {
-            mode = .stopped
-        }
+        mode = .stopped
+        
         timer?.invalidate()
         inspectionSecs = 0
         secondsElapsed = 0
@@ -161,9 +159,8 @@ class TimerContoller: ObservableObject {
         #if DEBUG
         NSLog("TC: Starting")
         #endif
-        withAnimation(Animation.customBouncySpring) {
-            mode = .running
-        }
+        
+        mode = .running
 
         timer?.invalidate() // Stop possibly running inspections
 
@@ -197,9 +194,8 @@ class TimerContoller: ObservableObject {
         }
         
         self.secondsStr = formatSolveTime(secs: self.secondsElapsed)
-        withAnimation(Animation.customBouncySpring) {
-            mode = .stopped
-        }
+        
+        mode = .stopped
         
         onStop?(time, secondsElapsed, phaseTimes)
         

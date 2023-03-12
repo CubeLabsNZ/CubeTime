@@ -42,7 +42,6 @@ struct TimerTime: View {
                        ? "(+2)"
                        : "")))
                 : ""))
-        .foregroundColor(getTimerColor())
         .modifier(DynamicText())
         // for smaller phones (iPhoneSE and test sim), disable animation to larger text
         // to prevent text clipping and other UI problems
@@ -54,6 +53,8 @@ struct TimerTime: View {
                 .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 70, nil)))
                 .scaleEffect(scale)
         }
+        .animation(Animation.customBouncySpring, value: timerController.mode == .running)
+        .foregroundColor(getTimerColor())
     }
 }
 
@@ -256,6 +257,7 @@ struct TimerView: View {
             if !stopwatchManager.hideUI {
                 BottomTools(timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr, presentedAvg: $presentedAvg)
                     .modifier(AvoidFloatingPanel())
+                    .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
                 
                 // 50 for tab + 8 for padding + 16/0 for bottom bar gap
                 
@@ -292,6 +294,7 @@ struct TimerView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     .padding(.horizontal)
                     .zIndex(3)
+                    .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
                 } else {
                     HStack(alignment: .top, spacing: 6) {
                         TimerHeader(targetFocused: $targetFocused, previewMode: false)
@@ -306,6 +309,7 @@ struct TimerView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     .padding(.horizontal)
                     .zIndex(3)
+                    .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
                 }
             }
             

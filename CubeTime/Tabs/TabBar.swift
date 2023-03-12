@@ -109,7 +109,7 @@ struct TabBar: View {
         }
         .padding(.horizontal)
         .ignoresSafeArea(.keyboard)
-        .transition(.move(edge: .bottom).animation(.easeIn(duration: 6)))
+        .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
         .fixedSize(horizontal: false, vertical: true)
     }
 }
