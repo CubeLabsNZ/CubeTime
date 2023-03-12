@@ -117,7 +117,7 @@ struct ScrambleText: View {
         
         Text(scr)
             .padding(4)
-            .font(fontManager.ctFontScramble)
+            
             .background(BackgroundColour())
             .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 4, style: .continuous))
             .contextMenu {
@@ -143,22 +143,27 @@ struct ScrambleText: View {
                     }
                 }
             }
-        
+            .font(fontManager.ctFontScramble)
             .fixedSize(horizontal: mega, vertical: false)
             .multilineTextAlignment(mega ? .leading : .center)
-            .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
+            
+            
         
             .if(mega) { view in
                 view.minimumScaleFactor(0.00001).scaledToFit()
             }
             .frame(maxWidth: timerSize.width,
                    maxHeight: timerSize.height/3)
+        
+            
+        
             .onTapGesture {
                 scrambleSheetStr = SheetStrWrapper(str: scr)
             }
-            .padding(.horizontal)
             .offset(y: 35 + (UIDevice.hasBottomBar ? 0 : 8) + ((UIDevice.deviceIsPad && hSizeClass == .regular) ? 50 : 0))
+            .padding(.horizontal)
             .modifier(AvoidFloatingPanel())
+            .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
     }
 }
 

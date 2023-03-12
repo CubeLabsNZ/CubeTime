@@ -38,7 +38,7 @@ struct BottomTools: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-        .padding(.bottom, (UIDevice.deviceIsPad && hSizeClass == .regular) ? 50 - 18 : 50 + 8)
+        .safeAreaInset(safeArea: .tabBar)
         // 18 = height of drag part
         // 8 = top padding for phone
         .padding(.horizontal)
@@ -46,6 +46,7 @@ struct BottomTools: View {
 }
 
 struct BottomToolContainer<Content: View>: View {
+    @Environment(\.globalGeometrySize) private var globalGeometrySize: CGSize
     let content: Content
     
     init(@ViewBuilder content: () -> Content) {
@@ -60,10 +61,10 @@ struct BottomToolContainer<Content: View>: View {
                 
                 content
             }
-            .frame(maxWidth: 170)
+            .frame(maxWidth: min(180, (globalGeometrySize.width - 48)/2))
             .frame(height: 120)
         }
-        .frame(maxWidth: 170)
+        .frame(maxWidth: min(180, (globalGeometrySize.width - 48)/2))
         .frame(height: 120)
     }
 }
