@@ -115,15 +115,27 @@ struct TimerHeader: View {
                 
                 switch sess_type {
                 case .playground:
-                    Picker("", selection: $stopwatchManager.playgroundScrambleType) {
-                        ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                            Text(element.name).tag(Int32(index))
-                                .font(.system(size: 15, weight: .regular))
+                    // i hate swiftui i hate apple i hate everything
+                    if #available(iOS 16, *) {
+                        Picker("", selection: $stopwatchManager.playgroundScrambleType) {
+                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                                Text(element.name).tag(Int32(index))
+                            }
                         }
+                        .pickerStyle(.menu)
+                        .scaleEffect(17/scale)
+                        .frame(maxHeight: .infinity)
+                    } else {
+                        Picker("", selection: $stopwatchManager.playgroundScrambleType) {
+                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                                Text(element.name).tag(Int32(index))
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .accentColor(Color("accent"))
+                        .frame(maxHeight: .infinity)
+                        .padding(.trailing, 8)
                     }
-                    .pickerStyle(.menu)
-                    .scaleEffect(17/scale)
-                    .frame(maxHeight: .infinity)
                 case .multiphase:
                     HStack(spacing: 0) {
                         Text("PHASES: ")

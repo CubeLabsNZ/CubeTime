@@ -67,6 +67,7 @@ struct CubeTime: App {
             MainView()
                 .preferredColorScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
                 .tint(Color("accent"))
+                .accentColor(Color("accent"))
                 .sheet(isPresented: $showUpdates, onDismiss: { showUpdates = false }) {
                     Updates(showUpdates: $showUpdates)
                         .tint(Color("accent"))

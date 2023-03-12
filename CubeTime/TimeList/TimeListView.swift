@@ -120,75 +120,78 @@ struct TimeListHeader: View {
                 }
             }
             
-            // search bar
-            ZStack {
-                RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .fill(Color("overlay0"))
-                    .shadowDark(x: 0, y: 1)
-                
-                
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .padding(.horizontal, searchExpanded ? 9 : 0)
-                        .foregroundColor(Color("accent"))
-                        .font(.body.weight(.medium))
+            if (stopwatchManager.currentSession.session_type != SessionType.compsim.rawValue) {
+                // search bar
+                ZStack {
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .fill(Color("overlay0"))
+                        .shadowDark(x: 0, y: 1)
                     
-                    #warning("todo make search bar search for comments too?")
-                    if searchExpanded {
-                        TextField("Search for a time...", text: $stopwatchManager.timeListFilter)
-                            .frame(maxWidth: .infinity)
-                            .foregroundColor(Color(stopwatchManager.timeListFilter.isEmpty ? "grey" : "dark"))
+                    
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                            .padding(.horizontal, searchExpanded ? 9 : 0)
+                            .foregroundColor(Color("accent"))
+                            .font(.body.weight(.medium))
                         
-                        HStack(spacing: 8) {
-                            Spacer()
+                        #warning("todo make search bar search for comments too?")
+                        if searchExpanded {
+                            TextField("Search for a time...", text: $stopwatchManager.timeListFilter)
+                                .frame(maxWidth: .infinity)
+                                .foregroundColor(Color(stopwatchManager.timeListFilter.isEmpty ? "grey" : "dark"))
                             
-                            Button {
-                                withAnimation(Animation.customEaseInOut) {
-                                    stopwatchManager.timeListFilter = ""
-                                    searchExpanded = false
+                            HStack(spacing: 8) {
+                                Spacer()
+                                
+                                Button {
+                                    withAnimation(Animation.customEaseInOut) {
+                                        stopwatchManager.timeListFilter = ""
+                                        searchExpanded = false
+                                    }
+                                } label: {
+                                    Image(systemName: "xmark")
                                 }
-                            } label: {
-                                Image(systemName: "xmark")
+                            }
+                            .font(.body)
+                            .buttonStyle(AnimatedButton())
+                            .foregroundColor(searchExpanded ? Color("accent") : Color.clear)
+                            .padding(.horizontal, 8)
+                        }
+                    }
+                    .mask(
+                        RoundedRectangle(cornerRadius: 6, style: .continuous)
+                            .frame(width: searchExpanded ? nil : barHeight)
+                    )
+                }
+                .frame(width: searchExpanded ? nil : barHeight, height: barHeight)
+                .fixedSize(horizontal: !searchExpanded, vertical: true)
+
+                .scaleEffect(pressing ? 0.96 : 1.00)
+                .opacity(pressing ? 0.80 : 1.00)
+                .gesture(
+                    searchExpanded ? nil :
+                    DragGesture(minimumDistance: 0)
+                        .onChanged{ _ in
+                            withAnimation(Animation.customFastSpring) {
+                                pressing = true
                             }
                         }
-                        .font(.body)
-                        .buttonStyle(AnimatedButton())
-                        .foregroundColor(searchExpanded ? Color("accent") : Color.clear)
-                        .padding(.horizontal, 8)
-                    }
-                }
-                .mask(
-                    RoundedRectangle(cornerRadius: 6, style: .continuous)
-                        .frame(width: searchExpanded ? nil : barHeight)
+                        .onEnded{ _ in
+                            withAnimation(Animation.customFastSpring) {
+                                pressing = false
+                            }
+                            withAnimation(Animation.customEaseInOut) {
+                                searchExpanded = true
+                            }
+                        }
                 )
+                .padding(.trailing, searchExpanded ? offset : 0)
+                
+                
+                // sort by menu
+                SortByMenu(hasShadow: !searchExpanded, animation: animation)
+                    .offset(x: searchExpanded ? -43 : 0)
             }
-            .frame(width: searchExpanded ? nil : barHeight, height: barHeight)
-            .fixedSize(horizontal: !searchExpanded, vertical: true)
-
-            .scaleEffect(pressing ? 0.96 : 1.00)
-            .opacity(pressing ? 0.80 : 1.00)
-            .gesture(
-                searchExpanded ? nil :
-                DragGesture(minimumDistance: 0)
-                    .onChanged{ _ in
-                        withAnimation(Animation.customFastSpring) {
-                            pressing = true
-                        }
-                    }
-                    .onEnded{ _ in
-                        withAnimation(Animation.customFastSpring) {
-                            pressing = false
-                        }
-                        withAnimation(Animation.customEaseInOut) {
-                            searchExpanded = true
-                        }
-                    }
-            )
-            
-            .padding(.trailing, searchExpanded ? offset : 0)
-            
-            SortByMenu(hasShadow: !searchExpanded, animation: animation)
-                .offset(x: searchExpanded ? -43 : 0)
         }
         .padding(.horizontal)
         .if((UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
@@ -266,8 +269,6 @@ struct TimeListView: View {
                                     } else {
                                         // re-enable when we have a graphic
                                     }
-                                    
-#warning("TODO:  sorting")
                                     
                                     ForEach(groups, id: \.self) { item in
                                         if item != groups.last! {
