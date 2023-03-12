@@ -23,7 +23,7 @@ struct SessionsView: View {
         NavigationView {
             GeometryReader { geo in
                 ZStack(alignment: .bottomLeading) {
-                    BackgroundColour()
+                    BackgroundColour(isSessions: true)
                     
                     ScrollView {
                         VStack (spacing: 10) {

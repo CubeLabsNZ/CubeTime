@@ -33,6 +33,8 @@ struct TimeDetailView: View {
     @State private var userComment: String
     @State private var offsetValue: CGFloat = -25
     
+    @State private var showShareSheet: Bool = false
+    
     @Binding var currentSolve: Solves?
     
     @FocusState private var commentFocus: Bool
@@ -222,10 +224,32 @@ struct TimeDetailView: View {
                                 }
                                 
                                 HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
-                                    shareSolve(solve: solve)
+                                    self.showShareSheet = true
                                 }) {
                                     Label("Share Solve", systemImage: "square.and.arrow.up")
                                 }
+                                .background(
+                                    ShareSheetViewController(isPresenting: self.$showShareSheet) {
+                                        let toShare: String = getShareStr(solve: solve)
+                                        
+                                        let activityViewController = UIActivityViewController(activityItems: [toShare], applicationActivities: nil)
+                                        activityViewController.isModalInPresentation = true
+                                        
+                                        // something something ipad TODO
+                                        /* if iPad, present as popoverpresentationcontroller
+                                         
+                                         if UIDevice.current.userInterfaceIdiom == .pad {
+                                            av.popoverPresentationController?.sourceView = UIView()
+                                         }
+                                         */
+                                        
+                                        activityViewController.completionWithItemsHandler = { _, _, _, _ in
+                                            self.showShareSheet = false
+                                        }
+                                        
+                                        return activityViewController
+                                    }
+                                )
                                 
                                 HierarchicalButton(type: .red, size: .large, square: true, onTapRun: {
                                     if currentSolve == nil {

@@ -22,6 +22,8 @@ struct StatsDetailView: View {
     
     private let isCurrentCompSimAverage: Bool
 
+    @State private var showShareSheet: Bool = false
+    
     
     init(solves: CalculatedAverage, session: Sessions) {
         self.solves = solves
@@ -130,10 +132,32 @@ struct StatsDetailView: View {
                                 }
                                 
                                 HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
-//                                    shareSolve(solve: solve)
+                                    self.showShareSheet = true
                                 }) {
                                     Label("Share Average", systemImage: "square.and.arrow.up")
                                 }
+                                .background(
+                                    ShareSheetViewController(isPresenting: self.$showShareSheet) {
+                                        let toShare: String = getShareStr(solves: solves)
+                                        
+                                        let activityViewController = UIActivityViewController(activityItems: [toShare], applicationActivities: nil)
+                                        activityViewController.isModalInPresentation = true
+                                        
+                                        // something something ipad TODO
+                                        /* if iPad, present as popoverpresentationcontroller
+                                         
+                                         if UIDevice.current.userInterfaceIdiom == .pad {
+                                            av.popoverPresentationController?.sourceView = UIView()
+                                         }
+                                         */
+                                        
+                                        activityViewController.completionWithItemsHandler = { _, _, _, _ in
+                                            self.showShareSheet = false
+                                        }
+                                        
+                                        return activityViewController
+                                    }
+                                )
                             }
                             .padding(.top, 16)
                             

@@ -90,6 +90,7 @@ struct TimerBackgroundColor: View {
 struct AvoidFloatingPanel: ViewModifier {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var timerController: TimerContoller
+    @Environment(\.horizontalSizeClass) private var hSizeClass
 
     
     func body(content: Content) -> some View {
@@ -98,6 +99,11 @@ struct AvoidFloatingPanel: ViewModifier {
         content
             .padding(.leading, condition ? 360 : 0)
             .padding(.leading, condition ? nil : 0)
+            .onChange(of: hSizeClass) { newValue in
+                if (newValue == .compact) {
+                    stopwatchManager.currentPadFloatingStage = 1
+                }
+            }
     }
 }
 

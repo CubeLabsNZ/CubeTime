@@ -52,9 +52,7 @@ struct SessionCard: View {
             
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(Color("overlay0"))
-                .frame(width: stopwatchManager.currentSession == item
-                       ? 16
-                       : parentGeo.size.width - 32,
+                .frame(width: stopwatchManager.currentSession == item ? 16 : nil,
                        height: item.pinned ? pinnedSessionHeight : regularSessionHeight)
                 .offset(x: stopwatchManager.currentSession == item
                         ? -((parentGeo.size.width - 16)/2) + 16

@@ -349,13 +349,25 @@ struct BackgroundColour: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.colorScheme) var colourScheme
     
+    let isSessions: Bool
+    
+    #warning("refactor this atrocious design")
+    init(isSessions: Bool=false, isTimeStatsDetail: Bool=false) {
+        self.isSessions = isSessions
+    }
+    
     var body: some View {
         Group {
             if (!UIDevice.deviceIsPad || hSizeClass == .compact) { // if phone or small split screen ipad, then NO modals
                 Color("base")
             } else {
                 if (colourScheme == .dark) {
-                    Color("indent1")
+                    let _ = NSLog("here")
+                    if (isSessions) {
+                        Color("overlay1")
+                    } else {
+                        Color("indent1")
+                    }
                 } else {
                     Color("base")
                 }
