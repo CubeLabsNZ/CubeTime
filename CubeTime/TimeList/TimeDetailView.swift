@@ -319,6 +319,7 @@ struct TimeDetailView: View {
                                                 .accentColor(Color("accent"))
                                         }
                                     }
+                                    .ignoresSafeArea(.keyboard, edges: [.bottom])
                                     .toolbar {
                                         ToolbarItemGroup(placement: .keyboard) {
                                             Button("Comment") {
