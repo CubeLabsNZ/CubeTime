@@ -34,6 +34,7 @@ struct GeneralSettingsView: View {
     @Preference(\.forceAppZoom) private var forceAppZoom
     @Preference(\.appZoom) private var appZoom
     @Preference(\.gestureDistance) private var gestureActivationDistance
+    @Preference(\.gestureDistanceTrackpad) private var gestureDistanceTrackpad
     
     // show previous time after delete
     @Preference(\.showPrevTime) private var showPrevTime
@@ -414,7 +415,7 @@ struct GeneralSettingsView: View {
                 
                 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("Gesture Activation Distance")
+                    Text(UIDevice.deviceIsPad ? "Touch Gesture Activation Distance" : "Gesture Activation Distance")
                         .font(.body.weight(.medium))
                         .padding(.bottom, 4)
                     
@@ -434,7 +435,30 @@ struct GeneralSettingsView: View {
                     
                 }
                 .padding(.horizontal)
-                .padding(.bottom, 12)
+                if UIDevice.deviceIsPad {
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("Trackpad Gesture Activation Distance")
+                            .font(.body.weight(.medium))
+                            .padding(.bottom, 4)
+                        
+                        HStack {
+                            Text("MIN")
+                                .font(Font.system(.footnote, design: .rounded))
+                                .foregroundColor(Color("grey"))
+                            
+                            Slider(value: $gestureActivationDistance, in: 100...1000)
+                                .padding(.horizontal, 4)
+                            
+                            Text("MAX")
+                                .font(Font.system(.footnote, design: .rounded))
+                                .foregroundColor(Color("grey"))
+                            
+                        }
+                        
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 12)
+                }
                 
             }
             .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
