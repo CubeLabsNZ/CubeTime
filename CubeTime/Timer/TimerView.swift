@@ -32,7 +32,6 @@ struct TimerTime: View {
     }
     
     var body: some View {
-        let scale: CGFloat = timerController.mode == .running ? 1 : (56/70)
 #warning("move this to timer controller?")
         Text(timerController.secondsStr
              + (timerController.mode == .inspecting
@@ -50,8 +49,9 @@ struct TimerTime: View {
                 .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 54, nil)))
         } elseDo: { view in
             return view
-                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 70, nil)))
-                .scaleEffect(scale)
+//                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 70, nil)))
+                .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: timerController.mode == .running ? 70 : 56))
+//                .scaleEffect(scale)
         }
         .animation(Animation.customBouncySpring, value: timerController.mode == .running)
         .foregroundColor(getTimerColor())

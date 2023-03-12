@@ -9,6 +9,7 @@ import Foundation
 import AudioToolbox
 import AVFAudio
 import SwiftUI
+import Combine
 
 
 let inspectionDnfTime = 17
@@ -24,6 +25,8 @@ class TimerContoller: ObservableObject {
     let preTimerStart: (() -> ())?
     let onGesture: ((_ direction: UISwipeGestureRecognizer.Direction) -> ())?
     let onModeChange: ((_ mode: TimerState) -> ())?
+    
+    var subscriber: AnyCancellable?
     
     init(
         onStartInspection: (() -> ())? = nil,
@@ -41,6 +44,15 @@ class TimerContoller: ObservableObject {
         self.preTimerStart = preTimerStart
         self.onGesture = onGesture
         self.onModeChange = onModeChange
+        
+        subscriber = sm.preferencesChangedSubject
+            .filter { item in
+                item == \SettingsManager.displayDP
+            }
+            .sink(receiveValue: { [weak self] _ in
+                guard let self else { return }
+                self.secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: sm.displayDP)
+            })
     }
     
         
@@ -160,6 +172,11 @@ class TimerContoller: ObservableObject {
         NSLog("TC: Starting")
         #endif
         
+        if phaseCount != nil {
+            currentMPCount = 1
+            phaseTimes = []
+        }
+        
         mode = .running
 
         timer?.invalidate() // Stop possibly running inspections
@@ -198,11 +215,6 @@ class TimerContoller: ObservableObject {
         mode = .stopped
         
         onStop?(time, secondsElapsed, phaseTimes)
-        
-        if phaseCount != nil {
-            currentMPCount = 1
-            phaseTimes = []
-        }
     }
     
     
