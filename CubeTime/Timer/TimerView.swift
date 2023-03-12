@@ -32,6 +32,9 @@ struct TimerTime: View {
     }
     
     var body: some View {
+        let fontSize: CGFloat = UIDevice.deviceIsPad
+            ? timerController.mode == .running ? 96 : 74
+            : timerController.mode == .running ? 70 : 56
 #warning("move this to timer controller?")
         Text(timerController.secondsStr
              + (timerController.mode == .inspecting
@@ -50,7 +53,7 @@ struct TimerTime: View {
         } elseDo: { view in
             return view
 //                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 70, nil)))
-                .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: timerController.mode == .running ? 70 : 56))
+                .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: fontSize))
 //                .scaleEffect(scale)
         }
         .animation(Animation.customBouncySpring, value: timerController.mode == .running)

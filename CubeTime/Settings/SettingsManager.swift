@@ -91,7 +91,7 @@ final class SettingsManager {
     var graphAnimation: Bool = true
     
     @UserDefault("scrambleSize")
-    var scrambleSize: Int = 18
+    var scrambleSize: Int = UIDevice.deviceIsPad ? 32 : 18
     
     @UserDefault("fontWeight")
     var fontWeight: Double = 516.0
