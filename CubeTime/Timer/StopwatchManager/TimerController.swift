@@ -172,6 +172,11 @@ class TimerContoller: ObservableObject {
         NSLog("TC: Starting")
         #endif
         
+        if phaseCount != nil {
+            currentMPCount = 1
+            phaseTimes = []
+        }
+        
         mode = .running
 
         timer?.invalidate() // Stop possibly running inspections
@@ -210,11 +215,6 @@ class TimerContoller: ObservableObject {
         mode = .stopped
         
         onStop?(time, secondsElapsed, phaseTimes)
-        
-        if phaseCount != nil {
-            currentMPCount = 1
-            phaseTimes = []
-        }
     }
     
     
