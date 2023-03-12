@@ -207,6 +207,8 @@ struct TimerTouchView: UIViewControllerRepresentable {
         let timerController: TimerContoller
         let sm = SettingsManager.standard
         
+        private var panHasTriggeredGesture = false
+        
         init(timerController: TimerContoller) {
             self.timerController = timerController
         }
@@ -228,9 +230,14 @@ struct TimerTouchView: UIViewControllerRepresentable {
         }
         
         @objc func pan(_ gestureRecogniser: UIPanGestureRecognizer) {
-            NSLog("PAN")
+            #if DEBUG
+            NSLog("State: \(gestureRecogniser.state), panHasTriggeredGesture: \(panHasTriggeredGesture)")
+            #endif
+            if panHasTriggeredGesture && (gestureRecogniser.state == .cancelled || gestureRecogniser.state == .ended) {
+                panHasTriggeredGesture = false
+                return
+            }
             if gestureRecogniser.state != .cancelled {
-                NSLog("PAN NOT CANCELLED")
                 let translation = gestureRecogniser.translation(in: gestureRecogniser.view!.superview)
                 let velocity = gestureRecogniser.velocity(in: gestureRecogniser.view!.superview)
                 
@@ -248,6 +255,7 @@ struct TimerTouchView: UIViewControllerRepresentable {
                 
                 
                 if v_x.magnitude > sm.gestureDistanceTrackpad || v_y.magnitude > sm.gestureDistanceTrackpad {
+                    panHasTriggeredGesture = true
                     if d_x.magnitude > d_y.magnitude {
                         if d_x > 0 {
                             timerController.handleGesture(direction: .right)
