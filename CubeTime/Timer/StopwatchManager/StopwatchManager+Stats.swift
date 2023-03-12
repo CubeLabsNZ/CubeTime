@@ -306,7 +306,7 @@ extension StopwatchManager {
     func updateStats() {
         #warning("TODO:  maybe make these async?")
         
-        if currentSession.session_type == SessionTypes.compsim.rawValue {
+        if currentSession.session_type == SessionType.compsim.rawValue {
             statsGetFromCache()
             return
         }

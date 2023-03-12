@@ -350,10 +350,10 @@ struct StatsView: View {
 //                                }
                                  
                                 
-                                StatsBlock(title: "TIME DISTRIBUTION", blockHeight: (timeDistributionData.count < 4 ? 150 : 310), isBigBlock: true, isColoured: false) {
+                                StatsBlock(title: "TIME DISTRIBUTION", blockHeight: (timeDistributionData.count < 4 ? blockGraphEmpty : blockGraphTimeDistribution), isBigBlock: true) {
                                     TimeDistribution(solves: timeDistributionData)
                                         .drawingGroup()
-//                                        .frame(height: timeDistributionData.count < 4 ? 150 : 300)
+                                        .frame(height: timeDistributionData.count < 4 ? blockGraphEmpty : blockGraphTimeDistribution)
                                 }
                             }
                             .frame(minWidth: 0, maxWidth: .infinity)
