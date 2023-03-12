@@ -38,10 +38,71 @@ struct TabBar: View {
     
     @Binding var currentTab: Tab
     
+    @State var littleGuyCanJumpToSettings = false
+    
     @Namespace private var namespace
     
     var body: some View {
-        ZStack {
+        HStack(spacing: 0) {
+            TabIcon(
+                currentTab: $currentTab,
+                assignedTab: .timer,
+                systemIconName: "stopwatch",
+                systemIconNameSelected: "stopwatch.fill",
+                namespace: namespace
+            )
+            
+            Spacer(minLength: 0)
+                .frame(maxWidth: 10)
+            
+            TabIcon(
+                currentTab: $currentTab,
+                assignedTab: .solves,
+                systemIconName: "hourglass.bottomhalf.filled",
+                systemIconNameSelected: "hourglass.tophalf.filled",
+                namespace: namespace
+            )
+            
+            Spacer(minLength: 0)
+                .frame(maxWidth: 10)
+            
+            TabIcon(
+                currentTab: $currentTab,
+                assignedTab: .stats,
+                systemIconName: "chart.pie",
+                systemIconNameSelected: "chart.pie.fill",
+                namespace: namespace
+            )
+            
+            Spacer(minLength: 0)
+                .frame(maxWidth: 10)
+            
+            TabIcon(
+                currentTab: $currentTab,
+                assignedTab: .sessions,
+                systemIconName: "line.3.horizontal.circle",
+                systemIconNameSelected: "line.3.horizontal.circle.fill",
+                namespace: namespace
+            )
+            
+            GeometryReader { geo in
+                EmptyView()
+                    .onChange(of: geo.size, perform: { newSize in
+                        littleGuyCanJumpToSettings = newSize.width < 10
+                    })
+            }
+            
+            TabIcon(
+                currentTab: $currentTab,
+                assignedTab: .settings,
+                systemIconName: "gearshape",
+                systemIconNameSelected: "gearshape.fill",
+                namespace: namespace,
+                hasLittleGuy: littleGuyCanJumpToSettings
+            )
+        }
+        .frame(height: 50)
+        .background {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill((self.currentTab == .timer
                        ? Color("base")
@@ -51,62 +112,9 @@ struct TabBar: View {
                         radius: self.currentTab != .timer ? 8 : 0,
                         x: 0,
                         y: self.currentTab != .timer ? 1 : 0)
-
-                .animation(Animation.customFastSpring, value: self.currentTab)
-            
-            HStack {
-                HStack {
-                    TabIcon(
-                        currentTab: $currentTab,
-                        assignedTab: .timer,
-                        systemIconName: "stopwatch",
-                        systemIconNameSelected: "stopwatch.fill",
-                        namespace: namespace
-                    )
-                                                   
-                    TabIcon(
-                        currentTab: $currentTab,
-                        assignedTab: .solves,
-                        systemIconName: "hourglass.bottomhalf.filled",
-                        systemIconNameSelected: "hourglass.tophalf.filled",
-                        namespace: namespace
-                    )
-                    
-                    TabIcon(
-                        currentTab: $currentTab,
-                        assignedTab: .stats,
-                        systemIconName: "chart.pie",
-                        systemIconNameSelected: "chart.pie.fill",
-                        namespace: namespace
-                    )
-                    
-                    TabIcon(
-                        currentTab: $currentTab,
-                        assignedTab: .sessions,
-                        systemIconName: "line.3.horizontal.circle",
-                        systemIconNameSelected: "line.3.horizontal.circle.fill",
-                        namespace: namespace
-                    )
-                }
-                .frame(
-                    height: 50,
-                    alignment: .leading
-                )
-                .animation(Animation.customFastSpring, value: self.currentTab)
-                .animation(.spring(), value: tabRouter.padExpandState)
-                
-                Spacer()
-                
-                TabIcon(
-                    currentTab: $currentTab,
-                    assignedTab: .settings,
-                    systemIconName: "gearshape",
-                    systemIconNameSelected: "gearshape.fill",
-                    namespace: namespace,
-                    hasBar: false
-                )
-            }
         }
+        .animation(Animation.customFastSpring, value: self.currentTab)
+        .animation(.spring(), value: tabRouter.padExpandState)
         .padding(.horizontal)
         .ignoresSafeArea(.keyboard)
         .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
@@ -122,48 +130,36 @@ struct TabIcon: View {
     let systemIconName: String
     let systemIconNameSelected: String
     var namespace: Namespace.ID
-    let hasBar: Bool
+    let hasLittleGuy: Bool
     
-    init(currentTab: Binding<Tab>, assignedTab: Tab, systemIconName: String, systemIconNameSelected: String, namespace: Namespace.ID, hasBar: Bool = true) {
+    init(currentTab: Binding<Tab>, assignedTab: Tab, systemIconName: String, systemIconNameSelected: String, namespace: Namespace.ID, hasLittleGuy: Bool = true) {
         self._currentTab = currentTab
         self.assignedTab = assignedTab
         self.systemIconName = systemIconName
         self.systemIconNameSelected = systemIconNameSelected
         self.namespace = namespace
-        self.hasBar = hasBar
+        self.hasLittleGuy = hasLittleGuy
     }
     
     var body: some View {
         ZStack {
-            if (hasBar) {
-                VStack() {
-                    Group {
-                        if (currentTab == assignedTab) {
-                            Capsule()
-                                .fill(currentTab == .timer
-                                      ? colourScheme == .dark
-                                        ? Color("accent")
-                                        : Color("accent2")
-                                      : Color("dark"))
-                                .matchedGeometryEffect(id: "littleguy", in: namespace, properties: .frame)
-                                .shadow(color: currentTab == .timer
-                                        ? Color("accent3")
-                                        : colourScheme == .dark
-                                          ? Color.clear
-                                          : Color("indent0"),
-                                        radius: 2,
-                                        x: 0, y: 0.5)
-                            
-                        } else {
-                            Capsule()
-                                .fill(Color.clear)
-                        }
-                    }
+            if (hasLittleGuy && currentTab == assignedTab) {
+                Capsule()
+                    .fill(currentTab == .timer
+                          ? colourScheme == .dark
+                            ? Color("accent")
+                            : Color("accent2")
+                          : Color("dark"))
+                    .matchedGeometryEffect(id: "littleguy", in: namespace, properties: .frame)
+                    .shadow(color: currentTab == .timer
+                            ? Color("accent3")
+                            : colourScheme == .dark
+                              ? Color.clear
+                              : Color("indent0"),
+                            radius: 2,
+                            x: 0, y: 0.5)
                     .frame(width: 32, height: 2.25)
-                    .offset(y: 47.75)
-                    
-                    Spacer()
-                }
+                    .offset(y: 47.75 - 48/2)
             }
             
             Image(systemName: currentTab == assignedTab ? systemIconNameSelected : systemIconName)
