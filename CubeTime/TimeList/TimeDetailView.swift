@@ -235,13 +235,9 @@ struct TimeDetailView: View {
                                         let activityViewController = UIActivityViewController(activityItems: [toShare], applicationActivities: nil)
                                         activityViewController.isModalInPresentation = true
                                         
-                                        // something something ipad TODO
-                                        /* if iPad, present as popoverpresentationcontroller
-                                         
-                                         if UIDevice.current.userInterfaceIdiom == .pad {
-                                            av.popoverPresentationController?.sourceView = UIView()
-                                         }
-                                         */
+                                        if (UIDevice.deviceIsPad) {
+                                            activityViewController.popoverPresentationController?.sourceView = UIView()
+                                        }
                                         
                                         activityViewController.completionWithItemsHandler = { _, _, _, _ in
                                             self.showShareSheet = false
