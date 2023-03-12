@@ -12,6 +12,7 @@
 		2303472B278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		231827E729B5E86B00A40C78 /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231827E629B5E86B00A40C78 /* FloatingPanel.swift */; };
 		2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2319F8B8276872F200644EB3 /* TimeTrend.swift */; };
+		231B2E2E29BDECF9007E5DC2 /* HelperButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */; };
 		2326436028C4927600F6322E /* TimerHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435F28C4927600F6322E /* TimerHeader.swift */; };
 		2326436228C4929700F6322E /* PrevSolvesDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326436128C4929700F6322E /* PrevSolvesDisplay.swift */; };
 		233FE7B6274F109600C6F1DF /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Helper.swift */; };
@@ -119,6 +120,7 @@
 		23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RecursiveSansLnrSt-Regular.ttf"; sourceTree = "<group>"; };
 		231827E629B5E86B00A40C78 /* FloatingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FloatingPanel.swift; path = CubeTime/Tabs/FloatingPanel.swift; sourceTree = SOURCE_ROOT; };
 		2319F8B8276872F200644EB3 /* TimeTrend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrend.swift; sourceTree = "<group>"; };
+		231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperButtons.swift; sourceTree = "<group>"; };
 		2326435F28C4927600F6322E /* TimerHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerHeader.swift; sourceTree = "<group>"; };
 		2326436128C4929700F6322E /* PrevSolvesDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrevSolvesDisplay.swift; sourceTree = "<group>"; };
 		233FE7B5274F109600C6F1DF /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
@@ -356,6 +358,7 @@
 				235CDA0227A786D800F48C89 /* Updates.swift */,
 				233FE7B5274F109600C6F1DF /* Helper.swift */,
 				2377418729A9A05A00A4F917 /* HelperUI.swift */,
+				231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */,
 				23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */,
@@ -631,6 +634,7 @@
 				7D78FF8E276087AF008BB82E /* TabBar.swift in Sources */,
 				23B7AC3C29BB049F00B5C9B4 /* CalculatorTool.swift in Sources */,
 				23CB6D0E29AC3DFB00C60EF8 /* TimeDetailView.swift in Sources */,
+				231B2E2E29BDECF9007E5DC2 /* HelperButtons.swift in Sources */,
 				23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */,
 				23D7722429B1E3540044AFBA /* NewSessionView.swift in Sources */,
 				7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */,

@@ -344,9 +344,10 @@ struct StatsView: View {
                                     TimeTrend(data: Array(timeTrendData.prefix(80)), title: nil)
                                         .drawingGroup()
                                 }
-                                .onTapGesture {
-                                    self.showTimeTrendModal = true
-                                }
+                                #warning("TODO: enable for v2.1")
+//                                .onTapGesture {
+//                                    self.showTimeTrendModal = true
+//                                }
                                  
                                 
 //                                StatsBlock("TIME DISTRIBUTION", (timeDistributionData.count < 4 ? blockGraphEmpty : blockGraphTimeDistribution), true, false) {
