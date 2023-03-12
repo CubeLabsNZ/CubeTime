@@ -223,29 +223,44 @@ struct TimeDetailView: View {
                                     }
                                 }
                                 
-                                HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
-                                    self.showShareSheet = true
-                                }) {
-                                    Label("Share Solve", systemImage: "square.and.arrow.up")
-                                }
-                                .background(
-                                    ShareSheetViewController(isPresenting: self.$showShareSheet) {
-                                        let toShare: String = getShareStr(solve: solve)
-                                        
-                                        let activityViewController = UIActivityViewController(activityItems: [toShare], applicationActivities: nil)
-                                        activityViewController.isModalInPresentation = true
-                                        
-                                        if (UIDevice.deviceIsPad) {
-                                            activityViewController.popoverPresentationController?.sourceView = UIView()
-                                        }
-                                        
-                                        activityViewController.completionWithItemsHandler = { _, _, _, _ in
-                                            self.showShareSheet = false
-                                        }
-                                        
-                                        return activityViewController
-                                    }
-                                )
+                                
+                                ShareButton(solve: solve)
+                                
+//                                GeometryReader { buttonGeo in
+//
+//                                    .background(
+//                                        ShareSheetViewController(isPresenting: self.$showShareSheet) {
+//                                            let toShare: String = getShareStr(solve: solve)
+//
+//                                            let activityViewController = UIActivityViewController(activityItems: [toShare], applicationActivities: nil)
+//                                            activityViewController.isModalInPresentation = true
+//
+//                                            if (UIDevice.deviceIsPad) {
+//                                                let buttonFrame = CGRect(x: buttonGeo.frame(in: .global).minX,
+//                                                                          y: buttonGeo.frame(in: .global).minY,
+//                                                                          width: buttonGeo.size.width,
+//                                                                          height: buttonGeo.size.height)
+//
+//                                                let sourceView = UIView(frame: buttonFrame)
+//
+//                                                print(buttonGeo.frame(in: .global).minX)
+//                                                print(buttonGeo.size.width)
+//
+//
+//
+//                                                activityViewController.popoverPresentationController?.sourceView = sourceView
+//                                            }
+//
+//                                            activityViewController.completionWithItemsHandler = { _, _, _, _ in
+//                                                self.showShareSheet = false
+//                                            }
+//
+//                                            return activityViewController
+//                                        }
+//                                    )
+//                                }
+//                                .background(.red)
+                                
                                 
                                 HierarchicalButton(type: .red, size: .large, square: true, onTapRun: {
                                     if currentSolve == nil {
@@ -394,5 +409,85 @@ struct TimeDetailView: View {
                 }
             }
         }
+    }
+}
+
+struct ShareButtonBase: View {
+    var onTapRun: () -> ()
+    
+    var body: some View {
+        HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: onTapRun) {
+            Label("Share Solve", systemImage: "square.and.arrow.up")
+        }
+    }
+}
+
+final class ShareButtonUIViewController: UIViewController {
+    var solve: Solves
+    var hostingController: UIHostingController<ShareButtonBase>!
+    var activityViewController: UIActivityViewController!
+    
+    required init?(coder: NSCoder) {
+        fatalError("error")
+    }
+    
+    init(solve: Solves) {
+        self.solve = solve
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    override func viewDidLoad() {
+        self.hostingController = UIHostingController(rootView: ShareButtonBase(onTapRun: { }))
+        
+        self.addChild(hostingController)
+        
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(hostingController.view)
+        hostingController.didMove(toParent: self)
+        
+        NSLayoutConstraint.activate([
+            hostingController.view.widthAnchor.constraint(equalTo: view.widthAnchor),
+            hostingController.view.heightAnchor.constraint(equalTo: view.heightAnchor),
+            hostingController.view.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            hostingController.view.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        
+        let toShare: String = getShareStr(solve: solve)
+
+        self.activityViewController = UIActivityViewController(activityItems: [toShare], applicationActivities: nil)
+        self.activityViewController.isModalInPresentation = true
+
+        if (UIDevice.deviceIsPad) {
+            self.activityViewController.popoverPresentationController?.sourceView = self.view
+        }
+
+        self.hostingController.rootView.onTapRun = { [weak self] in
+            guard let self = self else { return }
+            if (!self.hostingController.isBeingPresented) {
+                self.present(self.activityViewController, animated: true, completion: nil)
+            }
+        }
+    }
+}
+
+struct ShareButton: UIViewControllerRepresentable {
+    let solve: Solves
+    
+    func makeUIViewController(context: Context) -> some UIViewController {
+        let shareButtonUIViewController = ShareButtonUIViewController(solve: solve)
+        shareButtonUIViewController.view?.backgroundColor = .clear
+        shareButtonUIViewController.hostingController.rootView.background(.clear)
+        shareButtonUIViewController.hostingController.view?.backgroundColor = .clear
+        
+        return shareButtonUIViewController
+    }
+    
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+        
     }
 }
