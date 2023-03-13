@@ -3,7 +3,7 @@ import UIKit
 import SwiftUI
 import Combine
 
-let checkboxUIImage = UIImage(systemName: "checkmark.circle")!
+let checkboxUIImage = UIImage(systemName: "checkmark.circle.fill")!
 
 class TimeCardLabel: UIStackView {
     let timeTextLabel = UILabel()
@@ -15,28 +15,15 @@ class TimeCardLabel: UIStackView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-//        timeTextLabel.frame = frame
         timeTextLabel.textAlignment = .center
-        
-        
         timeTextLabel.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
         timeTextLabel.isUserInteractionEnabled = false
-        
-//        self.translatesAutoresizingMaskIntoConstraints = false
         
         checkbox.contentMode = .scaleAspectFit
         checkbox.isHidden = true
         
-        
-/*
- UIView.animate(withDuration: 0.25) { () -> Void in
-     let firstView = stackView.arrangedSubviews[0]
-     firstView.isHidden = true
- }
- */
-        
-        let config = UIImage.SymbolConfiguration(paletteColors: [UIColor(named: "accent")!, UIColor(named: "overlay0")!])
+        var config = UIImage.SymbolConfiguration(paletteColors: [UIColor(named: "accent")!, UIColor(named: "overlay0")!])
+        config = config.applying(UIImage.SymbolConfiguration(weight: .semibold))
         checkbox.preferredSymbolConfiguration = config
         
         self.axis = .vertical
@@ -48,8 +35,6 @@ class TimeCardLabel: UIStackView {
         self.addArrangedSubview(timeTextLabel)
         self.addArrangedSubview(checkbox)
         self.addArrangedSubview(UIView())
-//
-//        self.layoutIfNeeded()
     }
 }
 
@@ -85,8 +70,6 @@ class TimeCardCell: UICollectionViewCell {
             
             if (self.timeCardLabel.checkbox.isHidden != !self.isSelected) {
                 self.timeCardLabel.checkbox.isHidden = !self.isSelected
-                
-//                self.timeCardLabel.layoutIfNeeded()
             }
         }
     }
