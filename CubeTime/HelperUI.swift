@@ -46,6 +46,46 @@ extension Color {
     }
 }
 
+struct CopyButton: View {
+    let toCopy: String
+    let buttonText: String
+    
+    @State private var offsetValue: CGFloat = -25
+    
+    var body: some View {
+        HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+            UIPasteboard.general.string = toCopy
+            
+            withAnimation(Animation.customSlowSpring.delay(0.25)) {
+                self.offsetValue = 0
+            }
+            
+            withAnimation(Animation.customFastEaseOut.delay(2.25)) {
+                self.offsetValue = -25
+            }
+        }) {
+            HStack(spacing: 8) {
+                ZStack {
+                    if self.offsetValue != 0 {
+                        Image(systemName: "doc.on.doc")
+                            .font(.subheadline.weight(.medium))
+                            .foregroundColor(Color("accent"))
+                           
+                    }
+                    
+                    
+                    Image(systemName: "checkmark")
+                        .font(.subheadline.weight(.semibold))
+                        .clipShape(Rectangle().offset(x: self.offsetValue))
+                }
+                .frame(width: 20)
+                
+                Text(buttonText)
+            }
+        }
+    }
+}
+
 
 struct ShadowLight: ViewModifier {
     @Environment(\.colorScheme) private var env

@@ -458,7 +458,9 @@ class StopwatchManager: ObservableObject {
                 }
             },
             preTimerStart: {
-                self.scrambleController.rescramble()
+                if !self.isScrambleLocked {
+                    self.scrambleController.rescramble()
+                }
             },
             onGesture: { [self] direction in
                 switch direction {

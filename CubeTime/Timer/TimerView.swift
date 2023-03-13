@@ -493,7 +493,7 @@ struct TimerView: View {
         .sheet(item: $presentedAvg, onDismiss: {
             self.presentedAvg = nil
         }) { item in
-            StatsDetailView(solves: item, session: stopwatchManager.currentSession)
+            StatsDetailView(solves: item)
                 .tint(Color("accent"))
                 #warning("TODO: use SWM env object")
         }

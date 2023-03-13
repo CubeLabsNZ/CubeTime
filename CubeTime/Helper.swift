@@ -526,6 +526,7 @@ func formatSolveTime(secs: Double, dp: Int) -> String {
     }
 }
 
+@available(*, deprecated, message: "Use solve.timeText instead.")
 func formatSolveTime(secs: Double, penType: Penalty? = Penalty.none) -> String {
     if penType == Penalty.dnf {
         return "DNF"

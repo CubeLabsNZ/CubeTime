@@ -418,7 +418,7 @@ struct TimeListView: View {
         }
         
         .sheet(item: $calculatedAverage) { item in
-            StatsDetailView(solves: item, session: stopwatchManager.currentSession)
+            StatsDetailView(solves: item)
                 .tint(Color("accent"))
         }
         

@@ -378,7 +378,7 @@ struct StatsView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .sheet(item: $presentedAvg) { item in
-            StatsDetailView(solves: item, session: stopwatchManager.currentSession)
+            StatsDetailView(solves: item)
                 .tint(Color("accent"))
         }
         .sheet(isPresented: $showBestSinglePopup) {

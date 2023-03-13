@@ -31,7 +31,6 @@ struct TimeDetailView: View {
     private let phases: Array<Double>?
     
     @State private var userComment: String
-    @State private var offsetValue: CGFloat = -25
     
     @Binding var currentSolve: Solve?
     
@@ -190,36 +189,7 @@ struct TimeDetailView: View {
                             // BUTTONS
                             
                             HStack(spacing: 8) {
-                                HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
-                                    copySolve(solve: solve)
-                                    
-                                    withAnimation(Animation.customSlowSpring.delay(0.25)) {
-                                        self.offsetValue = 0
-                                    }
-                                    
-                                    withAnimation(Animation.customFastEaseOut.delay(2.25)) {
-                                        self.offsetValue = -25
-                                    }
-                                }) {
-                                    HStack(spacing: 8) {
-                                        ZStack {
-                                            if self.offsetValue != 0 {
-                                                Image(systemName: "doc.on.doc")
-                                                    .font(.subheadline.weight(.medium))
-                                                    .foregroundColor(Color("accent"))
-                                                   
-                                            }
-                                            
-                                            
-                                            Image(systemName: "checkmark")
-                                                .font(.subheadline.weight(.semibold))
-                                                .clipShape(Rectangle().offset(x: self.offsetValue))
-                                        }
-                                        .frame(width: 20)
-                                        
-                                        Text("Copy Solve")
-                                    }
-                                }
+                                CopyButton(toCopy: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: "Copy Solve")
                                 
                                 
                                 ShareButton(toShare: getShareStr(solve: solve), buttonText: "Share Solve")
