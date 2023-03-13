@@ -19,47 +19,56 @@ let tools: [Tool] = [
     Tool(name: "Timer Only", iconName: "stopwatch", description: "Just a timer. No scrambles are shown. Your solves are **not** recorded and are not saved to a session."),
     Tool(name: "Scramble Only", iconName: "cube", description: "Displays one scramble at a time. A timer is not shown. Tap to generate the next scramble."),
     Tool(name: "Scramble Generator", iconName: "server.rack", description: "Generate multiple scrambles at once, to share, save or use."),
-    Tool(name: "Average Calculator", iconName: "function", description: "Calculates WPA, BPA, and time needed for an average, etc."),
+    Tool(name: "Calculator", iconName: "function", description: "Simple average and mean calculator."),
+    /*
+    Tool(name: "Tracker", iconName: "scope", description: "Track someone's average at a comp. Calculates times needed for a chance for a target, BPA, WPA, and more."),
     Tool(name: "Scorecard Generator", iconName: "printer", description: "Export scorecards for use at meetups (or comps!)."),
+     */
 ]
 
 struct ToolsList: View {
+    @Environment(\.horizontalSizeClass) var hSizeClass
     @StateObject var toolsViewModel = ToolsViewModel()
+    @ScaledMetric(wrappedValue: 65, relativeTo: .title3) private var blockHeight: CGFloat
 
     var body: some View {
         ZStack {
-            Color("base")
-                .ignoresSafeArea()
+            BackgroundColour()
             
-            
-            VStack(spacing: 8) {
-                ForEach(tools) { tool in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Label(tool.name, systemImage: tool.iconName)
-                            .font(.headline)
-                        
-                        Text(.init(tool.description))
-                            .foregroundColor(Color("grey"))
-                            .font(.caption)
-                            .padding(.top, 2)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    .padding(12)
-                    .frame(maxWidth: .infinity, minHeight: 65, alignment: .topLeading)
-                    .background {
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(Color("overlay0"))
-                    }
-                    .onTapGesture {
-                        withAnimation {
-                            toolsViewModel.currentTool = tool
+            ScrollView {
+                VStack(spacing: 12) {
+                    ForEach(tools) { tool in
+                        Button {
+                            withAnimation {
+                                toolsViewModel.currentTool = tool
+                            }
+                            
+                        } label: {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Label(tool.name, systemImage: tool.iconName)
+                                    .font(.title3.weight(.semibold))
+                                
+                                Text(.init(tool.description))
+                                    .foregroundColor(Color("grey"))
+                                    .font(.callout)
+                                    .padding(.top, 2)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                            .padding(12)
+                            .frame(maxWidth: .infinity, minHeight: blockHeight, alignment: .topLeading)
+                            .background {
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .fill(Color("overlay0"))
+                            }
                         }
+                        .buttonStyle(AnimatedButton())
                     }
+                    
+                    Spacer()
                 }
-                
-                Spacer()
+                .padding()
             }
-            .padding()
+            .safeAreaInset(safeArea: .tabBar)
             .fullScreenCover(item: $toolsViewModel.currentTool, content: {_ in
                 ZStack {
                     Color("base")
@@ -77,13 +86,16 @@ struct ToolsList: View {
                             case "Scramble Generator":
                                 ScrambleGeneratorTool()
                                     
-                                
-                            case "Average Calculator":
+                            case "Calculator":
+                                CalculatorTool()
+                            
+                                /*
+                            case "Tracker":
                                 EmptyView()
-                                
                                 
                             case "Scorecard Generator":
                                 EmptyView()
+                                 */
                             
                             default:
                                 EmptyView()

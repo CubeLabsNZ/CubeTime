@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-class ScrambleController: ObservableObject {
+class ScrambleController: ObservableObject {    
     @Published var scrambleType: Int32 {
         didSet {
             rescramble()

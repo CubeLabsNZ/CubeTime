@@ -12,9 +12,9 @@ let moc = PersistenceController.preview.container.viewContext
 
 struct TestSolveWrapper {
     let time: Double
-    let pen: PenTypes
+    let pen: Penalty
     
-    init(_ time: Double, _ pen: PenTypes? = nil) {
+    init(_ time: Double, _ pen: Penalty? = nil) {
         self.time = time
         self.pen = pen ?? .none
     }
@@ -38,18 +38,18 @@ struct TestCalculatedAverageWrapper {
     let average: Double?
     let countedSolves: [Solves]
     let trimmedSolves: [Solves]
-    let totalPen: PenTypes
+    let totalPen: Penalty
     let swm: StopwatchManager
 
     
-    init(average: Double?, countedSolves: [TestSolveWrapper], trimmedSolves: [TestSolveWrapper], totalPen: PenTypes) {
+    init(average: Double?, countedSolves: [TestSolveWrapper], trimmedSolves: [TestSolveWrapper], totalPen: Penalty) {
         self.average = average
         self.totalPen = totalPen
         
         
         let session = Sessions(context: moc) // Must use this variable else didset will fire prematurely
         session.scramble_type = 1
-        session.session_type = SessionTypes.playground.rawValue
+        session.session_type = SessionType.playground.rawValue
         session.name = "Default Session"
         
         self.countedSolves = countedSolves.map {$0.toSlove(session)}

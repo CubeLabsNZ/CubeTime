@@ -287,11 +287,11 @@ extension CGPoint {
 
 
 extension View {
-    func colouredGlow(gradientSelected: Int) -> some View {
+    func colouredGlow(gradientSelected: Int, isStaticGradient: Bool) -> some View {
         ForEach(0..<2) { i in
             Rectangle()
-                .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
-                .mask(self.blur(radius: 12))
+                .fill(getGradient(gradientSelected: gradientSelected, isStaticGradient: isStaticGradient).opacity(0.5))
+                .mask(self.blur(radius: 20))
                 .overlay(self.blur(radius: 5 - CGFloat(i * 5)))
         }
     }
@@ -299,8 +299,10 @@ extension View {
 
 
 struct Line: View {
-    @Preference(\.gradientSelected) private var gradientSelected
     @Preference(\.graphAnimation) private var graphAnimation
+    @Preference(\.isStaticGradient) private var isStaticGradient
+
+    @EnvironmentObject var gradientManager: GradientManager
     
     var data: [Double]
     var frame: CGRect
@@ -346,7 +348,7 @@ struct Line: View {
     var body: some View {
         self.path
             .trim(from: 0, to: self.showFull ? 1 : 0)
-            .stroke(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected), style: StrokeStyle(lineWidth: 3, lineJoin: .round))
+            .stroke(getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient), style: StrokeStyle(lineWidth: 3, lineJoin: .round))
             .rotationEffect(.degrees(180), anchor: .center)
             .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
             .animation(.easeInOut(duration: graphAnimation ? 1.2 : 0), value: self.showFull)
@@ -398,7 +400,7 @@ struct Legend: View {
                         Text(formatLegendTime(secs: self.getYLegendSafe(height: height), dp: 1))
                             .offset(x: 2, y: self.getYposition(height: height))
                             .foregroundColor(Color("grey"))
-                            .font(FontManager.mono10)
+                            .recursiveMono(fontSize: 10, weight: .regular)
 
                     }
                     .offset(y: 3)
@@ -458,8 +460,10 @@ struct Legend: View {
 struct TimeTrend: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
-    @Preference(\.gradientSelected) private var gradientSelected
+    @EnvironmentObject var gradientManager: GradientManager
     @Preference(\.graphGlow) private var graphGlow
+    @Preference(\.isStaticGradient) private var isStaticGradient
+
     
     @ScaledMetric(relativeTo: .body) var monospacedFontSizeBody: CGFloat = 17
 
@@ -491,7 +495,7 @@ struct TimeTrend: View {
                                 if (graphGlow) {
                                     Line(data: self.data,
                                          frame: CGRect(x: 0, y: 0, width: reader.frame(in: .local).width - 30, height: reader.frame(in: .local).height + 25))
-                                    .colouredGlow(gradientSelected: gradientSelected)
+                                    .colouredGlow(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient)
                                 } else {
                                     Line(data: self.data,
                                          frame: CGRect(x: 0, y: 0, width: reader.frame(in: .local).width - 30, height: reader.frame(in: .local).height + 25))

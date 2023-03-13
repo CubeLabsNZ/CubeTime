@@ -1,35 +1,43 @@
 import SwiftUI
 
 struct SessionIconView: View {
+    @ScaledMetric(wrappedValue: 35, relativeTo: .body) private var size: CGFloat
+    @ScaledMetric(wrappedValue: 22, relativeTo: .body) private var iconSmall: CGFloat
+    @ScaledMetric(wrappedValue: 26, relativeTo: .body) private var iconLarge: CGFloat
+    
+    let isDynamicType: Bool
     let session: Sessions
+    
+    init(session: Sessions, isDynamicType: Bool = true) {
+        self.session = session
+        self.isDynamicType = isDynamicType
+    }
+    
     var body: some View {
         ZStack(alignment: .center) {
             Rectangle()
                 .fill(Color.clear)
-                .frame(width: 35, height: 35)
+                .frame(width: isDynamicType ? size : 35, height: isDynamicType ? size : 35)
             
-            
-            Group {
-                switch SessionTypes(rawValue: session.session_type)! {
-                case .standard:
-                    Image(systemName: "timer.square")
-                        .font(.system(size: 26, weight: .regular))
-                case .algtrainer:
-                    Image(systemName: "command.square")
-                        .font(.system(size: 26, weight: .regular))
-                case .multiphase:
-                    Image(systemName: "square.stack")
-                        .font(.system(size: 22, weight: .regular))
-                case .playground:
-                    Image(systemName: "square.on.square")
-                        .font(.system(size: 22, weight: .regular))
-                case .compsim:
-                    Image(systemName: "globe.asia.australia")
-                        .font(.system(size: 22, weight: .medium))
-                }
+            switch SessionType(rawValue: session.session_type)! {
+            case .standard:
+                Image(systemName: "timer.square")
+                    .font(.system(size: isDynamicType ? iconLarge : 26, weight: .regular))
+            case .algtrainer:
+                Image(systemName: "command.square")
+                    .font(.system(size: isDynamicType ? iconLarge : 26, weight: .regular))
+            case .multiphase:
+                Image(systemName: "square.stack")
+                    .font(.system(size: isDynamicType ? iconSmall : 22, weight: .regular))
+            case .playground:
+                Image(systemName: "square.on.square")
+                    .font(.system(size: isDynamicType ? iconSmall : 22, weight: .regular))
+            case .compsim:
+                Image(systemName: "globe.asia.australia")
+                    .font(.system(size: isDynamicType ? iconSmall : 22, weight: .medium))
             }
         }
-        .frame(width: 35, height: 35)
+        .frame(width: isDynamicType ? size : 35, height: isDynamicType ? size : 35)
     }
 }
 
@@ -40,6 +48,8 @@ struct TimerHeader: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @Preference(\.showSessionType) private var showSessionType
     
+    @ScaledMetric(wrappedValue: 17, relativeTo: .body) private var scale
+    
     var targetFocused: FocusState<Bool>.Binding?
     
     @State private var textRect = CGRect()
@@ -47,7 +57,7 @@ struct TimerHeader: View {
     let previewMode: Bool
     
     var body: some View {
-        let sess_type = SessionTypes(rawValue: stopwatchManager.currentSession.session_type)!
+        let sess_type = SessionType(rawValue: stopwatchManager.currentSession.session_type)!
         HStack {
             if previewMode {
                 ZStack(alignment: .leading) {
@@ -82,7 +92,7 @@ struct TimerHeader: View {
                         .shadowDark(x: 2, y: 0)
                     
                     HStack {
-                        SessionIconView(session: stopwatchManager.currentSession)
+                        SessionIconView(session: stopwatchManager.currentSession, isDynamicType: false)
                         
                         if (showSessionType) {
                             Text(stopwatchManager.currentSession.typeName)
@@ -105,13 +115,27 @@ struct TimerHeader: View {
                 
                 switch sess_type {
                 case .playground:
-                    Picker("", selection: $stopwatchManager.playgroundScrambleType) {
-                        ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                            Text(element.name).tag(Int32(index))
-                                .font(.system(size: 15, weight: .regular))
+                    // i hate swiftui i hate apple i hate everything
+                    if #available(iOS 16, *) {
+                        Picker("", selection: $stopwatchManager.playgroundScrambleType) {
+                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                                Text(element.name).tag(Int32(index))
+                            }
                         }
+                        .pickerStyle(.menu)
+                        .scaleEffect(17/scale)
+                        .frame(maxHeight: .infinity)
+                    } else {
+                        Picker("", selection: $stopwatchManager.playgroundScrambleType) {
+                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                                Text(element.name).tag(Int32(index))
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .accentColor(Color("accent"))
+                        .frame(maxHeight: .infinity)
+                        .padding(.trailing, 8)
                     }
-                    .pickerStyle(.menu)
                 case .multiphase:
                     HStack(spacing: 0) {
                         Text("PHASES: ")
@@ -174,7 +198,33 @@ struct TimerHeader: View {
                 .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
                 .animation(Animation.customFastSpring, value: stopwatchManager.playgroundScrambleType)
         )
-        .padding(.top, SetValues.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+        .padding(.top, UIDevice.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
         .animation(Animation.customSlowSpring, value: showSessionType)
+    }
+}
+
+
+
+struct PadTimerHeader: View {
+    var targetFocused: FocusState<Bool>.Binding
+    var showSessions: Binding<Bool>?
+    
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            TimerHeader(targetFocused: targetFocused, previewMode: false)
+            
+            Spacer()
+            
+            if let showSessions = showSessions {
+                HierarchicalButton(type: .mono, size: .large, square: true, onTapRun: {
+                    showSessions.wrappedValue.toggle()
+                }) {
+                    Image(systemName: showSessions.wrappedValue ? "hourglass.circle" : "line.3.horizontal.circle")
+                }
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 35)
     }
 }

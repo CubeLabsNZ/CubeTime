@@ -10,6 +10,7 @@ import Foundation
 
 let smallPhone: Bool =  ["iPhone7,2", "iPhone8,1", "iPhone9,1", "iPhone9,3", "iPhone10,1", "iPhone10,4", "iPhone12,8", "iPhone14,4", "iPhone13,1", "x86_64"].contains(UIDevice.modelName)
 
+#if false
 struct OnboardingView: View {
     @AppStorage("onboarding") var showOnboarding: Bool = true
     @Environment(\.colorScheme) var colourScheme
@@ -481,3 +482,4 @@ struct PageSeven: View {
         }
     }
 }
+#endif

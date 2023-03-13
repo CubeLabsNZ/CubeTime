@@ -19,7 +19,7 @@ struct CalculatedAverage: Identifiable, Comparable/*, Equatable, Comparable*/ {
     //    let discardedIndexes: [Int]
     let average: Double?
     let accountedSolves: [Solves]?
-    let totalPen: PenTypes
+    let totalPen: Penalty
     let trimmedSolves: [Solves]?
     
     static func < (lhs: CalculatedAverage, rhs: CalculatedAverage) -> Bool {
@@ -64,6 +64,7 @@ enum TimeNeededForTarget {
 class StopwatchManager: ObservableObject {
     let managedObjectContext: NSManagedObjectContext
     
+    @Published var isScrambleLocked: Bool = false
     
     // MARK: published variables
     @Published var currentSession: Sessions! {
@@ -82,8 +83,79 @@ class StopwatchManager: ObservableObject {
             } else {
                 timerController.phaseCount = nil
             }
+            if currentSession.session_type == SessionType.playground.rawValue {
+                updateSessionsCanMoveToPlayground()
+            } else {
+                updateSessionsCanMoveTo()
+            }
         }
     }
+    
+    func updateSessionsCanMoveTo() {
+        var phaseCount: Int16 = -1
+        if let multiphaseSession = currentSession as? MultiphaseSession {
+            phaseCount = multiphaseSession.phase_count
+        }
+        
+        let req = NSFetchRequest<Sessions>(entityName: "Sessions")
+        req.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Sessions.pinned, ascending: false),
+            NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
+        ]
+        req.predicate = NSPredicate(format: """
+            session_type != \(SessionType.compsim.rawValue)
+            AND
+            (
+                session_type == \(SessionType.playground.rawValue) OR
+                scramble_type == %i
+            )
+            AND
+            (
+                session_type != \(SessionType.multiphase.rawValue) OR
+                phase_count == %i
+            )
+            AND
+            self != %@
+        """, currentSession.scramble_type, phaseCount, currentSession)
+        
+        sessionsCanMoveTo = try! managedObjectContext.fetch(req)
+    }
+    
+    func updateSessionsCanMoveToPlayground() {
+        let req = NSFetchRequest<Sessions>(entityName: "Sessions")
+        req.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Sessions.pinned, ascending: false),
+            NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
+        ]
+        req.predicate = NSPredicate(format: """
+            session_type != \(SessionType.compsim.rawValue) AND
+            self != %@
+        """, currentSession)
+        
+        let results = try! managedObjectContext.fetch(req)
+        sessionsCanMoveToPlayground = Array(repeating: [], count: puzzle_types.count)
+        
+        for result in results {
+            if result.session_type == SessionType.playground.rawValue {
+                for i in sessionsCanMoveToPlayground.indices {
+                    sessionsCanMoveToPlayground[i].append(result)
+                }
+            } else {
+                sessionsCanMoveToPlayground[Int(result.scramble_type)].append(result)
+            }
+        }
+        
+        req.predicate = NSPredicate(format: """
+            session_type == \(SessionType.playground.rawValue) AND
+            self != %@
+        """, currentSession)
+        
+        allPlaygroundSessions = try! managedObjectContext.fetch(req)
+    }
+    
+    @Published var sessionsCanMoveTo: [Sessions]!
+    @Published var sessionsCanMoveToPlayground: [[Sessions]]!
+    @Published var allPlaygroundSessions: [Sessions]!
     
     @Published var zenMode = false {
         didSet {
@@ -100,8 +172,9 @@ class StopwatchManager: ObservableObject {
     
     @Published var solveItem: Solves!
     
+    @Published var currentPadFloatingStage: Int = 1
     
-    var penType: PenTypes = .none
+    var penType: Penalty = .none
 
     
     #warning("TODO: remove")
@@ -185,6 +258,8 @@ class StopwatchManager: ObservableObject {
     
     
     // Couple time list functions
+    #warning("this spams purple errors ... \"publishing view updates something somethin\"")
+    @Published var timeListSolvesSelected = Set<(Solves)>()
     var timeListSolves: [Solves]!
     @Published var timeListSolvesFiltered: [Solves]!
     @Published var timeListFilter = "" {
@@ -218,8 +293,8 @@ class StopwatchManager: ObservableObject {
         }
     }
     
-    #warning("TODO:  fix this god awful hack")
-    @Published var stateID = UUID()
+    var timeListReloadSolve: ((Solves) -> ())?
+    var timeListSelectAll: (() -> ())?
     
     
     // MARK: inspection alert audio
@@ -227,6 +302,11 @@ class StopwatchManager: ObservableObject {
     
     func updateHideStatusBar() {
         self.hideUI = timerController.mode == .inspecting || timerController.mode == .running || self.zenMode
+        /* if worse comes to worst
+        if (timerController.mode == .running) {
+            currentPadFloatingStage = 1
+        }
+        */
     }
     
     
@@ -255,7 +335,7 @@ class StopwatchManager: ObservableObject {
                 localizedTitle: session.name ?? "Unknown Session",
                 localizedSubtitle: session.shortcutName,
                 icon: UIApplicationShortcutIcon(
-                    systemImageName: iconNamesForType[SessionTypes(rawValue: session.session_type)!]!
+                    systemImageName: iconNamesForType[SessionType(rawValue: session.session_type)!]!
                 ),
                 userInfo: ["id": session.objectID.uriRepresentation().absoluteString as NSString]
             )
@@ -287,7 +367,7 @@ class StopwatchManager: ObservableObject {
             } else {
                 let sessionToSave = Sessions(context: moc) // Must use this variable else didset will fire prematurely
                 sessionToSave.scramble_type = 1
-                sessionToSave.session_type = SessionTypes.playground.rawValue
+                sessionToSave.session_type = SessionType.playground.rawValue
                 sessionToSave.name = "Default Session"
                 currentSession = sessionToSave
                 try! moc.save()

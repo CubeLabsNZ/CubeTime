@@ -8,39 +8,48 @@
 import SwiftUI
 
 struct TimerMenu: View {
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @Namespace private var namespace
     
     @State var expanded = false
     
-    private let circleWidth: CGFloat = 2.5
+    @State private var showTools: Bool = false
+    @State private var showSettings: Bool = false
+    
+    @ScaledMetric(wrappedValue: 35, relativeTo: .body) private var barHeight: CGFloat
+    
+    private let circleWidth: CGFloat = 3.25
     
     var body: some View {
-        let color = expanded ? Color("overlay1") : Color.white
+        let color = expanded ? Color("overlay1") : Color("overlay0")
         ZStack {
             RoundedRectangle(cornerRadius: 6, style: .continuous)
                 .fill(Material.ultraThinMaterial)
             
             RoundedRectangle(cornerRadius: 6, style: .continuous)
                 .fill(color.opacity(0.92))
-                .shadow(color: Color.black.opacity(0.06),
+                .shadow(color: Color("indent1"),
                         radius: 4,
-                        x: 0,
-                        y: 1)
+                        x: 0, y: 1)
             
             
             #warning("TODO: use animatabledata to animate path from circle -> symbol")
-            #warning("TODO: make and use custom divider")
-            
-            VStack {
+            VStack(spacing: 4) {
                 if expanded {
                     CloseButton {
                         expanded = false
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(.top, 2)
                     
-                    VStack {
-                        HierarchialButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {}) {
+                    VStack(spacing: 8) {
+                        HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                            withAnimation(.customEaseInOut) {
+                                stopwatchManager.currentPadFloatingStage = 1
+                                stopwatchManager.zenMode = true
+                            }
+                        }) {
                             Label(title: {
                                 Text("Zen Mode")
                             }, icon: {
@@ -50,8 +59,13 @@ struct TimerMenu: View {
                             })
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        Divider()
-                        HierarchialButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {}) {
+                        
+                        ThemedDivider()
+                            .padding(.horizontal, 4)
+                        
+                        HierarchicalButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {
+                            showTools = true
+                        }) {
                             Label(title: {
                                 Text("Tools")
                             }, icon: {
@@ -61,7 +75,9 @@ struct TimerMenu: View {
                             })
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        HierarchialButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {}) {
+                        HierarchicalButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {
+                            showSettings = true
+                        }) {
                             Label(title: {
                                 Text("Settings")
                             }, icon: {
@@ -74,7 +90,7 @@ struct TimerMenu: View {
                     }
                     .padding(8)
                 } else {
-                    HStack(spacing: 2.75) {
+                    HStack(spacing: 2.85) {
                         ForEach(0..<3, id: \.self) { id in
                             Circle()
                                 .fill(Color("accent"))
@@ -87,25 +103,38 @@ struct TimerMenu: View {
             }
             .mask(
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .frame(width: expanded ? nil : 35, height: expanded ? nil : 35)
+                    .frame(width: expanded ? nil : barHeight, height: expanded ? nil : barHeight)
             )
-            
-            
-            
         }
         .contentShape(Rectangle())
-        .frame(width: expanded ? nil : 35, height: expanded ? nil : 35)
+        .frame(width: expanded ? nil : barHeight, height: expanded ? nil : barHeight)
         .animation(Animation.customDampedSpring, value: expanded)
         .fixedSize(horizontal: true, vertical: true)
         
         .onTapGesture {
             expanded = true
         }
-    }
-}
-
-struct TimerMenu_Previews: PreviewProvider {
-    static var previews: some View {
-        TimerMenu()
+        
+        .onLongPressGesture {
+            expanded = true
+        }
+        
+        .sheet(isPresented: self.$showTools) {
+            NavigationView {
+                ToolsList()
+                    .toolbar {
+                        ToolbarItemGroup(placement: .navigationBarTrailing) {
+                            DoneButton(onTapRun: {
+                                self.showTools = false
+                                dismiss()
+                            })
+                        }
+                    }
+            }
+        }
+        
+        .sheet(isPresented: self.$showSettings) {
+            SettingsView()
+        }
     }
 }

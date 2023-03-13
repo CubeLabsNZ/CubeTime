@@ -18,7 +18,7 @@ let updatesList: [String: [String?]] = [
         """
         -   fresh new UI design
         -   dynamic type support!
-            -   all major UI elements now conform to Apple's DyanmicType accessbility font sizes
+            -   all major UI elements now conform to Apple's DynamicType accessbility font sizes
             -   this is the first version, if you do notice anything out of place, please open an issue and tag it with 'DynamicType' on our Github page. Thanks!
         –   changed tnoodle compatibility layer
             –   30x faster scramble generation
