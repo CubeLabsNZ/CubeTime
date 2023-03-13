@@ -121,16 +121,16 @@ func getSessionsCanMoveTo(managedObjectContext: NSManagedObjectContext, scramble
         NSSortDescriptor(keyPath: \Session.name, ascending: true)
     ]
     req.predicate = NSPredicate(format: """
-        session_type != \(SessionType.compsim.rawValue)
+        sessionType != \(SessionType.compsim.rawValue)
         AND
         (
-            session_type == \(SessionType.playground.rawValue) OR
-            scramble_type == %i
+            sessionType == \(SessionType.playground.rawValue) OR
+            scrambleType == %i
         )
         AND
         (
-            session_type != \(SessionType.multiphase.rawValue) OR
-            phase_count == %i
+            sessionType != \(SessionType.multiphase.rawValue) OR
+            phaseCount == %i
         )
         AND
         self != %@

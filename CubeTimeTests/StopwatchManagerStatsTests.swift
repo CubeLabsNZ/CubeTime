@@ -19,15 +19,15 @@ struct TestSolveWrapper {
         self.pen = pen ?? .none
     }
     
-    func toSlove(_ session: Sessions) -> Solves {
-        let solveItem = Solves(context: moc)
+    func toSlove(_ session: Session) -> Solve {
+        let solveItem = Solve(context: moc)
         solveItem.date = Date()
         solveItem.penalty = pen.rawValue
         solveItem.time = time
         solveItem.scramble = "Scramble"
         solveItem.session = session
-        solveItem.scramble_type = 1
-        solveItem.scramble_subtype = 0
+        solveItem.scrambleType = 1
+        solveItem.scrambleSubtype = 0
         return solveItem
     }
 }
@@ -36,8 +36,8 @@ struct TestCalculatedAverageWrapper {
     
     //    let discardedIndexes: [Int]
     let average: Double?
-    let countedSolves: [Solves]
-    let trimmedSolves: [Solves]
+    let countedSolves: [Solve]
+    let trimmedSolves: [Solve]
     let totalPen: Penalty
     let swm: StopwatchManager
 
@@ -47,9 +47,9 @@ struct TestCalculatedAverageWrapper {
         self.totalPen = totalPen
         
         
-        let session = Sessions(context: moc) // Must use this variable else didset will fire prematurely
-        session.scramble_type = 1
-        session.session_type = SessionType.playground.rawValue
+        let session = Session(context: moc) // Must use this variable else didset will fire prematurely
+        session.scrambleType = 1
+        session.sessionType = SessionType.playground.rawValue
         session.name = "Default Session"
         
         self.countedSolves = countedSolves.map {$0.toSlove(session)}

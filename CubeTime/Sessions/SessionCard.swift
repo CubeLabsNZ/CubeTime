@@ -20,9 +20,9 @@ struct SessionCard: View {
     var allSessions: FetchedResults<Session>
     
     let pinned: Bool
-    let session_type: SessionType
+    let sessionType: SessionType
     let name: String
-    let scramble_type: Int
+    let scrambleType: Int
     let solveCount: Int
     let parentGeo: GeometryProxy
     
@@ -34,9 +34,9 @@ struct SessionCard: View {
         
         // Copy out the things so that it won't change to null coalesced defaults on deletion
         self.pinned = item.pinned
-        self.session_type = SessionType(rawValue: item.sessionType)!
+        self.sessionType = SessionType(rawValue: item.sessionType)!
         self.name = item.name ?? "Unknown session name"
-        self.scramble_type = Int(item.scrambleType)
+        self.scrambleType = Int(item.scrambleType)
         self.solveCount = item.solves?.count ?? -1
         
         self.parentGeo = parentGeo
@@ -69,7 +69,7 @@ struct SessionCard: View {
                     VStack(alignment: .leading) {
                         HStack(alignment: .center, spacing: 0) {
                             ZStack {
-                                if session_type != .standard {
+                                if sessionType != .standard {
                                     RoundedRectangle(cornerRadius: 10, style: .continuous)
                                         .fill(Color("accent").opacity(0.33))
                                         .frame(width: 40, height: 40)
@@ -77,7 +77,7 @@ struct SessionCard: View {
                                 }
                                 
                                 Group {
-                                    switch session_type {
+                                    switch sessionType {
                                     case .algtrainer:
                                         Image(systemName: "command.square")
                                             .font(.system(size: 26, weight: .semibold))
@@ -109,15 +109,15 @@ struct SessionCard: View {
                                     .foregroundColor(Color("dark"))
                                 
                                 Group {
-                                    switch session_type {
+                                    switch sessionType {
                                     case .standard:
-                                        Text(puzzle_types[scramble_type].name)
+                                        Text(puzzle_types[scrambleType].name)
                                     case .playground:
                                         Text("Playground")
                                     case .multiphase:
-                                        Text("Multiphase - \(puzzle_types[scramble_type].name)")
+                                        Text("Multiphase - \(puzzle_types[scrambleType].name)")
                                     case .compsim:
-                                        Text("Comp Sim - \(puzzle_types[scramble_type].name)")
+                                        Text("Comp Sim - \(puzzle_types[scrambleType].name)")
                                     default:
                                         EmptyView()
                                     }
@@ -142,16 +142,16 @@ struct SessionCard: View {
                     
                     Spacer()
                     
-                    if session_type != .playground {
+                    if sessionType != .playground {
                         if item.pinned {
-                            Image(puzzle_types[scramble_type].name)
+                            Image(puzzle_types[scrambleType].name)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .foregroundColor(Color("dark"))
                                 .padding(.vertical, 4)
                                 .padding(.trailing, 12)
                         } else {
-                            Image(puzzle_types[scramble_type].name)
+                            Image(puzzle_types[scrambleType].name)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .foregroundColor(Color("dark"))

@@ -128,7 +128,7 @@ class StopwatchManager: ObservableObject {
             NSSortDescriptor(keyPath: \Session.name, ascending: true)
         ]
         req.predicate = NSPredicate(format: """
-            session_type != \(SessionType.compsim.rawValue) AND
+            sessionType != \(SessionType.compsim.rawValue) AND
             self != %@
         """, currentSession)
         
@@ -146,7 +146,7 @@ class StopwatchManager: ObservableObject {
         }
         
         req.predicate = NSPredicate(format: """
-            session_type == \(SessionType.playground.rawValue) AND
+            sessionType == \(SessionType.playground.rawValue) AND
             self != %@
         """, currentSession)
         
@@ -320,7 +320,7 @@ class StopwatchManager: ObservableObject {
         #endif
         
         let req = NSFetchRequest<Session>(entityName: "Session")
-        req.predicate = NSPredicate(format: "last_used != nil")
+        req.predicate = NSPredicate(format: "lastUsed != nil")
         req.sortDescriptors = [
             NSSortDescriptor(keyPath: \Session.lastUsed, ascending: false),
         ]
@@ -347,12 +347,12 @@ class StopwatchManager: ObservableObject {
         let userDefaults = UserDefaults.standard
         let moc = self.managedObjectContext
         
-        let lastUsedSessionURI = userDefaults.url(forKey: "last_used_session")
+        let lastUsedSessionURI = userDefaults.url(forKey: "lastUsed_session")
         
         if let lastUsedSessionURI = lastUsedSessionURI {
             let objID = moc.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI)!
             self.currentSession = try! moc.existingObject(with: objID) as! Session
-            userDefaults.removeObject(forKey: "last_used_session")
+            userDefaults.removeObject(forKey: "lastUsed_session")
         } else {
             let req = NSFetchRequest<Session>(entityName: "Session")
             req.sortDescriptors = [
