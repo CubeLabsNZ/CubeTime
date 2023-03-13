@@ -298,7 +298,7 @@ struct StatsView: View {
                                     .padding(.horizontal)
                                     
                                     
-                                    StatsBlock(title: "REACHED TARGETS", blockHeight: 50, isBigBlock: true) {
+                                    StatsBlock(title: "REACHED TARGETS", blockHeight: blockHeightReachedTargets, isBigBlock: true) {
                                         ReachedTargets(reachedCount: stopwatchManager.reachedTargets, totalCount: stopwatchManager.compSimCount)
                                     }
                                     .padding(.bottom, 8)

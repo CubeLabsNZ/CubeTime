@@ -116,6 +116,7 @@ struct ToolsList: View {
 
 struct ToolHeader<V: View>: View {
     @EnvironmentObject private var toolsViewModel: ToolsViewModel
+    @ScaledMetric(wrappedValue: 35, relativeTo: .body) private var height
     
     @Environment(\.globalGeometrySize) var globalGeometrySize
     let name: String
@@ -135,15 +136,21 @@ struct ToolHeader<V: View>: View {
         HStack {
             HStack {
                 Label(name, systemImage: image)
-                    .font(.system(size: 17, weight: .medium))
+                    .font(.body.weight(.medium))
                     .padding(.leading, 8)
                     .padding(.trailing)
                 
+                
                 if let innerView = content {
-                    innerView
+                    if #available(iOS 16, *) {
+                        innerView
+                    } else {
+                        innerView
+                            .padding(.trailing, 12)
+                    }
                 }
             }
-            .frame(height: 35)
+            .frame(height: height)
             .background(
                 Color("overlay1")
                     .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))

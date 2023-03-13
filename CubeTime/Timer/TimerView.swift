@@ -15,6 +15,7 @@ struct TimerTime: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
     @EnvironmentObject var timerController: TimerContoller
+    @Environment(\.horizontalSizeClass) private var hSizeClass
     @Environment(\.colorScheme) var colourScheme
     
     @inlinable func getTimerColor() -> Color {
@@ -32,8 +33,8 @@ struct TimerTime: View {
     }
     
     var body: some View {
-        let fontSize: CGFloat = UIDevice.deviceIsPad
-            ? timerController.mode == .running ? 96 : 74
+        let fontSize: CGFloat = (UIDevice.deviceIsPad && hSizeClass == .regular)
+            ? timerController.mode == .running ? 88 : 66
             : timerController.mode == .running ? 70 : 56
 #warning("move this to timer controller?")
         Text(timerController.secondsStr

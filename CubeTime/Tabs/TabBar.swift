@@ -163,7 +163,7 @@ struct TabIcon: View {
             }
             
             Image(systemName: currentTab == assignedTab ? systemIconNameSelected : systemIconName)
-                .font(.system(size: 23, weight: .medium))
+                .font(.system(size: assignedTab == .solves ? 24 : 23, weight: .medium))
                 .padding(.horizontal, 15)
                 .padding(.vertical, 12)
                 .contentShape(Rectangle())

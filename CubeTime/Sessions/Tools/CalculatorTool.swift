@@ -63,7 +63,7 @@ struct CalculatorTool: View {
                             VStack(spacing: 8) {
                                 ForEach(Array(zip(solves.indices, solves)), id: \.0) { index, solve in
                                     HStack {
-                                        if (solves.count > 3 && (solve == solves.min() || solve == solves.max())) {
+                                        if (solves.count > 3 && (index == solves.firstIndex(of: solves.min() ?? SimpleSolve(time: 0.00, penalty: .none)) || index == solves.lastIndex(of: solves.max() ?? SimpleSolve(time: 0.00, penalty: .none)))) {
                                             Text("(" + formatSolveTime(secs: solve.time, penType: solve.penalty) + ")")
                                                 .font(.body.weight(.semibold))
                                                 .foregroundColor(Color("grey"))
@@ -190,6 +190,7 @@ struct CalculatorTool: View {
                                                         focused = false
                                                         self.editNumber = nil
                                                     }
+                                                    .keyboardShortcut(KeyboardShortcut.cancelAction)
                                                     
                                                     Spacer()
                                                     
@@ -206,6 +207,7 @@ struct CalculatorTool: View {
                                                             currentTime = ""
                                                         }
                                                     }
+                                                    .keyboardShortcut(KeyboardShortcut.defaultAction)
                                                 }
                                             }
                                         }
@@ -220,7 +222,7 @@ struct CalculatorTool: View {
                             }
                             .padding([.horizontal, .bottom], 10)
                         }
-                        .frame(width: geo.size.width / 2)
+                        .frame(width: min(geo.size.width / 2, 300))
                         .background(Color("overlay0"))
                         .cornerRadius(8)
                         .shadowDark(x: 0, y: 2)
@@ -234,5 +236,6 @@ struct CalculatorTool: View {
             .ignoresSafeArea(.keyboard)
         }
         .ignoresSafeArea(.keyboard)
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }

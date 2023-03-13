@@ -38,7 +38,12 @@ struct BottomTools: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-        .safeAreaInset(safeArea: .tabBar)
+        .if (UIDevice.deviceIsPad && hSizeClass == .regular) { view in
+            view.padding(.bottom, 32)
+        }
+        .if (!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
+            view.safeAreaInset(safeArea: .tabBar)
+        }
         // 18 = height of drag part
         // 8 = top padding for phone
         .padding(.horizontal)

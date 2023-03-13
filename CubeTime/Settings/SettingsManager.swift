@@ -3,7 +3,6 @@ import Foundation
 import SwiftUI
 
 final class SettingsManager {
-    
     static let standard = SettingsManager(userDefaults: .standard)
     fileprivate let userDefaults: UserDefaults
     
@@ -91,7 +90,7 @@ final class SettingsManager {
     var graphAnimation: Bool = true
     
     @UserDefault("scrambleSize")
-    var scrambleSize: Int = UIDevice.deviceIsPad ? 32 : 18
+    var scrambleSize: Int = UIDevice.deviceIsPad ? 26 : 18
     
     @UserDefault("fontWeight")
     var fontWeight: Double = 516.0
