@@ -57,7 +57,7 @@ class TimeCardLabel: UIStackView {
 class TimeCardCell: UICollectionViewCell {
     let timeCardLabel: TimeCardLabel
     
-    var item: Solves!
+    var item: Solve!
     weak var viewController: TimeListViewController?
     var gesture: UITapGestureRecognizer!
     
@@ -93,8 +93,8 @@ class TimeCardCell: UICollectionViewCell {
 }
 
 final class TimeListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    typealias DataSource = UICollectionViewDiffableDataSource<Int, Solves>
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Solves>
+    typealias DataSource = UICollectionViewDiffableDataSource<Int, Solve>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Solve>
     private let timeResuseIdentifier = "TimeCard"
     
     private lazy var cardHeight: CGFloat = {
@@ -135,13 +135,13 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     }
     
     let stopwatchManager: StopwatchManager
-    let onClickSolve: (Solves) -> ()
+    let onClickSolve: (Solve) -> ()
     
     var subscriber: AnyCancellable?
     
     lazy var dataSource = makeDataSource()
     
-    init(stopwatchManager: StopwatchManager, onClickSolve: @escaping (Solves) -> ()) {
+    init(stopwatchManager: StopwatchManager, onClickSolve: @escaping (Solve) -> ()) {
         self.stopwatchManager = stopwatchManager
         self.onClickSolve = onClickSolve
         
@@ -167,7 +167,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     }
     
     func makeDataSource() -> DataSource {
-        let solveCellRegistration = UICollectionView.CellRegistration<TimeCardCell, Solves> { [weak self] cell, _, item in
+        let solveCellRegistration = UICollectionView.CellRegistration<TimeCardCell, Solve> { [weak self] cell, _, item in
             guard let self else { return }
             
             cell.timeCardLabel.timeTextLabel.text = item.timeText
@@ -196,7 +196,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         dataSource.apply(categorySnapshot, animatingDifferences: false)
     }
     
-    func applySnapshot(_ newArg: [Solves]? = nil, animatingDifferences: Bool = true) {
+    func applySnapshot(_ newArg: [Solve]? = nil, animatingDifferences: Bool = true) {
         let new = newArg ?? stopwatchManager.timeListSolvesFiltered!
         var categorySnapshot = Snapshot()
         
@@ -273,8 +273,8 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         let penaltyMenu = UIMenu(title: "Penalty", image: UIImage(systemName: "exclamationmark.triangle"), options: .singleSelection, children: [penNone, penPlusTwo, penDNF])
         
         
-        let sessions = (stopwatchManager.currentSession.session_type == SessionType.playground.rawValue ?
-            stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scramble_type)] :
+        let sessions = (stopwatchManager.currentSession.sessionType == SessionType.playground.rawValue ?
+            stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scrambleType)] :
             stopwatchManager.sessionsCanMoveTo)!
         
         let unpinnedidx = sessions.firstIndex(where: {!$0.pinned}) ?? sessions.count
@@ -282,13 +282,13 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         let unpinned = sessions[unpinnedidx..<sessions.count]
         
         let pinnedMenuItems = pinned.map { session in
-            UIAction(title: session.name!, image: UIImage(systemName: iconNamesForType[SessionType(rawValue:session.session_type)!]!)) {_ in
+            UIAction(title: session.name!, image: UIImage(systemName: iconNamesForType[SessionType(rawValue:session.sessionType)!]!)) {_ in
                 self.stopwatchManager.moveSolve(solve: solve, to: session)
             }
         }
         
         let unpinnedMenuItems = unpinned.map { session in
-            UIAction(title: session.name!, image: UIImage(systemName: iconNamesForType[SessionType(rawValue:session.session_type)!]!)) {_ in
+            UIAction(title: session.name!, image: UIImage(systemName: iconNamesForType[SessionType(rawValue:session.sessionType)!]!)) {_ in
                 self.stopwatchManager.moveSolve(solve: solve, to: session)
             }
         }
@@ -344,7 +344,7 @@ struct TimeListInner: UIViewControllerRepresentable {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
     @Binding var isSelectMode: Bool
-    @Binding var currentSolve: Solves?
+    @Binding var currentSolve: Solve?
     
     func makeUIViewController(context: Context) -> TimeListViewController {
         let timeListViewController = TimeListViewController(stopwatchManager: stopwatchManager, onClickSolve: { solve in

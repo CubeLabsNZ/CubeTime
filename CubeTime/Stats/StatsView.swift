@@ -49,13 +49,13 @@ struct StatsView: View {
                                 #if DEBUG
                                 .onTapGesture {
                                     for _ in 0..<10000 {
-                                        let solve: Solves = Solves(context: managedObjectContext)
+                                        let solve: Solve = Solve(context: managedObjectContext)
                                         solve.time = Double.random(in: 0...10)
                                         solve.scramble = "sdlfkjsdlfksdjf"
                                         solve.date = Date()
-                                        solve.scramble_type = 2
+                                        solve.scrambleType = 2
                                         solve.penalty = Penalty.none.rawValue
-                                        solve.scramble_subtype = 0
+                                        solve.scrambleSubtype = 0
                                         solve.session = stopwatchManager.currentSession
                                         
                                         try! managedObjectContext.save()
@@ -64,7 +64,7 @@ struct StatsView: View {
                                 }
                                 #endif
 
-                            let compsim: Bool = SessionType(rawValue: stopwatchManager.currentSession.session_type)! == .compsim
+                            let compsim: Bool = SessionType(rawValue: stopwatchManager.currentSession.sessionType)! == .compsim
                             
                             /// everything
                             VStack(spacing: 10) {
@@ -148,7 +148,7 @@ struct StatsView: View {
                                     .padding(.bottom, 8)
                                     
                                     
-                                    if SessionType(rawValue: stopwatchManager.currentSession.session_type)! == .multiphase {
+                                    if SessionType(rawValue: stopwatchManager.currentSession.sessionType)! == .multiphase {
                                         StatsBlock(title: "AVERAGE PHASES", blockHeight: stopwatchManager.solvesNoDNFs.count == 0 ? blockGraphEmpty : nil, isBigBlock: true) {
                                                 AveragePhases(phaseTimes: stopwatchManager.phases!, count: stopwatchManager.solvesNoDNFsbyDate.count)
                                         }

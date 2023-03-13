@@ -15,14 +15,14 @@ struct StatsDetailView: View {
 
     @State var offsetValue: CGFloat = -25
 
-    @State var solveDetail: Solves?
+    @State var solveDetail: Solve?
 
     let solves: CalculatedAverage
-    let session: Sessions
+    let session: Session
     
     private let isCurrentCompSimAverage: Bool
     
-    init(solves: CalculatedAverage, session: Sessions) {
+    init(solves: CalculatedAverage, session: Session) {
         self.solves = solves
         self.session = session
         
@@ -35,7 +35,6 @@ struct StatsDetailView: View {
         NavigationView {
             ZStack {
                 BackgroundColour()
-                
                 GeometryReader { geo in
                     ScrollView {
                         VStack {
@@ -49,7 +48,7 @@ struct StatsDetailView: View {
                                     // if playground, show playground, otherwise show puzzle type
                                     
                                     HStack(alignment: .center) {
-                                        if (SessionType(rawValue: session.session_type)! == .playground) {
+                                        if (SessionType(rawValue: session.sessionType)! == .playground) {
                                             Text("Playground")
                                                 .font(.title3.weight(.semibold))
                                             
@@ -58,10 +57,10 @@ struct StatsDetailView: View {
                                                 .frame(width: 22, height: 22)
 
                                         } else {
-                                            Text(puzzle_types[Int(session.scramble_type)].name)
+                                            Text(puzzle_types[Int(session.scrambleType)].name)
                                                 .font(.title3.weight(.semibold))
                                             
-                                            Image(puzzle_types[Int(session.scramble_type)].name)
+                                            Image(puzzle_types[Int(session.scrambleType)].name)
                                                 .resizable()
                                                 .frame(width: 22, height: 22)
 
@@ -84,7 +83,6 @@ struct StatsDetailView: View {
                             .padding(12)
                             .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
                             .padding(.top)
-                            
                             HStack {
                                 Spacer()
                                 

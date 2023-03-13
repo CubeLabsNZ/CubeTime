@@ -85,8 +85,8 @@ struct SessionHeader: View {
             
             Spacer()
             
-            if (SessionType(rawValue: stopwatchManager.currentSession.session_type) != .playground) {
-                Text(puzzle_types[Int(stopwatchManager.currentSession.scramble_type)].name)
+            if (SessionType(rawValue: stopwatchManager.currentSession.sessionType) != .playground) {
+                Text(puzzle_types[Int(stopwatchManager.currentSession.scrambleType)].name)
                     .font(.body.weight(.medium))
                     .padding(.trailing)
             }
@@ -120,7 +120,7 @@ struct TimeListHeader: View {
                 }
             }
             
-            if (stopwatchManager.currentSession.session_type != SessionType.compsim.rawValue) {
+            if (stopwatchManager.currentSession.sessionType != SessionType.compsim.rawValue) {
                 // search bar
                 ZStack {
                     RoundedRectangle(cornerRadius: 6, style: .continuous)
@@ -203,10 +203,10 @@ struct TimeListView: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    @State var solve: Solves?
+    @State var solve: Solve?
     @State var calculatedAverage: CalculatedAverage?
     
-    @State var sessionsCanMoveToPlaygroundContextMenu: [Sessions]?
+    @State var sessionsCanMoveToPlaygroundContextMenu: [Session]?
     
     @State var isSelectMode = false
     
@@ -222,13 +222,13 @@ struct TimeListView: View {
         }
     }
     var body: some View {
-        let sess_type = stopwatchManager.currentSession.session_type
+        let sess_type = stopwatchManager.currentSession.sessionType
         NavigationView {
             ZStack {
                 Color((UIDevice.deviceIsPad && hSizeClass == .regular) ? "overlay1" : "base")
                     .ignoresSafeArea()
                 
-                let sessType = stopwatchManager.currentSession.session_type
+                let sessType = stopwatchManager.currentSession.sessionType
                 
                 Group {
                     if sessType != SessionType.compsim.rawValue {
@@ -250,7 +250,7 @@ struct TimeListView: View {
                                         
                                         if groups.last!.solves!.array.count != 0 {
                                             LazyVGrid(columns: columns, spacing: 12) {
-                                                ForEach(groups.last!.solves!.array as! [Solves], id: \.self) { solve in
+                                                ForEach(groups.last!.solves!.array as! [Solve], id: \.self) { solve in
                                                     TimeCard(solve: solve, currentSolve: $solve)
                                                 }
                                             }
@@ -334,7 +334,7 @@ struct TimeListView: View {
                                         Label("Penalty", systemImage: "exclamationmark.triangle")
                                     }
                                     
-                                    if stopwatchManager.currentSession.session_type != SessionType.compsim.rawValue {
+                                    if stopwatchManager.currentSession.sessionType != SessionType.compsim.rawValue {
                                         SessionPickerMenu(sessions: sess_type == SessionType.playground.rawValue ? sessionsCanMoveToPlaygroundContextMenu : stopwatchManager.sessionsCanMoveTo) { session in
                                             for object in stopwatchManager.timeListSolvesSelected {
                                                 withAnimation(Animation.customDampedSpring) {
@@ -371,7 +371,7 @@ struct TimeListView: View {
                     }
                     
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        if stopwatchManager.currentSession.session_type != SessionType.compsim.rawValue {
+                        if stopwatchManager.currentSession.sessionType != SessionType.compsim.rawValue {
                             if isSelectMode {
                                 HierarchicalButton(type: .coloured, size: .small, onTapRun: {
                                     withAnimation(Animation.customDampedSpring) {
@@ -429,11 +429,11 @@ struct TimeListView: View {
                 return
             }
             
-            if stopwatchManager.currentSession.session_type != SessionType.playground.rawValue {
+            if stopwatchManager.currentSession.sessionType != SessionType.playground.rawValue {
                 return
             }
             
-            let uniqueScrambles = Set(stopwatchManager.timeListSolvesSelected.map{$0.scramble_type})
+            let uniqueScrambles = Set(stopwatchManager.timeListSolvesSelected.map{$0.scrambleType})
             
             #if DEBUG
             NSLog("TIMELISTVIEW SELECT: \(uniqueScrambles)")

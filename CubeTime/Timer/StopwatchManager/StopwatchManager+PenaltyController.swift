@@ -53,7 +53,7 @@ extension StopwatchManager {
     }
     
     
-    func changePen(solve: Solves, pen: Penalty) {
+    func changePen(solve: Solve, pen: Penalty) {
         #warning("TODO:  check best AOs")
         if solve.penalty == pen.rawValue {
             return

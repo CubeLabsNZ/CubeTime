@@ -121,7 +121,7 @@ struct ScrambleText: View {
     
     
     var body: some View {
-        let mega: Bool = stopwatchManager.currentSession.scramble_type == 7
+        let mega: Bool = stopwatchManager.currentSession.scrambleType == 7
         
         Text(scr)
             .padding(4)
@@ -227,7 +227,7 @@ struct TimerView: View {
     
     
     var body: some View {
-        let typingMode = inputMode == .typing && stopwatchManager.currentSession.session_type != SessionType.multiphase.rawValue
+        let typingMode = inputMode == .typing && stopwatchManager.currentSession.sessionType != SessionType.multiphase.rawValue
         
         GeometryReader { geo in
             TimerBackgroundColor()
@@ -386,7 +386,7 @@ struct TimerView: View {
             
             if scrambleController.scrambleStr != nil && (typingMode || stopwatchManager.showPenOptions) {
                 HStack {
-                    let showPlus = stopwatchManager.currentSession.session_type != SessionType.multiphase.rawValue && !justManuallyInput && (inputMode != .typing || manualInputTime != "")
+                    let showPlus = stopwatchManager.currentSession.sessionType != SessionType.multiphase.rawValue && !justManuallyInput && (inputMode != .typing || manualInputTime != "")
                     
                     
                     PenaltyBar {

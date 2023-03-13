@@ -22,7 +22,7 @@ struct TimeDetailView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     
     
-    private var solve: Solves
+    private var solve: Solve
     
     private let date: Date
     private let time: String
@@ -33,16 +33,16 @@ struct TimeDetailView: View {
     @State private var userComment: String
     @State private var offsetValue: CGFloat = -25
     
-    @Binding var currentSolve: Solves?
+    @Binding var currentSolve: Solve?
     
     @FocusState private var commentFocus: Bool
     
     
-    init(for solve: Solves, currentSolve: Binding<Solves?>?, sessionsCanMoveTo: Binding<[Sessions]?>? = nil, sessionsCanMoveTo_playground: Binding<[Sessions]?>? = nil) {
+    init(for solve: Solve, currentSolve: Binding<Solve?>?, sessionsCanMoveTo: Binding<[Session]?>? = nil, sessionsCanMoveTo_playground: Binding<[Session]?>? = nil) {
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
         self.time = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
-        self.puzzle_type = puzzle_types[Int(solve.scramble_type)]
+        self.puzzle_type = puzzle_types[Int(solve.scrambleType)]
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
                 
         if let multiphaseSolve = (solve as? MultiphaseSolve), let phases = multiphaseSolve.phases {
@@ -60,7 +60,7 @@ struct TimeDetailView: View {
     
     
     var body: some View {
-        let sess_type = stopwatchManager.currentSession.session_type
+        let sess_type = stopwatchManager.currentSession.sessionType
         
         NavigationView {
             ZStack {
@@ -137,7 +137,7 @@ struct TimeDetailView: View {
                                 .recursiveMono(fontSize: 17, weight: .medium)
                                 .padding(.top, 28)
                                 
-                                AsyncSVGView(puzzle: solve.scramble_type, scramble: scramble)
+                                AsyncSVGView(puzzle: solve.scrambleType, scramble: scramble)
                                     .frame(maxWidth: 240)
                                     .padding(.vertical, 8)
                                     .padding(.horizontal, geo.size.width * 0.15)
@@ -260,7 +260,7 @@ struct TimeDetailView: View {
                                 .padding(.vertical, 6)
                                 .font(.body.weight(.medium))
                                 
-                                SessionPickerMenu(sessions: sess_type == SessionType.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scramble_type)] : stopwatchManager.sessionsCanMoveTo) { session in
+                                SessionPickerMenu(sessions: sess_type == SessionType.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scrambleType)] : stopwatchManager.sessionsCanMoveTo) { session in
                                     withAnimation(Animation.customDampedSpring) {
                                         stopwatchManager.moveSolve(solve: solve, to: session)
                                     }
@@ -277,7 +277,7 @@ struct TimeDetailView: View {
                             .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
                             
                             
-                            if (stopwatchManager.currentSession.session_type == SessionType.multiphase.rawValue) {
+                            if (stopwatchManager.currentSession.sessionType == SessionType.multiphase.rawValue) {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text("PHASES")
                                         .font(.subheadline.weight(.semibold))

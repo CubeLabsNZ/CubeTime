@@ -6,9 +6,9 @@ struct SessionIconView: View {
     @ScaledMetric(wrappedValue: 26, relativeTo: .body) private var iconLarge: CGFloat
     
     let isDynamicType: Bool
-    let session: Sessions
+    let session: Session
     
-    init(session: Sessions, isDynamicType: Bool = true) {
+    init(session: Session, isDynamicType: Bool = true) {
         self.session = session
         self.isDynamicType = isDynamicType
     }
@@ -19,7 +19,7 @@ struct SessionIconView: View {
                 .fill(Color.clear)
                 .frame(width: isDynamicType ? size : 35, height: isDynamicType ? size : 35)
             
-            switch SessionType(rawValue: session.session_type)! {
+            switch SessionType(rawValue: session.sessionType)! {
             case .standard:
                 Image(systemName: "timer.square")
                     .font(.system(size: isDynamicType ? iconLarge : 26, weight: .regular))
@@ -57,7 +57,7 @@ struct TimerHeader: View {
     let previewMode: Bool
     
     var body: some View {
-        let sess_type = SessionType(rawValue: stopwatchManager.currentSession.session_type)!
+        let sess_type = SessionType(rawValue: stopwatchManager.currentSession.sessionType)!
         HStack {
             if previewMode {
                 ZStack(alignment: .leading) {

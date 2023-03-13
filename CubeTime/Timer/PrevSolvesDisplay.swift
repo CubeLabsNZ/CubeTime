@@ -4,7 +4,7 @@ struct PrevSolvesDisplay: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     var count: Int?
     
-    @State var solve: Solves? = nil
+    @State var solve: Solve? = nil
     
     var body: some View {
         HStack {

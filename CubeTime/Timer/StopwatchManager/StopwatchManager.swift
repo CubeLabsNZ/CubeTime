@@ -18,9 +18,9 @@ struct CalculatedAverage: Identifiable, Comparable/*, Equatable, Comparable*/ {
 
     //    let discardedIndexes: [Int]
     let average: Double?
-    let accountedSolves: [Solves]?
+    let accountedSolves: [Solve]?
     let totalPen: Penalty
-    let trimmedSolves: [Solves]?
+    let trimmedSolves: [Solve]?
     
     static func < (lhs: CalculatedAverage, rhs: CalculatedAverage) -> Bool {
         #warning("TODO:  merge with that one sort function")
@@ -67,23 +67,23 @@ class StopwatchManager: ObservableObject {
     @Published var isScrambleLocked: Bool = false
     
     // MARK: published variables
-    @Published var currentSession: Sessions! {
+    @Published var currentSession: Session! {
         didSet {
             self.targetStr = filteredStrFromTime((currentSession as? CompSimSession)?.target)
-            self.phaseCount = Int((currentSession as? MultiphaseSession)?.phase_count ?? 0)
+            self.phaseCount = Int((currentSession as? MultiphaseSession)?.phaseCount ?? 0)
             
-            scrambleController?.scrambleType = currentSession.scramble_type
+            scrambleController?.scrambleType = currentSession.scrambleType
             tryUpdateCurrentSolveth()
             statsGetFromCache()
-            currentSession.last_used = Date()
+            currentSession.lastUsed = Date()
             try! managedObjectContext.save()
-            self.playgroundScrambleType = currentSession.scramble_type
+            self.playgroundScrambleType = currentSession.scrambleType
             if let currentSession = currentSession as? MultiphaseSession {
-                timerController.phaseCount = Int(currentSession.phase_count)
+                timerController.phaseCount = Int(currentSession.phaseCount)
             } else {
                 timerController.phaseCount = nil
             }
-            if currentSession.session_type == SessionType.playground.rawValue {
+            if currentSession.sessionType == SessionType.playground.rawValue {
                 updateSessionsCanMoveToPlayground()
             } else {
                 updateSessionsCanMoveTo()
@@ -94,38 +94,38 @@ class StopwatchManager: ObservableObject {
     func updateSessionsCanMoveTo() {
         var phaseCount: Int16 = -1
         if let multiphaseSession = currentSession as? MultiphaseSession {
-            phaseCount = multiphaseSession.phase_count
+            phaseCount = multiphaseSession.phaseCount
         }
         
-        let req = NSFetchRequest<Sessions>(entityName: "Sessions")
+        let req = NSFetchRequest<Session>(entityName: "Session")
         req.sortDescriptors = [
-            NSSortDescriptor(keyPath: \Sessions.pinned, ascending: false),
-            NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
+            NSSortDescriptor(keyPath: \Session.pinned, ascending: false),
+            NSSortDescriptor(keyPath: \Session.name, ascending: true)
         ]
         req.predicate = NSPredicate(format: """
-            session_type != \(SessionType.compsim.rawValue)
+            sessionType != \(SessionType.compsim.rawValue)
             AND
             (
-                session_type == \(SessionType.playground.rawValue) OR
-                scramble_type == %i
+                sessionType == \(SessionType.playground.rawValue) OR
+                scrambleType == %i
             )
             AND
             (
-                session_type != \(SessionType.multiphase.rawValue) OR
-                phase_count == %i
+                sessionType != \(SessionType.multiphase.rawValue) OR
+                phaseCount == %i
             )
             AND
             self != %@
-        """, currentSession.scramble_type, phaseCount, currentSession)
+        """, currentSession.scrambleType, phaseCount, currentSession)
         
         sessionsCanMoveTo = try! managedObjectContext.fetch(req)
     }
     
     func updateSessionsCanMoveToPlayground() {
-        let req = NSFetchRequest<Sessions>(entityName: "Sessions")
+        let req = NSFetchRequest<Session>(entityName: "Session")
         req.sortDescriptors = [
-            NSSortDescriptor(keyPath: \Sessions.pinned, ascending: false),
-            NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
+            NSSortDescriptor(keyPath: \Session.pinned, ascending: false),
+            NSSortDescriptor(keyPath: \Session.name, ascending: true)
         ]
         req.predicate = NSPredicate(format: """
             session_type != \(SessionType.compsim.rawValue) AND
@@ -136,12 +136,12 @@ class StopwatchManager: ObservableObject {
         sessionsCanMoveToPlayground = Array(repeating: [], count: puzzle_types.count)
         
         for result in results {
-            if result.session_type == SessionType.playground.rawValue {
+            if result.sessionType == SessionType.playground.rawValue {
                 for i in sessionsCanMoveToPlayground.indices {
                     sessionsCanMoveToPlayground[i].append(result)
                 }
             } else {
-                sessionsCanMoveToPlayground[Int(result.scramble_type)].append(result)
+                sessionsCanMoveToPlayground[Int(result.scrambleType)].append(result)
             }
         }
         
@@ -153,9 +153,9 @@ class StopwatchManager: ObservableObject {
         allPlaygroundSessions = try! managedObjectContext.fetch(req)
     }
     
-    @Published var sessionsCanMoveTo: [Sessions]!
-    @Published var sessionsCanMoveToPlayground: [[Sessions]]!
-    @Published var allPlaygroundSessions: [Sessions]!
+    @Published var sessionsCanMoveTo: [Session]!
+    @Published var sessionsCanMoveToPlayground: [[Session]]!
+    @Published var allPlaygroundSessions: [Session]!
     
     @Published var zenMode = false {
         didSet {
@@ -170,7 +170,7 @@ class StopwatchManager: ObservableObject {
     
     @Published var currentSolveth: Int?
     
-    @Published var solveItem: Solves!
+    @Published var solveItem: Solve!
     
     @Published var currentPadFloatingStage: Int = 1
     
@@ -188,7 +188,7 @@ class StopwatchManager: ObservableObject {
     @Published var playgroundScrambleType: Int32 {
         didSet {
             if (playgroundScrambleType != -1){
-                currentSession.scramble_type = playgroundScrambleType
+                currentSession.scrambleType = playgroundScrambleType
                 try! managedObjectContext.save()
                 scrambleController?.scrambleType = playgroundScrambleType
             }
@@ -218,7 +218,7 @@ class StopwatchManager: ObservableObject {
     
     
     // other block calculations
-    @Published var bestSingle: Solves?
+    @Published var bestSingle: Solve?
     
     
     // For some reason calling sub function to initialize more doesn't work well, must use !
@@ -243,13 +243,13 @@ class StopwatchManager: ObservableObject {
     
     
     // On stop: insert where time with plustwoforzolve > $0
-    var solves: [Solves]!
+    var solves: [Solve]!
     // On stop: just append to list
-    @Published var solvesByDate: [Solves]!
+    @Published var solvesByDate: [Solve]!
     // Maybe use trickery to get object, maybe delete this array
-    @Published var solvesNoDNFs: [Solves]!
+    @Published var solvesNoDNFs: [Solve]!
     // On stop: just append if not dnf, remove if dnf
-    @Published var solvesNoDNFsbyDate: [Solves]!
+    @Published var solvesNoDNFsbyDate: [Solve]!
     
     
     
@@ -259,9 +259,9 @@ class StopwatchManager: ObservableObject {
     
     // Couple time list functions
     #warning("this spams purple errors ... \"publishing view updates something somethin\"")
-    @Published var timeListSolvesSelected = Set<(Solves)>()
-    var timeListSolves: [Solves]!
-    @Published var timeListSolvesFiltered: [Solves]!
+    @Published var timeListSolvesSelected = Set<(Solve)>()
+    var timeListSolves: [Solve]!
+    @Published var timeListSolvesFiltered: [Solve]!
     @Published var timeListFilter = "" {
         didSet {
             filterTimeList()
@@ -293,7 +293,7 @@ class StopwatchManager: ObservableObject {
         }
     }
     
-    var timeListReloadSolve: ((Solves) -> ())?
+    var timeListReloadSolve: ((Solve) -> ())?
     var timeListSelectAll: (() -> ())?
     
     
@@ -319,10 +319,10 @@ class StopwatchManager: ObservableObject {
         NSLog("Adding quick actions")
         #endif
         
-        let req = NSFetchRequest<Sessions>(entityName: "Sessions")
+        let req = NSFetchRequest<Session>(entityName: "Session")
         req.predicate = NSPredicate(format: "last_used != nil")
         req.sortDescriptors = [
-            NSSortDescriptor(keyPath: \Sessions.last_used, ascending: false),
+            NSSortDescriptor(keyPath: \Session.lastUsed, ascending: false),
         ]
         req.fetchLimit = 3
         
@@ -335,7 +335,7 @@ class StopwatchManager: ObservableObject {
                 localizedTitle: session.name ?? "Unknown Session",
                 localizedSubtitle: session.shortcutName,
                 icon: UIApplicationShortcutIcon(
-                    systemImageName: iconNamesForType[SessionType(rawValue: session.session_type)!]!
+                    systemImageName: iconNamesForType[SessionType(rawValue: session.sessionType)!]!
                 ),
                 userInfo: ["id": session.objectID.uriRepresentation().absoluteString as NSString]
             )
@@ -351,12 +351,12 @@ class StopwatchManager: ObservableObject {
         
         if let lastUsedSessionURI = lastUsedSessionURI {
             let objID = moc.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: lastUsedSessionURI)!
-            self.currentSession = try! moc.existingObject(with: objID) as! Sessions
+            self.currentSession = try! moc.existingObject(with: objID) as! Session
             userDefaults.removeObject(forKey: "last_used_session")
         } else {
-            let req = NSFetchRequest<Sessions>(entityName: "Sessions")
+            let req = NSFetchRequest<Session>(entityName: "Session")
             req.sortDescriptors = [
-                NSSortDescriptor(keyPath: \Sessions.last_used, ascending: false),
+                NSSortDescriptor(keyPath: \Session.lastUsed, ascending: false),
             ]
             req.fetchLimit = 1
             
@@ -365,9 +365,9 @@ class StopwatchManager: ObservableObject {
             if lastUsed.count > 0 {
                 currentSession = lastUsed[0]
             } else {
-                let sessionToSave = Sessions(context: moc) // Must use this variable else didset will fire prematurely
-                sessionToSave.scramble_type = 1
-                sessionToSave.session_type = SessionType.playground.rawValue
+                let sessionToSave = Session(context: moc) // Must use this variable else didset will fire prematurely
+                sessionToSave.scrambleType = 1
+                sessionToSave.sessionType = SessionType.playground.rawValue
                 sessionToSave.name = "Default Session"
                 currentSession = sessionToSave
                 try! moc.save()
@@ -379,7 +379,7 @@ class StopwatchManager: ObservableObject {
     var scrambleController: ScrambleController! = nil
     var timerController: TimerContoller! = nil; #warning("figure out way to not make it ! optional")
     
-    init (currentSession: Sessions?, managedObjectContext: NSManagedObjectContext) {
+    init (currentSession: Session?, managedObjectContext: NSManagedObjectContext) {
         #if DEBUG
         NSLog("Initialising Audio...")
         #endif
@@ -427,7 +427,7 @@ class StopwatchManager: ObservableObject {
                         
                         (self.solveItem as! MultiphaseSolve).phases = phaseTimes
                     } else {
-                        self.solveItem = Solves(context: managedObjectContext)
+                        self.solveItem = Solve(context: managedObjectContext)
                     }
                 }
                 
@@ -438,8 +438,8 @@ class StopwatchManager: ObservableObject {
                 self.solveItem.session = self.currentSession
                 // Use the current scramble if stopped from manual input
                 self.solveItem.scramble = time == nil ? self.scrambleController.prevScrambleStr : self.scrambleController.scrambleStr
-                self.solveItem.scramble_type = self.currentSession.scramble_type
-                self.solveItem.scramble_subtype = 0
+                self.solveItem.scrambleType = self.currentSession.scrambleType
+                self.solveItem.scrambleSubtype = 0
                 self.solveItem.time = secondsElapsed
                 try! managedObjectContext.save()
                 
@@ -487,7 +487,7 @@ class StopwatchManager: ObservableObject {
             loadSessionsHistory()
         }
         
-        self.scrambleController = ScrambleController(scrambleType: self.currentSession!.scramble_type, onSetScrambleStr: { newScr in
+        self.scrambleController = ScrambleController(scrambleType: self.currentSession!.scrambleType, onSetScrambleStr: { newScr in
             self.timerController.preventStart = newScr == nil
         })
         

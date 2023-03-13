@@ -2,7 +2,7 @@ import Foundation
 import CoreData
 
 extension StopwatchManager {
-    static func getCalculatedAverage(forSolves solves: [Solves], name: String, isCompsim: Bool) -> CalculatedAverage? {
+    static func getCalculatedAverage(forSolves solves: [Solve], name: String, isCompsim: Bool) -> CalculatedAverage? {
         let count = solves.count
         
         if count < 5 {
@@ -17,9 +17,9 @@ extension StopwatchManager {
             }
         }
         
-        let solvesSorted: [Solves] = solves.sorted(by: Self.sortWithDNFsLast)
+        let solvesSorted: [Solve] = solves.sorted(by: Self.sortWithDNFsLast)
         let isDNF = solvesSorted[solvesSorted.endIndex.advanced(by: -(trim + 1))].penalty == Penalty.dnf.rawValue
-        let solvesTrimmed: [Solves] = solvesSorted.prefix(trim) + solvesSorted.suffix(trim)
+        let solvesTrimmed: [Solve] = solvesSorted.prefix(trim) + solvesSorted.suffix(trim)
         
         return CalculatedAverage(
             name: "\(name)" + (isCompsim ? "" : "\(count)"),
@@ -31,7 +31,7 @@ extension StopwatchManager {
     }
     
     
-    static func calculateAverage(forSortedSolves sortedSolves: [Solves], count: Int, trim: Int) -> Double {
+    static func calculateAverage(forSortedSolves sortedSolves: [Solve], count: Int, trim: Int) -> Double {
         let sum = sortedSolves[trim..<(count-trim)].reduce(0, { $0 + $1.timeIncPen })
         return sum / (Double(count - (trim * 2)))
     }
@@ -43,7 +43,7 @@ extension StopwatchManager {
     }
     
     
-    static func sortWithDNFsLast(_ solve0: Solves, _ solve1: Solves) -> Bool {
+    static func sortWithDNFsLast(_ solve0: Solve, _ solve1: Solve) -> Bool {
         let pen0 = Penalty(rawValue: solve0.penalty)!
         let pen1 = Penalty(rawValue: solve1.penalty)!
         
@@ -60,7 +60,7 @@ extension StopwatchManager {
 
 // MARK: - STATS: STANDARD STATS FUNCS
 extension StopwatchManager {
-    func getMin() -> Solves? {
+    func getMin() -> Solve? {
         if let solve = solvesNoDNFs.first {
             return solve
         } else if let solve = solves.first {
@@ -134,7 +134,7 @@ extension StopwatchManager {
 // MARK: - STATS: CACHE STATS
 extension StopwatchManager {
     func changedTimeListSort() {
-        let s: [Solves] = timeListSortBy == .date ? solvesByDate : solves
+        let s: [Solve] = timeListSortBy == .date ? solvesByDate : solves
         timeListSolves = timeListAscending ? s : s.reversed()
         filterTimeList()
     }
@@ -155,27 +155,27 @@ extension StopwatchManager {
         }
         
         if scrambleTypeFilter >= 0 {
-            timeListSolvesFiltered = timeListSolvesFiltered.filter {$0.scramble_type == Int32(scrambleTypeFilter)}
+            timeListSolvesFiltered = timeListSolvesFiltered.filter {$0.scrambleType == Int32(scrambleTypeFilter)}
         }
     }
     
-    func delete(solve: Solves) {
+    func delete(solve: Solve) {
         removingSolve(solve: solve, removeFunc: managedObjectContext.delete)
     }
     
     #warning("Remember to update new stats when actually cache stats (if ever)")
-    func moveSolve(solve: Solves, to: Sessions) {
+    func moveSolve(solve: Solve, to: Session) {
         removingSolve(solve: solve, removeFunc: { solve in
-            if let solve = solve as? MultiphaseSolve, (to.session_type != SessionType.multiphase.rawValue) {
+            if let solve = solve as? MultiphaseSolve, (to.sessionType != SessionType.multiphase.rawValue) {
                 #warning("Figure out how to cast")
                 managedObjectContext.delete(solve)
-                let nonMultiSolve = Solves(context: managedObjectContext)
+                let nonMultiSolve = Solve(context: managedObjectContext)
                 nonMultiSolve.comment = solve.comment
                 nonMultiSolve.date = solve.date
                 nonMultiSolve.penalty = solve.penalty
                 nonMultiSolve.scramble = solve.scramble
-                nonMultiSolve.scramble_subtype = solve.scramble_subtype
-                nonMultiSolve.scramble_type = solve.scramble_type
+                nonMultiSolve.scrambleSubtype = solve.scrambleSubtype
+                nonMultiSolve.scrambleType = solve.scrambleType
                 nonMultiSolve.time = solve.time
                 nonMultiSolve.session = to
             } else {
@@ -193,7 +193,7 @@ extension StopwatchManager {
         // so much for cache stats
     }
     
-    func removingSolve(solve: Solves, removeFunc: (Solves) -> ()) {
+    func removingSolve(solve: Solve, removeFunc: (Solve) -> ()) {
         #warning("TODO:  check best AOs")
         var recalcAO100 = false
         var recalcAO12 = false
@@ -243,7 +243,7 @@ extension StopwatchManager {
         
     func statsGetFromCache() {
         #warning("TODO:  get from cache actually")
-        let sessionSolves = currentSession.solves!.allObjects as! [Solves]
+        let sessionSolves = currentSession.solves!.allObjects as! [Solve]
         var compSim = false
         if let currentSession = currentSession as? CompSimSession {
             compSim = true
@@ -306,7 +306,7 @@ extension StopwatchManager {
     func updateStats() {
         #warning("TODO:  maybe make these async?")
         
-        if currentSession.session_type == SessionType.compsim.rawValue {
+        if currentSession.sessionType == SessionType.compsim.rawValue {
             statsGetFromCache()
             return
         }
@@ -430,7 +430,7 @@ extension StopwatchManager {
         
     
     static func calculateAverage(forCompsimGroup group: Any) -> Double {
-        let solves = ((group as AnyObject).solves!?.array as! [Solves]).sorted()
+        let solves = ((group as AnyObject).solves!?.array as! [Solve]).sorted()
         
         return Self.calculateAverage(forSortedSolves: solves, count: 5, trim: 1)
     }
@@ -440,7 +440,7 @@ extension StopwatchManager {
         
         if let compsimSession = currentSession as? CompSimSession {
             for solvegroup in compsimSession.solvegroups!.array {
-                if (((solvegroup as AnyObject).solves!?.array as! [Solves]).count != 5) { continue }
+                if (((solvegroup as AnyObject).solves!?.array as! [Solve]).count != 5) { continue }
                 
                 let average = Self.calculateAverage(forCompsimGroup: solvegroup)
                 
@@ -462,7 +462,7 @@ extension StopwatchManager {
             if groupCount == 0 {
                 return nil
             } else if groupCount == 1 {
-                let groupLastSolve = ((compsimSession.solvegroups!.lastObject as! CompSimSolveGroup).solves!.array as! [Solves])
+                let groupLastSolve = ((compsimSession.solvegroups!.lastObject as! CompSimSolveGroup).solves!.array as! [Solve])
                 
                 if groupLastSolve.count != 5 {
                     return nil
@@ -473,14 +473,14 @@ extension StopwatchManager {
             } else {
                 let groupLastTwoSolves = (compsimSession.solvegroups!.array as! [CompSimSolveGroup]).suffix(2)
                 
-                let lastInGroup = groupLastTwoSolves.last!.solves!.array as! [Solves]
+                let lastInGroup = groupLastTwoSolves.last!.solves!.array as! [Solve]
                 
                 if lastInGroup.count == 5 {
                     
                     return Self.getCalculatedAverage(forSolves: lastInGroup, name: "Current Comp Sim", isCompsim: true)
                 } else {
                     
-                    return Self.getCalculatedAverage(forSolves: (groupLastTwoSolves.first!.solves!.array as! [Solves]), name: "Current Comp Sim", isCompsim: true)
+                    return Self.getCalculatedAverage(forSolves: (groupLastTwoSolves.first!.solves!.array as! [Solve]), name: "Current Comp Sim", isCompsim: true)
                 }
             }
         } else {
@@ -495,7 +495,7 @@ extension StopwatchManager {
         if let compsimSession = currentSession as? CompSimSession {
             if compsimSession.solvegroups!.count == 0 {
                 return (nil, [])
-            } else if compsimSession.solvegroups!.count == 1 && (((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]).count != 5)  {
+            } else if compsimSession.solvegroups!.count == 1 && (((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solve]).count != 5)  {
                 /// && ((compsimSession.solvegroups!.first as AnyObject).solves!.array as! [Solves]).count != 5
                 return (nil, [])
             } else {
@@ -506,7 +506,7 @@ extension StopwatchManager {
                     if (solvegroup as AnyObject).solves!.array.count == 5 {
                         
                         
-                        let currentAvg = Self.getCalculatedAverage(forSolves: (solvegroup as AnyObject).solves!.array as! [Solves], name: "Best Comp Sim", isCompsim: true)
+                        let currentAvg = Self.getCalculatedAverage(forSolves: (solvegroup as AnyObject).solves!.array as! [Solve], name: "Best Comp Sim", isCompsim: true)
                         
                         if currentAvg?.totalPen == .dnf {
                             continue
@@ -592,7 +592,7 @@ extension StopwatchManager {
             let solveGroups = (compsimSession.solvegroups!.array as! [CompSimSolveGroup])
             
             if solveGroups.count == 0 { return (nil, nil) } else {
-                let lastGroupSolves = (solveGroups.last!.solves!.array as! [Solves])
+                let lastGroupSolves = (solveGroups.last!.solves!.array as! [Solve])
                 if lastGroupSolves.count == 4 {
                     let sortedGroup = lastGroupSolves.sorted(by: Self.sortWithDNFsLast)
                     
@@ -614,7 +614,7 @@ extension StopwatchManager {
             let solveGroups = (compsimSession.solvegroups!.array as! [CompSimSolveGroup])
             
             if solveGroups.count == 0 { return nil } else {
-                let lastGroupSolves = (solveGroups.last!.solves!.array as! [Solves])
+                let lastGroupSolves = (solveGroups.last!.solves!.array as! [Solve])
                 if lastGroupSolves.count == 4 {
                     let sortedGroup = lastGroupSolves.sorted(by: Self.sortWithDNFsLast)
                     

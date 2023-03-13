@@ -25,7 +25,7 @@ struct BottomTools: View {
             
             if showStats {
                 BottomToolContainer {
-                    if stopwatchManager.currentSession.session_type == SessionType.compsim.rawValue {
+                    if stopwatchManager.currentSession.sessionType == SessionType.compsim.rawValue {
                         TimerStatsCompSim()
                     } else {
                         if (UIDevice.deviceIsPad && hSizeClass == .regular) {

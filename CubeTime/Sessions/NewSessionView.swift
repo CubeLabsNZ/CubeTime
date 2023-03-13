@@ -89,20 +89,20 @@ struct NewSessionView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        let sessionItem = sessionTypeForID[sessionType, default: Sessions.self].init(context: managedObjectContext)
+                        let sessionItem = sessionTypeForID[sessionType, default: Session.self].init(context: managedObjectContext)
                         
                         sessionItem.name = name
                         sessionItem.pinned = pinnedSession
-                        sessionItem.session_type = sessionType.rawValue
+                        sessionItem.sessionType = sessionType.rawValue
                         
                         if let sessionItem = sessionItem as? MultiphaseSession {
-                            sessionItem.phase_count = Int16(phaseCount)
+                            sessionItem.phaseCount = Int16(phaseCount)
                         } else if let sessionItem = sessionItem as? CompSimSession {
                             sessionItem.target = timeFromStr(targetStr)!
                         }
                         
                         if sessionType != .playground {
-                            sessionItem.scramble_type = sessionEventType
+                            sessionItem.scrambleType = sessionEventType
                         }
                         
                         try! managedObjectContext.save()

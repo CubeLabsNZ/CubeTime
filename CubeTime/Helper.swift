@@ -5,7 +5,7 @@ import Combine
 import CoreData
 
 // MARK: - GLOBAL LETS
-let sessionTypeForID: [SessionType: Sessions.Type] = [
+let sessionTypeForID: [SessionType: Session.Type] = [
     .multiphase: MultiphaseSession.self,
     .compsim: CompSimSession.self
 ]
@@ -19,10 +19,10 @@ let sessionDescriptions: [SessionType: String] = [
 
 struct SessionPickerMenu<Content: View>: View {
     let content: Content
-    let sessions: [Sessions]?
-    let clickSession: (Sessions) -> ()
+    let sessions: [Session]?
+    let clickSession: (Session) -> ()
     
-    @inlinable init(sessions: [Sessions]?, clickSession: @escaping (Sessions) -> (), @ViewBuilder label: () -> Content = {Label("Move To", systemImage: "arrow.up.right")}) {
+    @inlinable init(sessions: [Session]?, clickSession: @escaping (Session) -> (), @ViewBuilder label: () -> Content = {Label("Move To", systemImage: "arrow.up.right")}) {
         self.sessions = sessions
         self.clickSession = clickSession
         self.content = label()
@@ -41,7 +41,7 @@ struct SessionPickerMenu<Content: View>: View {
                         Button {
                             clickSession(session)
                         } label: {
-                            Label(session.name!, systemImage: iconNamesForType[SessionType(rawValue:session.session_type)!]!)
+                            Label(session.name!, systemImage: iconNamesForType[SessionType(rawValue:session.sessionType)!]!)
                         }
                     }
                 }
@@ -50,7 +50,7 @@ struct SessionPickerMenu<Content: View>: View {
                         Button {
                             clickSession(session)
                         } label: {
-                            Label(session.name!, systemImage: iconNamesForType[SessionType(rawValue:session.session_type)!]!)
+                            Label(session.name!, systemImage: iconNamesForType[SessionType(rawValue:session.sessionType)!]!)
                         }
                     }
                 }
@@ -64,10 +64,10 @@ struct SessionPickerMenu<Content: View>: View {
 }
 
 
-extension Sessions {
+extension Session {
     var typeName: String {
         get {
-            switch (SessionType(rawValue: session_type)!) {
+            switch (SessionType(rawValue: sessionType)!) {
             case .standard:
                 return "Standard Session"
             case .algtrainer:
@@ -84,8 +84,8 @@ extension Sessions {
     
     var shortcutName: String {
         get {
-            let scrname = puzzle_types[Int(scramble_type)].name
-            switch (SessionType(rawValue: session_type)!) {
+            let scrname = puzzle_types[Int(scrambleType)].name
+            switch (SessionType(rawValue: sessionType)!) {
             case .standard:
                 return scrname
             case .algtrainer:
@@ -109,16 +109,16 @@ let iconNamesForType: [SessionType: String] = [
     .compsim: "globe.asia.australia"
 ]
 
-func getSessionsCanMoveTo(managedObjectContext: NSManagedObjectContext, scrambleType: Int32, currentSession: Sessions) -> [Sessions] {
+func getSessionsCanMoveTo(managedObjectContext: NSManagedObjectContext, scrambleType: Int32, currentSession: Session) -> [Session] {
     var phaseCount: Int16 = -1
     if let multiphaseSession = currentSession as? MultiphaseSession {
-        phaseCount = multiphaseSession.phase_count
+        phaseCount = multiphaseSession.phaseCount
     }
     
-    let req = NSFetchRequest<Sessions>(entityName: "Sessions")
+    let req = NSFetchRequest<Session>(entityName: "Session")
     req.sortDescriptors = [
-        NSSortDescriptor(keyPath: \Sessions.pinned, ascending: false),
-        NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
+        NSSortDescriptor(keyPath: \Session.pinned, ascending: false),
+        NSSortDescriptor(keyPath: \Session.name, ascending: true)
     ]
     req.predicate = NSPredicate(format: """
         session_type != \(SessionType.compsim.rawValue)
@@ -262,11 +262,11 @@ extension CompSimSolveGroup: RawGraphData {
     }
     
     var avg: CalculatedAverage? {
-        return StopwatchManager.getCalculatedAverage(forSolves: self.solves!.array as! [Solves], name: "Comp Sim Group", isCompsim: true)
+        return StopwatchManager.getCalculatedAverage(forSolves: self.solves!.array as! [Solve], name: "Comp Sim Group", isCompsim: true)
     }
 }
 
-extension Solves: Comparable, RawGraphData {
+extension Solve: Comparable, RawGraphData {
     var timeIncPen: Double {
         get {
             return self.time + (self.penalty == Penalty.plustwo.rawValue ? 2 : 0)
@@ -287,12 +287,12 @@ extension Solves: Comparable, RawGraphData {
         }
     }
     
-    public static func < (lhs: Solves, rhs: Solves) -> Bool {
+    public static func < (lhs: Solve, rhs: Solve) -> Bool {
         return lhs.timeIncPen < rhs.timeIncPen
     }
 
     // I don't know if i need both but better safe than sorry
-    public static func > (lhs: Solves, rhs: Solves) -> Bool {
+    public static func > (lhs: Solve, rhs: Solve) -> Bool {
         return lhs.timeIncPen > rhs.timeIncPen
     }
 }
@@ -314,8 +314,8 @@ extension RandomAccessCollection where Element : Comparable {
     }
 }
 
-extension RandomAccessCollection where Element : Solves {
-    func insertionIndexDate(solve value: Solves) -> Index {
+extension RandomAccessCollection where Element : Solve {
+    func insertionIndexDate(solve value: Solve) -> Index {
         var slice : SubSequence = self[...]
 
         while !slice.isEmpty {
@@ -566,14 +566,14 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
     
     let trim = 1
     
-    guard let solves = compsimsolvegroup.solves!.array as? [Solves] else {return nil}
+    guard let solves = compsimsolvegroup.solves!.array as? [Solve] else {return nil}
     
     if solves.count < 5 {
         return nil
     }
     
     let sorted = solves.sorted(by: StopwatchManager.sortWithDNFsLast)
-    let trimmedSolves: [Solves] = sorted.prefix(trim) + sorted.suffix(trim)
+    let trimmedSolves: [Solve] = sorted.prefix(trim) + sorted.suffix(trim)
     
     return CalculatedAverage(
         name: "Comp Sim",
@@ -586,7 +586,7 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
 }
 
 
-extension Solves {
+extension Solve {
     var timeText: String {
         get {
             return formatSolveTime(secs: self.time, penType: Penalty(rawValue: self.penalty)!)
@@ -601,7 +601,7 @@ func copyScramble(scramble: String) -> Void {
     UIPasteboard.general.string = str
 }
 
-func getShareStr(solve: Solves) -> String {
+func getShareStr(solve: Solve) -> String {
     var str = "Generated by CubeTime.\n"
     let scramble = solve.scramble ?? "Retrieving scramble failed."
     let time = solve.timeText
@@ -611,7 +611,7 @@ func getShareStr(solve: Solves) -> String {
     return str
 }
 
-func getShareStr(solves: Set<Solves>) -> String {
+func getShareStr(solves: Set<Solve>) -> String {
     var str = "Generated by CubeTime."
     for solve in solves {
         let scramble = solve.scramble ?? "Retrieving scramble failed."
@@ -623,7 +623,7 @@ func getShareStr(solves: Set<Solves>) -> String {
     return str
 }
 
-func getShareStr(solve: Solves, phases: Array<Double>?) -> String {
+func getShareStr(solve: Solve, phases: Array<Double>?) -> String {
     let scramble = solve.scramble ?? "Retrieving scramble failed."
     let time = solve.timeText
     
@@ -669,15 +669,15 @@ func getShareStr(solves: CalculatedAverage) -> String {
 }
 
 
-func copySolve(solve: Solves) -> Void {
+func copySolve(solve: Solve) -> Void {
     UIPasteboard.general.string = getShareStr(solve: solve)
 }
 
-func copySolve(solves: Set<Solves>) -> Void {
+func copySolve(solves: Set<Solve>) -> Void {
     UIPasteboard.general.string = getShareStr(solves: solves)
 }
 
-func copySolve(solve: Solves, phases: Array<Double>?) -> Void {
+func copySolve(solve: Solve, phases: Array<Double>?) -> Void {
     UIPasteboard.general.string = getShareStr(solve: solve, phases: phases)
 }
 
@@ -848,7 +848,7 @@ extension View {
 
 
 @available(*, deprecated, message: "Use solve.timeIncPen instead.")
-func timeWithPlusTwoForSolve(_ solve: Solves) -> Double {
+func timeWithPlusTwoForSolve(_ solve: Solve) -> Double {
     return solve.time + (solve.penalty == Penalty.plustwo.rawValue ? 2 : 0)
 }
 

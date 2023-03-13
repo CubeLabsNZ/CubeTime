@@ -11,15 +11,15 @@ struct SessionsView: View {
     @State var showNewSessionPopUp = false
     
     @FetchRequest(
-        entity: Sessions.entity(),
+        entity: Session.entity(),
         sortDescriptors: [
-            NSSortDescriptor(keyPath: \Sessions.pinned, ascending: false),
-            NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
+            NSSortDescriptor(keyPath: \Session.pinned, ascending: false),
+            NSSortDescriptor(keyPath: \Session.name, ascending: true)
         ]
-    ) var sessions: FetchedResults<Sessions>
+    ) var sessions: FetchedResults<Session>
     
     var body: some View {
-        let _ = NSLog("\(sessions.map({$0.scramble_type}))")
+        let _ = NSLog("\(sessions.map({$0.scrambleType}))")
         NavigationView {
             GeometryReader { geo in
                 ZStack(alignment: .bottomLeading) {
@@ -93,7 +93,7 @@ struct CustomiseSessionView: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    let sessionItem: Sessions
+    let sessionItem: Session
     
     @State private var name: String
     @State private var targetStr: String
@@ -108,15 +108,15 @@ struct CustomiseSessionView: View {
     @State private var sessionEventType: Int32
     
     
-    init(sessionItem: Sessions) {
+    init(sessionItem: Session) {
         self.sessionItem = sessionItem
         
         self._name = State(initialValue: sessionItem.name ?? "")
         self._pinnedSession = State(initialValue: sessionItem.pinned)
         self._targetStr = State(initialValue: filteredStrFromTime((sessionItem as? CompSimSession)?.target))
-        self._phaseCount = State(initialValue: Int((sessionItem as? MultiphaseSession)?.phase_count ?? 0))
+        self._phaseCount = State(initialValue: Int((sessionItem as? MultiphaseSession)?.phaseCount ?? 0))
         
-        self._sessionEventType = State(initialValue: sessionItem.scramble_type)
+        self._sessionEventType = State(initialValue: sessionItem.scrambleType)
     }
     
     
@@ -136,11 +136,11 @@ struct CustomiseSessionView: View {
                         .frame(height: bigFrameHeight)
                         .modifier(CardBlockBackground())
                         
-                        if sessionItem.session_type == SessionType.compsim.rawValue {
+                        if sessionItem.sessionType == SessionType.compsim.rawValue {
                             CompSimTargetEntry(targetStr: $targetStr)
                         }
                         
-                        if sessionItem.session_type == SessionType.playground.rawValue {
+                        if sessionItem.sessionType == SessionType.playground.rawValue {
                             EventPicker(sessionEventType: $sessionEventType)
                         }
                         
@@ -162,19 +162,19 @@ struct CustomiseSessionView: View {
                             sessionItem.name = name
                             sessionItem.pinned = pinnedSession
                             
-                            if sessionItem.session_type == SessionType.compsim.rawValue {
+                            if sessionItem.sessionType == SessionType.compsim.rawValue {
                                 (sessionItem as! CompSimSession).target = timeFromStr(targetStr)!
                             }
                             
-                            if sessionItem.session_type == SessionType.multiphase.rawValue {
-                                (sessionItem as! MultiphaseSession).phase_count = Int16(phaseCount)
+                            if sessionItem.sessionType == SessionType.multiphase.rawValue {
+                                (sessionItem as! MultiphaseSession).phaseCount = Int16(phaseCount)
                             }
                             
-                            if sessionItem.session_type == SessionType.playground.rawValue {
+                            if sessionItem.sessionType == SessionType.playground.rawValue {
                                 if sessionItem == stopwatchManager.currentSession {
                                     stopwatchManager.playgroundScrambleType = sessionEventType
                                 } else {
-                                    sessionItem.scramble_type = sessionEventType
+                                    sessionItem.scrambleType = sessionEventType
                                 }
                             }
                             
@@ -182,7 +182,7 @@ struct CustomiseSessionView: View {
                             
                             dismiss()
                         })
-                        .disabled(self.name.isEmpty || (sessionItem.session_type == SessionType.compsim.rawValue && targetStr.isEmpty))
+                        .disabled(self.name.isEmpty || (sessionItem.sessionType == SessionType.compsim.rawValue && targetStr.isEmpty))
                     }
                 }
             }

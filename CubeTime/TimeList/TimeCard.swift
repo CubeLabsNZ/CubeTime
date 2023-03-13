@@ -9,12 +9,12 @@ struct TimeCard: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    var solve: Solves
+    var solve: Solve
     
     let formattedTime: String
     let pen: Penalty
     
-    @Binding var currentSolve: Solves?
+    @Binding var currentSolve: Solve?
     
     @Environment(\.sizeCategory) var sizeCategory
     
@@ -38,7 +38,7 @@ struct TimeCard: View {
         }
     }
     
-    init(solve: Solves, currentSolve: Binding<Solves?>) {
+    init(solve: Solve, currentSolve: Binding<Solve?>) {
         self.solve = solve
         self.formattedTime = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
         self.pen = Penalty(rawValue: solve.penalty)!
@@ -46,7 +46,7 @@ struct TimeCard: View {
     }
     
     var body: some View {
-        let sess_type = stopwatchManager.currentSession.session_type
+        let sess_type = stopwatchManager.currentSession.sessionType
         ZStack {
             #warning("TODO:  check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectangle")
             RoundedRectangle(cornerRadius: 8, style: .continuous)
@@ -67,8 +67,6 @@ struct TimeCard: View {
             }
         }
         .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 8, style: .continuous))
-
-
         .contextMenu {
             Button {
                 copySolve(solve: solve)
@@ -103,7 +101,7 @@ struct TimeCard: View {
             }
             
             if sess_type != SessionType.compsim.rawValue {
-                SessionPickerMenu(sessions: sess_type == SessionType.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scramble_type)] : stopwatchManager.sessionsCanMoveTo) { session in
+                SessionPickerMenu(sessions: sess_type == SessionType.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scrambleType)] : stopwatchManager.sessionsCanMoveTo) { session in
                     withAnimation(Animation.customDampedSpring) {
                         stopwatchManager.moveSolve(solve: solve, to: session)
                     }

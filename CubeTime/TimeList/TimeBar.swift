@@ -70,7 +70,7 @@ struct TimeBar: View {
                             let normal: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 17, weight: .medium)]
                           
                             if let ar = solvegroup.solves {
-                                for (index, solve) in Array((ar.array as! [Solves]).enumerated()) {
+                                for (index, solve) in Array((ar.array as! [Solve]).enumerated()) {
                                     if calculatedAverage.trimmedSolves!.contains(solve) {
                                         finalStr.append(NSMutableAttributedString(string: "(" + formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)) + ")", attributes: grey))
                                     } else {
@@ -112,7 +112,7 @@ struct TimeBar: View {
                                 ]
                                 
                                 
-                                for (index, solve) in Array((solvegroup.solves!.array as! [Solves]).enumerated()) {
+                                for (index, solve) in Array((solvegroup.solves!.array as! [Solve]).enumerated()) {
                                     finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)), attributes: normal))
                                     
                                     if index < solvegroup.solves!.count - 1 {

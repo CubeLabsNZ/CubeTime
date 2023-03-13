@@ -105,7 +105,7 @@ struct CubeTime: App {
                 if let pendingSession = tabRouter.pendingSessionURL {
                     let url = URL(string: pendingSession as String)
                     let objID = moc.persistentStoreCoordinator!.managedObjectID(forURIRepresentation: url!)!
-                    stopwatchManager.currentSession = try! moc.existingObject(with: objID) as! Sessions
+                    stopwatchManager.currentSession = try! moc.existingObject(with: objID) as! Session
                     tabRouter.pendingSessionURL = nil
                 }
             default: break

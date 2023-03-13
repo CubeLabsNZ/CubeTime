@@ -16,8 +16,8 @@ struct SessionCard: View {
     @ScaledMetric private var regularSessionHeight: CGFloat = 65
     
     
-    var item: Sessions
-    var allSessions: FetchedResults<Sessions>
+    var item: Session
+    var allSessions: FetchedResults<Session>
     
     let pinned: Bool
     let session_type: SessionType
@@ -28,15 +28,15 @@ struct SessionCard: View {
     
     @Namespace var namespace
     
-    init (item: Sessions, allSessions: FetchedResults<Sessions>, parentGeo: GeometryProxy) {
+    init (item: Session, allSessions: FetchedResults<Session>, parentGeo: GeometryProxy) {
         self.item = item
         self.allSessions = allSessions
         
         // Copy out the things so that it won't change to null coalesced defaults on deletion
         self.pinned = item.pinned
-        self.session_type = SessionType(rawValue: item.session_type)!
+        self.session_type = SessionType(rawValue: item.sessionType)!
         self.name = item.name ?? "Unknown session name"
-        self.scramble_type = Int(item.scramble_type)
+        self.scramble_type = Int(item.scrambleType)
         self.solveCount = item.solves?.count ?? -1
         
         self.parentGeo = parentGeo
@@ -218,7 +218,7 @@ struct SessionCard: View {
         .confirmationDialog(String("Are you sure you want to delete \"\(name)\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
                 if item == stopwatchManager.currentSession {
-                    var next: Sessions? = nil
+                    var next: Session? = nil
                     for item in allSessions {
                         if item != stopwatchManager.currentSession {
                             next = item
