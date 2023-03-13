@@ -108,12 +108,12 @@ struct TimeDistribution: View {
                                 path.move(to: CGPoint(x: 0, y: height < 4 ? 220/4*CGFloat(height) : 226))
                                 path.addLine(to: CGPoint(x: geometry.size.width, y: height < 4 ? 220/4*CGFloat(height) : 226))
                             }
-                            .stroke(Color(uiColor: UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0)), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5, height == 4 ? 0 : 10]))
+                            .stroke(Color("grey"), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5, height == 4 ? 0 : 10]))
                         }
                     }
                 }
-                .padding()
                 .offset(y: 31)
+                .padding(.vertical)
                 
                 
                 GeometryReader { geometry in
@@ -129,7 +129,7 @@ struct TimeDistribution: View {
                         path.move(to: CGPoint(x: medianxloc, y: 225))
                         path.addLine(to: CGPoint(x: medianxloc, y: -11))
                     }
-                    .stroke(Color("grey"), style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [5, 10]))
+                    .stroke(Color("dark"), style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [5, 10]))
                     
                     ForEach(0..<data.count, id: \.self) { datum in
                         let xloc: CGFloat = (geometry.size.width / (count < 8 ? CGFloat(count+2) : 10)) * CGFloat(datum)
@@ -160,7 +160,7 @@ struct TimeDistribution: View {
                                 }
                             
                             Text((datum == 0 ? "<" : (datum == data.count-1 ? ">" : ""))+formatLegendTime(secs: data[datum].0, dp: 1)+(datum != 0 && datum != data.count-1 ? "+" : ""))
-                                .foregroundColor(Color("indent0"))
+                                .foregroundColor(Color("grey"))
                                 .recursiveMono(fontSize: 10, weight: .regular)
                                 .position(x: xloc, y: 240)
                         }
@@ -170,22 +170,24 @@ struct TimeDistribution: View {
                     HStack (spacing: 0) {
                         Text("MEDIAN: ")
                             .font(.system(size: 11, weight: .bold, design: .default))
-                            .foregroundColor(Color("grey"))
+                            .foregroundColor(Color("dark"))
                         
                         Text(formatSolveTime(secs: stopwatchManager.normalMedian.0!))
                             .recursiveMono(fontSize: 11, weight: .semibold)
-                            .foregroundColor(Color("grey"))
+                            .foregroundColor(Color("dark"))
                     }
                     .position(x: medianxloc, y: -16)
                 }
-                .padding()
                 .offset(y: 27)
+                .padding(.vertical)
             }
         } else {
             Text("not enough solves to\ndisplay graph")
                 .recursiveMono(fontSize: 17, weight: .medium)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color("grey"))
+                .offset(y: 5)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
