@@ -6,7 +6,6 @@ import Combine
 let checkboxUIImage = UIImage(systemName: "checkmark.circle.fill")!
 
 class TimeCardLabel: UIStackView {
-    let timeTextLabel = UILabel()
     let checkbox = UIImageView(image: checkboxUIImage)
     
     required init(coder: NSCoder) {
@@ -15,9 +14,6 @@ class TimeCardLabel: UIStackView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        timeTextLabel.textAlignment = .center
-        timeTextLabel.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
-        timeTextLabel.isUserInteractionEnabled = false
         
         checkbox.contentMode = .scaleAspectFit
         checkbox.isHidden = true
@@ -32,7 +28,6 @@ class TimeCardLabel: UIStackView {
         self.spacing = 0
         
         self.addArrangedSubview(UIView())
-        self.addArrangedSubview(timeTextLabel)
         self.addArrangedSubview(checkbox)
         self.addArrangedSubview(UIView())
     }
@@ -40,35 +35,56 @@ class TimeCardLabel: UIStackView {
 
 
 class TimeCardCell: UICollectionViewCell {
-    let timeCardLabel: TimeCardLabel
+    lazy var timeCardLabel: TimeCardLabel = {
+        NSLog("GOT TIMECARDLABEL")
+        return TimeCardLabel(frame: CGRect(origin: .zero, size: self.frame.size))
+    }()
     
     var item: Solve!
+    let label = UILabel()
     weak var viewController: TimeListViewController?
     var gesture: UITapGestureRecognizer!
+    var switchedToStackView = false
     
     required init?(coder: NSCoder) {
         fatalError("error")
     }
     
     override init(frame: CGRect) {
-        self.timeCardLabel = TimeCardLabel(frame: CGRect(origin: .zero, size: frame.size))
         
         super.init(frame: frame)
         
         self.layer.backgroundColor = UIColor(named: isSelected ? "indent0" : "overlay0")!.cgColor
-        self.timeCardLabel.checkbox.isHidden = !self.isSelected
+//        self.timeCardLabel.checkbox.isHidden = !self.isSelected
         
         self.layer.cornerRadius = 8
         self.layer.cornerCurve = .continuous
         
-        self.contentView.addSubview(timeCardLabel)
+        self.label.textAlignment = .center
+        
+        
+        self.label.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
+        self.label.isUserInteractionEnabled = false
+
+        
+        self.contentView.addSubview(label)
     }
     
     override func updateConfiguration(using state: UICellConfigurationState) {
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.82, initialSpringVelocity: 1) {
+        if self.isSelected && !switchedToStackView {
+            switchedToStackView = true
+            label.removeFromSuperview()
+            self.contentView.addSubview(timeCardLabel)
+            timeCardLabel.insertArrangedSubview(label, at: 1)
+        }
+        
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.82, initialSpringVelocity: 1) { [ weak self] in
+            guard let self else { return }
             self.layer.backgroundColor = UIColor(named: self.isSelected ? "indent0" : "overlay0")!.cgColor
-            
-            if (self.timeCardLabel.checkbox.isHidden != !self.isSelected) {
+        }
+        if switchedToStackView && (self.timeCardLabel.checkbox.isHidden != !self.isSelected) {
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.82, initialSpringVelocity: 1) { [ weak self] in
+                guard let self else {return}
                 self.timeCardLabel.checkbox.isHidden = !self.isSelected
             }
         }
@@ -153,7 +169,8 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         let solveCellRegistration = UICollectionView.CellRegistration<TimeCardCell, Solve> { [weak self] cell, _, item in
             guard let self else { return }
             
-            cell.timeCardLabel.timeTextLabel.text = item.timeText
+            cell.label.text = item.timeText
+            cell.label.frame = CGRect(origin: .zero, size: cell.frame.size)
 //            cell.timeCardLabel.layoutIfNeeded()
             
             cell.item = item
@@ -224,6 +241,10 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
                 }
             }
         }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        stopwatchManager.timeListSolvesSelected.removeAll()
     }
     
     deinit {
