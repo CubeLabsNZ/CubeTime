@@ -2,14 +2,14 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22D68" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="CompSimSession" representedClassName="CompSimSession" parentEntity="Session" syncable="YES" codeGenerationType="class">
         <attribute name="target" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="solvegroups" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="CompSimSolveGroup" inverseName="session" inverseEntity="CompSimSolveGroup"/>
+        <relationship name="solvegroups" toMany="YES" deletionRule="Cascade" destinationEntity="CompSimSolveGroup" inverseName="session" inverseEntity="CompSimSolveGroup"/>
     </entity>
     <entity name="CompSimSolve" representedClassName="CompSimSolve" parentEntity="Solve" syncable="YES" codeGenerationType="class">
         <relationship name="solvegroup" maxCount="1" deletionRule="Nullify" destinationEntity="CompSimSolveGroup" inverseName="solves" inverseEntity="CompSimSolveGroup"/>
     </entity>
     <entity name="CompSimSolveGroup" representedClassName="CompSimSolveGroup" syncable="YES" codeGenerationType="class">
         <relationship name="session" maxCount="1" deletionRule="Nullify" destinationEntity="CompSimSession" inverseName="solvegroups" inverseEntity="CompSimSession"/>
-        <relationship name="solves" toMany="YES" maxCount="5" deletionRule="Cascade" ordered="YES" destinationEntity="CompSimSolve" inverseName="solvegroup" inverseEntity="CompSimSolve"/>
+        <relationship name="solves" toMany="YES" maxCount="5" deletionRule="Cascade" destinationEntity="CompSimSolve" inverseName="solvegroup" inverseEntity="CompSimSolve"/>
     </entity>
     <entity name="MultiphaseSession" representedClassName="MultiphaseSession" parentEntity="Session" syncable="YES" codeGenerationType="class">
         <attribute name="phaseCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" elementID="phase_count"/>
