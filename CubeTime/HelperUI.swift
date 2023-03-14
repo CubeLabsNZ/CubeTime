@@ -49,6 +49,7 @@ extension Color {
 struct CopyButton: View {
     let toCopy: String
     let buttonText: String
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     
     @State private var offsetValue: CGFloat = -25
     
@@ -80,9 +81,12 @@ struct CopyButton: View {
                 }
                 .frame(width: 20)
                 
-                Text(buttonText)
+                if (dynamicTypeSize <= .xLarge) {
+                    Text(buttonText)
+                }
             }
         }
+        .frame(height: 35)
     }
 }
 
@@ -166,15 +170,14 @@ struct BackgroundColour: View {
             if (!UIDevice.deviceIsPad || hSizeClass == .compact) { // if phone or small split screen ipad, then NO modals
                 Color("base")
             } else {
-                if (colourScheme == .dark) {
-                    let _ = NSLog("here")
-                    if (isSessions) {
-                        Color("overlay1")
-                    } else {
-                        Color("indent1")
-                    }
+                if (isSessions) {
+                    Color("overlay1")
                 } else {
-                    Color("base")
+                    if (colourScheme == .dark) {
+                        Color("indent1")
+                    } else {
+                        Color("base")
+                    }
                 }
             }
         }

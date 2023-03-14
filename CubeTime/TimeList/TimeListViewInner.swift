@@ -5,7 +5,7 @@ import Combine
 
 let checkboxUIImage = UIImage(systemName: "checkmark.circle.fill")!
 
-class TimeCardLabel: UIStackView {
+class TimeCardView: UIStackView {
     let checkbox = UIImageView(image: checkboxUIImage)
     
     required init(coder: NSCoder) {
@@ -34,14 +34,38 @@ class TimeCardLabel: UIStackView {
 }
 
 
+class TimeCardTextLabel: UILabel {
+    required init() {
+        super.init(frame: CGRect.zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("error")
+    }
+    
+    override func drawText(in rect: CGRect) {
+        let insets = UIEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
+        super.drawText(in: rect.inset(by: insets))
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        get {
+            var contentSize = super.intrinsicContentSize
+            contentSize.width += 8
+            return contentSize
+        }
+    }
+}
+
+
 class TimeCardCell: UICollectionViewCell {
-    lazy var timeCardLabel: TimeCardLabel = {
+    lazy var timeCardView: TimeCardView = {
         NSLog("GOT TIMECARDLABEL")
-        return TimeCardLabel(frame: CGRect(origin: .zero, size: self.frame.size))
+        return TimeCardView(frame: CGRect(origin: .zero, size: self.frame.size))
     }()
     
     var item: Solve!
-    let label = UILabel()
+    let label = TimeCardTextLabel()
     weak var viewController: TimeListViewController?
     var gesture: UITapGestureRecognizer!
     var switchedToStackView = false
@@ -65,27 +89,31 @@ class TimeCardCell: UICollectionViewCell {
         
         self.label.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
         self.label.isUserInteractionEnabled = false
-
+        
+        self.label.numberOfLines = 1
+        self.label.minimumScaleFactor = 0.25
+        self.label.adjustsFontSizeToFitWidth = true
         
         self.contentView.addSubview(label)
+        
     }
     
     override func updateConfiguration(using state: UICellConfigurationState) {
         if self.isSelected && !switchedToStackView {
             switchedToStackView = true
             label.removeFromSuperview()
-            self.contentView.addSubview(timeCardLabel)
-            timeCardLabel.insertArrangedSubview(label, at: 1)
+            self.contentView.addSubview(timeCardView)
+            timeCardView.insertArrangedSubview(label, at: 1)
         }
         
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.82, initialSpringVelocity: 1) { [ weak self] in
             guard let self else { return }
             self.layer.backgroundColor = UIColor(named: self.isSelected ? "indent0" : "overlay0")!.cgColor
         }
-        if switchedToStackView && (self.timeCardLabel.checkbox.isHidden != !self.isSelected) {
+        if switchedToStackView && (self.timeCardView.checkbox.isHidden != !self.isSelected) {
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.82, initialSpringVelocity: 1) { [ weak self] in
                 guard let self else {return}
-                self.timeCardLabel.checkbox.isHidden = !self.isSelected
+                self.timeCardView.checkbox.isHidden = !self.isSelected
             }
         }
     }
@@ -171,7 +199,6 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
             
             cell.label.text = item.timeText
             cell.label.frame = CGRect(origin: .zero, size: cell.frame.size)
-//            cell.timeCardLabel.layoutIfNeeded()
             
             cell.item = item
             cell.gesture = UITapGestureRecognizer(target: self, action: #selector(self.handleCellTap(_:)))

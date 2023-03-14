@@ -137,7 +137,6 @@ struct MainView: View {
     
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.scenePhase) var scenePhase
-    @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @EnvironmentObject var stopwatchManager: StopwatchManager
         
@@ -146,6 +145,9 @@ struct MainView: View {
             Group {
                 if horizontalSizeClass == .compact {
                     ZStack {
+                        BackgroundColour()
+                            .ignoresSafeArea()
+                        
                         switch tabRouter.currentTab {
                         case .timer:
                             TimerView()

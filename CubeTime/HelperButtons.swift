@@ -142,6 +142,8 @@ struct HierarchicalButtonBase<V: View>: View {
     
     @ScaledMetric var frameHeight: CGFloat
     
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    
     let horizontalPadding: CGFloat
     let fontType: Font
     
@@ -249,10 +251,18 @@ struct HierarchicalButtonBase<V: View>: View {
                         x: 0,
                         y: self.hasShadow ? 1 : 0)
             
-            content
-                .foregroundColor(self.colourFg)
-                .font(self.fontType)
-                .padding(.horizontal, square ? 0 : self.horizontalPadding)
+            Group {
+                if (dynamicTypeSize > .xLarge) {
+                    content
+                        .labelStyle(.iconOnly)
+                } else {
+                    content
+                        .labelStyle(.titleAndIcon)
+                }
+            }
+            .foregroundColor(self.colourFg)
+            .font(self.fontType)
+            .padding(.horizontal, square ? 0 : self.horizontalPadding)
         }
         .contentShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
         .fixedSize(horizontal: !expandWidth, vertical: true)
@@ -271,6 +281,7 @@ struct CloseButton: View {
     var body: some View {
         HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: hasBackgroundShadow, hasBackground: hasBackgroundShadow, onTapRun: self.onTapRun) {
             Image(systemName: "xmark")
+                .imageScale(.medium)
         }
     }
 }

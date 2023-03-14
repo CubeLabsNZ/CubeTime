@@ -18,6 +18,8 @@ struct TimeDetailView: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var managedObjectContext
     
@@ -75,23 +77,25 @@ struct TimeDetailView: View {
                                         Text("DNF")
                                             .font(.largeTitle.weight(.bold))
                                         
-                                        let rawTime = formatSolveTime(secs: solve.time)
-                                        Text("(\(rawTime))")
-                                            .font(.title3.weight(.semibold))
-                                            .foregroundColor(Color("grey"))
-                                            .padding(.leading, 8)
-                                            .offset(y: -4)
+                                        if (dynamicTypeSize <= .xLarge) {
+                                            Text("(\(formatSolveTime(secs: solve.time)))")
+                                                .font(.title3.weight(.semibold))
+                                                .foregroundColor(Color("grey"))
+                                                .padding(.leading, 8)
+                                                .offset(y: -4)
+                                        }
                                         
                                     case Penalty.plustwo.rawValue:
-                                        let addedTime = formatSolveTime(secs: (solve.time + 2))
-                                        Text("\(addedTime)")
+                                        Text("\(formatSolveTime(secs: (solve.time + 2)))")
                                             .font(.largeTitle.weight(.bold))
                                         
-                                        Text("(\(time))")
-                                            .font(.title3.weight(.semibold))
-                                            .foregroundColor(Color("grey"))
-                                            .padding(.leading, 8)
-                                            .offset(y: -4)
+                                        if (dynamicTypeSize <= .xLarge) {
+                                            Text("(\(time))")
+                                                .font(.title3.weight(.semibold))
+                                                .foregroundColor(Color("grey"))
+                                                .padding(.leading, 8)
+                                                .offset(y: -4)
+                                        }
                                     default:
                                         Text(time)
                                             .font(.largeTitle.weight(.bold))
@@ -192,7 +196,7 @@ struct TimeDetailView: View {
                                 CopyButton(toCopy: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: "Copy Solve")
                                 
                                 
-                                ShareButton(toShare: getShareStr(solve: solve), buttonText: "Share Solve")
+                                ShareButton(toShare: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: "Share Solve")
                                 
                                 
                                 HierarchicalButton(type: .red, size: .large, square: true, onTapRun: {
@@ -211,6 +215,7 @@ struct TimeDetailView: View {
                                 .frame(width: 35)
                             }
                             .padding(.top, 16)
+                            .padding(.bottom, 4)
                             
                             // END BUTTONS
                             
