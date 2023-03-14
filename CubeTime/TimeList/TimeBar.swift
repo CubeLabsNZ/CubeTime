@@ -136,9 +136,15 @@ struct TimeBar: View {
                     }
                 }
                 .padding(.leading, 12)
+                // Don't even talk to me
+                .onChange(of: solvegroup.solves.debugDescription) { newValue in
+                    NSLog("ONCHANGE")
+                    self.calculatedAverage = getAvgOfSolveGroup(solvegroup)
+                }
                 .task {
+                    let avg = getAvgOfSolveGroup(solvegroup)
                     await MainActor.run {
-                        self.calculatedAverage = getAvgOfSolveGroup(solvegroup)
+                        self.calculatedAverage = avg
                     }
                 }
                 

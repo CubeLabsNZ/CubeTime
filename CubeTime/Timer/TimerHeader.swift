@@ -57,7 +57,7 @@ struct TimerHeader: View {
     let previewMode: Bool
     
     var body: some View {
-        let sess_type = SessionType(rawValue: stopwatchManager.currentSession.sessionType)!
+        let sessionType = SessionType(rawValue: stopwatchManager.currentSession.sessionType)!
         HStack {
             if previewMode {
                 ZStack(alignment: .leading) {
@@ -110,10 +110,10 @@ struct TimerHeader: View {
                 if !showSessionType {
                     Text(stopwatchManager.currentSession.name ?? "Unknown Session Name")
                         .font(.system(size: 17, weight: .medium))
-                        .padding(.trailing, sess_type == .standard ? nil : 4)
+                        .padding(.trailing, sessionType == .standard ? nil : 4)
                 }
                 
-                switch sess_type {
+                switch sessionType {
                 case .playground:
                     // i hate swiftui i hate apple i hate everything
                     if #available(iOS 16, *) {

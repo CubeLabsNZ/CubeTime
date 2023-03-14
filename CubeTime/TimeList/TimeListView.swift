@@ -222,7 +222,7 @@ struct TimeListView: View {
         }
     }
     var body: some View {
-        let sess_type = stopwatchManager.currentSession.sessionType
+        let sessionType = stopwatchManager.currentSession.sessionType
         NavigationView {
             ZStack {
                 Color((UIDevice.deviceIsPad && hSizeClass == .regular) ? "overlay1" : "base")
@@ -335,7 +335,7 @@ struct TimeListView: View {
                                     }
                                     
                                     if stopwatchManager.currentSession.sessionType != SessionType.compsim.rawValue {
-                                        SessionPickerMenu(sessions: sess_type == SessionType.playground.rawValue ? sessionsCanMoveToPlaygroundContextMenu : stopwatchManager.sessionsCanMoveTo) { session in
+                                        SessionPickerMenu(sessions: sessionType == SessionType.playground.rawValue ? sessionsCanMoveToPlaygroundContextMenu : stopwatchManager.sessionsCanMoveTo) { session in
                                             for object in stopwatchManager.timeListSolvesSelected {
                                                 withAnimation(Animation.customDampedSpring) {
                                                     stopwatchManager.moveSolve(solve: object, to: session)

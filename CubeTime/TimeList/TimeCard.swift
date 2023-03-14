@@ -46,7 +46,7 @@ struct TimeCard: View {
     }
     
     var body: some View {
-        let sess_type = stopwatchManager.currentSession.sessionType
+        let sessionType = stopwatchManager.currentSession.sessionType
         ZStack {
             #warning("TODO:  check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectangle")
             RoundedRectangle(cornerRadius: 8, style: .continuous)
@@ -100,8 +100,8 @@ struct TimeCard: View {
                 Label("Penalty", systemImage: "exclamationmark.triangle")
             }
             
-            if sess_type != SessionType.compsim.rawValue {
-                SessionPickerMenu(sessions: sess_type == SessionType.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scrambleType)] : stopwatchManager.sessionsCanMoveTo) { session in
+            if sessionType != SessionType.compsim.rawValue {
+                SessionPickerMenu(sessions: sessionType == SessionType.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scrambleType)] : stopwatchManager.sessionsCanMoveTo) { session in
                     withAnimation(Animation.customDampedSpring) {
                         stopwatchManager.moveSolve(solve: solve, to: session)
                     }

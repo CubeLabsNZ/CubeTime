@@ -61,7 +61,7 @@ struct TimeDetailView: View {
     
     
     var body: some View {
-        let sess_type = stopwatchManager.currentSession.sessionType
+        let sessionType = stopwatchManager.currentSession.sessionType
         
         NavigationView {
             ZStack {
@@ -235,7 +235,7 @@ struct TimeDetailView: View {
                                 .padding(.vertical, 6)
                                 .font(.body.weight(.medium))
                                 
-                                SessionPickerMenu(sessions: sess_type == SessionType.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scrambleType)] : stopwatchManager.sessionsCanMoveTo) { session in
+                                SessionPickerMenu(sessions: sessionType == SessionType.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scrambleType)] : stopwatchManager.sessionsCanMoveTo) { session in
                                     withAnimation(Animation.customDampedSpring) {
                                         stopwatchManager.moveSolve(solve: solve, to: session)
                                     }
