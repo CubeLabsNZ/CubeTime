@@ -263,6 +263,29 @@ struct TimerView: View {
                     .modifier(TimeMaskTextField(text: $manualInputTime))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .ignoresSafeArea()
+                    .onSubmit {
+                        if (!typingMode) {
+                            if manualInputTime != "" {
+                                // record entered time time
+                                timerController.stop(timeFromStr(manualInputTime))
+                                
+                                // remove focus and reset time
+                                showInputField = false
+                                manualInputFocused = false
+                                manualInputTime = ""
+                            }
+                        } else {
+                            timerController.stop(timeFromStr(manualInputTime))
+                            
+                            // remove focus and reset time
+                            manualInputFocused = false
+                            justManuallyInput = true
+                            
+                            stopwatchManager.displayPenOptions()
+                            
+                            showManualInputFormattedText = true
+                        }
+                    }
             }
             
             
