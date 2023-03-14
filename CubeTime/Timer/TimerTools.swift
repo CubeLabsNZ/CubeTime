@@ -244,13 +244,16 @@ struct TimerStatsCompSim: View {
         VStack(spacing: 6) {
             HStack {
                 TimerStatRaw(name: "BPA", value: stopwatchManager.bpa == nil ? nil : formatSolveTime(secs: stopwatchManager.bpa!), placeholderText: "...")
+                    .frame(maxWidth: .infinity)
                 TimerStatRaw(name: "WPA", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!), placeholderText: "...")
+                    .frame(maxWidth: .infinity)
             }
             
             ThemedDivider()
                 .padding(.horizontal, 24)
             
             TimerStatRaw(name: "TO REACH TARGET", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!), placeholderText: "...")
+                .frame(maxWidth: .infinity)
         }
     }
 }
