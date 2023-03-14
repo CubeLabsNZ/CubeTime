@@ -448,14 +448,14 @@ class StopwatchManager: ObservableObject {
                 
                 #warning("scramble lock causes crash here sometimes, can't reproduce consistently")
                 
-                self.solveItem.scramble = time == nil ? self.scrambleController.prevScrambleStr : self.scrambleController.scrambleStr
+                self.solveItem.scramble = self.isScrambleLocked ? self.scrambleController.scrambleStr : (time == nil ? self.scrambleController.prevScrambleStr : self.scrambleController.scrambleStr)
                 self.solveItem.scrambleType = self.currentSession.scrambleType
                 self.solveItem.scrambleSubtype = 0
                 self.solveItem.time = secondsElapsed
                 try! managedObjectContext.save()
                 
-                // Rescramble if from manual input
-                if time != nil {
+                // Rescramble if from manual input1
+                if time != nil && !self.isScrambleLocked {
                     self.scrambleController.rescramble()
                 }
                 
