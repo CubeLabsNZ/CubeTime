@@ -205,6 +205,7 @@ struct TimerView: View {
                             manualInputFocused = false
                             targetFocused = false
                             showInputField = false
+                            manualInputTime = ""
                             
                         case .typing:
                             if (showManualInputFormattedText) {
@@ -458,7 +459,7 @@ struct TimerView: View {
         }
         
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopwatchManager.showDeleteSolveConfirmation, titleVisibility: .visible) {
-            Button("Confirm", role: .destructive) {
+            Button("Delete", role: .destructive) {
                 stopwatchManager.deleteLastSolve()
             }
             Button("Cancel", role: .cancel) { }

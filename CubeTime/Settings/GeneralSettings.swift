@@ -70,7 +70,7 @@ struct GeneralSettingsView: View {
                 }
                 .padding([.horizontal, .top], 10)
                 
-                Group {
+                VStack(alignment: .leading) {
                     HStack {
                         Toggle(isOn: $inspectionTime) {
                             Text("Use Inspection")
@@ -142,7 +142,10 @@ struct GeneralSettingsView: View {
                                 .padding(.horizontal)
                         }
                     }
+
                 }
+                .clipped()
+                
                 
                 
                 ThemedDivider()
