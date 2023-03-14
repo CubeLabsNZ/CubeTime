@@ -69,6 +69,8 @@ class StopwatchManager: ObservableObject {
     // MARK: published variables
     @Published var currentSession: Session! {
         didSet {
+            self.isScrambleLocked = false
+            
             self.targetStr = filteredStrFromTime((currentSession as? CompSimSession)?.target)
             self.phaseCount = Int((currentSession as? MultiphaseSession)?.phaseCount ?? 0)
             
@@ -166,6 +168,7 @@ class StopwatchManager: ObservableObject {
     
 
     @Published var showDeleteSolveConfirmation = false
+    @Published var showUnlockScrambleConfirmation = false
     @Published var showPenOptions = false
     
     @Published var currentSolveth: Int?
@@ -437,6 +440,14 @@ class StopwatchManager: ObservableObject {
                 // .puzzle_id
                 self.solveItem.session = self.currentSession
                 // Use the current scramble if stopped from manual input
+                
+                #if DEBUG
+                print(time, self.scrambleController.prevScrambleStr, self.scrambleController.scrambleStr)
+                #endif
+                
+                
+                #warning("scramble lock causes crash here sometimes, can't reproduce consistently")
+                
                 self.solveItem.scramble = time == nil ? self.scrambleController.prevScrambleStr : self.scrambleController.scrambleStr
                 self.solveItem.scrambleType = self.currentSession.scrambleType
                 self.solveItem.scrambleSubtype = 0
@@ -472,8 +483,12 @@ class StopwatchManager: ObservableObject {
                     askToDelete()
                 case .right:
                     timerController.feedbackStyle?.impactOccurred()
-                    if !timerController.preventStart {
-                        scrambleController.rescramble()
+                    if (self.isScrambleLocked) {
+                        self.showUnlockScrambleConfirmation = true
+                    } else {
+                        if !timerController.preventStart {
+                            scrambleController.rescramble()
+                        }
                     }
                 default: break
                 }

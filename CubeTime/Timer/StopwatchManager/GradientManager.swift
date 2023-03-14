@@ -21,9 +21,7 @@ func getGradient(gradientSelected: Int, isStaticGradient: Bool) -> LinearGradien
 }
 
 func getGradientColours(gradientSelected: Int, isStaticGradient: Bool) -> [Color] {
-    return isStaticGradient
-    ? staticGradient
-    : dynamicGradients[gradientSelected]
+    return isStaticGradient ? staticGradient : dynamicGradients[gradientSelected]
 }
 
 let dynamicGradients: [[Color]] = [

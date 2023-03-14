@@ -17,7 +17,6 @@
 	</array>
 	<key>UIAppFonts</key>
 	<array>
-		<string>RecursiveSansLnrSt-Regular.ttf</string>
 		<string>RecMonoVariable.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>

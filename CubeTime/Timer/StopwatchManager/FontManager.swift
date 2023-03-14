@@ -82,7 +82,7 @@ extension View {
         modifier(RecursiveMono(fontSize: fontSize, weight: weight))
     }
     
-    func recursiveMono(fontSize: CGFloat, weight: Font.Weight) -> some View {
+    func recursiveMono(fontSize: CGFloat, weight: Font.Weight=Font.Weight.regular) -> some View {
         switch (weight) {
         case .regular:
             return modifier(RecursiveMono(fontSize: fontSize, weight: 400))

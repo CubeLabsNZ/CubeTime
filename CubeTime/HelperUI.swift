@@ -126,7 +126,7 @@ extension Animation {
     static let customSlowSpring: Animation = .spring(response: 0.45, dampingFraction: 0.76)
     
     static let customDampedSpring: Animation = .spring(response: 0.3, dampingFraction: 0.82)
-    static let customBouncySpring: Animation = .spring(response: 0.45, dampingFraction: 0.64)
+    static let customBouncySpring: Animation = .spring(response: 0.42, dampingFraction: 0.66)
     
     static let customFastEaseOut: Animation = .easeOut(duration: 0.28)
     static let customEaseInOut: Animation = .easeInOut(duration: 0.26)

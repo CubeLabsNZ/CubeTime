@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		23034729278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
-		2303472A278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
-		2303472B278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */; };
 		231827E729B5E86B00A40C78 /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231827E629B5E86B00A40C78 /* FloatingPanel.swift */; };
 		2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2319F8B8276872F200644EB3 /* TimeTrend.swift */; };
 		231B2E2E29BDECF9007E5DC2 /* HelperButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */; };
@@ -117,7 +114,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RecursiveSansLnrSt-Regular.ttf"; sourceTree = "<group>"; };
 		231827E629B5E86B00A40C78 /* FloatingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FloatingPanel.swift; path = CubeTime/Tabs/FloatingPanel.swift; sourceTree = SOURCE_ROOT; };
 		2319F8B8276872F200644EB3 /* TimeTrend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrend.swift; sourceTree = "<group>"; };
 		231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperButtons.swift; sourceTree = "<group>"; };
@@ -229,7 +225,6 @@
 			isa = PBXGroup;
 			children = (
 				AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */,
-				23034728278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -566,7 +561,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				23DE3BE2274DDBE300254D29 /* Preview Assets.xcassets in Resources */,
-				23034729278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */,
 				23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */,
 				23AB648C293867EA0049993B /* 12sec-audio.wav in Resources */,
 				23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */,
@@ -580,7 +574,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF7697DF293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */,
-				2303472A278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -589,7 +582,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF7697E0293C5A9D00FF1C50 /* RecMonoVariable.ttf in Resources */,
-				2303472B278C32CC00553A7D /* RecursiveSansLnrSt-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

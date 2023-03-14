@@ -16,76 +16,38 @@ struct TimerTime: View {
     @EnvironmentObject var fontManager: FontManager
     @EnvironmentObject var timerController: TimerContoller
     @Environment(\.horizontalSizeClass) private var hSizeClass
-    @Environment(\.colorScheme) var colourScheme
-    
-    @inlinable func getTimerColor() -> Color {
-#warning("move this to timer controller?")
-        if timerController.mode == .inspecting && colourScheme == .dark && timerController.timerColour == Color.Timer.normal {
-            switch timerController.inspectionSecs {
-            case ..<8: return Color.Timer.normal
-            case 8..<12: return Color("yellow")
-            case 12..<15: return Color("orange")
-            default: return Color("red")
-            }
-        } else {
-            return timerController.timerColour
-        }
-    }
     
     var body: some View {
         let fontSize: CGFloat = (UIDevice.deviceIsPad && hSizeClass == .regular)
             ? timerController.mode == .running ? 88 : 66
             : timerController.mode == .running ? 70 : 56
-#warning("move this to timer controller?")
-        Text(timerController.secondsStr
-             + (timerController.mode == .inspecting
-                ? ((timerController.inspectionSecs >= 17
-                    ? "(DNF)"
-                    : (timerController.inspectionSecs >= 15
-                       ? "(+2)"
-                       : "")))
-                : ""))
-        .modifier(DynamicText())
-        // for smaller phones (iPhoneSE and test sim), disable animation to larger text
-        // to prevent text clipping and other UI problems
-        .ifelse (stopwatchManager.isSmallDevice) { view in
-            return view
-                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 54, nil)))
-        } elseDo: { view in
-            return view
-//                .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 70, nil)))
-                .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: fontSize))
-//                .scaleEffect(scale)
+        
+        HStack{
+            Text(timerController.secondsStr)
+                .modifier(DynamicText())
+                // for smaller phones (iPhoneSE and test sim), disable animation to larger text
+                // to prevent text clipping and other UI problems
+                .ifelse (stopwatchManager.isSmallDevice) { view in
+                    return view
+                        .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 54, nil)))
+                } elseDo: { view in
+                    return view
+                        .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: fontSize))
+                }
+            
+            Group {
+                if (timerController.mode == .inspecting) {
+                    if (15..<17 ~= timerController.inspectionSecs) {
+                        Text("[+2]")
+                    } else if (timerController.inspectionSecs >= 17) {
+                        Text("[DNF]")
+                    }
+                }
+            }
+            .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: fontSize - 32))
         }
         .animation(Animation.customBouncySpring, value: timerController.mode == .running)
-        .foregroundColor(getTimerColor())
-    }
-}
-
-
-struct TimerBackgroundColor: View {
-    @EnvironmentObject var stopwatchManager: StopwatchManager
-    @EnvironmentObject var timerController: TimerContoller
-    
-    @Environment(\.colorScheme) var colourScheme
-    
-    var body: some View {
-        if timerController.mode == .inspecting && colourScheme == .light {
-            switch timerController.inspectionSecs {
-            case 8..<12:
-                Color.Inspection.eight
-                
-            case 12..<15:
-                Color.Inspection.twelve
-                
-            case let x where x >= 15:
-                Color.Inspection.penalty
-            default:
-                Color("base")
-            }
-        } else {
-            Color("base")
-        }
+        .foregroundColor(timerController.timerColour)
     }
 }
 
@@ -127,7 +89,11 @@ struct ScrambleText: View {
         Text(scr)
             .padding(4)
             
-            .background(TimerBackgroundColor())
+            .background(Color("base"))
+            .font(fontManager.ctFontScramble)
+            .fixedSize(horizontal: mega, vertical: false)
+            .multilineTextAlignment(mega ? .leading : .center)
+            
             .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 4, style: .continuous))
             .contextMenu {
                 if let scrambleString = scrambleController.scrambleStr {
@@ -152,10 +118,6 @@ struct ScrambleText: View {
                     }
                 }
             }
-            .font(fontManager.ctFontScramble)
-            .fixedSize(horizontal: mega, vertical: false)
-            .multilineTextAlignment(mega ? .leading : .center)
-            
             
         
             .if(mega) { view in
@@ -231,7 +193,7 @@ struct TimerView: View {
         let typingMode = inputMode == .typing && stopwatchManager.currentSession.sessionType != SessionType.multiphase.rawValue
         
         GeometryReader { geo in
-            TimerBackgroundColor()
+            Color("base")
                 .ignoresSafeArea()
             
             
@@ -354,6 +316,9 @@ struct TimerView: View {
                                 .font(.system(size: 17, weight: .medium, design: .default))
                                 .imageScale(.medium)
                                 .frame(width: 35, height: 35, alignment: .center)
+                                .onTapGesture {
+                                    stopwatchManager.showUnlockScrambleConfirmation = true
+                                }
                         } else {
                             LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
                                 .frame(maxHeight: 35)
@@ -392,7 +357,9 @@ struct TimerView: View {
                     
                     PenaltyBar {
                         HStack(spacing: 12) {
-                            if (stopwatchManager.solveItem != nil && !manualInputFocused && showManualInputFormattedText) {
+                            let _ = NSLog("\(showManualInputFormattedText)")
+                            
+                            if (stopwatchManager.solveItem != nil && !manualInputFocused && (inputMode == .typing ? showManualInputFormattedText : true)) {
                                 PenaltyButton(penType: .plustwo, penSymbol: "+2", imageSymbol: true, canType: false, colour: Color("orange"))
                                 
                                 PenaltyButton(penType: .dnf, penSymbol: "xmark.circle", imageSymbol: false, canType: false, colour: Color("red"))
@@ -476,6 +443,19 @@ struct TimerView: View {
             
             
         }
+        .confirmationDialog("Unlock scramble?", isPresented: $stopwatchManager.showUnlockScrambleConfirmation, titleVisibility: .visible) {
+            Button("Unlock!") {
+                print(scrambleController.scrambleStr)
+                stopwatchManager.isScrambleLocked = false
+                scrambleController.rescramble()
+                print(scrambleController.scrambleStr)
+            }
+            
+            Button("Cancel", role: .cancel) {
+                print(scrambleController.scrambleStr)
+            }
+        }
+        
         .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopwatchManager.showDeleteSolveConfirmation, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
                 stopwatchManager.deleteLastSolve()

@@ -132,8 +132,8 @@ struct StatsDetailView: View {
                     .padding(.top)
                     
                     Text("CubeTime.")
-                        .recursiveMono(fontSize: 13, weight: .regular)
-                        .foregroundColor(Color("indent0"))
+                        .recursiveMono(fontSize: 13)
+                        .foregroundColor(Color("indent1"))
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .padding(.vertical, -4)
                     

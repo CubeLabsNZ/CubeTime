@@ -178,8 +178,8 @@ struct TimeDetailView: View {
                                 Spacer()
                                 
                                 Text("CubeTime.")
-                                    .recursiveMono(fontSize: 13, weight: .regular)
-                                    .foregroundColor(Color("indent0"))
+                                    .recursiveMono(fontSize: 13)
+                                    .foregroundColor(Color("indent1"))
                             }
                             .padding(.vertical, -4)
 

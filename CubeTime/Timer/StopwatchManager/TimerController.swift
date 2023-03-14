@@ -57,7 +57,25 @@ class TimerContoller: ObservableObject {
     
         
     @Published var secondsStr = formatSolveTime(secs: 0)
-    @Published var inspectionSecs = 0
+    
+    @Published var inspectionSecs = 0 {
+        didSet {
+            if (timerColour != Color.Timer.canStart) {
+                switch (self.inspectionSecs) {
+                    case ..<8:
+                        self.timerColour = Color.Timer.normal
+                    case 8..<12:
+                        self.timerColour = Color("yellow")
+                    case 12..<15:
+                        self.timerColour = Color("orange")
+                    default:
+                        self.timerColour = Color("red")
+                }
+            }
+        }
+    }
+    
+    
     @Published var mode: TimerState = .stopped {
         didSet {
             onModeChange?(mode)

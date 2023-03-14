@@ -12,7 +12,7 @@ struct TimerOnlyTool: View {
     
     var body: some View {
         ZStack {
-            TimerBackgroundColor()
+            Color("base")
                 .ignoresSafeArea(.all)
             
             TimerTouchView()

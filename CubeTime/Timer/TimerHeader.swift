@@ -184,7 +184,6 @@ struct TimerHeader: View {
                                 .padding(.trailing, 4)
                         }
                         .padding(.leading, 2)
-                        .padding(.trailing, 12)
                     }
                     .foregroundColor(Color("accent"))
                 default:
