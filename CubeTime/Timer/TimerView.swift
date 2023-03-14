@@ -233,6 +233,7 @@ struct TimerView: View {
             if !((typingMode || showInputField) && !showManualInputFormattedText) {
                 VStack(alignment: .center, spacing: 0) {
                     TimerTime()
+                        .padding(.horizontal)
                         .modifier(AvoidFloatingPanel())
                         .allowsHitTesting(false)
                     

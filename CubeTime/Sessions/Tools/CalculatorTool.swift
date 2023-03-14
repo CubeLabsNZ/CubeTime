@@ -233,6 +233,9 @@ struct CalculatorTool: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
+            .navigationTitle("")
+            .navigationBarHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
             .ignoresSafeArea(.keyboard)
         }
         .ignoresSafeArea(.keyboard)

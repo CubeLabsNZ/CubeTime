@@ -22,8 +22,6 @@ struct StatsView: View {
     
     
     @ScaledMetric var blockGraphEmpty = 150
-    @ScaledMetric var blockGraphTimeTrend = 310
-    @ScaledMetric var blockGraphTimeDistribution = 300
     
     
     @ScaledMetric(relativeTo: .body) var monospacedFontSizeBody: CGFloat = 17
@@ -340,7 +338,7 @@ struct StatsView: View {
                                 
                                 
                                 #warning("TODO: add settings customisation to choose how many solves to show")
-                                StatsBlock(title: "TIME TREND", blockHeight: (timeTrendData.count < 2 ? blockGraphEmpty : blockGraphTimeTrend), isBigBlock: true) {
+                                StatsBlock(title: "TIME TREND", blockHeight: (timeTrendData.count < 2 ? blockGraphEmpty : 310), isBigBlock: true) {
                                     TimeTrend(data: Array(timeTrendData.prefix(80)), title: nil)
                                         .drawingGroup()
                                 }
@@ -350,10 +348,10 @@ struct StatsView: View {
 //                                }
                                  
                                 
-                                StatsBlock(title: "TIME DISTRIBUTION", blockHeight: (timeDistributionData.count < 4 ? blockGraphEmpty : blockGraphTimeDistribution), isBigBlock: true) {
+                                StatsBlock(title: "TIME DISTRIBUTION", blockHeight: (timeDistributionData.count < 4 ? blockGraphEmpty : 300), isBigBlock: true) {
                                     TimeDistribution(solves: timeDistributionData)
                                         .drawingGroup()
-                                        .frame(height: timeDistributionData.count < 4 ? blockGraphEmpty : blockGraphTimeDistribution)
+                                        .frame(height: timeDistributionData.count < 4 ? blockGraphEmpty : 300)
                                 }
                             }
                             .frame(minWidth: 0, maxWidth: .infinity)

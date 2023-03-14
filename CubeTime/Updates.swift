@@ -7,97 +7,122 @@
 
 import SwiftUI
 
-// [bugFixes, majorAdditions, minorAdditions]
-let updatesList: [String: [String?]] = [
-    "2.0": [
-        """
-        -   fixed stretched scramble image on smaller devices
-        -   fixed time distribution graph labels
-        -   fixed multiphase stats UI
-        """,
-        """
-        -   fresh new UI design
-        -   dynamic type support!
-            -   all major UI elements now conform to Apple's DynamicType accessbility font sizes
-            -   this is the first version, if you do notice anything out of place, please open an issue and tag it with 'DynamicType' on our Github page. Thanks!
-        –   changed tnoodle compatibility layer
-            –   30x faster scramble generation
-            –   20x less memory usage
-                –   fixes OOM crashes on older phones
-                    –   fixes launch crash on iPod 7th Gen
-        –   added manual entry mode
-            –   you can switch to entering times by typing instead of a timer in General Settings > Timer Settings > Timer Mode > Typing
-        -   added rotations added for blind scrambles
-        –   using WCA-complient random state 4x4 scrambles
-        -   iPad Mode!
-        -   New stats engline
-            -   much faster stats
-                -   overall smoother UI
-        """,
-        """
-        -   move solves between session
-        –   using more modern SVG renderer, faster draw scrambles
-        –   more solve selection functions:
-            –   copy multiple solves
-            -   add penalty to multiple solves
-        –   show +2 and DNF time in brackets
-        –   swapped around delete and copy button in individual solve cards
-        –   added ability to delete currently selected session
-        -   added multiphase details to solve copy
-        -   improved various timing-related functions
-        -   added ability to stop inspection
-        -   improved user accessibility
-        –   added inspection alerts
-        –   added ability to switch between voice based or beep based alerts
-        –   added ability to toggle session name in timer view
-        """
-    ],
-    "1.2.1": [
-        """
-        -   fixed multiphase solve deletion crash
-        -   added graph animation toggle
-        -   made solve pop up and time detail more resilient
-        -   fixed stats and settings page animation bug
-        -   increased penalty button area
-        -   sort averages by date and not speed
-        -   fixed lag on TimerView
-        -   fixed target input crash
-        -   fixed print spamming
-        -   fixed various comp sim bugs
-            -   fixed current average skipping after solve deletion
-            -   fixed comp sim calculation bugs
-            -   fixed assertionFailure from saving session > 5 solves
-            -   fixed current solve counter not updating
-        -   greatly improved timer speed and responsiveness
-        """,
-        nil,
-        """
-        -   added changable font size in scramble/image popup
-        """
-    ],
-    "1.2": [
-        nil,
-        """
-        -   we're now using official TNoodle scrambles! This means:
-            -   no more weird or incorrect scrambles
-            -   all WCA compliant and random state
-            -   we've added draw scramble functionality
-        -   we've prevented sleep on the timer screen
-        -   many accessibility oriented changes:
-            -   added placeholder text in the comment field
-            -   option to turn off graph glow
-            -   ability to change scramble size (and tap scramble to view full screen)
-        -   added bpa/wpa, target needed for x calculations for comp sim
-        -   added stats and draw scramble to the timer view
-        -   scrambles are copied when you copy averages
-        -   ability to penalise/delete solves in current comp sim average
-        -   added backwards counting inspection
-        -   lowered minimum hold down time to 0.05s
-        -   added a launch screen!
-        """,
-        nil,
-    ],
 
+struct ListPoint: Equatable, Hashable {
+    let depth: Int
+    let text: String
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(depth)
+        hasher.combine(text)
+    }
+    
+    init(_ depth: Int, _ text: String) {
+        self.depth = depth
+        self.text = text
+    }
+    
+    static func == (lhs: ListPoint, rhs: ListPoint) -> Bool {
+        return lhs.depth == rhs.depth && lhs.text == rhs.text
+    }
+}
+
+struct ListLine: View {
+    let depth: Int
+    let text: LocalizedStringKey
+    
+    init(_ depth: Int = 1, _ text: LocalizedStringKey) {
+        self.depth = depth
+        self.text = text
+    }
+    
+    var body: some View {
+        HStack(alignment: .top, spacing: 8) {
+            Text("–")
+                .recursiveMono(fontSize: 17, weight: .medium)
+            
+            Text(text)
+        }
+        .padding(.leading, CGFloat(20 * (depth-1)))
+    }
+}
+
+let updatesList: [String: (majorAdditions: [ListPoint]?,
+                           minorAdditions: [ListPoint]?,
+                           bugFixes: [ListPoint]?)] = [
+    "2.0": (
+        majorAdditions: [
+        ListPoint(1, "**Fresh new UI design**"),
+            ListPoint(2, "TONS of UI fixes throughout the app"),
+            ListPoint(2, "improved design consistency"),
+        ListPoint(1 , "**Dynamic type support!**"),
+            ListPoint(2, "all major UI elements now conform to Apple's DynamicType accessbility font sizes"),
+            ListPoint(2, "this is the first version, if you do notice anything out of place, please open an issue and tag it with 'DynamicType' on our Github page."),
+        ListPoint(1, "**Changed tnoodle compatibility layer**"),
+            ListPoint(2, "**30x faster scramble generation**"),
+            ListPoint(2, "**20x less memory usage**"),
+                ListPoint(3, "fixes OOM crashes on older phones"),
+                ListPoint(3, "fixes launch crash on iPod 7th Gen"),
+        ListPoint(1, "**Improved stats engine**"),
+            ListPoint(2, "over 100x faster speeds"),
+        ListPoint(1, "**iPad Mode is here!**"),
+            ListPoint(2, "iPad mode supports many keyboard shortcuts, along with **trackpad gestures**"),
+                ListPoint(3, "you can two-finger swipe on your trackpad, just like using a finger"),
+            ListPoint(2, "new design with a floating panel"),
+            ListPoint(2, "to see your times, drag down on the panel handle"),
+        ListPoint(1, "**Added tools!**"),
+            ListPoint(2, "scramble generator: batch generate multiple scrambles to use or share"),
+            ListPoint(2, "timer and scramble only mode: for use at comps"),
+            ListPoint(2, "average calculator: to quickly calculate averages!"),
+        ListPoint(1, "**Added voice alerts for inspection**"),
+        ListPoint(1, "Added manual entry mode"),
+            ListPoint(2, "you can switch to entering times by typing instead of a timer in General Settings > Timer Settings > Timer Mode > Typing"),
+        ListPoint(1, "Quick actions!"),
+            ListPoint(2, "long press on icon to quickly go to your recently used sessions"),
+        ListPoint(1, "Cleaned up to make the app run smoother!"),
+            ListPoint(2, "we've written over 20,000 lines of code for this update!")],
+        
+        minorAdditions: [
+        ListPoint(1, "added rotations added for blind scrambles"),
+        ListPoint(1, "using WCA-complient random state 4x4 scrambles"),
+        ListPoint(1, "new dynamic gradient option that changes the gradient throughout the day"),
+        ListPoint(1, "added share sheets to share your times or averages"),
+        ListPoint(1, "added copy scramble on timer screen"),
+        ListPoint(1, "added lock scramble feature"),
+            ListPoint(2, "long press on the scramble text to bring up a menu, where you can lock or unlock the current scramble"),
+        ListPoint(1, "move solves between session"),
+        ListPoint(1, "using more modern SVG renderer, faster draw scrambles"),
+        ListPoint(1, "more solve selection functions:"),
+            ListPoint(2, "copy multiple solves"),
+            ListPoint(2, "add penalty to multiple solves"),
+        ListPoint(1, "show +2 and DNF time in brackets"),
+        ListPoint(1, "swapped around delete and copy button in individual solve cards"),
+        ListPoint(1, "added ability to delete currently selected session"),
+        ListPoint(1, "added multiphase details to solve copy"),
+        ListPoint(1, "improved various timing-related functions"),
+        ListPoint(1, "added ability to stop inspection"),
+        ListPoint(1, "improved user accessibility"),
+        ListPoint(1, "added inspection alerts"),
+        ListPoint(1, "added voice inspection"),
+        ListPoint(1, "added ability to cancel inspection"),
+        ListPoint(1, "added ability to switch between voice based or beep based alerts"),
+        ListPoint(1, "added ability to toggle session name in timer view"),
+        ListPoint(1, "batch select solves to penalty"),
+        ListPoint(1, "batch select solves to change sessions"),
+        ListPoint(1, "added ability to clear all solves in a session"),
+        ListPoint(1, "added many more filter options, such as filtering solves with comments, with penalties, and more"),
+        ListPoint(1, "time trend now only displays last 80 solves"),
+            ListPoint(2, "an interactive time trend is coming in the next update"),
+        ListPoint(1, "added multiphase graph to individual time details"),
+        ListPoint(1, "added fully customisable fonts for timer and scramble")],
+        bugFixes: [
+        ListPoint(1, "fixed stretched scramble image on smaller devices"),
+        ListPoint(1, "fixed time distribution graph labels"),
+        ListPoint(1, "fixed multiphase stats UI"),
+        ListPoint(1, "fixed many UI bugs with context menus and more"),
+        ListPoint(1, "fixed stats crashing"),
+        ListPoint(1, "fixed stats tools not updating when deleting solve")]
+    )
 ]
 
 
@@ -115,25 +140,10 @@ struct Updates: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     Group {
+                        Update(update: updatesList["2.0"]!)
                         
-//                        Text("A quick apology: sorry for the lack of updates - we're just two high school students and we've had a very busy school term! \n")
-//                            .font(.title3).fontWeight(.medium)
-                        
-                        Update(currentVersion)
-                        
-                        Text("Again, thanks for using this app! As this app is still in it's beta stage, you may experience some slight bugs and crashes. In the event that the app does crash – please please please message me on discord (tim#0911) or open an issue on our github page (https://github.com/CubeStuffs/CubeTime/issues).")
+                        Text("Again, thanks for using this app! If anything goes wrong, like if the app crashes, please message me on discord (tim#0911) or open an issue on our github page (https://github.com/CubeStuffs/CubeTime/issues).")
                             .font(.body).fontWeight(.medium)
-                    }
-                    
-                    Group {
-                        Text("Past Updates:")
-                            .font(.title).fontWeight(.bold)
-                            .padding(.top)
-                            .padding(.bottom, 6)
-                        
-                        Update("1.2.1")
-                        
-                        Update("1.2")
                     }
                     
                     Spacer()
@@ -142,12 +152,11 @@ struct Updates: View {
             }
             .navigationBarTitle("What's New!")
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
                     CloseButton {
                         dismiss()
                         showUpdates = false
                     }
-                    .padding([.top, .trailing])
                 }
             }
         }
@@ -156,59 +165,61 @@ struct Updates: View {
 
 
 struct Update: View {
-    var version: String
-    var bugFixes: String?
-    var majorAdditions: String?
-    var minorAdditions: String?
+    var majorAdditions: [ListPoint]?
+    var minorAdditions: [ListPoint]?
+    var bugFixes: [ListPoint]?
     
-    init(_ version: String) {
-        self.version = version
-        if let updateText = updatesList[version] {
-            self.bugFixes = updateText[0]
-            self.majorAdditions = updateText[1]
-            self.minorAdditions = updateText[2]
-        } else {
-            self.bugFixes = nil
-            self.majorAdditions = nil
-            self.minorAdditions = nil
-        }
+    init(update: (majorAdditions: [ListPoint]?,
+          minorAdditions: [ListPoint]?,
+          bugFixes: [ListPoint]?)) {
+        self.majorAdditions = update.majorAdditions
+        self.minorAdditions = update.minorAdditions
+        self.bugFixes = update.bugFixes
     }
-    
-    
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("v\(version)")
-                .foregroundColor(Color("grey"))
-                .font(.subheadline).fontWeight(.medium)
-            
-            if let bugFixes = bugFixes {
-                Text("Bug Fixes: ")
-                    .font(.body).fontWeight(.medium)
-                
-                Text(bugFixes)
-                    .font(.subheadline)
-                    .padding(.bottom)
-            }
-            
-        
+            Text("v2.0 is here!!")
+                .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
+                .recursiveMono(fontSize: 21, weight: .semibold)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.vertical, 12)
             
             if let majorAdditions = majorAdditions {
                 Text("Major Additions: ")
-                    .font(.body).fontWeight(.medium)
+                    .font(.title3).fontWeight(.semibold)
                 
-                Text(majorAdditions)
-                    .font(.subheadline)
-                    .padding(.bottom)
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(majorAdditions, id: \.self) { point in
+                        ListLine(point.depth, .init(stringLiteral: point.text))
+                    }
+                }
+                .padding(.bottom)
             }
-        
+                
             if let minorAdditions = minorAdditions {
                 Text("Minor Additions: ")
-                    .font(.body).fontWeight(.medium)
+                    .font(.title3).fontWeight(.semibold)
                 
-                Text(minorAdditions)
-                    .font(.subheadline)
-                    .padding(.bottom)
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(minorAdditions, id: \.self) { point in
+                        ListLine(point.depth, .init(stringLiteral: point.text))
+                    }
+                }
+                .padding(.bottom)
+            }
+                
+            if let bugFixes = bugFixes {
+                Text("Bug Fixes: ")
+                    .font(.title3).fontWeight(.semibold)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(bugFixes, id: \.self) { point in
+                        ListLine(point.depth, .init(stringLiteral: point.text))
+                    }
+                }
+                .padding(.bottom)
+                .font(.callout)
             }
         }
         .padding(.bottom)

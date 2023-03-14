@@ -145,6 +145,7 @@ struct StatsDetailView: View {
                         ShareButton(toShare: shareStr, buttonText: "Share Average")
                     }
                     .padding(.top, 16)
+                    .padding(.bottom, 4)
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text("TIMES")

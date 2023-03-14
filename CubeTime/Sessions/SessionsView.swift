@@ -57,7 +57,7 @@ struct SessionsView: View {
                     }
                     .padding(.horizontal)
                 }
-                .navigationTitle("Your Sessions")
+                .navigationTitle("Sessions")
                 .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
                 .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
                     view.toolbar {

@@ -278,7 +278,7 @@ struct TimeListView: View {
                         }
                     }
                 }
-                .navigationTitle(isSelectMode ? "Select Solves" : "Session Times")
+                .navigationTitle(isSelectMode ? "Select Solves" : "Times")
                 .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {

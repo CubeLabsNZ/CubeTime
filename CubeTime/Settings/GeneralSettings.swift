@@ -433,8 +433,12 @@ struct GeneralSettingsView: View {
                         
                     }
                     
+                    
                 }
                 .padding(.horizontal)
+                .padding(.bottom, UIDevice.deviceIsPad ? 0 : 12)
+                
+                
                 if UIDevice.deviceIsPad {
                     VStack(alignment: .leading, spacing: 0) {
                         Text("Trackpad Gesture Activation Distance")
