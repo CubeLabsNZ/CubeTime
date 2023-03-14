@@ -500,7 +500,7 @@ struct GeneralSettingsView: View {
             .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
         }
         .padding(.horizontal)
-        
+        .animation(Animation.customSlowSpring, value: inspectionTime)
     }
 }
 
