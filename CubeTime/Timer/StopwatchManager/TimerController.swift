@@ -326,6 +326,7 @@ class TimerContoller: ObservableObject {
     func lap() {
         currentMPCount += 1
         phaseTimes.append(-timerStartTime!.timeIntervalSinceNow)
+        feedbackStyle?.impactOccurred(intensity: 0.5)
         print("lapped")
     }
 }
