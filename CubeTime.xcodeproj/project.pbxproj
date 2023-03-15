@@ -310,8 +310,8 @@
 				23E5643029AB4DBA00C910D6 /* getBestAverage.c++ */,
 				23783DA429AB55750036FE2B /* getBestAverage.h++ */,
 				2359689227A367A0003ED9E1 /* StopwatchManager.swift */,
-				23CA8A0929AAFA75006676BF /* StopwatchManager+PenaltyController.swift */,
 				23CA8A0729AAF96C006676BF /* StopwatchManager+Stats.swift */,
+				23CA8A0929AAFA75006676BF /* StopwatchManager+PenaltyController.swift */,
 				23CA8A0B29AAFABD006676BF /* ScrambleController.swift */,
 				AF8874C229AB0BE7001E49D0 /* TimerController.swift */,
 				AF81757629B07712004838B9 /* FontManager.swift */,
@@ -345,6 +345,7 @@
 		23DE3BD9274DDBE200254D29 /* CubeTime */ = {
 			isa = PBXGroup;
 			children = (
+				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				2354882227642E2800FE8D7A /* Info.plist */,
 				23AB6488293867CB0049993B /* Ext */,
 				23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */,
@@ -356,7 +357,6 @@
 				2377418729A9A05A00A4F917 /* HelperUI.swift */,
 				231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */,
 				23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */,
-				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */,
 				7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */,
 				23A73F5D276B0AC800153748 /* Tabs */,

@@ -26,9 +26,9 @@
 	<array>
 		<dict>
 			<key>UIApplicationShortcutItemIconFile</key>
-			<string>qa-sessions</string>
+			<string>quickActionIcon</string>
 			<key>UIApplicationShortcutItemTitle</key>
-			<string>All sessions</string>
+			<string>Sessions</string>
 			<key>UIApplicationShortcutItemType</key>
 			<string>com.cubetime.cubetime.allsessions</string>
 		</dict>

@@ -135,7 +135,9 @@ struct AboutSettingsView: View {
             }
             
             Text("\nThis project is made possible by [speedcube.co.nz](https://www.speedcube.co.nz/).")
+                .fixedSize(horizontal: false, vertical: true)
             Text("\nSupport us directly by donating on Ko-Fi:")
+                .fixedSize(horizontal: false, vertical: true)
             
             Button {
                 guard let kofiLink = URL(string: "https://ko-fi.com/cubetime"),
