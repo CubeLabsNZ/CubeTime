@@ -110,27 +110,34 @@ struct AboutSettingsView: View {
                 
                 VStack(alignment: .leading, spacing: 0) {
                     Text("CubeTime.")
-                        .font(.custom("RecursiveSansLnrSt-Regular", size: 30))
+                        .recursiveMono(fontSize: 28)
+                        .foregroundColor(Color("dark"))
                     
                     Text("v" + versionString)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundColor(Color("grey"))
+                        .recursiveMono(fontSize: 15, weight: .semibold)
+                        .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
                 }
             }
             .frame(height: iconSize)
             .padding(.bottom, 12)
             
+            #if DEBUG
+            Text("DEBUG BUILD").font(.system(size: 20, weight: .black, design: .monospaced))
+            #endif
+            
             
             Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\n\nClick below for more info on source licenses and our privacy policy:")
                 .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
                             
             Button("Open licenses") {
                 showLicenses = true
             }
             
-            Text("\nThis project is made possible by [speedcube.co.nz](https://www.speedcube.co.nz/).\nShow some support by buying your cubes from them!\n")
-            
-            Text("or support us directly by donating on Ko-Fi:")
+            Text("\nThis project is made possible by [speedcube.co.nz](https://www.speedcube.co.nz/).")
+                .fixedSize(horizontal: false, vertical: true)
+            Text("\nSupport us directly by donating on Ko-Fi:")
+                .fixedSize(horizontal: false, vertical: true)
             
             Button {
                 guard let kofiLink = URL(string: "https://ko-fi.com/cubetime"),
@@ -148,17 +155,21 @@ struct AboutSettingsView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: parentGeo.size.width * 0.618)
+                        .frame(maxHeight: 40)
                     
                     Spacer()
                 }
             }
             
             Text("\nIf you run into any issues, please visit our GitHub page and submit an issue. \nhttps://github.com/CubeStuffs/CubeTime/issues")
+                .fixedSize(horizontal: false, vertical: true)
             
+            #if false
             Text("\nIf you need a refresher on the primary features, you can see the welcome page again.")
             Button("Show welcome page") {
                 showOnboarding = true
             }
+            #endif
         }
         .padding(.horizontal)
         .sheet(isPresented: $showLicenses) {

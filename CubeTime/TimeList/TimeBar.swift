@@ -22,6 +22,8 @@ struct TimeBar: View {
     
     @State var isSelected = false
     
+    @ScaledMetric(wrappedValue: 17, relativeTo: .body) private var attributedStringSize: CGFloat
+    
     let current: Bool
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
@@ -36,15 +38,9 @@ struct TimeBar: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(isSelected ? Color(uiColor: UIColor(red: 216/255, green: 218/255, blue: 225/255, alpha: 1.0)) : colourScheme == .dark ? Color(uiColor: .systemGray6) : Color(uiColor: .systemBackground))
-                
+                .fill(Color("overlay0"))
                 .onTapGesture {
-                    if isSelectMode {
-                        
-                    } else if solvegroup.solves!.count < 5 {
-                        // Current average
-//                        currentCalculatedAverage = CalculatedAverage(name: "Current Average", average: nil, accountedSolves: (solvegroup.solves!.array as! [Solves]), totalPen: .none, trimmedSolves: [])
-                    } else {
+                    if solvegroup.solves!.count == 5 {
                         currentCalculatedAverage = calculatedAverage
                     }
                 }
@@ -66,15 +62,16 @@ struct TimeBar: View {
                         let displayText: NSMutableAttributedString = {
                             let finalStr = NSMutableAttributedString(string: "")
                             
-                            let grey: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.systemGray, .font: UIFont.systemFont(ofSize: 17, weight: .medium)]
-                            let normal: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 17, weight: .medium)]
+                            let grey: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.systemGray, .font: UIFont.systemFont(ofSize: attributedStringSize, weight: .medium)]
+                            let normal: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: attributedStringSize, weight: .medium)]
                           
                             if let ar = solvegroup.solves {
-                                for (index, solve) in Array((ar.array as! [Solves]).enumerated()) {
+                                // CSTODO
+                                for (index, solve) in Array((ar.allObjects as! [Solve]).enumerated()) {
                                     if calculatedAverage.trimmedSolves!.contains(solve) {
-                                        finalStr.append(NSMutableAttributedString(string: "(" + formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)) + ")", attributes: grey))
+                                        finalStr.append(NSMutableAttributedString(string: "(" + formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)) + ")", attributes: grey))
                                     } else {
-                                        finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)), attributes: normal))
+                                        finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)), attributes: normal))
                                     }
                                     if index < solvegroup.solves!.count-1 {
                                         finalStr.append(NSMutableAttributedString(string: ", "))
@@ -103,17 +100,13 @@ struct TimeBar: View {
                             let displayText: NSMutableAttributedString = {
                                 let finalStr = NSMutableAttributedString(string: "")
                                 
-//                                let normal: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 17, weight: .medium)]
-                                
-//                                let normal: [NSAttributedString.Key: Any] = [.font: UIFontMetrics.default.scaledFont(for: UIFont.preferredFont(forTextStyle: .body))]
-                                
                                 let normal: [NSAttributedString.Key: Any] = [
                                     .font: UIFont.preferredFont(forTextStyle: .body),
                                 ]
                                 
-                                
-                                for (index, solve) in Array((solvegroup.solves!.array as! [Solves]).enumerated()) {
-                                    finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)), attributes: normal))
+                                // CSTODO
+                                for (index, solve) in Array((solvegroup.solves!.allObjects as! [Solve]).enumerated()) {
+                                    finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)), attributes: normal))
                                     
                                     if index < solvegroup.solves!.count - 1 {
                                         finalStr.append(NSMutableAttributedString(string: ", "))
@@ -144,9 +137,15 @@ struct TimeBar: View {
                     }
                 }
                 .padding(.leading, 12)
+                // Don't even talk to me
+                .onChange(of: solvegroup.solves.debugDescription) { newValue in
+                    NSLog("ONCHANGE")
+                    self.calculatedAverage = getAvgOfSolveGroup(solvegroup)
+                }
                 .task {
+                    let avg = getAvgOfSolveGroup(solvegroup)
                     await MainActor.run {
-                        self.calculatedAverage = getAvgOfSolveGroup(solvegroup)
+                        self.calculatedAverage = avg
                     }
                 }
                 

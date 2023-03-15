@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22D68" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CompSimSession" representedClassName="CompSimSession" parentEntity="Session" syncable="YES" codeGenerationType="class">
+        <attribute name="target" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="solvegroups" toMany="YES" deletionRule="Cascade" destinationEntity="CompSimSolveGroup" inverseName="session" inverseEntity="CompSimSolveGroup"/>
+    </entity>
+    <entity name="CompSimSolve" representedClassName="CompSimSolve" parentEntity="Solve" syncable="YES" codeGenerationType="class">
+        <relationship name="solvegroup" maxCount="1" deletionRule="Nullify" destinationEntity="CompSimSolveGroup" inverseName="solves" inverseEntity="CompSimSolveGroup"/>
+    </entity>
+    <entity name="CompSimSolveGroup" representedClassName="CompSimSolveGroup" syncable="YES" codeGenerationType="class">
+        <relationship name="session" maxCount="1" deletionRule="Nullify" destinationEntity="CompSimSession" inverseName="solvegroups" inverseEntity="CompSimSession"/>
+        <relationship name="solves" toMany="YES" maxCount="5" deletionRule="Cascade" destinationEntity="CompSimSolve" inverseName="solvegroup" inverseEntity="CompSimSolve"/>
+    </entity>
+    <entity name="MultiphaseSession" representedClassName="MultiphaseSession" parentEntity="Session" syncable="YES" codeGenerationType="class">
+        <attribute name="phaseCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" elementID="phase_count"/>
+    </entity>
+    <entity name="MultiphaseSolve" representedClassName="MultiphaseSolve" parentEntity="Solve" syncable="YES" codeGenerationType="class">
+        <attribute name="phases" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[Double]"/>
+    </entity>
+    <entity name="Session" representedClassName="Session" elementID="Sessions" syncable="YES" codeGenerationType="class">
+        <attribute name="color" optional="YES" attributeType="Binary"/>
+        <attribute name="lastUsed" optional="YES" attributeType="Date" usesScalarValueType="NO" elementID="last_used"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="pinned" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="scrambleType" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" elementID="scramble_type"/>
+        <attribute name="sessionType" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" elementID="session_type"/>
+        <relationship name="solves" toMany="YES" deletionRule="Cascade" destinationEntity="Solve" inverseName="session" inverseEntity="Solve"/>
+    </entity>
+    <entity name="Solve" representedClassName="Solve" elementID="Solves" syncable="YES" codeGenerationType="class">
+        <attribute name="comment" optional="YES" attributeType="String"/>
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="penalty" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="scramble" attributeType="String"/>
+        <attribute name="scrambleSubtype" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" elementID="scramble_subtype"/>
+        <attribute name="scrambleType" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" elementID="scramble_type"/>
+        <attribute name="time" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="session" maxCount="1" deletionRule="Nullify" destinationEntity="Session" inverseName="solves" inverseEntity="Session"/>
+    </entity>
+</model>

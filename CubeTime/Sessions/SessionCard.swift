@@ -12,27 +12,31 @@ struct SessionCard: View {
     @State private var isShowingDeleteDialog = false
     @State private var isShowingCustomizeDialog = false
     
-    var item: Sessions
-    var allSessions: FetchedResults<Sessions>
+    @ScaledMetric private var pinnedSessionHeight: CGFloat = 110
+    @ScaledMetric private var regularSessionHeight: CGFloat = 65
+    
+    
+    var item: Session
+    var allSessions: FetchedResults<Session>
     
     let pinned: Bool
-    let session_type: SessionTypes
+    let sessionType: SessionType
     let name: String
-    let scramble_type: Int
+    let scrambleType: Int
     let solveCount: Int
     let parentGeo: GeometryProxy
     
     @Namespace var namespace
     
-    init (item: Sessions, allSessions: FetchedResults<Sessions>, parentGeo: GeometryProxy) {
+    init (item: Session, allSessions: FetchedResults<Session>, parentGeo: GeometryProxy) {
         self.item = item
         self.allSessions = allSessions
         
         // Copy out the things so that it won't change to null coalesced defaults on deletion
         self.pinned = item.pinned
-        self.session_type = SessionTypes(rawValue: item.session_type)!
+        self.sessionType = SessionType(rawValue: item.sessionType)!
         self.name = item.name ?? "Unknown session name"
-        self.scramble_type = Int(item.scramble_type)
+        self.scrambleType = Int(item.scrambleType)
         self.solveCount = item.solves?.count ?? -1
         
         self.parentGeo = parentGeo
@@ -42,15 +46,14 @@ struct SessionCard: View {
         ZStack {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(Color("indent1"))
-                .frame(height: pinned ? 110 : 65)
+                .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight)
                 .zIndex(0)
             
             
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(Color("overlay0"))
-                .frame(width: stopwatchManager.currentSession == item
-                       ? 16
-                       : parentGeo.size.width - 32, height: item.pinned ? 110 : 65)
+                .frame(width: stopwatchManager.currentSession == item ? 16 : nil,
+                       height: item.pinned ? pinnedSessionHeight : regularSessionHeight)
                 .offset(x: stopwatchManager.currentSession == item
                         ? -((parentGeo.size.width - 16)/2) + 16
                         : 0)
@@ -66,7 +69,7 @@ struct SessionCard: View {
                     VStack(alignment: .leading) {
                         HStack(alignment: .center, spacing: 0) {
                             ZStack {
-                                if session_type != .standard {
+                                if sessionType != .standard {
                                     RoundedRectangle(cornerRadius: 10, style: .continuous)
                                         .fill(Color("accent").opacity(0.33))
                                         .frame(width: 40, height: 40)
@@ -74,7 +77,7 @@ struct SessionCard: View {
                                 }
                                 
                                 Group {
-                                    switch session_type {
+                                    switch sessionType {
                                     case .algtrainer:
                                         Image(systemName: "command.square")
                                             .font(.system(size: 26, weight: .semibold))
@@ -100,21 +103,21 @@ struct SessionCard: View {
                             }
                             
                             
-                            VStack(alignment: .leading, spacing: -2) {
+                            VStack(alignment: .leading, spacing: 0) {
                                 Text(name)
                                     .font(.title2.weight(.bold))
                                     .foregroundColor(Color("dark"))
                                 
                                 Group {
-                                    switch session_type {
+                                    switch sessionType {
                                     case .standard:
-                                        Text(puzzle_types[scramble_type].name)
+                                        Text(puzzle_types[scrambleType].name)
                                     case .playground:
                                         Text("Playground")
                                     case .multiphase:
-                                        Text("Multiphase - \(puzzle_types[scramble_type].name)")
+                                        Text("Multiphase - \(puzzle_types[scrambleType].name)")
                                     case .compsim:
-                                        Text("Comp Sim - \(puzzle_types[scramble_type].name)")
+                                        Text("Comp Sim - \(puzzle_types[scrambleType].name)")
                                     default:
                                         EmptyView()
                                     }
@@ -139,16 +142,16 @@ struct SessionCard: View {
                     
                     Spacer()
                     
-                    if session_type != .playground {
+                    if sessionType != .playground {
                         if item.pinned {
-                            Image(puzzle_types[scramble_type].name)
+                            Image(puzzle_types[scrambleType].name)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .foregroundColor(Color("dark"))
                                 .padding(.vertical, 4)
                                 .padding(.trailing, 12)
                         } else {
-                            Image(puzzle_types[scramble_type].name)
+                            Image(puzzle_types[scrambleType].name)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .foregroundColor(Color("dark"))
@@ -163,7 +166,7 @@ struct SessionCard: View {
                 .padding(.vertical,  pinned ? 12 : 8)
             }
             
-            .frame(height: pinned ? 110 : 65)
+            .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight)
             
             .background(Color.clear)
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
@@ -215,7 +218,7 @@ struct SessionCard: View {
         .confirmationDialog(String("Are you sure you want to delete \"\(name)\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
                 if item == stopwatchManager.currentSession {
-                    var next: Sessions? = nil
+                    var next: Session? = nil
                     for item in allSessions {
                         if item != stopwatchManager.currentSession {
                             next = item

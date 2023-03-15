@@ -2,48 +2,50 @@ import Foundation
 import CoreData
 
 extension StopwatchManager {
-    static func calculateAverage(_ solves: [Solves], _ id: String, _ compsim: Bool) -> CalculatedAverage? {
-        let cnt = solves.count
+    static func getCalculatedAverage(forSolves solves: [Solve], name: String, isCompsim: Bool) -> CalculatedAverage? {
+        let count = solves.count
         
-        if cnt < 5 {
+        if count < 5 {
             return nil
         }
         
         var trim: Int {
-            if cnt <= 12 {
+            if count <= 12 {
                 return 1
             } else {
-                return Int(Double(cnt) * 0.05)
+                return Int(Double(count) * 0.05)
             }
         }
         
-        let solvesSorted: [Solves] = solves.sorted(by: Self.sortWithDNFsLast)
-        let isDNF = solvesSorted[solvesSorted.endIndex.advanced(by: -(trim + 1))].penalty == PenTypes.dnf.rawValue
-        let solvesTrimmed: [Solves] = solvesSorted.prefix(trim) + solvesSorted.suffix(trim)
+        let solvesSorted: [Solve] = solves.sorted(by: Self.sortWithDNFsLast)
+        let isDNF = solvesSorted[solvesSorted.endIndex.advanced(by: -(trim + 1))].penalty == Penalty.dnf.rawValue
+        let solvesTrimmed: [Solve] = solvesSorted.prefix(trim) + solvesSorted.suffix(trim)
         
-        if compsim {
-            return CalculatedAverage(
-                name: "\(id)",
-                average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
-                accountedSolves: solvesSorted.suffix(cnt),
-                totalPen: isDNF ? .dnf : .none,
-                trimmedSolves: solvesTrimmed
-            )
-        } else {
-            return CalculatedAverage(
-                name: "\(id)\(cnt)",
-                average: solvesSorted.dropFirst(trim).dropLast(trim).reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(cnt-(trim * 2)),
-                accountedSolves: solvesSorted.suffix(cnt),
-                totalPen: isDNF ? .dnf : .none,
-                trimmedSolves: solvesTrimmed
-            )
-        }
+        return CalculatedAverage(
+            name: "\(name)" + (isCompsim ? "" : "\(count)"),
+            average: calculateAverage(forSortedSolves: solvesSorted, count: count, trim: trim),
+            accountedSolves: solvesSorted.suffix(count),
+            totalPen: isDNF ? .dnf : .none,
+            trimmedSolves: solvesTrimmed
+        )
     }
     
     
-    static func sortWithDNFsLast(_ solve0: Solves, _ solve1: Solves) -> Bool {
-        let pen0 = PenTypes(rawValue: solve0.penalty)!
-        let pen1 = PenTypes(rawValue: solve1.penalty)!
+    static func calculateAverage(forSortedSolves sortedSolves: [Solve], count: Int, trim: Int) -> Double {
+        let sum = sortedSolves[trim..<(count-trim)].reduce(0, { $0 + $1.timeIncPen })
+        return sum / (Double(count - (trim * 2)))
+    }
+    
+    #warning("todo make generic :quesitopn?")
+    static func calculateAverage(forSortedSolves sortedSolves: [SimpleSolve], count: Int, trim: Int) -> Double {
+        let sum = sortedSolves[trim..<(count-trim)].reduce(0, { $0 + $1.timeIncPen })
+        return sum / (Double(count - (trim * 2)))
+    }
+    
+    
+    static func sortWithDNFsLast(_ solve0: Solve, _ solve1: Solve) -> Bool {
+        let pen0 = Penalty(rawValue: solve0.penalty)!
+        let pen1 = Penalty(rawValue: solve1.penalty)!
         
         // Sort non DNFs or both DNFs by time
         if (pen0 != .dnf && pen1 != .dnf) || (pen0 == .dnf && pen1 == .dnf) {
@@ -58,7 +60,7 @@ extension StopwatchManager {
 
 // MARK: - STATS: STANDARD STATS FUNCS
 extension StopwatchManager {
-    func getMin() -> Solves? {
+    func getMin() -> Solve? {
         if let solve = solvesNoDNFs.first {
             return solve
         } else if let solve = solves.first {
@@ -123,59 +125,8 @@ extension StopwatchManager {
             return nil
         }
         
-        return Self.calculateAverage(solvesByDate.suffix(period), "Current ao", false)
+        return Self.getCalculatedAverage(forSolves: solvesByDate.suffix(period), name: "Current ao", isCompsim: false)
     }
-    
-    
-    /*
-    func getBestMovingAverageOf(_ period: Int) -> CalculatedAverage? {
-        precondition(period > 1)
-        if solvesByDate.count < period {
-            return nil
-        }
-        
-        let trim = period >= 100 ? 5 : 1
-        
-        
-        var lowestAverage: Double?
-        var lowestValues: [Solves]?
-        var lowsetTrimmedSolves: [Solves]?
-        var totalPen = PenTypes.none
-        var lowestTotalPen = PenTypes.none
-        
-        for i in period..<solves.count+1 {
-            var solves = solvesByDate[i - period..<i]
-            solves.sort(by: Self.sortWithDNFsLast)
-            
-            let trimmedSolves = solves.suffix(trim) + solves.prefix(trim)
-            
-            let trimmed = solves.dropFirst(trim).dropLast(trim)
-            
-//            if trimmed.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) {
-//                continue
-//            }
-            totalPen = trimmed.last!.penalty == PenTypes.dnf.rawValue ? PenTypes.dnf : PenTypes.none
-            let sum = trimmed.reduce(0, {$0 + $1.timeIncPen})
-            
-            let result = Double(sum) / Double(period-(trim*2))
-            if lowestAverage == nil
-                || (
-                    result < lowestAverage!
-                    && (
-                        (totalPen, lowestTotalPen) == (PenTypes.dnf, PenTypes.dnf)
-                        || (totalPen, lowestTotalPen) == (PenTypes.none, PenTypes.none)
-                    )
-                )
-                || (totalPen, lowestTotalPen) == (PenTypes.none, PenTypes.dnf) {
-                lowestValues = solvesByDate[i - period ..< i].sorted(by: {$0.date! > $1.date!})
-                lowestAverage = result
-                lowestTotalPen = totalPen
-                lowsetTrimmedSolves = Array(trimmedSolves)
-            }
-        }
-        return CalculatedAverage(name: "Best ao\(period)", average: lowestAverage, accountedSolves: lowestValues, totalPen: lowestTotalPen, trimmedSolves: lowsetTrimmedSolves)
-    }
-     */
 }
 
 
@@ -183,7 +134,7 @@ extension StopwatchManager {
 // MARK: - STATS: CACHE STATS
 extension StopwatchManager {
     func changedTimeListSort() {
-        let s: [Solves] = timeListSortBy == .date ? solvesByDate : solves
+        let s: [Solve] = timeListSortBy == .date ? solvesByDate : solves
         timeListSolves = timeListAscending ? s : s.reversed()
         filterTimeList()
     }
@@ -204,27 +155,27 @@ extension StopwatchManager {
         }
         
         if scrambleTypeFilter >= 0 {
-            timeListSolvesFiltered = timeListSolvesFiltered.filter {$0.scramble_type == Int32(scrambleTypeFilter)}
+            timeListSolvesFiltered = timeListSolvesFiltered.filter {$0.scrambleType == Int32(scrambleTypeFilter)}
         }
     }
     
-    func delete(solve: Solves) {
+    func delete(solve: Solve) {
         removingSolve(solve: solve, removeFunc: managedObjectContext.delete)
     }
     
     #warning("Remember to update new stats when actually cache stats (if ever)")
-    func moveSolve(solve: Solves, to: Sessions) {
+    func moveSolve(solve: Solve, to: Session) {
         removingSolve(solve: solve, removeFunc: { solve in
-            if let solve = solve as? MultiphaseSolve, (to.session_type != SessionTypes.multiphase.rawValue) {
+            if let solve = solve as? MultiphaseSolve, (to.sessionType != SessionType.multiphase.rawValue) {
                 #warning("Figure out how to cast")
                 managedObjectContext.delete(solve)
-                let nonMultiSolve = Solves(context: managedObjectContext)
+                let nonMultiSolve = Solve(context: managedObjectContext)
                 nonMultiSolve.comment = solve.comment
                 nonMultiSolve.date = solve.date
                 nonMultiSolve.penalty = solve.penalty
                 nonMultiSolve.scramble = solve.scramble
-                nonMultiSolve.scramble_subtype = solve.scramble_subtype
-                nonMultiSolve.scramble_type = solve.scramble_type
+                nonMultiSolve.scrambleSubtype = solve.scrambleSubtype
+                nonMultiSolve.scrambleType = solve.scrambleType
                 nonMultiSolve.time = solve.time
                 nonMultiSolve.session = to
             } else {
@@ -239,11 +190,10 @@ extension StopwatchManager {
         try! managedObjectContext.save()
         
         statsGetFromCache() // TODO not this :sob:
-        stateID = UUID()
         // so much for cache stats
     }
     
-    func removingSolve(solve: Solves, removeFunc: (Solves) -> ()) {
+    func removingSolve(solve: Solve, removeFunc: (Solve) -> ()) {
         #warning("TODO:  check best AOs")
         var recalcAO100 = false
         var recalcAO12 = false
@@ -290,15 +240,24 @@ extension StopwatchManager {
         timerController.secondsStr = formatSolveTime(secs: SettingsManager.standard.showPrevTime ? (self.solvesByDate.last?.time ?? 0) : 0)
     }
     
+    func updateCSSolveGroups() {
+        if let currentSession = currentSession as? CompSimSession {
+            // CSTODO verify order
+            compsimSolveGroups = (currentSession.solvegroups!.allObjects as! [CompSimSolveGroup]).sorted(by: {
+                // Object with no solves is more recent
+                guard let firstSolve = $0.solves?.anyObject() else { return true }
+                guard let secondSolve = $1.solves?.anyObject() else { return false }
+                return (firstSolve as! CompSimSolve).date! >
+                    (secondSolve as! CompSimSolve).date!
+            })
+        }
+    }
         
     func statsGetFromCache() {
         #warning("TODO:  get from cache actually")
-        let sessionSolves = currentSession.solves!.allObjects as! [Solves]
-        var compSim = false
-        if let currentSession = currentSession as? CompSimSession {
-            compSim = true
-            compsimSolveGroups = (currentSession.solvegroups!.array as! [CompSimSolveGroup])
-        }
+        let sessionSolves = currentSession.solves!.allObjects as! [Solve]
+        var compSim = currentSession.sessionType == SessionType.compsim.rawValue
+        updateCSSolveGroups()
         
         solves = sessionSolves.sorted(by: {$0.timeIncPen < $1.timeIncPen})
         solvesByDate = sessionSolves.sorted(by: {$0.date! < $1.date!})
@@ -306,10 +265,10 @@ extension StopwatchManager {
         changedTimeListSort()
         
         solvesNoDNFsbyDate = solvesByDate
-        solvesNoDNFsbyDate.removeAll(where: { $0.penalty == PenTypes.dnf.rawValue })
+        solvesNoDNFsbyDate.removeAll(where: { $0.penalty == Penalty.dnf.rawValue })
         
         solvesNoDNFs = solves
-        solvesNoDNFs.removeAll(where: { $0.penalty == PenTypes.dnf.rawValue })
+        solvesNoDNFs.removeAll(where: { $0.penalty == Penalty.dnf.rawValue })
         
         if !compSim {
             bestAo5 = getBestAverage(of: 5)
@@ -334,6 +293,13 @@ extension StopwatchManager {
             
             currentCompsimAverage = getCurrentCompsimAverage()
             bestCompsimAverage = getBestCompsimAverageAndArrayOfCompsimAverages().0
+            
+            
+            let bpawpa = getWpaBpa()
+            self.bpa = bpawpa.0
+            self.wpa = bpawpa.1
+            
+            self.timeNeededForTarget = getTimeNeededForTarget()
         }
         
         currentMeanOfTen = getCurrentMeanOfTen()
@@ -356,11 +322,19 @@ extension StopwatchManager {
     func updateStats() {
         #warning("TODO:  maybe make these async?")
         
+        if currentSession.sessionType == SessionType.compsim.rawValue {
+            statsGetFromCache()
+            return
+        }
+        
+        
         solvesByDate.append(solveItem)
         // These stats would require severe voodoo to not recalculate (TODO switch to voodoo), and are faily cheap
         self.currentAo5 = getCurrentAverageOf(5)
         self.currentAo12 = getCurrentAverageOf(12)
         self.currentAo100 = getCurrentAverageOf(100)
+        
+        normalMedian = getNormalMedian()
         
         let bpawpa = getWpaBpa()
         self.bpa = bpawpa.0
@@ -369,7 +343,7 @@ extension StopwatchManager {
         self.timeNeededForTarget = getTimeNeededForTarget()
         
         // Update sessionMean
-        if solveItem.penalty != PenTypes.dnf.rawValue { //TODO test if this really works with inspection
+        if solveItem.penalty != Penalty.dnf.rawValue { //TODO test if this really works with inspection
             sessionMean = ((sessionMean ?? 0) * Double(solvesNoDNFs.count) + timeWithPlusTwoForSolve(solveItem)) / Double(solvesNoDNFs.count + 1)
             solvesNoDNFsbyDate.append(solveItem)
             
@@ -392,11 +366,11 @@ extension StopwatchManager {
         
         if let currentAo5 = currentAo5 {
             if bestAo5 == nil || ( // best is not set yet (and current is), or:
-                    (currentAo5.totalPen, bestAo5!.totalPen) == (PenTypes.dnf, PenTypes.dnf)
-                    || (currentAo5.totalPen, bestAo5!.totalPen) == (PenTypes.none, PenTypes.none)
+                    (currentAo5.totalPen, bestAo5!.totalPen) == (Penalty.dnf, Penalty.dnf)
+                    || (currentAo5.totalPen, bestAo5!.totalPen) == (Penalty.none, Penalty.none)
                     && currentAo5 < bestAo5! // current is less than current best, and total pen is the same, or:
                 )
-                || (currentAo5.totalPen, bestAo5!.totalPen) == (PenTypes.none, PenTypes.dnf) { // current is none and best is dnf
+                || (currentAo5.totalPen, bestAo5!.totalPen) == (Penalty.none, Penalty.dnf) { // current is none and best is dnf
                 self.bestAo5 = currentAo5
                 self.bestAo5?.name = "Best ao5"
                 #warning("TODO:  unhardcode")
@@ -404,11 +378,11 @@ extension StopwatchManager {
         }
         if let currentAo12 = currentAo12 {
             if bestAo12 == nil || ( // best is not set yet (and current is), or:
-                    (currentAo12.totalPen, bestAo12!.totalPen) == (PenTypes.dnf, PenTypes.dnf)
-                    || (currentAo12.totalPen, bestAo12!.totalPen) == (PenTypes.none, PenTypes.none)
+                    (currentAo12.totalPen, bestAo12!.totalPen) == (Penalty.dnf, Penalty.dnf)
+                    || (currentAo12.totalPen, bestAo12!.totalPen) == (Penalty.none, Penalty.none)
                     && currentAo12 < bestAo12! // current is less than current best, and total pen is the same, or:
                 )
-                || (currentAo12.totalPen, bestAo12!.totalPen) == (PenTypes.none, PenTypes.dnf) { // current is none and best is dnf
+                || (currentAo12.totalPen, bestAo12!.totalPen) == (Penalty.none, Penalty.dnf) { // current is none and best is dnf
                 self.bestAo12 = currentAo12
                 self.bestAo12?.name = "Best ao12"
                 #warning("TODO:  unhardcode")
@@ -416,11 +390,11 @@ extension StopwatchManager {
         }
         if let currentAo100 = currentAo100 {
             if bestAo100 == nil || ( // best is not set yet (and current is), or:
-                    (currentAo100.totalPen, bestAo100!.totalPen) == (PenTypes.dnf, PenTypes.dnf)
-                    || (currentAo100.totalPen, bestAo100!.totalPen) == (PenTypes.none, PenTypes.none)
+                    (currentAo100.totalPen, bestAo100!.totalPen) == (Penalty.dnf, Penalty.dnf)
+                    || (currentAo100.totalPen, bestAo100!.totalPen) == (Penalty.none, Penalty.none)
                     && currentAo100 < bestAo100! // current is less than current best, and total pen is the same, or:
                 )
-                || (currentAo100.totalPen, bestAo100!.totalPen) == (PenTypes.none, PenTypes.dnf) { // current is none and best is dnf
+                || (currentAo100.totalPen, bestAo100!.totalPen) == (Penalty.none, Penalty.dnf) { // current is none and best is dnf
                 self.bestAo100 = currentAo100
                 self.bestAo100?.name = "Best ao100"
                 #warning("TODO:  unhardcode")
@@ -439,8 +413,7 @@ extension StopwatchManager {
             let times = (solvesNoDNFs as! [MultiphaseSolve]).map({ $0.phases! })
             
             
-            var summedPhases = [Double](repeating: 0, count: Int(phaseCount))
-                        
+            var summedPhases = [Double](repeating: 0, count: phaseCount)
             
             for phase in times {
                 var paddedPhase = phase
@@ -449,7 +422,7 @@ extension StopwatchManager {
                 let mappedPhase = paddedPhase.chunked().map { $0[1] - $0[0] }
                 
                
-                for i in 0..<Int(phaseCount) {
+                for i in 0..<phaseCount {
                     summedPhases[i] += mappedPhase[i]
                 }
             }
@@ -467,22 +440,27 @@ extension StopwatchManager {
 // MARK: - STATS: COMPSIM
 extension StopwatchManager {
     func getNumberOfAverages() -> Int {
+        print(solves.count)
         return (solves.count / 5)
     }
         
+    
+    static func calculateAverage(forCompsimGroup group: CompSimSolveGroup) -> Double {
+        return Self.calculateAverage(forSortedSolves: group.orderedSolves, count: 5, trim: 1)
+    }
     
     func getReachedTargets() -> Int {
         var reached = 0
         
         if let compsimSession = currentSession as? CompSimSession {
-            for solvegroup in compsimSession.solvegroups!.array {
-                let x = ((solvegroup as AnyObject).solves!.array as! [Solves]).map {$0.time}.sorted().dropFirst().dropLast()
-                if x.count == 3 {
-                    if x.reduce(0, +) <= compsimSession.target * 3 {
-                        reached += 1
-                    }
-                }
+            for solvegroup in compsimSolveGroups {
+                if solvegroup.solves!.count != 5 { continue }
                 
+                let average = Self.calculateAverage(forCompsimGroup: solvegroup)
+                
+                if (average <= compsimSession.target) {
+                    reached += 1
+                }
             }
         }
         
@@ -493,30 +471,30 @@ extension StopwatchManager {
     func getCurrentCompsimAverage() -> CalculatedAverage? {
         if let compsimSession = currentSession as? CompSimSession {
             
-            let groupCount = compsimSession.solvegroups!.count
+            let groupCount = compsimSolveGroups!.count
             
             if groupCount == 0 {
                 return nil
             } else if groupCount == 1 {
-                let groupLastSolve = ((compsimSession.solvegroups!.lastObject as! CompSimSolveGroup).solves!.array as! [Solves])
+                let groupLastSolve = compsimSolveGroups.first!.solves!.allObjects as! [Solve]
                 
                 if groupLastSolve.count != 5 {
                     return nil
                 } else {
-                    return Self.calculateAverage(groupLastSolve, "Current Comp Sim", true)
+                    return Self.getCalculatedAverage(forSolves: groupLastSolve, name: "Current Comp Sim", isCompsim: true)
                 }
                 
             } else {
-                let groupLastTwoSolves = (compsimSession.solvegroups!.array as! [CompSimSolveGroup]).suffix(2)
+                let groupLastTwoSolves = compsimSolveGroups.prefix(2)
                 
-                let lastInGroup = groupLastTwoSolves.last!.solves!.array as! [Solves]
+                let lastInGroup = groupLastTwoSolves.first!.solves!.allObjects as! [Solve]
                 
                 if lastInGroup.count == 5 {
                     
-                    return Self.calculateAverage(lastInGroup, "Current Comp Sim", true)
+                    return Self.getCalculatedAverage(forSolves: lastInGroup, name: "Current Comp Sim", isCompsim: true)
                 } else {
                     
-                    return Self.calculateAverage((groupLastTwoSolves.first!.solves!.array as! [Solves]), "Current Comp Sim", true)
+                    return Self.getCalculatedAverage(forSolves: (groupLastTwoSolves.last!.solves!.allObjects as! [Solve]), name: "Current Comp Sim", isCompsim: true)
                 }
             }
         } else {
@@ -531,18 +509,18 @@ extension StopwatchManager {
         if let compsimSession = currentSession as? CompSimSession {
             if compsimSession.solvegroups!.count == 0 {
                 return (nil, [])
-            } else if compsimSession.solvegroups!.count == 1 && (((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]).count != 5)  {
+            } else if compsimSession.solvegroups!.count == 1 && compsimSolveGroups.first!.orderedSolves.count != 5  {
                 /// && ((compsimSession.solvegroups!.first as AnyObject).solves!.array as! [Solves]).count != 5
                 return (nil, [])
             } else {
                 var bestAverage: CalculatedAverage?
 //                var bestAverage: CalculatedAverage = calculateAverage(((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]), "Best Comp Sim", true)!
                 
-                for solvegroup in compsimSession.solvegroups!.array {
-                    if (solvegroup as AnyObject).solves!.array.count == 5 {
+                for solvegroup in compsimSolveGroups {
+                    if solvegroup.solves!.allObjects.count == 5 {
                         
                         
-                        let currentAvg = Self.calculateAverage((solvegroup as AnyObject).solves!.array as! [Solves], "Best Comp Sim", true)
+                        let currentAvg = Self.getCalculatedAverage(forSolves: solvegroup.solves!.allObjects as! [Solve], name: "Best Comp Sim", isCompsim: true)
                         
                         if currentAvg?.totalPen == .dnf {
                             continue
@@ -624,17 +602,17 @@ extension StopwatchManager {
         
     
     func getWpaBpa() -> (Double?, Double?) {
-        if let compsimSession = currentSession as? CompSimSession {
-            let solveGroups = (compsimSession.solvegroups!.array as! [CompSimSolveGroup])
-            
+        if currentSession is CompSimSession {
+            let solveGroups = compsimSolveGroups!
+                        
             if solveGroups.count == 0 { return (nil, nil) } else {
-                let lastGroupSolves = (solveGroups.last!.solves!.array as! [Solves])
+                let lastGroupSolves = (compsimSolveGroups.first!.solves!.allObjects as! [Solve])
                 if lastGroupSolves.count == 4 {
                     let sortedGroup = lastGroupSolves.sorted(by: Self.sortWithDNFsLast)
                     
                     let bpa = (sortedGroup.dropFirst().reduce(0) {$0 + $1.timeIncPen}) / 3.00
                     
-                    let wpa = sortedGroup.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) ? -1 : (sortedGroup.dropLast().reduce(0) {$0 + $1.timeIncPen}) / 3.00
+                    let wpa = sortedGroup.contains(where: {$0.penalty == Penalty.dnf.rawValue}) ? -1 : (sortedGroup.dropLast().reduce(0) {$0 + $1.timeIncPen}) / 3.00
                     
                     return (bpa, wpa)
                 }
@@ -646,19 +624,26 @@ extension StopwatchManager {
     
     
     func getTimeNeededForTarget() -> TimeNeededForTarget? {
+        NSLog("-------------HERE1-------------")
         if let compsimSession = currentSession as? CompSimSession {
-            let solveGroups = (compsimSession.solvegroups!.array as! [CompSimSolveGroup])
+            let solveGroups = compsimSolveGroups!
+            NSLog("-------------HERE2-------------")
             
             if solveGroups.count == 0 { return nil } else {
-                let lastGroupSolves = (solveGroups.last!.solves!.array as! [Solves])
+                NSLog("-------------HERE3-------------")
+                let lastGroupSolves = (solveGroups.first!.solves!.allObjects as! [Solve])
                 if lastGroupSolves.count == 4 {
+                    NSLog("-------------HERE4-------------")
                     let sortedGroup = lastGroupSolves.sorted(by: Self.sortWithDNFsLast)
                     
                     let timeNeededForTarget = (compsimSession as CompSimSession).target * 3 - (sortedGroup.dropFirst().dropLast().reduce(0) {$0 + $1.timeIncPen})
                     
+                    NSLog("-------------HERE5-------------")
+                    NSLog("TARGET: \((compsimSession as CompSimSession).target)")
+                    
                     if timeNeededForTarget < sortedGroup.last!.time {
                         return .notPossible
-                    } else if timeNeededForTarget > sortedGroup.first!.time && !sortedGroup.contains(where: {$0.penalty == PenTypes.dnf.rawValue}) {
+                    } else if timeNeededForTarget > sortedGroup.first!.time && !sortedGroup.contains(where: {$0.penalty == Penalty.dnf.rawValue}) {
                         return .guaranteed
                     } else {
                         return .value(timeNeededForTarget)
@@ -669,101 +654,6 @@ extension StopwatchManager {
         
         return nil
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    /*
-    func getBestAverage(of width: Int) -> CalculatedAverage? {
-        precondition(width >= 5)
-        
-        if (solvesByDate.count < width) {
-            return nil
-        }
-        
-        var bestAverage: Double = Double.greatestFiniteMagnitude
-
-        var sum: Double = 0
-        var multiset: SortedBag<Solves> = SortedBag<Solves>()
-        
-        var accountedSolves: SortedBag<Solves> = SortedBag<Solves>()
-        var minTrimmedSolves: SortedBag<Solves> = SortedBag<Solves>()
-        var maxTrimmedSolves: SortedBag<Solves> = SortedBag<Solves>()
-        
-        let trimSize: Int = getTrimSizeEachEnd(width)
-        
-        // width of window - 1
-        let beginWidth: Int = (width - 1)
-        
-        for i in 0 ..< beginWidth {
-            sum += solvesByDate[i].timeIncPen
-            multiset.insert(solvesByDate[i])
-        }
-
-        // rest of solves
-        for i in beginWidth ..< solvesByDate.count {
-            sum += solvesByDate[i].timeIncPen
-            multiset.insert(solvesByDate[i])
-            
-            var sumTrimmed: Double = 0
-            
-            // if after trim, includes dnf => entire average dnf
-            if (multiset[width - trimSize - 1].penalty == PenTypes.dnf.rawValue) {
-                return CalculatedAverage(name: "Best ao\(width)",
-                                         average: nil,
-                                         accountedSolves: nil,
-                                         totalPen: PenTypes.dnf,
-                                         trimmedSolves: nil)
-            }
-            
-            let tempMinTrim = multiset.prefix(trimSize)
-            let tempMaxTrim = multiset.suffix(trimSize)
-            
-            // for ao5, ao12
-            if (trimSize == 1) {
-                sumTrimmed = multiset.first!.timeIncPen + multiset.last!.timeIncPen
-            } else {  // for ao>12
-                tempMinTrim.forEach({
-                    sumTrimmed += $0.timeIncPen
-                })
-                tempMaxTrim.forEach({
-                    sumTrimmed += $0.timeIncPen
-                })
-            }
-            
-            // todo add error checking
-            let average: Double = (sum - sumTrimmed) / Double(width - (trimSize * 2))
-            
-            // if updates
-            if (average < bestAverage) {
-                bestAverage = average
-                accountedSolves = multiset.suffix(solvesByDate.count - trimSize).prefix(solvesByDate.count - trimSize*2)
-                minTrimmedSolves = tempMinTrim
-                maxTrimmedSolves = tempMaxTrim
-            }
-            
-            sum -= solvesByDate[i - width + 1].timeIncPen
-            multiset.remove(solvesByDate[i - width + 1])
-        }
-        
-        return CalculatedAverage(name: "Best ao\(width)",
-                                 average: bestAverage,
-                                 accountedSolves: Array(accountedSolves),
-                                 totalPen: .none,
-                                 trimmedSolves: Array(minTrimmedSolves) + Array(maxTrimmedSolves))
-    }
-     */
     
     static func getTrimSizeEachEnd(_ n: Int32) -> Int32 {
         return (n <= 12) ? 1 : Int32(n / 20)

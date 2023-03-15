@@ -3,7 +3,6 @@ import Foundation
 import SwiftUI
 
 final class SettingsManager {
-    
     static let standard = SettingsManager(userDefaults: .standard)
     fileprivate let userDefaults: UserDefaults
     
@@ -51,6 +50,9 @@ final class SettingsManager {
     @UserDefault("gestureDistance")
     var gestureDistance: Double = 50
     
+    @UserDefault("gestureDistanceTrackpad")
+    var gestureDistanceTrackpad: Double = 500
+    
     @UserDefault("showScramble")
     var showScramble: Bool = true
     
@@ -78,11 +80,8 @@ final class SettingsManager {
     @UserDefault("dmBool")
     var dmBool: Bool = false
     
-    @UserDefault("staticGradient")
-    var staticGradient: Bool = true
-    
-    @UserDefault("gradientSelected")
-    var gradientSelected: Int = 6
+    @UserDefault("isStaticGradient")
+    var isStaticGradient: Bool = true
     
     @UserDefault("graphGlow")
     var graphGlow: Bool = true
@@ -91,7 +90,7 @@ final class SettingsManager {
     var graphAnimation: Bool = true
     
     @UserDefault("scrambleSize")
-    var scrambleSize: Int = 18
+    var scrambleSize: Int = UIDevice.deviceIsPad ? 26 : 18
     
     @UserDefault("fontWeight")
     var fontWeight: Double = 516.0
@@ -127,12 +126,26 @@ struct UserDefault<Value> {
             let container = instance.userDefaults
             let key = instance[keyPath: storageKeyPath].key
             let defaultValue = instance[keyPath: storageKeyPath].defaultValue
+            #warning("TODO: this is absolutely terrible, but I spent hours trying to check if Value is any RawRepresentable to no avail...")
+            if Value.self == InputMode.self {
+                guard let pref = container.object(forKey: key) as? InputMode.RawValue else { return defaultValue }
+                return InputMode(rawValue: pref) as! Value? ?? defaultValue
+            }
+            typealias FeedbackType = UIImpactFeedbackGenerator.FeedbackStyle
+            if Value.self == FeedbackType.self {
+                guard let pref = container.object(forKey: key) as? FeedbackType.RawValue else { return defaultValue }
+                return FeedbackType(rawValue: pref) as! Value? ?? defaultValue
+            }
             return container.object(forKey: key) as? Value ?? defaultValue
         }
         set {
             let container = instance.userDefaults
             let key = instance[keyPath: storageKeyPath].key
-            container.set(newValue, forKey: key)
+            if let newValue = newValue as? (any RawRepresentable) {
+                container.set(newValue.rawValue, forKey: key)
+            } else {
+                container.set(newValue, forKey: key)
+            }
             instance.preferencesChangedSubject.send(wrappedKeyPath)
         }
     }

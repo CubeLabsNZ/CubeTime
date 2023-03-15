@@ -15,7 +15,6 @@
 	</array>
 	<key>UIAppFonts</key>
 	<array>
-		<string>RecursiveSansLnrSt-Regular.ttf</string>
 		<string>RecMonoVariable.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
@@ -27,9 +26,9 @@
 	<array>
 		<dict>
 			<key>UIApplicationShortcutItemIconFile</key>
-			<string>qa-sessions</string>
+			<string>quickActionIcon</string>
 			<key>UIApplicationShortcutItemTitle</key>
-			<string>All sessions</string>
+			<string>Sessions</string>
 			<key>UIApplicationShortcutItemType</key>
 			<string>com.cubetime.cubetime.allsessions</string>
 		</dict>

@@ -6,7 +6,7 @@ struct NewSessionView: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    let sessionType: SessionTypes
+    let sessionType: SessionType
     let typeName: String
     @Binding var showNewSessionPopUp: Bool
     
@@ -27,22 +27,21 @@ struct NewSessionView: View {
     @ScaledMetric(relativeTo: .body) var frameHeight: CGFloat = 45
     @ScaledMetric(relativeTo: .title2) var bigFrameHeight: CGFloat = 220
     @ScaledMetric(relativeTo: .title2) var otherBigFrameHeight: CGFloat = 80
-
+    
     
     var body: some View {
         ZStack {
-            Color("base")
-                .ignoresSafeArea()
+            BackgroundColour()
             
             ScrollView {
                 VStack (spacing: 16) {
                     VStack (alignment: .center, spacing: 0) {
-                        if sessionType != SessionTypes.playground {
+                        if sessionType != SessionType.playground {
                             PuzzleHeaderImage(imageName: puzzle_types[Int(sessionEventType)].name)
                         }
                         
                         SessionNameField(name: $name)
-                            .if(sessionType == SessionTypes.playground) { view in
+                            .if(sessionType == SessionType.playground) { view in
                                 view.padding(.top)
                             }
                         
@@ -85,25 +84,24 @@ struct NewSessionView: View {
                     Spacer()
                 }
             }
-//            .ignoresSafeArea(.keyboard)
             .navigationBarTitle("New \(typeName) Session", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        let sessionItem = sessionTypeForID[sessionType, default: Sessions.self].init(context: managedObjectContext)
+                        let sessionItem = sessionTypeForID[sessionType, default: Session.self].init(context: managedObjectContext)
                         
                         sessionItem.name = name
                         sessionItem.pinned = pinnedSession
-                        sessionItem.session_type = sessionType.rawValue
+                        sessionItem.sessionType = sessionType.rawValue
                         
                         if let sessionItem = sessionItem as? MultiphaseSession {
-                            sessionItem.phase_count = Int16(phaseCount)
+                            sessionItem.phaseCount = Int16(phaseCount)
                         } else if let sessionItem = sessionItem as? CompSimSession {
                             sessionItem.target = timeFromStr(targetStr)!
                         }
                         
                         if sessionType != .playground {
-                            sessionItem.scramble_type = sessionEventType
+                            sessionItem.scrambleType = sessionEventType
                         }
                         
                         try! managedObjectContext.save()

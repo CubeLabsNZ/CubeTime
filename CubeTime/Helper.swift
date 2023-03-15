@@ -5,12 +5,12 @@ import Combine
 import CoreData
 
 // MARK: - GLOBAL LETS
-let sessionTypeForID: [SessionTypes: Sessions.Type] = [
+let sessionTypeForID: [SessionType: Session.Type] = [
     .multiphase: MultiphaseSession.self,
     .compsim: CompSimSession.self
 ]
 
-let sessionDescriptions: [SessionTypes: String] = [
+let sessionDescriptions: [SessionType: String] = [
     .multiphase: "A multiphase session gives you the ability to breakdown your solves into sections, such as memo/exec stages in blindfolded solving or stages in 3x3 solves.\n\nTap anywhere on the timer during a solve to record a phase lap. You can access your breakdown statistics in each time card and view overall statistics in the Stats view.",
     .playground: "A playground session allows you to quickly change the scramble type within a session without having to specify a scramble type for the whole session.",
     .compsim: "A comp sim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach."
@@ -19,10 +19,10 @@ let sessionDescriptions: [SessionTypes: String] = [
 
 struct SessionPickerMenu<Content: View>: View {
     let content: Content
-    let sessions: [Sessions]?
-    let clickSession: (Sessions) -> ()
+    let sessions: [Session]?
+    let clickSession: (Session) -> ()
     
-    @inlinable init(sessions: [Sessions]?, clickSession: @escaping (Sessions) -> (), @ViewBuilder label: () -> Content = {Label("Move To", systemImage: "arrow.up.right")}) {
+    @inlinable init(sessions: [Session]?, clickSession: @escaping (Session) -> (), @ViewBuilder label: () -> Content = {Label("Move To", systemImage: "arrow.up.right")}) {
         self.sessions = sessions
         self.clickSession = clickSession
         self.content = label()
@@ -41,7 +41,7 @@ struct SessionPickerMenu<Content: View>: View {
                         Button {
                             clickSession(session)
                         } label: {
-                            Label(session.name!, systemImage: iconNamesForType[SessionTypes(rawValue:session.session_type)!]!)
+                            Label(session.name!, systemImage: iconNamesForType[SessionType(rawValue:session.sessionType)!]!)
                         }
                     }
                 }
@@ -50,7 +50,7 @@ struct SessionPickerMenu<Content: View>: View {
                         Button {
                             clickSession(session)
                         } label: {
-                            Label(session.name!, systemImage: iconNamesForType[SessionTypes(rawValue:session.session_type)!]!)
+                            Label(session.name!, systemImage: iconNamesForType[SessionType(rawValue:session.sessionType)!]!)
                         }
                     }
                 }
@@ -64,10 +64,10 @@ struct SessionPickerMenu<Content: View>: View {
 }
 
 
-extension Sessions {
+extension Session {
     var typeName: String {
         get {
-            switch (SessionTypes(rawValue: session_type)!) {
+            switch (SessionType(rawValue: sessionType)!) {
             case .standard:
                 return "Standard Session"
             case .algtrainer:
@@ -84,8 +84,8 @@ extension Sessions {
     
     var shortcutName: String {
         get {
-            let scrname = puzzle_types[Int(scramble_type)].name
-            switch (SessionTypes(rawValue: session_type)!) {
+            let scrname = puzzle_types[Int(scrambleType)].name
+            switch (SessionType(rawValue: sessionType)!) {
             case .standard:
                 return scrname
             case .algtrainer:
@@ -101,7 +101,7 @@ extension Sessions {
     }
 }
 
-let iconNamesForType: [SessionTypes: String] = [
+let iconNamesForType: [SessionType: String] = [
     .standard: "timer.square",
     .algtrainer: "command.square",
     .multiphase: "square.stack",
@@ -109,28 +109,28 @@ let iconNamesForType: [SessionTypes: String] = [
     .compsim: "globe.asia.australia"
 ]
 
-func getSessionsCanMoveTo(managedObjectContext: NSManagedObjectContext, scrambleType: Int32, currentSession: Sessions) -> [Sessions] {
+func getSessionsCanMoveTo(managedObjectContext: NSManagedObjectContext, scrambleType: Int32, currentSession: Session) -> [Session] {
     var phaseCount: Int16 = -1
     if let multiphaseSession = currentSession as? MultiphaseSession {
-        phaseCount = multiphaseSession.phase_count
+        phaseCount = multiphaseSession.phaseCount
     }
     
-    let req = NSFetchRequest<Sessions>(entityName: "Sessions")
+    let req = NSFetchRequest<Session>(entityName: "Session")
     req.sortDescriptors = [
-        NSSortDescriptor(keyPath: \Sessions.pinned, ascending: false),
-        NSSortDescriptor(keyPath: \Sessions.name, ascending: true)
+        NSSortDescriptor(keyPath: \Session.pinned, ascending: false),
+        NSSortDescriptor(keyPath: \Session.name, ascending: true)
     ]
     req.predicate = NSPredicate(format: """
-        session_type != \(SessionTypes.compsim.rawValue)
+        sessionType != \(SessionType.compsim.rawValue)
         AND
         (
-            session_type == \(SessionTypes.playground.rawValue) OR
-            scramble_type == %i
+            sessionType == \(SessionType.playground.rawValue) OR
+            scrambleType == %i
         )
         AND
         (
-            session_type != \(SessionTypes.multiphase.rawValue) OR
-            phase_count == %i
+            sessionType != \(SessionType.multiphase.rawValue) OR
+            phaseCount == %i
         )
         AND
         self != %@
@@ -261,23 +261,28 @@ extension CompSimSolveGroup: RawGraphData {
         }
     }
     
+    var orderedSolves: [CompSimSolve] {
+        // CSTODO + date order
+        return (self.solves!.allObjects as! [CompSimSolve]).sorted(by: {$0.date! > $1.date!})
+    }
+    
     var avg: CalculatedAverage? {
-        return StopwatchManager.calculateAverage(self.solves!.array as! [Solves], "Comp Sim Group", true)
+        return StopwatchManager.getCalculatedAverage(forSolves: self.solves!.allObjects as! [Solve], name: "Comp Sim Group", isCompsim: true)
     }
 }
 
-extension Solves: Comparable, RawGraphData {
+extension Solve: Comparable, RawGraphData {
     var timeIncPen: Double {
         get {
-            return self.time + (self.penalty == PenTypes.plustwo.rawValue ? 2 : 0)
+            return self.time + (self.penalty == Penalty.plustwo.rawValue ? 2 : 0)
         }
     }
     
     var timeIncPenDNFMax: Double {
         get {
-            return (self.penalty == PenTypes.dnf.rawValue
+            return (self.penalty == Penalty.dnf.rawValue
                     ? Double.infinity
-                    : (self.time + (self.penalty == PenTypes.plustwo.rawValue ? 2 : 0)))
+                    : (self.time + (self.penalty == Penalty.plustwo.rawValue ? 2 : 0)))
         }
     }
     
@@ -287,12 +292,12 @@ extension Solves: Comparable, RawGraphData {
         }
     }
     
-    public static func < (lhs: Solves, rhs: Solves) -> Bool {
+    public static func < (lhs: Solve, rhs: Solve) -> Bool {
         return lhs.timeIncPen < rhs.timeIncPen
     }
 
     // I don't know if i need both but better safe than sorry
-    public static func > (lhs: Solves, rhs: Solves) -> Bool {
+    public static func > (lhs: Solve, rhs: Solve) -> Bool {
         return lhs.timeIncPen > rhs.timeIncPen
     }
 }
@@ -314,8 +319,8 @@ extension RandomAccessCollection where Element : Comparable {
     }
 }
 
-extension RandomAccessCollection where Element : Solves {
-    func insertionIndexDate(solve value: Solves) -> Index {
+extension RandomAccessCollection where Element : Solve {
+    func insertionIndexDate(solve value: Solve) -> Index {
         var slice : SubSequence = self[...]
 
         while !slice.isEmpty {
@@ -342,14 +347,6 @@ extension RandomAccessCollection where Element : Solves {
 //        self.init(int: jint(cgsize.width), with: jint(cgsize.height))
 //    }
 //}
-
-// view scaled font 
-@available(iOS 15, *)
-extension View {
-    func scaledCustomFont(name: String, size: CGFloat, sf: Bool, weight: Font.Weight?) -> some View {
-        return self.modifier(ScaledCustomFont(name: name, size: size, sf: sf, weight: weight))
-    }
-}
 
 // view struct extensions
 // source: https://www.avanderlee.com/swiftui/conditional-view-modifier/
@@ -385,8 +382,8 @@ extension View {
 
 // gradient view extension
 extension View {
-    public func gradientForeground(gradientSelected: Int) -> some View {
-        self.overlay(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
+    public func gradientForeground(gradientSelected: Int, isStaticGradient: Bool) -> some View {
+        self.overlay(getGradient(gradientSelected: gradientSelected, isStaticGradient: isStaticGradient))
             .mask(self)
     }
 }
@@ -439,8 +436,8 @@ struct AppZoomWrapper: RawRepresentable, Identifiable {
 struct DynamicText: ViewModifier {
     @inlinable func body(content: Content) -> some View {
         content
-            .scaledToFill()
-            .minimumScaleFactor(0.5)
+            .scaledToFit()
+            .minimumScaleFactor(0.25)
             .lineLimit(1)
     }
 }
@@ -457,25 +454,6 @@ struct AnimatingFontSize: AnimatableModifier {
     @inlinable func body(content: Self.Content) -> some View {
         content
             .font(Font(CTFontCreateWithFontDescriptor(font, fontSize, nil)))
-    }
-}
-
-@available(iOS 15, *)
-struct ScaledCustomFont: ViewModifier {
-    @Environment(\.sizeCategory) var sizeCategory
-    
-    var name: String
-    var size: CGFloat
-    var sf: Bool
-    var weight: Font.Weight?
-    
-    func body(content: Content) -> some View {
-        let scaledSize = UIFontMetrics.default.scaledValue(for: size)
-        if sf {
-            return content.font(.system(size: scaledSize, weight: weight ?? .regular, design: .default))
-        } else {
-            return content.font(.custom(name, size: scaledSize))
-        }
     }
 }
 
@@ -522,13 +500,13 @@ struct PuzzleType {
 
 
 // MARK: - ENUMS
-enum PenTypes: Int16, Hashable {
+enum Penalty: Int16, Hashable {
     case none
     case plustwo
     case dnf
 }
 
-enum SessionTypes: Int16 {
+enum SessionType: Int16 {
     case standard
     case algtrainer
     case multiphase
@@ -552,8 +530,9 @@ func formatSolveTime(secs: Double, dp: Int) -> String {
     }
 }
 
-func formatSolveTime(secs: Double, penType: PenTypes? = PenTypes.none) -> String {
-    if penType == PenTypes.dnf {
+@available(*, deprecated, message: "Use solve.timeText instead.")
+func formatSolveTime(secs: Double, penType: Penalty? = Penalty.none) -> String {
+    if penType == Penalty.dnf {
         return "DNF"
     }
     
@@ -592,64 +571,66 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
     
     let trim = 1
     
-    guard let solves = compsimsolvegroup.solves!.array as? [Solves] else {return nil}
+    guard let solves = compsimsolvegroup.solves!.allObjects as? [Solve] else {return nil}
     
     if solves.count < 5 {
         return nil
     }
     
     let sorted = solves.sorted(by: StopwatchManager.sortWithDNFsLast)
-    let trimmedSolves: [Solves] = sorted.prefix(trim) + sorted.suffix(trim)
+    let trimmedSolves: [Solve] = sorted.prefix(trim) + sorted.suffix(trim)
     
     return CalculatedAverage(
         name: "Comp Sim",
         average: sorted.dropFirst(trim).dropLast(trim)
                 .reduce(0, {$0 + timeWithPlusTwoForSolve($1)}) / Double(3),
         accountedSolves: sorted,
-        totalPen: sorted.filter {$0.penalty == PenTypes.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
+        totalPen: sorted.filter {$0.penalty == Penalty.dnf.rawValue}.count >= trim * 2 ? .dnf : .none,
         trimmedSolves: trimmedSolves
     )
 }
 
 
-extension Solves {
-    var shareText: String {
+extension Solve {
+    var timeText: String {
         get {
-            let scramble = self.scramble ?? "Retrieving scramble failed."
-            let time = formatSolveTime(secs: self.time, penType: PenTypes(rawValue: self.penalty)!)
-            
-            return "Generated by CubeTime.\n\(time):\t\(scramble)"
+            return formatSolveTime(secs: self.time, penType: Penalty(rawValue: self.penalty)!)
         }
     }
 }
 
 
-func shareSolve(solve: Solves) {
-    let activityVC = UIActivityViewController(activityItems: [solve.shareText], applicationActivities: nil)
-    (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
-}
-
 // MARK: COPY FUNCTIONS
-func copySolve(solve: Solves) -> Void {
-    
-    UIPasteboard.general.string = solve.scramble
+func copyScramble(scramble: String) -> Void {
+    let str = "Generated by CubeTime.\n" + scramble
+    UIPasteboard.general.string = str
 }
 
-func copySolve(solves: Set<Solves>) -> Void {
-    var str = "Generated by CubeTime."
+func getShareStr(solve: Solve) -> String {
+    var str = "Generated by CubeTime.\n"
+    let scramble = solve.scramble ?? "Retrieving scramble failed."
+    let time = solve.timeText
+    
+    str += "\(time):\t\(scramble)"
+
+    return str
+}
+
+func getShareStr(solves: Set<Solve>) -> String {
+    var str = "Generated by CubeTime.\n"
     for solve in solves {
         let scramble = solve.scramble ?? "Retrieving scramble failed."
-        let time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+        let time = solve.timeText
         
         str += "\n\(time):\t\(scramble)"
     }
     
-    UIPasteboard.general.string = str
+    return str
 }
 
-func copySolve(solve: Solves, phases: Array<Double>?) -> Void {
+func getShareStr(solve: Solve, phases: Array<Double>?) -> String {
     let scramble = solve.scramble ?? "Retrieving scramble failed."
-    let time = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
+    let time = solve.timeText
     
     var str = "Generated by CubeTime.\n\(time):\t\(scramble)"
     
@@ -665,34 +646,48 @@ func copySolve(solve: Solves, phases: Array<Double>?) -> Void {
         }
     }
     
-    UIPasteboard.general.string = str
+    return str
+}
+
+func getShareStr(solves: CalculatedAverage) -> String {
+    var str = "Generated by CubeTime.\n"
+    str += "\(solves.name)"
+    if let avg = solves.average {
+        str+=": \(formatSolveTime(secs: avg, penType: solves.totalPen))"
+    }
+    str += "\n\n"
+    str += "Time List:"
+    
+    for pair in zip(solves.accountedSolves!.indices, solves.accountedSolves!) {
+        str += "\n\(pair.0 + 1). "
+        let formattedTime = formatSolveTime(secs: pair.1.time, penType: Penalty(rawValue: pair.1.penalty))
+        if solves.trimmedSolves!.contains(pair.1) {
+            str += "(" + formattedTime + ")"
+        } else {
+            str += formattedTime
+        }
+        
+        str += ":\t"+pair.1.scramble!
+    }
+    
+    return str
 }
 
 
+func copySolve(solve: Solve) -> Void {
+    UIPasteboard.general.string = getShareStr(solve: solve)
+}
+
+func copySolve(solves: Set<Solve>) -> Void {
+    UIPasteboard.general.string = getShareStr(solves: solves)
+}
+
+func copySolve(solve: Solve, phases: Array<Double>?) -> Void {
+    UIPasteboard.general.string = getShareStr(solve: solve, phases: phases)
+}
+
 func copySolve(solves: CalculatedAverage) -> Void {
-    UIPasteboard.general.string = {
-        var str = "Generated by CubeTime.\n"
-        str += "\(solves.name)"
-        if let avg = solves.average {
-            str+=": \(formatSolveTime(secs: avg, penType: solves.totalPen))"
-        }
-        str += "\n\n"
-        str += "Time List:"
-        
-        for pair in zip(solves.accountedSolves!.indices, solves.accountedSolves!) {
-            str += "\n\(pair.0 + 1). "
-            let formattedTime = formatSolveTime(secs: pair.1.time, penType: PenTypes(rawValue: pair.1.penalty))
-            if solves.trimmedSolves!.contains(pair.1) {
-                str += "(" + formattedTime + ")"
-            } else {
-                str += formattedTime
-            }
-            
-            str += ":\t"+pair.1.scramble!
-        }
-        
-        return str
-    }()
+    UIPasteboard.general.string = getShareStr(solves: solves)
 }
 
 
@@ -858,8 +853,8 @@ extension View {
 
 
 @available(*, deprecated, message: "Use solve.timeIncPen instead.")
-func timeWithPlusTwoForSolve(_ solve: Solves) -> Double {
-    return solve.time + (solve.penalty == PenTypes.plustwo.rawValue ? 2 : 0)
+func timeWithPlusTwoForSolve(_ solve: Solve) -> Double {
+    return solve.time + (solve.penalty == Penalty.plustwo.rawValue ? 2 : 0)
 }
 
 
@@ -923,7 +918,7 @@ struct ContextMenuButton: View {
         }
     }
     private func delayedAction() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + (delay ? 0.9 : 0)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + (delay ? 0.8 : 0)) {
             self.action()
         }
     }
@@ -957,11 +952,29 @@ func offsetImage(image: UIImage, offsetX: CGFloat=0, offsetY: CGFloat=0) -> UIIm
 }
 
 
-func setNavBarAppearance() -> Void {
+func setupNavbarAppearance() -> Void {
     let navBarAppearance = UINavigationBar.appearance()
     var customBackImage = UIImage(systemName: "arrow.backward")
     customBackImage = offsetImage(image: customBackImage!, offsetX: 10, offsetY: -1.5)
     navBarAppearance.backIndicatorImage = customBackImage
     navBarAppearance.backIndicatorTransitionMaskImage = customBackImage
-    navBarAppearance.tintColor = UIColor.black
+    navBarAppearance.tintColor = UIColor(named: "accent")
+//    navBarAppearance.backgroundColor = UIColor(named: "overlay1")
+    #warning("BUG: enabling this fixes background blur effect, BUT buttons on timelistview are cut off on top?")
+}
+
+
+#warning("todo: fix; doesn't seem to be working ios 15?")
+func setupColourScheme(_ mode: UIUserInterfaceStyle?) -> Void {
+    if let mode = mode {
+        keyWindow?.overrideUserInterfaceStyle = mode
+    }
+}
+
+var keyWindow: UIWindow? {
+    return UIApplication.shared.connectedScenes
+        .filter({ $0.activationState == .foregroundActive })
+        .first(where: { $0 is UIWindowScene })
+        .flatMap({ $0 as? UIWindowScene })?.windows
+        .first(where: \.isKeyWindow)
 }

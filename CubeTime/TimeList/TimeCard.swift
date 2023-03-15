@@ -9,17 +9,12 @@ struct TimeCard: View {
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    var solve: Solves
+    var solve: Solve
     
     let formattedTime: String
-    let pen: PenTypes
+    let pen: Penalty
     
-    @Binding var currentSolve: Solves?
-    @Binding var isSelectMode: Bool
-    
-    @Binding var selectedSolves: Set<Solves>
-    
-    var isSelected = false
+    @Binding var currentSolve: Solve?
     
     @Environment(\.sizeCategory) var sizeCategory
     
@@ -43,45 +38,23 @@ struct TimeCard: View {
         }
     }
     
-    
-    @Binding var sessionsCanMoveTo: [Sessions]?
-    @State var sessionsCanMoveTo_playground: [Sessions]? = nil
-    
-    init(solve: Solves, currentSolve: Binding<Solves?>, isSelectMode: Binding<Bool>, selectedSolves: Binding<Set<Solves>>, sessionsCanMoveTo: Binding<[Sessions]?>? = nil) {
+    init(solve: Solve, currentSolve: Binding<Solve?>) {
         self.solve = solve
-        self.formattedTime = formatSolveTime(secs: solve.time, penType: PenTypes(rawValue: solve.penalty)!)
-        self.pen = PenTypes(rawValue: solve.penalty)!
+        self.formattedTime = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
+        self.pen = Penalty(rawValue: solve.penalty)!
         self._currentSolve = currentSolve
-        self._isSelectMode = isSelectMode
-        self._selectedSolves = selectedSolves
-        self.isSelected = selectedSolves.wrappedValue.contains(solve)
-        self._sessionsCanMoveTo = sessionsCanMoveTo ?? Binding.constant(nil)
     }
     
     var body: some View {
-        let sess_type = stopwatchManager.currentSession.session_type
+        let sessionType = stopwatchManager.currentSession.sessionType
         ZStack {
             #warning("TODO:  check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectangle")
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(isSelected
-                      ? Color("indent0")
-                      : Color("overlay0"))
+                .fill(Color("overlay0"))
                 .frame(maxWidth: cardWidth, minHeight: cardHeight, maxHeight: cardHeight)
 
                 .onTapGesture {
-                    if isSelectMode {
-                        withAnimation(Animation.customDampedSpring) {
-                            if isSelected {
-//                                isSelected = false
-                                selectedSolves.remove(solve)
-                            } else {
-//                                isSelected = true
-                                selectedSolves.insert(solve)
-                            }
-                        }
-                    } else {
-                        currentSolve = solve
-                    }
+                    currentSolve = solve
                 }
                 .onLongPressGesture {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
@@ -91,23 +64,10 @@ struct TimeCard: View {
             VStack {
                 Text(formattedTime)
                     .font(.body.weight(.bold))
-                if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(Color("accent"))
-                }
             }
         }
         .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 8, style: .continuous))
-
-
         .contextMenu {
-//            Button {
-//            } label: {
-//                Label("Move To", systemImage: "arrow.up.forward.circle")
-//            }
-//
-            
-            
             Button {
                 copySolve(solve: solve)
             } label: {
@@ -140,8 +100,8 @@ struct TimeCard: View {
                 Label("Penalty", systemImage: "exclamationmark.triangle")
             }
             
-            if sess_type != SessionTypes.compsim.rawValue {
-                SessionPickerMenu(sessions: sess_type == SessionTypes.playground.rawValue ? sessionsCanMoveTo_playground : sessionsCanMoveTo) { session in
+            if sessionType != SessionType.compsim.rawValue {
+                SessionPickerMenu(sessions: sessionType == SessionType.playground.rawValue ? stopwatchManager.sessionsCanMoveToPlayground[Int(solve.scrambleType)] : stopwatchManager.sessionsCanMoveTo) { session in
                     withAnimation(Animation.customDampedSpring) {
                         stopwatchManager.moveSolve(solve: solve, to: session)
                     }
@@ -167,13 +127,6 @@ struct TimeCard: View {
                     Image(systemName: "trash")
                 }
             }
-        }
-        .if(sess_type == SessionTypes.playground.rawValue) { view in
-            view
-                .task {
-                    #warning("Optimize this :sob:")
-                    sessionsCanMoveTo_playground = getSessionsCanMoveTo(managedObjectContext: managedObjectContext, scrambleType: solve.scramble_type, currentSession: stopwatchManager.currentSession)
-                }
         }
     }
 }

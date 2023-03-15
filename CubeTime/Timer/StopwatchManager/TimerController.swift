@@ -9,6 +9,7 @@ import Foundation
 import AudioToolbox
 import AVFAudio
 import SwiftUI
+import Combine
 
 
 let inspectionDnfTime = 17
@@ -24,6 +25,8 @@ class TimerContoller: ObservableObject {
     let preTimerStart: (() -> ())?
     let onGesture: ((_ direction: UISwipeGestureRecognizer.Direction) -> ())?
     let onModeChange: ((_ mode: TimerState) -> ())?
+    
+    var subscriber: AnyCancellable?
     
     init(
         onStartInspection: (() -> ())? = nil,
@@ -41,11 +44,38 @@ class TimerContoller: ObservableObject {
         self.preTimerStart = preTimerStart
         self.onGesture = onGesture
         self.onModeChange = onModeChange
+        
+        subscriber = sm.preferencesChangedSubject
+            .filter { item in
+                item == \SettingsManager.displayDP
+            }
+            .sink(receiveValue: { [weak self] _ in
+                guard let self else { return }
+                self.secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: self.sm.displayDP)
+            })
     }
     
         
     @Published var secondsStr = formatSolveTime(secs: 0)
-    @Published var inspectionSecs = 0
+    
+    @Published var inspectionSecs = 0 {
+        didSet {
+            if (timerColour != Color.Timer.canStart) {
+                switch (self.inspectionSecs) {
+                    case ..<8:
+                        self.timerColour = Color.Timer.normal
+                    case 8..<12:
+                        self.timerColour = Color("yellow")
+                    case 12..<15:
+                        self.timerColour = Color("orange")
+                    default:
+                        self.timerColour = Color("red")
+                }
+            }
+        }
+    }
+    
+    
     @Published var mode: TimerState = .stopped {
         didSet {
             onModeChange?(mode)
@@ -112,6 +142,7 @@ class TimerContoller: ObservableObject {
         secondsStr = sm.inspectionCountsDown ? "15" : "0"
         inspectionSecs = 0
         mode = .inspecting
+        
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
             inspectionSecs += 1
             if sm.inspectionCountsDown {
@@ -143,6 +174,7 @@ class TimerContoller: ObservableObject {
     
     func interruptInspection() {
         mode = .stopped
+        
         timer?.invalidate()
         inspectionSecs = 0
         secondsElapsed = 0
@@ -157,6 +189,12 @@ class TimerContoller: ObservableObject {
         #if DEBUG
         NSLog("TC: Starting")
         #endif
+        
+        if phaseCount != nil {
+            currentMPCount = 1
+            phaseTimes = []
+        }
+        
         mode = .running
 
         timer?.invalidate() // Stop possibly running inspections
@@ -191,14 +229,10 @@ class TimerContoller: ObservableObject {
         }
         
         self.secondsStr = formatSolveTime(secs: self.secondsElapsed)
+        
         mode = .stopped
         
         onStop?(time, secondsElapsed, phaseTimes)
-        
-        if phaseCount != nil {
-            currentMPCount = 1
-            phaseTimes = []
-        }
     }
     
     
@@ -218,6 +252,7 @@ class TimerContoller: ObservableObject {
         if let phaseCount = phaseCount, phaseCount != currentMPCount {
             lap()
         } else {
+            lap()
             stop(nil)
         }
     }
@@ -291,5 +326,7 @@ class TimerContoller: ObservableObject {
     func lap() {
         currentMPCount += 1
         phaseTimes.append(-timerStartTime!.timeIntervalSinceNow)
+        feedbackStyle?.impactOccurred(intensity: 0.5)
+        print("lapped")
     }
 }

@@ -75,11 +75,13 @@ func getTruncatedMinMax(numbers: Array<(Double, Int)>) -> (Double?, Double?) {
 
 
 struct TimeDistribution: View {
-    @Preference(\.gradientSelected) private var gradientSelected
     @Preference(\.graphGlow) private var graphGlow
+    @Preference(\.isStaticGradient) private var isStaticGradient
+
 
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
+    @EnvironmentObject var gradientManager: GradientManager
     
     @ScaledMetric(relativeTo: .body) var monospacedFontSizeBody: CGFloat = 17
     
@@ -106,12 +108,12 @@ struct TimeDistribution: View {
                                 path.move(to: CGPoint(x: 0, y: height < 4 ? 220/4*CGFloat(height) : 226))
                                 path.addLine(to: CGPoint(x: geometry.size.width, y: height < 4 ? 220/4*CGFloat(height) : 226))
                             }
-                            .stroke(Color(uiColor: UIColor(red: 228/255, green: 230/255, blue: 238/255, alpha: 1.0)), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5, height == 4 ? 0 : 10]))
+                            .stroke(Color("grey"), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5, height == 4 ? 0 : 10]))
                         }
                     }
                 }
-                .padding()
                 .offset(y: 31)
+                .padding(.vertical)
                 
                 
                 GeometryReader { geometry in
@@ -127,13 +129,13 @@ struct TimeDistribution: View {
                         path.move(to: CGPoint(x: medianxloc, y: 225))
                         path.addLine(to: CGPoint(x: medianxloc, y: -11))
                     }
-                    .stroke(Color("grey"), style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [5, 10]))
+                    .stroke(Color("dark"), style: StrokeStyle(lineWidth: 4, lineCap: .round, dash: [5, 10]))
                     
                     ForEach(0..<data.count, id: \.self) { datum in
                         let xloc: CGFloat = (geometry.size.width / (count < 8 ? CGFloat(count+2) : 10)) * CGFloat(datum)
                         ZStack {
                             Rectangle()
-                                .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
+                                .fill(getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient))
                                 .frame(width: geometry.size.width, height: 260)
                                 .mask {
                                     Path { path in
@@ -144,22 +146,22 @@ struct TimeDistribution: View {
                                 }
                             
                             Rectangle()
-                                .fill(getGradient(gradientArray: CustomGradientColours.gradientColours, gradientSelected: gradientSelected))
+                                .fill(getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient))
                                 .frame(width: geometry.size.width, height: 260)
                                 .offset(x: -20, y: -20)
                                 .mask {
                                     Text("\(data[datum].1)")
                                         .position(x: xloc, y: (220 - max_height * CGFloat(data[datum].1)) - 10)
                                         .multilineTextAlignment(.center)
-                                        .font(FontManager.mono10Bold)
+                                        .recursiveMono(fontSize: 10, weight: .semibold)
                                 }
                                 .if(graphGlow) { view in
-                                    view.colouredGlow(gradientSelected: gradientSelected)
+                                    view.colouredGlow(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient)
                                 }
                             
                             Text((datum == 0 ? "<" : (datum == data.count-1 ? ">" : ""))+formatLegendTime(secs: data[datum].0, dp: 1)+(datum != 0 && datum != data.count-1 ? "+" : ""))
-                                .foregroundColor(Color("indent0"))
-                                .font(FontManager.mono10)
+                                .foregroundColor(Color("grey"))
+                                .recursiveMono(fontSize: 10, weight: .regular)
                                 .position(x: xloc, y: 240)
                         }
                         .padding(.horizontal)
@@ -168,22 +170,24 @@ struct TimeDistribution: View {
                     HStack (spacing: 0) {
                         Text("MEDIAN: ")
                             .font(.system(size: 11, weight: .bold, design: .default))
-                            .foregroundColor(Color("grey"))
+                            .foregroundColor(Color("dark"))
                         
                         Text(formatSolveTime(secs: stopwatchManager.normalMedian.0!))
-                            .font(FontManager.mono11Bold)
-                            .foregroundColor(Color("grey"))
+                            .recursiveMono(fontSize: 11, weight: .semibold)
+                            .foregroundColor(Color("dark"))
                     }
                     .position(x: medianxloc, y: -16)
                 }
-                .padding()
                 .offset(y: 27)
+                .padding(.vertical)
             }
         } else {
             Text("not enough solves to\ndisplay graph")
                 .recursiveMono(fontSize: 17, weight: .medium)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color("grey"))
+                .offset(y: 5)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
