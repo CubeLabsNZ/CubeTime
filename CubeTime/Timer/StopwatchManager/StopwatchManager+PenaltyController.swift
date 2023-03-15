@@ -13,6 +13,7 @@ extension StopwatchManager {
         if oldPen.rawValue == solveItem.penalty {
             return
         }
+        timeListReloadSolve?(solveItem)
         
         if Penalty(rawValue: solveItem.penalty)! == .plustwo {
             timerController.secondsStr = formatSolveTime(secs: timerController.secondsElapsed, penType: Penalty(rawValue: solveItem.penalty)!)
