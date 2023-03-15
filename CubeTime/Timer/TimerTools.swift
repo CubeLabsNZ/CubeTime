@@ -175,7 +175,7 @@ struct TimerStatsStandard: View {
             ThemedDivider()
                 .padding(.horizontal, 18)
             
-            HStack(spacing: 4) {
+            HStack(spacing: 6) {
                 TimerStat(name: "AO100", average: stopwatchManager.currentAo100, presentedAvg: $presentedAvg)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 TimerStatRaw(name: "MEAN", value: stopwatchManager.sessionMean == nil ? nil : formatSolveTime(secs: stopwatchManager.sessionMean!), placeholderText: "-")
@@ -192,26 +192,28 @@ struct TimerStatsPad: View {
     @State private var showStats: Bool = false
     
     var body: some View {
-        VStack(spacing: 6) {
-            HStack(spacing: 0) {
+        VStack(spacing: 0) {
+            HStack(spacing: 6) {
                 TimerStat(name: "AO5", average: stopwatchManager.currentAo5, presentedAvg: .constant(nil), hasIndividualGesture: false)
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 TimerStat(name: "AO12", average: stopwatchManager.currentAo12, presentedAvg: .constant(nil), hasIndividualGesture: false)
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .frame(maxHeight: .infinity)
             
             ThemedDivider()
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 18)
             
             
-            HStack(spacing: 0) {
+            HStack(spacing: 6) {
                 TimerStat(name: "AO100", average: stopwatchManager.currentAo100, presentedAvg: .constant(nil), hasIndividualGesture: false)
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 TimerStatRaw(name: "MEAN", value: stopwatchManager.sessionMean == nil ? nil : formatSolveTime(secs: stopwatchManager.sessionMean!), placeholderText: "-")
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .frame(maxHeight: .infinity)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 6)
         .onTapGesture {
             self.showStats = true
         }
@@ -241,19 +243,19 @@ struct TimerStatsCompSim: View {
             return nil
         }()
     
-        VStack(spacing: 6) {
-            HStack {
+        VStack(spacing: 0) {
+            HStack(spacing: 6) {
                 TimerStatRaw(name: "BPA", value: stopwatchManager.bpa == nil ? nil : formatSolveTime(secs: stopwatchManager.bpa!), placeholderText: "...")
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 TimerStatRaw(name: "WPA", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!), placeholderText: "...")
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             
             ThemedDivider()
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 18)
             
             TimerStatRaw(name: "TO REACH TARGET", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!), placeholderText: "...")
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }

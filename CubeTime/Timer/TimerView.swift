@@ -255,7 +255,13 @@ struct TimerView: View {
                 TextField("0.00", text: $manualInputTime)
                     .focused($manualInputFocused)
                     .frame(maxWidth: geo.size.width-32)
-                    .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 56, nil)))
+                    .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, {
+                        if (UIDevice.deviceIsPad && hSizeClass == .regular) {
+                            return 66
+                        } else {
+                            return 56
+                        }
+                    }(), nil)))
                     .multilineTextAlignment(.center)
                     .foregroundColor(timerController.timerColour)
                     .background(Color("base"))
@@ -444,7 +450,6 @@ struct TimerView: View {
                                         stopwatchManager.displayPenOptions()
                                         
                                         showManualInputFormattedText = true
-                                        
                                     } label: {
                                         Text("Done")
                                             .font(.body.weight(.medium))
@@ -463,10 +468,8 @@ struct TimerView: View {
                 .disabled(scrambleController.scrambleStr == nil)
                 .ignoresSafeArea()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                .offset(y: 40)
+                .offset(y: UIDevice.deviceIsPad && hSizeClass == .regular ? 55 : 40)
             }
-            
-            
         }
         .confirmationDialog("Unlock scramble?", isPresented: $stopwatchManager.showUnlockScrambleConfirmation, titleVisibility: .visible) {
             Button("Unlock!") {
