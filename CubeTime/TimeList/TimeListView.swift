@@ -50,11 +50,13 @@ struct SortByMenu: View {
                     Label("Has Comment", systemImage: "quote.opening")
                 }
 
-                Menu("Puzzle Type") {
-                    Picker("", selection: $stopwatchManager.scrambleTypeFilter) {
-                        Text("All Puzzles").tag(-1)
-                        ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
-                            Label(element.name, image: element.name).tag(index)
+                if (SessionType(rawValue: stopwatchManager.currentSession.sessionType) == .playground) {
+                    Menu("Puzzle Type") {
+                        Picker("", selection: $stopwatchManager.scrambleTypeFilter) {
+                            Text("All Puzzles").tag(-1)
+                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                                Label(element.name, image: element.name).tag(index)
+                            }
                         }
                     }
                 }

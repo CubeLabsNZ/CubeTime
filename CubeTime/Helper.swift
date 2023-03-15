@@ -918,7 +918,7 @@ struct ContextMenuButton: View {
         }
     }
     private func delayedAction() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + (delay ? 0.55 : 0)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + (delay ? 0.8 : 0)) {
             self.action()
         }
     }
