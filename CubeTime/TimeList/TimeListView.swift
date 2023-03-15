@@ -293,7 +293,7 @@ struct TimeListView: View {
                 }
                 .navigationTitle(isSelectMode ? "Select Solves" : "Times")
                 .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
-                /*.toolbar {
+                .toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {
                         #warning("MAKE THIS PICKER MENU")
                         if isSelectMode {
@@ -410,7 +410,7 @@ struct TimeListView: View {
                             }
                         }
                     }
-                }*/
+                }
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
