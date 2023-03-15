@@ -23,7 +23,11 @@ struct SimpleSolve: Comparable, Hashable {
     }
     
     public static func < (lhs: SimpleSolve, rhs: SimpleSolve) -> Bool {
-        return lhs.timeIncPen < rhs.timeIncPen
+        if (lhs.penalty == .dnf) { return false }
+        else if (rhs.penalty == .dnf) { return true }
+        else {
+            return lhs.timeIncPen < rhs.timeIncPen
+        }
     }
 }
 
@@ -162,14 +166,15 @@ struct CalculatorTool: View {
                                     if (solves.count < 5) {
                                         Text("SOLVE \(solves.count + 1)")
                                     } else {
-                                        Text("= " + formatSolveTime(secs: StopwatchManager.calculateAverage(forSortedSolves: solves.sorted(), count: 5, trim: 1)))
+                                        Text("= " + formatSolveTime(secs: StopwatchManager.calculateAverage(forSortedSolves: solves.sorted(), count: 5, trim: 1),
+                                                                    penType: solves.sorted()[3].penalty == .dnf ? .dnf : .none ))
                                             .font(.largeTitle.weight(.bold))
                                             .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
                                     }
                                 }
                             }
                             .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
-                            .font(.footnote.weight(.semibold))
+                            .font(.body.weight(.semibold))
                             .padding(.top, 10)
 
                             Group {
@@ -177,7 +182,7 @@ struct CalculatorTool: View {
                                     TextField("0.00", text: $currentTime)
                                         .focused($focused)
                                         .padding(.vertical, 6)
-                                        .recursiveMono(fontSize: 17, weight: .semibold)
+                                        .recursiveMono(fontSize: 20, weight: .semibold)
                                         .multilineTextAlignment(.center)
                                         .foregroundColor(Color("dark"))
                                         .background(Color("indent1"))
