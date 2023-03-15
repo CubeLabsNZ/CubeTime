@@ -53,7 +53,6 @@ struct StatsView: View {
                                         solve.date = Date()
                                         solve.scrambleType = 2
                                         solve.penalty = Penalty.none.rawValue
-                                        solve.scrambleSubtype = 0
                                         solve.session = stopwatchManager.currentSession
                                         
                                         try! managedObjectContext.save()

@@ -34,6 +34,8 @@ struct CubeTime: App {
     init() {
         persistenceController = PersistenceController.shared
         let moc = persistenceController.container.viewContext
+        moc.automaticallyMergesChangesFromParent = true
+        moc.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         
         #warning("TODO: move to WM")
         UIApplication.shared.isIdleTimerDisabled = true

@@ -174,7 +174,6 @@ extension StopwatchManager {
                 nonMultiSolve.date = solve.date
                 nonMultiSolve.penalty = solve.penalty
                 nonMultiSolve.scramble = solve.scramble
-                nonMultiSolve.scrambleSubtype = solve.scrambleSubtype
                 nonMultiSolve.scrambleType = solve.scrambleType
                 nonMultiSolve.time = solve.time
                 nonMultiSolve.session = to

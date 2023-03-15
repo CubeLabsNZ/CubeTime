@@ -450,7 +450,6 @@ class StopwatchManager: ObservableObject {
                 
                 self.solveItem.scramble = self.isScrambleLocked ? self.scrambleController.scrambleStr : (time == nil ? self.scrambleController.prevScrambleStr : self.scrambleController.scrambleStr)
                 self.solveItem.scrambleType = self.currentSession.scrambleType
-                self.solveItem.scrambleSubtype = 0
                 self.solveItem.time = secondsElapsed
                 try! managedObjectContext.save()
                 
