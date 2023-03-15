@@ -251,7 +251,7 @@ struct TimerStatsCompSim: View {
             ThemedDivider()
                 .padding(.horizontal, 24)
             
-            TimerStatRaw(name: "TO REACH TARGET", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!), placeholderText: "...")
+            TimerStatRaw(name: "TO REACH TARGET", value: timeNeededText, placeholderText: "...")
         }
         .onTapGesture {
             self.showStats = true

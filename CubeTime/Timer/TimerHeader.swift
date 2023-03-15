@@ -179,6 +179,11 @@ struct TimerHeader: View {
                                         (stopwatchManager.currentSession as! CompSimSession).target = time
                                         
                                         try! managedObjectContext.save()
+                                        
+                                        
+                                        stopwatchManager.timeNeededForTarget = stopwatchManager.getTimeNeededForTarget()
+                                        
+                                        stopwatchManager.reachedTargets = stopwatchManager.getReachedTargets()
                                     }
                                 }))
                                 .padding(.trailing, 4)
