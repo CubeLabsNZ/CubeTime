@@ -38,12 +38,6 @@ extension Color {
         static let canStart: Color = Color("green")
         static let loading: Color = Color("grey")
     }
-    
-    struct Inspection {
-        static let eight: Color = Color(red: 234/255, green: 224/255, blue: 182/255)
-        static let twelve: Color = Color(red: 234/255, green: 212/255, blue: 182/255)
-        static let penalty: Color = Color(red: 234/255, green: 194/255, blue: 192/255)
-    }
 }
 
 struct CopyButton: View {

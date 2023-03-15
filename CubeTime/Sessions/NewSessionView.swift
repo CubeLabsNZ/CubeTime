@@ -84,7 +84,6 @@ struct NewSessionView: View {
                     Spacer()
                 }
             }
-            //            .ignoresSafeArea(.keyboard)
             .navigationBarTitle("New \(typeName) Session", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

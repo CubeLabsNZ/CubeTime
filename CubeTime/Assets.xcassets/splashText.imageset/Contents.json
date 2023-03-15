@@ -1,16 +1,17 @@
 {
   "images" : [
     {
+      "filename" : "splashText.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "qa-4-sessions@2x.png",
+      "filename" : "splashText@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "qa-4-sessions@3x.png",
+      "filename" : "splashText@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

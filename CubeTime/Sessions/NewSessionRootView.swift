@@ -118,5 +118,7 @@ struct NewSessionRootView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarHidden(true)
         }
+        .accentColor(Color("accent"))
+        .tint(Color("accent"))
     }
 }

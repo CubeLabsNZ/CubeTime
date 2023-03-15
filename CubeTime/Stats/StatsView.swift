@@ -46,7 +46,7 @@ struct StatsView: View {
                                 .padding(.horizontal)
                                 #if DEBUG
                                 .onTapGesture {
-                                    for _ in 0..<10000 {
+                                    for _ in 0..<3140 {
                                         let solve: Solve = Solve(context: managedObjectContext)
                                         solve.time = Double.random(in: 0...10)
                                         solve.scramble = "sdlfkjsdlfksdjf"
