@@ -108,6 +108,9 @@ struct FloatingPanel: View {
             .zIndex(3)
         }
         .frame(width: 360)
+        .onChange(of: stages) { newValue in
+            height = newValue[stage]
+        }
     }
 }
 
