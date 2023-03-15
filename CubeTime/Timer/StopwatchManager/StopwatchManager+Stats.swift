@@ -624,15 +624,22 @@ extension StopwatchManager {
     
     
     func getTimeNeededForTarget() -> TimeNeededForTarget? {
+        NSLog("-------------HERE1-------------")
         if let compsimSession = currentSession as? CompSimSession {
             let solveGroups = compsimSolveGroups!
+            NSLog("-------------HERE2-------------")
             
             if solveGroups.count == 0 { return nil } else {
-                let lastGroupSolves = (solveGroups.last!.solves!.allObjects as! [Solve])
+                NSLog("-------------HERE3-------------")
+                let lastGroupSolves = (solveGroups.first!.solves!.allObjects as! [Solve])
                 if lastGroupSolves.count == 4 {
+                    NSLog("-------------HERE4-------------")
                     let sortedGroup = lastGroupSolves.sorted(by: Self.sortWithDNFsLast)
                     
                     let timeNeededForTarget = (compsimSession as CompSimSession).target * 3 - (sortedGroup.dropFirst().dropLast().reduce(0) {$0 + $1.timeIncPen})
+                    
+                    NSLog("-------------HERE5-------------")
+                    NSLog("TARGET: \((compsimSession as CompSimSession).target)")
                     
                     if timeNeededForTarget < sortedGroup.last!.time {
                         return .notPossible

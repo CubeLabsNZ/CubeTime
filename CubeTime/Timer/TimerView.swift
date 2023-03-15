@@ -266,6 +266,7 @@ struct TimerView: View {
                     .foregroundColor(timerController.timerColour)
                     .background(Color("base"))
                     .modifier(DynamicText())
+                    .modifier(AvoidFloatingPanel())
                     .modifier(TimeMaskTextField(text: $manualInputTime))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .ignoresSafeArea()

@@ -226,6 +226,7 @@ struct TimerStatsPad: View {
 
 struct TimerStatsCompSim: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @State private var showStats: Bool = false
 
     
     var body: some View {
@@ -254,8 +255,14 @@ struct TimerStatsCompSim: View {
             ThemedDivider()
                 .padding(.horizontal, 18)
             
-            TimerStatRaw(name: "TO REACH TARGET", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!), placeholderText: "...")
+            TimerStatRaw(name: "TO REACH TARGET", value: timeNeededText, placeholderText: "...")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .onTapGesture {
+            self.showStats = true
+        }
+        .sheet(isPresented: self.$showStats) {
+            StatsView()
         }
     }
 }
