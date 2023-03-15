@@ -261,8 +261,13 @@ extension CompSimSolveGroup: RawGraphData {
         }
     }
     
+    var orderedSolves: [CompSimSolve] {
+        // CSTODO + date order
+        return (self.solves!.allObjects as! [CompSimSolve]).sorted(by: {$0.date! > $1.date!})
+    }
+    
     var avg: CalculatedAverage? {
-        return StopwatchManager.getCalculatedAverage(forSolves: self.solves!.array as! [Solve], name: "Comp Sim Group", isCompsim: true)
+        return StopwatchManager.getCalculatedAverage(forSolves: self.solves!.allObjects as! [Solve], name: "Comp Sim Group", isCompsim: true)
     }
 }
 
@@ -566,7 +571,7 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
     
     let trim = 1
     
-    guard let solves = compsimsolvegroup.solves!.array as? [Solve] else {return nil}
+    guard let solves = compsimsolvegroup.solves!.allObjects as? [Solve] else {return nil}
     
     if solves.count < 5 {
         return nil

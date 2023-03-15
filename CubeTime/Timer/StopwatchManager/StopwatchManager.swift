@@ -75,8 +75,8 @@ class StopwatchManager: ObservableObject {
             self.phaseCount = Int((currentSession as? MultiphaseSession)?.phaseCount ?? 0)
             
             scrambleController?.scrambleType = currentSession.scrambleType
-            tryUpdateCurrentSolveth()
             statsGetFromCache()
+            tryUpdateCurrentSolveth()
             currentSession.lastUsed = Date()
             try! managedObjectContext.save()
             self.playgroundScrambleType = currentSession.scrambleType
@@ -412,17 +412,17 @@ class StopwatchManager: ObservableObject {
                 if let currentSession = self.currentSession as? CompSimSession {
                     self.solveItem = CompSimSolve(context: managedObjectContext)
                     if currentSession.solvegroups == nil {
-                        currentSession.solvegroups = NSOrderedSet()
+                        currentSession.solvegroups = NSSet()
                     }
                                         
                     if currentSession.solvegroups!.count == 0 || self.currentSolveth == 5 {
                         let solvegroup = CompSimSolveGroup(context: managedObjectContext)
                         solvegroup.session = currentSession
-                        
+                        self.updateCSSolveGroups()
                     }
                     
-                    (self.solveItem as! CompSimSolve).solvegroup = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup)
-                    self.currentSolveth = (currentSession.solvegroups!.lastObject! as? CompSimSolveGroup)!.solves!.count
+                    (self.solveItem as! CompSimSolve).solvegroup = self.compsimSolveGroups.first
+                    self.currentSolveth = self.compsimSolveGroups.first!.solves!.count
 
                 } else {
                     if let _ = self.currentSession as? MultiphaseSession {
@@ -448,14 +448,14 @@ class StopwatchManager: ObservableObject {
                 
                 #warning("scramble lock causes crash here sometimes, can't reproduce consistently")
                 
-                self.solveItem.scramble = time == nil ? self.scrambleController.prevScrambleStr : self.scrambleController.scrambleStr
+                self.solveItem.scramble = self.isScrambleLocked ? self.scrambleController.scrambleStr : (time == nil ? self.scrambleController.prevScrambleStr : self.scrambleController.scrambleStr)
                 self.solveItem.scrambleType = self.currentSession.scrambleType
                 self.solveItem.scrambleSubtype = 0
                 self.solveItem.time = secondsElapsed
                 try! managedObjectContext.save()
                 
-                // Rescramble if from manual input
-                if time != nil {
+                // Rescramble if from manual input1
+                if time != nil && !self.isScrambleLocked {
                     self.scrambleController.rescramble()
                 }
                 
@@ -523,7 +523,7 @@ class StopwatchManager: ObservableObject {
     func tryUpdateCurrentSolveth() {
         if let currentSession = currentSession as? CompSimSession {
             if currentSession.solvegroups!.count > 0 {
-                currentSolveth = (currentSession.solvegroups!.lastObject! as! CompSimSolveGroup).solves!.count
+                currentSolveth = compsimSolveGroups.first!.solves!.count
             } else {
                 currentSolveth = 0
             }

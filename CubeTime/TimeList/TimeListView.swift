@@ -195,6 +195,64 @@ struct TimeListHeader: View {
 }
 
 
+struct CompSimTimeListInner: View {
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    @Environment(\.sizeCategory) var sizeCategory
+    @EnvironmentObject var stopwatchManager: StopwatchManager
+    @Binding var solve: Solve?
+    @Binding var calculatedAverage: CalculatedAverage?
+    
+    var body: some View {
+        let columns: [GridItem] = {
+            if sizeCategory > ContentSizeCategory.extraLarge {
+                return [GridItem(spacing: 10), GridItem(spacing: 10)]
+            } else if sizeCategory < ContentSizeCategory.small {
+                return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+            } else {
+                return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
+            }
+        }()
+        
+        ScrollView {
+            LazyVStack {
+                TimeListHeader()
+                
+                let groups = stopwatchManager.compsimSolveGroups!
+                LazyVStack(spacing: 12) {
+                    
+                    if groups.count != 0 {
+                        TimeBar(solvegroup: groups.first!, currentCalculatedAverage: $calculatedAverage, isSelectMode: .constant(false), current: true)
+                        
+                        if groups.first!.solves!.allObjects.count != 0 {
+                            LazyVGrid(columns: columns, spacing: 12) {
+                                ForEach(groups.first!.orderedSolves, id: \.self) { solve in
+                                    TimeCard(solve: solve, currentSolve: $solve)
+                                }
+                            }
+                        }
+                        
+                        if groups.count > 1 {
+                            ThemedDivider()
+                                .padding(.horizontal, 8)
+                        }
+                    } else {
+                        // re-enable when we have a graphic
+                    }
+                    ForEach(groups, id: \.self) { item in
+                        if item != groups.first! {
+                            TimeBar(solvegroup: item, currentCalculatedAverage: $calculatedAverage, isSelectMode: .constant(false), current: false)
+                        }
+                    }
+                }
+                .padding(.horizontal)
+            }
+        }
+        .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
+            view.safeAreaInset(safeArea: .tabBar)
+        }
+    }
+}
+
 struct TimeListView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.colorScheme) var colourScheme
@@ -212,15 +270,6 @@ struct TimeListView: View {
     
     @State var isCleaningSession = false
     
-    private var columns: [GridItem] {
-        if sizeCategory > ContentSizeCategory.extraLarge {
-            return [GridItem(spacing: 10), GridItem(spacing: 10)]
-        } else if sizeCategory < ContentSizeCategory.small {
-            return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
-        } else {
-            return [GridItem(spacing: 10), GridItem(spacing: 10), GridItem(spacing: 10)]
-        }
-    }
     var body: some View {
         let sessionType = stopwatchManager.currentSession.sessionType
         NavigationView {
@@ -239,48 +288,12 @@ struct TimeListView: View {
                                 .ignoresSafeArea()
                         }
                     } else {
-                        ScrollView {
-                            LazyVStack {
-                                TimeListHeader()
-                                
-                                let groups = stopwatchManager.compsimSolveGroups!
-                                LazyVStack(spacing: 12) {
-                                    if groups.count != 0 {
-                                        TimeBar(solvegroup: groups.last!, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode, current: true)
-                                        
-                                        if groups.last!.solves!.array.count != 0 {
-                                            LazyVGrid(columns: columns, spacing: 12) {
-                                                ForEach(groups.last!.solves!.array as! [Solve], id: \.self) { solve in
-                                                    TimeCard(solve: solve, currentSolve: $solve)
-                                                }
-                                            }
-                                        }
-                                        
-                                        if groups.count > 1 {
-                                            ThemedDivider()
-                                                .padding(.horizontal, 8)
-                                        }
-                                    } else {
-                                        // re-enable when we have a graphic
-                                    }
-                                    
-                                    ForEach(groups, id: \.self) { item in
-                                        if item != groups.last! {
-                                            TimeBar(solvegroup: item, currentCalculatedAverage: $calculatedAverage, isSelectMode: $isSelectMode, current: false)
-                                        }
-                                    }
-                                }
-                                .padding(.horizontal)
-                            }
-                        }
-                        .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
-                            view.safeAreaInset(safeArea: .tabBar)
-                        }
+                        CompSimTimeListInner(solve: $solve, calculatedAverage: $calculatedAverage)
                     }
                 }
                 .navigationTitle(isSelectMode ? "Select Solves" : "Times")
                 .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
-                .toolbar {
+                /*.toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {
                         #warning("MAKE THIS PICKER MENU")
                         if isSelectMode {
@@ -397,7 +410,7 @@ struct TimeListView: View {
                             }
                         }
                     }
-                }
+                }*/
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())

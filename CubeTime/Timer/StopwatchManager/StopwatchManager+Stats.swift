@@ -240,15 +240,24 @@ extension StopwatchManager {
         timerController.secondsStr = formatSolveTime(secs: SettingsManager.standard.showPrevTime ? (self.solvesByDate.last?.time ?? 0) : 0)
     }
     
+    func updateCSSolveGroups() {
+        if let currentSession = currentSession as? CompSimSession {
+            // CSTODO verify order
+            compsimSolveGroups = (currentSession.solvegroups!.allObjects as! [CompSimSolveGroup]).sorted(by: {
+                // Object with no solves is more recent
+                guard let firstSolve = $0.solves?.anyObject() else { return true }
+                guard let secondSolve = $1.solves?.anyObject() else { return false }
+                return (firstSolve as! CompSimSolve).date! >
+                    (secondSolve as! CompSimSolve).date!
+            })
+        }
+    }
         
     func statsGetFromCache() {
         #warning("TODO:  get from cache actually")
         let sessionSolves = currentSession.solves!.allObjects as! [Solve]
-        var compSim = false
-        if let currentSession = currentSession as? CompSimSession {
-            compSim = true
-            compsimSolveGroups = (currentSession.solvegroups!.array as! [CompSimSolveGroup])
-        }
+        var compSim = currentSession.sessionType == SessionType.compsim.rawValue
+        updateCSSolveGroups()
         
         solves = sessionSolves.sorted(by: {$0.timeIncPen < $1.timeIncPen})
         solvesByDate = sessionSolves.sorted(by: {$0.date! < $1.date!})
@@ -284,6 +293,13 @@ extension StopwatchManager {
             
             currentCompsimAverage = getCurrentCompsimAverage()
             bestCompsimAverage = getBestCompsimAverageAndArrayOfCompsimAverages().0
+            
+            
+            let bpawpa = getWpaBpa()
+            self.bpa = bpawpa.0
+            self.wpa = bpawpa.1
+            
+            self.timeNeededForTarget = getTimeNeededForTarget()
         }
         
         currentMeanOfTen = getCurrentMeanOfTen()
@@ -429,18 +445,16 @@ extension StopwatchManager {
     }
         
     
-    static func calculateAverage(forCompsimGroup group: Any) -> Double {
-        let solves = ((group as AnyObject).solves!?.array as! [Solve]).sorted()
-        
-        return Self.calculateAverage(forSortedSolves: solves, count: 5, trim: 1)
+    static func calculateAverage(forCompsimGroup group: CompSimSolveGroup) -> Double {
+        return Self.calculateAverage(forSortedSolves: group.orderedSolves, count: 5, trim: 1)
     }
     
     func getReachedTargets() -> Int {
         var reached = 0
         
         if let compsimSession = currentSession as? CompSimSession {
-            for solvegroup in compsimSession.solvegroups!.array {
-                if (((solvegroup as AnyObject).solves!?.array as! [Solve]).count != 5) { continue }
+            for solvegroup in compsimSolveGroups {
+                if solvegroup.solves!.count != 5 { continue }
                 
                 let average = Self.calculateAverage(forCompsimGroup: solvegroup)
                 
@@ -457,12 +471,12 @@ extension StopwatchManager {
     func getCurrentCompsimAverage() -> CalculatedAverage? {
         if let compsimSession = currentSession as? CompSimSession {
             
-            let groupCount = compsimSession.solvegroups!.count
+            let groupCount = compsimSolveGroups!.count
             
             if groupCount == 0 {
                 return nil
             } else if groupCount == 1 {
-                let groupLastSolve = ((compsimSession.solvegroups!.lastObject as! CompSimSolveGroup).solves!.array as! [Solve])
+                let groupLastSolve = compsimSolveGroups.first!.solves!.allObjects as! [Solve]
                 
                 if groupLastSolve.count != 5 {
                     return nil
@@ -471,16 +485,16 @@ extension StopwatchManager {
                 }
                 
             } else {
-                let groupLastTwoSolves = (compsimSession.solvegroups!.array as! [CompSimSolveGroup]).suffix(2)
+                let groupLastTwoSolves = compsimSolveGroups.prefix(2)
                 
-                let lastInGroup = groupLastTwoSolves.last!.solves!.array as! [Solve]
+                let lastInGroup = groupLastTwoSolves.first!.solves!.allObjects as! [Solve]
                 
                 if lastInGroup.count == 5 {
                     
                     return Self.getCalculatedAverage(forSolves: lastInGroup, name: "Current Comp Sim", isCompsim: true)
                 } else {
                     
-                    return Self.getCalculatedAverage(forSolves: (groupLastTwoSolves.first!.solves!.array as! [Solve]), name: "Current Comp Sim", isCompsim: true)
+                    return Self.getCalculatedAverage(forSolves: (groupLastTwoSolves.last!.solves!.allObjects as! [Solve]), name: "Current Comp Sim", isCompsim: true)
                 }
             }
         } else {
@@ -495,18 +509,18 @@ extension StopwatchManager {
         if let compsimSession = currentSession as? CompSimSession {
             if compsimSession.solvegroups!.count == 0 {
                 return (nil, [])
-            } else if compsimSession.solvegroups!.count == 1 && (((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solve]).count != 5)  {
+            } else if compsimSession.solvegroups!.count == 1 && compsimSolveGroups.first!.orderedSolves.count != 5  {
                 /// && ((compsimSession.solvegroups!.first as AnyObject).solves!.array as! [Solves]).count != 5
                 return (nil, [])
             } else {
                 var bestAverage: CalculatedAverage?
 //                var bestAverage: CalculatedAverage = calculateAverage(((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]), "Best Comp Sim", true)!
                 
-                for solvegroup in compsimSession.solvegroups!.array {
-                    if (solvegroup as AnyObject).solves!.array.count == 5 {
+                for solvegroup in compsimSolveGroups {
+                    if solvegroup.solves!.allObjects.count == 5 {
                         
                         
-                        let currentAvg = Self.getCalculatedAverage(forSolves: (solvegroup as AnyObject).solves!.array as! [Solve], name: "Best Comp Sim", isCompsim: true)
+                        let currentAvg = Self.getCalculatedAverage(forSolves: solvegroup.solves!.allObjects as! [Solve], name: "Best Comp Sim", isCompsim: true)
                         
                         if currentAvg?.totalPen == .dnf {
                             continue
@@ -588,11 +602,11 @@ extension StopwatchManager {
         
     
     func getWpaBpa() -> (Double?, Double?) {
-        if let compsimSession = currentSession as? CompSimSession {
-            let solveGroups = (compsimSession.solvegroups!.array as! [CompSimSolveGroup])
-            
+        if currentSession is CompSimSession {
+            let solveGroups = compsimSolveGroups!
+                        
             if solveGroups.count == 0 { return (nil, nil) } else {
-                let lastGroupSolves = (solveGroups.last!.solves!.array as! [Solve])
+                let lastGroupSolves = (compsimSolveGroups.first!.solves!.allObjects as! [Solve])
                 if lastGroupSolves.count == 4 {
                     let sortedGroup = lastGroupSolves.sorted(by: Self.sortWithDNFsLast)
                     
@@ -611,10 +625,10 @@ extension StopwatchManager {
     
     func getTimeNeededForTarget() -> TimeNeededForTarget? {
         if let compsimSession = currentSession as? CompSimSession {
-            let solveGroups = (compsimSession.solvegroups!.array as! [CompSimSolveGroup])
+            let solveGroups = compsimSolveGroups!
             
             if solveGroups.count == 0 { return nil } else {
-                let lastGroupSolves = (solveGroups.last!.solves!.array as! [Solve])
+                let lastGroupSolves = (solveGroups.last!.solves!.allObjects as! [Solve])
                 if lastGroupSolves.count == 4 {
                     let sortedGroup = lastGroupSolves.sorted(by: Self.sortWithDNFsLast)
                     
