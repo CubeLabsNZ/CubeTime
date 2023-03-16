@@ -22,8 +22,9 @@ struct SessionsView: View {
         ]
     ) var sessions: FetchedResults<Session>
     
+    #warning("TODO: fix this - R")
     var body: some View {
-        NavigationView {
+//        NavigationView {
             GeometryReader { geo in
                 ZStack(alignment: .bottomLeading) {
                     BackgroundColour(isSessions: true)
@@ -101,7 +102,7 @@ struct SessionsView: View {
                     }
                 }
             }
-        }
+//        }
         .navigationViewStyle(StackNavigationViewStyle())
         .sheet(isPresented: $showNewSessionPopUp) {
             NewSessionRootView(showNewSessionPopUp: $showNewSessionPopUp)
