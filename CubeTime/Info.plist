@@ -19,10 +19,10 @@
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
-		<key>UISceneConfigurations</key>
-		<dict/>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
+		<key>UISceneConfigurations</key>
+		<dict/>
 	</dict>
 	<key>UIApplicationShortcutItems</key>
 	<array>
@@ -39,5 +39,7 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>UILaunchStoryboardName~ipad</key>
+	<string>SplashPad</string>
 </dict>
 </plist>
