@@ -1,6 +1,7 @@
 import SwiftUI
 import UIKit
 import CoreData
+import Combine
 
 
 @main
@@ -11,10 +12,6 @@ struct CubeTime: App {
     @Preference(\.dmBool) private var darkMode
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
-    /*
-    var shortcutItem: UIApplicationShortcutItem?
-     */
     
     @AppStorage("onboarding") var showOnboarding: Bool = true
     
@@ -27,9 +24,9 @@ struct CubeTime: App {
     
     @StateObject var gradientManager = GradientManager()
     
+    #warning("todo separate this into a viewmodel this is disgusting")
     @State var showUpdates: Bool = false
     @State var pageIndex: Int = 0
-    
     
     init() {
         UIApplication.shared.isIdleTimerDisabled = true
@@ -91,9 +88,6 @@ struct CubeTime: App {
                 .environmentObject(fontManager)
                 .environmentObject(tabRouter)
                 .environmentObject(gradientManager)
-//                .onAppear {
-//                    self.deviceManager.deviceOrientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation
-//                }
         }
         .onChange(of: phase) { newValue in
             switch(newValue) {

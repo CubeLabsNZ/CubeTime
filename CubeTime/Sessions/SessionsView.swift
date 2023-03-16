@@ -1,6 +1,7 @@
 import SwiftUI
 import CoreData
 import Combine
+import SwiftfulLoadingIndicators
 
 // MARK: - MAIN SESSION VIEW
 struct SessionsView: View {
@@ -8,6 +9,8 @@ struct SessionsView: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
     
     @State var showNewSessionPopUp = false
+    
+    @StateObject var cloudkitStatusManager = CloudkitStatusManager()
     
     @FetchRequest(
         entity: Session.entity(),
@@ -57,9 +60,30 @@ struct SessionsView: View {
                 }
                 .navigationTitle("Sessions")
                 .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
-                .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
-                    view.toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        if let status = cloudkitStatusManager.currentStatus {
+                            Group {
+                                if (status == 0) {
+                                    Label("Synced to iCloud", systemImage: "checkmark")
+                                        .foregroundColor(Color("accent"))
+                                        .imageScale(.medium)
+                                        .labelStyle(.titleAndIcon)
+                                } else {
+                                    Text("Failed to sync to iCloud")
+                                        .foregroundColor(Color("grey"))
+                                }
+                            }
+                            .font(.subheadline.weight(.medium))
+                        } else {
+                            LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
+                                .frame(maxHeight: 35)
+                        }
+                    }
+                    
+                    
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        if !(UIDevice.deviceIsPad && hSizeClass == .regular) {
                             NavigationLink(destination: ToolsList()) {
                                 HierarchicalButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
                                     Label("Tools", systemImage: "wrench.and.screwdriver")

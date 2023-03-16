@@ -18,6 +18,7 @@
 		235D6A6729C2C060002D90D8 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6629C2C060002D90D8 /* Models.swift */; };
 		235D6A6929C2C0D3002D90D8 /* HelperShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6829C2C0D3002D90D8 /* HelperShare.swift */; };
 		235D6A6E29C2C34E002D90D8 /* ManualInputTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6D29C2C34E002D90D8 /* ManualInputTextField.swift */; };
+		235D6A7029C2CE09002D90D8 /* CloudkitStatusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6F29C2CE09002D90D8 /* CloudkitStatusManager.swift */; };
 		2377418829A9A05A00A4F917 /* HelperUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2377418729A9A05A00A4F917 /* HelperUI.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
 		238FB42029B8175C008EC1D4 /* GradientManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238FB41F29B8175C008EC1D4 /* GradientManager.swift */; };
@@ -129,6 +130,7 @@
 		235D6A6629C2C060002D90D8 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		235D6A6829C2C0D3002D90D8 /* HelperShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperShare.swift; sourceTree = "<group>"; };
 		235D6A6D29C2C34E002D90D8 /* ManualInputTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualInputTextField.swift; sourceTree = "<group>"; };
+		235D6A6F29C2CE09002D90D8 /* CloudkitStatusManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudkitStatusManager.swift; sourceTree = "<group>"; };
 		2377418729A9A05A00A4F917 /* HelperUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperUI.swift; sourceTree = "<group>"; };
 		23783DA429AB55750036FE2B /* getBestAverage.h++ */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "getBestAverage.h++"; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
@@ -336,6 +338,7 @@
 				AF8874C229AB0BE7001E49D0 /* TimerController.swift */,
 				AF81757629B07712004838B9 /* FontManager.swift */,
 				238FB41F29B8175C008EC1D4 /* GradientManager.swift */,
+				235D6A6F29C2CE09002D90D8 /* CloudkitStatusManager.swift */,
 			);
 			path = StopwatchManager;
 			sourceTree = "<group>";
@@ -638,6 +641,7 @@
 				23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */,
 				7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */,
 				AF8874C529AB3736001E49D0 /* ScrambleGeneratorTool.swift in Sources */,
+				235D6A7029C2CE09002D90D8 /* CloudkitStatusManager.swift in Sources */,
 				23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */,
 				7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */,
 				23B7AC3A29BAB2E300B5C9B4 /* TimerTools.swift in Sources */,
