@@ -50,7 +50,7 @@ struct ShadowLight: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .shadow(color: env == .dark ? .clear : Color("indent1").opacity(0.5), radius: 6, x: x, y: y)
+            .shadow(color: env == .dark ? .clear : Color.black.opacity(0.04), radius: 6, x: x, y: y)
     }
 }
 
@@ -62,7 +62,7 @@ struct ShadowDark: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .shadow(color: env == .dark ? .clear : Color("indent1"), radius: 4, x: x, y: y)
+            .shadow(color: env == .dark ? .clear : Color.black.opacity(0.07), radius: 4, x: x, y: y)
     }
 }
 

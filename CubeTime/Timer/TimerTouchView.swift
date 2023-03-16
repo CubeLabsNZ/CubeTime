@@ -45,52 +45,82 @@ class TimerUIView: UIViewController {
                 return Penalty(rawValue: pen)
             }()
             
-            return [
-                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve(key:)), input: "\u{08}", discoverabilityTitle: "Delete Solve", attributes: .destructive),
-                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve(key:)), input: UIKeyCommand.inputDelete, discoverabilityTitle: "Delete Solve", attributes: .destructive),
+            var commands = [
+                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve), input: "\u{08}", discoverabilityTitle: "Delete Solve", attributes: .destructive),
+                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve), input: UIKeyCommand.inputDelete, discoverabilityTitle: "Delete Solve", attributes: .destructive),
                 // ANSI delete (above doesnt register in simulator? not sure
-                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve(key:)), input: "\u{7F}", attributes: .destructive),
-                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve(key:)), input: "z", modifierFlags: [.command], discoverabilityTitle: "Delete Solve", attributes: .destructive),
+                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve), input: "\u{7F}", attributes: .destructive),
+                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve), input: "z", modifierFlags: [.command], discoverabilityTitle: "Delete Solve", attributes: .destructive),
                 
-                UIKeyCommand(title: "New Scramble", action: #selector(newScr(key:)), input: "+", discoverabilityTitle: "New Scramble"),
-                UIKeyCommand(title: "New Scramble", action: #selector(newScr(key:)), input: "n", modifierFlags: [.command], discoverabilityTitle: "New Scramble"),
-                UIKeyCommand(title: "New Scramble", action: #selector(newScr(key:)), input: UIKeyCommand.inputRightArrow, modifierFlags: [.command], discoverabilityTitle: "New Scramble"),
+                UIKeyCommand(title: "New Scramble", action: #selector(newScr), input: "+", discoverabilityTitle: "New Scramble"),
+                UIKeyCommand(title: "New Scramble", action: #selector(newScr), input: "n", modifierFlags: [.command], discoverabilityTitle: "New Scramble"),
+                UIKeyCommand(title: "New Scramble", action: #selector(newScr), input: UIKeyCommand.inputRightArrow, modifierFlags: [.command], discoverabilityTitle: "New Scramble"),
                 
-                UIKeyCommand(title: "Penalty: None", action: #selector(penNone(key:)), input: "1", modifierFlags: [.command], discoverabilityTitle: "Remove the current penalty", state: curPen == Penalty.none ? .on : .off),
-                UIKeyCommand(title: "Penalty: +2", action: #selector(penPlus2(key:)), input: "2", modifierFlags: [.command], discoverabilityTitle: "Set the current penalty to +2", state: curPen == .plustwo ? .on : .off),
-                UIKeyCommand(title: "Penalty: DNF", action: #selector(penDNF(key:)), input: "3", modifierFlags: [.command], discoverabilityTitle: "Set the current penalty to DNF", state: curPen == .dnf ? .on : .off),
-                
-                
-                UIKeyCommand(title: "Playground scramble: 2x2", action: #selector(setScrambleTo2x2(key:)), input: "2", modifierFlags: [.alternate], discoverabilityTitle: "Set the current playground scramble to 2x2")
+                UIKeyCommand(title: "Penalty: None", action: #selector(penNone), input: "1", modifierFlags: [.command], discoverabilityTitle: "Remove penalty", state: curPen == Penalty.none ? .on : .off),
+                UIKeyCommand(title: "Penalty: +2", action: #selector(penPlus2), input: "2", modifierFlags: [.command], discoverabilityTitle: "Set penalty to +2", state: curPen == Penalty.plustwo ? .on : .off),
+                UIKeyCommand(title: "Penalty: DNF", action: #selector(penDNF), input: "3", modifierFlags: [.command], discoverabilityTitle: "Set penalty to DNF", state: curPen == Penalty.dnf ? .on : .off),
             ]
+            
+            if (SessionType(rawValue: stopwatchManager.currentSession.sessionType) == .playground) {
+                commands += [
+                    UIKeyCommand(title: "Scramble: 2x2", action: #selector(setScrambleTo2x2), input: "2", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to 2x2"),
+                    UIKeyCommand(title: "Scramble: 3x3", action: #selector(setScrambleTo3x3), input: "3", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to 3x3"),
+                    UIKeyCommand(title: "Scramble: 4x4", action: #selector(setScrambleTo4x4), input: "4", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to 4x4"),
+                    UIKeyCommand(title: "Scramble: 5x5", action: #selector(setScrambleTo5x5), input: "5", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to 5x5"),
+                    UIKeyCommand(title: "Scramble: 6x6", action: #selector(setScrambleTo6x6), input: "6", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to 6x6"),
+                    UIKeyCommand(title: "Scramble: 7x7", action: #selector(setScrambleTo7x7), input: "7", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to 7x7"),
+                    UIKeyCommand(title: "Scramble: Square-1", action: #selector(setScrambleToSquare1), input: "1", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to Square-1"),
+                    UIKeyCommand(title: "Scramble: Megaminx", action: #selector(setScrambleToMegaminx), input: "M", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to Megaminx"),
+                    UIKeyCommand(title: "Scramble: Pyraminx", action: #selector(setScrambleToPyraminx), input: "P", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to Pyraminx"),
+                    UIKeyCommand(title: "Scramble: Clock", action: #selector(setScrambleToClock), input: "C", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to Clock"),
+                    UIKeyCommand(title: "Scramble: Skewb", action: #selector(setScrambleToSkewb), input: "S", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to Skewb"),
+                    UIKeyCommand(title: "Scramble: 3x3 OH", action: #selector(setScrambleToOH), input: "O", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to 3x3 OH"),
+                    UIKeyCommand(title: "Scramble: 3x3 BLD", action: #selector(setScrambleTo3BLD), input: "B", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to 3x3 BLD"),
+                    UIKeyCommand(title: "Scramble: 4x4 BLD", action: #selector(setScrambleTo4BLD), input: "8", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to 4x4 BLD"),
+                    UIKeyCommand(title: "Scramble: 5x5 BLD", action: #selector(setScrambleTo5BLD), input: "9", modifierFlags: [.alternate], discoverabilityTitle: "Set scramble to 5x5 BLD")
+                ]
+            }
+            
+            return commands
         }
     }
     
-    @objc func deleteSolve(key: UIKeyCommand?) {
+    @objc func deleteSolve() {
         stopwatchManager.deleteLastSolve()
     }
     
-    @objc func newScr(key: UIKeyCommand?) {
+    @objc func newScr() {
         stopwatchManager.scrambleController.rescramble()
     }
     
-    @objc func penNone(key: UIKeyCommand?) {
+    @objc func penNone() {
         stopwatchManager.changePen(to: .none)
     }
     
-    @objc func penPlus2(key: UIKeyCommand?) {
+    @objc func penPlus2() {
         stopwatchManager.changePen(to: .plustwo)
     }
     
-    @objc func penDNF(key: UIKeyCommand?) {
+    @objc func penDNF() {
         stopwatchManager.changePen(to: .dnf)
     }
     
-    @objc func setScrambleTo2x2(key: UIKeyCommand?) {
-        if SessionType(rawValue: stopwatchManager.currentSession.sessionType) == .playground {
-            stopwatchManager.playgroundScrambleType = 0
-        }
-    }
+    @objc func setScrambleTo2x2() { stopwatchManager.playgroundScrambleType = 0 }
+    @objc func setScrambleTo3x3() { stopwatchManager.playgroundScrambleType = 1 }
+    @objc func setScrambleTo4x4() { stopwatchManager.playgroundScrambleType = 2 }
+    @objc func setScrambleTo5x5() { stopwatchManager.playgroundScrambleType = 3 }
+    @objc func setScrambleTo6x6() { stopwatchManager.playgroundScrambleType = 4 }
+    @objc func setScrambleTo7x7() { stopwatchManager.playgroundScrambleType = 5 }
+    @objc func setScrambleToSquare1() { stopwatchManager.playgroundScrambleType = 6 }
+    @objc func setScrambleToMegaminx() { stopwatchManager.playgroundScrambleType = 7 }
+    @objc func setScrambleToPyraminx() { stopwatchManager.playgroundScrambleType = 8 }
+    @objc func setScrambleToClock() { stopwatchManager.playgroundScrambleType = 9 }
+    @objc func setScrambleToSkewb() { stopwatchManager.playgroundScrambleType = 10 }
+    @objc func setScrambleToOH() { stopwatchManager.playgroundScrambleType = 11 }
+    @objc func setScrambleTo3BLD() { stopwatchManager.playgroundScrambleType = 12 }
+    @objc func setScrambleTo4BLD() { stopwatchManager.playgroundScrambleType = 13 }
+    @objc func setScrambleTo5BLD() { stopwatchManager.playgroundScrambleType = 14 }
+    
     
     // iPad keyboard support
     
