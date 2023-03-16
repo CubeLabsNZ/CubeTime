@@ -22,6 +22,7 @@ struct SessionCard: View {
     let name: String
     let scrambleType: Int
     let solveCount: Int
+    #warning("TODO: remove this ( i have idea )")
     let parentGeo: GeometryProxy
     
     @Namespace var namespace
