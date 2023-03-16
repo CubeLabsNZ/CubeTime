@@ -40,7 +40,26 @@
    * Clean tab bar for effortless navigation
 
 ## Screenshots
-Coming soon!
+
+#### iOS
+<p align="middle">
+  <img src="https://user-images.githubusercontent.com/65262710/225591753-e764aef2-4694-4ba9-bf7a-e5959cef555f.png" width="19%" />
+  
+  <img src="https://user-images.githubusercontent.com/65262710/225591798-1e647057-88fa-49c3-be67-0c5804efebdc.png" width="19%" />
+  
+  <img src="https://user-images.githubusercontent.com/65262710/225592018-3c1ceb5a-7c22-4d40-a713-4682aec12532.png" width="19%" />
+  
+  <img src="https://user-images.githubusercontent.com/65262710/225592044-f631703d-3b81-4b60-9e5a-8c1e89f9c24f.png" width="19%" />
+  
+  <img src="https://user-images.githubusercontent.com/65262710/225592066-2f36a0c1-505f-44be-8c15-a8bb218c47ba.png" width="19%" />
+</p>
+
+
+#### iPadOS
+![1](https://user-images.githubusercontent.com/65262710/225591896-848e0441-24ae-4c3e-a702-c164dc5ab140.png)
+![2](https://user-images.githubusercontent.com/65262710/225591921-5709b01f-daed-4fda-a49a-01ee73aafb90.png)
+![6](https://user-images.githubusercontent.com/65262710/225591977-f19c13c9-22c4-42b1-b62f-1a093e0b89af.png)
+
 
 ## Features
 ### App Features
@@ -78,16 +97,17 @@ Coming soon!
   * batch scramble generator
   * timer only and scramble only tool
 
+- iPad® support, including:
+  * Keyboard shortcuts
+  * Trackpad support
+  * Multitasking window support
+  
+- CloudKit® for iCloud® time syncing
      
 ### Upcoming Features
 
 You can view our [Todo List for this repo](https://github.com/orgs/CubeStuffs/projects/3) for a list of all our upcoming features. You can add suggestions by opening an issue.
 Here's an outline of some of the major upcoming features
-- iPad® support, including:
-  * Keyboard shortcuts
-  * Trackpad support
-  * Multitasking window support
-- Cloudkit for time syncing
 - Support for bluetooth cubes
 - Support for stackmats
 - Importing sessions and solves from common timers, such as ChaoTimer and csTimer
