@@ -530,7 +530,6 @@ func formatSolveTime(secs: Double, dp: Int) -> String {
     }
 }
 
-@available(*, deprecated, message: "Use solve.timeText instead.")
 func formatSolveTime(secs: Double, penType: Penalty? = Penalty.none) -> String {
     if penType == Penalty.dnf {
         return "DNF"
@@ -721,7 +720,6 @@ struct TimeMaskTextField: ViewModifier {
         content
             .keyboardType(text.count > 2 ? .numberPad : .decimalPad)
             .onChange(of: text) { newValue in
-                NSLog("ONRECEIVE, text: \(text)")
                 refilter()
                 
                 onReceiveAlso?(text)

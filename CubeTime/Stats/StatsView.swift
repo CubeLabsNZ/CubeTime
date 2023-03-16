@@ -146,7 +146,7 @@ struct StatsView: View {
                                     
                                     
                                     if SessionType(rawValue: stopwatchManager.currentSession.sessionType)! == .multiphase {
-                                        StatsBlock(title: "AVERAGE PHASES", blockHeight: stopwatchManager.solvesNoDNFs.count == 0 ? blockGraphEmpty : nil, isBigBlock: true) {
+                                        StatsBlock(title: "AVERAGE PHASES", blockHeight: stopwatchManager.solvesNoDNFs.count == 0 ? blockGraphEmpty : nil, isBigBlock: true, isTappable: false) {
                                                 AveragePhases(phaseTimes: stopwatchManager.phases!, count: stopwatchManager.solvesNoDNFsbyDate.count)
                                         }
                                     }
@@ -208,7 +208,7 @@ struct StatsView: View {
                                             
                                             
                                             
-                                            StatsBlock(title: "AVERAGES", blockHeight: blockHeightSmall) {
+                                            StatsBlock(title: "AVERAGES", blockHeight: blockHeightSmall, isTappable: false) {
                                                 StatsBlockText(displayText: String(describing: stopwatchManager.compSimCount!), nilCondition: true)
                                             }
                                         }
@@ -278,12 +278,12 @@ struct StatsView: View {
                                     
                                     
                                     HStack(spacing: 10) {
-                                        StatsBlock(title: "TARGET", blockHeight: blockHeightSmall) {
+                                        StatsBlock(title: "TARGET", blockHeight: blockHeightSmall, isTappable: false) {
                                             StatsBlockText(displayText: formatSolveTime(secs: (stopwatchManager.currentSession as! CompSimSession).target, dp: 2), nilCondition: true)
                                         }
                                             .frame(minWidth: 0, maxWidth: .infinity)
                                         
-                                        StatsBlock(title: "REACHED", blockHeight: blockHeightSmall) {
+                                        StatsBlock(title: "REACHED", blockHeight: blockHeightSmall, isTappable: false) {
                                             if (stopwatchManager.compSimCount == 0) {
                                                 StatsBlockText(displayText: "", nilCondition: false)
                                             } else {
@@ -295,14 +295,14 @@ struct StatsView: View {
                                     .padding(.horizontal)
                                     
                                     
-                                    StatsBlock(title: "REACHED TARGETS", blockHeight: blockHeightReachedTargets, isBigBlock: true) {
+                                    StatsBlock(title: "REACHED TARGETS", blockHeight: blockHeightReachedTargets, isBigBlock: true, isTappable: false) {
                                         ReachedTargets(reachedCount: stopwatchManager.reachedTargets, totalCount: stopwatchManager.compSimCount)
                                     }
                                     .padding(.bottom, 8)
                                     
                                     
                                     HStack(spacing: 10) {
-                                        StatsBlock(title: "CURRENT MO10 AO5", blockHeight: blockHeightSmall) {
+                                        StatsBlock(title: "CURRENT MO10 AO5", blockHeight: blockHeightSmall, isTappable: false) {
                                             if let currentMeanOfTen = stopwatchManager.currentMeanOfTen {
                                                 StatsBlockText(displayText: formatSolveTime(secs: currentMeanOfTen, penType: ((currentMeanOfTen == -1) ? .dnf : Penalty.none)), nilCondition: true)
                                                 StatsBlockText(displayText: "", nilCondition: false)
@@ -312,7 +312,7 @@ struct StatsView: View {
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
-                                        StatsBlock(title: "BEST MO10 AO5", blockHeight: blockHeightSmall) {
+                                        StatsBlock(title: "BEST MO10 AO5", blockHeight: blockHeightSmall, isTappable: false) {
                                             if let bestMeanOfTen = stopwatchManager.bestMeanOfTen {
                                                 StatsBlockText(displayText: formatSolveTime(secs: bestMeanOfTen, penType: ((bestMeanOfTen == -1) ? .dnf : Penalty.none)), nilCondition: true)
                                             } else {
@@ -337,7 +337,7 @@ struct StatsView: View {
                                 
                                 
                                 #warning("TODO: add settings customisation to choose how many solves to show")
-                                StatsBlock(title: "TIME TREND", blockHeight: (timeTrendData.count < 2 ? blockGraphEmpty : 310), isBigBlock: true) {
+                                StatsBlock(title: "TIME TREND", blockHeight: (timeTrendData.count < 2 ? blockGraphEmpty : 310), isBigBlock: true, isTappable: false) {
                                     TimeTrend(data: Array(timeTrendData.prefix(80)), title: nil)
                                         .drawingGroup()
                                 }
@@ -347,7 +347,7 @@ struct StatsView: View {
 //                                }
                                  
                                 
-                                StatsBlock(title: "TIME DISTRIBUTION", blockHeight: (timeDistributionData.count < 4 ? blockGraphEmpty : 300), isBigBlock: true) {
+                                StatsBlock(title: "TIME DISTRIBUTION", blockHeight: (timeDistributionData.count < 4 ? blockGraphEmpty : 300), isBigBlock: true, isTappable: false) {
                                     TimeDistribution(solves: timeDistributionData)
                                         .drawingGroup()
                                         .frame(height: timeDistributionData.count < 4 ? blockGraphEmpty : 300)

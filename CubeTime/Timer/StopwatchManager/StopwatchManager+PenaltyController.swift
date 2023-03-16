@@ -64,7 +64,6 @@ extension StopwatchManager {
         
         solve.penalty = pen.rawValue
         if timeListSolvesFiltered.contains(solve) {
-            NSLog("RELOADING SOLVE")
             timeListReloadSolve?(solve)
         }
         

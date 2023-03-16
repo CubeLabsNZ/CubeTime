@@ -224,8 +224,6 @@ struct SessionCard: View {
                             next = item
                             break
                         }
-                        /// **this should theoretically never happen, as the deletion option will be disabled if solves <= 1**
-                        NSLog("ERROR: cannot find next session to replace current session")
                     }
                     
                     if let next = next {

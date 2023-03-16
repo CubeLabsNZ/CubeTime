@@ -12,7 +12,7 @@ struct TimerMenu: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @Namespace private var namespace
     
-    @State var expanded = false
+    @Binding var expanded: Bool
     
     @State private var showTools: Bool = false
     @State private var showSettings: Bool = false

@@ -25,7 +25,6 @@ struct PersistenceController {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         } else {
             container = NSPersistentCloudKitContainer(name: "txmerdata")
-            print("using cloudkit")
         }
         
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in

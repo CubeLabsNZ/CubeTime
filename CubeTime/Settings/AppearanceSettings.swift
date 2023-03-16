@@ -58,7 +58,6 @@ struct AppearanceSettingsView: View {
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            print("HERE")
                             withAnimation(Animation.customSlowSpring) {
                                 showThemeOptions.toggle()
                             }

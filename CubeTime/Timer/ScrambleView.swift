@@ -16,7 +16,6 @@ struct AsyncSVGView: View {
                 SVGView(string: svg)
                     .aspectRatio(contentMode: .fit)
             } else {
-                #warning("weird bug, full circle...")
                 LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
             }
         }

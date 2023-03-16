@@ -46,8 +46,6 @@ class TimerUIView: UIViewController {
                 return Penalty(rawValue: pen)
             }()
             
-            NSLog("CURPEN is \(curPen)")
-            
             return [
                 UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve(key:)), input: "\u{08}", discoverabilityTitle: "Delete Solve", attributes: .destructive),
                 UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve(key:)), input: UIKeyCommand.inputDelete, discoverabilityTitle: "Delete Solve", attributes: .destructive),
@@ -162,7 +160,6 @@ struct TimerTouchView: UIViewControllerRepresentable {
         pan.allowedScrollTypesMask = .all
         pan.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirectPointer.rawValue)]
         v.view.addGestureRecognizer(pan)
-        NSLog("\(SettingsManager.standard.gestureDistance)")
         
         for direction in [UISwipeGestureRecognizer.Direction.up, UISwipeGestureRecognizer.Direction.down, UISwipeGestureRecognizer.Direction.left, UISwipeGestureRecognizer.Direction.right] {
             let gesture = UISwipeGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.swipe))
@@ -250,12 +247,6 @@ struct TimerTouchView: UIViewControllerRepresentable {
                 
                 let v_x = velocity.x
                 let v_y = velocity.y
-                
-                NSLog("\(translation.x)")
-//                NSLog("\(translation.y)")
-//                NSLog("\(velocity.x)")
-//                NSLog("\(velocity.y)")
-                
                 
                 if v_x.magnitude > sm.gestureDistanceTrackpad || v_y.magnitude > sm.gestureDistanceTrackpad {
                     panHasTriggeredGesture = true

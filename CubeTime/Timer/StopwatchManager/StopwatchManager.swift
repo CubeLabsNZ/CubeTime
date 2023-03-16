@@ -43,6 +43,20 @@ struct CalculatedAverage: Identifiable, Comparable/*, Equatable, Comparable*/ {
     }
 }
 
+struct Average: Identifiable, Comparable {
+    let id = UUID()
+    
+    let average: Double
+    let penalty: Penalty
+    
+    static func < (lhs: Average, rhs: Average) -> Bool {
+        if (lhs.penalty == .dnf) { return false }
+        if (rhs.penalty == .dnf) { return true }
+        
+        return lhs.average < rhs.average
+    }
+}
+
 func setupAudioSession() {
     let audioSession = AVAudioSession.sharedInstance()
     do {
@@ -209,8 +223,9 @@ class StopwatchManager: ObservableObject {
     
     @Published var sessionMean: Double?
     
-    @Published var bpa: Double?
-    @Published var wpa: Double?
+    #warning("todo: merge average and calculatedaverage, and fix the functions")
+    @Published var bpa: Average?
+    @Published var wpa: Average?
     
     @Published var timeNeededForTarget: TimeNeededForTarget?
     
@@ -385,6 +400,7 @@ class StopwatchManager: ObservableObject {
     init (currentSession: Session?, managedObjectContext: NSManagedObjectContext) {
         #if DEBUG
         NSLog("Initialising Audio...")
+        NSLog("Initialising Stopwatch Manager")
         #endif
         
         setupAudioSession()
@@ -440,10 +456,6 @@ class StopwatchManager: ObservableObject {
                 // .puzzle_id
                 self.solveItem.session = self.currentSession
                 // Use the current scramble if stopped from manual input
-                
-                #if DEBUG
-                print(time, self.scrambleController.prevScrambleStr, self.scrambleController.scrambleStr)
-                #endif
                 
                 
                 #warning("scramble lock causes crash here sometimes, can't reproduce consistently")

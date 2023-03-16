@@ -438,7 +438,6 @@ struct TimeListView: View {
         }
         
         .onChange(of: stopwatchManager.timeListSolvesSelected) { newValue in
-            NSLog("num of selected solves: \(newValue.count)")
             if newValue.count == 0 {
                 isSelectMode = false
                 return
@@ -449,10 +448,6 @@ struct TimeListView: View {
             }
             
             let uniqueScrambles = Set(stopwatchManager.timeListSolvesSelected.map{$0.scrambleType})
-            
-            #if DEBUG
-            NSLog("TIMELISTVIEW SELECT: \(uniqueScrambles)")
-            #endif
             
             if uniqueScrambles.count > 1 {
                 sessionsCanMoveToPlaygroundContextMenu = stopwatchManager.allPlaygroundSessions

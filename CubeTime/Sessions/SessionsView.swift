@@ -19,7 +19,6 @@ struct SessionsView: View {
     ) var sessions: FetchedResults<Session>
     
     var body: some View {
-        let _ = NSLog("\(sessions.map({$0.scrambleType}))")
         NavigationView {
             GeometryReader { geo in
                 ZStack(alignment: .bottomLeading) {
