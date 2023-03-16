@@ -107,10 +107,10 @@ struct StatsDetailView: View {
                                         .frame(width: 22, height: 22)
                                     
                                 } else {
-                                    Text(puzzle_types[Int(session.scrambleType)].name)
+                                    Text(puzzleTypes[Int(session.scrambleType)].name)
                                         .font(.title3.weight(.semibold))
                                     
-                                    Image(puzzle_types[Int(session.scrambleType)].name)
+                                    Image(puzzleTypes[Int(session.scrambleType)].name)
                                         .resizable()
                                         .frame(width: 22, height: 22)
                                     

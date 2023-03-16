@@ -23,7 +23,6 @@ class TimerUIView: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         UIApplication.shared.isIdleTimerDisabled = true
-        #warning("TODO: make this actually work: impelemnt in swm (possibly remove in application delegate")
         timerController.touchDown()
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -57,11 +56,12 @@ class TimerUIView: UIViewController {
                 UIKeyCommand(title: "New Scramble", action: #selector(newScr(key:)), input: "n", modifierFlags: [.command], discoverabilityTitle: "New Scramble"),
                 UIKeyCommand(title: "New Scramble", action: #selector(newScr(key:)), input: UIKeyCommand.inputRightArrow, modifierFlags: [.command], discoverabilityTitle: "New Scramble"),
                 
-                UIKeyCommand(title: "Penalty None", action: #selector(penNone(key:)), input: "1", modifierFlags: [.command], discoverabilityTitle: "Penalty None", state: curPen == Penalty.none ? .on : .off),
-                UIKeyCommand(title: "Penalty +2", action: #selector(penPlus2(key:)), input: "2", modifierFlags: [.command], discoverabilityTitle: "Penalty +2", state: curPen == .plustwo ? .on : .off),
-                UIKeyCommand(title: "Penalty DNF", action: #selector(penDNF(key:)), input: "3", modifierFlags: [.command], discoverabilityTitle: "Penalty DNF", state: curPen == .dnf ? .on : .off),
+                UIKeyCommand(title: "Penalty: None", action: #selector(penNone(key:)), input: "1", modifierFlags: [.command], discoverabilityTitle: "Remove the current penalty", state: curPen == Penalty.none ? .on : .off),
+                UIKeyCommand(title: "Penalty: +2", action: #selector(penPlus2(key:)), input: "2", modifierFlags: [.command], discoverabilityTitle: "Set the current penalty to +2", state: curPen == .plustwo ? .on : .off),
+                UIKeyCommand(title: "Penalty: DNF", action: #selector(penDNF(key:)), input: "3", modifierFlags: [.command], discoverabilityTitle: "Set the current penalty to DNF", state: curPen == .dnf ? .on : .off),
                 
                 
+                UIKeyCommand(title: "Playground scramble: 2x2", action: #selector(setScrambleTo2x2(key:)), input: "2", modifierFlags: [.alternate], discoverabilityTitle: "Set the current playground scramble to 2x2")
             ]
         }
     }
@@ -84,6 +84,12 @@ class TimerUIView: UIViewController {
     
     @objc func penDNF(key: UIKeyCommand?) {
         stopwatchManager.changePen(to: .dnf)
+    }
+    
+    @objc func setScrambleTo2x2(key: UIKeyCommand?) {
+        if SessionType(rawValue: stopwatchManager.currentSession.sessionType) == .playground {
+            stopwatchManager.playgroundScrambleType = 0
+        }
     }
     
     // iPad keyboard support

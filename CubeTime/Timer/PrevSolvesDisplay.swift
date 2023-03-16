@@ -11,7 +11,7 @@ struct PrevSolvesDisplay: View {
             ForEach((count != nil)
                     ? stopwatchManager.solvesByDate.suffix(count!)
                     : stopwatchManager.solvesByDate, id: \.self) { solve in
-                #warning("TODO:  popup")
+                
                 TimeCard(solve: solve, currentSolve: $solve)
             }
         }

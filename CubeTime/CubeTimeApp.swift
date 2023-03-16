@@ -32,16 +32,13 @@ struct CubeTime: App {
     
     
     init() {
+        UIApplication.shared.isIdleTimerDisabled = true
+        
         persistenceController = PersistenceController.shared
         let moc = persistenceController.container.viewContext
         moc.automaticallyMergesChangesFromParent = true
         moc.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         
-        #warning("TODO: move to WM")
-        UIApplication.shared.isIdleTimerDisabled = true
-        
-
-        let userDefaults = UserDefaults.standard
         
         // https://swiftui-lab.com/random-lessons/#data-10
         self._stopwatchManager = StateObject(wrappedValue: StopwatchManager(currentSession: nil, managedObjectContext: moc))

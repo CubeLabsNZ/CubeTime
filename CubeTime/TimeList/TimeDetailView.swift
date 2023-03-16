@@ -43,7 +43,7 @@ struct TimeDetailView: View {
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
         self.time = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
-        self.puzzle_type = puzzle_types[Int(solve.scrambleType)]
+        self.puzzle_type = puzzleTypes[Int(solve.scrambleType)]
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
                 
         if let multiphaseSolve = (solve as? MultiphaseSolve), let phases = multiphaseSolve.phases {
@@ -253,19 +253,20 @@ struct TimeDetailView: View {
                             
                             
                             if (stopwatchManager.currentSession.sessionType == SessionType.multiphase.rawValue) {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("PHASES")
-                                        .font(.subheadline.weight(.semibold))
-                                    
-                                    ThemedDivider()
-                                    
-                                    #warning("TODO: ERROR CHECKING")
-                                    AveragePhases(phaseTimes: phases!, count: phases!.count)
-                                        .padding(.top, -24)
-                                        .padding(.bottom, -12)
+                                if let phases = phases {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("PHASES")
+                                            .font(.subheadline.weight(.semibold))
+                                        
+                                        ThemedDivider()
+                                        
+                                        AveragePhases(phaseTimes: phases, count: phases.count)
+                                            .padding(.top, -24)
+                                            .padding(.bottom, -12)
+                                    }
+                                    .padding(12)
+                                    .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
                                 }
-                                .padding(12)
-                                .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
                             }
                             
                             

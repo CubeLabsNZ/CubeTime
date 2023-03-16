@@ -10,7 +10,6 @@ import SwiftUI
 struct PenaltyButton: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @Environment(\.managedObjectContext) private var managedObjectContext
-    @Environment(\.colorScheme) private var colourScheme
     
     let penType: Penalty
     let penSymbol: String
@@ -43,7 +42,6 @@ struct PenaltyButton: View {
 
 
 struct PenaltyBar<Content: View>: View {
-    @Environment(\.colorScheme) var colourScheme
     let buttons: Content
     
     init(@ViewBuilder buttons: () -> Content) {

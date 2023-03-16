@@ -6,7 +6,6 @@ enum StatsBlockColour {
 }
 
 struct StatsBlock<Content: View>: View {
-    @Environment(\.colorScheme) var colourScheme
     @Preference(\.isStaticGradient) private var isStaticGradient
     @EnvironmentObject var gradientManager: GradientManager
     
@@ -77,7 +76,6 @@ struct StatsBlock<Content: View>: View {
 
 
 struct StatsBlockText: View {
-    @Environment(\.colorScheme) var colourScheme
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @EnvironmentObject var gradientManager: GradientManager
     @Preference(\.isStaticGradient) private var isStaticGradient
@@ -112,7 +110,7 @@ struct StatsBlockText: View {
                 Group {
                     if (colouredText) {
                         Text(displayText)
-                            .gradientForeground(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient)
+                            .foregroundStyle(getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient))
                     } else {
                         Text(displayText)
                             .foregroundColor(
@@ -140,7 +138,6 @@ struct StatsBlockText: View {
 }
 
 struct StatsBlockDetailText: View {
-    @Environment(\.colorScheme) var colourScheme
     let calculatedAverage: CalculatedAverage
     let colouredBlock: Bool
     
@@ -176,7 +173,6 @@ struct StatsBlockDetailText: View {
 }
 
 struct StatsBlockSmallText: View {
-    @Environment(\.colorScheme) var colourScheme
     @ScaledMetric private var spacing: CGFloat = -4
         
     let titles: [String]

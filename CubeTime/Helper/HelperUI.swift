@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 
-// MARK: - COLOURS AND GRADIENTS
+// MARK: - Colours, Gradients
 extension Color: RawRepresentable {
     public typealias RawValue = String
     
@@ -40,51 +40,8 @@ extension Color {
     }
 }
 
-struct CopyButton: View {
-    let toCopy: String
-    let buttonText: String
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    
-    @State private var offsetValue: CGFloat = -25
-    
-    var body: some View {
-        HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
-            UIPasteboard.general.string = toCopy
-            
-            withAnimation(Animation.customSlowSpring.delay(0.25)) {
-                self.offsetValue = 0
-            }
-            
-            withAnimation(Animation.customFastEaseOut.delay(2.25)) {
-                self.offsetValue = -25
-            }
-        }) {
-            HStack(spacing: 8) {
-                ZStack {
-                    if self.offsetValue != 0 {
-                        Image(systemName: "doc.on.doc")
-                            .font(.subheadline.weight(.medium))
-                            .foregroundColor(Color("accent"))
-                           
-                    }
-                    
-                    
-                    Image(systemName: "checkmark")
-                        .font(.subheadline.weight(.semibold))
-                        .clipShape(Rectangle().offset(x: self.offsetValue))
-                }
-                .frame(width: 20)
-                
-                if (dynamicTypeSize <= .xLarge) {
-                    Text(buttonText)
-                }
-            }
-        }
-        .frame(height: 35)
-    }
-}
 
-
+// MARK: - Shadows
 struct ShadowLight: ViewModifier {
     @Environment(\.colorScheme) private var env
     
@@ -119,6 +76,8 @@ extension View {
     }
 }
 
+
+// MARK: - Animations
 extension Animation {
     static let customFastSpring: Animation = .spring(response: 0.3, dampingFraction: 0.72)
     static let customSlowSpring: Animation = .spring(response: 0.45, dampingFraction: 0.76)
@@ -131,7 +90,63 @@ extension Animation {
 }
 
 
+// MARK: - Dynamic & Animating Text
+struct DynamicText: ViewModifier {
+    @inlinable func body(content: Content) -> some View {
+        content
+            .scaledToFit()
+            .minimumScaleFactor(0.25)
+            .lineLimit(1)
+    }
+}
 
+struct AnimatingFontSize: AnimatableModifier {
+    let font: CTFontDescriptor
+    var fontSize: CGFloat
+
+    @inlinable var animatableData: CGFloat {
+        get { fontSize }
+        set { fontSize = newValue }
+    }
+
+    @inlinable func body(content: Self.Content) -> some View {
+        content
+            .font(Font(CTFontCreateWithFontDescriptor(font, fontSize, nil)))
+    }
+}
+
+
+// MARK: - Safe Area
+enum SafeAreaType {
+    case tabBar
+}
+
+struct TabBarSafeAreaInset: ViewModifier {
+    let avoidBottomBy: CGFloat
+    
+    func body(content: Content) -> some View {
+        content
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                Rectangle()
+                .fill(Color.clear)
+                .frame(height: 50)
+                .padding(.top, 8 + avoidBottomBy)
+                .padding(.bottom, UIDevice.hasBottomBar ? 0 : nil)
+            }
+    }
+}
+
+extension View {
+    func safeAreaInset(safeArea: SafeAreaType, avoidBottomBy: CGFloat=0) -> some View {
+        switch safeArea {
+        case .tabBar:
+            return modifier(TabBarSafeAreaInset(avoidBottomBy: avoidBottomBy))
+        }
+    }
+}
+
+
+// MARK: - Other Views
 struct ThemedDivider: View {
     let isHorizontal: Bool
     
@@ -147,15 +162,13 @@ struct ThemedDivider: View {
 }
 
 
-
 struct BackgroundColour: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.colorScheme) var colourScheme
     
     let isSessions: Bool
     
-    #warning("refactor this atrocious design")
-    init(isSessions: Bool=false, isTimeStatsDetail: Bool=false) {
+    init(isSessions: Bool=false) {
         self.isSessions = isSessions
     }
     
@@ -176,5 +189,40 @@ struct BackgroundColour: View {
             }
         }
         .ignoresSafeArea()
+    }
+}
+
+#warning("todo: make timedetailview/statsdetailview use this")
+struct CardBlockBackground: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .background(Color("overlay1"))
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .padding(.horizontal)
+    }
+}
+
+
+// global geometry reader structs
+/// as the default textfield does not dynamically adjust its width according to the text
+/// and instead is always set to the maximum width, this globalgeometrygetter is used
+/// for the target input field on the timer view to change its width dynamically.
+
+// source: https://stackoverflow.com/a/56729880/3902590
+struct GlobalGeometryGetter: View {
+    @Binding var rect: CGRect
+
+    var body: some View {
+        return GeometryReader { geometry in
+            self.makeView(geometry: geometry)
+        }
+    }
+
+    func makeView(geometry: GeometryProxy) -> some View {
+        DispatchQueue.main.async {
+            self.rect = geometry.frame(in: .global)
+        }
+
+        return Rectangle().fill(Color.clear)
     }
 }

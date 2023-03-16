@@ -76,7 +76,7 @@ extension StopwatchManager {
         if solvesNoDNFs.count == 0 {
             return nil
         }
-        let sum = solvesNoDNFs.reduce(0, {$0 + timeWithPlusTwoForSolve($1) })
+        let sum = solvesNoDNFs.reduce(0, {$0 + $1.timeIncPen })
         return sum / Double(solvesNoDNFs.count)
     }
     
@@ -93,7 +93,7 @@ extension StopwatchManager {
             return (nil, nil)
         }
         
-        let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solvesNoDNFs.map { timeWithPlusTwoForSolve($0) }))
+        let truncatedValues = getTruncatedMinMax(numbers: getDivisions(data: solvesNoDNFs.map { $0.timeIncPen }))
         
         
         if cnt % 2 == 0 {
@@ -121,7 +121,7 @@ extension StopwatchManager {
     }
     
     
-    func getCurrentAverageOf(_ period: Int) -> CalculatedAverage? {
+    func getCurrentAverage(of period: Int) -> CalculatedAverage? {
         if solvesByDate.count < period {
             return nil
         }
@@ -222,11 +222,11 @@ extension StopwatchManager {
         phases = getAveragePhases()
         
         if recalcAO100 {
-            self.currentAo100 = getCurrentAverageOf(100)
+            self.currentAo100 = getCurrentAverage(of: 100)
             if recalcAO12 {
-                self.currentAo12 = getCurrentAverageOf(12)
+                self.currentAo12 = getCurrentAverage(of: 12)
                 if recalcAO5 {
-                    self.currentAo5 = getCurrentAverageOf(5)
+                    self.currentAo5 = getCurrentAverage(of: 5)
                 }
             }
         }
@@ -256,7 +256,7 @@ extension StopwatchManager {
     func statsGetFromCache() {
         #warning("TODO:  get from cache actually")
         let sessionSolves = currentSession.solves!.allObjects as! [Solve]
-        var compSim = currentSession.sessionType == SessionType.compsim.rawValue
+        let compSim = currentSession.sessionType == SessionType.compsim.rawValue
         updateCSSolveGroups()
         
         solves = sessionSolves.sorted(by: {$0.timeIncPen < $1.timeIncPen})
@@ -277,9 +277,9 @@ extension StopwatchManager {
         }
         
         
-        currentAo5 = getCurrentAverageOf(5)
-        currentAo12 = getCurrentAverageOf(12)
-        currentAo100 = getCurrentAverageOf(100)
+        currentAo5 = getCurrentAverage(of: 5)
+        currentAo12 = getCurrentAverage(of: 12)
+        currentAo100 = getCurrentAverage(of: 100)
         
         bestSingle = getMin()
         phases = getAveragePhases()
@@ -330,9 +330,9 @@ extension StopwatchManager {
         
         solvesByDate.append(solveItem)
         // These stats would require severe voodoo to not recalculate (TODO switch to voodoo), and are faily cheap
-        self.currentAo5 = getCurrentAverageOf(5)
-        self.currentAo12 = getCurrentAverageOf(12)
-        self.currentAo100 = getCurrentAverageOf(100)
+        self.currentAo5 = getCurrentAverage(of: 5)
+        self.currentAo12 = getCurrentAverage(of: 12)
+        self.currentAo100 = getCurrentAverage(of: 100)
         
         normalMedian = getNormalMedian()
         
@@ -345,10 +345,10 @@ extension StopwatchManager {
         
         // Update sessionMean
         if solveItem.penalty != Penalty.dnf.rawValue { //TODO test if this really works with inspection
-            sessionMean = ((sessionMean ?? 0) * Double(solvesNoDNFs.count) + timeWithPlusTwoForSolve(solveItem)) / Double(solvesNoDNFs.count + 1)
+            sessionMean = ((sessionMean ?? 0) * Double(solvesNoDNFs.count) + solveItem.timeIncPen) / Double(solvesNoDNFs.count + 1)
             solvesNoDNFsbyDate.append(solveItem)
             
-            let greatersolvenodnfidx = solvesNoDNFs.firstIndex(where: {timeWithPlusTwoForSolve($0) > timeWithPlusTwoForSolve(solveItem)}) ?? solvesNoDNFs.count
+            let greatersolvenodnfidx = solvesNoDNFs.firstIndex(where: { $0.timeIncPen > solveItem.timeIncPen }) ?? solvesNoDNFs.count
             solvesNoDNFs.insert(solveItem, at: greatersolvenodnfidx)
             #warning("TODO:  use own extension")
             
@@ -410,7 +410,7 @@ extension StopwatchManager {
 // MARK: - STATS: MULTIPHASE
 extension StopwatchManager {
     func getAveragePhases() -> [Double]? {
-        if let multiphaseSession = currentSession as? MultiphaseSession {
+        if currentSession is MultiphaseSession {
             let times = (solvesNoDNFs as! [MultiphaseSolve]).map({ $0.phases! })
             
             
@@ -469,7 +469,7 @@ extension StopwatchManager {
     
     
     func getCurrentCompsimAverage() -> CalculatedAverage? {
-        if let compsimSession = currentSession as? CompSimSession {
+        if currentSession is CompSimSession {
             
             let groupCount = compsimSolveGroups!.count
             

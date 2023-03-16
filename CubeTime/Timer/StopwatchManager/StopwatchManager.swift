@@ -149,7 +149,7 @@ class StopwatchManager: ObservableObject {
         """, currentSession)
         
         let results = try! managedObjectContext.fetch(req)
-        sessionsCanMoveToPlayground = Array(repeating: [], count: puzzle_types.count)
+        sessionsCanMoveToPlayground = Array(repeating: [], count: puzzleTypes.count)
         
         for result in results {
             if result.sessionType == SessionType.playground.rawValue {
@@ -193,11 +193,6 @@ class StopwatchManager: ObservableObject {
     
     var penType: Penalty = .none
 
-    
-    #warning("TODO: remove")
-    var nilSolve: Bool = true
-    
-    
     
     
     
@@ -394,8 +389,8 @@ class StopwatchManager: ObservableObject {
         assert(currentSession != nil)
     }
     
-    var scrambleController: ScrambleController! = nil
-    var timerController: TimerContoller! = nil; #warning("figure out way to not make it ! optional")
+    var scrambleController: ScrambleController!
+    var timerController: TimerContoller!
     
     init (currentSession: Session?, managedObjectContext: NSManagedObjectContext) {
         #if DEBUG
@@ -409,7 +404,8 @@ class StopwatchManager: ObservableObject {
 //        self.currentSession = currentSession
         self.managedObjectContext = managedObjectContext
         
-        self.isSmallDevice = smallDeviceNames.contains(getModelName())
+        #warning("include more..?")
+        self.isSmallDevice = (UIDevice.deviceModelName == "iPhoneSE")
         
         
         self.playgroundScrambleType = -1 // Get the compiler to shut up about not initialized, cannot be optional for picker
@@ -457,15 +453,12 @@ class StopwatchManager: ObservableObject {
                 self.solveItem.session = self.currentSession
                 // Use the current scramble if stopped from manual input
                 
-                
-                #warning("scramble lock causes crash here sometimes, can't reproduce consistently")
-                
                 self.solveItem.scramble = self.isScrambleLocked ? self.scrambleController.scrambleStr : (time == nil ? self.scrambleController.prevScrambleStr : self.scrambleController.scrambleStr)
                 self.solveItem.scrambleType = self.currentSession.scrambleType
                 self.solveItem.time = secondsElapsed
                 try! managedObjectContext.save()
                 
-                // Rescramble if from manual input1
+                // Rescramble if from manual input
                 if time != nil && !self.isScrambleLocked {
                     self.scrambleController.rescramble()
                 }

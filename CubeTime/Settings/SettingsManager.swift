@@ -63,7 +63,7 @@ final class SettingsManager {
     var forceAppZoom: Bool = false
     
     @UserDefault("appZoom")
-    var appZoom: AppZoomWrapper = AppZoomWrapper(rawValue: 3)
+    var appZoom: AppZoom = AppZoom(rawValue: 3)
     
     @UserDefault("showPrevTime")
     var showPrevTime: Bool = false

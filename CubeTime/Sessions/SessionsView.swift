@@ -5,7 +5,6 @@ import Combine
 // MARK: - MAIN SESSION VIEW
 struct SessionsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
     @Environment(\.horizontalSizeClass) var hSizeClass
     
     @State var showNewSessionPopUp = false
@@ -87,7 +86,6 @@ struct SessionsView: View {
 // MARK: - CUSTOMISE SESSIONS
 struct CustomiseSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
@@ -128,7 +126,7 @@ struct CustomiseSessionView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         VStack(alignment: .center, spacing: 0) {
-                            PuzzleHeaderImage(imageName: puzzle_types[Int(sessionEventType)].name)
+                            PuzzleHeaderImage(imageName: puzzleTypes[Int(sessionEventType)].name)
                             
                             SessionNameField(name: $name)
                         }
@@ -208,13 +206,13 @@ struct EventPicker: View {
                 
                 Menu {
                     Picker("", selection: $sessionEventType) {
-                        ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
+                        ForEach(Array(puzzleTypes.enumerated()), id: \.offset) {index, element in
                             Text(element.name).tag(Int32(index))
                                 .font(.body)
                         }
                     }
                 } label: {
-                    Text(puzzle_types[Int(sessionEventType)].name)
+                    Text(puzzleTypes[Int(sessionEventType)].name)
                         .font(.body)
                         .frame(maxWidth: 120, alignment: .trailing)
 
@@ -227,7 +225,7 @@ struct EventPicker: View {
                 .padding(.horizontal)
             
             LazyVGrid(columns: [GridItem(.adaptive(minimum: spacing), spacing: 8)], spacing: 8) {
-                ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
                     HierarchicalButton(type: (index == sessionEventType) ? .halfcoloured : .mono,
                                       size: .ultraLarge,
                                       square: true,
@@ -305,7 +303,7 @@ struct CompSimTargetEntry: View {
                 
                 TextField("0.00", text: $targetStr)
                     .multilineTextAlignment(.trailing)
-                    .modifier(TimeMaskTextField(text: $targetStr))
+                    .modifier(ManualInputTextField(text: $targetStr))
             }
             .padding()
         }

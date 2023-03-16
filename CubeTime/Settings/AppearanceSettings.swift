@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct AppearanceSettingsView: View {
-    @Environment(\.colorScheme) var colourScheme
-    
     @State private var showThemeOptions: Bool = false
     @State private var showFontSizeOptions: Bool = false
     @State private var showPreview: Bool = false
@@ -381,7 +379,6 @@ struct AppearanceSettingsView: View {
 struct TimerPreview: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
-    @Environment(\.colorScheme) var colourScheme
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.globalGeometrySize) var globalGeometrySize
     
@@ -397,7 +394,7 @@ struct TimerPreview: View {
             Text("0.000")
                 .foregroundColor(Color("grey"))
                 .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold,
-                                                          smallDeviceNames.contains(getModelName()) ? 54 : 56
+                                                          (UIDevice.deviceModelName == "iPhoneSE") ? 54 : 56
                                                           , nil)))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .ignoresSafeArea(edges: .all)

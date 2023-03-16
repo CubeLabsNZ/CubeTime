@@ -146,7 +146,6 @@ struct TimerView: View {
     @StateObject var gm = GradientManager()
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.horizontalSizeClass) var hSizeClass
     
@@ -183,8 +182,6 @@ struct TimerView: View {
     @State var algTrainerSubset = 0
     
     @State private var showSessions: Bool = false
-    
-    #warning("TODO: find a way to not use an initialiser")
     
     
     var body: some View {
@@ -270,7 +267,7 @@ struct TimerView: View {
                     .background(Color("base"))
                     .modifier(DynamicText())
                     .modifier(AvoidFloatingPanel())
-                    .modifier(TimeMaskTextField(text: $manualInputTime))
+                    .modifier(ManualInputTextField(text: $manualInputTime))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .ignoresSafeArea()
                     .onSubmit {

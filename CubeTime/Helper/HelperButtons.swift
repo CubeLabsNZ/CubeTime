@@ -2,7 +2,7 @@ import SwiftUI
 import UIKit
 import Foundation
 
-// share button
+// MARK: - Share Button
 final class ShareButtonUIViewController: UIViewController {
     var hostingController: UIHostingController<HierarchicalButton<Label<Text, Image>>>!
     
@@ -57,9 +57,53 @@ struct ShareButton: UIViewControllerRepresentable {
 }
 
 
-// hierarchical button
+// MARK: - Copy Button
+struct CopyButton: View {
+    let toCopy: String
+    let buttonText: String
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    
+    @State private var offsetValue: CGFloat = -25
+    
+    var body: some View {
+        HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+            UIPasteboard.general.string = toCopy
+            
+            withAnimation(Animation.customSlowSpring.delay(0.25)) {
+                self.offsetValue = 0
+            }
+            
+            withAnimation(Animation.customFastEaseOut.delay(2.25)) {
+                self.offsetValue = -25
+            }
+        }) {
+            HStack(spacing: 8) {
+                ZStack {
+                    if self.offsetValue != 0 {
+                        Image(systemName: "doc.on.doc")
+                            .font(.subheadline.weight(.medium))
+                            .foregroundColor(Color("accent"))
+                           
+                    }
+                    
+                    
+                    Image(systemName: "checkmark")
+                        .font(.subheadline.weight(.semibold))
+                        .clipShape(Rectangle().offset(x: self.offsetValue))
+                }
+                .frame(width: 20)
+                
+                if (dynamicTypeSize <= .xLarge) {
+                    Text(buttonText)
+                }
+            }
+        }
+        .frame(height: 35)
+    }
+}
 
 
+// MARK: - Hierarchical Button
 enum HierarchialButtonType {
     case mono, coloured, halfcoloured, disabled, red, green
 }
@@ -269,6 +313,8 @@ struct HierarchicalButtonBase<V: View>: View {
     }
 }
 
+
+// MARK: - Close Button
 struct CloseButton: View {
     let hasBackgroundShadow: Bool
     let onTapRun: () -> Void
@@ -286,6 +332,8 @@ struct CloseButton: View {
     }
 }
 
+
+// MARK: - Done Button
 struct DoneButton: View {
     let onTapRun: () -> ()
     
@@ -304,3 +352,96 @@ struct DoneButton: View {
     }
 }
 
+
+
+// MARK: - Overriden UI Elements
+// delayed context menu animation
+struct ContextMenuButton: View {
+    var delay: Bool
+    var action: () -> Void
+    var title: String
+    var systemImage: String? = nil
+    var disableButton: Bool? = nil
+    
+    init(delay: Bool, action: @escaping () -> Void, title: String, systemImage: String?, disableButton: Bool?) {
+        self.delay = delay
+        self.action = action
+        self.title = title
+        self.systemImage = systemImage
+        self.disableButton = disableButton
+    }
+    
+    var body: some View {
+        Button(role: title == "Delete Session" ? .destructive : nil, action: delayedAction) {
+            HStack {
+                Text(title)
+                if image != nil {
+                    Image(uiImage: image!)
+                }
+            }
+        }.disabled(disableButton ?? false)
+    }
+    
+    private var image: UIImage? {
+        if let systemName = systemImage {
+            let config = UIImage.SymbolConfiguration(font: .preferredFont(forTextStyle: .body), scale: .medium)
+            
+            return UIImage(systemName: systemName, withConfiguration: config)
+        } else {
+            return nil
+        }
+    }
+    private func delayedAction() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + (delay ? 0.8 : 0)) {
+            self.action()
+        }
+    }
+}
+
+struct SessionPickerMenu<Content: View>: View {
+    let content: Content
+    let sessions: [Session]?
+    let clickSession: (Session) -> ()
+    
+    @inlinable init(sessions: [Session]?,
+                    clickSession: @escaping (Session) -> (),
+                    @ViewBuilder label: () -> Content = { Label("Move To", systemImage: "arrow.up.right") }) {
+        self.sessions = sessions
+        self.clickSession = clickSession
+        self.content = label()
+    }
+
+    var body: some View {
+        Menu {
+            Text("Only compatible sessions are shown")
+            if let sessions = sessions {
+                let unpinnedidx = sessions.firstIndex(where: {!$0.pinned}) ?? sessions.count
+                let pinned = sessions[0..<unpinnedidx]
+                let unpinned = sessions[unpinnedidx..<sessions.count]
+                Divider()
+                Section("Pinned Sessions") {
+                    ForEach(pinned) { session in
+                        Button {
+                            clickSession(session)
+                        } label: {
+                            Label(session.name!, systemImage: iconNamesForType[SessionType(rawValue:session.sessionType)!]!)
+                        }
+                    }
+                }
+                Section("Other Sessions") {
+                    ForEach(unpinned) { session in
+                        Button {
+                            clickSession(session)
+                        } label: {
+                            Label(session.name!, systemImage: iconNamesForType[SessionType(rawValue:session.sessionType)!]!)
+                        }
+                    }
+                }
+            } else {
+                Text("Loading...")
+            }
+        } label: {
+            content
+        }
+    }
+}

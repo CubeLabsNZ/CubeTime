@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TimeBar: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
     
     let solvegroup: CompSimSolveGroup
     

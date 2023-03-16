@@ -21,10 +21,6 @@ struct AsyncSVGView: View {
         }
         .task {
             let task = Task.detached(priority: .userInitiated) { () -> String? in
-                #if DEBUG
-                NSLog("ismainthread \(Thread.isMainThread)")
-                #endif
-                
                 var isolate: OpaquePointer? = nil
                 var thread: OpaquePointer? = nil
                 

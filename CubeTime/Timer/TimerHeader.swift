@@ -42,7 +42,6 @@ struct SessionIconView: View {
 }
 
 struct TimerHeader: View {
-    @Environment(\.colorScheme) var colourScheme
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var tabRouter: TabRouter
     @EnvironmentObject var stopwatchManager: StopwatchManager
@@ -118,7 +117,7 @@ struct TimerHeader: View {
                     // i hate swiftui i hate apple i hate everything
                     if #available(iOS 16, *) {
                         Picker("", selection: $stopwatchManager.playgroundScrambleType) {
-                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                            ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
                                 Text(element.name).tag(Int32(index))
                             }
                         }
@@ -127,7 +126,7 @@ struct TimerHeader: View {
                         .frame(maxHeight: .infinity)
                     } else {
                         Picker("", selection: $stopwatchManager.playgroundScrambleType) {
-                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                            ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
                                 Text(element.name).tag(Int32(index))
                             }
                         }
@@ -174,7 +173,7 @@ struct TimerHeader: View {
                                 .submitLabel(.done)
                                 .focused(targetFocused!)
                                 .multilineTextAlignment(.leading)
-                                .modifier(TimeMaskTextField(text: $stopwatchManager.targetStr, onReceiveAlso: { text in
+                                .modifier(ManualInputTextField(text: $stopwatchManager.targetStr, onReceiveAlso: { text in
                                     if let time = timeFromStr(text) {
                                         (stopwatchManager.currentSession as! CompSimSession).target = time
                                         
