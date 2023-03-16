@@ -3,6 +3,7 @@ import SwiftUI
 import UIKit
 import Combine
 import CoreData
+import AVFoundation
 
 // MARK: - GLOBAL LETS
 let sessionTypeForID: [SessionType: Session.Type] = [
@@ -324,4 +325,16 @@ var keyWindow: UIWindow? {
         .first(where: { $0 is UIWindowScene })
         .flatMap({ $0 as? UIWindowScene })?.windows
         .first(where: \.isKeyWindow)
+}
+
+
+func setupAudioSession() {
+    let audioSession = AVAudioSession.sharedInstance()
+    do {
+        try audioSession.setCategory(AVAudioSession.Category.playback)
+    } catch let error as NSError {
+        #if DEBUG
+        NSLog(error.description)
+        #endif
+    }
 }

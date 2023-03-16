@@ -47,7 +47,7 @@ struct TimerTime: View {
                 .modifier(DynamicText())
                 // for smaller phones (iPhoneSE and test sim), disable animation to larger text
                 // to prevent text clipping and other UI problems
-                .ifelse (stopwatchManager.isSmallDevice) { view in
+                .ifelse (UIDevice.deviceModelName == "iPhoneSE") { view in
                     return view
                         .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 54, nil)))
                 } elseDo: { view in

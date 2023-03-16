@@ -12,6 +12,10 @@ func getShareStr(solve: Solve) -> String {
     let time = solve.timeText
     
     str += "\(time):\t\(scramble)"
+    
+    if let comment = solve.comment {
+        str += "\n\nComment: \(comment)"
+    }
 
     return str
 }
@@ -44,6 +48,10 @@ func getShareStr(solve: Solve, phases: Array<Double>?) -> String {
             str += "\n\(index + 1): +\(formatSolveTime(secs: phase - prevphasetime)) (\(formatSolveTime(secs: phase)))"
             prevphasetime = phase
         }
+    }
+    
+    if let comment = solve.comment {
+        str += "\n\nComment: \(comment)"
     }
     
     return str

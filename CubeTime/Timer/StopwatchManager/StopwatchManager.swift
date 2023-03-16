@@ -12,69 +12,12 @@ enum TimerState {
 }
 
 
-struct CalculatedAverage: Identifiable, Comparable/*, Equatable, Comparable*/ {
-    let id = UUID()
-    var name: String
-
-    //    let discardedIndexes: [Int]
-    let average: Double?
-    let accountedSolves: [Solve]?
-    let totalPen: Penalty
-    let trimmedSolves: [Solve]?
-    
-    static func < (lhs: CalculatedAverage, rhs: CalculatedAverage) -> Bool {
-        #warning("TODO:  merge with that one sort function")
-        if lhs.totalPen == .dnf && rhs.totalPen != .dnf {
-            return true
-        } else if lhs.totalPen != .dnf && rhs.totalPen == .dnf {
-            return false
-        } else {
-            if let lhsa = lhs.average {
-                if let rhsa = rhs.average {
-//                    return timeWithPlusTwo(lhsa, pen: lhs.totalPen) < timeWithPlusTwo(rhsa, pen: rhs.totalPen)
-                    return lhsa < rhsa
-                } else {
-                    return true
-                }
-            } else {
-                return false
-            }
-        }
-    }
-}
-
-struct Average: Identifiable, Comparable {
-    let id = UUID()
-    
-    let average: Double
-    let penalty: Penalty
-    
-    static func < (lhs: Average, rhs: Average) -> Bool {
-        if (lhs.penalty == .dnf) { return false }
-        if (rhs.penalty == .dnf) { return true }
-        
-        return lhs.average < rhs.average
-    }
-}
-
-func setupAudioSession() {
-    let audioSession = AVAudioSession.sharedInstance()
-    do {
-        try audioSession.setCategory(AVAudioSession.Category.playback)
-    } catch let error as NSError {
-        #if DEBUG
-        NSLog(error.description)
-        #endif
-    }
-}
-
 enum TimeNeededForTarget {
     case notPossible, guaranteed
     case value(Double)
 }
 
 // MARK: --
-// MARK: SWM
 class StopwatchManager: ObservableObject {
     let managedObjectContext: NSManagedObjectContext
     
@@ -315,17 +258,7 @@ class StopwatchManager: ObservableObject {
     
     func updateHideStatusBar() {
         self.hideUI = timerController.mode == .inspecting || timerController.mode == .running || self.zenMode
-        /* if worse comes to worst
-        if (timerController.mode == .running) {
-            currentPadFloatingStage = 1
-        }
-        */
     }
-    
-    
-    
-    let isSmallDevice: Bool
-    
     
     func addSessionQuickActions() {
         #if DEBUG
@@ -403,11 +336,7 @@ class StopwatchManager: ObservableObject {
         
 //        self.currentSession = currentSession
         self.managedObjectContext = managedObjectContext
-        
-        #warning("include more..?")
-        self.isSmallDevice = (UIDevice.deviceModelName == "iPhoneSE")
-        
-        
+                
         self.playgroundScrambleType = -1 // Get the compiler to shut up about not initialized, cannot be optional for picker
         
         
