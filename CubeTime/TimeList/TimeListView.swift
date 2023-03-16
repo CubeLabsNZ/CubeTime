@@ -54,7 +54,7 @@ struct SortByMenu: View {
                     Menu("Puzzle Type") {
                         Picker("", selection: $stopwatchManager.scrambleTypeFilter) {
                             Text("All Puzzles").tag(-1)
-                            ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                            ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
                                 Label(element.name, image: element.name).tag(index)
                             }
                         }
@@ -88,7 +88,7 @@ struct SessionHeader: View {
             Spacer()
             
             if (SessionType(rawValue: stopwatchManager.currentSession.sessionType) != .playground) {
-                Text(puzzle_types[Int(stopwatchManager.currentSession.scrambleType)].name)
+                Text(puzzleTypes[Int(stopwatchManager.currentSession.scrambleType)].name)
                     .font(.body.weight(.medium))
                     .padding(.trailing)
             }
@@ -257,7 +257,6 @@ struct CompSimTimeListInner: View {
 
 struct TimeListView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
     @Environment(\.sizeCategory) var sizeCategory
     @Environment(\.horizontalSizeClass) var hSizeClass
     
@@ -438,7 +437,6 @@ struct TimeListView: View {
         }
         
         .onChange(of: stopwatchManager.timeListSolvesSelected) { newValue in
-            NSLog("num of selected solves: \(newValue.count)")
             if newValue.count == 0 {
                 isSelectMode = false
                 return
@@ -449,10 +447,6 @@ struct TimeListView: View {
             }
             
             let uniqueScrambles = Set(stopwatchManager.timeListSolvesSelected.map{$0.scrambleType})
-            
-            #if DEBUG
-            NSLog("TIMELISTVIEW SELECT: \(uniqueScrambles)")
-            #endif
             
             if uniqueScrambles.count > 1 {
                 sessionsCanMoveToPlaygroundContextMenu = stopwatchManager.allPlaygroundSessions

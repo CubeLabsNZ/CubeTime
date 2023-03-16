@@ -28,7 +28,6 @@ struct NewSessionTypeCard: View {
 
 
 struct NewSessionTypeCardGroup<Content: View>: View {
-    @Environment(\.colorScheme) var colourScheme
     let title: String
     let content: () -> Content
     
@@ -59,7 +58,6 @@ struct NewSessionRootView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.dismiss) var dismiss
-    @Environment(\.colorScheme) var colourScheme
     
     @Binding var showNewSessionPopUp: Bool
     

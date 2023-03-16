@@ -44,7 +44,6 @@ struct GeneralSettingsView: View {
     
     
         
-    @Environment(\.colorScheme) var colourScheme
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
     
@@ -338,8 +337,8 @@ struct GeneralSettingsView: View {
                         Spacer()
 
                         Picker("", selection: $appZoom) {
-                            ForEach(0..<AppZoomWrapper.allCases.count, id: \.self) { mode in
-                                Text(AppZoomWrapper.appZoomNames[mode])
+                            ForEach(0..<AppZoom.allCases.count, id: \.self) { mode in
+                                Text(AppZoom.appZoomNames[mode])
                             }
                         }
                         .pickerStyle(.menu)

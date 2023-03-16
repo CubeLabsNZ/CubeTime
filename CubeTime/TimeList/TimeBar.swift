@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TimeBar: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
     
     let solvegroup: CompSimSolveGroup
     
@@ -139,7 +138,6 @@ struct TimeBar: View {
                 .padding(.leading, 12)
                 // Don't even talk to me
                 .onChange(of: solvegroup.solves.debugDescription) { newValue in
-                    NSLog("ONCHANGE")
                     self.calculatedAverage = getAvgOfSolveGroup(solvegroup)
                 }
                 .task {

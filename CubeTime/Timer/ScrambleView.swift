@@ -16,16 +16,11 @@ struct AsyncSVGView: View {
                 SVGView(string: svg)
                     .aspectRatio(contentMode: .fit)
             } else {
-                #warning("weird bug, full circle...")
                 LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
             }
         }
         .task {
             let task = Task.detached(priority: .userInitiated) { () -> String? in
-                #if DEBUG
-                NSLog("ismainthread \(Thread.isMainThread)")
-                #endif
-                
                 var isolate: OpaquePointer? = nil
                 var thread: OpaquePointer? = nil
                 

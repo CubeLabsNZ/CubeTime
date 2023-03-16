@@ -1,14 +1,18 @@
 import SwiftUI
 import CoreData
 import Combine
+import SwiftfulLoadingIndicators
 
 // MARK: - MAIN SESSION VIEW
 struct SessionsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
     @Environment(\.horizontalSizeClass) var hSizeClass
     
     @State var showNewSessionPopUp = false
+    
+    @StateObject var cloudkitStatusManager = CloudkitStatusManager()
+    
+    @ScaledMetric(wrappedValue: 25, relativeTo: .subheadline) private var height
     
     @FetchRequest(
         entity: Session.entity(),
@@ -18,8 +22,8 @@ struct SessionsView: View {
         ]
     ) var sessions: FetchedResults<Session>
     
+    #warning("TODO: fix this - R")
     var body: some View {
-        let _ = NSLog("\(sessions.map({$0.scrambleType}))")
         NavigationView {
             GeometryReader { geo in
                 ZStack(alignment: .bottomLeading) {
@@ -27,14 +31,38 @@ struct SessionsView: View {
                     
                     ScrollView {
                         VStack (spacing: 10) {
+                            if let status = cloudkitStatusManager.currentStatus {
+                                Group {
+                                    switch (status) {
+                                    case 0:
+                                        Text("Synced to iCloud")
+                                            .foregroundColor(Color("accent"))
+                                        
+                                    case 1:
+                                        Text("Sync to iCloud failed")
+                                            .foregroundColor(Color("grey"))
+                                        
+                                    case 2:
+                                        Text("iCloud unavailable")
+                                            .foregroundColor(Color("grey"))
+                                    
+                                    default:
+                                        EmptyView()
+                                    }
+                                }
+                                .font(.subheadline.weight(.medium))
+                                .frame(height: height)
+                            } else {
+                                LoadingIndicator(animation: .bar, color: Color("accent"), size: .small, speed: .normal)
+                                    .frame(height: height)
+                            }
+                            
                             ForEach(sessions) { item in
                                 SessionCard(item: item, allSessions: sessions, parentGeo: geo)
                             }
                         }
                     }
-                    .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
-                        view.safeAreaInset(safeArea: .tabBar, avoidBottomBy: 50)
-                    }
+                    .safeAreaInset(safeArea: .tabBar, avoidBottomBy: (UIDevice.deviceIsPad && hSizeClass == .regular) ? 0 : 50)
                     
                     HierarchicalButton(type: .coloured, size: .large, onTapRun: {
                         showNewSessionPopUp = true
@@ -59,9 +87,9 @@ struct SessionsView: View {
                 }
                 .navigationTitle("Sessions")
                 .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
-                .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
-                    view.toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        if !(UIDevice.deviceIsPad && hSizeClass == .regular) {
                             NavigationLink(destination: ToolsList()) {
                                 HierarchicalButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
                                     Label("Tools", systemImage: "wrench.and.screwdriver")
@@ -88,7 +116,6 @@ struct SessionsView: View {
 // MARK: - CUSTOMISE SESSIONS
 struct CustomiseSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
@@ -129,7 +156,7 @@ struct CustomiseSessionView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         VStack(alignment: .center, spacing: 0) {
-                            PuzzleHeaderImage(imageName: puzzle_types[Int(sessionEventType)].name)
+                            PuzzleHeaderImage(imageName: puzzleTypes[Int(sessionEventType)].name)
                             
                             SessionNameField(name: $name)
                         }
@@ -209,13 +236,13 @@ struct EventPicker: View {
                 
                 Menu {
                     Picker("", selection: $sessionEventType) {
-                        ForEach(Array(puzzle_types.enumerated()), id: \.offset) {index, element in
+                        ForEach(Array(puzzleTypes.enumerated()), id: \.offset) {index, element in
                             Text(element.name).tag(Int32(index))
                                 .font(.body)
                         }
                     }
                 } label: {
-                    Text(puzzle_types[Int(sessionEventType)].name)
+                    Text(puzzleTypes[Int(sessionEventType)].name)
                         .font(.body)
                         .frame(maxWidth: 120, alignment: .trailing)
 
@@ -228,7 +255,7 @@ struct EventPicker: View {
                 .padding(.horizontal)
             
             LazyVGrid(columns: [GridItem(.adaptive(minimum: spacing), spacing: 8)], spacing: 8) {
-                ForEach(Array(zip(puzzle_types.indices, puzzle_types)), id: \.0) { index, element in
+                ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
                     HierarchicalButton(type: (index == sessionEventType) ? .halfcoloured : .mono,
                                       size: .ultraLarge,
                                       square: true,
@@ -306,7 +333,7 @@ struct CompSimTargetEntry: View {
                 
                 TextField("0.00", text: $targetStr)
                     .multilineTextAlignment(.trailing)
-                    .modifier(TimeMaskTextField(text: $targetStr))
+                    .modifier(ManualInputTextField(text: $targetStr))
             }
             .padding()
         }

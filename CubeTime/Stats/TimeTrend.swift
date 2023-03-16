@@ -365,7 +365,6 @@ struct Legend: View {
     var data: [Double]
     var frame: CGRect
     
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
     var specifier: String = "%.2f"
     let padding:CGFloat = 3
     

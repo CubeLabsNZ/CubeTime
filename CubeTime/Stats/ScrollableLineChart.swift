@@ -94,10 +94,10 @@ class TimeDistViewController: UIViewController {
         UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
         let context = UIGraphicsGetCurrentContext()!
         
-        let height = getStandardisedYLocation(value: averageValue,
-                                              min: limits.min,
-                                              max: limits.max,
-                                              boundsHeight: rawImageHeight)
+//        let height = getStandardisedYLocation(value: averageValue,
+//                                              min: limits.min,
+//                                              max: limits.max,
+//                                              boundsHeight: rawImageHeight)
         
         context.move(to: CGPoint(x: 0, y: imageHeight - imagePadding))
         
@@ -189,7 +189,6 @@ class TimeDistViewController: UIViewController {
         var p = g.location(in: imageView)
         p.y += 5
         let pointWhere = points.first(where: {$0.pointIn(p)})
-        print(pointWhere ?? "nil")
     }
 }
 

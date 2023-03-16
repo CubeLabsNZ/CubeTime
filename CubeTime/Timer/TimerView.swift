@@ -11,47 +11,6 @@ struct SheetStrWrapper: Identifiable {
     let str: String
 }
 
-struct TimerTime: View {
-    @EnvironmentObject var stopwatchManager: StopwatchManager
-    @EnvironmentObject var fontManager: FontManager
-    @EnvironmentObject var timerController: TimerContoller
-    @Environment(\.horizontalSizeClass) private var hSizeClass
-    
-    var body: some View {
-        let fontSize: CGFloat = (UIDevice.deviceIsPad && hSizeClass == .regular)
-            ? timerController.mode == .running ? 88 : 66
-            : timerController.mode == .running ? 70 : 56
-        
-        HStack{
-            Text(timerController.secondsStr)
-                .modifier(DynamicText())
-                // for smaller phones (iPhoneSE and test sim), disable animation to larger text
-                // to prevent text clipping and other UI problems
-                .ifelse (stopwatchManager.isSmallDevice) { view in
-                    return view
-                        .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 54, nil)))
-                } elseDo: { view in
-                    return view
-                        .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: fontSize))
-                }
-            
-            Group {
-                if (timerController.mode == .inspecting) {
-                    if (15..<17 ~= timerController.inspectionSecs) {
-                        Text("[+2]")
-                    } else if (timerController.inspectionSecs >= 17) {
-                        Text("[DNF]")
-                    }
-                }
-            }
-            .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: fontSize - 32))
-        }
-        .animation(Animation.customBouncySpring, value: timerController.mode == .running)
-        .foregroundColor(timerController.timerColour)
-    }
-}
-
-
 struct AvoidFloatingPanel: ViewModifier {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var timerController: TimerContoller
@@ -72,6 +31,47 @@ struct AvoidFloatingPanel: ViewModifier {
     }
 }
 
+struct TimerTime: View {
+    @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
+    @EnvironmentObject var timerController: TimerContoller
+    @Environment(\.horizontalSizeClass) private var hSizeClass
+    
+    var body: some View {
+        let fontSize: CGFloat = (UIDevice.deviceIsPad && hSizeClass == .regular)
+            ? timerController.mode == .running ? 88 : 66
+            : timerController.mode == .running ? 70 : 56
+        
+        HStack{
+            Text(timerController.secondsStr)
+                .modifier(DynamicText())
+                // for smaller phones (iPhoneSE and test sim), disable animation to larger text
+                // to prevent text clipping and other UI problems
+                .ifelse (UIDevice.deviceModelName == "iPhoneSE") { view in
+                    return view
+                        .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 54, nil)))
+                } elseDo: { view in
+                    return view
+                        .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: fontSize))
+                }
+            
+            Group {
+                if (timerController.mode == .inspecting) {
+                    if (15..<17 ~= timerController.inspectionSecs) {
+                        Text("[+2]")
+                    } else if (timerController.inspectionSecs >= 17) {
+                        Text("[DNF]")
+                    }
+                }
+            }
+            .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: fontSize - 32))
+        }
+        .animation(Animation.customBouncySpring, value: timerController.mode == .running)
+        .foregroundColor(timerController.timerColour)
+        .padding(.horizontal)
+        .modifier(AvoidFloatingPanel())
+    }
+}
 
 struct ScrambleText: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
@@ -88,12 +88,7 @@ struct ScrambleText: View {
         
         Text(scr)
             .padding(4)
-            
             .background(Color("base"))
-            .font(fontManager.ctFontScramble)
-            .fixedSize(horizontal: mega, vertical: false)
-            .multilineTextAlignment(mega ? .leading : .center)
-            
             .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 4, style: .continuous))
             .contextMenu {
                 if let scrambleString = scrambleController.scrambleStr {
@@ -118,20 +113,22 @@ struct ScrambleText: View {
                     }
                 }
             }
-            
-        
-            .if(mega) { view in
-                view.minimumScaleFactor(0.00001).scaledToFit()
-            }
-            .frame(maxWidth: timerSize.width,
-                   maxHeight: timerSize.height/3)
-        
-            
-        
             .onTapGesture {
                 scrambleSheetStr = SheetStrWrapper(str: scr)
             }
-            .offset(y: 35 + (UIDevice.hasBottomBar ? 0 : 8) + ((UIDevice.deviceIsPad && hSizeClass == .regular) ? 50 : 0))
+        
+            .font(fontManager.ctFontScramble)
+            .fixedSize(horizontal: mega, vertical: false)
+            .multilineTextAlignment(mega ? .leading : .center)
+            .if(mega) { view in
+                view.minimumScaleFactor(0.00001).scaledToFit()
+            }
+        
+            .padding(.top, 35 + (UIDevice.hasBottomBar ? 0 : 8))
+            .padding(.bottom, 40)
+
+            .frame(maxWidth: timerSize.width, maxHeight: timerSize.height / 2, alignment: .center)
+        
             .padding(.horizontal)
             .modifier(AvoidFloatingPanel())
             .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
@@ -149,7 +146,6 @@ struct TimerView: View {
     @StateObject var gm = GradientManager()
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @Environment(\.horizontalSizeClass) var hSizeClass
     
@@ -178,6 +174,7 @@ struct TimerView: View {
     @State private var scrambleSheetStr: SheetStrWrapper?
     @State private var showDrawScrambleSheet: Bool = false
     
+    @State private var menuExpanded: Bool = false
     
     @State private var justManuallyInput: Bool = false
     @State private var showManualInputFormattedText: Bool = false
@@ -185,8 +182,6 @@ struct TimerView: View {
     @State var algTrainerSubset = 0
     
     @State private var showSessions: Bool = false
-    
-    #warning("TODO: find a way to not use an initialiser")
     
     
     var body: some View {
@@ -234,9 +229,14 @@ struct TimerView: View {
             if !((typingMode || showInputField) && !showManualInputFormattedText) {
                 VStack(alignment: .center, spacing: 0) {
                     TimerTime()
-                        .padding(.horizontal)
-                        .modifier(AvoidFloatingPanel())
                         .allowsHitTesting(false)
+                        .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopwatchManager.showDeleteSolveConfirmation, titleVisibility: .visible) {
+                            Button("Delete", role: .destructive) {
+                                stopwatchManager.deleteLastSolve()
+                            }
+                            Button("Cancel", role: .cancel) { }
+                        }
+                    
                     
                     if timerController.mode == .inspecting && showCancelInspection {
                         HierarchicalButton(type: .mono, size: .medium, onTapRun: {
@@ -267,7 +267,7 @@ struct TimerView: View {
                     .background(Color("base"))
                     .modifier(DynamicText())
                     .modifier(AvoidFloatingPanel())
-                    .modifier(TimeMaskTextField(text: $manualInputTime))
+                    .modifier(ManualInputTextField(text: $manualInputTime))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .ignoresSafeArea()
                     .onSubmit {
@@ -306,6 +306,8 @@ struct TimerView: View {
                 let stageMaxHeight: CGFloat = geo.size.height-CGFloat(50)
                 let stages: [CGFloat] = [35, 35+16+55, stageMaxHeight]
                 
+                
+                #warning("todo: combine these into one hstack, doesn't need to be separate...")
                 if (UIDevice.deviceIsPad && hSizeClass == .regular) {
                     HStack(alignment: .top) {
                         FloatingPanel(currentStage: $stopwatchManager.currentPadFloatingStage, maxHeight: stageMaxHeight, stages: stages) {
@@ -331,7 +333,25 @@ struct TimerView: View {
                         
                         Spacer()
                         
-                        TimerMenu()
+                        
+                        if (!self.menuExpanded) {
+                            if (stopwatchManager.isScrambleLocked) {
+                                Image(systemName: "lock.rotation")
+                                    .font(.system(size: 17, weight: .medium, design: .default))
+                                    .imageScale(.medium)
+                                    .frame(width: 35, height: 35, alignment: .center)
+                                    .onTapGesture {
+                                        stopwatchManager.showUnlockScrambleConfirmation = true
+                                    }
+                            } else {
+                                LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
+                                    .frame(maxHeight: 35)
+                                    .padding(.top, UIDevice.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+                                    .opacity(scrambleController.scrambleStr == nil ? 1 : 0)
+                            }
+                        }
+                        
+                        TimerMenu(expanded: self.$menuExpanded)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     .padding(.horizontal)
@@ -378,6 +398,14 @@ struct TimerView: View {
             
             if let scr = scrambleController.scrambleStr, timerController.mode == .stopped {
                 ScrambleText(scr: scr, timerSize: geo.size, scrambleSheetStr: $scrambleSheetStr)
+                    .confirmationDialog("Unlock scramble?", isPresented: $stopwatchManager.showUnlockScrambleConfirmation, titleVisibility: .visible) {
+                        Button("Unlock!") {
+                            stopwatchManager.isScrambleLocked = false
+                            scrambleController.rescramble()
+                        }
+                        
+                        Button("Cancel", role: .cancel) { }
+                    }
                     .frame(maxHeight: .infinity, alignment: .top)
             }
             
@@ -389,8 +417,6 @@ struct TimerView: View {
                     
                     PenaltyBar {
                         HStack(spacing: 12) {
-                            let _ = NSLog("\(showManualInputFormattedText)")
-                            
                             if (stopwatchManager.solveItem != nil && !manualInputFocused && (inputMode == .typing ? showManualInputFormattedText : true)) {
                                 PenaltyButton(penType: .plustwo, penSymbol: "+2", imageSymbol: true, canType: false, colour: Color("orange"))
                                 
@@ -471,25 +497,6 @@ struct TimerView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .offset(y: UIDevice.deviceIsPad && hSizeClass == .regular ? 55 : 40)
             }
-        }
-        .confirmationDialog("Unlock scramble?", isPresented: $stopwatchManager.showUnlockScrambleConfirmation, titleVisibility: .visible) {
-            Button("Unlock!") {
-                print(scrambleController.scrambleStr)
-                stopwatchManager.isScrambleLocked = false
-                scrambleController.rescramble()
-                print(scrambleController.scrambleStr)
-            }
-            
-            Button("Cancel", role: .cancel) {
-                print(scrambleController.scrambleStr)
-            }
-        }
-        
-        .confirmationDialog("Are you sure you want to delete this solve?", isPresented: $stopwatchManager.showDeleteSolveConfirmation, titleVisibility: .visible) {
-            Button("Delete", role: .destructive) {
-                stopwatchManager.deleteLastSolve()
-            }
-            Button("Cancel", role: .cancel) { }
         }
         .sheet(item: $scrambleSheetStr, onDismiss: {
             scrambleSheetStr = nil

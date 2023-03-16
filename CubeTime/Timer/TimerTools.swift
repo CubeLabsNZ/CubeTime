@@ -225,9 +225,9 @@ struct TimerStatsPad: View {
 
 
 struct TimerStatsCompSim: View {
+    @Environment(\.horizontalSizeClass) var hSizeClass
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @State private var showStats: Bool = false
-
     
     var body: some View {
         let timeNeededText: String? = {
@@ -246,9 +246,9 @@ struct TimerStatsCompSim: View {
     
         VStack(spacing: 0) {
             HStack(spacing: 6) {
-                TimerStatRaw(name: "BPA", value: stopwatchManager.bpa == nil ? nil : formatSolveTime(secs: stopwatchManager.bpa!), placeholderText: "...")
+                TimerStatRaw(name: "BPA", value: stopwatchManager.bpa == nil ? nil : formatSolveTime(secs: stopwatchManager.bpa!.average, penType: stopwatchManager.bpa!.penalty), placeholderText: "...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                TimerStatRaw(name: "WPA", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!), placeholderText: "...")
+                TimerStatRaw(name: "WPA", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!.average, penType: stopwatchManager.wpa!.penalty), placeholderText: "...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             
@@ -258,11 +258,16 @@ struct TimerStatsCompSim: View {
             TimerStatRaw(name: "TO REACH TARGET", value: timeNeededText, placeholderText: "...")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .onTapGesture {
-            self.showStats = true
-        }
-        .sheet(isPresented: self.$showStats) {
-            StatsView()
+        .padding(.horizontal, 6)
+        .contentShape(Rectangle())
+        .if (UIDevice.deviceIsPad && hSizeClass == .regular) { view in
+            view
+                .onTapGesture {
+                    self.showStats = true
+                }
+                .sheet(isPresented: self.$showStats) {
+                    StatsView()
+                }
         }
     }
 }

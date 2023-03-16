@@ -3,9 +3,7 @@ import Foundation
 
 struct SessionCard: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
-
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
@@ -24,6 +22,7 @@ struct SessionCard: View {
     let name: String
     let scrambleType: Int
     let solveCount: Int
+    #warning("TODO: remove this ( i have idea )")
     let parentGeo: GeometryProxy
     
     @Namespace var namespace
@@ -105,35 +104,34 @@ struct SessionCard: View {
                             
                             VStack(alignment: .leading, spacing: 0) {
                                 Text(name)
-                                    .font(.title2.weight(.bold))
+                                    .font(.title2.weight(.semibold))
                                     .foregroundColor(Color("dark"))
                                 
                                 Group {
                                     switch sessionType {
                                     case .standard:
-                                        Text(puzzle_types[scrambleType].name)
+                                        Text(puzzleTypes[scrambleType].name)
                                     case .playground:
                                         Text("Playground")
                                     case .multiphase:
-                                        Text("Multiphase - \(puzzle_types[scrambleType].name)")
+                                        Text("Multiphase - \(puzzleTypes[scrambleType].name)")
                                     case .compsim:
-                                        Text("Comp Sim - \(puzzle_types[scrambleType].name)")
+                                        Text("Comp Sim - \(puzzleTypes[scrambleType].name)")
                                     default:
                                         EmptyView()
                                     }
                                 }
-                                .font(.subheadline.weight(.medium))
-                                    .foregroundColor(Color("dark"))
-                                .if(!pinned) { view in
-                                    view.offset(y: -2)
-                                }
+                                .font(.subheadline.weight(.regular))
+                                .foregroundColor(Color("dark"))
+                                .offset(y: pinned ? 0 : -2)
                             }
                         }
                         
                         if pinned {
                             Spacer()
+                            
                             Text("\(solveCount) Solves")
-                                .font(.subheadline.weight(.bold))
+                                .font(.subheadline.weight(.semibold))
                                 .foregroundColor(Color("grey"))
                                 .padding(.bottom, 4)
                         }
@@ -142,28 +140,19 @@ struct SessionCard: View {
                     
                     Spacer()
                     
-                    if sessionType != .playground {
-                        if item.pinned {
-                            Image(puzzle_types[scrambleType].name)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(Color("dark"))
-                                .padding(.vertical, 4)
-                                .padding(.trailing, 12)
-                        } else {
-                            Image(puzzle_types[scrambleType].name)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(Color("dark"))
-                                .padding(.trailing, 6)
-                        }
+                    if (sessionType != .playground) {
+                        Image(puzzleTypes[scrambleType].name)
+                            .resizable()
+                            .frame(width: item.pinned ? nil : 40, height: item.pinned ? nil : 40)
+                            .aspectRatio(contentMode: .fit)
+                            .foregroundColor(Color("dark"))
+                            .padding(.trailing, item.pinned ? 12 : 8)
+                            .padding(.vertical, item.pinned ? 6 : 0)
                     }
-                    
-                    
                 }
                 .padding(.leading)
                 .padding(.trailing, pinned ? 6 : 4)
-                .padding(.vertical,  pinned ? 12 : 8)
+                .padding(.vertical, pinned ? 12 : 8)
             }
             
             .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight)
@@ -224,15 +213,12 @@ struct SessionCard: View {
                             next = item
                             break
                         }
-                        /// **this should theoretically never happen, as the deletion option will be disabled if solves <= 1**
-                        NSLog("ERROR: cannot find next session to replace current session")
                     }
                     
                     if let next = next {
                         withAnimation(Animation.customDampedSpring) {
                             stopwatchManager.currentSession = next
                         }
-                        
                     }
                 }
                 
@@ -245,4 +231,3 @@ struct SessionCard: View {
         }
     }
 }
-

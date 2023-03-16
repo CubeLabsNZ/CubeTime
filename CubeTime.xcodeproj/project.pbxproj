@@ -15,9 +15,14 @@
 		233FE7B6274F109600C6F1DF /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Helper.swift */; };
 		2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2359689227A367A0003ED9E1 /* StopwatchManager.swift */; };
 		235CDA0327A786D800F48C89 /* Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235CDA0227A786D800F48C89 /* Updates.swift */; };
+		235D6A6729C2C060002D90D8 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6629C2C060002D90D8 /* Models.swift */; };
+		235D6A6929C2C0D3002D90D8 /* HelperShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6829C2C0D3002D90D8 /* HelperShare.swift */; };
+		235D6A6E29C2C34E002D90D8 /* ManualInputTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6D29C2C34E002D90D8 /* ManualInputTextField.swift */; };
+		235D6A7029C2CE09002D90D8 /* CloudkitStatusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6F29C2CE09002D90D8 /* CloudkitStatusManager.swift */; };
 		2377418829A9A05A00A4F917 /* HelperUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2377418729A9A05A00A4F917 /* HelperUI.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
 		238FB42029B8175C008EC1D4 /* GradientManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238FB41F29B8175C008EC1D4 /* GradientManager.swift */; };
+		239560A629C3056E00735035 /* SplashPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 239560A529C3056E00735035 /* SplashPad.storyboard */; };
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
 		239C7E702781511300943AF2 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239C7E6F2781511300943AF2 /* Onboarding.swift */; };
 		23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */; };
@@ -123,10 +128,15 @@
 		2354882227642E2800FE8D7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2359689227A367A0003ED9E1 /* StopwatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchManager.swift; sourceTree = "<group>"; };
 		235CDA0227A786D800F48C89 /* Updates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updates.swift; sourceTree = "<group>"; };
+		235D6A6629C2C060002D90D8 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		235D6A6829C2C0D3002D90D8 /* HelperShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperShare.swift; sourceTree = "<group>"; };
+		235D6A6D29C2C34E002D90D8 /* ManualInputTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualInputTextField.swift; sourceTree = "<group>"; };
+		235D6A6F29C2CE09002D90D8 /* CloudkitStatusManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudkitStatusManager.swift; sourceTree = "<group>"; };
 		2377418729A9A05A00A4F917 /* HelperUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperUI.swift; sourceTree = "<group>"; };
 		23783DA429AB55750036FE2B /* getBestAverage.h++ */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "getBestAverage.h++"; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
 		238FB41F29B8175C008EC1D4 /* GradientManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientManager.swift; sourceTree = "<group>"; };
+		239560A529C3056E00735035 /* SplashPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SplashPad.storyboard; sourceTree = "<group>"; };
 		2397131E2791032300268DFA /* AveragePhases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AveragePhases.swift; sourceTree = "<group>"; };
 		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		23AAF99529B0219200C5C1FF /* ScrollableLineChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableLineChart.swift; sourceTree = "<group>"; };
@@ -167,6 +177,7 @@
 		23E81E72275D8DEA00B741E3 /* AboutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettings.swift; sourceTree = "<group>"; };
 		23EB8A1D2779B6D3000F6663 /* TimeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBar.swift; sourceTree = "<group>"; };
 		23F4113729ADDA77002C4E23 /* ToolsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsViewModel.swift; sourceTree = "<group>"; };
+		73B7136529BA3FF00064E02F /* CubeTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CubeTime.entitlements; sourceTree = "<group>"; };
 		7D2B805D279422BD0006AEDD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTouchView.swift; sourceTree = "<group>"; };
 		7D5521DB2799657300B418BE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -227,6 +238,19 @@
 				AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		235D6A6429C2BEFA002D90D8 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				235D6A6629C2C060002D90D8 /* Models.swift */,
+				233FE7B5274F109600C6F1DF /* Helper.swift */,
+				235D6A6D29C2C34E002D90D8 /* ManualInputTextField.swift */,
+				2377418729A9A05A00A4F917 /* HelperUI.swift */,
+				231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */,
+				235D6A6829C2C0D3002D90D8 /* HelperShare.swift */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 		23A73F5C276B0AA100153748 /* Timer */ = {
@@ -316,6 +340,7 @@
 				AF8874C229AB0BE7001E49D0 /* TimerController.swift */,
 				AF81757629B07712004838B9 /* FontManager.swift */,
 				238FB41F29B8175C008EC1D4 /* GradientManager.swift */,
+				235D6A6F29C2CE09002D90D8 /* CloudkitStatusManager.swift */,
 			);
 			path = StopwatchManager;
 			sourceTree = "<group>";
@@ -345,6 +370,7 @@
 		23DE3BD9274DDBE200254D29 /* CubeTime */ = {
 			isa = PBXGroup;
 			children = (
+				73B7136529BA3FF00064E02F /* CubeTime.entitlements */,
 				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				2354882227642E2800FE8D7A /* Info.plist */,
 				23AB6488293867CB0049993B /* Ext */,
@@ -353,10 +379,9 @@
 				7D2B805D279422BD0006AEDD /* AppDelegate.swift */,
 				239C7E6F2781511300943AF2 /* Onboarding.swift */,
 				235CDA0227A786D800F48C89 /* Updates.swift */,
-				233FE7B5274F109600C6F1DF /* Helper.swift */,
-				2377418729A9A05A00A4F917 /* HelperUI.swift */,
-				231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */,
+				235D6A6429C2BEFA002D90D8 /* Helper */,
 				23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */,
+				239560A529C3056E00735035 /* SplashPad.storyboard */,
 				23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */,
 				7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */,
 				23A73F5D276B0AC800153748 /* Tabs */,
@@ -562,6 +587,7 @@
 			files = (
 				23DE3BE2274DDBE300254D29 /* Preview Assets.xcassets in Resources */,
 				23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */,
+				239560A629C3056E00735035 /* SplashPad.storyboard in Resources */,
 				23AB648C293867EA0049993B /* 12sec-audio.wav in Resources */,
 				23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */,
 				AF7697DE293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */,
@@ -608,6 +634,7 @@
 				23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */,
 				23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */,
 				AF8874C129AAC8C0001E49D0 /* ToolsList.swift in Sources */,
+				235D6A6929C2C0D3002D90D8 /* HelperShare.swift in Sources */,
 				AF8B305B29B5C7010023D23B /* SettingsManager.swift in Sources */,
 				AF8A157429AF15B500F6818E /* ScrambleOnlyTool.swift in Sources */,
 				2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */,
@@ -618,6 +645,7 @@
 				23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */,
 				7D7A9EC4274F392700C2E125 /* SessionsView.swift in Sources */,
 				AF8874C529AB3736001E49D0 /* ScrambleGeneratorTool.swift in Sources */,
+				235D6A7029C2CE09002D90D8 /* CloudkitStatusManager.swift in Sources */,
 				23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */,
 				7D7E7C63279A69F1004C9A4E /* ScrambleView.swift in Sources */,
 				23B7AC3A29BAB2E300B5C9B4 /* TimerTools.swift in Sources */,
@@ -635,6 +663,7 @@
 				AF8874C329AB0BE7001E49D0 /* TimerController.swift in Sources */,
 				23E647C62775B2AC00561780 /* TimeDistribution.swift in Sources */,
 				235CDA0327A786D800F48C89 /* Updates.swift in Sources */,
+				235D6A6E29C2C34E002D90D8 /* ManualInputTextField.swift in Sources */,
 				2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */,
 				233FE7B6274F109600C6F1DF /* Helper.swift in Sources */,
 				23CA8A0C29AAFABD006676BF /* ScrambleController.swift in Sources */,
@@ -647,6 +676,7 @@
 				23AB648429385D310049993B /* NewSessionRootView.swift in Sources */,
 				23CE093427A76D610013E227 /* SessionCard.swift in Sources */,
 				23C85EAC29388C9C00C7C3EC /* StatsSubviews.swift in Sources */,
+				235D6A6729C2C060002D90D8 /* Models.swift in Sources */,
 				2377418829A9A05A00A4F917 /* HelperUI.swift in Sources */,
 				23E5643129AB4DBB00C910D6 /* getBestAverage.c++ in Sources */,
 			);
@@ -804,6 +834,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = accent;
+				CODE_SIGN_ENTITLEMENTS = CubeTime/CubeTime.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CubeTime/Preview Content\"";
@@ -851,6 +883,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = accent;
+				CODE_SIGN_ENTITLEMENTS = CubeTime/CubeTime.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CubeTime/Preview Content\"";

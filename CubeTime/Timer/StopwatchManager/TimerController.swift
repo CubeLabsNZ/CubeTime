@@ -126,11 +126,11 @@ class TimerContoller: ObservableObject {
     
     func handleGesture(direction: UISwipeGestureRecognizer.Direction) {
         prevDownStoppedTimer = false
-        NSLog("HERE1 \(!preventStart) || \(mode != .stopped)")
+        
         if !preventStart || mode != .stopped {
-            NSLog("HERE2")
             timerColour = Color.Timer.normal
         }
+        
         if mode == .stopped {
             onGesture?(direction)
         }
@@ -327,6 +327,5 @@ class TimerContoller: ObservableObject {
         currentMPCount += 1
         phaseTimes.append(-timerStartTime!.timeIntervalSinceNow)
         feedbackStyle?.impactOccurred(intensity: 0.5)
-        print("lapped")
     }
 }

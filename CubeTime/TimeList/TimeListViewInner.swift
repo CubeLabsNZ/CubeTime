@@ -60,7 +60,6 @@ class TimeCardTextLabel: UILabel {
 
 class TimeCardCell: UICollectionViewCell {
     lazy var timeCardView: TimeCardView = {
-        NSLog("GOT TIMECARDLABEL")
         return TimeCardView(frame: CGRect(origin: .zero, size: self.frame.size))
     }()
     
