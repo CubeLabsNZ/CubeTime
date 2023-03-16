@@ -6,9 +6,13 @@ import CloudKit
 class CloudkitStatusManager: ObservableObject {
     var subscribers = Set<AnyCancellable>()
     
-    @Published var currentStatus: Int?
+    @Published var currentStatus: Int? = 0
     
     init() {
+        if (FileManager.default.ubiquityIdentityToken == nil) {
+            self.currentStatus = 2
+        }
+        
         NotificationCenter.default.publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
             .sink(receiveValue: { notification in
                 if let cloudEvent = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey]

@@ -307,8 +307,8 @@ func setupNavbarAppearance() -> Void {
     navBarAppearance.backIndicatorImage = customBackImage
     navBarAppearance.backIndicatorTransitionMaskImage = customBackImage
     navBarAppearance.tintColor = UIColor(named: "accent")
-//    navBarAppearance.backgroundColor = UIColor(named: "overlay1")
-    #warning("BUG: enabling this fixes background blur effect, BUT buttons on timelistview are cut off on top?")
+    #warning("TODO FIX")
+//    navBarAppearance.backgroundColor = UIColor(named: "indent")
 }
 
 

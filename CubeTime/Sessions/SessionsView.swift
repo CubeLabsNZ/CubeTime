@@ -12,6 +12,8 @@ struct SessionsView: View {
     
     @StateObject var cloudkitStatusManager = CloudkitStatusManager()
     
+    @ScaledMetric(wrappedValue: 25, relativeTo: .subheadline) private var height
+    
     @FetchRequest(
         entity: Session.entity(),
         sortDescriptors: [
@@ -28,14 +30,38 @@ struct SessionsView: View {
                     
                     ScrollView {
                         VStack (spacing: 10) {
+                            if let status = cloudkitStatusManager.currentStatus {
+                                Group {
+                                    switch (status) {
+                                    case 0:
+                                        Text("Synced to iCloud")
+                                            .foregroundColor(Color("accent"))
+                                        
+                                    case 1:
+                                        Text("Sync to iCloud failed")
+                                            .foregroundColor(Color("grey"))
+                                        
+                                    case 2:
+                                        Text("iCloud unavailable")
+                                            .foregroundColor(Color("grey"))
+                                    
+                                    default:
+                                        EmptyView()
+                                    }
+                                }
+                                .font(.subheadline.weight(.medium))
+                                .frame(height: height)
+                            } else {
+                                LoadingIndicator(animation: .bar, color: Color("accent"), size: .small, speed: .normal)
+                                    .frame(height: height)
+                            }
+                            
                             ForEach(sessions) { item in
                                 SessionCard(item: item, allSessions: sessions, parentGeo: geo)
                             }
                         }
                     }
-                    .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
-                        view.safeAreaInset(safeArea: .tabBar, avoidBottomBy: 50)
-                    }
+                    .safeAreaInset(safeArea: .tabBar, avoidBottomBy: (UIDevice.deviceIsPad && hSizeClass == .regular) ? 0 : 50)
                     
                     HierarchicalButton(type: .coloured, size: .large, onTapRun: {
                         showNewSessionPopUp = true
@@ -61,27 +87,6 @@ struct SessionsView: View {
                 .navigationTitle("Sessions")
                 .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        if let status = cloudkitStatusManager.currentStatus {
-                            Group {
-                                if (status == 0) {
-                                    Label("Synced to iCloud", systemImage: "checkmark")
-                                        .foregroundColor(Color("accent"))
-                                        .imageScale(.medium)
-                                        .labelStyle(.titleAndIcon)
-                                } else {
-                                    Text("Failed to sync to iCloud")
-                                        .foregroundColor(Color("grey"))
-                                }
-                            }
-                            .font(.subheadline.weight(.medium))
-                        } else {
-                            LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
-                                .frame(maxHeight: 35)
-                        }
-                    }
-                    
-                    
                     ToolbarItem(placement: .navigationBarTrailing) {
                         if !(UIDevice.deviceIsPad && hSizeClass == .regular) {
                             NavigationLink(destination: ToolsList()) {
