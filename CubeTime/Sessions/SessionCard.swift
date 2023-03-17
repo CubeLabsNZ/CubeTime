@@ -22,12 +22,10 @@ struct SessionCard: View {
     let name: String
     let scrambleType: Int
     let solveCount: Int
-    #warning("TODO: remove this ( i have idea )")
-    let parentGeo: GeometryProxy
     
     @Namespace var namespace
     
-    init (item: Session, allSessions: FetchedResults<Session>, parentGeo: GeometryProxy) {
+    init (item: Session, allSessions: FetchedResults<Session>) {
         self.item = item
         self.allSessions = allSessions
         
@@ -37,130 +35,113 @@ struct SessionCard: View {
         self.name = item.name ?? "Unknown session name"
         self.scrambleType = Int(item.scrambleType)
         self.solveCount = item.solves?.count ?? -1
-        
-        self.parentGeo = parentGeo
     }
     
     var body: some View {
-        ZStack {
+        HStack {
+            VStack(alignment: .leading) {
+                HStack(alignment: .center, spacing: 0) {
+                    Group {
+                        switch sessionType {
+                        case .algtrainer:
+                            Image(systemName: "command.square")
+                                .font(.system(size: 26, weight: .semibold))
+                            
+                        case .playground:
+                            Image(systemName: "square.on.square")
+                                .font(.system(size: 22, weight: .semibold))
+                            
+                        case .multiphase:
+                            Image(systemName: "square.stack")
+                                .font(.system(size: 22, weight: .semibold))
+                            
+                        case .compsim:
+                            Image(systemName: "globe.asia.australia")
+                                .font(.system(size: 26, weight: .bold))
+                            
+                        default:
+                            EmptyView()
+                        }
+                    }
+                    .foregroundColor(Color("accent"))
+                    .padding(.trailing, 12)
+                    .background( Group {
+                        if sessionType != .standard {
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(Color("accent").opacity(0.33))
+                                .frame(width: 40, height: 40)
+                                .padding(.trailing, 12)
+                        }
+                    })
+                    
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(name)
+                            .font(.title2.weight(.semibold))
+                            .foregroundColor(Color("dark"))
+                        
+                        Group {
+                            switch sessionType {
+                            case .standard:
+                                Text(puzzleTypes[scrambleType].name)
+                            case .playground:
+                                Text("Playground")
+                            case .multiphase:
+                                Text("Multiphase - \(puzzleTypes[scrambleType].name)")
+                            case .compsim:
+                                Text("Comp Sim - \(puzzleTypes[scrambleType].name)")
+                            default:
+                                EmptyView()
+                            }
+                        }
+                        .font(.subheadline.weight(.regular))
+                        .foregroundColor(Color("dark"))
+                        .offset(y: pinned ? 0 : -2)
+                    }
+                }
+                
+                if pinned {
+                    Spacer()
+                    
+                    Text("\(solveCount) Solves")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(Color("grey"))
+                        .padding(.bottom, 4)
+                }
+            }
+            .offset(x: stopwatchManager.currentSession == item ? 10 : 0)
+            
+            Spacer()
+            
+            if (sessionType != .playground) {
+                Image(puzzleTypes[scrambleType].name)
+                    .resizable()
+                    .frame(width: item.pinned ? nil : 40, height: item.pinned ? nil : 40)
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(Color("dark"))
+                    .padding(.trailing, item.pinned ? 12 : 8)
+                    .padding(.vertical, item.pinned ? 6 : 0)
+            }
+        }
+        .padding(.leading)
+        .padding(.trailing, pinned ? 6 : 4)
+        .padding(.vertical, pinned ? 12 : 8)
+        
+        .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight)
+        
+        .background( Group {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(Color("indent1"))
                 .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight)
-                .zIndex(0)
-            
             
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(Color("overlay0"))
                 .frame(width: stopwatchManager.currentSession == item ? 16 : nil,
                        height: item.pinned ? pinnedSessionHeight : regularSessionHeight)
-                .offset(x: stopwatchManager.currentSession == item
-                        ? -((parentGeo.size.width - 16)/2) + 16
-                        : 0)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
-                .zIndex(1)
-            
-            
-        
-            
-            
-            VStack {
-                HStack {
-                    VStack(alignment: .leading) {
-                        HStack(alignment: .center, spacing: 0) {
-                            ZStack {
-                                if sessionType != .standard {
-                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                        .fill(Color("accent").opacity(0.33))
-                                        .frame(width: 40, height: 40)
-                                        .padding(.trailing, 12)
-                                }
-                                
-                                Group {
-                                    switch sessionType {
-                                    case .algtrainer:
-                                        Image(systemName: "command.square")
-                                            .font(.system(size: 26, weight: .semibold))
-                                        
-                                    case .playground:
-                                        Image(systemName: "square.on.square")
-                                            .font(.system(size: 22, weight: .semibold))
-                                        
-                                    case .multiphase:
-                                        Image(systemName: "square.stack")
-                                            .font(.system(size: 22, weight: .semibold))
-                                        
-                                    case .compsim:
-                                        Image(systemName: "globe.asia.australia")
-                                            .font(.system(size: 26, weight: .bold))
-                                        
-                                    default:
-                                        EmptyView()
-                                    }
-                                }
-                                .foregroundColor(Color("accent"))
-                                .padding(.trailing, 12)
-                            }
-                            
-                            
-                            VStack(alignment: .leading, spacing: 0) {
-                                Text(name)
-                                    .font(.title2.weight(.semibold))
-                                    .foregroundColor(Color("dark"))
-                                
-                                Group {
-                                    switch sessionType {
-                                    case .standard:
-                                        Text(puzzleTypes[scrambleType].name)
-                                    case .playground:
-                                        Text("Playground")
-                                    case .multiphase:
-                                        Text("Multiphase - \(puzzleTypes[scrambleType].name)")
-                                    case .compsim:
-                                        Text("Comp Sim - \(puzzleTypes[scrambleType].name)")
-                                    default:
-                                        EmptyView()
-                                    }
-                                }
-                                .font(.subheadline.weight(.regular))
-                                .foregroundColor(Color("dark"))
-                                .offset(y: pinned ? 0 : -2)
-                            }
-                        }
-                        
-                        if pinned {
-                            Spacer()
-                            
-                            Text("\(solveCount) Solves")
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundColor(Color("grey"))
-                                .padding(.bottom, 4)
-                        }
-                    }
-                    .offset(x: stopwatchManager.currentSession == item ? 10 : 0)
-                    
-                    Spacer()
-                    
-                    if (sessionType != .playground) {
-                        Image(puzzleTypes[scrambleType].name)
-                            .resizable()
-                            .frame(width: item.pinned ? nil : 40, height: item.pinned ? nil : 40)
-                            .aspectRatio(contentMode: .fit)
-                            .foregroundColor(Color("dark"))
-                            .padding(.trailing, item.pinned ? 12 : 8)
-                            .padding(.vertical, item.pinned ? 6 : 0)
-                    }
-                }
-                .padding(.leading)
-                .padding(.trailing, pinned ? 6 : 4)
-                .padding(.vertical, pinned ? 12 : 8)
-            }
-            
-            .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight)
-            
-            .background(Color.clear)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .zIndex(2)
-        }
+        })
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         .onTapGesture {
             withAnimation(Animation.customDampedSpring) {
                 if stopwatchManager.currentSession != item {
@@ -195,7 +176,7 @@ struct SessionCard: View {
                               title: "Delete Session",
                               systemImage: "trash",
                               disableButton: allSessions.count <= 1)
-                .foregroundColor(Color.red)
+            .foregroundColor(Color.red)
         })
         .padding(.horizontal)
         

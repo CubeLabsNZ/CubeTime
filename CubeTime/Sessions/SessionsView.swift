@@ -22,83 +22,82 @@ struct SessionsView: View {
         ]
     ) var sessions: FetchedResults<Session>
     
-    #warning("TODO: fix this - R")
     var body: some View {
         NavigationView {
             GeometryReader { geo in
-                ZStack(alignment: .bottomLeading) {
-                    BackgroundColour(isSessions: true)
-                    
-                    ScrollView {
-                        VStack (spacing: 10) {
-                            if let status = cloudkitStatusManager.currentStatus {
-                                Group {
-                                    switch (status) {
-                                    case 0:
-                                        Text("Synced to iCloud")
-                                            .foregroundColor(Color("accent"))
-                                        
-                                    case 1:
-                                        Text("Sync to iCloud failed")
-                                            .foregroundColor(Color("grey"))
-                                        
-                                    case 2:
-                                        Text("iCloud unavailable")
-                                            .foregroundColor(Color("grey"))
+                ScrollView {
+                    VStack (spacing: 10) {
+                        if let status = cloudkitStatusManager.currentStatus {
+                            Group {
+                                switch (status) {
+                                case 0:
+                                    Text("Synced to iCloud")
+                                        .foregroundColor(Color("accent"))
                                     
-                                    default:
-                                        EmptyView()
-                                    }
+                                case 1:
+                                    Text("Sync to iCloud failed")
+                                        .foregroundColor(Color("grey"))
+                                    
+                                case 2:
+                                    Text("iCloud unavailable")
+                                        .foregroundColor(Color("grey"))
+                                    
+                                default:
+                                    EmptyView()
                                 }
-                                .font(.subheadline.weight(.medium))
+                            }
+                            .font(.subheadline.weight(.medium))
+                            .frame(height: height)
+                        } else {
+                            LoadingIndicator(animation: .bar, color: Color("accent"), size: .small, speed: .normal)
                                 .frame(height: height)
-                            } else {
-                                LoadingIndicator(animation: .bar, color: Color("accent"), size: .small, speed: .normal)
-                                    .frame(height: height)
-                            }
-                            
-                            ForEach(sessions) { item in
-                                SessionCard(item: item, allSessions: sessions, parentGeo: geo)
-                            }
+                        }
+                        
+                        ForEach(sessions) { item in
+                            SessionCard(item: item, allSessions: sessions)
                         }
                     }
-                    .safeAreaInset(safeArea: .tabBar, avoidBottomBy: (UIDevice.deviceIsPad && hSizeClass == .regular) ? 0 : 50)
-                    
-                    HierarchicalButton(type: .coloured, size: .large, onTapRun: {
-                        showNewSessionPopUp = true
-                    }) {
-                        HStack(spacing: 6) {
-                            Image(systemName: "plus.circle.fill")
-                                .offset(x: -2)
-                            
-                            Text("New Session")
-                        }
-                    }
-                    .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
-                        view
-                            .padding(.bottom, 58)
-                            .padding(.bottom, UIDevice.hasBottomBar ? 0 : nil)
-                    }
-                    .if(UIDevice.deviceIsPad && hSizeClass == .regular) { view in
-                        view
-                            .padding(.bottom, 8)
-                    }
-                    .padding(.horizontal)
                 }
-                .navigationTitle("Sessions")
-                .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        if !(UIDevice.deviceIsPad && hSizeClass == .regular) {
-                            NavigationLink(destination: ToolsList()) {
-                                HierarchicalButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
-                                    Label("Tools", systemImage: "wrench.and.screwdriver")
-                                        .labelStyle(.titleAndIcon)
-                                        .imageScale(.small)
-                                }
+                .safeAreaInset(safeArea: .tabBar, avoidBottomBy: (UIDevice.deviceIsPad && hSizeClass == .regular) ? 0 : 50)
+            }
+            .background(
+                BackgroundColour(isSessions: true)
+            )
+            .overlay(alignment: .bottomLeading) {
+                HierarchicalButton(type: .coloured, size: .large, onTapRun: {
+                    showNewSessionPopUp = true
+                }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "plus.circle.fill")
+                            .offset(x: -2)
+                        
+                        Text("New Session")
+                    }
+                }
+                .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
+                    view
+                        .padding(.bottom, 58)
+                        .padding(.bottom, UIDevice.hasBottomBar ? 0 : nil)
+                }
+                .if(UIDevice.deviceIsPad && hSizeClass == .regular) { view in
+                    view
+                        .padding(.bottom, 8)
+                }
+                .padding(.horizontal)
+            }
+            .navigationTitle("Sessions")
+            .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if !(UIDevice.deviceIsPad && hSizeClass == .regular) {
+                        NavigationLink(destination: ToolsList()) {
+                            HierarchicalButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
+                                Label("Tools", systemImage: "wrench.and.screwdriver")
+                                    .labelStyle(.titleAndIcon)
+                                    .imageScale(.small)
                             }
-                            .buttonStyle(AnimatedButton())
                         }
+                        .buttonStyle(AnimatedButton())
                     }
                 }
             }
