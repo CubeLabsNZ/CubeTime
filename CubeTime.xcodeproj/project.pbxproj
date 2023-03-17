@@ -85,6 +85,7 @@
 		AF8874C529AB3736001E49D0 /* ScrambleGeneratorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */; };
 		AF8A157429AF15B500F6818E /* ScrambleOnlyTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */; };
 		AF8B305B29B5C7010023D23B /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8B305A29B5C7010023D23B /* SettingsManager.swift */; };
+		AFA444A229C4290500795434 /* SettingsWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA444A129C4290400795434 /* SettingsWidgets.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -202,6 +203,7 @@
 		AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleOnlyTool.swift; sourceTree = "<group>"; };
 		AF8B305A29B5C7010023D23B /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		AF977E5B29BEE9E100A246C0 /* CubeTimeData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CubeTimeData.xcdatamodel; sourceTree = "<group>"; };
+		AFA444A129C4290400795434 /* SettingsWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWidgets.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -440,6 +442,7 @@
 				23E81E72275D8DEA00B741E3 /* AboutSettings.swift */,
 				7D7E2011275DD52600ADF01D /* Licenses.swift */,
 				AF8B305A29B5C7010023D23B /* SettingsManager.swift */,
+				AFA444A129C4290400795434 /* SettingsWidgets.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -664,6 +667,7 @@
 				23E647C62775B2AC00561780 /* TimeDistribution.swift in Sources */,
 				235CDA0327A786D800F48C89 /* Updates.swift in Sources */,
 				235D6A6E29C2C34E002D90D8 /* ManualInputTextField.swift in Sources */,
+				AFA444A229C4290500795434 /* SettingsWidgets.swift in Sources */,
 				2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */,
 				233FE7B6274F109600C6F1DF /* Helper.swift in Sources */,
 				23CA8A0C29AAFABD006676BF /* ScrambleController.swift in Sources */,
