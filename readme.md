@@ -47,7 +47,7 @@
 ## Screenshots
 
 #### iOS
-<p align="middle">
+<p align="center">
   <img src="https://user-images.githubusercontent.com/65262710/225591753-e764aef2-4694-4ba9-bf7a-e5959cef555f.png" width="19%" />
   
   <img src="https://user-images.githubusercontent.com/65262710/225591798-1e647057-88fa-49c3-be67-0c5804efebdc.png" width="19%" />
