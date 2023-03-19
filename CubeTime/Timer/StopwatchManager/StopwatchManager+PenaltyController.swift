@@ -123,6 +123,7 @@ extension StopwatchManager {
             self.solveItem = nil
         }
         timerController.secondsStr = formatSolveTime(secs: self.solveItem?.time ?? 0)
+        tryUpdateCurrentSolveth()
     }
     
     func askToDelete() {
