@@ -16,7 +16,6 @@ struct FloatingPanel: View {
     var stages: [CGFloat]
     let views: [AnyView]
     
-#warning("TODO: use that one func for each tupleview type when making a real package")
     
     init<A: View, B: View, C: View>(
         currentStage: Binding<Int>,
@@ -39,77 +38,60 @@ struct FloatingPanel: View {
         }
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            ZStack(alignment: .bottom) {
-                RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .fill(Color("overlay1"))
-                    .frame(width: 360, height: height + 18)
-                    .shadowDark(x: 0, y: 3)
-                    .zIndex(1)
-                
-                DraggerView(callBack: { (heightDelta, projectedDelta, state)  in
-                    if (state == .began) {
-                        self.beginHeight = self.height
-                        
-                    } else if (state == .changed) {
-                        self.height = max(min(self.beginHeight + heightDelta, self.maxHeight), self.minHeight)
-                        
-                        
-                        let nearest = stages.nearest(to: height)!.0
-                        if (nearest != oldStage) {
-                            withAnimation(.customSlowSpring) {
-                                stage = nearest
-                            }
-                            oldStage = nearest
-                        }
-                    } else if (state == .ended) {
-                        let n = stages.nearest(to: self.height + projectedDelta)!
-                        
+        VStack(spacing: 0) {
+            views[stage]
+                .frame(width: 360, height: height, alignment: .top)
+                .clipped()
+                .animation(.none, value: stage)
+            
+                            
+            DraggerView(onUpdate: { (heightDelta, projectedDelta, state)  in
+                if (state == .began) {
+                    self.beginHeight = self.height
+                    
+                } else if (state == .changed) {
+                    self.height = max(min(self.beginHeight + heightDelta, self.maxHeight), self.minHeight)
+                    
+                    let nearest = stages.nearest(to: height)!.0
+                    if (nearest != oldStage) {
                         withAnimation(.customSlowSpring) {
-                            stage = n.0
-                            height = max(min(Double(n.1), self.maxHeight), self.minHeight)
+                            stage = nearest
                         }
+                        oldStage = nearest
                     }
-                })
-                    .frame(width: 360, height: 18)
-                    .zIndex(3)
-            }
-            .frame(width: 360, height: height + 18)
-            
-            
-            // view
-            ZStack(alignment: .top) {
-                Rectangle()
-                    .fill(Color("overlay1"))
-                    .frame(width: 360, height: height)
-                    .cornerRadius(6, corners: [.topLeft, .topRight])
-
-                views[stage]
-                    .frame(width: 360, height: height, alignment: .top)
-                    .clipped()
-                    .animation(.none, value: stage)
-                    .zIndex(100)
-            }
-            .zIndex(2)
+                } else if (state == .ended) {
+                    let n = stages.nearest(to: self.height + projectedDelta)!
+                    
+                    withAnimation(.customSlowSpring) {
+                        stage = n.0
+                        height = max(min(Double(n.1), self.maxHeight), self.minHeight)
+                    }
+                }
+            })
+                .frame(width: 360, height: 18)
         }
+        .clipped()
         .frame(width: 360)
+        .background (
+            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                .fill(Color("overlay1"))
+                .shadowDark(x: 0, y: 3)
+        )
         .onChange(of: stages) { newValue in
-            withAnimation(.customSlowSpring) {
-                height = newValue[stage]
-            }
+            height = newValue[stage]
         }
     }
 }
 
 struct DraggerView: UIViewControllerRepresentable {
-    let callBack: (CGFloat,
+    let onUpdate: (CGFloat,
                    CGFloat,
                    UIPanGestureRecognizer.State) -> Void
     
     typealias UIViewControllerType = DraggerViewController
     
     func makeUIViewController(context: Context) -> DraggerViewController {
-        return DraggerViewController(changeHeight: callBack)
+        return DraggerViewController(changeHeight: onUpdate)
     }
     
     func updateUIViewController(_ uiViewController: DraggerViewController, context: Context) { }
@@ -120,14 +102,14 @@ class DraggerViewController: UIViewController {
     
     var drag: UIPanGestureRecognizer!
     
-    let changeHeight: (CGFloat,
+    let onUpdate: (CGFloat,
                        CGFloat,
                        UIPanGestureRecognizer.State) -> ()
     
     init(changeHeight: @escaping (CGFloat,
                                   CGFloat,
                                   UIPanGestureRecognizer.State) -> ()) {
-        self.changeHeight = changeHeight
+        self.onUpdate = changeHeight
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -147,10 +129,11 @@ class DraggerViewController: UIViewController {
         let d = gestureRecogniser.translation(in: self.view).y
         let state = gestureRecogniser.state
         let v = gestureRecogniser.velocity(in: self.view).y
+        let a = 1<<13
         
-        let dProj = (v*v) / (2.5) * (d > 0 ? 1.0 : -1.0)
+        let dProj = (v*v) / CGFloat(a) * (d > 0 ? 1.0 : -1.0)
         
-        print(state.rawValue)
+        
         if (state == .began) {
             self.draggerCapsuleView.backgroundColor = UIColor(named: "indent0")!
             UIView.animate(withDuration: 0.45, delay: 0, usingSpringWithDamping: 0.76, initialSpringVelocity: 5, options: .curveEaseInOut, animations: {
@@ -163,7 +146,7 @@ class DraggerViewController: UIViewController {
             })
         }
         
-        changeHeight(d, dProj, state)
+        onUpdate(d, dProj, state)
     }
     
     private func setupGestures() {
