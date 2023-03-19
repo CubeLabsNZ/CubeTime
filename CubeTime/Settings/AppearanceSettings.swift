@@ -199,7 +199,7 @@ struct TimerPreview: View {
                     .frame(width: 85, height: 30)
                     .padding(.trailing, 8)
                 
-                CloseButton {
+                CTCloseButton {
                     presentationMode.wrappedValue.dismiss()
                 }
                 .padding(0)

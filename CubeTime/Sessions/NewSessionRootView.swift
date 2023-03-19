@@ -71,7 +71,7 @@ struct NewSessionRootView: View {
                     HStack {
                         Spacer()
                         
-                        CloseButton {
+                        CTCloseButton {
                             dismiss()
                         }
                         .padding([.top, .trailing])

@@ -239,7 +239,7 @@ struct TimerView: View {
                     
                     
                     if timerController.mode == .inspecting && showCancelInspection {
-                        HierarchicalButton(type: .mono, size: .medium, onTapRun: {
+                        CTButton(type: .mono, size: .medium, onTapRun: {
                             timerController.interruptInspection()
                         }) {
                             Text("Cancel")
@@ -386,7 +386,7 @@ struct TimerView: View {
             }
             
             if stopwatchManager.zenMode {
-                CloseButton(hasBackgroundShadow: true, onTapRun: {
+                CTCloseButton(hasBackgroundShadow: true, onTapRun: {
                     withAnimation(.customEaseInOut) {
                         stopwatchManager.zenMode = false
                     }
@@ -591,7 +591,7 @@ struct TimeScrambleDetail: View {
                     }
                     
                     ToolbarItem(placement: .confirmationAction) {
-                        DoneButton(onTapRun: {
+                        CTDoneButton(onTapRun: {
                             dismiss()
                             scramble = nil
                         })

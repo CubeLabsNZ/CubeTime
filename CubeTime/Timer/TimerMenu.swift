@@ -37,14 +37,14 @@ struct TimerMenu: View {
             #warning("TODO: use animatabledata to animate path from circle -> symbol")
             VStack(spacing: 4) {
                 if expanded {
-                    CloseButton {
+                    CTCloseButton {
                         expanded = false
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .padding(.top, 2)
                     
                     VStack(spacing: 8) {
-                        HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                        CTButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
                             withAnimation(.customEaseInOut) {
                                 stopwatchManager.currentPadFloatingStage = 1
                                 stopwatchManager.zenMode = true
@@ -63,7 +63,7 @@ struct TimerMenu: View {
                         ThemedDivider()
                             .padding(.horizontal, 4)
                         
-                        HierarchicalButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {
+                        CTButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {
                             showTools = true
                         }) {
                             Label(title: {
@@ -75,7 +75,7 @@ struct TimerMenu: View {
                             })
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        HierarchicalButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {
+                        CTButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {
                             showSettings = true
                         }) {
                             Label(title: {
@@ -124,7 +124,7 @@ struct TimerMenu: View {
                 ToolsList()
                     .toolbar {
                         ToolbarItemGroup(placement: .navigationBarTrailing) {
-                            DoneButton(onTapRun: {
+                            CTDoneButton(onTapRun: {
                                 self.showTools = false
                                 dismiss()
                             })

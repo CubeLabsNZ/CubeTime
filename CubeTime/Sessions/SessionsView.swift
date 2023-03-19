@@ -64,7 +64,7 @@ struct SessionsView: View {
                 BackgroundColour(isSessions: true)
             )
             .overlay(alignment: .bottomLeading) {
-                HierarchicalButton(type: .coloured, size: .large, onTapRun: {
+                CTButton(type: .coloured, size: .large, onTapRun: {
                     showNewSessionPopUp = true
                 }) {
                     HStack(spacing: 6) {
@@ -91,13 +91,13 @@ struct SessionsView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !(UIDevice.deviceIsPad && hSizeClass == .regular) {
                         NavigationLink(destination: ToolsList()) {
-                            HierarchicalButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
+                            CTButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
                                 Label("Tools", systemImage: "wrench.and.screwdriver")
                                     .labelStyle(.titleAndIcon)
                                     .imageScale(.small)
                             }
                         }
-                        .buttonStyle(AnimatedButton())
+                        .buttonStyle(CTButtonStyle())
                     }
                 }
             }
@@ -184,7 +184,7 @@ struct CustomiseSessionView: View {
                         }
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        DoneButton(onTapRun: {
+                        CTDoneButton(onTapRun: {
                             sessionItem.name = name
                             sessionItem.pinned = pinnedSession
                             
@@ -255,7 +255,7 @@ struct EventPicker: View {
             
             LazyVGrid(columns: [GridItem(.adaptive(minimum: spacing), spacing: 8)], spacing: 8) {
                 ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
-                    HierarchicalButton(type: (index == sessionEventType) ? .halfcoloured : .mono,
+                    CTButton(type: (index == sessionEventType) ? .halfcoloured : .mono,
                                       size: .ultraLarge,
                                       square: true,
                                       onTapRun: {

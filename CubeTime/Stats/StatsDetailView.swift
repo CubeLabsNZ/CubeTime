@@ -140,9 +140,9 @@ struct StatsDetailView: View {
                     let shareStr = getShareStr(solves: solves)
                     
                     HStack(spacing: 8) {
-                        CopyButton(toCopy: shareStr, buttonText: "Copy Average")
+                        CTCopyButton(toCopy: shareStr, buttonText: "Copy Average")
                         
-                        ShareButton(toShare: shareStr, buttonText: "Share Average")
+                        CTShareButton(toShare: shareStr, buttonText: "Share Average")
                     }
                     .padding(.top, 16)
                     .padding(.bottom, 4)
@@ -171,7 +171,7 @@ struct StatsDetailView: View {
             )
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    DoneButton(onTapRun: {
+                    CTDoneButton(onTapRun: {
                         dismiss()
                     })
                 }
