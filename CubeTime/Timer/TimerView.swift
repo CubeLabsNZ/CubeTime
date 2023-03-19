@@ -303,14 +303,12 @@ struct TimerView: View {
                 
                 // 50 for tab + 8 for padding + 16/0 for bottom bar gap
                 
-                let stageMaxHeight: CGFloat = geo.size.height-CGFloat(50)
-                let stages: [CGFloat] = [35, 35+16+55, stageMaxHeight]
-                
+                let stages: [CGFloat] = [35, 35+16+55, geo.size.height-CGFloat(50)]
                 
                 #warning("todo: combine these into one hstack, doesn't need to be separate...")
                 if (UIDevice.deviceIsPad && hSizeClass == .regular) {
                     HStack(alignment: .top) {
-                        FloatingPanel(currentStage: $stopwatchManager.currentPadFloatingStage, maxHeight: stageMaxHeight, stages: stages) {
+                        FloatingPanel(currentStage: $stopwatchManager.currentPadFloatingStage, stages: stages) {
                             PadTimerHeader(targetFocused: self.$targetFocused, showSessions: nil)
                             
                             VStack(alignment: .leading, spacing: 8) {

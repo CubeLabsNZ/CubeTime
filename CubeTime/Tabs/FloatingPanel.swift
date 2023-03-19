@@ -10,8 +10,8 @@ struct FloatingPanel: View {
     @State var oldStage: Int
     @State var isPressed: Bool = false
     
-    private let minHeight: CGFloat = 0
-    private var maxHeight: CGFloat
+    private let minHeight: CGFloat
+    private let maxHeight: CGFloat
     
     var stages: [CGFloat]
     let views: [AnyView]
@@ -20,10 +20,11 @@ struct FloatingPanel: View {
     
     init<A: View, B: View, C: View>(
         currentStage: Binding<Int>,
-        maxHeight: CGFloat,
         stages: [CGFloat],
         @ViewBuilder content: @escaping () -> TupleView<(A, B, C)>) {
-            self.maxHeight = maxHeight
+            self.maxHeight = stages.last ?? 300
+            self.minHeight = stages.first ?? 0
+            
             self.stages = stages
             
             self._stage = currentStage
@@ -49,8 +50,10 @@ struct FloatingPanel: View {
                 DraggerView(callBack: { (heightDelta, projectedDelta, state)  in
                     if (state == .began) {
                         self.beginHeight = self.height
+                        
                     } else if (state == .changed) {
-                        self.height = self.beginHeight + heightDelta
+                        self.height = max(min(self.beginHeight + heightDelta, self.maxHeight), self.minHeight)
+                        
                         
                         let nearest = stages.nearest(to: height)!.0
                         if (nearest != oldStage) {
@@ -59,26 +62,17 @@ struct FloatingPanel: View {
                             }
                             oldStage = nearest
                         }
-                        
-                        
                     } else if (state == .ended) {
+                        let n = stages.nearest(to: self.height + projectedDelta)!
+                        
                         withAnimation(.customSlowSpring) {
-                            let n = stages.nearest(to: self.height + projectedDelta)!
                             stage = n.0
-                            height = Double(n.1)
+                            height = max(min(Double(n.1), self.maxHeight), self.minHeight)
                         }
                     }
                 })
                     .frame(width: 360, height: 18)
                     .zIndex(3)
-                
-//                ZStack {
-//                    Capsule()
-//                        .fill(isPressed ? Color("indent0") : Color("indent1"))
-//                        .scaleEffect(isPressed ? 1.12 : 1.00)
-//                        .frame(width: 36, height: 6)
-//                }
-//                .frame(width: 360, height: 18, alignment: .center)
             }
             .frame(width: 360, height: height + 18)
             
@@ -100,7 +94,9 @@ struct FloatingPanel: View {
         }
         .frame(width: 360)
         .onChange(of: stages) { newValue in
-            height = newValue[stage]
+            withAnimation(.customSlowSpring) {
+                height = newValue[stage]
+            }
         }
     }
 }
@@ -116,9 +112,7 @@ struct DraggerView: UIViewControllerRepresentable {
         return DraggerViewController(changeHeight: callBack)
     }
     
-    func updateUIViewController(_ uiViewController: DraggerViewController, context: Context) {
-        
-    }
+    func updateUIViewController(_ uiViewController: DraggerViewController, context: Context) { }
 }
 
 class DraggerViewController: UIViewController {
@@ -156,7 +150,18 @@ class DraggerViewController: UIViewController {
         
         let dProj = (v*v) / (2.5) * (d > 0 ? 1.0 : -1.0)
         
-        print("dproj = \(dProj)")
+        print(state.rawValue)
+        if (state == .began) {
+            self.draggerCapsuleView.backgroundColor = UIColor(named: "indent0")!
+            UIView.animate(withDuration: 0.45, delay: 0, usingSpringWithDamping: 0.76, initialSpringVelocity: 5, options: .curveEaseInOut, animations: {
+                self.draggerCapsuleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.12, 1.12);
+            })
+        } else if (state == .ended) {
+            self.draggerCapsuleView.backgroundColor = UIColor(named: "indent1")!
+            UIView.animate(withDuration: 0.45, delay: 0, usingSpringWithDamping: 0.76, initialSpringVelocity: 5, options: .curveEaseInOut, animations: {
+                self.draggerCapsuleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.0, 1.0);
+            })
+        }
         
         changeHeight(d, dProj, state)
     }
@@ -173,14 +178,14 @@ class DraggerViewController: UIViewController {
     
     private func setupView() {
         self.view = UIView(frame: .zero)
-        view.backgroundColor = UIColor.blue
+        view.backgroundColor = UIColor(named: "overlay1")!
         view.layer.cornerRadius = 6
         view.layer.cornerCurve = .continuous
         
         self.draggerCapsuleView = UIView(frame: .zero)
         draggerCapsuleView.layer.cornerRadius = 3
         draggerCapsuleView.layer.cornerCurve = .continuous
-        draggerCapsuleView.backgroundColor = UIColor.yellow
+        draggerCapsuleView.backgroundColor = UIColor(named: "indent1")
         
         self.view.addSubview(draggerCapsuleView)
         self.draggerCapsuleView.translatesAutoresizingMaskIntoConstraints = false
