@@ -108,19 +108,13 @@ extension StopwatchManager {
         guard let solveItem else {return}
         delete(solve: solveItem)
         timerController.secondsElapsed = 0
-        //                stopwatchManager.secondsStr = formatSolveTime(secs: 0)
-        if SettingsManager.standard.showPrevTime {
-            if let g1 = (solveItem as? CompSimSolve)?.solvegroup, let lastSolveItem = solvesByDate.last as? CompSimSolve, let g2 = lastSolveItem.solvegroup {
-                if g1 == g2 {
-                    self.solveItem = lastSolveItem
-                } else {
-                    self.solveItem = nil
-                }
-            } else {
-                self.solveItem = solvesByDate.last
+        if !SettingsManager.standard.showPrevTime || currentSession is CompSimSession {
+            if currentSession is CompSimSession {
+                statsGetFromCache()
             }
-        } else {
             self.solveItem = nil
+        } else {
+            self.solveItem = solvesByDate.last
         }
         timerController.secondsStr = formatSolveTime(secs: self.solveItem?.time ?? 0)
         tryUpdateCurrentSolveth()
