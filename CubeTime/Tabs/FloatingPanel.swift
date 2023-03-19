@@ -1,7 +1,9 @@
 import SwiftUI
+import UIKit
 
 struct FloatingPanel: View {
     @State private var height: CGFloat
+    @State private var beginHeight: CGFloat
     
     @Binding var stage: Int
     
@@ -28,6 +30,7 @@ struct FloatingPanel: View {
             self._oldStage = State(initialValue: currentStage.wrappedValue)
             
             self._height = State(initialValue: stages[currentStage.wrappedValue])
+            self._beginHeight = State(initialValue: stages[currentStage.wrappedValue])
             
             let c = content().value
             
@@ -43,50 +46,39 @@ struct FloatingPanel: View {
                     .shadowDark(x: 0, y: 3)
                     .zIndex(1)
                 
-                ZStack {
-                    Capsule()
-                        .fill(isPressed ? Color("indent0") : Color("indent1"))
-                        .scaleEffect(isPressed ? 1.12 : 1.00)
-                        .frame(width: 36, height: 6)
-                }
-                .frame(width: 360, height: 18, alignment: .center)
-                .background(
-                    RoundedRectangle(cornerRadius: 6, style: .continuous)
-                        .fill(Color("overlay1"))
-                        .frame(width: 360, height: 18)
-                )
-                .zIndex(2)
-                .gesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { value in
-                            self.isPressed = true
-                            // Just follow touch within bounds
-                            
-                            let newh = height + value.translation.height
-                            if newh > maxHeight {
-                                height = maxHeight
-                            } else if newh < minHeight {
-                                height = minHeight
-                            } else {
-                                height = newh
-                            }
-                            let nearest = stages.nearest(to: height)!.0
-                            if (nearest != oldStage) {
-                                withAnimation(.customSlowSpring) {
-                                    stage = nearest
-                                }
-                                oldStage = nearest
-                            }
-                        }
-                        .onEnded() { value in
+                DraggerView(callBack: { (heightDelta, projectedDelta, state)  in
+                    if (state == .began) {
+                        self.beginHeight = self.height
+                    } else if (state == .changed) {
+                        self.height = self.beginHeight + heightDelta
+                        
+                        let nearest = stages.nearest(to: height)!.0
+                        if (nearest != oldStage) {
                             withAnimation(.customSlowSpring) {
-                                self.isPressed = false
-                                let n = stages.nearest(to: height + value.predictedEndTranslation.height)!
-                                stage = n.0
-                                height = Double(n.1)
+                                stage = nearest
                             }
+                            oldStage = nearest
                         }
-                )
+                        
+                        
+                    } else if (state == .ended) {
+                        withAnimation(.customSlowSpring) {
+                            let n = stages.nearest(to: self.height + projectedDelta)!
+                            stage = n.0
+                            height = Double(n.1)
+                        }
+                    }
+                })
+                    .frame(width: 360, height: 18)
+                    .zIndex(3)
+                
+//                ZStack {
+//                    Capsule()
+//                        .fill(isPressed ? Color("indent0") : Color("indent1"))
+//                        .scaleEffect(isPressed ? 1.12 : 1.00)
+//                        .frame(width: 36, height: 6)
+//                }
+//                .frame(width: 360, height: 18, alignment: .center)
             }
             .frame(width: 360, height: height + 18)
             
@@ -104,12 +96,101 @@ struct FloatingPanel: View {
                     .animation(.none, value: stage)
                     .zIndex(100)
             }
-            .zIndex(3)
+            .zIndex(2)
         }
         .frame(width: 360)
         .onChange(of: stages) { newValue in
             height = newValue[stage]
         }
+    }
+}
+
+struct DraggerView: UIViewControllerRepresentable {
+    let callBack: (CGFloat,
+                   CGFloat,
+                   UIPanGestureRecognizer.State) -> Void
+    
+    typealias UIViewControllerType = DraggerViewController
+    
+    func makeUIViewController(context: Context) -> DraggerViewController {
+        return DraggerViewController(changeHeight: callBack)
+    }
+    
+    func updateUIViewController(_ uiViewController: DraggerViewController, context: Context) {
+        
+    }
+}
+
+class DraggerViewController: UIViewController {
+    var draggerCapsuleView = UIView(frame: .zero)
+    
+    var drag: UIPanGestureRecognizer!
+    
+    let changeHeight: (CGFloat,
+                       CGFloat,
+                       UIPanGestureRecognizer.State) -> ()
+    
+    init(changeHeight: @escaping (CGFloat,
+                                  CGFloat,
+                                  UIPanGestureRecognizer.State) -> ()) {
+        self.changeHeight = changeHeight
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupView()
+        setupGestures()
+    }
+    
+    @objc private func panPanel(_ gestureRecogniser: UIPanGestureRecognizer) {
+        let d = gestureRecogniser.translation(in: self.view).y
+        let state = gestureRecogniser.state
+        let v = gestureRecogniser.velocity(in: self.view).y
+        
+        let dProj = (v*v) / (2.5) * (d > 0 ? 1.0 : -1.0)
+        
+        print("dproj = \(dProj)")
+        
+        changeHeight(d, dProj, state)
+    }
+    
+    private func setupGestures() {
+        self.drag = UIPanGestureRecognizer(target: self, action: #selector(self.panPanel))
+        drag.allowedScrollTypesMask = .all
+        drag.maximumNumberOfTouches = 1
+        drag.minimumNumberOfTouches = 1
+        
+        view.addGestureRecognizer(drag)
+        view.isUserInteractionEnabled = true
+    }
+    
+    private func setupView() {
+        self.view = UIView(frame: .zero)
+        view.backgroundColor = UIColor.blue
+        view.layer.cornerRadius = 6
+        view.layer.cornerCurve = .continuous
+        
+        self.draggerCapsuleView = UIView(frame: .zero)
+        draggerCapsuleView.layer.cornerRadius = 3
+        draggerCapsuleView.layer.cornerCurve = .continuous
+        draggerCapsuleView.backgroundColor = UIColor.yellow
+        
+        self.view.addSubview(draggerCapsuleView)
+        self.draggerCapsuleView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            draggerCapsuleView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            draggerCapsuleView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            draggerCapsuleView.widthAnchor.constraint(equalToConstant: 36),
+            draggerCapsuleView.heightAnchor.constraint(equalToConstant: 6),
+        ])
     }
 }
 
@@ -125,5 +206,34 @@ private extension Array where Element: (Comparable & SignedNumeric) {
         self.enumerated().min(by: {
             abs($0.element - value) < abs($1.element - value)
         })
+    }
+}
+
+
+struct PrevSolvesDisplay: View {
+    @EnvironmentObject var stopwatchManager: StopwatchManager
+    var count: Int?
+    
+    @State var solve: Solve? = nil
+    
+    var body: some View {
+        if (SessionType(rawValue: stopwatchManager.currentSession.sessionType) == .compsim) {
+            if let currentSolveGroup = stopwatchManager.compsimSolveGroups.first {
+                TimeBar(solvegroup: currentSolveGroup, currentCalculatedAverage: .constant(nil), isSelectMode: .constant(false), current: true)
+                    .frame(height: 55)
+            }
+        } else {
+            HStack {
+                ForEach((count != nil)
+                        ? stopwatchManager.solvesByDate.suffix(count!)
+                        : stopwatchManager.solvesByDate, id: \.self) { solve in
+                    
+                    TimeCard(solve: solve, currentSolve: $solve)
+                }
+            }
+            .sheet(item: self.$solve) { item in
+                TimeDetailView(for: item, currentSolve: $solve)
+            }
+        }
     }
 }
