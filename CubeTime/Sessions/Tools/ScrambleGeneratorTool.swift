@@ -160,6 +160,7 @@ struct ScrambleGeneratorTool: View {
                         .padding(.vertical, 6)
                         .frame(height: 35)
                         .foregroundColor((scrambleGenerator.numScramble == nil || scrambleGenerator.scrambles?.count != nil) ? Color("grey") : Color("dark"))
+                        .keyboardType(.numberPad)
                         .disabled(scrambleGenerator.scrambles?.count != nil)
                     }
                     .background(

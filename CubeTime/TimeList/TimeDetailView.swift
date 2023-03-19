@@ -88,17 +88,20 @@ struct TimeDetailView: View {
                                     case Penalty.plustwo.rawValue:
                                         Text("\(formatSolveTime(secs: (solve.time + 2)))")
                                             .font(.largeTitle.weight(.bold))
+                                            .modifier(DynamicText())
                                         
                                         if (dynamicTypeSize <= .xLarge) {
                                             Text("(\(time))")
                                                 .font(.title3.weight(.semibold))
                                                 .foregroundColor(Color("grey"))
                                                 .padding(.leading, 8)
+                                                .modifier(DynamicText())
                                                 .offset(y: -4)
                                         }
                                     default:
                                         Text(time)
                                             .font(.largeTitle.weight(.bold))
+                                            .modifier(DynamicText())
                                     }
                                     
                                     Spacer()

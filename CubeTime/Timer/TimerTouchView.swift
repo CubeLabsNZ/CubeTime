@@ -293,9 +293,9 @@ struct TimerTouchView: UIViewControllerRepresentable {
                             timerController.handleGesture(direction: .left)
                         }
                     } else {
-                        if d_y > 0 {
+                        if d_y < 0 {
                             timerController.handleGesture(direction: .up)
-                        } else if d_y < 0 {
+                        } else if d_y > 0 {
                             timerController.handleGesture(direction: .down)
                         }
                     }
