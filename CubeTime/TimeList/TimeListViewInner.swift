@@ -260,9 +260,9 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         stopwatchManager.timeListSelectAll = { [weak self] in
             guard let self else { return }
             
-            for idxpath in self.collectionView.indexPathsForVisibleItems {
-                self.collectionView.selectItem(at: idxpath, animated: true, scrollPosition: [])
-                if let solve = self.dataSource.itemIdentifier(for: idxpath) {
+            for solve in self.stopwatchManager.timeListSolvesFiltered {
+                if let idxpath = self.dataSource.indexPath(for: solve) {
+                    self.collectionView.selectItem(at: idxpath, animated: true, scrollPosition: [])
                     self.stopwatchManager.timeListSolvesSelected.insert(solve)
                 }
             }

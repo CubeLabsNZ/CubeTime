@@ -110,7 +110,15 @@ extension StopwatchManager {
         timerController.secondsElapsed = 0
         //                stopwatchManager.secondsStr = formatSolveTime(secs: 0)
         if SettingsManager.standard.showPrevTime {
-            self.solveItem = solvesByDate.last
+            if let g1 = (solveItem as? CompSimSolve)?.solvegroup, let lastSolveItem = solvesByDate.last as? CompSimSolve, let g2 = lastSolveItem.solvegroup {
+                if g1 == g2 {
+                    self.solveItem = lastSolveItem
+                } else {
+                    self.solveItem = nil
+                }
+            } else {
+                self.solveItem = solvesByDate.last
+            }
         } else {
             self.solveItem = nil
         }
