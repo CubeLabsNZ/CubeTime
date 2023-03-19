@@ -12,6 +12,7 @@
 		231B2E2E29BDECF9007E5DC2 /* HelperButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */; };
 		2326436028C4927600F6322E /* TimerHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435F28C4927600F6322E /* TimerHeader.swift */; };
 		2326436228C4929700F6322E /* PrevSolvesDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326436128C4929700F6322E /* PrevSolvesDisplay.swift */; };
+		23329E9029C31CA60017AE99 /* libz.1.1.3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 23329E8F29C31CA60017AE99 /* libz.1.1.3.tbd */; };
 		233FE7B6274F109600C6F1DF /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Helper.swift */; };
 		2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2359689227A367A0003ED9E1 /* StopwatchManager.swift */; };
 		235CDA0327A786D800F48C89 /* Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235CDA0227A786D800F48C89 /* Updates.swift */; };
@@ -32,7 +33,6 @@
 		23AB648C293867EA0049993B /* 12sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648A293867EA0049993B /* 12sec-audio.wav */; };
 		23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648B293867EA0049993B /* 8sec-audio.wav */; };
 		23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; };
-		23B45E7329A8560400BDF49E /* TNoodleLibNative.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		23B7AC3A29BAB2E300B5C9B4 /* TimerTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B7AC3929BAB2E300B5C9B4 /* TimerTools.swift */; };
 		23B7AC3C29BB049F00B5C9B4 /* CalculatorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B7AC3B29BB049F00B5C9B4 /* CalculatorTool.swift */; };
 		23C85EAC29388C9C00C7C3EC /* StatsSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */; };
@@ -112,7 +112,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				23B45E7329A8560400BDF49E /* TNoodleLibNative.xcframework in Embed Libraries */,
 			);
 			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -125,6 +124,7 @@
 		231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperButtons.swift; sourceTree = "<group>"; };
 		2326435F28C4927600F6322E /* TimerHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerHeader.swift; sourceTree = "<group>"; };
 		2326436128C4929700F6322E /* PrevSolvesDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrevSolvesDisplay.swift; sourceTree = "<group>"; };
+		23329E8F29C31CA60017AE99 /* libz.1.1.3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.1.3.tbd; path = usr/lib/libz.1.1.3.tbd; sourceTree = SDKROOT; };
 		233FE7B5274F109600C6F1DF /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		2354882227642E2800FE8D7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2359689227A367A0003ED9E1 /* StopwatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchManager.swift; sourceTree = "<group>"; };
@@ -211,6 +211,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23329E9029C31CA60017AE99 /* libz.1.1.3.tbd in Frameworks */,
 				23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */,
 				AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */,
 				23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */,
@@ -325,6 +326,7 @@
 		23B45E7129A855F400BDF49E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				23329E8F29C31CA60017AE99 /* libz.1.1.3.tbd */,
 				23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */,
 			);
 			path = Frameworks;
@@ -871,6 +873,7 @@
 				LLVM_LTO = YES_THIN;
 				MARKETING_VERSION = 2.0;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.cubetime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -919,6 +922,7 @@
 				LLVM_LTO = YES_THIN;
 				MARKETING_VERSION = 2.0;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.cubetime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
