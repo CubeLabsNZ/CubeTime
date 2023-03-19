@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_5" orientation="portrait" appearance="dark"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--TimerUI View New-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController storyboardIdentifier="timerStoryboard" id="Y6W-OH-hqX" customClass="TimerUIViewNew" customModule="CubeTime" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GPw-tr-IzB">
+                                <rect key="frame" x="188" y="438" width="38" height="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scramble" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Qdi-JC-3z5">
+                                <rect key="frame" x="16" y="214" width="382" height="20.333333333333343"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="olE-DT-zM7">
+                                <rect key="frame" x="16" y="44" width="382" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="vrb-Iz-uFT"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="1si-q6-sTT" kind="embed" destinationCreationSelector="addTimerHeader:" id="TO2-jm-Wgg"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Qdi-JC-3z5" secondAttribute="trailing" constant="16" id="2Pg-SU-KfW"/>
+                            <constraint firstItem="Qdi-JC-3z5" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="HE3-hb-nML"/>
+                            <constraint firstItem="olE-DT-zM7" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="OgK-Sm-eoo"/>
+                            <constraint firstItem="GPw-tr-IzB" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="abT-qO-KMg"/>
+                            <constraint firstItem="olE-DT-zM7" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="eW5-jF-rKH"/>
+                            <constraint firstItem="Qdi-JC-3z5" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="fFk-l0-8vA"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="olE-DT-zM7" secondAttribute="trailing" constant="16" id="n1y-Yc-2Z8"/>
+                            <constraint firstItem="GPw-tr-IzB" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="nNm-f7-mo8"/>
+                            <constraint firstItem="Qdi-JC-3z5" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="bottom" multiplier="0.25" id="spK-Xq-9ix"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="pSI-hQ-E0U" appends="YES" id="Bhe-Ip-DAq"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="longPressGesture" destination="pSI-hQ-E0U" id="0ms-tn-ayH"/>
+                        <outlet property="panGesture" destination="gGw-Qh-ySd" id="Bl9-JI-Fnf"/>
+                        <outlet property="scrambleLabel" destination="Qdi-JC-3z5" id="Y8E-IN-3lJ"/>
+                        <outlet property="timeLabel" destination="GPw-tr-IzB" id="C5d-hD-r0b"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="gGw-Qh-ySd">
+                    <scrollTypes key="allowedScrollTypesMask" discrete="YES" continuous="YES"/>
+                    <connections>
+                        <action selector="pan:" destination="Y6W-OH-hqX" id="x9F-ta-a7B"/>
+                    </connections>
+                </panGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="pSI-hQ-E0U">
+                    <connections>
+                        <action selector="handleLongPress:" destination="Y6W-OH-hqX" id="AZa-uc-a6o"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="130.40000000000001" y="-27.339901477832512"/>
+        </scene>
+        <!--Hosting Controller-->
+        <scene sceneID="Jao-Zk-are">
+            <objects>
+                <hostingController id="1si-q6-sTT" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="B9D-6V-mIJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="846" y="-27"/>
+        </scene>
+    </scenes>
+</document>

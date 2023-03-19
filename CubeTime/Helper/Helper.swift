@@ -96,6 +96,11 @@ extension RandomAccessCollection where Element: Solve {
 }
 
 
+extension UISwipeGestureRecognizer.Direction: CaseIterable {
+    static public var allCases: [UISwipeGestureRecognizer.Direction] = [.down, .left, .right, .up]
+}
+
+
 // MARK: - UIDEVICE EXTENSIONS
 extension UIDevice {
     static var deviceIsPad: Bool {

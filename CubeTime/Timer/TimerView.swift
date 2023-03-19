@@ -4,7 +4,7 @@ import CoreGraphics
 import Combine
 import SwiftfulLoadingIndicators
 import SVGView
-
+import UIKit
 
 struct SheetStrWrapper: Identifiable {
     let id = UUID()
@@ -28,6 +28,342 @@ struct AvoidFloatingPanel: ViewModifier {
                     stopwatchManager.currentPadFloatingStage = 1
                 }
             }
+    }
+}
+
+class TimerUIViewNew: UIViewController, UIContextMenuInteractionDelegate {
+    let sm = SettingsManager.standard
+    
+    var scrambleController: ScrambleController!
+    var timerController: TimerContoller!
+    var stopwatchManager: StopwatchManager?
+    
+    var subscriptions: [AnyCancellable] = []
+    
+    @IBOutlet weak var scrambleLabel: UILabel!
+    @IBOutlet weak var timeLabel: UILabel!
+
+    @IBSegueAction func addTimerHeader(_ coder: NSCoder) -> UIViewController? {
+        let hostingController = UIHostingController(coder: coder, rootView: TimerHeader(previewMode: false))
+        hostingController!.view.backgroundColor = UIColor.clear
+        return hostingController
+    }
+    
+    @IBOutlet weak var longPressGesture: UILongPressGestureRecognizer!
+    @IBOutlet weak var panGesture: UIPanGestureRecognizer!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        sm.preferencesChangedSubject
+            .filter({
+                $0 == \SettingsManager.gestureDistance ||
+                $0 == \SettingsManager.holdDownTime
+            })
+            .sink(receiveValue: { [self] _ in
+                NSLog("RECIEVE LONG PRESS SINK")
+                longPressGesture.allowableMovement = sm.gestureDistance
+                longPressGesture.minimumPressDuration = sm.holdDownTime
+            })
+            .store(in: &subscriptions)
+        
+        scrambleController.$scrambleStr
+            .receive(on: RunLoop.main)
+            .assign(to: \.text, on: scrambleLabel)
+            .store(in: &subscriptions)
+        
+        timerController.$secondsStr
+            .receive(on: RunLoop.main)
+            .assign(to: \.text!, on: timeLabel)
+            .store(in: &subscriptions)
+        
+        timerController.$timerUIColor
+            .receive(on: RunLoop.main)
+            .assign(to: \.textColor, on: timeLabel)
+            .store(in: &subscriptions)
+        
+        scrambleController.$scrambleType
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { newScr in
+                // TODO
+//                self.scrambleLabel.adjustsFontSizeToFitWidth = newScr == 7
+//                self.scrambleLabel.minimumScaleFactor = 0.5
+            })
+            .store(in: &subscriptions)
+        
+        let interaction = UIContextMenuInteraction(delegate: self)
+        scrambleLabel.addInteraction(interaction)
+        
+        // Im not adding each of these individually in storyboard
+        for direction in UISwipeGestureRecognizer.Direction.allCases {
+            let gesture = UISwipeGestureRecognizer(target: self, action: #selector(swipe))
+            gesture.direction = direction
+            gesture.require(toFail: longPressGesture)
+                        
+            view.addGestureRecognizer(gesture)
+        }
+        
+        // Can't find this in storyboard
+        panGesture.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirectPointer.rawValue)]
+    }
+    
+    // MARK: - Gestures
+    
+    
+    @objc func swipe(_ gestureRecognizer: UISwipeGestureRecognizer) {
+        #if DEBUG
+        NSLog("SWIPED: \(timerController.mode), DIR: \(gestureRecognizer.direction)")
+        #endif
+        
+        timerController.handleGesture(direction: gestureRecognizer.direction)
+    }
+    
+    private var panHasTriggeredGesture = false
+    
+    @IBAction func pan(_ sender: UIPanGestureRecognizer) {
+#if DEBUG
+        NSLog("State: \(sender.state), panHasTriggeredGesture: \(panHasTriggeredGesture)")
+#endif
+        if panHasTriggeredGesture {
+            if (sender.state == .cancelled || sender.state == .ended) {
+                panHasTriggeredGesture = false
+            }
+            return
+        }
+        if sender.state != .cancelled {
+            let translation = sender.translation(in: sender.view!.superview)
+            let velocity = sender.velocity(in: sender.view!.superview)
+            
+            let d_x = translation.x
+            let d_y = translation.y
+            
+            
+            let v_x = velocity.x
+            let v_y = velocity.y
+            
+            if v_x.magnitude > sm.gestureDistanceTrackpad || v_y.magnitude > sm.gestureDistanceTrackpad {
+                panHasTriggeredGesture = true
+                if d_x.magnitude > d_y.magnitude {
+                    if d_x > 0 {
+                        timerController.handleGesture(direction: .right)
+                    } else if d_x < 0 {
+                        timerController.handleGesture(direction: .left)
+                    }
+                } else {
+                    if d_y < 0 {
+                        timerController.handleGesture(direction: .up)
+                    } else if d_y > 0 {
+                        timerController.handleGesture(direction: .down)
+                    }
+                }
+            } else {
+                sender.state = .cancelled
+            }
+        }
+    }
+    
+    @IBAction func handleLongPress(_ sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            timerController.longPressStart()
+        } else if sender.state == .ended {
+            timerController.longPressEnd()
+        }
+    }
+    
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        UIApplication.shared.isIdleTimerDisabled = true
+        timerController.touchDown()
+    }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        timerController.touchUp()
+    }
+    
+    
+    private var taskTimerReady: DispatchWorkItem?
+    private var isLongPress = false
+    private var keyDownThatStopped: UIKeyboardHIDUsage? = nil
+    
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        guard let key = presses.first?.key else { return }
+
+        if timerController.mode == .running {
+            keyDownThatStopped = key.keyCode
+            timerController.touchDown()
+        } else if key.keyCode == .keyboardSpacebar {
+            timerController.touchDown()
+            let newTaskTimerReady = DispatchWorkItem {
+                self.timerController.longPressStart()
+                self.isLongPress = true
+            }
+            taskTimerReady = newTaskTimerReady
+            DispatchQueue.main.asyncAfter(deadline: .now() + sm.holdDownTime, execute: newTaskTimerReady)
+        } else {
+            super.pressesBegan(presses, with: event)
+        }
+    }
+    
+    override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        guard let key = presses.first?.key else { return }
+        
+        if keyDownThatStopped == key.keyCode {
+            keyDownThatStopped = nil
+            timerController.touchUp() // In case any key previously stopped
+        } else if keyDownThatStopped == nil && key.keyCode == .keyboardSpacebar {
+            taskTimerReady?.cancel()
+            if isLongPress {
+                timerController.longPressEnd()
+                isLongPress = false
+            } else {
+                timerController.touchUp()
+            }
+        } else {
+            super.pressesBegan(presses, with: event)
+        }
+    }
+    
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configuration: UIContextMenuConfiguration, highlightPreviewForItemWithIdentifier identifier: NSCopying) -> UITargetedPreview? {
+        let previewParams = UIPreviewParameters()
+        previewParams.backgroundColor = .clear
+        return UITargetedPreview(view: scrambleLabel, parameters: previewParams)
+    }
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+            var children = [UIAction]()
+            if let scrambleString = self.scrambleController.scrambleStr {
+                children.append(
+                    UIAction(title: "Copy Scramble", image: UIImage(systemName: "doc.on.doc")) { _ in
+                        copyScramble(scramble: scrambleString)
+                    }
+                )
+            }
+            if let stopwatchManager = self.stopwatchManager {
+                children.append(
+                    UIAction(title: stopwatchManager.isScrambleLocked ? "Unlock Scramble" : "Lock Scramble",
+                             image: UIImage(systemName: stopwatchManager.isScrambleLocked ? "lock.rotation.open" : "lock.rotation")) { _ in
+                        stopwatchManager.isScrambleLocked.toggle()
+                    }
+                )
+            }
+            return UIMenu(children: children)
+        })
+    }
+    
+    
+    
+    
+    
+    // Setting coming soon. Watch this space :)
+    // - backspace/del/ctrl-z = delete
+    // - plus/ctrl-n/ctrl-rightarrow = new scramble
+    // - ctrl-1,2,3 = ok, +2, dnf
+    // - option-{2,7 | M | S | K | P | C | B} = switch playground puzzle type
+    
+    
+    // iPad keyboard support
+    
+    
+    
+    #warning("TODO: make this a UIMenu for mac catalyst and sections in the discoverability overlay")
+    override var keyCommands: [UIKeyCommand]? {
+        get {
+            guard let stopwatchManager else {return []}
+            if (stopwatchManager.timerController !== timerController) {return []}
+            let curPen: Penalty? = {
+                guard let pen = stopwatchManager.solveItem?.penalty else {return nil}
+                return Penalty(rawValue: pen)
+            }()
+            
+            var commands = [
+                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve), input: "\u{08}", discoverabilityTitle: "Delete Solve", attributes: .destructive),
+                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve), input: UIKeyCommand.inputDelete, discoverabilityTitle: "Delete Solve", attributes: .destructive),
+                // ANSI delete (above doesnt register in simulator? not sure
+                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve), input: "\u{7F}", attributes: .destructive),
+                UIKeyCommand(title: "Delete Solve", action: #selector(deleteSolve), input: "z", modifierFlags: [.command], discoverabilityTitle: "Delete Solve", attributes: .destructive),
+                
+                UIKeyCommand(title: "New Scramble", action: #selector(newScr), input: "+", discoverabilityTitle: "New Scramble"),
+                UIKeyCommand(title: "New Scramble", action: #selector(newScr), input: "n", modifierFlags: [.command], discoverabilityTitle: "New Scramble"),
+                UIKeyCommand(title: "New Scramble", action: #selector(newScr), input: UIKeyCommand.inputRightArrow, modifierFlags: [.command], discoverabilityTitle: "New Scramble"),
+                
+                UIKeyCommand(title: "Penalty: None", action: #selector(penNone), input: "1", modifierFlags: [.command], discoverabilityTitle: "Remove penalty", state: curPen == Penalty.none ? .on : .off),
+                UIKeyCommand(title: "Penalty: +2", action: #selector(penPlus2), input: "2", modifierFlags: [.command], discoverabilityTitle: "Set penalty to +2", state: curPen == Penalty.plustwo ? .on : .off),
+                UIKeyCommand(title: "Penalty: DNF", action: #selector(penDNF), input: "3", modifierFlags: [.command], discoverabilityTitle: "Set penalty to DNF", state: curPen == Penalty.dnf ? .on : .off),
+            ]
+            
+            if (SessionType(rawValue: stopwatchManager.currentSession.sessionType) == .playground) {
+                commands += [
+                    UIKeyCommand(title: "Scramble: 2x2", action: #selector(setScramble), input: "2", modifierFlags: [.alternate], propertyList: 0, discoverabilityTitle: "Set scramble to 2x2"),
+                    UIKeyCommand(title: "Scramble: 3x3", action: #selector(setScramble), input: "3", modifierFlags: [.alternate], propertyList: 1, discoverabilityTitle: "Set scramble to 3x3"),
+                    UIKeyCommand(title: "Scramble: 4x4", action: #selector(setScramble), input: "4", modifierFlags: [.alternate], propertyList: 2, discoverabilityTitle: "Set scramble to 4x4"),
+                    UIKeyCommand(title: "Scramble: 5x5", action: #selector(setScramble), input: "5", modifierFlags: [.alternate], propertyList: 3, discoverabilityTitle: "Set scramble to 5x5"),
+                    UIKeyCommand(title: "Scramble: 6x6", action: #selector(setScramble), input: "6", modifierFlags: [.alternate], propertyList: 4, discoverabilityTitle: "Set scramble to 6x6"),
+                    UIKeyCommand(title: "Scramble: 7x7", action: #selector(setScramble), input: "7", modifierFlags: [.alternate], propertyList: 5, discoverabilityTitle: "Set scramble to 7x7"),
+                    UIKeyCommand(title: "Scramble: Square-1", action: #selector(setScramble), input: "1", modifierFlags: [.alternate], propertyList: 6, discoverabilityTitle: "Set scramble to Square-1"),
+                    UIKeyCommand(title: "Scramble: Megaminx", action: #selector(setScramble), input: "M", modifierFlags: [.alternate], propertyList: 7, discoverabilityTitle: "Set scramble to Megaminx"),
+                    UIKeyCommand(title: "Scramble: Pyraminx", action: #selector(setScramble), input: "P", modifierFlags: [.alternate], propertyList: 8, discoverabilityTitle: "Set scramble to Pyraminx"),
+                    UIKeyCommand(title: "Scramble: Clock", action: #selector(setScramble), input: "C", modifierFlags: [.alternate], propertyList: 9, discoverabilityTitle: "Set scramble to Clock"),
+                    UIKeyCommand(title: "Scramble: Skewb", action: #selector(setScramble), input: "S", modifierFlags: [.alternate], propertyList: 10, discoverabilityTitle: "Set scramble to Skewb"),
+                    UIKeyCommand(title: "Scramble: 3x3 OH", action: #selector(setScramble), input: "O", modifierFlags: [.alternate], propertyList: 11, discoverabilityTitle: "Set scramble to 3x3 OH"),
+                    UIKeyCommand(title: "Scramble: 3x3 BLD", action: #selector(setScramble), input: "B", modifierFlags: [.alternate], propertyList: 12, discoverabilityTitle: "Set scramble to 3x3 BLD"),
+                    UIKeyCommand(title: "Scramble: 4x4 BLD", action: #selector(setScramble), input: "8", modifierFlags: [.alternate], propertyList: 13, discoverabilityTitle: "Set scramble to 4x4 BLD"),
+                    UIKeyCommand(title: "Scramble: 5x5 BLD", action: #selector(setScramble), input: "9", modifierFlags: [.alternate], propertyList: 14, discoverabilityTitle: "Set scramble to 5x5 BLD")
+                ]
+            }
+            
+            return commands
+        }
+    }
+    
+    @objc func deleteSolve() {
+        stopwatchManager?.deleteLastSolve()
+    }
+    
+    @objc func newScr() {
+        scrambleController.rescramble()
+    }
+    
+    @objc func penNone() {
+        stopwatchManager?.changePen(to: .none)
+    }
+    
+    @objc func penPlus2() {
+        stopwatchManager?.changePen(to: .plustwo)
+    }
+    
+    @objc func penDNF() {
+        stopwatchManager?.changePen(to: .dnf)
+    }
+    
+    @objc func setScramble(keyCommand: UIKeyCommand) {
+        if let stopwatchManager = stopwatchManager, let type = keyCommand.propertyList as? Int {
+            stopwatchManager.playgroundScrambleType = Int32(type)
+        }
+    }
+}
+
+
+struct TimerViewRepresentable: UIViewControllerRepresentable {
+    @EnvironmentObject var timerController: TimerContoller
+    @EnvironmentObject var scrambleController: ScrambleController
+    @EnvironmentObject var stopwatchManager: StopwatchManager
+    
+    func makeUIViewController(context: Context) -> some UIViewController {
+        let storyboard = UIStoryboard(name: "TimerView", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "timerStoryboard") as! TimerUIViewNew
+        
+        vc.scrambleController = scrambleController
+        vc.timerController = timerController
+        vc.stopwatchManager = stopwatchManager
+        
+        return vc
+    }
+    
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+        
     }
 }
 
@@ -221,8 +557,6 @@ struct TimerView: View {
                         
                         stopwatchManager.showPenOptions = false
                     }
-            } else {
-                TimerTouchView()
             }
             
             

@@ -79,6 +79,7 @@
 		AF7697DE293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */; };
 		AF7697DF293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */; };
 		AF7697E0293C5A9D00FF1C50 /* RecMonoVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */; };
+		AF7F1AC629C7BFF900C81456 /* TimerView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF7F1AC529C7BFF900C81456 /* TimerView.storyboard */; };
 		AF81757729B07712004838B9 /* FontManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF81757629B07712004838B9 /* FontManager.swift */; };
 		AF8874C129AAC8C0001E49D0 /* ToolsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C029AAC8C0001E49D0 /* ToolsList.swift */; };
 		AF8874C329AB0BE7001E49D0 /* TimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C229AB0BE7001E49D0 /* TimerController.swift */; };
@@ -196,6 +197,7 @@
 		AF649FB329B7ED320099A839 /* TimeListViewInner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeListViewInner.swift; sourceTree = "<group>"; };
 		AF6EAC1F29ADDA1C00171F73 /* TimerMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerMenu.swift; sourceTree = "<group>"; };
 		AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RecMonoVariable.ttf; sourceTree = "<group>"; };
+		AF7F1AC529C7BFF900C81456 /* TimerView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TimerView.storyboard; sourceTree = "<group>"; };
 		AF81757629B07712004838B9 /* FontManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontManager.swift; sourceTree = "<group>"; };
 		AF8874C029AAC8C0001E49D0 /* ToolsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsList.swift; sourceTree = "<group>"; };
 		AF8874C229AB0BE7001E49D0 /* TimerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerController.swift; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 			children = (
 				23CA8A0229AAF894006676BF /* StopwatchManager */,
 				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
+				AF7F1AC529C7BFF900C81456 /* TimerView.storyboard */,
 				23B7AC3929BAB2E300B5C9B4 /* TimerTools.swift */,
 				2326435F28C4927600F6322E /* TimerHeader.swift */,
 				7D7DDF2227955AFF00362DE9 /* PenButton.swift */,
@@ -596,6 +599,7 @@
 				23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */,
 				AF7697DE293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */,
 				23D01FE327A4AA5D0019FCE5 /* Splash.storyboard in Resources */,
+				AF7F1AC629C7BFF900C81456 /* TimerView.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

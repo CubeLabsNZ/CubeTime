@@ -15,7 +15,7 @@ struct TimerOnlyTool: View {
             Color("base")
                 .ignoresSafeArea(.all)
             
-            TimerTouchView()
+//            TimerTouchView()
             
             TimerTime()
                 .allowsHitTesting(false)

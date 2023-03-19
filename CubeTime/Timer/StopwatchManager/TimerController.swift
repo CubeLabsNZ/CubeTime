@@ -81,7 +81,12 @@ class TimerContoller: ObservableObject {
             onModeChange?(mode)
         }
     }
-    @Published var timerColour: Color = Color.Timer.normal
+    @Published var timerUIColor: UIColor = UIColor(Color.Timer.normal)
+    @Published var timerColour: Color = Color.Timer.normal {
+        didSet {
+            timerUIColor = UIColor(timerColour)
+        }
+    }
         
     var feedbackStyle: UIImpactFeedbackGenerator? {
         get {

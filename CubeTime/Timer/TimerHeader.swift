@@ -58,159 +58,162 @@ struct TimerHeader: View {
     var body: some View {
         let sessionType = SessionType(rawValue: stopwatchManager.currentSession.sessionType)!
         HStack {
-            if previewMode {
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 6, style: .continuous)
-                        .fill(Color("overlay0"))
-                        .frame(width: 35, height: 35)
-                        .shadowDark(x: 2, y: 0)
-                    
-                    HStack {
-                        ZStack(alignment: .center) {
-                            Rectangle()
-                                .fill(Color.clear)
-                                .frame(width: 35, height: 35)
-                            
-                            
-                            Group {
-                                Image(systemName: "eyes")
-                                    .font(.system(size: 22, weight: .regular))
+            HStack {
+                if previewMode {
+                    ZStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 6, style: .continuous)
+                            .fill(Color("overlay0"))
+                            .frame(width: 35, height: 35)
+                            .shadowDark(x: 2, y: 0)
+                        
+                        HStack {
+                            ZStack(alignment: .center) {
+                                Rectangle()
+                                    .fill(Color.clear)
+                                    .frame(width: 35, height: 35)
+                                
+                                
+                                Group {
+                                    Image(systemName: "eyes")
+                                        .font(.system(size: 22, weight: .regular))
+                                }
                             }
-                        }
-                        
-                        Text("PREVIEW")
-                            .font(.system(size: 17, weight: .medium))
-                            .padding(.trailing)
-                    }
-                }
-            } else {
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 6, style: .continuous)
-                        .fill(Color("overlay0"))
-                        .frame(width: (showSessionType) ? nil : 35, height: 35)
-                        .shadowDark(x: 2, y: 0)
-                    
-                    HStack {
-                        SessionIconView(session: stopwatchManager.currentSession, isDynamicType: false)
-                        
-                        if (showSessionType) {
-                            Text(stopwatchManager.currentSession.typeName)
+                            
+                            Text("PREVIEW")
                                 .font(.system(size: 17, weight: .medium))
-                                .padding(.trailing, 4)
+                                .padding(.trailing)
                         }
                     }
-                }
-                .onTapGesture {
-                    withAnimation(Animation.customSlowSpring) {
-                        showSessionType.toggle()
-                    }
-                }
-                
-                if !showSessionType {
-                    Text(stopwatchManager.currentSession.name ?? "Unknown Session Name")
-                        .font(.system(size: 17, weight: .medium))
-                        .padding(.trailing, sessionType == .standard ? nil : 4)
-                }
-                
-                switch sessionType {
-                case .playground:
-                    // i hate swiftui i hate apple i hate everything
-                    if #available(iOS 16, *) {
-                        Picker("", selection: $stopwatchManager.playgroundScrambleType) {
-                            ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
-                                Text(element.name).tag(Int32(index))
+                } else {
+                    ZStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 6, style: .continuous)
+                            .fill(Color("overlay0"))
+                            .frame(width: (showSessionType) ? nil : 35, height: 35)
+                            .shadowDark(x: 2, y: 0)
+                        
+                        HStack {
+                            SessionIconView(session: stopwatchManager.currentSession, isDynamicType: false)
+                            
+                            if (showSessionType) {
+                                Text(stopwatchManager.currentSession.typeName)
+                                    .font(.system(size: 17, weight: .medium))
+                                    .padding(.trailing, 4)
                             }
                         }
-                        .pickerStyle(.menu)
-                        .scaleEffect(17/scale)
-                        .frame(maxHeight: .infinity)
-                    } else {
-                        Picker("", selection: $stopwatchManager.playgroundScrambleType) {
-                            ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
-                                Text(element.name).tag(Int32(index))
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .accentColor(Color("accent"))
-                        .frame(maxHeight: .infinity)
-                        .padding(.trailing, 8)
                     }
-                case .multiphase:
-                    HStack(spacing: 0) {
-                        Text("PHASES: ")
+                    .onTapGesture {
+                        withAnimation(Animation.customSlowSpring) {
+                            showSessionType.toggle()
+                        }
+                    }
+                    
+                    if !showSessionType {
+                        Text(stopwatchManager.currentSession.name ?? "Unknown Session Name")
+                            .font(.system(size: 17, weight: .medium))
+                            .padding(.trailing, sessionType == .standard ? nil : 4)
+                    }
+                    
+                    switch sessionType {
+                    case .playground:
+                        // i hate swiftui i hate apple i hate everything
+                        if #available(iOS 16, *) {
+                            Picker("", selection: $stopwatchManager.playgroundScrambleType) {
+                                ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
+                                    Text(element.name).tag(Int32(index))
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .scaleEffect(17/scale)
+                            .frame(maxHeight: .infinity)
+                        } else {
+                            Picker("", selection: $stopwatchManager.playgroundScrambleType) {
+                                ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
+                                    Text(element.name).tag(Int32(index))
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .accentColor(Color("accent"))
+                            .frame(maxHeight: .infinity)
+                            .padding(.trailing, 8)
+                        }
+                    case .multiphase:
+                        HStack(spacing: 0) {
+                            Text("PHASES: ")
+                                .font(.system(size: 15, weight: .regular))
+                            
+                            Text("\(stopwatchManager.phaseCount)")
+                                .font(.system(size: 15, weight: .medium))
+                            
+                        }
+                        .padding(.trailing)
+                    case .compsim:
+                        let solveth: Int = stopwatchManager.currentSolveth!+1
+                        
+                        Text("SOLVE \(solveth == 6 ? 1 : solveth)")
                             .font(.system(size: 15, weight: .regular))
+                            .padding(.horizontal, 2)
                         
-                        Text("\(stopwatchManager.phaseCount)")
-                            .font(.system(size: 15, weight: .medium))
+                        ThemedDivider(isHorizontal: false)
+                            .padding(.vertical, 6)
                         
-                    }
-                    .padding(.trailing)
-                case .compsim:
-                    let solveth: Int = stopwatchManager.currentSolveth!+1
-                    
-                    Text("SOLVE \(solveth == 6 ? 1 : solveth)")
-                        .font(.system(size: 15, weight: .regular))
-                        .padding(.horizontal, 2)
-                    
-                    ThemedDivider(isHorizontal: false)
-                        .padding(.vertical, 6)
-                    
-                    HStack (spacing: 10) {
-                        Image(systemName: "target")
-                            .font(.system(size: 15))
-                            .foregroundColor(Color("accent"))
-                        
-                        ZStack {
-                            Text(stopwatchManager.targetStr == "" ? "0.00" : stopwatchManager.targetStr)
-                                .font(.system(size: 17))
-                                .background(
-                                    GeometryReader { geo in
-                                        let _ = DispatchQueue.main.async {
-                                            self.textRect = geo.frame(in: .global)
+                        HStack (spacing: 10) {
+                            Image(systemName: "target")
+                                .font(.system(size: 15))
+                                .foregroundColor(Color("accent"))
+                            
+                            ZStack {
+                                Text(stopwatchManager.targetStr == "" ? "0.00" : stopwatchManager.targetStr)
+                                    .font(.system(size: 17))
+                                    .background(
+                                        GeometryReader { geo in
+                                            let _ = DispatchQueue.main.async {
+                                                self.textRect = geo.frame(in: .global)
+                                            }
+                                            
+                                            Rectangle().fill(Color.clear)
                                         }
-                                        
-                                        Rectangle().fill(Color.clear)
-                                    }
-                                )
-                                .layoutPriority(1)
-                                .opacity(0)
-                            
-                            
-                            TextField("0.00", text: $stopwatchManager.targetStr)
-                                .font(.system(size: 17, weight: .regular))
-                                .frame(width: textRect.width + CGFloat(stopwatchManager.targetStr.count > 6 ? 12 : 6))
-                                .submitLabel(.done)
-                                .focused(targetFocused!)
-                                .multilineTextAlignment(.leading)
-                                .modifier(ManualInputTextField(text: $stopwatchManager.targetStr, onReceiveAlso: { text in
-                                    if let time = timeFromStr(text) {
-                                        (stopwatchManager.currentSession as! CompSimSession).target = time
-                                        
-                                        try! managedObjectContext.save()
-                                        
-                                        
-                                        stopwatchManager.timeNeededForTarget = stopwatchManager.getTimeNeededForTarget()
-                                        
-                                        stopwatchManager.reachedTargets = stopwatchManager.getReachedTargets()
-                                    }
-                                }))
-                                .padding(.trailing, 4)
+                                    )
+                                    .layoutPriority(1)
+                                    .opacity(0)
+                                
+                                
+                                TextField("0.00", text: $stopwatchManager.targetStr)
+                                    .font(.system(size: 17, weight: .regular))
+                                    .frame(width: textRect.width + CGFloat(stopwatchManager.targetStr.count > 6 ? 12 : 6))
+                                    .submitLabel(.done)
+                                    .focused(targetFocused!)
+                                    .multilineTextAlignment(.leading)
+                                    .modifier(ManualInputTextField(text: $stopwatchManager.targetStr, onReceiveAlso: { text in
+                                        if let time = timeFromStr(text) {
+                                            (stopwatchManager.currentSession as! CompSimSession).target = time
+                                            
+                                            try! managedObjectContext.save()
+                                            
+                                            
+                                            stopwatchManager.timeNeededForTarget = stopwatchManager.getTimeNeededForTarget()
+                                            
+                                            stopwatchManager.reachedTargets = stopwatchManager.getReachedTargets()
+                                        }
+                                    }))
+                                    .padding(.trailing, 4)
+                            }
+                            .padding(.leading, 2)
                         }
-                        .padding(.leading, 2)
+                        .foregroundColor(Color("accent"))
+                    default:
+                        EmptyView()
                     }
-                    .foregroundColor(Color("accent"))
-                default:
-                    EmptyView()
                 }
             }
+            .background(
+                Color("overlay1")
+                    .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                    .animation(Animation.customFastSpring, value: stopwatchManager.playgroundScrambleType)
+            )
+            //        .padding(.top, UIDevice.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+            Spacer()
         }
         .frame(height: 35)
-        .background(
-            Color("overlay1")
-                .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-                .animation(Animation.customFastSpring, value: stopwatchManager.playgroundScrambleType)
-        )
-        .padding(.top, UIDevice.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
         .animation(Animation.customSlowSpring, value: showSessionType)
     }
 }
