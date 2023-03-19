@@ -26,16 +26,19 @@ class StopwatchManager: ObservableObject {
     // MARK: published variables
     @Published var currentSession: Session! {
         didSet {
+            currentSession.lastUsed = Date()
+            try! managedObjectContext.save()
+            
             self.isScrambleLocked = false
             
             self.targetStr = filteredStrFromTime((currentSession as? CompSimSession)?.target)
             self.phaseCount = Int((currentSession as? MultiphaseSession)?.phaseCount ?? 0)
             
             scrambleController?.scrambleType = currentSession.scrambleType
-            statsGetFromCache()
+            
+            updateStatsForSession()
             tryUpdateCurrentSolveth()
-            currentSession.lastUsed = Date()
-            try! managedObjectContext.save()
+            statsGetFromCache()
             self.playgroundScrambleType = currentSession.scrambleType
             if let currentSession = currentSession as? MultiphaseSession {
                 timerController.phaseCount = Int(currentSession.phaseCount)
@@ -48,6 +51,16 @@ class StopwatchManager: ObservableObject {
                 updateSessionsCanMoveTo()
             }
         }
+    }
+    
+    func updateStatsForSession() {
+        self.stats = [
+            "currentAo5": StatCurrentAOn(swm: self, n: 5),
+            "currentAo12": StatCurrentAOn(swm: self, n: 12),
+            "currentAo100": StatCurrentAOn(swm: self, n: 100),
+            "solveCount": StatSolveCount(swm: self),
+            "mean": StatMean(swm: self),
+        ]
     }
     
     func updateSessionsCanMoveTo() {
@@ -155,11 +168,9 @@ class StopwatchManager: ObservableObject {
     // STATS
     
     // Stats used on timer
-    @Published var currentAo5: CalculatedAverage?
-    @Published var currentAo12: CalculatedAverage?
-    @Published var currentAo100: CalculatedAverage?
     
-    @Published var sessionMean: Double?
+    
+    @Published var stats: [String:Stat] = [:]
     
     #warning("todo: merge average and calculatedaverage, and fix the functions")
     @Published var bpa: Average?

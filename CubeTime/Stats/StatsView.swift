@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftfulLoadingIndicators
 import CoreData
 
 struct StatsView: View {
@@ -64,7 +65,10 @@ struct StatsView: View {
                                 if !compsim {
                                     HStack(spacing: 10) {
                                         StatsBlock(title: "CURRENT STATS", blockHeight: blockHeightLarge) {
-                                            StatsBlockSmallText(titles: ["AO5", "AO12", "AO100"], data: [stopwatchManager.currentAo5, stopwatchManager.currentAo12, stopwatchManager.currentAo100], presentedAvg: $presentedAvg, blockHeight: blockHeightLarge)
+                                            StatsBlockSmallText(titles: ["AO5", "AO12", "AO100"], data: [
+                                                stopwatchManager.stats["currentAo5"]!.result,
+                                                stopwatchManager.stats["currentAo12"]!.result,
+                                                stopwatchManager.stats["currentAo100"]!.result], presentedAvg: $presentedAvg, blockHeight: blockHeightLarge)
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
@@ -74,10 +78,16 @@ struct StatsView: View {
                                             }
                                             
                                             StatsBlock(title: "SESSION MEAN", blockHeight: blockHeightSmall, isTappable: false) {
-                                                if let sessionMean = stopwatchManager.sessionMean {
-                                                    StatsBlockText(displayText: formatSolveTime(secs: sessionMean), nilCondition: true)
-                                                } else {
+                                                let sessionMean = stopwatchManager.stats["mean"]!.result
+                                                switch sessionMean {
+                                                case .loading:
+                                                    LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
+                                                case .notEnoughDetail:
                                                     StatsBlockText(displayText: "", nilCondition: false)
+                                                case .value(let statValue):
+                                                    StatsBlockText(displayText: statValue.formatted, nilCondition: true)
+                                                default:
+                                                    EmptyView()
                                                 }
                                             }
                                         }
@@ -101,7 +111,7 @@ struct StatsView: View {
                                             }
                                             
                                             StatsBlock(title: "BEST STATS", blockHeight: blockHeightMedium) {
-                                                StatsBlockSmallText(titles: ["AO12", "AO100"], data: [stopwatchManager.bestAo12, stopwatchManager.bestAo100], presentedAvg: $presentedAvg, blockHeight: blockHeightMedium)
+//                                                StatsBlockSmallText(titles: ["AO12", "AO100"], data: [stopwatchManager.bestAo12, stopwatchManager.bestAo100], presentedAvg: $presentedAvg, blockHeight: blockHeightMedium)
                                             }
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
@@ -380,10 +390,16 @@ struct StatsView: View {
         }
         .sheet(isPresented: self.$showTimeTrendModal) {
             let timesOnly = stopwatchManager.solvesNoDNFsbyDate.map { $0.timeIncPen }
-            DetailTimeTrend(rawDataPoints: timesOnly,
-                            limits: (timesOnly.max()!, timesOnly.min()!),
-                            averageValue: stopwatchManager.sessionMean!)
+            let r = stopwatchManager.stats["mean"]!.result
+            
+            if case let .value(val) = r, case let .double(dbl) = val {
+                DetailTimeTrend(rawDataPoints: timesOnly,
+                                limits: (timesOnly.max()!, timesOnly.min()!),
+                                averageValue: dbl)
                 .tint(Color("accent"))
+            } else {
+                LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftfulLoadingIndicators
 import CoreData
 
 enum StatsBlockColour {
@@ -62,6 +63,7 @@ struct StatsBlock<Content: View>: View {
             dataView
         }
         .frame(height: blockHeight)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
         .padding(.horizontal, 12)
         .background(
             (self.background.1 == .coloured
@@ -174,14 +176,14 @@ struct StatsBlockDetailText: View {
 
 struct StatsBlockSmallText: View {
     @ScaledMetric private var spacing: CGFloat = -4
-        
+    
     let titles: [String]
-    let data: [CalculatedAverage?]
+    let data: [StatResult]
     @Binding var presentedAvg: CalculatedAverage?
     let blockHeight: CGFloat
     
     init(titles: [String],
-         data: [CalculatedAverage?],
+         data: [StatResult],
          presentedAvg: Binding<CalculatedAverage?>,
          blockHeight: CGFloat) {
         self.titles = titles
@@ -192,32 +194,36 @@ struct StatsBlockSmallText: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            ForEach(Array(zip(titles.indices, titles)), id: \.0) { index, title in
-                HStack {
-                    VStack(alignment: .leading, spacing: spacing) {
-                        Text(title)
-                            .font(.footnote.weight(.medium))
-                            .foregroundColor(Color("grey"))
-                        
-                        if let datum = data[index] {
-                            Text(formatSolveTime(secs: datum.average ?? 0, penType: datum.totalPen))
-                                .font(.title2.weight(.bold))
-                                .foregroundColor(Color("dark"))
-                                .modifier(DynamicText())
-                        } else {
-                            Text("-")
-                                .font(.title3.weight(.medium))
-                                .foregroundColor(Color("grey"))
-                        }
-                    }
+            ForEach(Array(zip(data.indices, zip(data, titles))), id: \.0) { (index, arg1) in
+                let (stat, title) = arg1
+                VStack(alignment: .leading, spacing: spacing) {
+                    Text(title)
+                        .font(.footnote.weight(.medium))
+                        .foregroundColor(Color("grey"))
                     
-                    Spacer()
+                    
+                    switch stat {
+                    case .loading:
+                        LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
+                    case .notEnoughDetail:
+                        Text("-")
+                            .font(.title3.weight(.medium))
+                            .foregroundColor(Color("grey"))
+                    case .error(let error):
+                        Text(error.localizedDescription)
+                            .font(.title2)
+                            .foregroundColor(Color("dark"))
+                            .modifier(DynamicText())
+                    case .value(let statValue):
+                        Text(statValue.formatted)
+                            .font(.title2.weight(.bold))
+                            .foregroundColor(Color("dark"))
+                            .modifier(DynamicText())
+                    }
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    if data[index] != nil {
-                        presentedAvg = data[index]
-                    }
+                    //                    presentedAvg = stat
                 }
                 
                 if (index < titles.count-1) {

@@ -33,24 +33,20 @@ extension StopwatchManager {
             solvesNoDNFs.insert(solveItem, at: solvesNoDNFs.insertionIndex(of: solveItem))
         }
         
-        
-#warning("TODO: next update use optimised versions")
+        Task(priority: .userInitiated) {
+            for (_, stat) in self.stats {
+                await stat.solvePenChanged(solve: solveItem, from: .none)
+            }
+        }
         
         bestAo5 = getBestAverage(of: 5)
         bestAo12 = getBestAverage(of: 12)
         bestAo100 = getBestAverage(of: 100)
         
-#warning("TODO:  optimise")
-        sessionMean = getSessionMean()
-        
         
         
         changedTimeListSort()
         bestSingle = getMin()
-        
-        currentAo5 = getCurrentAverage(of: 5)
-        currentAo12 = getCurrentAverage(of: 12)
-        currentAo100 = getCurrentAverage(of: 100)
     }
     
     
@@ -79,16 +75,7 @@ extension StopwatchManager {
         
         bestSingle = getMin()
         phases = getAveragePhases()
-        
-        if (solvesByDate.suffix(100).contains(solve)) {
-            self.currentAo100 = getCurrentAverage(of: 100)
-            if (solvesByDate.suffix(12).contains(solve)) {
-                self.currentAo12 = getCurrentAverage(of: 12)
-                if (solvesByDate.suffix(5).contains(solve)) {
-                    self.currentAo5 = getCurrentAverage(of: 5)
-                }
-            }
-        }
+
         
         self.bestAo5 = getBestAverage(of: 5)
         self.bestAo12 = getBestAverage(of: 12)
@@ -106,7 +93,12 @@ extension StopwatchManager {
     
     func deleteLastSolve() {
         guard let solveItem else {return}
-        delete(solve: solveItem)
+        delete(solve: solveItem, updateStats: false)
+        Task(priority: .userInitiated) {
+            for (_, stat) in self.stats {
+                await stat.poppedSolve(solve: solveItem)
+            }
+        }
         timerController.secondsElapsed = 0
         if !SettingsManager.standard.showPrevTime || currentSession is CompSimSession {
             if currentSession is CompSimSession {

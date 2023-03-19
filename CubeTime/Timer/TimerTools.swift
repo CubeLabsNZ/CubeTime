@@ -28,11 +28,7 @@ struct BottomTools: View {
                     if stopwatchManager.currentSession.sessionType == SessionType.compsim.rawValue {
                         TimerStatsCompSim()
                     } else {
-                        if (UIDevice.deviceIsPad && hSizeClass == .regular) {
-                            TimerStatsPad()
-                        } else {
-                            TimerStatsStandard(presentedAvg: $presentedAvg)
-                        }
+                        TimerStatsStandard(presentedAvg: $presentedAvg)
                     }
                 }
             }
@@ -125,78 +121,63 @@ struct TimerStatRaw: View {
 
 struct TimerStat: View {
     let name: String
-    let average: CalculatedAverage?
-    let value: String?
+    let average: StatResult
     let placeholderText: String
     let hasIndividualGesture: Bool
     @Binding var presentedAvg: CalculatedAverage?
 
-    init(name: String, average: CalculatedAverage?, placeholderText: String = "-", presentedAvg: Binding<CalculatedAverage?>, hasIndividualGesture: Bool=true) {
+    init(name: String, average: StatResult, placeholderText: String = "-", presentedAvg: Binding<CalculatedAverage?>, hasIndividualGesture: Bool=true) {
         self.name = name
         self.average = average
         self.placeholderText = placeholderText
         self.hasIndividualGesture = hasIndividualGesture
         self._presentedAvg = presentedAvg
-        if let average = average {
-            self.value = formatSolveTime(secs: average.average!, penType: average.totalPen)
-        } else {
-            self.value = nil
-        }
     }
 
     var body: some View {
-        if (hasIndividualGesture) {
-            TimerStatRaw(name: name, value: value, placeholderText: placeholderText)
+        VStack(spacing: 0) {
+            Text(name)
+                .font(.system(size: 13, weight: .medium))
+            
+            switch average {
+            case .loading:
+                LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
+            case .notEnoughDetail:
+                Text(placeholderText)
+                    .font(.system(size: 24, weight: .medium, design: .default))
+                    .foregroundColor(Color("grey"))
+            case .error(let error):
+                Text(error.localizedDescription)
+                    .font(.system(size: 24, weight: .bold))
+                    .modifier(DynamicText())
+            case .value(let statValue):
+                Text(statValue.formatted)
+                    .font(.system(size: 24, weight: .bold))
+                    .modifier(DynamicText())
+            }
+        }
+        .if(hasIndividualGesture) { view in
+            view
                 .onTapGesture {
                     if average != nil {
-                        presentedAvg = average
+                        //                            presentedAvg = average
                     }
                 }
-        } else {
-            TimerStatRaw(name: name, value: value, placeholderText: placeholderText)
         }
     }
 }
 
 struct TimerStatsStandard: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @State private var showStats: Bool = false
     @Binding var presentedAvg: CalculatedAverage?
     
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 6) {
-                TimerStat(name: "AO5", average: stopwatchManager.currentAo5, presentedAvg: $presentedAvg)
+                TimerStat(name: "AO5", average: stopwatchManager.stats["currentAo5"]!.result, presentedAvg: $presentedAvg, hasIndividualGesture: !UIDevice.deviceIsPad)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                TimerStat(name: "AO12", average: stopwatchManager.currentAo12, presentedAvg: $presentedAvg)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            .frame(maxHeight: .infinity)
-            
-            ThemedDivider()
-                .padding(.horizontal, 18)
-            
-            HStack(spacing: 6) {
-                TimerStat(name: "AO100", average: stopwatchManager.currentAo100, presentedAvg: $presentedAvg)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                TimerStatRaw(name: "MEAN", value: stopwatchManager.sessionMean == nil ? nil : formatSolveTime(secs: stopwatchManager.sessionMean!), placeholderText: "-")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            .frame(maxHeight: .infinity)
-        }
-        .padding(.horizontal, 6)
-    }
-}
-
-struct TimerStatsPad: View {
-    @EnvironmentObject var stopwatchManager: StopwatchManager
-    @State private var showStats: Bool = false
-    
-    var body: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 6) {
-                TimerStat(name: "AO5", average: stopwatchManager.currentAo5, presentedAvg: .constant(nil), hasIndividualGesture: false)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                TimerStat(name: "AO12", average: stopwatchManager.currentAo12, presentedAvg: .constant(nil), hasIndividualGesture: false)
+                TimerStat(name: "AO12", average: stopwatchManager.stats["currentAo12"]!.result, presentedAvg: $presentedAvg, hasIndividualGesture: !UIDevice.deviceIsPad)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .frame(maxHeight: .infinity)
@@ -204,21 +185,23 @@ struct TimerStatsPad: View {
             ThemedDivider()
                 .padding(.horizontal, 18)
             
-            
             HStack(spacing: 6) {
-                TimerStat(name: "AO100", average: stopwatchManager.currentAo100, presentedAvg: .constant(nil), hasIndividualGesture: false)
+                TimerStat(name: "AO100", average: stopwatchManager.stats["currentAo100"]!.result, presentedAvg: $presentedAvg, hasIndividualGesture: !UIDevice.deviceIsPad)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                TimerStatRaw(name: "MEAN", value: stopwatchManager.sessionMean == nil ? nil : formatSolveTime(secs: stopwatchManager.sessionMean!), placeholderText: "-")
+                TimerStat(name: "MEAN", average: stopwatchManager.stats["mean"]!.result, presentedAvg: $presentedAvg, hasIndividualGesture: !UIDevice.deviceIsPad)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .frame(maxHeight: .infinity)
         }
         .padding(.horizontal, 6)
-        .onTapGesture {
-            self.showStats = true
-        }
-        .sheet(isPresented: self.$showStats) {
-            StatsView()
+        .if(UIDevice.deviceIsPad) { view in
+            view
+                .onTapGesture {
+                    self.showStats = true
+                }
+                .sheet(isPresented: self.$showStats) {
+                    StatsView()
+                }
         }
     }
 }

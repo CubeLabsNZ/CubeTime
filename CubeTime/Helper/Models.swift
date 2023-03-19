@@ -46,6 +46,22 @@ struct Average: Identifiable, Comparable {
     }
 }
 
+struct AverageOf: Identifiable, Comparable {
+    let id = UUID()
+    
+    let average: Double
+    let penalty: Penalty
+    let accountedSolves: [Solve]
+    let trimmedSolves: [Solve]
+    
+    static func < (lhs: AverageOf, rhs: AverageOf) -> Bool {
+        if (lhs.penalty == .dnf) { return false }
+        if (rhs.penalty == .dnf) { return true }
+        
+        return lhs.average < rhs.average
+    }
+}
+
 
 extension Solve {
     var timeText: String {

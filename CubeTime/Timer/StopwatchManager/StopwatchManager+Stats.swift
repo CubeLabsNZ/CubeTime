@@ -71,16 +71,6 @@ extension StopwatchManager {
         }
     }
     
-    
-    func getSessionMean() -> Double? {
-        if solvesNoDNFs.count == 0 {
-            return nil
-        }
-        let sum = solvesNoDNFs.reduce(0, {$0 + $1.timeIncPen })
-        return sum / Double(solvesNoDNFs.count)
-    }
-    
-    
     func getNumberOfSolves() -> Int {
         return solves.count
     }
@@ -160,11 +150,10 @@ extension StopwatchManager {
         }
     }
     
-    func delete(solve: Solve) {
-        removingSolve(solve: solve, removeFunc: managedObjectContext.delete)
+    func delete(solve: Solve, updateStats: Bool = true) {
+        removingSolve(solve: solve, removeFunc: managedObjectContext.delete, updateStats: updateStats)
     }
     
-    #warning("Remember to update new stats when actually cache stats (if ever)")
     func moveSolve(solve: Solve, to: Session) {
         removingSolve(solve: solve, removeFunc: { solve in
             if let solve = solve as? MultiphaseSolve, (to.sessionType != SessionType.multiphase.rawValue) {
@@ -193,7 +182,7 @@ extension StopwatchManager {
         // so much for cache stats
     }
     
-    func removingSolve(solve: Solve, removeFunc: (Solve) -> ()) {
+    func removingSolve(solve: Solve, removeFunc: (Solve) -> (), updateStats: Bool = true) {
         #warning("TODO:  check best AOs")
         var recalcAO100 = false
         var recalcAO12 = false
@@ -221,15 +210,15 @@ extension StopwatchManager {
         bestSingle = getMin() // Get min is super fast anyway
         phases = getAveragePhases()
         
-        if recalcAO100 {
-            self.currentAo100 = getCurrentAverage(of: 100)
-            if recalcAO12 {
-                self.currentAo12 = getCurrentAverage(of: 12)
-                if recalcAO5 {
-                    self.currentAo5 = getCurrentAverage(of: 5)
+        if updateStats {
+            Task(priority: .userInitiated) {
+                for (_, stat) in self.stats {
+                    await stat.solveRemoved(solve: solve)
                 }
             }
         }
+        
+        
         
         self.bestAo5 = getBestAverage(of: 5)
         self.bestAo12 = getBestAverage(of: 12)
@@ -270,20 +259,23 @@ extension StopwatchManager {
         solvesNoDNFs = solves
         solvesNoDNFs.removeAll(where: { $0.penalty == Penalty.dnf.rawValue })
         
+        
+        
+        Task(priority: .userInitiated) {
+            for (_, stat) in self.stats {
+                await stat.firstCalculate()
+            }
+        }
+        
+        
         if !compSim {
             bestAo5 = getBestAverage(of: 5)
             bestAo12 = getBestAverage(of: 12)
             bestAo100 = getBestAverage(of: 100)
         }
         
-        
-        currentAo5 = getCurrentAverage(of: 5)
-        currentAo12 = getCurrentAverage(of: 12)
-        currentAo100 = getCurrentAverage(of: 100)
-        
         bestSingle = getMin()
         phases = getAveragePhases()
-        sessionMean = getSessionMean()
         
         normalMedian = getNormalMedian()
         
@@ -327,12 +319,7 @@ extension StopwatchManager {
             return
         }
         
-        
         solvesByDate.append(solveItem)
-        // These stats would require severe voodoo to not recalculate (TODO switch to voodoo), and are faily cheap
-        self.currentAo5 = getCurrentAverage(of: 5)
-        self.currentAo12 = getCurrentAverage(of: 12)
-        self.currentAo100 = getCurrentAverage(of: 100)
         
         normalMedian = getNormalMedian()
         
@@ -345,7 +332,6 @@ extension StopwatchManager {
         
         // Update sessionMean
         if solveItem.penalty != Penalty.dnf.rawValue { //TODO test if this really works with inspection
-            sessionMean = ((sessionMean ?? 0) * Double(solvesNoDNFs.count) + solveItem.timeIncPen) / Double(solvesNoDNFs.count + 1)
             solvesNoDNFsbyDate.append(solveItem)
             
             let greatersolvenodnfidx = solvesNoDNFs.firstIndex(where: { $0.timeIncPen > solveItem.timeIncPen }) ?? solvesNoDNFs.count
@@ -357,50 +343,19 @@ extension StopwatchManager {
         let greatersolveidx = solves.firstIndex(where: {$0.timeIncPen > solveItem.timeIncPen}) ?? solves.count
         solves.insert(solveItem, at: greatersolveidx)
         
+        
+        
+        Task(priority: .userInitiated) {
+            for (_, stat) in self.stats {
+                await stat.pushedSolve(solve: solveItem)
+            }
+        }
+        
         bestSingle = getMin()
         #warning("TODO:  use optimize this with mean magic")
         phases = getAveragePhases()
         
         changedTimeListSort()
-        
-        #warning("TODO:  make these a dict instead")
-        
-        if let currentAo5 = currentAo5 {
-            if bestAo5 == nil || ( // best is not set yet (and current is), or:
-                    (currentAo5.totalPen, bestAo5!.totalPen) == (Penalty.dnf, Penalty.dnf)
-                    || (currentAo5.totalPen, bestAo5!.totalPen) == (Penalty.none, Penalty.none)
-                    && currentAo5 < bestAo5! // current is less than current best, and total pen is the same, or:
-                )
-                || (currentAo5.totalPen, bestAo5!.totalPen) == (Penalty.none, Penalty.dnf) { // current is none and best is dnf
-                self.bestAo5 = currentAo5
-                self.bestAo5?.name = "Best ao5"
-                #warning("TODO:  unhardcode")
-            }
-        }
-        if let currentAo12 = currentAo12 {
-            if bestAo12 == nil || ( // best is not set yet (and current is), or:
-                    (currentAo12.totalPen, bestAo12!.totalPen) == (Penalty.dnf, Penalty.dnf)
-                    || (currentAo12.totalPen, bestAo12!.totalPen) == (Penalty.none, Penalty.none)
-                    && currentAo12 < bestAo12! // current is less than current best, and total pen is the same, or:
-                )
-                || (currentAo12.totalPen, bestAo12!.totalPen) == (Penalty.none, Penalty.dnf) { // current is none and best is dnf
-                self.bestAo12 = currentAo12
-                self.bestAo12?.name = "Best ao12"
-                #warning("TODO:  unhardcode")
-            }
-        }
-        if let currentAo100 = currentAo100 {
-            if bestAo100 == nil || ( // best is not set yet (and current is), or:
-                    (currentAo100.totalPen, bestAo100!.totalPen) == (Penalty.dnf, Penalty.dnf)
-                    || (currentAo100.totalPen, bestAo100!.totalPen) == (Penalty.none, Penalty.none)
-                    && currentAo100 < bestAo100! // current is less than current best, and total pen is the same, or:
-                )
-                || (currentAo100.totalPen, bestAo100!.totalPen) == (Penalty.none, Penalty.dnf) { // current is none and best is dnf
-                self.bestAo100 = currentAo100
-                self.bestAo100?.name = "Best ao100"
-                #warning("TODO:  unhardcode")
-            }
-        }
         #warning("TODO:  save to cache")
     }
 }

@@ -84,6 +84,7 @@
 		AF8874C329AB0BE7001E49D0 /* TimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C229AB0BE7001E49D0 /* TimerController.swift */; };
 		AF8874C529AB3736001E49D0 /* ScrambleGeneratorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */; };
 		AF89931A29C6B0EF0079EA8D /* TNoodleLibNative.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AF89931C29C6C2210079EA8D /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF89931B29C6C2210079EA8D /* Stats.swift */; };
 		AF8A157429AF15B500F6818E /* ScrambleOnlyTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */; };
 		AF8B305B29B5C7010023D23B /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8B305A29B5C7010023D23B /* SettingsManager.swift */; };
 		AFA444A229C4290500795434 /* SettingsWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA444A129C4290400795434 /* SettingsWidgets.swift */; };
@@ -202,6 +203,7 @@
 		AF8874C029AAC8C0001E49D0 /* ToolsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsList.swift; sourceTree = "<group>"; };
 		AF8874C229AB0BE7001E49D0 /* TimerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerController.swift; sourceTree = "<group>"; };
 		AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleGeneratorTool.swift; sourceTree = "<group>"; };
+		AF89931B29C6C2210079EA8D /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 		AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambleOnlyTool.swift; sourceTree = "<group>"; };
 		AF8B305A29B5C7010023D23B /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		AF977E5B29BEE9E100A246C0 /* CubeTimeData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CubeTimeData.xcdatamodel; sourceTree = "<group>"; };
@@ -462,6 +464,7 @@
 				23E647C52775B2AC00561780 /* TimeDistribution.swift */,
 				23CA845F2783EBA1003901FB /* ReachedTargets.swift */,
 				2397131E2791032300268DFA /* AveragePhases.swift */,
+				AF89931B29C6C2210079EA8D /* Stats.swift */,
 			);
 			path = Stats;
 			sourceTree = "<group>";
@@ -643,6 +646,7 @@
 				AF8874C129AAC8C0001E49D0 /* ToolsList.swift in Sources */,
 				235D6A6929C2C0D3002D90D8 /* HelperShare.swift in Sources */,
 				AF8B305B29B5C7010023D23B /* SettingsManager.swift in Sources */,
+				AF89931C29C6C2210079EA8D /* Stats.swift in Sources */,
 				AF8A157429AF15B500F6818E /* ScrambleOnlyTool.swift in Sources */,
 				2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */,
 				23E81E6C275D8DAE00B741E3 /* GeneralSettings.swift in Sources */,
