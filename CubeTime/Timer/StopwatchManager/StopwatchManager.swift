@@ -405,9 +405,11 @@ class StopwatchManager: ObservableObject {
                 case .down:
                     timerController.feedbackStyle?.impactOccurred()
                     displayPenOptions()
+                    
                 case .left:
                     timerController.feedbackStyle?.impactOccurred()
                     askToDelete()
+                    
                 case .right:
                     timerController.feedbackStyle?.impactOccurred()
                     if (self.isScrambleLocked) {
@@ -417,6 +419,12 @@ class StopwatchManager: ObservableObject {
                             scrambleController.rescramble()
                         }
                     }
+                    
+                case .up:
+                    withAnimation(Animation.customSlowSpring) {
+                        self.showPenOptions = false
+                    }
+                    
                 default: break
                 }
             },

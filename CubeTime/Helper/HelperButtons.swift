@@ -4,7 +4,7 @@ import Foundation
 
 // MARK: - Share Button
 final class ShareButtonUIViewController: UIViewController {
-    var hostingController: UIHostingController<HierarchicalButton<Label<Text, Image>>>!
+    var hostingController: UIHostingController<CTButton<Label<Text, Image>>>!
     
     required init?(coder: NSCoder) {
         fatalError("error")
@@ -12,7 +12,7 @@ final class ShareButtonUIViewController: UIViewController {
     
     init(toShare: String, buttonText: String) {
         super.init(nibName: nil, bundle: nil)
-        self.hostingController = UIHostingController(rootView: HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: { [weak self] in
+        self.hostingController = UIHostingController(rootView: CTButton(type: .coloured, size: .large, expandWidth: true, onTapRun: { [weak self] in
             guard let self = self else { return }
             let activityViewController = UIActivityViewController(activityItems: [toShare], applicationActivities: nil)
             activityViewController.isModalInPresentation = !UIDevice.deviceIsPad
@@ -39,7 +39,7 @@ final class ShareButtonUIViewController: UIViewController {
     }
 }
 
-struct ShareButton: UIViewControllerRepresentable {
+struct CTShareButton: UIViewControllerRepresentable {
     let toShare: String
     let buttonText: String
     
@@ -58,7 +58,7 @@ struct ShareButton: UIViewControllerRepresentable {
 
 
 // MARK: - Copy Button
-struct CopyButton: View {
+struct CTCopyButton: View {
     let toCopy: String
     let buttonText: String
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -66,7 +66,7 @@ struct CopyButton: View {
     @State private var offsetValue: CGFloat = -25
     
     var body: some View {
-        HierarchicalButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+        CTButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
             UIPasteboard.general.string = toCopy
             
             withAnimation(Animation.customSlowSpring.delay(0.25)) {
@@ -104,15 +104,15 @@ struct CopyButton: View {
 
 
 // MARK: - Hierarchical Button
-enum HierarchialButtonType {
+enum CTButtonType {
     case mono, coloured, halfcoloured, disabled, red, green
 }
 
-enum HierarchialButtonSize {
+enum CTButtonSize {
     case small, medium, large, ultraLarge
 }
 
-struct AnimatedButton: ButtonStyle {
+struct CTButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         return configuration.label
             .scaleEffect(configuration.isPressed ? 0.96 : 1.00)
@@ -121,9 +121,9 @@ struct AnimatedButton: ButtonStyle {
     }
 }
 
-struct HierarchicalButton<V: View>: View {
-    let type: HierarchialButtonType
-    let size: HierarchialButtonSize
+struct CTButton<V: View>: View {
+    let type: CTButtonType
+    let size: CTButtonSize
     
     let outlined: Bool
     let square: Bool
@@ -136,8 +136,8 @@ struct HierarchicalButton<V: View>: View {
     let onTapRun: () -> Void
     @ViewBuilder let content: () -> V
     
-    init(type: HierarchialButtonType,
-         size: HierarchialButtonSize,
+    init(type: CTButtonType,
+         size: CTButtonSize,
          outlined: Bool=false,
          square: Bool=false,
          hasShadow: Bool=true,
@@ -164,7 +164,7 @@ struct HierarchicalButton<V: View>: View {
         Button {
             self.onTapRun()
         } label: {
-            HierarchicalButtonBase(type: self.type,
+            CTButtonBase(type: self.type,
                                   size: self.size,
                                   outlined: self.outlined,
                                   square: self.square,
@@ -173,11 +173,11 @@ struct HierarchicalButton<V: View>: View {
                                   expandWidth: expandWidth,
                                   content: self.content)
         }
-        .buttonStyle(AnimatedButton())
+        .buttonStyle(CTButtonStyle())
     }
 }
 
-struct HierarchicalButtonBase<V: View>: View {
+struct CTButtonBase<V: View>: View {
     let content: V
     
     let colourBg: Color
@@ -200,8 +200,8 @@ struct HierarchicalButtonBase<V: View>: View {
     
     @State private var hovering: Bool = false
     
-    init(type: HierarchialButtonType,
-         size: HierarchialButtonSize,
+    init(type: CTButtonType,
+         size: CTButtonSize,
          outlined: Bool,
          square: Bool,
          hasShadow: Bool,
@@ -302,6 +302,7 @@ struct HierarchicalButtonBase<V: View>: View {
                 } else {
                     content
                         .labelStyle(.titleAndIcon)
+                        .modifier(DynamicText())
                 }
             }
             .foregroundColor(self.colourFg)
@@ -315,7 +316,7 @@ struct HierarchicalButtonBase<V: View>: View {
 
 
 // MARK: - Close Button
-struct CloseButton: View {
+struct CTCloseButton: View {
     let hasBackgroundShadow: Bool
     let onTapRun: () -> Void
     
@@ -325,7 +326,7 @@ struct CloseButton: View {
     }
     
     var body: some View {
-        HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: hasBackgroundShadow, hasBackground: hasBackgroundShadow, onTapRun: self.onTapRun) {
+        CTButton(type: .mono, size: .medium, square: true, hasShadow: hasBackgroundShadow, hasBackground: hasBackgroundShadow, onTapRun: self.onTapRun) {
             Image(systemName: "xmark")
                 .imageScale(.medium)
         }
@@ -334,7 +335,7 @@ struct CloseButton: View {
 
 
 // MARK: - Done Button
-struct DoneButton: View {
+struct CTDoneButton: View {
     let onTapRun: () -> ()
     
     init(onTapRun: @escaping () -> ()) {

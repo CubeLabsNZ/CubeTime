@@ -86,7 +86,7 @@ struct CalculatorTool: View {
                                             
                                             HStack {
                                                 if (showEditFor != nil && showEditFor == index) {
-                                                    HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
+                                                    CTButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
                                                         self.solves[index].penalty = .plustwo
                                                         showEditFor = nil
                                                     }) {
@@ -94,7 +94,7 @@ struct CalculatorTool: View {
                                                             .imageScale(.medium)
                                                     }
                                                     
-                                                    HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
+                                                    CTButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
                                                         self.solves[index].penalty = .dnf
                                                         showEditFor = nil
                                                     }) {
@@ -102,7 +102,7 @@ struct CalculatorTool: View {
                                                             .imageScale(.medium)
                                                     }
                                                     
-                                                    HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
+                                                    CTButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
                                                         self.solves[index].penalty = .none
                                                         showEditFor = nil
                                                     }) {
@@ -113,7 +113,7 @@ struct CalculatorTool: View {
                                                     ThemedDivider(isHorizontal: false)
                                                         .padding(.vertical, 8)
                                                     
-                                                    HierarchicalButton(type: .red, size: .medium, square: true, hasShadow: false, hasBackground: false, onTapRun: {
+                                                    CTButton(type: .red, size: .medium, square: true, hasShadow: false, hasBackground: false, onTapRun: {
                                                         self.solves.remove(at: index)
                                                         showEditFor = nil
                                                     }) {
@@ -122,7 +122,7 @@ struct CalculatorTool: View {
                                                     }
                                                 }
                                                 
-                                                HierarchicalButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
+                                                CTButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
                                                     
                                                     if (showEditFor != nil && showEditFor == index) {
                                                         editNumber = index
@@ -217,7 +217,7 @@ struct CalculatorTool: View {
                                             }
                                         }
                                 } else {
-                                    HierarchicalButton(type: .coloured, size: .medium, expandWidth: true, onTapRun: {
+                                    CTButton(type: .coloured, size: .medium, expandWidth: true, onTapRun: {
                                         self.solves = []
                                     }) {
                                         Label("Start Over", systemImage: "arrow.clockwise")

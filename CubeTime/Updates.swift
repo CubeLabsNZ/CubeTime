@@ -152,7 +152,7 @@ struct Updates: View {
             .navigationBarTitle("What's New!")
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    CloseButton {
+                    CTCloseButton {
                         dismiss()
                         showUpdates = false
                     }

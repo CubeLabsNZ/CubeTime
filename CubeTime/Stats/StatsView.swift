@@ -360,7 +360,7 @@ struct StatsView: View {
                         view
                             .toolbar {
                                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                                    DoneButton(onTapRun: {
+                                    CTDoneButton(onTapRun: {
                                         dismiss()
                                     })
                                 }

@@ -61,7 +61,7 @@ struct ToolsList: View {
                                     .fill(Color("overlay0"))
                             }
                         }
-                        .buttonStyle(AnimatedButton())
+                        .buttonStyle(CTButtonStyle())
                     }
                     
                     Spacer()
@@ -158,7 +158,7 @@ struct ToolHeader<V: View>: View {
             
             Spacer()
             
-            CloseButton(hasBackgroundShadow: true) {
+            CTCloseButton(hasBackgroundShadow: true) {
                 toolsViewModel.currentTool = nil
                 if let onClose = self.onClose {
                     onClose()

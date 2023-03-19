@@ -173,6 +173,13 @@ struct TabIcon: View {
                         currentTab = assignedTab
                     }
                 }
+            
+                .onLongPressGesture {
+                    if currentTab != assignedTab {
+                        currentTab = assignedTab
+                    }
+                }
+            
                 .frame(height: 48)
         }
     }

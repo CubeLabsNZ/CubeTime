@@ -220,7 +220,7 @@ struct PadTimerHeader: View {
             Spacer()
             
             if let showSessions = showSessions {
-                HierarchicalButton(type: .mono, size: .large, square: true, onTapRun: {
+                CTButton(type: .mono, size: .large, square: true, onTapRun: {
                     showSessions.wrappedValue.toggle()
                 }) {
                     Image(systemName: showSessions.wrappedValue ? "hourglass.circle" : "line.3.horizontal.circle")

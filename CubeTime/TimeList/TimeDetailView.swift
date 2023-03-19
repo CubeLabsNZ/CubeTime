@@ -88,17 +88,20 @@ struct TimeDetailView: View {
                                     case Penalty.plustwo.rawValue:
                                         Text("\(formatSolveTime(secs: (solve.time + 2)))")
                                             .font(.largeTitle.weight(.bold))
+                                            .modifier(DynamicText())
                                         
                                         if (dynamicTypeSize <= .xLarge) {
                                             Text("(\(time))")
                                                 .font(.title3.weight(.semibold))
                                                 .foregroundColor(Color("grey"))
                                                 .padding(.leading, 8)
+                                                .modifier(DynamicText())
                                                 .offset(y: -4)
                                         }
                                     default:
                                         Text(time)
                                             .font(.largeTitle.weight(.bold))
+                                            .modifier(DynamicText())
                                     }
                                     
                                     Spacer()
@@ -149,13 +152,13 @@ struct TimeDetailView: View {
                                 HStack(spacing: 6) {
                                     Spacer()
                                     
-                                    HierarchicalButton(type: solve.penalty == Penalty.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    CTButton(type: solve.penalty == Penalty.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .none)
                                     }) {
                                         Label("OK", systemImage: "checkmark.circle")
                                     }
                                     
-                                    HierarchicalButton(type: solve.penalty == Penalty.plustwo.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    CTButton(type: solve.penalty == Penalty.plustwo.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .plustwo)
                                     }) {
                                         Label(title: {
@@ -166,7 +169,7 @@ struct TimeDetailView: View {
                                         })
                                     }
                                     
-                                    HierarchicalButton(type: solve.penalty == Penalty.dnf.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    CTButton(type: solve.penalty == Penalty.dnf.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .dnf)
                                     }) {
                                         Label("DNF", systemImage: "xmark.circle")
@@ -193,13 +196,13 @@ struct TimeDetailView: View {
                             // BUTTONS
                             
                             HStack(spacing: 8) {
-                                CopyButton(toCopy: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: "Copy Solve")
+                                CTCopyButton(toCopy: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: "Copy Solve")
                                 
                                 
-                                ShareButton(toShare: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: "Share Solve")
+                                CTShareButton(toShare: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: "Share Solve")
                                 
                                 
-                                HierarchicalButton(type: .red, size: .large, square: true, onTapRun: {
+                                CTButton(type: .red, size: .large, square: true, onTapRun: {
                                     if currentSolve == nil {
                                         dismiss()
                                     }
@@ -242,7 +245,7 @@ struct TimeDetailView: View {
                                     currentSolve = nil
                                     dismiss()
                                 } label: {
-                                    HierarchicalButtonBase(type: .mono, size: .medium, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
+                                    CTButtonBase(type: .mono, size: .medium, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
                                         Label("Move to…", systemImage: "arrow.up.right")
                                     }
                                 }
@@ -333,7 +336,7 @@ struct TimeDetailView: View {
                     }
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            DoneButton(onTapRun: {
+                            CTDoneButton(onTapRun: {
                                 currentSolve = nil
                                 
                                 dismiss()

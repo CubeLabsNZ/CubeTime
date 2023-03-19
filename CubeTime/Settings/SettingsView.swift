@@ -51,7 +51,7 @@ struct SettingsViewInner: View {
                 view
                     .toolbar {
                         ToolbarItemGroup(placement: .navigationBarTrailing) {
-                            DoneButton(onTapRun: {
+                            CTDoneButton(onTapRun: {
                                 dismiss()
                             })
                         }
@@ -134,7 +134,7 @@ struct SettingsCard: View {
                     .frame(height: globalGeometrySize.height/3.5, alignment: .center)
                 }
             }
-            .buttonStyle(AnimatedButton())
+            .buttonStyle(CTButtonStyle())
         } else {
             Button {
                 withAnimation(Animation.customSlowSpring) {
@@ -173,7 +173,7 @@ struct SettingsCard: View {
                     .frame(height: globalGeometrySize.height/7, alignment: .center)
                 }
             }
-            .buttonStyle(AnimatedButton())
+            .buttonStyle(CTButtonStyle())
         }
     }
 }
@@ -209,7 +209,7 @@ struct SettingsDetail: View {
                     .safeAreaInset(edge: .top, spacing: 0) {
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
                             .fill(Color.clear)
-                            .frame(maxHeight: globalGeometrySize.height / 7)
+                            .frame(maxHeight: 125)
                             .padding(.bottom)
                     }
                     .safeAreaInset(safeArea: .tabBar)
@@ -245,7 +245,7 @@ struct SettingsDetail: View {
                             }
                         }
                         .ignoresSafeArea()
-                        .frame(maxHeight: globalGeometrySize.height / 7)
+                        .frame(maxHeight: 125)
                         
                         Spacer()
                     }
@@ -255,7 +255,7 @@ struct SettingsDetail: View {
                             HStack {
                                 Spacer()
                                 
-                                CloseButton {
+                                CTCloseButton {
                                     withAnimation(Animation.customSlowSpring) {
                                         currentCard = nil
                                     }

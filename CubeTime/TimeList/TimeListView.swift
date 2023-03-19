@@ -62,7 +62,7 @@ struct SortByMenu: View {
                 }
             }
         } label: {
-            HierarchicalButtonBase(type: .halfcoloured, size: .large, outlined: false, square: true, hasShadow: hasShadow, hasBackground: true, expandWidth: true) {
+            CTButtonBase(type: .halfcoloured, size: .large, outlined: false, square: true, hasShadow: hasShadow, hasBackground: true, expandWidth: true) {
                 Image(systemName: "line.3.horizontal.decrease")
                     .matchedGeometryEffect(id: "label", in: animation)
             }
@@ -149,7 +149,7 @@ struct TimeListHeader: View {
                                 Image(systemName: "xmark")
                             }
                             .font(.body)
-                            .buttonStyle(AnimatedButton())
+                            .buttonStyle(CTButtonStyle())
                             .foregroundColor(searchExpanded ? Color("accent") : Color.clear)
                             .padding(.horizontal, 8)
                         }
@@ -373,7 +373,7 @@ struct TimeListView: View {
                                     }
                                 }
                             } label: {
-                                HierarchicalButtonBase(type: .coloured, size: .small, outlined: false, square: true, hasShadow: true, hasBackground: true, expandWidth: true) {
+                                CTButtonBase(type: .coloured, size: .small, outlined: false, square: true, hasShadow: true, hasBackground: true, expandWidth: true) {
                                     Image(systemName: "ellipsis")
                                         .frame(width: 28, height: 28)
                                         .imageScale(.medium)
@@ -387,7 +387,7 @@ struct TimeListView: View {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         if stopwatchManager.currentSession.sessionType != SessionType.compsim.rawValue {
                             if isSelectMode {
-                                HierarchicalButton(type: .coloured, size: .small, onTapRun: {
+                                CTButton(type: .coloured, size: .small, onTapRun: {
                                     withAnimation(Animation.customDampedSpring) {
                                         stopwatchManager.timeListSelectAll?()
                                     }
@@ -395,7 +395,7 @@ struct TimeListView: View {
                                     Text("Select All")
                                 }
                                 
-                                HierarchicalButton(type: .disabled, size: .small, onTapRun: {
+                                CTButton(type: .disabled, size: .small, onTapRun: {
                                     withAnimation(Animation.customDampedSpring) {
                                         isSelectMode = false
                                     }
@@ -403,7 +403,7 @@ struct TimeListView: View {
                                     Text("Cancel")
                                 }
                             } else {
-                                HierarchicalButton(type: .coloured, size: .small, onTapRun: {
+                                CTButton(type: .coloured, size: .small, onTapRun: {
                                     isSelectMode = true
                                 }) {
                                     Text("Select")

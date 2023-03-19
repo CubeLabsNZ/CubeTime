@@ -82,7 +82,7 @@ struct LicensesPopUpView: View {
             .navigationTitle("Licenses")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    DoneButton(onTapRun: {
+                    CTDoneButton(onTapRun: {
                         dismiss()
                     })
                 }
