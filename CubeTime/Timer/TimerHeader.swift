@@ -162,7 +162,16 @@ struct TimerHeader: View {
                         
                         ZStack {
                             Text(stopwatchManager.targetStr == "" ? "0.00" : stopwatchManager.targetStr)
-                                .background(GlobalGeometryGetter(rect: $textRect))
+                                .font(.system(size: 17))
+                                .background(
+                                    GeometryReader { geo in
+                                        let _ = DispatchQueue.main.async {
+                                            self.textRect = geo.frame(in: .global)
+                                        }
+                                        
+                                        Rectangle().fill(Color.clear)
+                                    }
+                                )
                                 .layoutPriority(1)
                                 .opacity(0)
                             

@@ -214,15 +214,11 @@ struct GlobalGeometryGetter: View {
 
     var body: some View {
         return GeometryReader { geometry in
-            self.makeView(geometry: geometry)
-        }
-    }
+            DispatchQueue.main.async {
+                self.rect = geometry.frame(in: .global)
+            }
 
-    func makeView(geometry: GeometryProxy) -> some View {
-        DispatchQueue.main.async {
-            self.rect = geometry.frame(in: .global)
+            return Rectangle().fill(Color.clear)
         }
-
-        return Rectangle().fill(Color.clear)
     }
 }
