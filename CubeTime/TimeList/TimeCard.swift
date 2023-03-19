@@ -5,7 +5,6 @@ import CoreData
 
 struct TimeCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
@@ -48,24 +47,23 @@ struct TimeCard: View {
     var body: some View {
         let sessionType = stopwatchManager.currentSession.sessionType
         ZStack {
-            #warning("TODO:  check operforamcne of the on tap/long hold gestures on the zstack vs the rounded rectangle")
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(Color("overlay0"))
                 .frame(maxWidth: cardWidth, minHeight: cardHeight, maxHeight: cardHeight)
-
-                .onTapGesture {
-                    currentSolve = solve
-                }
-                .onLongPressGesture {
-                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                }
-                
                 
             VStack {
                 Text(formattedTime)
                     .font(.body.weight(.bold))
             }
         }
+        .frame(maxWidth: cardWidth, minHeight: cardHeight, maxHeight: cardHeight)
+        .onTapGesture {
+            currentSolve = solve
+        }
+        .onLongPressGesture {
+            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+        }
+
         .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 8, style: .continuous))
         .contextMenu {
             Button {

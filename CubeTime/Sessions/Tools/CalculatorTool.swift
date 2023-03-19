@@ -187,7 +187,7 @@ struct CalculatorTool: View {
                                         .foregroundColor(Color("dark"))
                                         .background(Color("indent1"))
                                         .cornerRadius(6)
-                                        .modifier(TimeMaskTextField(text: $currentTime))
+                                        .modifier(ManualInputTextField(text: $currentTime))
                                         .toolbar {
                                             ToolbarItemGroup(placement: .keyboard) {
                                                 HStack {

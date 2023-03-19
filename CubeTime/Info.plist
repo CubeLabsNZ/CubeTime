@@ -21,6 +21,8 @@
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
+		<key>UISceneConfigurations</key>
+		<dict/>
 	</dict>
 	<key>UIApplicationShortcutItems</key>
 	<array>
@@ -33,5 +35,11 @@
 			<string>com.cubetime.cubetime.allsessions</string>
 		</dict>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName~ipad</key>
+	<string>SplashPad</string>
 </dict>
 </plist>

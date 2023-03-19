@@ -48,9 +48,9 @@ extension StopwatchManager {
         changedTimeListSort()
         bestSingle = getMin()
         
-        currentAo5 = getCurrentAverageOf(5)
-        currentAo12 = getCurrentAverageOf(12)
-        currentAo100 = getCurrentAverageOf(100)
+        currentAo5 = getCurrentAverage(of: 5)
+        currentAo12 = getCurrentAverage(of: 12)
+        currentAo100 = getCurrentAverage(of: 100)
     }
     
     
@@ -59,12 +59,9 @@ extension StopwatchManager {
         if solve.penalty == pen.rawValue {
             return
         }
-        let oldPen = Penalty(rawValue: solve.penalty)!
-        
         
         solve.penalty = pen.rawValue
         if timeListSolvesFiltered.contains(solve) {
-            NSLog("RELOADING SOLVE")
             timeListReloadSolve?(solve)
         }
         
@@ -84,11 +81,11 @@ extension StopwatchManager {
         phases = getAveragePhases()
         
         if (solvesByDate.suffix(100).contains(solve)) {
-            self.currentAo100 = getCurrentAverageOf(100)
+            self.currentAo100 = getCurrentAverage(of: 100)
             if (solvesByDate.suffix(12).contains(solve)) {
-                self.currentAo12 = getCurrentAverageOf(12)
+                self.currentAo12 = getCurrentAverage(of: 12)
                 if (solvesByDate.suffix(5).contains(solve)) {
-                    self.currentAo5 = getCurrentAverageOf(5)
+                    self.currentAo5 = getCurrentAverage(of: 5)
                 }
             }
         }
@@ -104,7 +101,6 @@ extension StopwatchManager {
     func displayPenOptions() {
         withAnimation(Animation.customSlowSpring) {
             showPenOptions = true
-            nilSolve = (solveItem == nil)
         }
     }
     

@@ -64,7 +64,6 @@ class GradientManager: ObservableObject {
     
     private func changeGradient(newTime: Double) {
         let hour: Int = Int(newTime / 3600)
-        print(hour)
         
         if (2..<6 ~= hour) {
             self.appGradient = 0

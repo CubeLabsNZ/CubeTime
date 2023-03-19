@@ -12,55 +12,12 @@ enum TimerState {
 }
 
 
-struct CalculatedAverage: Identifiable, Comparable/*, Equatable, Comparable*/ {
-    let id = UUID()
-    var name: String
-
-    //    let discardedIndexes: [Int]
-    let average: Double?
-    let accountedSolves: [Solve]?
-    let totalPen: Penalty
-    let trimmedSolves: [Solve]?
-    
-    static func < (lhs: CalculatedAverage, rhs: CalculatedAverage) -> Bool {
-        #warning("TODO:  merge with that one sort function")
-        if lhs.totalPen == .dnf && rhs.totalPen != .dnf {
-            return true
-        } else if lhs.totalPen != .dnf && rhs.totalPen == .dnf {
-            return false
-        } else {
-            if let lhsa = lhs.average {
-                if let rhsa = rhs.average {
-//                    return timeWithPlusTwo(lhsa, pen: lhs.totalPen) < timeWithPlusTwo(rhsa, pen: rhs.totalPen)
-                    return lhsa < rhsa
-                } else {
-                    return true
-                }
-            } else {
-                return false
-            }
-        }
-    }
-}
-
-func setupAudioSession() {
-    let audioSession = AVAudioSession.sharedInstance()
-    do {
-        try audioSession.setCategory(AVAudioSession.Category.playback)
-    } catch let error as NSError {
-        #if DEBUG
-        NSLog(error.description)
-        #endif
-    }
-}
-
 enum TimeNeededForTarget {
     case notPossible, guaranteed
     case value(Double)
 }
 
 // MARK: --
-// MARK: SWM
 class StopwatchManager: ObservableObject {
     let managedObjectContext: NSManagedObjectContext
     
@@ -135,7 +92,7 @@ class StopwatchManager: ObservableObject {
         """, currentSession)
         
         let results = try! managedObjectContext.fetch(req)
-        sessionsCanMoveToPlayground = Array(repeating: [], count: puzzle_types.count)
+        sessionsCanMoveToPlayground = Array(repeating: [], count: puzzleTypes.count)
         
         for result in results {
             if result.sessionType == SessionType.playground.rawValue {
@@ -180,11 +137,6 @@ class StopwatchManager: ObservableObject {
     var penType: Penalty = .none
 
     
-    #warning("TODO: remove")
-    var nilSolve: Bool = true
-    
-    
-    
     
     
     // MARK: stats
@@ -209,8 +161,9 @@ class StopwatchManager: ObservableObject {
     
     @Published var sessionMean: Double?
     
-    @Published var bpa: Double?
-    @Published var wpa: Double?
+    #warning("todo: merge average and calculatedaverage, and fix the functions")
+    @Published var bpa: Average?
+    @Published var wpa: Average?
     
     @Published var timeNeededForTarget: TimeNeededForTarget?
     
@@ -305,17 +258,7 @@ class StopwatchManager: ObservableObject {
     
     func updateHideStatusBar() {
         self.hideUI = timerController.mode == .inspecting || timerController.mode == .running || self.zenMode
-        /* if worse comes to worst
-        if (timerController.mode == .running) {
-            currentPadFloatingStage = 1
-        }
-        */
     }
-    
-    
-    
-    let isSmallDevice: Bool
-    
     
     func addSessionQuickActions() {
         #if DEBUG
@@ -379,12 +322,13 @@ class StopwatchManager: ObservableObject {
         assert(currentSession != nil)
     }
     
-    var scrambleController: ScrambleController! = nil
-    var timerController: TimerContoller! = nil; #warning("figure out way to not make it ! optional")
+    var scrambleController: ScrambleController!
+    var timerController: TimerContoller!
     
     init (currentSession: Session?, managedObjectContext: NSManagedObjectContext) {
         #if DEBUG
         NSLog("Initialising Audio...")
+        NSLog("Initialising Stopwatch Manager")
         #endif
         
         setupAudioSession()
@@ -392,10 +336,7 @@ class StopwatchManager: ObservableObject {
         
 //        self.currentSession = currentSession
         self.managedObjectContext = managedObjectContext
-        
-        self.isSmallDevice = smallDeviceNames.contains(getModelName())
-        
-        
+                
         self.playgroundScrambleType = -1 // Get the compiler to shut up about not initialized, cannot be optional for picker
         
         
@@ -441,20 +382,12 @@ class StopwatchManager: ObservableObject {
                 self.solveItem.session = self.currentSession
                 // Use the current scramble if stopped from manual input
                 
-                #if DEBUG
-                print(time, self.scrambleController.prevScrambleStr, self.scrambleController.scrambleStr)
-                #endif
-                
-                
-                #warning("scramble lock causes crash here sometimes, can't reproduce consistently")
-                
                 self.solveItem.scramble = self.isScrambleLocked ? self.scrambleController.scrambleStr : (time == nil ? self.scrambleController.prevScrambleStr : self.scrambleController.scrambleStr)
                 self.solveItem.scrambleType = self.currentSession.scrambleType
-                self.solveItem.scrambleSubtype = 0
                 self.solveItem.time = secondsElapsed
                 try! managedObjectContext.save()
                 
-                // Rescramble if from manual input1
+                // Rescramble if from manual input
                 if time != nil && !self.isScrambleLocked {
                     self.scrambleController.rescramble()
                 }

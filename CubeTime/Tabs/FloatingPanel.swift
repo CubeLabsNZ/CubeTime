@@ -78,7 +78,6 @@ struct FloatingPanel: View {
                                 oldStage = nearest
                             }
                         }
-                    
                         .onEnded() { value in
                             withAnimation(.customSlowSpring) {
                                 self.isPressed = false

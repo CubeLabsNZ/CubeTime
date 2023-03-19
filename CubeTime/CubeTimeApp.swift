@@ -1,6 +1,7 @@
 import SwiftUI
 import UIKit
 import CoreData
+import Combine
 
 
 @main
@@ -11,10 +12,6 @@ struct CubeTime: App {
     @Preference(\.dmBool) private var darkMode
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
-    /*
-    var shortcutItem: UIApplicationShortcutItem?
-     */
     
     @AppStorage("onboarding") var showOnboarding: Bool = true
     
@@ -27,19 +24,18 @@ struct CubeTime: App {
     
     @StateObject var gradientManager = GradientManager()
     
+    #warning("todo separate this into a viewmodel this is disgusting")
     @State var showUpdates: Bool = false
     @State var pageIndex: Int = 0
     
-    
     init() {
-        persistenceController = PersistenceController.shared
-        let moc = persistenceController.container.viewContext
-        
-        #warning("TODO: move to WM")
         UIApplication.shared.isIdleTimerDisabled = true
         
-
-        let userDefaults = UserDefaults.standard
+        persistenceController = PersistenceController.shared
+        let moc = persistenceController.container.viewContext
+        moc.automaticallyMergesChangesFromParent = true
+        moc.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        
         
         // https://swiftui-lab.com/random-lessons/#data-10
         self._stopwatchManager = StateObject(wrappedValue: StopwatchManager(currentSession: nil, managedObjectContext: moc))
@@ -92,9 +88,6 @@ struct CubeTime: App {
                 .environmentObject(fontManager)
                 .environmentObject(tabRouter)
                 .environmentObject(gradientManager)
-//                .onAppear {
-//                    self.deviceManager.deviceOrientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation
-//                }
         }
         .onChange(of: phase) { newValue in
             switch(newValue) {

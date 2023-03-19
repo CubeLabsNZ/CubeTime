@@ -32,7 +32,6 @@ extension UIColor {
 
 
 struct AveragePhases: View {
-    @Environment(\.colorScheme) private var colourScheme
     @Preference(\.isStaticGradient) private var isStaticGradient
     @EnvironmentObject var gradientManager: GradientManager
     

@@ -2,7 +2,6 @@ import SwiftUI
 
 struct NewSessionView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Environment(\.colorScheme) var colourScheme
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
@@ -37,7 +36,7 @@ struct NewSessionView: View {
                 VStack (spacing: 16) {
                     VStack (alignment: .center, spacing: 0) {
                         if sessionType != SessionType.playground {
-                            PuzzleHeaderImage(imageName: puzzle_types[Int(sessionEventType)].name)
+                            PuzzleHeaderImage(imageName: puzzleTypes[Int(sessionEventType)].name)
                         }
                         
                         SessionNameField(name: $name)

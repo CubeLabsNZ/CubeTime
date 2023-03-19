@@ -128,7 +128,6 @@ let updatesList: [String: (majorAdditions: [ListPoint]?,
 
 
 struct Updates: View {
-    @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
     
     @Binding var showUpdates: Bool

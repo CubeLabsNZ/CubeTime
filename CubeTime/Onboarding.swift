@@ -8,12 +8,9 @@
 import SwiftUI
 import Foundation
 
-let smallPhone: Bool =  ["iPhone7,2", "iPhone8,1", "iPhone9,1", "iPhone9,3", "iPhone10,1", "iPhone10,4", "iPhone12,8", "iPhone14,4", "iPhone13,1", "x86_64"].contains(UIDevice.modelName)
-
 #if false
 struct OnboardingView: View {
     @AppStorage("onboarding") var showOnboarding: Bool = true
-    @Environment(\.colorScheme) var colourScheme
     @Environment(\.dismiss) var dismiss
     
     @Binding var pageIndex: Int
@@ -206,7 +203,6 @@ struct PageTwo: View {
 
 struct PageThree: View {
     @Binding var pageIndex: Int
-    @Environment(\.colorScheme) var colourScheme
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -239,7 +235,6 @@ struct PageThree: View {
 
 struct PageFour: View {
     @Binding var pageIndex: Int
-    @Environment(\.colorScheme) var colourScheme
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -272,7 +267,6 @@ struct PageFour: View {
 
 struct PageFive: View {
     @Binding var pageIndex: Int
-    @Environment(\.colorScheme) var colourScheme
     var body: some View {
         ZStack {
             VStack(spacing: 0) {

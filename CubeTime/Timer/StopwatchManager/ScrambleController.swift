@@ -49,11 +49,6 @@ class ScrambleController: ObservableObject {
         scrambleStr = nil
         scrambleSVG = nil
         let newWorkItem = DispatchWorkItem {
-            #if DEBUG
-            NSLog("running work item")
-            #endif
-            
-            
             let scrTypeAtWorkStart = self.scrambleType
             let scramble = self.safeGetScramble()
 
