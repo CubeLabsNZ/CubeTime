@@ -83,6 +83,7 @@
 		AF8874C129AAC8C0001E49D0 /* ToolsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C029AAC8C0001E49D0 /* ToolsList.swift */; };
 		AF8874C329AB0BE7001E49D0 /* TimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C229AB0BE7001E49D0 /* TimerController.swift */; };
 		AF8874C529AB3736001E49D0 /* ScrambleGeneratorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8874C429AB3736001E49D0 /* ScrambleGeneratorTool.swift */; };
+		AF89931A29C6B0EF0079EA8D /* TNoodleLibNative.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AF8A157429AF15B500F6818E /* ScrambleOnlyTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */; };
 		AF8B305B29B5C7010023D23B /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8B305A29B5C7010023D23B /* SettingsManager.swift */; };
 		AFA444A229C4290500795434 /* SettingsWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA444A129C4290400795434 /* SettingsWidgets.swift */; };
@@ -112,6 +113,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				AF89931A29C6B0EF0079EA8D /* TNoodleLibNative.xcframework in Embed Libraries */,
 			);
 			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;

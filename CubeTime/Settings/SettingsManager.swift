@@ -3,13 +3,30 @@ import Foundation
 import SwiftUI
 
 final class SettingsManager {
-    static let standard = SettingsManager(userDefaults: .standard)
-    fileprivate let userDefaults: UserDefaults
+    static let standard = SettingsManager(userDefaults: .default)
+    fileprivate let userDefaults: NSUbiquitousKeyValueStore
     
     var preferencesChangedSubject = PassthroughSubject<AnyKeyPath, Never>()
     
-    init(userDefaults: UserDefaults) {
+    @objc func ubiquitousKeyValueStoreDidChange(notification: NSNotification) {
+        NSLog("EXTERNAL CHANGE")
+        if let changeReason = notification.userInfo?[NSUbiquitousKeyValueStoreChangedKeysKey] {
+            NSLog("change: \(changeReason)")
+        }
+    }
+    
+    init(userDefaults: NSUbiquitousKeyValueStore) {
         self.userDefaults = userDefaults
+        let ret = userDefaults.synchronize()
+        #if DEBUG
+        NSLog("Syncronize returned: \(ret)")
+        #endif
+        NotificationCenter.default.addObserver(self,
+            selector: #selector(
+            ubiquitousKeyValueStoreDidChange),
+            name: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
+            object: self.userDefaults)
+
     }
     
     // MARK: - General Settings
