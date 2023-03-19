@@ -55,11 +55,10 @@ class StopwatchManager: ObservableObject {
     
     func updateStatsForSession() {
         self.stats = [
-            "currentAo5": StatCurrentAOn(swm: self, n: 5),
-            "currentAo12": StatCurrentAOn(swm: self, n: 12),
-            "currentAo100": StatCurrentAOn(swm: self, n: 100),
-            "solveCount": StatSolveCount(swm: self),
-            "mean": StatMean(swm: self),
+            "currentAo5": StatCurrentAverage(of: 5, stopwatchManager: self),
+            "currentAo12": StatCurrentAverage(of: 12, stopwatchManager: self),
+            "currentAo100": StatCurrentAverage(of: 100, stopwatchManager: self),
+            "mean": StatMean(stopwatchManager: self),
         ]
     }
     
@@ -170,7 +169,7 @@ class StopwatchManager: ObservableObject {
     // Stats used on timer
     
     
-    @Published var stats: [String:Stat] = [:]
+    @Published var stats: [String: Stat] = [:]
     
     #warning("todo: merge average and calculatedaverage, and fix the functions")
     @Published var bpa: Average?

@@ -1,23 +1,29 @@
 import Foundation
 import Combine
 
+typealias Mean = Average
 
 enum StatValue {
     case average(Average)
     case averageOf(AverageOf)
-    case double(Double)
-    case count(Int)
+    
+    case mean(Mean)
+    case solve(Solve)
     
     var doubleValue: Double {
         switch self {
         case .average(let average):
             return average.average
+            
         case .averageOf(let averageOf):
             return averageOf.average
-        case .double(let double):
-            return double
-        case .count(let int):
-            return Double(int)
+            
+        case .mean(let mean):
+            return mean.average
+            
+        case .solve(let solve):
+            return solve.timeIncPen
+            
         }
     }
     
@@ -25,10 +31,15 @@ enum StatValue {
         switch self {
         case .average(let average):
             return average.penalty
+            
+        case .mean(let mean):
+            return mean.penalty
+            
         case .averageOf(let averageOf):
             return averageOf.penalty
-        default:
-            return nil
+            
+        case .solve(let solve):
+            return Penalty(rawValue: solve.penalty)
         }
     }
     
@@ -47,63 +58,45 @@ enum StatResult {
 protocol Stat {
     var result: StatResult { get }
     
-//    init(swm: StopwatchManager)
-    
-    func firstCalculate() async
+    func initialiseStatistic() async
     func poppedSolve(solve: Solve) async
     func pushedSolve(solve: Solve) async
     func solveRemoved(solve: Solve) async
     func solvePenChanged(solve: Solve, from: Penalty) async
 }
 
-class StatSolveCount: Stat {
-    var result: StatResult = .loading
-    
-    let swm: StopwatchManager
-    
-    init(swm: StopwatchManager) {
-        self.swm = swm
-    }
-    
-    func firstCalculate() async {
-        result = .value(.count(swm.solves.count))
-    }
-    
-    func poppedSolve(solve _: Solve) async {
-        result = .value(.count(swm.solves.count))
-    }
-    
-    func pushedSolve(solve _: Solve) async {
-        result = .value(.count(swm.solves.count))
-    }
-    
-    func solveRemoved(solve _: Solve) async {
-        result = .value(.count(swm.solves.count))
-    }
-    
-    func solvePenChanged(solve: Solve, from: Penalty) async {
-        
-    }
-}
-
 class StatMean: Stat {
     var result: StatResult = .loading
     
-    let swm: StopwatchManager
+    let stopwatchManager: StopwatchManager
     var sum: Double!
+    var dnfCount: Int!
     
-    init(swm: StopwatchManager) {
-        self.swm = swm
+    init(stopwatchManager: StopwatchManager) {
+        self.stopwatchManager = stopwatchManager
     }
     
-    func firstCalculate() async {
-        if swm.solvesNoDNFs.count == 0 {
+    func initialiseStatistic() async {
+        if stopwatchManager.solvesNoDNFs.count == 0 {
             result = .notEnoughDetail
             return
         }
+        
         result = .loading
-        sum = swm.solvesNoDNFs.reduce(0, {$0 + $1.timeIncPen })
-        result = .value(.double(sum / Double(swm.solvesNoDNFs.count)))
+        
+        // merge into one loop
+        self.sum = stopwatchManager.solvesNoDNFs.reduce(0, {$0 + $1.timeIncPen })
+        
+        // for some reason this is run TWICE and so if i directly increment self.dnfCount it will duplicate the count
+        var tempDnfCount = 0
+        stopwatchManager.solves.forEach({ solve in
+            if (Penalty(rawValue: solve.penalty) == .dnf) {
+                tempDnfCount += 1
+            }
+        })
+        self.dnfCount = tempDnfCount
+        
+        result = .value(.mean(Mean(average: sum / Double(stopwatchManager.solvesNoDNFs.count), penalty: dnfCount == 0 ? .none : .dnf)))
     }
     
     func poppedSolve(solve: Solve) async {
@@ -112,16 +105,20 @@ class StatMean: Stat {
     
     func pushedSolve(solve: Solve) async {
         sum += solve.timeIncPen
-        result = .value(.double(sum / Double(swm.solvesNoDNFs.count)))
+        dnfCount += (Penalty(rawValue: solve.penalty) == .dnf ? 1 : 0)
+        
+        result = .value(.mean(Mean(average: sum / Double(stopwatchManager.solvesNoDNFs.count), penalty: dnfCount == 0 ? .none : .dnf)))
     }
     
     func solveRemoved(solve: Solve) async {
-        if swm.solvesNoDNFs.count == 0 {
+        if stopwatchManager.solvesNoDNFs.count == 0 {
             result = .notEnoughDetail
             return
         }
         sum -= solve.timeIncPen
-        result = .value(.double(sum / Double(swm.solvesNoDNFs.count)))
+        dnfCount -= (Penalty(rawValue: solve.penalty) == .dnf ? 1 : 0)
+        
+        result = .value(.mean(Mean(average: sum / Double(stopwatchManager.solvesNoDNFs.count), penalty: dnfCount == 0 ? .none : .dnf)))
     }
     
     func solvePenChanged(solve: Solve, from oldPen: Penalty) async {
@@ -129,69 +126,84 @@ class StatMean: Stat {
         if newPen == oldPen {
             return
         }
+        
+        
         result = .loading
-        if newPen == .dnf {
-            await solveRemoved(solve: solve)
-        } else if oldPen == .dnf {
-            await pushedSolve(solve: solve)
-        } else if newPen == .plustwo {
+        
+        switch (newPen) {
+        case .dnf:
+            if (oldPen == .plustwo) {
+                sum -= 2
+            }
+            dnfCount += 1
+            
+        case .none:
+            if (oldPen == .dnf) {
+                dnfCount -= 1
+            } else {
+                sum -= 2
+            }
+        
+        case .plustwo:
+            if (oldPen == .dnf) {
+                dnfCount -= 1
+            }
+            
             sum += 2
-            result = .value(.double(sum / Double(swm.solvesNoDNFs.count)))
-        } else if oldPen == .plustwo {
-            sum -= 2
-            result = .value(.double(sum / Double(swm.solvesNoDNFs.count)))
         }
+        
+        result = .value(.mean(Mean(average: sum / Double(stopwatchManager.solvesNoDNFs.count), penalty: dnfCount == 0 ? .none : .dnf)))
     }
 }
 
-class StatCurrentAOn: Stat {
+class StatCurrentAverage: Stat {
     var result: StatResult = .loading
     
-    let swm: StopwatchManager
-    let n: Int
+    let stopwatchManager: StopwatchManager
+    let x: Int
     
-    init(swm: StopwatchManager, n: Int) {
-        self.swm = swm
-        self.n = n
+    init(of x: Int, stopwatchManager: StopwatchManager) {
+        self.x = x
+        self.stopwatchManager = stopwatchManager
     }
     
-    func firstCalculate() async {
-        if swm.solves.count < n {
+    func initialiseStatistic() async {
+        if stopwatchManager.solves.count < x {
             result = .notEnoughDetail
             return
         }
         result = .loading
-        let avg = Self.getCalculatedAverage(forSolves: swm.solvesByDate.suffix(n))
+        let avg = Self.getCalculatedAverage(forSolves: stopwatchManager.solvesByDate.suffix(x))
         result = .value(.averageOf(avg))
     }
     
     #warning("TODO: make these incremental instead of recalculating")
     func poppedSolve(solve _: Solve) async {
-        if swm.solves.count < n {
+        if stopwatchManager.solves.count < x {
             result = .notEnoughDetail
             return
         }
         result = .loading
-        let avg = Self.getCalculatedAverage(forSolves: swm.solvesByDate.suffix(n))
+        let avg = Self.getCalculatedAverage(forSolves: stopwatchManager.solvesByDate.suffix(x))
         result = .value(.averageOf(avg))
     }
     
     func pushedSolve(solve _: Solve) async {
-        NSLog("Pushed solve, n = \(n    )")
-        if swm.solves.count < n {
+        NSLog("Pushed solve, n = \(x    )")
+        if stopwatchManager.solves.count < x {
             NSLog("not enough solves!")
             return
         }
         result = .loading
         NSLog("getting avg...!")
-        let avg = Self.getCalculatedAverage(forSolves: swm.solvesByDate.suffix(n))
+        let avg = Self.getCalculatedAverage(forSolves: stopwatchManager.solvesByDate.suffix(x))
         NSLog("avg is \(avg)")
         result = .value(.averageOf(avg))
     }
     
     #warning("TODO: are trimmedsolves in accountedsolves?")
     func solveRemoved(solve: Solve) async {
-        if swm.solves.count < n {
+        if stopwatchManager.solves.count < x {
             result = .notEnoughDetail
             return
         } else if case let .value(val) = result,
@@ -200,18 +212,18 @@ class StatCurrentAOn: Stat {
             return
         }
         result = .loading
-        let avg = Self.getCalculatedAverage(forSolves: swm.solvesByDate.suffix(n))
+        let avg = Self.getCalculatedAverage(forSolves: stopwatchManager.solvesByDate.suffix(x))
         result = .value(.averageOf(avg))
     }
     
     func solvePenChanged(solve: Solve, from: Penalty) async {
-        if swm.solves.count < n {
+        if stopwatchManager.solves.count < x {
             return
-        } else if !swm.solvesByDate.suffix(n).contains(solve) {
+        } else if !stopwatchManager.solvesByDate.suffix(x).contains(solve) {
             return
         }
         result = .loading
-        let avg = Self.getCalculatedAverage(forSolves: swm.solvesByDate.suffix(n))
+        let avg = Self.getCalculatedAverage(forSolves: stopwatchManager.solvesByDate.suffix(x))
         result = .value(.averageOf(avg))
     }
     

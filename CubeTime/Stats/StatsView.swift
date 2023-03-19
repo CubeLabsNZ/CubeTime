@@ -389,17 +389,17 @@ struct StatsView: View {
                 .tint(Color("accent"))
         }
         .sheet(isPresented: self.$showTimeTrendModal) {
-            let timesOnly = stopwatchManager.solvesNoDNFsbyDate.map { $0.timeIncPen }
-            let r = stopwatchManager.stats["mean"]!.result
-            
-            if case let .value(val) = r, case let .double(dbl) = val {
-                DetailTimeTrend(rawDataPoints: timesOnly,
-                                limits: (timesOnly.max()!, timesOnly.min()!),
-                                averageValue: dbl)
-                .tint(Color("accent"))
-            } else {
-                LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
-            }
+//            let timesOnly = stopwatchManager.solvesNoDNFsbyDate.map { $0.timeIncPen }
+//            let r = stopwatchManager.stats["mean"]!.result
+//
+//            if case let .value(val) = r, case let .double(dbl) = val {
+//                DetailTimeTrend(rawDataPoints: timesOnly,
+//                                limits: (timesOnly.max()!, timesOnly.min()!),
+//                                averageValue: dbl)
+//                .tint(Color("accent"))
+//            } else {
+//                LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
+//            }
         }
     }
 }

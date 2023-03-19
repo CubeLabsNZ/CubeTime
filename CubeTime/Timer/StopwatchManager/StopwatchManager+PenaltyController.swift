@@ -35,7 +35,7 @@ extension StopwatchManager {
         
         Task(priority: .userInitiated) {
             for (_, stat) in self.stats {
-                await stat.solvePenChanged(solve: solveItem, from: .none)
+                await stat.solvePenChanged(solve: solveItem, from: oldPen)
             }
         }
         

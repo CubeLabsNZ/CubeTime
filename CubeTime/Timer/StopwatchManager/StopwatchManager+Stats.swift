@@ -263,7 +263,7 @@ extension StopwatchManager {
         
         Task(priority: .userInitiated) {
             for (_, stat) in self.stats {
-                await stat.firstCalculate()
+                await stat.initialiseStatistic()
             }
         }
         
