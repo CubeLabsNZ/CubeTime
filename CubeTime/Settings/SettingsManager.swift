@@ -32,6 +32,9 @@ final class SettingsManager {
     @UserDefault("inspectionAlertType")
     var inspectionAlertType: Int = 0
     
+    @UserDefault("inspectionAlertFollowsSilent")
+    var inspectionAlertFollowsSilent: Bool = false
+    
     @UserDefault("inputMode")
     var inputMode: InputMode = .timer
     

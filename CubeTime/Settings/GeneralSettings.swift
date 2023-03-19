@@ -27,6 +27,7 @@ struct GeneralSettingsView: View {
     @Preference(\.showCancelInspection) private var showCancelInspection
     @Preference(\.inspectionAlert) private var inspectionAlert
     @Preference(\.inspectionAlertType) private var inspectionAlertType
+    @Preference(\.inspectionAlertFollowsSilent) private var inspectionAlertFollowsSilent
     
     @Preference(\.inputMode) private var inputMode
     
@@ -81,6 +82,13 @@ struct GeneralSettingsView: View {
                             }
                             .pickerStyle(.segmented)
                         }
+                        
+                        DescribedSetting(description: "With this setting on, the **Voice** alert type will play through system audio, respecting your phone's ringer mute state.") {
+                            SettingsToggle("Inspection Alert Follows System Silent Mode", $inspectionAlertFollowsSilent)
+                        }
+                        .onChange(of: inspectionAlertFollowsSilent, perform: { _ in
+                            setupAudioSession(with: inspectionAlertFollowsSilent ? .ambient : .playback)
+                        })
                     }
                 }
                 

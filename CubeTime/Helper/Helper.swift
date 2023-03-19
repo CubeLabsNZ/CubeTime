@@ -328,10 +328,10 @@ var keyWindow: UIWindow? {
 }
 
 
-func setupAudioSession() {
+func setupAudioSession(with category: AVAudioSession.Category = .playback) {
     let audioSession = AVAudioSession.sharedInstance()
     do {
-        try audioSession.setCategory(AVAudioSession.Category.playback)
+        try audioSession.setCategory(category, options: .duckOthers)
     } catch let error as NSError {
         #if DEBUG
         NSLog(error.description)

@@ -10,6 +10,7 @@ struct CubeTime: App {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @Preference(\.overrideDM) private var overrideSystemAppearance
     @Preference(\.dmBool) private var darkMode
+    @Preference(\.inspectionAlertFollowsSilent) private var inspectionAlertFollowsSilent
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
@@ -54,6 +55,8 @@ struct CubeTime: App {
         
         setupNavbarAppearance()
         setupColourScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
+        
+        setupAudioSession(with: inspectionAlertFollowsSilent ? .ambient : .playback)
     }
     
     

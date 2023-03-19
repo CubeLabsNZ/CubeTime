@@ -50,9 +50,9 @@ struct SettingsFootnote: ViewModifier {
 
 struct DescribedSetting<V: View>: View {
     @ViewBuilder let content: () -> V
-    let description: String
+    let description: LocalizedStringKey
     
-    init(description: String, @ViewBuilder _ content: @escaping () -> V) {
+    init(description: LocalizedStringKey, @ViewBuilder _ content: @escaping () -> V) {
         self.description = description
         self.content = content
     }

@@ -253,9 +253,6 @@ class StopwatchManager: ObservableObject {
     var timeListSelectAll: (() -> ())?
     
     
-    // MARK: inspection alert audio
-    
-    
     func updateHideStatusBar() {
         self.hideUI = timerController.mode == .inspecting || timerController.mode == .running || self.zenMode
     }
@@ -330,9 +327,6 @@ class StopwatchManager: ObservableObject {
         NSLog("Initialising Audio...")
         NSLog("Initialising Stopwatch Manager")
         #endif
-        
-        setupAudioSession()
-        
         
 //        self.currentSession = currentSession
         self.managedObjectContext = managedObjectContext
