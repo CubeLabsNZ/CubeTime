@@ -258,7 +258,6 @@
 		23A73F5C276B0AA100153748 /* Timer */ = {
 			isa = PBXGroup;
 			children = (
-				23CA8A0229AAF894006676BF /* StopwatchManager */,
 				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
 				23B7AC3929BAB2E300B5C9B4 /* TimerTools.swift */,
 				2326435F28C4927600F6322E /* TimerHeader.swift */,
@@ -396,6 +395,7 @@
 				23DC2F8829C7EAD00040A5F5 /* Onboarding */,
 				235D6A6429C2BEFA002D90D8 /* Helper */,
 				23A73F5D276B0AC800153748 /* Tabs */,
+				23CA8A0229AAF894006676BF /* StopwatchManager */,
 				23A73F5C276B0AA100153748 /* Timer */,
 				23A73F5E276B0AED00153748 /* TimeList */,
 				23E81E75275D917000B741E3 /* Stats */,

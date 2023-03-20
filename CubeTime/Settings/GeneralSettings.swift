@@ -99,23 +99,25 @@ struct GeneralSettingsView: View {
                 
                 ThemedDivider()
                 
-                SettingsPicker(text: "Timer Mode", selection: $inputMode) {
-                    ForEach(Array(InputMode.allCases), id: \.self) { mode in
-                        Text(mode.rawValue)
-                    }
-                }
-                .pickerStyle(.menu)
-            
-                
-                if inputMode == .timer {
-                    SettingsPicker(text: "Timer Update", selection: $timerDP) {
-                        Text("None")
-                            .tag(-1)
-                        ForEach(0...3, id: \.self) {
-                            Text("\($0) d.p")
+                VStack(spacing: 4) {
+                    SettingsPicker(text: "Timer Mode", selection: $inputMode) {
+                        ForEach(Array(InputMode.allCases), id: \.self) { mode in
+                            Text(mode.rawValue)
                         }
                     }
                     .pickerStyle(.menu)
+                
+                    
+                    if inputMode == .timer {
+                        SettingsPicker(text: "Timer Update", selection: $timerDP) {
+                            Text("None")
+                                .tag(-1)
+                            ForEach(0...3, id: \.self) {
+                                Text("\($0) d.p")
+                            }
+                        }
+                        .pickerStyle(.menu)
+                    }
                 }
             }
             

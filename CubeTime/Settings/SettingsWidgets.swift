@@ -29,6 +29,7 @@ struct SettingsGroup<L: View, V: View>: View {
             label
                 .labelStyle(SettingsHeaderLabelStyle())
                 .padding([.horizontal, .top], 10)
+            
             VStack(alignment: .leading, content: content)
                 .padding(.horizontal)
         }
@@ -105,7 +106,7 @@ struct SettingsPicker<SelectionValue: Hashable, V: View>: View {
             
             Spacer()
             
-            Picker("Test", selection: $selection) {
+            Picker("", selection: $selection) {
                 content()
             }
             .frame(maxWidth: maxWidth)

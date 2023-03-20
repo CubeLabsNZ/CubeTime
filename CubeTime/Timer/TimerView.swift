@@ -364,13 +364,14 @@ struct TimerView: View {
                         
                         VStack {
                             if showZenMode {
-                                CTButton(type: .halfcoloured, size: .large, square: true, expandWidth: false, onTapRun: {
+                                CTButton(type: .halfcoloured, size: .large, square: true, supportsDynamicResizing: false, expandWidth: false, onTapRun: {
                                     withAnimation(.customEaseInOut) {
                                         stopwatchManager.zenMode = true
                                     }
                                 }) {
                                     Label("Zen Mode", systemImage: "moon.stars")
                                         .labelStyle(.iconOnly)
+                                        .font(.system(size: 17, weight: .semibold))
                                 }
                             }
                             if (stopwatchManager.isScrambleLocked) {
@@ -397,13 +398,13 @@ struct TimerView: View {
             }
             
             if stopwatchManager.zenMode {
-                CTCloseButton(hasBackgroundShadow: true, onTapRun: {
-                    withAnimation(.customEaseInOut) {
-                        stopwatchManager.zenMode = false
-                    }
+                CTCloseButton(hasBackgroundShadow: true, supportsDynamicResizing: false, onTapRun: {
+                    stopwatchManager.zenMode = false
                 })
-                .padding([.trailing, .top])
+                .frame(width: 35, height: 35)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                .padding(.trailing)
+                .transition(.asymmetric(insertion: .opacity.animation(.easeIn(duration: 0.10)), removal: .identity))
             }
             
             

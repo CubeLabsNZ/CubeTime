@@ -91,7 +91,7 @@ struct SessionsView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !(UIDevice.deviceIsPad && hSizeClass == .regular) {
                         NavigationLink(destination: ToolsList()) {
-                            CTButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
+                            CTButtonBase(type: .coloured, size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, supportsDynamicResizing: true, expandWidth: false) {
                                 Label("Tools", systemImage: "wrench.and.screwdriver")
                                     .labelStyle(.titleAndIcon)
                                     .imageScale(.small)
