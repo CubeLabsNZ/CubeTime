@@ -56,9 +56,10 @@ let updatesList: [String: (majorAdditions: [ListPoint]?,
                                 ],
                                 minorAdditions: [
                                     ListPoint(1, "added ability to two-finger swipe on iPad trackpad to resize floating panel"),
-                                    ListPoint(1, "made 3-solve display display current average in compsim"),
+                                    ListPoint(1, "made 3-solve display show current average in compsim"),
                                     ListPoint(1, "added toggle to play voice alert through ringer, following mute toggle"),
                                     ListPoint(1, "allow audio alerts to play alongside background audio, eg: music"),
+                                    ListPoint(1, "add zen mode on iPhone"),
                                     
                                 ],
                                 bugFixes: [
