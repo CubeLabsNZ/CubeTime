@@ -37,11 +37,13 @@ class TimerUIViewNew: UIViewController, UIContextMenuInteractionDelegate {
     var scrambleController: ScrambleController!
     var timerController: TimerContoller!
     var stopwatchManager: StopwatchManager?
+    var fontManager: FontManager!
     
     var subscriptions: [AnyCancellable] = []
     
     @IBOutlet weak var scrambleLabel: UILabel!
-    @IBOutlet weak var timeLabel: UILabel!
+    #warning("TODO: remove fixed height in storyboard, maybe fine since no hit testing, bg, etc.")
+    @IBOutlet weak var timeLabel: UIView!
 
     @IBSegueAction func addTimerHeader(_ coder: NSCoder) -> UIViewController? {
         let hostingController = UIHostingController(coder: coder, rootView: TimerHeader(previewMode: false))
@@ -51,10 +53,52 @@ class TimerUIViewNew: UIViewController, UIContextMenuInteractionDelegate {
     
     @IBOutlet weak var longPressGesture: UILongPressGestureRecognizer!
     @IBOutlet weak var panGesture: UIPanGestureRecognizer!
+    let textLayer: CubeTimeTextLayer = {
+        let textLayer = CubeTimeTextLayer()
+        textLayer.alignmentMode = .center
+        textLayer.contentsScale = UIScreen.main.scale
+        return textLayer
+    }()
+    
+    func updateTimerTextSize(mode _mode: TimerState? = nil) {
+        // Must do explicitly else time will freeze until size finished
+        CATransaction.begin()
+        let mode = _mode ?? self.timerController.mode
+        NSLog("UPDATE TIMER TEXT SIZE")
+        if UIDevice.deviceIsPad && traitCollection.horizontalSizeClass == .regular {
+            textLayer.fontSize = mode == .running ? 88 : 66
+        } else if UIDevice.deviceModelName != "iPhoneSE" {
+            textLayer.fontSize = mode == .running ? 70 : 56
+        } else {
+            textLayer.fontSize = 54
+        }
+        CATransaction.commit()
+    }
+    
+    @objc func frame(displaylink: CADisplayLink) {
+        self.textLayer.textDontAnimate = formatSolveTime(secs: -timerController.timerStartTime!.timeIntervalSinceNow, dp: sm.timeDpWhenRunning)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        textLayer.frame = self.timeLabel.bounds
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        textLayer.font = CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 0, nil)
+        updateTimerTextSize()
+        timeLabel.layer.addSublayer(textLayer)
+        
+        let displaylink = CADisplayLink(target: self,
+                                        selector: #selector(frame))
+        displaylink.isPaused = true
+        displaylink.add(to: .current,
+                        forMode: .default)
+        
+                
         sm.preferencesChangedSubject
             .filter({
                 $0 == \SettingsManager.gestureDistance ||
@@ -72,15 +116,33 @@ class TimerUIViewNew: UIViewController, UIContextMenuInteractionDelegate {
             .assign(to: \.text, on: scrambleLabel)
             .store(in: &subscriptions)
         
-        timerController.$secondsStr
+        
+        timerController.$timerCGColor
             .receive(on: RunLoop.main)
-            .assign(to: \.text!, on: timeLabel)
+            .assign(to: \.colorDontAnimate!, on: textLayer)
             .store(in: &subscriptions)
         
-        timerController.$timerUIColor
+        timerController.$mode
             .receive(on: RunLoop.main)
-            .assign(to: \.textColor, on: timeLabel)
+            .sink(receiveValue: { newValue in
+                NSLog("label bounds: \(self.timeLabel.bounds), layer: \(self.textLayer.bounds)")
+                self.updateTimerTextSize(mode: newValue)
+                self.scrambleLabel.isHidden = newValue != .stopped
+                UIApplication.shared.isIdleTimerDisabled = newValue != .stopped
+                displaylink.isPaused = newValue != .running || self.sm.timeDpWhenRunning == -1
+            })
             .store(in: &subscriptions)
+        
+        timerController.$secondsStr
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { newValue in
+                // Isn't updating from displaylink
+                if displaylink.isPaused {
+                    self.textLayer.textDontAnimate = newValue
+                }
+            })
+            .store(in: &subscriptions)
+        
         
         scrambleController.$scrambleType
             .receive(on: RunLoop.main)
@@ -89,6 +151,12 @@ class TimerUIViewNew: UIViewController, UIContextMenuInteractionDelegate {
 //                self.scrambleLabel.adjustsFontSizeToFitWidth = newScr == 7
 //                self.scrambleLabel.minimumScaleFactor = 0.5
             })
+            .store(in: &subscriptions)
+        
+        
+        fontManager.$uiFontScramble
+            .receive(on: RunLoop.main)
+            .assign(to: \.font, on: scrambleLabel)
             .store(in: &subscriptions)
         
         let interaction = UIContextMenuInteraction(delegate: self)
@@ -103,7 +171,7 @@ class TimerUIViewNew: UIViewController, UIContextMenuInteractionDelegate {
             view.addGestureRecognizer(gesture)
         }
         
-        // Can't find this in storyboard
+        // Can't find these in storyboard
         panGesture.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirectPointer.rawValue)]
     }
     
@@ -173,12 +241,15 @@ class TimerUIViewNew: UIViewController, UIContextMenuInteractionDelegate {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        UIApplication.shared.isIdleTimerDisabled = true
-        timerController.touchDown()
+        if touches.first?.view == self.view {
+            timerController.touchDown()
+        }
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        timerController.touchUp()
+        if touches.first?.view == self.view {
+            timerController.touchUp()
+        }
     }
     
     
@@ -350,6 +421,7 @@ struct TimerViewRepresentable: UIViewControllerRepresentable {
     @EnvironmentObject var timerController: TimerContoller
     @EnvironmentObject var scrambleController: ScrambleController
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var fontManager: FontManager
     
     func makeUIViewController(context: Context) -> some UIViewController {
         let storyboard = UIStoryboard(name: "TimerView", bundle: nil)
@@ -358,6 +430,7 @@ struct TimerViewRepresentable: UIViewControllerRepresentable {
         vc.scrambleController = scrambleController
         vc.timerController = timerController
         vc.stopwatchManager = stopwatchManager
+        vc.fontManager = fontManager
         
         return vc
     }
@@ -453,7 +526,7 @@ struct ScrambleText: View {
                 scrambleSheetStr = SheetStrWrapper(str: scr)
             }
         
-            .font(fontManager.ctFontScramble)
+            .font(Font(fontManager.uiFontScramble))
             .fixedSize(horizontal: mega, vertical: false)
             .multilineTextAlignment(mega ? .leading : .center)
             .if(mega) { view in

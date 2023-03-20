@@ -115,6 +115,43 @@ struct AnimatingFontSize: AnimatableModifier {
     }
 }
 
+// Smooth, vertically aligned without dont animate
+class CubeTimeTextLayer: CATextLayer {
+    var textDontAnimate: Any? {
+        get {
+            self.string
+        }
+        set {
+            CATransaction.begin()
+            CATransaction.setDisableActions(true)
+            self.string = newValue
+            CATransaction.commit()
+        }
+    }
+    
+    var colorDontAnimate: CGColor? {
+        get {
+            self.foregroundColor
+        }
+        set {
+            CATransaction.begin()
+            CATransaction.setDisableActions(true)
+            self.foregroundColor = newValue
+            CATransaction.commit()
+        }
+    }
+    
+    override func draw(in ctx: CGContext) {
+        ctx.setShouldSmoothFonts(true)
+        let height = self.bounds.size.height
+        let fontSize = self.fontSize
+        let yDiff = (height-fontSize)/2 - fontSize/10
+        ctx.saveGState()
+        ctx.translateBy(x: 0, y: yDiff)
+        super.draw(in: ctx)
+        ctx.restoreGState()
+    }
+}
 
 // MARK: - Safe Area
 enum SafeAreaType {

@@ -13,7 +13,7 @@ import CoreText
 class FontManager: ObservableObject {
     let sm = SettingsManager.standard
     
-    @Published var ctFontScramble: Font!
+    @Published var uiFontScramble: UIFont!
     @Published var ctFontDescBold: CTFontDescriptor!
     @Published var ctFontDesc: CTFontDescriptor!
     
@@ -58,7 +58,13 @@ class FontManager: ObservableObject {
             kCTFontVariationAttribute: variationsTimer
         ] as! CFDictionary)
         
-        ctFontScramble = Font(CTFontCreateWithFontDescriptor(ctFontDesc, CGFloat(sm.scrambleSize), nil))
+        
+        let uiFontDesc = UIFontDescriptor(fontAttributes: [
+            .name: "RecursiveSansLinearLightMonospace-Regular",
+            kCTFontVariationAttribute as UIFontDescriptor.AttributeName: variations
+        ])
+        
+        uiFontScramble = UIFont(descriptor: uiFontDesc, size: CGFloat(sm.scrambleSize))
     }
 }
 

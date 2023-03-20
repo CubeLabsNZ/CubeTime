@@ -133,7 +133,7 @@ struct AppearanceSettingsView: View {
                     
                     VStack {
                         Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
-                            .font(fontManager.ctFontScramble)
+                            .font(Font(fontManager.uiFontScramble))
                             .padding()
                         
                         
@@ -209,7 +209,7 @@ struct TimerPreview: View {
             
             VStack {
                 Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
-                    .font(fontManager.ctFontScramble)
+                    .font(Font(fontManager.uiFontScramble))
                     .frame(maxHeight: globalGeometrySize.height/3)
                     .multilineTextAlignment(.center)
                     

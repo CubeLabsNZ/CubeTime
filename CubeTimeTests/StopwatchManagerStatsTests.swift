@@ -27,7 +27,6 @@ struct TestSolveWrapper {
         solveItem.scramble = "Scramble"
         solveItem.session = session
         solveItem.scrambleType = 1
-        solveItem.scrambleSubtype = 0
         return solveItem
     }
 }

@@ -81,10 +81,10 @@ class TimerContoller: ObservableObject {
             onModeChange?(mode)
         }
     }
-    @Published var timerUIColor: UIColor = UIColor(Color.Timer.normal)
+    @Published var timerCGColor: CGColor = UIColor(Color.Timer.normal).cgColor
     @Published var timerColour: Color = Color.Timer.normal {
         didSet {
-            timerUIColor = UIColor(timerColour)
+            timerCGColor = UIColor(timerColour).cgColor
         }
     }
         
@@ -108,7 +108,7 @@ class TimerContoller: ObservableObject {
     
     
     private var timer: Timer?
-    private var timerStartTime: Date?
+    var timerStartTime: Date?
     var secondsElapsed = 0.0
     
     
@@ -210,11 +210,6 @@ class TimerContoller: ObservableObject {
 
         if sm.timeDpWhenRunning == -1 {
             self.secondsStr = "..."
-        } else {
-            timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { [self] timer in
-                self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
-                self.secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: sm.timeDpWhenRunning)
-            }
         }
     }
     

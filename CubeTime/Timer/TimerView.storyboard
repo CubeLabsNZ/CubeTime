@@ -16,18 +16,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GPw-tr-IzB">
-                                <rect key="frame" x="188" y="438" width="38" height="20"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scramble" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Qdi-JC-3z5">
                                 <rect key="frame" x="16" y="214" width="382" height="20.333333333333343"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kdz-xj-JKn">
+                                <rect key="frame" x="16" y="320" width="382" height="256"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="256" id="V24-aL-jFQ"/>
+                                </constraints>
+                            </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="olE-DT-zM7">
                                 <rect key="frame" x="16" y="44" width="382" height="35"/>
                                 <constraints>
@@ -42,13 +42,14 @@
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Qdi-JC-3z5" secondAttribute="trailing" constant="16" id="2Pg-SU-KfW"/>
+                            <constraint firstItem="Kdz-xj-JKn" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="4Cf-eQ-9Rx"/>
                             <constraint firstItem="Qdi-JC-3z5" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="HE3-hb-nML"/>
                             <constraint firstItem="olE-DT-zM7" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="OgK-Sm-eoo"/>
-                            <constraint firstItem="GPw-tr-IzB" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="abT-qO-KMg"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Kdz-xj-JKn" secondAttribute="trailing" constant="16" id="e57-nv-nQQ"/>
                             <constraint firstItem="olE-DT-zM7" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="eW5-jF-rKH"/>
                             <constraint firstItem="Qdi-JC-3z5" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="fFk-l0-8vA"/>
+                            <constraint firstItem="Kdz-xj-JKn" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="hOF-Fq-Yf7"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="olE-DT-zM7" secondAttribute="trailing" constant="16" id="n1y-Yc-2Z8"/>
-                            <constraint firstItem="GPw-tr-IzB" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="nNm-f7-mo8"/>
                             <constraint firstItem="Qdi-JC-3z5" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="bottom" multiplier="0.25" id="spK-Xq-9ix"/>
                         </constraints>
                         <connections>
@@ -59,7 +60,7 @@
                         <outlet property="longPressGesture" destination="pSI-hQ-E0U" id="0ms-tn-ayH"/>
                         <outlet property="panGesture" destination="gGw-Qh-ySd" id="Bl9-JI-Fnf"/>
                         <outlet property="scrambleLabel" destination="Qdi-JC-3z5" id="Y8E-IN-3lJ"/>
-                        <outlet property="timeLabel" destination="GPw-tr-IzB" id="C5d-hD-r0b"/>
+                        <outlet property="timeLabel" destination="Kdz-xj-JKn" id="EjG-cg-FEI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
