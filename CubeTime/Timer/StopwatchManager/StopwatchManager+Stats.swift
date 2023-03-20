@@ -347,7 +347,6 @@ extension StopwatchManager {
         // Update sessionMean
         if solveItem.penalty != Penalty.dnf.rawValue { //TODO test if this really works with inspection
             sessionMean = ((sessionMean ?? 0) * Double(solvesNoDNFs.count) + solveItem.timeIncPen) / Double(solvesNoDNFs.count + 1)
-            print("updated")
             solvesNoDNFsbyDate.append(solveItem)
             
             let greatersolvenodnfidx = solvesNoDNFs.firstIndex(where: { $0.timeIncPen > solveItem.timeIncPen }) ?? solvesNoDNFs.count
