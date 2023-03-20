@@ -174,7 +174,7 @@ struct CalculatorTool: View {
                                 }
                             }
                             .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
-                            .font(.body.weight(.semibold))
+                            .font(.callout.weight(.semibold))
                             .padding(.top, 10)
 
                             Group {

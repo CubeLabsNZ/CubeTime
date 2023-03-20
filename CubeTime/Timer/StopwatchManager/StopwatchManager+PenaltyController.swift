@@ -79,6 +79,7 @@ extension StopwatchManager {
         
         bestSingle = getMin()
         phases = getAveragePhases()
+        sessionMean = getSessionMean()
         
         if (solvesByDate.suffix(100).contains(solve)) {
             self.currentAo100 = getCurrentAverage(of: 100)
