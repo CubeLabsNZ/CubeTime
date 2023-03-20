@@ -119,6 +119,9 @@ final class SettingsManager {
     
     @UserDefault("fontCursive")
     var fontCursive: Bool = false
+    
+    @UserDefault("showZenMode")
+    var showZenMode: Bool = false
 }
 
 @propertyWrapper

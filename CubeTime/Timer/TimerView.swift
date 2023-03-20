@@ -158,6 +158,7 @@ struct TimerView: View {
     @Preference(\.scrambleSize) private var scrambleSize
     @Preference(\.showPrevTime) private var showPrevTime
     @Preference(\.inputMode) private var inputMode
+    @Preference(\.showZenMode) private var showZenMode
     
     
     // FOCUS STATES
@@ -361,19 +362,31 @@ struct TimerView: View {
                         
                         Spacer()
                         
-                        if (stopwatchManager.isScrambleLocked) {
-                            Image(systemName: "lock.rotation")
-                                .font(.system(size: 17, weight: .medium, design: .default))
-                                .imageScale(.medium)
-                                .frame(width: 35, height: 35, alignment: .center)
-                                .onTapGesture {
-                                    stopwatchManager.showUnlockScrambleConfirmation = true
+                        VStack {
+                            if showZenMode {
+                                CTButton(type: .halfcoloured, size: .large, square: true, expandWidth: false, onTapRun: {
+                                    withAnimation(.customEaseInOut) {
+                                        stopwatchManager.zenMode = true
+                                    }
+                                }) {
+                                    Label("Zen Mode", systemImage: "moon.stars")
+                                        .labelStyle(.iconOnly)
                                 }
-                        } else {
-                            LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
-                                .frame(maxHeight: 35)
-                                .padding(.top, UIDevice.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
-                                .opacity(scrambleController.scrambleStr == nil ? 1 : 0)
+                            }
+                            if (stopwatchManager.isScrambleLocked) {
+                                Image(systemName: "lock.rotation")
+                                    .font(.system(size: 17, weight: .medium, design: .default))
+                                    .imageScale(.medium)
+                                    .frame(width: 35, height: 35, alignment: .center)
+                                    .onTapGesture {
+                                        stopwatchManager.showUnlockScrambleConfirmation = true
+                                    }
+                            } else {
+                                LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)
+                                    .frame(maxHeight: 35)
+                                    .padding(.top, UIDevice.hasBottomBar ? 0 : tabRouter.hideTabBar ? nil : 8)
+                                    .opacity(scrambleController.scrambleStr == nil ? 1 : 0)
+                            }
                         }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)

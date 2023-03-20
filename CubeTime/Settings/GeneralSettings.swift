@@ -37,6 +37,7 @@ struct GeneralSettingsView: View {
     // timer tools
     @Preference(\.showScramble) private var showScramble
     @Preference(\.showStats) private var showStats
+    @Preference(\.showZenMode) private var showZenMode
     
     // accessibility
     @Preference(\.hapticEnabled) private var hapticFeedback
@@ -122,6 +123,13 @@ struct GeneralSettingsView: View {
                 DescribedSetting(description: "Show draw scramble or statistics on the timer screen.") {
                     SettingsToggle("Show draw scramble on timer", $showScramble)
                     SettingsToggle("Show stats on timer", $showStats)
+                }
+                var desc = "Show a button in the top right corner to enter zen mode."
+                if UIDevice.deviceIsPad {
+                    let _ = {desc += " Note that this is only applicable in compact UI mode (i.e. when the floating panel is not shown)."}()
+                }
+                DescribedSetting(description: LocalizedStringKey.init(desc)) {
+                    SettingsToggle("Show zen mode button", $showZenMode)
                 }
             }
             
