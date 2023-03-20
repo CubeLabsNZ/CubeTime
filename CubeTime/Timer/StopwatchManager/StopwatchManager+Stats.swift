@@ -235,6 +235,14 @@ extension StopwatchManager {
         self.bestAo12 = getBestAverage(of: 12)
         self.bestAo100 = getBestAverage(of: 100)
         
+        
+        if currentSession is CompSimSession {
+            let bpaWpa = getBpaWpa()
+            self.bpa = bpaWpa.bpa
+            self.wpa = bpaWpa.wpa
+            self.timeNeededForTarget = getTimeNeededForTarget()
+        }
+        
         try! managedObjectContext.save()
         
         timerController.secondsStr = formatSolveTime(secs: SettingsManager.standard.showPrevTime ? (self.solvesByDate.last?.time ?? 0) : 0)
