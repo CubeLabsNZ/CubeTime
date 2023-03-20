@@ -88,7 +88,7 @@ struct TimeBar: View {
                             Spacer()
                         }
                     } else {
-                        if solvegroup.solves!.count < 5 {
+                        if let solves = solvegroup.solves, solves.count < 5 {
                             HStack {
                                 Text("Current Average")
                                     .font(.title2.weight(.bold))

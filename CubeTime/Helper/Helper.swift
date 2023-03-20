@@ -267,7 +267,7 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
     
     let trim = 1
     
-    guard let solves = compsimsolvegroup.solves!.allObjects as? [Solve] else {return nil}
+    guard let solves = compsimsolvegroup.solves?.allObjects as? [Solve] else {return nil}
     
     if solves.count < 5 {
         return nil
