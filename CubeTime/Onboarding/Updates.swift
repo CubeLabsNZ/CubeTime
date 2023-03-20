@@ -62,7 +62,7 @@ let updatesList: [String: (majorAdditions: [ListPoint]?,
                                     
                                 ],
                                 bugFixes: [
-                                    ListPoint(1, "fix various dynamic type bugs"),
+                                    ListPoint(1, "fixed various dynamic type bugs"),
                                     ListPoint(1, "fixed calculator tool bugs"),
                                     ListPoint(1, "fixed comp sim crashing"),
                                     ListPoint(1, "fixed time distribution crashing"),
