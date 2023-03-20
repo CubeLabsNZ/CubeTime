@@ -215,7 +215,6 @@ struct TimeDetailView: View {
                                 }) {
                                     Image(systemName: "trash")
                                 }
-                                .frame(width: 35)
                             }
                             .padding(.top, 16)
                             .padding(.bottom, 4)
