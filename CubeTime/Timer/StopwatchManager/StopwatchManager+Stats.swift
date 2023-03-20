@@ -220,6 +220,7 @@ extension StopwatchManager {
         
         bestSingle = getMin() // Get min is super fast anyway
         phases = getAveragePhases()
+        sessionMean = getSessionMean()
         
         if recalcAO100 {
             self.currentAo100 = getCurrentAverage(of: 100)

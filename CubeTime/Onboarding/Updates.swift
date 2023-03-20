@@ -39,7 +39,7 @@ struct ListLine: View {
     var body: some View {
         HStack(alignment: .top, spacing: 8) {
             Text("–")
-                .recursiveMono(fontSize: 17, weight: .medium)
+                .recursiveMono(fontSize: 17, weight: .regular)
             
             Text(text)
         }
@@ -50,6 +50,31 @@ struct ListLine: View {
 let updatesList: [String: (majorAdditions: [ListPoint]?,
                            minorAdditions: [ListPoint]?,
                            bugFixes: [ListPoint]?)] = [
+                            "2.1": (
+                                majorAdditions: [
+                                    ListPoint(1, "added settings sync between devices")
+                                ],
+                                minorAdditions: [
+                                    ListPoint(1, "added ability to two-finger swipe on iPad trackpad to resize floating panel"),
+                                    ListPoint(1, "made 3-solve display display current average in compsim"),
+                                    ListPoint(1, "added toggle to play voice alert through ringer, following mute toggle"),
+                                    ListPoint(1, "allow audio alerts to play alongside background audio, eg: music"),
+                                    
+                                ],
+                                bugFixes: [
+                                    ListPoint(1, "fixed various dynamic type bugs"),
+                                    ListPoint(1, "fixed calculator tool bugs"),
+                                    ListPoint(1, "fixed comp sim crashing"),
+                                    ListPoint(1, "fixed time distribution crashing"),
+                                    ListPoint(1, "fixed inverted iPad trackpad gesture to show penalty bar"),
+                                    ListPoint(1, "fixed select all only selected shown solves"),
+                                    ListPoint(1, "fixed button text wrapping"),
+                                    ListPoint(1, "fixed stats not updating"),
+                                    ListPoint(1, "fixed text cutting off on smaller devices"),
+                                    ListPoint(1, "fixed long times wrapping in time detail"),
+                                ]
+                            ),
+                            
     "2.0": (
         majorAdditions: [
         ListPoint(1, "**Fresh new UI design**"),
@@ -141,7 +166,7 @@ struct Updates: View {
                     Group {
                         Update(update: updatesList["2.0"]!)
                         
-                        Text("Again, thanks for using this app! If anything goes wrong, like if the app crashes, please message me on discord (tim#0911) or open an issue on our github page (https://github.com/CubeStuffs/CubeTime/issues).")
+                        Text("Thanks for using this app! If anything goes wrong, please message me on discord (tim#0911) or open an issue on our github page (https://github.com/CubeStuffs/CubeTime/issues).")
                             .font(.body).fontWeight(.medium)
                     }
                     
@@ -178,11 +203,56 @@ struct Update: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("v2.0 is here!!")
+            Text("v2.0 is here!")
                 .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
                 .recursiveMono(fontSize: 21, weight: .semibold)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.vertical, 12)
+            
+            
+            Group {
+                Text("v2.1 changes:")
+                    .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
+                    .recursiveMono(fontSize: 15, weight: .semibold)
+
+                
+                Text("Major Additions: ")
+                    .font(.title3).fontWeight(.semibold)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(updatesList["2.1"]!.majorAdditions!, id: \.self) { point in
+                        ListLine(point.depth, .init(stringLiteral: point.text))
+                    }
+                }
+                .padding(.bottom)
+            
+                Text("Minor Additions: ")
+                    .font(.title3).fontWeight(.semibold)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(updatesList["2.1"]!.minorAdditions!, id: \.self) { point in
+                        ListLine(point.depth, .init(stringLiteral: point.text))
+                    }
+                }
+                .padding(.bottom)
+                
+                Text("Bug Fixes: ")
+                    .font(.title3).fontWeight(.semibold)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(updatesList["2.1"]!.bugFixes!, id: \.self) { point in
+                        ListLine(point.depth, .init(stringLiteral: point.text))
+                    }
+                }
+                .padding(.bottom)
+                .font(.callout)
+            }
+            
+            
+            
+            Text("v2.0 changes:")
+                .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
+                .recursiveMono(fontSize: 15, weight: .semibold)
             
             if let majorAdditions = majorAdditions {
                 Text("Major Additions: ")

@@ -79,6 +79,7 @@ extension StopwatchManager {
         
         bestSingle = getMin()
         phases = getAveragePhases()
+        sessionMean = getSessionMean()
         
         if (solvesByDate.suffix(100).contains(solve)) {
             self.currentAo100 = getCurrentAverage(of: 100)
@@ -108,6 +109,7 @@ extension StopwatchManager {
         guard let solveItem else {return}
         delete(solve: solveItem)
         timerController.secondsElapsed = 0
+        
         if !SettingsManager.standard.showPrevTime || currentSession is CompSimSession {
             if currentSession is CompSimSession {
                 statsGetFromCache()
@@ -116,6 +118,7 @@ extension StopwatchManager {
         } else {
             self.solveItem = solvesByDate.last
         }
+        
         timerController.secondsStr = formatSolveTime(secs: self.solveItem?.time ?? 0)
         tryUpdateCurrentSolveth()
     }

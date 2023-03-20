@@ -49,7 +49,8 @@ struct CubeTime: App {
         let newVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String)
         let currentVersion = UserDefaults.standard.string(forKey: "currentVersion")
         
-        self._showUpdates = State(initialValue: currentVersion != newVersion && !showOnboarding)
+//        self._showUpdates = State(initialValue: currentVersion != newVersion && !showOnboarding)
+        self._showUpdates = State(initialValue: currentVersion != newVersion)
         UserDefaults.standard.set(newVersion, forKey: "currentVersion")
         
         

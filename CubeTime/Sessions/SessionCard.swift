@@ -109,7 +109,7 @@ struct SessionCard: View {
                         .padding(.bottom, 4)
                 }
             }
-            .offset(x: stopwatchManager.currentSession == item ? 10 : 0)
+            .offset(x: stopwatchManager.currentSession == item ? 16 : 0)
             
             Spacer()
             

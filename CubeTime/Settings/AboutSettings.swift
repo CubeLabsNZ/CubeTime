@@ -94,6 +94,7 @@ struct LicensesPopUpView: View {
 struct AboutSettingsView: View {
     @AppStorage("onboarding") var showOnboarding = false
     @State var showLicenses = false
+    @State private var showUpdates = false
     @ScaledMetric(relativeTo: .largeTitle) var iconSize: CGFloat = 60
     let parentGeo: GeometryProxy
     private let versionString: String = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
@@ -164,6 +165,11 @@ struct AboutSettingsView: View {
             Text("\nIf you run into any issues, please visit our GitHub page and submit an issue. \nhttps://github.com/CubeStuffs/CubeTime/issues")
                 .fixedSize(horizontal: false, vertical: true)
             
+            Text("\nUpdates list:")
+            Button("Show updates list") {
+                self.showUpdates = true
+            }
+            
             #if false
             Text("\nIf you need a refresher on the primary features, you can see the welcome page again.")
             Button("Show welcome page") {
@@ -175,6 +181,9 @@ struct AboutSettingsView: View {
         .sheet(isPresented: $showLicenses) {
             LicensesPopUpView(showLicenses: $showLicenses)
                 .tint(Color("accent"))
+        }
+        .sheet(isPresented: $showUpdates) {
+            Updates(showUpdates: .constant(true))
         }
     }
 }

@@ -147,7 +147,7 @@ struct GeneralSettingsView: View {
                 SettingsDragger(text: UIDevice.deviceIsPad ? "Touch Gesture Activation Distance" : "Gesture Activation Distance", value: $gestureActivationDistance, in: 20...300)
                 
                 if UIDevice.deviceIsPad {
-                    SettingsDragger(text: "Trackpad Gesture Activation Distance", value: $gestureActivationDistance, in: 100...1000)
+                    SettingsDragger(text: "Trackpad Gesture Activation Distance", value: $gestureDistanceTrackpad, in: 100...1000)
                 }
                 
             }

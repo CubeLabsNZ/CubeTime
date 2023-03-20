@@ -6,27 +6,26 @@ final class SettingsManager {
     static let standard = SettingsManager(userDefaults: .default)
     fileprivate let userDefaults: NSUbiquitousKeyValueStore
     
+    fileprivate var keys: [String: AnyKeyPath] = [:]
+    
     var preferencesChangedSubject = PassthroughSubject<AnyKeyPath, Never>()
     
     @objc func ubiquitousKeyValueStoreDidChange(notification: NSNotification) {
-        NSLog("EXTERNAL CHANGE")
-        if let changeReason = notification.userInfo?[NSUbiquitousKeyValueStoreChangedKeysKey] {
-            NSLog("change: \(changeReason)")
+        if let changeReason = (notification.userInfo?[NSUbiquitousKeyValueStoreChangedKeysKey] as? NSArray)?.firstObject as? NSString,
+           let keyPath = self.keys[String(changeReason)] {
+            preferencesChangedSubject.send(keyPath)
         }
     }
-    
+
     init(userDefaults: NSUbiquitousKeyValueStore) {
         self.userDefaults = userDefaults
         let ret = userDefaults.synchronize()
-        #if DEBUG
-        NSLog("Syncronize returned: \(ret)")
-        #endif
+        
         NotificationCenter.default.addObserver(self,
             selector: #selector(
             ubiquitousKeyValueStoreDidChange),
             name: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
             object: self.userDefaults)
-
     }
     
     // MARK: - General Settings
@@ -156,6 +155,9 @@ struct UserDefault<Value> {
                 guard let pref = container.object(forKey: key) as? FeedbackType.RawValue else { return defaultValue }
                 return FeedbackType(rawValue: pref) as! Value? ?? defaultValue
             }
+            
+            instance.keys[key] = wrappedKeyPath
+            
             return container.object(forKey: key) as? Value ?? defaultValue
         }
         set {
@@ -175,7 +177,9 @@ final class PublisherObservableObject: ObservableObject {
     var subscriber: AnyCancellable?
     
     init(publisher: AnyPublisher<Void, Never>) {
-        subscriber = publisher.sink(receiveValue: { [weak self] _ in
+        subscriber = publisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
             self?.objectWillChange.send()
         })
     }
