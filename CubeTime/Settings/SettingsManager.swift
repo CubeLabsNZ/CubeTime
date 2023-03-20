@@ -11,7 +11,8 @@ final class SettingsManager {
     var preferencesChangedSubject = PassthroughSubject<AnyKeyPath, Never>()
     
     @objc func ubiquitousKeyValueStoreDidChange(notification: NSNotification) {
-        if let changeReason = (notification.userInfo?[NSUbiquitousKeyValueStoreChangedKeysKey] as? NSArray)?.firstObject as? NSString, let keyPath = self.keys[String(changeReason)] {
+        if let changeReason = (notification.userInfo?[NSUbiquitousKeyValueStoreChangedKeysKey] as? NSArray)?.firstObject as? NSString,
+           let keyPath = self.keys[String(changeReason)] {
             preferencesChangedSubject.send(keyPath)
         }
     }

@@ -122,7 +122,7 @@ struct TimeDistribution: View {
                     let medianxmax = (divs*CGFloat((count < 8 ? count : 8))+20)
                     let medianxmin = (divs+20)
                     
-                    let medianxloc = (medianxmax - medianxmin) * CGFloat(stopwatchManager.normalMedian.1!) + medianxmin
+                    let medianxloc = (medianxmax - medianxmin) * CGFloat(stopwatchManager.normalMedian.1 ?? 0) + medianxmin
                     
                     
                     Path { path in
