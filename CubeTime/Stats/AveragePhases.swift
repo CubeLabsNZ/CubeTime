@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-let phaseColours: [Color] = [.red, .orange, .yellow, .green, .mint, .teal, .cyan, .blue, Color("accent")]
-
 /// source: https://stackoverflow.com/a/46729248/17569741
 extension UIColor {
     func toColor(_ color: UIColor, percentage: CGFloat) -> UIColor {

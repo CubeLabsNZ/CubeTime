@@ -62,7 +62,7 @@ protocol Stat {
     func poppedSolve(solve: Solve) async
     func pushedSolve(solve: Solve) async
     func solveRemoved(solve: Solve) async
-    func solvePenChanged(solve: Solve, from: Penalty) async
+    func solvePenChanged(solve: Solve, from oldPen: Penalty) async
 }
 
 class StatMean: Stat {
@@ -216,7 +216,7 @@ class StatCurrentAverage: Stat {
         result = .value(.averageOf(avg))
     }
     
-    func solvePenChanged(solve: Solve, from: Penalty) async {
+    func solvePenChanged(solve: Solve, from oldPen: Penalty) async {
         if stopwatchManager.solves.count < x {
             return
         } else if !stopwatchManager.solvesByDate.suffix(x).contains(solve) {
