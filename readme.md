@@ -30,7 +30,7 @@
 1. [Overview](#overview)
 2. [Screenshots](#screenshots)
 3. [Features](#features)
-4. [User Guide](#user-guide)
+4. [Introductory User Guide](#introductory-user-guide)
 5. [Some final stuff](#some-final-stuff)
 
 ## Overview
@@ -70,6 +70,8 @@
 ### App Features
 - Built-in system haptics, and able to be changed to your liking
 
+- Audio alerts in inspection
+
 - All the basic timing functionalities, and fully customisable:
    * Customisable hold down time
    * Inspection time
@@ -87,16 +89,17 @@
   * pinnable sessions for easy access
 
 - Simple card design for viewing your times
-  * Searchable times, along with quick and easy to use sort functionality - to sort your times by date or by speed
-  * Batch select times for deletion, adding penalties, or to move to a different session
+  * Searchable times, along with quick and easy to use sort and filter functionality - to sort your times by date or by speed, and filter by comment, scramble type and penalty
+  * Batch select times for deletion, adding penalties, moving to a different session, or copying
   * Add comments for special solves
+  * Long-press menu for easy access to solve options
 
 - Extensive statistics and solve analysis:
   * Visual graphs for your sessions
     * Such as time trend, time distribution and other graphs
-  * All standard calculations, including best and current averages of 5, 12 and 100, session mean, median
+  * All standard calculations, including best and current averages of 5, 12 and 100, session mean, median, and many more
 
-- Other tools, including special ones for Comp Sim, such as:
+- Other stats and tools, including special ones for compsim, such as:
   * calculating your bpa and wpa
   * calculating time needed to secure certain averages
   * batch scramble generator
@@ -107,7 +110,8 @@
   * Trackpad support
   * Multitasking window support
   
-- CloudKit® for iCloud® time syncing
+- CloudKit® for iCloud® session and solve syncing
+- iCloud® settings syncing – so all your settings are the same across devices
      
 ### Upcoming Features
 
@@ -117,9 +121,9 @@ Here's an outline of some of the major upcoming features
 - Support for stackmats
 - Importing sessions and solves from common timers, such as ChaoTimer and csTimer
 - Easy to use export to save your sessions
+- Algorithm Trainer and more to come...
 
-
-## User Guide
+## Introductory User Guide
 
 ### Timer
 Press and hold until the timer turns green to start. You can change the hold time in settings.
@@ -128,38 +132,42 @@ The default gestures are as follows:
 - swipe right to generate a new scramble
 - swipe down to add a penalty
 
+On iPads, you can use your trackpad to two-finger swipe in the same way as your finger.
+
 ### Time List
 All your solves in the currently selected session will be displayed in your time list.
-You can sort your times by pressing "Sort by Date" or "Sort by Time". The button to the right will sort by ascending or descending order.
 Pressing the select button on the top right will enter selection mode, where you can batch select, delete, move or penalise solves.
-Swiping down will reveal the search bar, where you can search for your times.
+Pressing on the seach icon will reveal the search bar, where you can search for your times.
+You can also filter for scramble types, penalties and comments, along with sorting your times.
 Searching while in select mode will preserve your current selection.
 
 Clicking on a solve will bring up the solve details, the time, date, event and scramble.
 You can add a comment if you wish by typing in the comment box.
 "Copy Solve" will copy the solve details to your clipboard.
+"Share Solve" allows you to share it to other apps or save as a file.
 
 ### Stats
 The default stats view shows your current and best averages of 5, 12 and 100, the number of solves in the session, session mean and your best single.
 Clicking on each of the stats will bring up a detail view, such as the solves in your average.
 
-You can customise the graphs by pressing and holding on the graph.
-
 ### Sessions
 Create a new session by clicking the "New Session" button.
 You can select from different types of sessions:
 1. Standard Session: is a normal session where the scramble is fixed to the session event
-2. Algorithm Trainer: generates scrambles that allow you to train a certain algset
-3. Multiphase: times many phases during your solve, useful in blind or analysing your solve breakdown
-4. Playground: session with no fixed scramble type, you can change the scramble within the session
-5. Comp Sim: non-rolling session that records solves in averages of x, instead of a big session
+2. Multiphase: times many phases during your solve, useful in blind or analysing your solve breakdown
+3. Playground: session with no fixed scramble type, you can change the scramble within the session
+4. Comp Sim: non-rolling session that records solves in averages of x, instead of a big session. Simulates competitions
 
-Pinning a session will make the session bigger, and you can pin a session when creating or by long pressing on a session to access the menu.
+Pinning a session will make the session bigger and stickied at the top of sessions, and you can pin a session when creating or by long pressing on a session to access the menu.
 Deleting a session will delete *all* your solves in that session, so be careful!
 
 ### Settings
 You can customise almost all settings in the app and the appearance and themes.
 
+### Tools
+You can access the tools menu through settings on iPhone (or split view iPad) and through the menu icon on large iPad modes. CubeTime has basic timer and scramble only modes, along with a batch scramble generator and average calculator.
+
 ## Some final stuff
 As we are using the official TNoodle scrambler library, please see our [transpiled tnoodle-lib-objc repo](https://github.com/CubeStuffs/tnoodle-lib-objc) for more information. 
+
 iPad and App Store are trademarks of Apple Inc., registered in the U.S. and other countries.
