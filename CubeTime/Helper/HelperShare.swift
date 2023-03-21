@@ -75,7 +75,7 @@ func getShareStr(solves: CalculatedAverage) -> String {
             str += formattedTime
         }
         
-        str += ":\t"+pair.1.scramble!
+        str += ":\t"+(pair.1.scramble ?? "Retrieving scramble failed.")
     }
     
     return str
