@@ -28,7 +28,6 @@ struct AppearanceSettingsView: View {
     var body: some View {
         VStack(spacing: 16) {
             SettingsGroup(Label("Colours", systemImage: "paintbrush.pointed.fill")) {
-                
                 DescribedSetting(description: "Customise the gradients used in stats. By default, the gradient is set to \"Static\". You can choose to set it to \"Dynamic\", where the gradient will change throughout the day.") {
                     HStack() {
                         Text("Gradient")
@@ -55,7 +54,7 @@ struct AppearanceSettingsView: View {
                         HStack(spacing: 16) {
                             VStack(spacing: 4) {
                                 Text("STATIC GRADIENT")
-                                    .foregroundColor(Color("grey"))
+                                    .foregroundColor(Color("dark"))
                                     .font(.footnote.weight(.semibold))
                                 
                                 ZStack {
@@ -76,7 +75,7 @@ struct AppearanceSettingsView: View {
                             
                             VStack(spacing: 2) {
                                 Text("DYNAMIC GRADIENT")
-                                    .foregroundColor(Color("grey"))
+                                    .foregroundColor(Color("dark"))
                                     .font(.footnote.weight(.semibold))
                                 
                                 ZStack {
@@ -104,6 +103,8 @@ struct AppearanceSettingsView: View {
                             }
                         }
                     }
+                    .padding(.bottom, 4)
+                    .padding(.top, 8)
                 }
                 
                 ThemedDivider()
@@ -116,6 +117,7 @@ struct AppearanceSettingsView: View {
                     SettingsToggle("Graph Animation", $graphAnimation)
                 })
             }
+            .clipped()
             
             SettingsGroup(Label("System Settings", systemImage: "command")) {
                 SettingsToggle("Override System Appearance", $overrideSystemAppearance)

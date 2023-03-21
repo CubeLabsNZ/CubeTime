@@ -212,7 +212,7 @@ struct SettingsDetail: View {
                             .frame(maxHeight: 125)
                             .padding(.bottom)
                     }
-                    .safeAreaInset(safeArea: .tabBar)
+                    .safeAreaInset(safeArea: .tabBar, avoidBottomBy: 50)
 
                     VStack {
                         ZStack {

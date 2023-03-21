@@ -59,7 +59,7 @@ struct DescribedSetting<V: View>: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 6) {
             content()
             
             Text(description)
