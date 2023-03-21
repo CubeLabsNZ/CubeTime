@@ -120,9 +120,11 @@ struct GeneralSettingsView: View {
             }
             
             SettingsGroup(Label("Timer Tools", systemImage: "wrench")) {
-                DescribedSetting(description: "Show draw scramble or statistics on the timer screen.") {
+                DescribedSetting(description: "Show tools on the timer screen.") {
                     SettingsToggle("Show draw scramble on timer", $showScramble)
-                    SettingsToggle("Show stats on timer", $showStats)
+                    if !UIDevice.deviceIsPad {
+                        SettingsToggle("Show stats on timer", $showStats)
+                    }
                 }
                 var desc = "Show a button in the top right corner to enter zen mode."
                 if UIDevice.deviceIsPad {

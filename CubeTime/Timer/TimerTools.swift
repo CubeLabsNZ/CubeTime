@@ -23,7 +23,7 @@ struct BottomTools: View {
             
             Spacer(minLength: 0)
             
-            if showStats {
+            if showStats || UIDevice.deviceIsPad {
                 BottomToolContainer {
                     if stopwatchManager.currentSession.sessionType == SessionType.compsim.rawValue {
                         TimerStatsCompSim()
