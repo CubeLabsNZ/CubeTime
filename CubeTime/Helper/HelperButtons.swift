@@ -153,6 +153,7 @@ struct CTButton<Base: View>: View {
     var body: some View { self.button.buttonStyle(CTButtonStyle()) }
 }
 
+#warning("todo: set image scale here instead of per button -> inconsistent!")
 struct CTButtonBase<V: View>: View {
     let content: V
     
