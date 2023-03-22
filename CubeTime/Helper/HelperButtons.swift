@@ -121,20 +121,8 @@ struct CTButtonStyle: ButtonStyle {
     }
 }
 
-struct CTButton<V: View>: View {
-    let type: CTButtonType
-    let size: CTButtonSize
-    
-    let outlined: Bool
-    let square: Bool
-    
-    let hasShadow: Bool
-    let hasBackground: Bool
-    
-    let expandWidth: Bool
-        
-    let onTapRun: () -> Void
-    @ViewBuilder let content: () -> V
+struct CTButton<Base: View>: View {
+    let button: Button<CTButtonBase<Base>>
     
     init(type: CTButtonType,
          size: CTButtonSize,
@@ -142,41 +130,30 @@ struct CTButton<V: View>: View {
          square: Bool=false,
          hasShadow: Bool=true,
          hasBackground: Bool=true,
+         supportsDynamicResizing: Bool=true,
          expandWidth: Bool=false,
          onTapRun: @escaping () -> Void,
-         @ViewBuilder _ content: @escaping () -> V) {
-        self.type = type
-        self.size = size
+         @ViewBuilder _ content: @escaping () -> Base) {
         
-        self.outlined = outlined
-        self.square = square
-        
-        self.hasShadow = hasShadow
-        self.hasBackground = hasBackground
-        
-        self.expandWidth = expandWidth
-        
-        self.onTapRun = onTapRun
-        self.content = content
+        self.button = Button {
+            onTapRun()
+        } label: {
+            CTButtonBase(type: type,
+                         size: size,
+                         outlined: outlined,
+                         square: square,
+                         hasShadow: hasShadow,
+                         hasBackground: hasBackground,
+                         supportsDynamicResizing: supportsDynamicResizing,
+                         expandWidth: expandWidth,
+                         content: content)
+        }
     }
     
-    var body: some View {
-        Button {
-            self.onTapRun()
-        } label: {
-            CTButtonBase(type: self.type,
-                                  size: self.size,
-                                  outlined: self.outlined,
-                                  square: self.square,
-                                  hasShadow: self.hasShadow,
-                                  hasBackground: self.hasBackground,
-                                  expandWidth: expandWidth,
-                                  content: self.content)
-        }
-        .buttonStyle(CTButtonStyle())
-    }
+    var body: some View { self.button.buttonStyle(CTButtonStyle()) }
 }
 
+#warning("todo: set image scale here instead of per button -> inconsistent!")
 struct CTButtonBase<V: View>: View {
     let content: V
     
@@ -184,7 +161,8 @@ struct CTButtonBase<V: View>: View {
     let colourFg: Color
     let colourShadow: Color
     
-    @ScaledMetric var frameHeight: CGFloat
+    @ScaledMetric var dynamicHeight: CGFloat = 0
+    var staticHeight: CGFloat = 0
     
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     
@@ -196,6 +174,8 @@ struct CTButtonBase<V: View>: View {
     let hasShadow: Bool
     let hasBackground: Bool
     
+    let supportsDynamicResizing: Bool
+    
     let expandWidth: Bool
     
     @State private var hovering: Bool = false
@@ -206,6 +186,7 @@ struct CTButtonBase<V: View>: View {
          square: Bool,
          hasShadow: Bool,
          hasBackground: Bool,
+         supportsDynamicResizing: Bool,
          expandWidth: Bool,
          content: @escaping () -> V) {
         switch (type) {
@@ -241,28 +222,48 @@ struct CTButtonBase<V: View>: View {
 
         }
         
-    
+        self.supportsDynamicResizing = supportsDynamicResizing
         
         switch (size) {
         case .small:
-            self._frameHeight = ScaledMetric(wrappedValue: 28, relativeTo: .callout)
+            if (supportsDynamicResizing) {
+                self._dynamicHeight = ScaledMetric(wrappedValue: 28, relativeTo: .callout)
+            } else {
+                self.staticHeight = 28
+            }
+            
             self.horizontalPadding = 8
             self.fontType = Font.callout.weight(.medium)
             
             
         case .medium:
-            self._frameHeight = ScaledMetric(wrappedValue: 32, relativeTo: .body)
+            if (supportsDynamicResizing) {
+                self._dynamicHeight = ScaledMetric(wrappedValue: 32, relativeTo: .body)
+            } else {
+                self.staticHeight = 32
+            }
+            
             self.horizontalPadding = 10
             self.fontType = Font.body.weight(.medium)
             
             
         case .large:
-            self._frameHeight = ScaledMetric(wrappedValue: 35, relativeTo: .body)
+            if (supportsDynamicResizing) {
+                self._dynamicHeight = ScaledMetric(wrappedValue: 35, relativeTo: .body)
+            } else {
+                self.staticHeight = 35
+            }
+            
             self.horizontalPadding = 12
             self.fontType = Font.body.weight(.medium)
         
         case .ultraLarge:
-            self._frameHeight = ScaledMetric(wrappedValue: 48, relativeTo: .title3)
+            if (supportsDynamicResizing) {
+                self._dynamicHeight = ScaledMetric(wrappedValue: 48, relativeTo: .title3)
+            } else {
+                self.staticHeight = 48
+            }
+            
             self.horizontalPadding = 16
             self.fontType = Font.title3.weight(.semibold)
             
@@ -279,15 +280,17 @@ struct CTButtonBase<V: View>: View {
     
     var body: some View {
         ZStack {
+            let frameHeight: CGFloat = (self.supportsDynamicResizing ? self.dynamicHeight : self.staticHeight)
+            
             if (self.hasBackground) {
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
                     .fill(Material.thinMaterial)
-                    .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
+                    .frame(width: square ? frameHeight : nil, height: frameHeight)
             }
             
             RoundedRectangle(cornerRadius: 6, style: .continuous)
                 .fill(self.hasBackground ? self.colourBg.opacity(0.92) : Color.white.opacity(0.001))
-                .frame(width: square ? self.frameHeight : nil, height: self.frameHeight)
+                .frame(width: square ? frameHeight : nil, height: frameHeight)
                 .shadow(color: self.hasShadow
                         ? self.colourShadow
                         : Color.clear,
@@ -318,17 +321,26 @@ struct CTButtonBase<V: View>: View {
 // MARK: - Close Button
 struct CTCloseButton: View {
     let hasBackgroundShadow: Bool
+    let supportsDynamicResizing: Bool
     let onTapRun: () -> Void
     
-    init(hasBackgroundShadow: Bool=false, onTapRun: @escaping () -> Void) {
+    init(hasBackgroundShadow: Bool=false, supportsDynamicResizing: Bool=true, onTapRun: @escaping () -> Void) {
         self.hasBackgroundShadow = hasBackgroundShadow
+        self.supportsDynamicResizing = supportsDynamicResizing
         self.onTapRun = onTapRun
     }
     
     var body: some View {
-        CTButton(type: .mono, size: .medium, square: true, hasShadow: hasBackgroundShadow, hasBackground: hasBackgroundShadow, onTapRun: self.onTapRun) {
-            Image(systemName: "xmark")
-                .imageScale(.medium)
+        CTButton(type: .mono, size: .medium, square: true, hasShadow: hasBackgroundShadow, hasBackground: hasBackgroundShadow, supportsDynamicResizing: supportsDynamicResizing, onTapRun: self.onTapRun) {
+            if (supportsDynamicResizing) {
+                Image(systemName: "xmark")
+                    .imageScale(.medium)
+            } else {
+                Image(systemName: "xmark")
+                    .font(.system(size: 16, weight: .medium))
+            }
+            
+                
         }
     }
 }

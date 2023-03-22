@@ -215,7 +215,6 @@ struct TimeDetailView: View {
                                 }) {
                                     Image(systemName: "trash")
                                 }
-                                .frame(width: 35)
                             }
                             .padding(.top, 16)
                             .padding(.bottom, 4)
@@ -245,7 +244,7 @@ struct TimeDetailView: View {
                                     currentSolve = nil
                                     dismiss()
                                 } label: {
-                                    CTButtonBase(type: .mono, size: .medium, outlined: false, square: false, hasShadow: true, hasBackground: true, expandWidth: false) {
+                                    CTButtonBase(type: .mono, size: .medium, outlined: false, square: false, hasShadow: true, hasBackground: true, supportsDynamicResizing: true, expandWidth: false) {
                                         Label("Move to…", systemImage: "arrow.up.right")
                                     }
                                 }

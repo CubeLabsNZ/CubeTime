@@ -12,8 +12,11 @@ enum ProjectLicense: String {
 
 
 struct LicensePopUpView: View {
-    @Environment(\.dismiss) var dismiss
-    @Binding var projectLicense: ProjectLicense?
+    var projectLicense: ProjectLicense?
+    
+    init(for projectLicense: ProjectLicense?) {
+        self.projectLicense = projectLicense
+    }
     
     var body: some View {
         ScrollView {
@@ -30,6 +33,7 @@ struct LicensePopUpView: View {
                 RecursiveLicense()
             case .privacypolicy:
                 PrivacyPolicy()
+                
             default:
                 Text("Could not get license for project")
             }
@@ -40,46 +44,26 @@ struct LicensePopUpView: View {
 }
 
 
-struct LicensesPopUpView: View {
+struct LicensesView: View {
     @Environment(\.dismiss) var dismiss
-    @State var showLicense = false
-    @Binding var showLicenses: Bool
-    @State var projectLicense: ProjectLicense?
     
     var body: some View {
         NavigationView {
-            ZStack {
-                NavigationLink("", destination: LicensePopUpView(projectLicense: $projectLicense), isActive: $showLicense)
+            List {
+                Section("Licenses") {
+                    NavigationLink(ProjectLicense.cubetime.rawValue, destination: LicensePopUpView(for: .cubetime))
+                    NavigationLink(ProjectLicense.tnoodle.rawValue, destination: LicensePopUpView(for: .tnoodle))
+                    NavigationLink(ProjectLicense.chartview.rawValue, destination: LicensePopUpView(for: .chartview))
+                    NavigationLink(ProjectLicense.icons.rawValue, destination: LicensePopUpView(for: .icons))
+                    NavigationLink(ProjectLicense.recursivefont.rawValue, destination: LicensePopUpView(for: .recursivefont))
+                }
                 
-                List {
-                    Button(ProjectLicense.cubetime.rawValue) {
-                        projectLicense = .cubetime
-                        showLicense = true
-                    }
-                    Button(ProjectLicense.tnoodle.rawValue) {
-                        projectLicense = .tnoodle
-                        showLicense = true
-                    }
-                    Button(ProjectLicense.chartview.rawValue) {
-                        projectLicense = .chartview
-                        showLicense = true
-                    }
-                    Button(ProjectLicense.icons.rawValue) {
-                        projectLicense = .icons
-                        showLicense = true
-                    }
-                    Button(ProjectLicense.recursivefont.rawValue) {
-                        projectLicense = .recursivefont
-                        showLicense = true
-                    }
-                    Button(ProjectLicense.privacypolicy.rawValue) {
-                        projectLicense = .privacypolicy
-                        showLicense = true
-                    }
+                Section("Privacy Policy") {
+                    NavigationLink(ProjectLicense.privacypolicy.rawValue, destination: LicensePopUpView(for: .privacypolicy))
                 }
             }
             .listStyle(.insetGrouped)
-            .navigationTitle("Licenses")
+            .navigationTitle("Boring stuff")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     CTDoneButton(onTapRun: {
@@ -100,7 +84,7 @@ struct AboutSettingsView: View {
     private let versionString: String = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
     
     var body: some View {
-        VStack (alignment: .leading, spacing: 2) {
+        VStack (alignment: .leading) {
             HStack(alignment: .bottom) {
                 Image("about-icon")
                     .resizable()
@@ -118,6 +102,8 @@ struct AboutSettingsView: View {
                         .recursiveMono(fontSize: 15, weight: .semibold)
                         .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
                 }
+                
+                Spacer()
             }
             .frame(height: iconSize)
             .padding(.bottom, 12)
@@ -127,27 +113,27 @@ struct AboutSettingsView: View {
             #endif
             
             
-            Text("CubeTime is licensed under the GNU GPL v3 license, and uses open source projects and libraries.\n\nClick below for more info on source licenses and our privacy policy:")
+            Text("CubeTime is open source and licensed under the GNU GPL v3 license.\n\nWe use many open source projects and libraries, and you can view their respective licenses, along with our privacy policy below:")
                 .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
-                            
-            Button("Open licenses") {
-                showLicenses = true
-            }
             
-            Text("\nThis project is made possible by [speedcube.co.nz](https://www.speedcube.co.nz/).")
+            CTButton(type: .halfcoloured, size: .medium, onTapRun: {
+                showLicenses = true
+            }) {
+                Label("Open Licenses & Privacy Policy", systemImage: "arrow.up.forward.square")
+                    .imageScale(.medium)
+            }
+            .padding(.top, -6)
+            
+            Text("\nCubeTime is made possible by [speedcube.co.nz](https://www.speedcube.co.nz/).")
                 .fixedSize(horizontal: false, vertical: true)
+            
             Text("\nSupport us directly by donating on Ko-Fi:")
                 .fixedSize(horizontal: false, vertical: true)
             
             Button {
-                guard let kofiLink = URL(string: "https://ko-fi.com/cubetime"),
-                      UIApplication.shared.canOpenURL(kofiLink) else {
-                          return
-                      }
-                UIApplication.shared.open(kofiLink,
-                                          options: [:],
-                completionHandler: nil)
+                guard let kofiLink = URL(string: "https://ko-fi.com/cubetime"), UIApplication.shared.canOpenURL(kofiLink) else { return }
+                UIApplication.shared.open(kofiLink, options: [:], completionHandler: nil)
             } label: {
                 HStack {
                     Spacer()
@@ -161,14 +147,18 @@ struct AboutSettingsView: View {
                     Spacer()
                 }
             }
+            .padding(.top, -8)
             
             Text("\nIf you run into any issues, please visit our GitHub page and submit an issue. \nhttps://github.com/CubeStuffs/CubeTime/issues")
                 .fixedSize(horizontal: false, vertical: true)
             
-            Text("\nUpdates list:")
-            Button("Show updates list") {
+            CTButton(type: .halfcoloured, size: .medium, onTapRun: {
                 self.showUpdates = true
+            }) {
+                Text("Show Updates List")
             }
+            .padding(.top, 6)
+            
             
             #if false
             Text("\nIf you need a refresher on the primary features, you can see the welcome page again.")
@@ -179,7 +169,7 @@ struct AboutSettingsView: View {
         }
         .padding(.horizontal)
         .sheet(isPresented: $showLicenses) {
-            LicensesPopUpView(showLicenses: $showLicenses)
+            LicensesView()
                 .tint(Color("accent"))
         }
         .sheet(isPresented: $showUpdates) {

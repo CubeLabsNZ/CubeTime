@@ -29,6 +29,7 @@ struct SettingsGroup<L: View, V: View>: View {
             label
                 .labelStyle(SettingsHeaderLabelStyle())
                 .padding([.horizontal, .top], 10)
+            
             VStack(alignment: .leading, content: content)
                 .padding(.horizontal)
         }
@@ -58,7 +59,7 @@ struct DescribedSetting<V: View>: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 6) {
             content()
             
             Text(description)
@@ -130,7 +131,7 @@ struct SettingsPicker<SelectionValue: Hashable, V: View>: View {
             
             Spacer()
             
-            Picker("Test", selection: $selection) {
+            Picker("", selection: $selection) {
                 content()
             }
             .frame(maxWidth: maxWidth)

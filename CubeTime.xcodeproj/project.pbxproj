@@ -13,7 +13,6 @@
 		2326436028C4927600F6322E /* TimerHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435F28C4927600F6322E /* TimerHeader.swift */; };
 		23329E9029C31CA60017AE99 /* libz.1.1.3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 23329E8F29C31CA60017AE99 /* libz.1.1.3.tbd */; settings = {ATTRIBUTES = (Required, ); }; };
 		233FE7B6274F109600C6F1DF /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Helper.swift */; };
-		2345BA8129C6F298000F5770 /* TNoodleLibNative.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2359689227A367A0003ED9E1 /* StopwatchManager.swift */; };
 		235CDA0327A786D800F48C89 /* Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235CDA0227A786D800F48C89 /* Updates.swift */; };
 		235D6A6729C2C060002D90D8 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6629C2C060002D90D8 /* Models.swift */; };
@@ -112,7 +111,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				2345BA8129C6F298000F5770 /* TNoodleLibNative.xcframework in Embed Libraries */,
 			);
 			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -258,7 +256,6 @@
 		23A73F5C276B0AA100153748 /* Timer */ = {
 			isa = PBXGroup;
 			children = (
-				23CA8A0229AAF894006676BF /* StopwatchManager */,
 				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
 				23B7AC3929BAB2E300B5C9B4 /* TimerTools.swift */,
 				2326435F28C4927600F6322E /* TimerHeader.swift */,
@@ -396,6 +393,7 @@
 				23DC2F8829C7EAD00040A5F5 /* Onboarding */,
 				235D6A6429C2BEFA002D90D8 /* Helper */,
 				23A73F5D276B0AC800153748 /* Tabs */,
+				23CA8A0229AAF894006676BF /* StopwatchManager */,
 				23A73F5C276B0AA100153748 /* Timer */,
 				23A73F5E276B0AED00153748 /* TimeList */,
 				23E81E75275D917000B741E3 /* Stats */,
@@ -849,7 +847,7 @@
 				CODE_SIGN_ENTITLEMENTS = CubeTime/CubeTime.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CubeTime/Preview Content\"";
 				DEVELOPMENT_TEAM = 52VS5QG4YD;
 				ENABLE_BITCODE = NO;
@@ -877,7 +875,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "";
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.cubetime;
@@ -898,7 +896,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = accent;
 				CODE_SIGN_ENTITLEMENTS = CubeTime/CubeTime.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CubeTime/Preview Content\"";
 				DEVELOPMENT_TEAM = 52VS5QG4YD;
 				ENABLE_BITCODE = NO;
@@ -926,7 +924,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "";
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cubetime.cubetime;

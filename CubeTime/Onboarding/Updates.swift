@@ -59,7 +59,7 @@ let updatesList: [String: (majorAdditions: [ListPoint]?,
                                     ListPoint(1, "made 3-solve display show current average in compsim"),
                                     ListPoint(1, "added toggle to play voice alert through ringer, following mute toggle"),
                                     ListPoint(1, "allow audio alerts to play alongside background audio, eg: music"),
-                                    ListPoint(1, "add zen mode on iPhone"),
+                                    ListPoint(1, "added zen mode on iPhone"),
                                     
                                 ],
                                 bugFixes: [
@@ -90,7 +90,7 @@ let updatesList: [String: (majorAdditions: [ListPoint]?,
                 ListPoint(3, "fixes OOM crashes on older phones"),
                 ListPoint(3, "fixes launch crash on iPod 7th Gen"),
         ListPoint(1, "**Improved stats engine**"),
-            ListPoint(2, "over 100x faster speeds"),
+            ListPoint(2, "over 100x faster"),
         ListPoint(1, "**iPad Mode is here!**"),
             ListPoint(2, "iPad mode supports many keyboard shortcuts, along with **trackpad gestures**"),
                 ListPoint(3, "you can two-finger swipe on your trackpad, just like using a finger"),
@@ -204,7 +204,7 @@ struct Update: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("v2.0 is here!")
+            Text("CubeTime v2 is here!")
                 .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
                 .recursiveMono(fontSize: 21, weight: .semibold)
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -215,6 +215,7 @@ struct Update: View {
                 Text("v2.1 changes:")
                     .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
                     .recursiveMono(fontSize: 15, weight: .semibold)
+                    .padding(.top, 8)
 
                 
                 Text("Major Additions: ")

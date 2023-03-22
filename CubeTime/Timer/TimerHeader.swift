@@ -118,20 +118,22 @@ struct TimerHeader: View {
                     if #available(iOS 16, *) {
                         Picker("", selection: $stopwatchManager.playgroundScrambleType) {
                             ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
-                                Text(element.name).tag(Int32(index))
+                                Text(element.name).tag(Int32(index)).font(.body)
                             }
                         }
                         .pickerStyle(.menu)
+                        .font(.body)
                         .scaleEffect(17/scale)
                         .frame(maxHeight: .infinity)
                     } else {
                         Picker("", selection: $stopwatchManager.playgroundScrambleType) {
                             ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
-                                Text(element.name).tag(Int32(index))
+                                Text(element.name).tag(Int32(index)).font(.body)
                             }
                         }
                         .pickerStyle(.menu)
                         .accentColor(Color("accent"))
+                        .font(.body)
                         .frame(maxHeight: .infinity)
                         .padding(.trailing, 8)
                     }
