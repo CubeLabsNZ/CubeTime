@@ -272,8 +272,8 @@ struct TimerView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .ignoresSafeArea()
                     .onSubmit {
-                        if (!typingMode) {
-                            if manualInputTime != "" {
+                        if manualInputTime != "" {
+                            if (!typingMode) {
                                 // record entered time time
                                 timerController.stop(timeFromStr(manualInputTime))
                                 
@@ -281,17 +281,18 @@ struct TimerView: View {
                                 showInputField = false
                                 manualInputFocused = false
                                 manualInputTime = ""
+                            } else {
+                                timerController.stop(timeFromStr(manualInputTime))
+                                
+                                
+                                // remove focus and reset time
+                                manualInputFocused = false
+                                justManuallyInput = true
+                                
+                                stopwatchManager.displayPenOptions()
+                                
+                                showManualInputFormattedText = true
                             }
-                        } else {
-                            timerController.stop(timeFromStr(manualInputTime))
-                            
-                            // remove focus and reset time
-                            manualInputFocused = false
-                            justManuallyInput = true
-                            
-                            stopwatchManager.displayPenOptions()
-                            
-                            showManualInputFormattedText = true
                         }
                     }
             }
