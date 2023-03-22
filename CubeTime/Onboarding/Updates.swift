@@ -210,6 +210,16 @@ struct Update: View {
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.vertical, 12)
             
+            Text("v2.1.1 changes:")
+                .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
+                .recursiveMono(fontSize: 15, weight: .semibold)
+                .padding(.top, 8)
+            
+            Text("Bug Fixes: ")
+                .font(.title3).fontWeight(.semibold)
+            
+            ListLine(1, .init(stringLiteral: "fixed time trend graph bug"))
+            
             
             Group {
                 Text("v2.1 changes:")

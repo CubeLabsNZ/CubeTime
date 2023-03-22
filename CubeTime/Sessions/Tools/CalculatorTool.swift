@@ -167,7 +167,7 @@ struct CalculatorTool: View {
                                         Text("SOLVE \(solves.count + 1)")
                                     } else {
                                         Text("= " + formatSolveTime(secs: StopwatchManager.calculateAverage(forSortedSolves: solves.sorted(), count: 5, trim: 1),
-                                                                    penType: solves.sorted()[3].penalty == .dnf ? .dnf : .none ))
+                                                                    penType: solves.sorted()[3].penalty == .dnf ? Penalty.dnf : Penalty.none ))
                                             .font(.largeTitle.weight(.bold))
                                             .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
                                     }
