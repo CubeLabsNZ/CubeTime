@@ -643,20 +643,18 @@ extension StopwatchManager {
         if let compsimSession = currentSession as? CompSimSession {
             let solveGroups = compsimSolveGroups!
             
-            if solveGroups.count == 0 { return nil } else {
-                let lastGroupSolves = (solveGroups.first!.solves!.allObjects as! [Solve])
-                if lastGroupSolves.count == 4 {
+            let target = compsimSession.target
+            
+            if let bpa = self.bpa, let wpa = self.wpa {
+                if wpa.average < target {
+                    return .guaranteed
+                } else if bpa.average > target {
+                    return .notPossible
+                } else {
+                    let lastGroupSolves = (solveGroups.first!.solves!.allObjects as! [Solve])
                     let sortedGroup = lastGroupSolves.sorted(by: Self.sortWithDNFsLast)
-                    
                     let timeNeededForTarget = (compsimSession as CompSimSession).target * 3 - (sortedGroup.dropFirst().dropLast().reduce(0) {$0 + $1.timeIncPen})
-                    
-                    if timeNeededForTarget < sortedGroup.last!.time {
-                        return .notPossible
-                    } else if timeNeededForTarget > sortedGroup.first!.time && !sortedGroup.contains(where: {$0.penalty == Penalty.dnf.rawValue}) {
-                        return .guaranteed
-                    } else {
-                        return .value(timeNeededForTarget)
-                    }
+                    return .value(timeNeededForTarget)
                 }
             }
         } else { return nil }
