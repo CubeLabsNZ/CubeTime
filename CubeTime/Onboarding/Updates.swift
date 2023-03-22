@@ -52,10 +52,10 @@ let updatesList: [String: (majorAdditions: [ListPoint]?,
                            bugFixes: [ListPoint]?)] = [
                             "2.1": (
                                 majorAdditions: [
-                                    ListPoint(1, "added settings sync between devices")
+                                    ListPoint(1, "added settings sync between devices"),
+                                    ListPoint(1, "**added ability to two-finger swipe on iPad trackpad to resize floating panel**")
                                 ],
                                 minorAdditions: [
-                                    ListPoint(1, "added ability to two-finger swipe on iPad trackpad to resize floating panel"),
                                     ListPoint(1, "made 3-solve display show current average in compsim"),
                                     ListPoint(1, "added toggle to play voice alert through ringer, following mute toggle"),
                                     ListPoint(1, "allow audio alerts to play alongside background audio, eg: music"),
