@@ -68,6 +68,31 @@ struct DescribedSetting<V: View>: View {
     }
 }
 
+struct ConditionalSetting<V: View>: View {
+    @ViewBuilder let content: () -> V
+    let condition: Bool
+    
+    init(showIf condition: Bool, @ViewBuilder _ content: @escaping () -> V) {
+        self.condition = condition
+        self.content = content
+    }
+    
+    var body: some View {
+        VStack {
+            if condition {
+                content()
+            } else {
+                Spacer()
+                    .frame(maxHeight: 10)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 2)
+        .clipped()
+        .padding(.horizontal, -2)
+    }
+}
+
 struct SettingsToggle: View {
     let text: String
     @Binding var isOn: Bool

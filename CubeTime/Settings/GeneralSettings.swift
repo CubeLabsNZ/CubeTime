@@ -63,7 +63,7 @@ struct GeneralSettingsView: View {
                 
                 SettingsToggle("Use Inspection", $inspectionTime)
                 
-                if inspectionTime {
+                ConditionalSetting(showIf: inspectionTime) {
                     SettingsToggle("Inspection Counts Down", $insCountDown)
                     
                     DescribedSetting(description: "Display a cancel inspection button when inspecting.") {
@@ -143,7 +143,7 @@ struct GeneralSettingsView: View {
             
             SettingsGroup(Label("Accessibility", systemImage: "eye")) {
                 SettingsToggle("Haptic Feedback", $hapticFeedback)
-                if hapticFeedback {
+                ConditionalSetting(showIf: hapticFeedback) {
                     SettingsPicker(text: "Haptic Intensity", selection: $feedbackType) {
                         ForEach(Array(UIImpactFeedbackGenerator.FeedbackStyle.allCases), id: \.self) { mode in
                             Text(hapticNames[mode]!)
@@ -174,6 +174,7 @@ struct GeneralSettingsView: View {
         }
         .padding(.horizontal)
         .animation(Animation.customSlowSpring, value: inspectionTime)
+        .animation(Animation.customSlowSpring, value: inspectionAlert)
         .animation(Animation.customSlowSpring, value: hapticFeedback)
     }
 }

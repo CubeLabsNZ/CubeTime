@@ -50,7 +50,7 @@ struct AppearanceSettingsView: View {
                 }
                 .padding(.top)
                 
-                if showThemeOptions {
+                ConditionalSetting(showIf: showThemeOptions) {
                     VStack(alignment: .leading, spacing: 0) {
                         HStack(spacing: 16) {
                             VStack(spacing: 4) {
