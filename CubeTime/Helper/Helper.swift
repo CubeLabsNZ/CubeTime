@@ -311,6 +311,21 @@ func setupNavbarAppearance() -> Void {
 //    navBarAppearance.backgroundColor = UIColor(named: "indent")
 }
 
+func setupNavTitleAppearance() -> Void {
+    let navBarAppearance = UINavigationBar.appearance()
+    
+    let variations = [2003265652: 650.0, 1128354636: 0.0, 1129468758: 0]
+    
+    let uiFontDesc = UIFontDescriptor(fontAttributes: [
+        .name: "RecursiveSansLinearLightCasual-Regular",
+        kCTFontVariationAttribute as UIFontDescriptor.AttributeName: variations
+    ])
+    
+    let metrics = UIFontMetrics(forTextStyle: .largeTitle)
+    let font = metrics.scaledFont(for: UIFont(descriptor: uiFontDesc, size: 34))
+    
+    navBarAppearance.largeTitleTextAttributes = [NSAttributedString.Key.font: font]
+}
 
 #warning("todo: fix; doesn't seem to be working ios 15?")
 func setupColourScheme(_ mode: UIUserInterfaceStyle?) -> Void {

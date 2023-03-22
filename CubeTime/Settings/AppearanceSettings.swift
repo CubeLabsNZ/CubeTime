@@ -135,6 +135,7 @@ struct AppearanceSettingsView: View {
                     
                     VStack {
                         Text("L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'")
+                            .fixedSize(horizontal: false, vertical: true)
                             .font(fontManager.ctFontScramble)
                             .padding()
                         

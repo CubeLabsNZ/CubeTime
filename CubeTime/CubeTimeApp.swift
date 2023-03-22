@@ -55,6 +55,7 @@ struct CubeTime: App {
         
         
         setupNavbarAppearance()
+//        setupNavTitleAppearance() for future possibly, but doesn't look great ..
         setupColourScheme(overrideSystemAppearance ? (darkMode ? .dark : .light) : nil)
         
         setupAudioSession(with: inspectionAlertFollowsSilent ? .ambient : .playback)
