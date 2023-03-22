@@ -646,7 +646,7 @@ extension StopwatchManager {
             let target = compsimSession.target
             
             if let bpa = self.bpa, let wpa = self.wpa {
-                if wpa.average < target {
+                if wpa.average < target && wpa.penalty != .dnf {
                     return .guaranteed
                 } else if bpa.average > target {
                     return .notPossible
