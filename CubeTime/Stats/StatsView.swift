@@ -334,7 +334,7 @@ struct StatsView: View {
                                 
                                 #warning("TODO: add settings customisation to choose how many solves to show")
                                 StatsBlock(title: "TIME TREND", blockHeight: (timeTrendData.count < 2 ? blockHeightGraphEmpty : 310), isBigBlock: true, isTappable: false) {
-                                    TimeTrend(data: Array(timeTrendData.prefix(80)), title: nil)
+                                    TimeTrend(data: Array(timeTrendData.suffix(80)), title: nil)
                                         .drawingGroup()
                                 }
                                 #warning("TODO: enable for v2.1")
