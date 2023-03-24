@@ -364,8 +364,8 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width: CGFloat = (collectionView.frame.width - 32 - 10*2)/columnCount
-        return CGSize(width: width, height: cardHeight)
+        let width: CGFloat = (collectionView.frame.width - 32 - 10*(columnCount-1))/columnCount
+        return CGSize(width: width.rounded(.down), height: cardHeight)
     }
 }
 
