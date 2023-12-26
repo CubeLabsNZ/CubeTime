@@ -420,8 +420,7 @@ extension StopwatchManager {
 extension StopwatchManager {
     func getAveragePhases() -> [Double]? {
         if currentSession is MultiphaseSession {
-            let times = (solvesNoDNFs as! [MultiphaseSolve]).map({ $0.phases! })
-            
+            let times = solvesNoDNFs.compactMap({ ($0 as? MultiphaseSolve)?.phases })
             
             var summedPhases = [Double](repeating: 0, count: phaseCount)
             
