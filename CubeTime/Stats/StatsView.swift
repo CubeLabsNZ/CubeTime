@@ -84,8 +84,6 @@ struct StatsView: View {
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     }
                                     .padding(.horizontal)
-                                    .padding(.bottom, 8)
-                                    
                                     
                                     HStack(spacing: 10) {
                                         VStack (spacing: 10) {
@@ -138,7 +136,6 @@ struct StatsView: View {
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     }
                                     .padding(.horizontal)
-                                    .padding(.bottom, 8)
                                     
                                     
                                     if SessionType(rawValue: stopwatchManager.currentSession.sessionType)! == .multiphase {
@@ -270,7 +267,6 @@ struct StatsView: View {
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     }
                                     .padding(.horizontal)
-                                    .padding(.bottom, 8)
                                     
                                     
                                     HStack(spacing: 10) {
@@ -294,7 +290,6 @@ struct StatsView: View {
                                     StatsBlock(title: "REACHED TARGETS", blockHeight: blockHeightReachedTargets, isBigBlock: true, isTappable: false) {
                                         ReachedTargets(reachedCount: stopwatchManager.reachedTargets, totalCount: stopwatchManager.compSimCount)
                                     }
-                                    .padding(.bottom, 8)
                                     
                                     
                                     HStack(spacing: 10) {
@@ -318,7 +313,6 @@ struct StatsView: View {
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                     }
                                     .padding(.horizontal)
-                                    .padding(.bottom, 8)
                                 }
                                 
                                 let allCompsimAveragesByDate: [CalculatedAverage] = stopwatchManager.getBestCompsimAverageAndArrayOfCompsimAverages().1
