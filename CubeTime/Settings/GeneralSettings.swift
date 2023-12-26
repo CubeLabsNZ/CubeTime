@@ -71,7 +71,7 @@ struct GeneralSettingsView: View {
                     }
                     
                     DescribedSetting(description: "Play an audible alert when 8 or 12 seconds is reached.") {
-                        SettingsToggle("Inpsection Alert", $inspectionAlert)
+                        SettingsToggle("Inspection Alert", $inspectionAlert)
                     }
                     
                     if inspectionAlert {
