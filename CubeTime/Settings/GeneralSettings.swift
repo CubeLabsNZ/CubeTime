@@ -95,7 +95,7 @@ struct GeneralSettingsView: View {
                 
                 ThemedDivider()
                 
-                SettingsStepper(text: "Hold Down Time: ", format: "%.2fs", value: $holdDownTime, in: 0.05...1.0, step: 0.05)
+                SettingsStepper(text: "Hold Down Time: ", format: "%.2fs", value: $holdDownTime, in: 0.00...1.0, step: 0.05)
                 
                 ThemedDivider()
                 
