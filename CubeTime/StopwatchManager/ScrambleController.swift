@@ -26,17 +26,18 @@ class ScrambleController: ObservableObject {
     }
     
     func safeGetScramble() -> String {
-        var isolate: OpaquePointer? = nil
-        var thread: OpaquePointer? = nil
-        
-        
-        graal_create_isolate(nil, &isolate, &thread)
-                
-        let s = String(cString: tnoodle_lib_scramble(thread, scrambleType))
-        
-        graal_tear_down_isolate(thread);
-            
-        return s
+//        var isolate: OpaquePointer? = nil
+//        var thread: OpaquePointer? = nil
+//        
+//        
+//        graal_create_isolate(nil, &isolate, &thread)
+//                
+//        let s = String(cString: tnoodle_lib_scramble(thread, scrambleType))
+//        
+//        graal_tear_down_isolate(thread);
+//            
+//        return s
+        return ""
     }
     
     
@@ -62,15 +63,17 @@ class ScrambleController: ObservableObject {
                 
                 
                 
-                graal_create_isolate(nil, &isolate, &thread)
+//                graal_create_isolate(nil, &isolate, &thread)
+//                
+//                var svg: String!
+//                
+//                scramble.withCString { s in
+//                    svg = String(cString: tnoodle_lib_draw_scramble(thread, scrTypeAtWorkStart, s))
+//                }
+//                
+//                graal_tear_down_isolate(thread);
                 
-                var svg: String!
-                
-                scramble.withCString { s in
-                    svg = String(cString: tnoodle_lib_draw_scramble(thread, scrTypeAtWorkStart, s))
-                }
-                
-                graal_tear_down_isolate(thread);
+                let svg = ""
                 
             
                 DispatchQueue.main.async {
