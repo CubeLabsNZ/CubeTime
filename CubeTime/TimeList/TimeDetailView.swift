@@ -4,6 +4,7 @@ import SwiftUI
 func getSolveDateFormatter(_ date: Date) -> DateFormatter {
     let dateFormatter: DateFormatter = DateFormatter()
     dateFormatter.locale = Locale(identifier: "en_NZ")
+    #warning("l10n")
     
     if (Calendar.current.isDateInToday(date)) {
         dateFormatter.dateFormat = "h:mm a"

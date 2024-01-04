@@ -4,11 +4,11 @@ import UIKit
 
 
 class TimerUIView: UIViewController {
-    let timerController: TimerContoller
+    let timerController: TimerController
     let stopwatchManager: StopwatchManager
 
         
-    required init(timerController: TimerContoller, stopwatchManager: StopwatchManager, userHoldTime: Double) {
+    required init(timerController: TimerController, stopwatchManager: StopwatchManager, userHoldTime: Double) {
         self.timerController = timerController
         self.stopwatchManager = stopwatchManager
         self.userHoldTime = userHoldTime
@@ -173,7 +173,7 @@ class TimerUIView: UIViewController {
 
 struct TimerTouchView: UIViewControllerRepresentable {
     
-    @EnvironmentObject var timerController: TimerContoller
+    @EnvironmentObject var timerController: TimerController
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
     @Preference(\.holdDownTime) private var holdDownTime
@@ -238,12 +238,12 @@ struct TimerTouchView: UIViewControllerRepresentable {
     }
     
     class Coordinator: NSObject {
-        let timerController: TimerContoller
+        let timerController: TimerController
         let sm = SettingsManager.standard
         
         private var panHasTriggeredGesture = false
         
-        init(timerController: TimerContoller) {
+        init(timerController: TimerController) {
             self.timerController = timerController
         }
         

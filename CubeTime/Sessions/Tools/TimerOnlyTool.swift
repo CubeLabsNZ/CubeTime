@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TimerOnlyTool: View {
-    @StateObject var timerController: TimerContoller = TimerContoller()
+    @StateObject var timerController: TimerController = TimerController()
     
     var body: some View {
         ZStack {

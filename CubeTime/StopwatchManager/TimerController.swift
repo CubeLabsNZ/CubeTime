@@ -15,7 +15,7 @@ import Combine
 let inspectionDnfTime = 17
 let inspectionPlusTwoTime = 15
 
-class TimerContoller: ObservableObject {
+class TimerController: ObservableObject {
     let sm = SettingsManager.standard
     
     let onStartInspection: (() -> ())?
@@ -195,7 +195,9 @@ class TimerContoller: ObservableObject {
             phaseTimes = []
         }
         
-        mode = .running
+        withAnimation(Animation.customBouncySpring) {
+            mode = .running
+        }
 
         timer?.invalidate() // Stop possibly running inspections
 
@@ -230,7 +232,9 @@ class TimerContoller: ObservableObject {
         
         self.secondsStr = formatSolveTime(secs: self.secondsElapsed)
         
-        mode = .stopped
+        withAnimation(Animation.customFastSpring) {
+            mode = .stopped
+        }
         
         onStop?(time, secondsElapsed, phaseTimes)
     }

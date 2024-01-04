@@ -320,7 +320,7 @@ class StopwatchManager: ObservableObject {
     }
     
     var scrambleController: ScrambleController!
-    var timerController: TimerContoller!
+    var timerController: TimerController!
     
     init (currentSession: Session?, managedObjectContext: NSManagedObjectContext) {
         #if DEBUG
@@ -334,7 +334,7 @@ class StopwatchManager: ObservableObject {
         self.playgroundScrambleType = -1 // Get the compiler to shut up about not initialized, cannot be optional for picker
         
         
-        self.timerController = TimerContoller(
+        self.timerController = TimerController(
             onStartInspection: { self.penType = .none /* reset penType from last solve */ },
             onInspectionSecondsChange: { inspectionSecs in
                 if inspectionSecs == inspectionPlusTwoTime {

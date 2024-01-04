@@ -1,5 +1,6 @@
 import SwiftUI
 import CoreData
+import Charts
 
 struct StatsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -331,10 +332,10 @@ struct StatsView: View {
                                     TimeTrend(data: Array(timeTrendData.suffix(80)), title: nil)
                                         .drawingGroup()
                                 }
+                                .onTapGesture {
+                                    self.showTimeTrendModal = true
+                                }
                                 #warning("TODO: enable for v2.1")
-//                                .onTapGesture {
-//                                    self.showTimeTrendModal = true
-//                                }
                                  
                                 
                                 StatsBlock(title: "TIME DISTRIBUTION", blockHeight: (timeDistributionData.count < 4 ? blockHeightGraphEmpty : 300), isBigBlock: true, isTappable: false) {
@@ -374,10 +375,17 @@ struct StatsView: View {
         }
         .sheet(isPresented: self.$showTimeTrendModal) {
             let timesOnly = stopwatchManager.solvesNoDNFsbyDate.map { $0.timeIncPen }
-            DetailTimeTrend(rawDataPoints: timesOnly,
-                            limits: (timesOnly.max()!, timesOnly.min()!),
-                            averageValue: stopwatchManager.sessionMean!)
-                .tint(Color("accent"))
+            
+            if #available(iOS 16.0, *) {
+                Chart {
+                    ForEach(Array(zip(stopwatchManager.solvesNoDNFsbyDate.indices, stopwatchManager.solvesNoDNFsbyDate)), id: \.0) { index, solve in
+                        LineMark(x: PlottableValue.value("s", index), y: PlottableValue.value("s", solve.time))
+                            .interpolationMethod(.monotone)
+                    }
+                }
+            } else {
+                Text("update!")
+            }
         }
     }
 }

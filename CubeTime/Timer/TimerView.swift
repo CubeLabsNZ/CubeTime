@@ -13,7 +13,7 @@ struct SheetStrWrapper: Identifiable {
 
 struct AvoidFloatingPanel: ViewModifier {
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    @EnvironmentObject var timerController: TimerContoller
+    @EnvironmentObject var timerController: TimerController
     @Environment(\.horizontalSizeClass) private var hSizeClass
 
     
@@ -34,7 +34,7 @@ struct AvoidFloatingPanel: ViewModifier {
 struct TimerTime: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var fontManager: FontManager
-    @EnvironmentObject var timerController: TimerContoller
+    @EnvironmentObject var timerController: TimerController
     @Environment(\.horizontalSizeClass) private var hSizeClass
     
     var body: some View {
@@ -66,7 +66,6 @@ struct TimerTime: View {
             }
             .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: fontSize - 32))
         }
-        .animation(Animation.customBouncySpring, value: timerController.mode == .running)
         .foregroundColor(timerController.timerColour)
         .padding(.horizontal)
         .modifier(AvoidFloatingPanel())
@@ -138,7 +137,7 @@ struct ScrambleText: View {
 
 struct TimerView: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    @EnvironmentObject var timerController: TimerContoller
+    @EnvironmentObject var timerController: TimerController
     @EnvironmentObject var fontManager: FontManager
     @EnvironmentObject var scrambleController: ScrambleController
     @EnvironmentObject var tabRouter: TabRouter

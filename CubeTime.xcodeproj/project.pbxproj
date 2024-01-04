@@ -21,17 +21,17 @@
 		235D6A7029C2CE09002D90D8 /* CloudkitStatusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6F29C2CE09002D90D8 /* CloudkitStatusManager.swift */; };
 		2377418829A9A05A00A4F917 /* HelperUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2377418729A9A05A00A4F917 /* HelperUI.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
+		238949982B46470100BFE1E6 /* TNoodle.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 238949962B4646B300BFE1E6 /* TNoodle.xcframework */; };
+		238949992B46470100BFE1E6 /* TNoodle.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 238949962B4646B300BFE1E6 /* TNoodle.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		238FB42029B8175C008EC1D4 /* GradientManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238FB41F29B8175C008EC1D4 /* GradientManager.swift */; };
 		239560A629C3056E00735035 /* SplashPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 239560A529C3056E00735035 /* SplashPad.storyboard */; };
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
-		239C7E702781511300943AF2 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239C7E6F2781511300943AF2 /* Onboarding.swift */; };
 		23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */; };
 		23AAF99629B0219200C5C1FF /* ScrollableLineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AAF99529B0219200C5C1FF /* ScrollableLineChart.swift */; };
 		23AAF99829B072F900C5C1FF /* StatsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AAF99729B072F900C5C1FF /* StatsDetailView.swift */; };
 		23AB648429385D310049993B /* NewSessionRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AB648329385D310049993B /* NewSessionRootView.swift */; };
 		23AB648C293867EA0049993B /* 12sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648A293867EA0049993B /* 12sec-audio.wav */; };
 		23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 23AB648B293867EA0049993B /* 8sec-audio.wav */; };
-		23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */; };
 		23B7AC3A29BAB2E300B5C9B4 /* TimerTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B7AC3929BAB2E300B5C9B4 /* TimerTools.swift */; };
 		23B7AC3C29BB049F00B5C9B4 /* CalculatorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B7AC3B29BB049F00B5C9B4 /* CalculatorTool.swift */; };
 		23C85EAC29388C9C00C7C3EC /* StatsSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */; };
@@ -111,6 +111,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				238949992B46470100BFE1E6 /* TNoodle.xcframework in Embed Libraries */,
 			);
 			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -134,17 +135,16 @@
 		2377418729A9A05A00A4F917 /* HelperUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperUI.swift; sourceTree = "<group>"; };
 		23783DA429AB55750036FE2B /* getBestAverage.h++ */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "getBestAverage.h++"; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
+		238949962B4646B300BFE1E6 /* TNoodle.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodle.xcframework; sourceTree = "<group>"; };
 		238FB41F29B8175C008EC1D4 /* GradientManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientManager.swift; sourceTree = "<group>"; };
 		239560A529C3056E00735035 /* SplashPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SplashPad.storyboard; sourceTree = "<group>"; };
 		2397131E2791032300268DFA /* AveragePhases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AveragePhases.swift; sourceTree = "<group>"; };
-		239C7E6F2781511300943AF2 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		23AAF99529B0219200C5C1FF /* ScrollableLineChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableLineChart.swift; sourceTree = "<group>"; };
 		23AAF99729B072F900C5C1FF /* StatsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsDetailView.swift; sourceTree = "<group>"; };
 		23AB648329385D310049993B /* NewSessionRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSessionRootView.swift; sourceTree = "<group>"; };
 		23AB648A293867EA0049993B /* 12sec-audio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "12sec-audio.wav"; sourceTree = "<group>"; };
 		23AB648B293867EA0049993B /* 8sec-audio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "8sec-audio.wav"; sourceTree = "<group>"; };
 		23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "3rdparty-Bridging-Header.h"; sourceTree = "<group>"; };
-		23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodleLibNative.xcframework; sourceTree = "<group>"; };
 		23B7AC3929BAB2E300B5C9B4 /* TimerTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTools.swift; sourceTree = "<group>"; };
 		23B7AC3B29BB049F00B5C9B4 /* CalculatorTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorTool.swift; sourceTree = "<group>"; };
 		23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsSubviews.swift; sourceTree = "<group>"; };
@@ -210,9 +210,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				23329E9029C31CA60017AE99 /* libz.1.1.3.tbd in Frameworks */,
-				23B45E7229A8560400BDF49E /* TNoodleLibNative.xcframework in Frameworks */,
 				AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */,
 				23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */,
+				238949982B46470100BFE1E6 /* TNoodle.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,8 +321,8 @@
 		23B45E7129A855F400BDF49E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				238949962B4646B300BFE1E6 /* TNoodle.xcframework */,
 				23329E8F29C31CA60017AE99 /* libz.1.1.3.tbd */,
-				23B45E6F29A8553000BDF49E /* TNoodleLibNative.xcframework */,
 			);
 			path = Frameworks;
 			sourceTree = "<group>";
@@ -347,7 +347,6 @@
 		23DC2F8829C7EAD00040A5F5 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
-				239C7E6F2781511300943AF2 /* Onboarding.swift */,
 				235CDA0227A786D800F48C89 /* Updates.swift */,
 			);
 			path = Onboarding;
@@ -378,13 +377,13 @@
 		23DE3BD9274DDBE200254D29 /* CubeTime */ = {
 			isa = PBXGroup;
 			children = (
+				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */,
 				7D2B805D279422BD0006AEDD /* AppDelegate.swift */,
 				23DE3BE3274DDBE300254D29 /* Persistence.swift */,
 				235D6A6629C2C060002D90D8 /* Models.swift */,
 				7D7D205E274DE13A0016D804 /* txmerdata.xcdatamodeld */,
 				73B7136529BA3FF00064E02F /* CubeTime.entitlements */,
-				23DE3BDE274DDBE300254D29 /* Assets.xcassets */,
 				23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */,
 				239560A529C3056E00735035 /* SplashPad.storyboard */,
 				23B45E6E29A8552000BDF49E /* 3rdparty-Bridging-Header.h */,
@@ -682,7 +681,6 @@
 				2326436028C4927600F6322E /* TimerHeader.swift in Sources */,
 				23F4113829ADDA77002C4E23 /* ToolsViewModel.swift in Sources */,
 				23CA84602783EBA1003901FB /* ReachedTargets.swift in Sources */,
-				239C7E702781511300943AF2 /* Onboarding.swift in Sources */,
 				23AB648429385D310049993B /* NewSessionRootView.swift in Sources */,
 				23CE093427A76D610013E227 /* SessionCard.swift in Sources */,
 				23C85EAC29388C9C00C7C3EC /* StatsSubviews.swift in Sources */,
