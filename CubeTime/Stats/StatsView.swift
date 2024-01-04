@@ -373,19 +373,8 @@ struct StatsView: View {
             TimeDetailView(for: stopwatchManager.bestSingle!, currentSolve: nil)
                 .tint(Color("accent"))
         }
-        .sheet(isPresented: self.$showTimeTrendModal) {
-            let timesOnly = stopwatchManager.solvesNoDNFsbyDate.map { $0.timeIncPen }
-            
-            if #available(iOS 16.0, *) {
-                Chart {
-                    ForEach(Array(zip(stopwatchManager.solvesNoDNFsbyDate.indices, stopwatchManager.solvesNoDNFsbyDate)), id: \.0) { index, solve in
-                        LineMark(x: PlottableValue.value("s", index), y: PlottableValue.value("s", solve.time))
-                            .interpolationMethod(.monotone)
-                    }
-                }
-            } else {
-                Text("update!")
-            }
-        }
+//        .sheet(isPresented: self.$showTimeTrendModal) {
+//
+//        }
     }
 }
