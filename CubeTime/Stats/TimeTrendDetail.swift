@@ -58,7 +58,10 @@ struct TimeTrendDetail: View {
                     )
                 }
                 
-                DetailTimeTrendBase(rawDataPoints: stopwatchManager.solvesByDate, limits: (0.01, 10.0), averageValue: 5)
+                GeometryReader { proxy in
+                    DetailTimeTrendBase(rawDataPoints: stopwatchManager.solvesByDate, limits: (0.01, 10.0), averageValue: 5, proxy: proxy)
+                }
+                
                 
 //                if #available(iOS 17.0, *) {
 //                    Chart {

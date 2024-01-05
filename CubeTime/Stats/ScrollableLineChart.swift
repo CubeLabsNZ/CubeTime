@@ -72,7 +72,7 @@ class TimeDistViewController: UIViewController {
     var scrollView: UIScrollView!
     var imageView: UIImageView!
     
-    let crossView: CGPath!  // TODO: the crosses for DNFs that is drawn (copy)
+    // let crossView: CGPath!  // TODO: the crosses for DNFs that is drawn (copy)
     
     var yOffset: CGFloat!
     
@@ -159,6 +159,9 @@ class TimeDistViewController: UIViewController {
         let newImage = UIGraphicsGetImageFromCurrentImageContext()!
 
         self.scrollView = UIScrollView()
+        self.scrollView.showsHorizontalScrollIndicator = true
+        
+        self.view.clipsToBounds = true
         
         imageView = UIImageView(image: newImage)
         let fr = imageView.frame
@@ -172,9 +175,11 @@ class TimeDistViewController: UIViewController {
         scrollView.contentSize = newImage.size
         
         scrollView.isUserInteractionEnabled = true
-        scrollView.addGestureRecognizer(
-            UILongPressGestureRecognizer(target: self, action: #selector(panning))
-        )
+        
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(panning))
+        longPressGestureRecognizer.minimumPressDuration = 0.25
+        
+        scrollView.addGestureRecognizer(longPressGestureRecognizer)
         
         self.hightlightedPoint = HighlightedPoint(frame: CGRect(x: 10, y: 10, width: 12, height: 12))
         
@@ -183,6 +188,12 @@ class TimeDistViewController: UIViewController {
                                               y: self.points[1].point.y + yOffset - 6,
                                               width: 12, height: 12)
         scrollView.addSubview(self.hightlightedPoint)
+        
+        let activityItem: [AnyObject] = [self.imageView.image as! AnyObject]
+
+        let avc = UIActivityViewController(activityItems: activityItem as [AnyObject], applicationActivities: nil)
+
+        self.present(avc, animated: true, completion: nil)
     }
     
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
@@ -206,22 +217,28 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     let points: [LineChartPoint]
     let gapDelta: Int
     let averageValue: Double
+    let proxy: GeometryProxy
     
     let limits: (min: Double, max: Double)
     
-    init(rawDataPoints: [Solve], limits: (min: Double, max: Double), averageValue: Double, gapDelta: Int = 30) {
+    init(rawDataPoints: [Solve], limits: (min: Double, max: Double), averageValue: Double, gapDelta: Int = 30, proxy: GeometryProxy) {
         self.points = makeData(rawDataPoints, limits)
         self.averageValue = averageValue
         self.limits = limits
         self.gapDelta = gapDelta
+        self.proxy = proxy
     }
     
     func makeUIViewController(context: Context) -> some UIViewController {
-        let view = TimeDistViewController(points: points, gapDelta: gapDelta, averageValue: averageValue, limits: limits)
-        return view
+        let timeDistViewController = TimeDistViewController(points: points, gapDelta: gapDelta, averageValue: averageValue, limits: limits)
+        print(proxy.size.width, proxy.size.height)
+        timeDistViewController.view.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
+        timeDistViewController.scrollView.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
+        
+        return timeDistViewController
     }
     
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-        
+        uiViewController.view?.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
     }
 }
