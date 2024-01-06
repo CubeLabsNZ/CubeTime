@@ -16,7 +16,7 @@ struct TimeTrendDetail: View {
     @State var selectedLines = [true, false, false, false]
     let labels = ["time", "ao5", "ao12", "ao100"]
     
-    @State var visibleDomain = 10
+    @State var interval: Int = 30
     
     var body: some View {
         ZStack {
@@ -26,13 +26,13 @@ struct TimeTrendDetail: View {
             VStack {
                 HStack(spacing: 8) {
                     CTButton(type: .mono, size: .large, square: true, onTapRun: {
-                        self.visibleDomain += self.visibleDomain / 2
+                        self.interval = max(10, self.interval - (self.interval / 2))
                     }) {
                         Image(systemName: "minus.magnifyingglass")
                     }
                     
                     CTButton(type: .mono, size: .large, square: true, onTapRun: {
-                        self.visibleDomain = max(10, self.visibleDomain - (self.visibleDomain / 2))
+                        self.interval += self.interval / 2
                     }) {
                         Image(systemName: "plus.magnifyingglass")
                     }
@@ -62,7 +62,8 @@ struct TimeTrendDetail: View {
                     DetailTimeTrendBase(rawDataPoints: stopwatchManager.solvesByDate,
                                         limits: (stopwatchManager.solvesByDate.min(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen, stopwatchManager.solvesByDate.max(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen),
                                         averageValue: 5,
-                                        proxy: proxy)
+                                        proxy: proxy,
+                                        interval: $interval)
                 }
                 
                 

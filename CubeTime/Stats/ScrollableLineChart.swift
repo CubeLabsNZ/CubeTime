@@ -22,8 +22,6 @@ class HighlightedPoint: UIView {
 
 private let dotDiameter: CGFloat = 6
 
-private let INTERVAL: Int = 30
-
 struct LineChartPoint {
     var point: CGPoint
     var solve: Solve
@@ -42,7 +40,27 @@ struct LineChartPoint {
 }
 
 func getStandardisedYLocation(value: Double, min: Double, max: Double, boundsHeight: CGFloat) -> CGFloat {
-    return ((value - min) / (max - min)) * boundsHeight
+    return boundsHeight - (((value - min) / (max - min)) * boundsHeight)
+}
+
+extension CGPoint {
+    static func midPointForPoints(p1: CGPoint, p2: CGPoint) -> CGPoint {
+        return CGPoint(x:(p1.x + p2.x) / 2,y: (p1.y + p2.y) / 2)
+    }
+    
+    static func controlPointForPoints(p1: CGPoint, p2: CGPoint) -> CGPoint {
+        var controlPoint = CGPoint.midPointForPoints(p1: p1, p2: p2)
+        
+        let diffY = abs(p2.y - controlPoint.y)
+        
+        if (p1.y < p2.y){
+            controlPoint.y += diffY
+        } else if (p1.y > p2.y) {
+            controlPoint.y -= diffY
+        }
+        
+        return controlPoint
+    }
 }
 
 class TimeDistViewController: UIViewController {
@@ -51,6 +69,8 @@ class TimeDistViewController: UIViewController {
     let averageValue: Double
     
     let limits: (min: Double, max: Double)
+    
+    var interval: Int
     
     var hightlightedPoint: HighlightedPoint!
     var scrollView: UIScrollView!
@@ -62,11 +82,12 @@ class TimeDistViewController: UIViewController {
     
     private let dotSize: CGFloat = 6
     
-    init(points: [LineChartPoint], gapDelta: Int, averageValue: Double, limits: (min: Double, max: Double)) {
+    init(points: [LineChartPoint], gapDelta: Int, averageValue: Double, limits: (min: Double, max: Double), interval: Int) {
         self.points = points
         self.gapDelta = gapDelta
         self.averageValue = averageValue
         self.limits = limits
+        self.interval = interval
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -94,19 +115,29 @@ class TimeDistViewController: UIViewController {
         /// bottom line
         bottomLine.move(to: CGPoint(x: 0, y: imageHeight))
         bottomLine.lineWidth = 2
-        bottomLine.addLine(to: CGPoint(x: CGFloat((points.count - 1) * INTERVAL), y: imageHeight))
+        bottomLine.addLine(to: CGPoint(x: CGFloat((points.count - 1) * self.interval), y: imageHeight))
         context.setStrokeColor(UIColor(Color("indent0")).cgColor)
         bottomLine.stroke()
         
         /// graph line
         context.setStrokeColor(UIColor(Color("accent")).cgColor)
         
-        for p in points {
+        for i in 0 ..< points.count {
+            let prev = points[i - 1 >= 0 ? i - 1 : 0]
+            let cur = points[i]
+            
             if (trendLine.isEmpty) {
-                trendLine.move(to: CGPointMake(dotSize/2, imageHeight - p.point.y))
-            } else {
-                trendLine.addLine(to: CGPointMake(p.point.x, imageHeight - p.point.y))
+                trendLine.move(to: CGPointMake(dotSize/2, cur.point.y))
+                continue
             }
+                
+            let mid = CGPoint.midPointForPoints(p1: prev.point, p2: cur.point)
+            
+            trendLine.addQuadCurve(to: mid,
+                                   controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: prev.point))
+            
+            trendLine.addQuadCurve(to: cur.point,
+                                   controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: cur.point))
         }
         
         trendLine.lineWidth = 2
@@ -117,7 +148,7 @@ class TimeDistViewController: UIViewController {
         
         trendLine.addLine(to: CGPoint(x: points.last!.point.x, y: imageHeight))
         trendLine.addLine(to: CGPoint(x: 0, y: imageHeight))
-        trendLine.addLine(to: CGPoint(x: 0, y: imageHeight - points.first!.point.y))
+        trendLine.addLine(to: CGPoint(x: 0, y: points.first!.point.y))
         
         trendLine.close()
         
@@ -168,7 +199,7 @@ class TimeDistViewController: UIViewController {
         
         self.hightlightedPoint.backgroundColor = .clear
         self.hightlightedPoint.frame = CGRect(x: self.points[1].point.x - 6,
-                                              y: imageHeight - self.points[1].point.y - 6,
+                                              y: self.points[1].point.y - 6,
                                               width: 12, height: 12)
         scrollView.addSubview(self.hightlightedPoint)
     }
@@ -180,17 +211,21 @@ class TimeDistViewController: UIViewController {
         }
         
         self.hightlightedPoint.isHidden = false
-        var closestIndex = Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(INTERVAL))
-        var closestPoint = self.points[closestIndex]
+        let closestIndex = Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(interval))
+        let closestPoint = self.points[closestIndex]
         
         self.hightlightedPoint.frame = CGRect(x: closestPoint.point.x - 6,
-                                              y: self.imageHeight - closestPoint.point.y - 6,
+                                              y: closestPoint.point.y - 6,
                                               width: 12, height: 12)
     }
 }
 
 
 struct DetailTimeTrendBase: UIViewControllerRepresentable {
+    typealias UIViewControllerType = TimeDistViewController
+    
+    @Binding var interval: Int
+    
     let points: [LineChartPoint]
     let gapDelta: Int
     let averageValue: Double
@@ -198,18 +233,21 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     
     let limits: (min: Double, max: Double)
     
-    init(rawDataPoints: [Solve], limits: (min: Double, max: Double), averageValue: Double, gapDelta: Int = 30, proxy: GeometryProxy) {
+    init(rawDataPoints: [Solve], limits: (min: Double, max: Double), averageValue: Double, gapDelta: Int = 30, proxy: GeometryProxy, interval: Binding<Int>) {
         self.points = rawDataPoints.enumerated().map({ (i, e) in
-            return LineChartPoint(solve: e, position: Double(i * INTERVAL), min: limits.min, max: limits.max, boundsHeight: 300)
+            return LineChartPoint(solve: e, position: Double(i * interval.wrappedValue), min: limits.min, max: limits.max, boundsHeight: 300)
         })
         self.averageValue = averageValue
         self.limits = limits
         self.gapDelta = gapDelta
         self.proxy = proxy
+        self._interval = interval
+        
+        print("detail time trend reinit with \(interval)")
     }
     
-    func makeUIViewController(context: Context) -> some UIViewController {
-        let timeDistViewController = TimeDistViewController(points: points, gapDelta: gapDelta, averageValue: averageValue, limits: limits)
+    func makeUIViewController(context: Context) -> TimeDistViewController {
+        let timeDistViewController = TimeDistViewController(points: points, gapDelta: gapDelta, averageValue: averageValue, limits: limits, interval: interval)
         print(proxy.size.width, proxy.size.height)
         timeDistViewController.view.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
         timeDistViewController.scrollView.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
@@ -217,7 +255,9 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
         return timeDistViewController
     }
     
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+    func updateUIViewController(_ uiViewController: TimeDistViewController, context: Context) {
         uiViewController.view?.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
+        
+        print("vc updated")
     }
 }
