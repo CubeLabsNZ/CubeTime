@@ -45,22 +45,6 @@ func getStandardisedYLocation(value: Double, min: Double, max: Double, boundsHei
     return ((value - min) / (max - min)) * boundsHeight
 }
 
-func getRandomData() -> [Double] {
-    var temp: [Double] = []
-    for _ in 0..<10000 {
-        temp.append(Double.random(in: 0...2))
-    }
-    
-    return temp
-}
-
-func makeData(_ data: [Solve], _ limits: (min: Double, max: Double), _ boundsHeight: CGFloat=300) -> [LineChartPoint] {
-    return data.enumerated().map({ (i, e) in
-        return LineChartPoint(solve: e, position: Double(i * INTERVAL), min: limits.min, max: limits.max, boundsHeight: boundsHeight)
-    })
-}
-
-
 class TimeDistViewController: UIViewController {
     let points: [LineChartPoint]
     let gapDelta: Int
@@ -72,9 +56,9 @@ class TimeDistViewController: UIViewController {
     var scrollView: UIScrollView!
     var imageView: UIImageView!
     
-    // let crossView: CGPath!  // TODO: the crosses for DNFs that is drawn (copy)
+    let imageHeight: CGFloat = 300
     
-    var yOffset: CGFloat!
+    // let crossView: CGPath!  // TODO: the crosses for DNFs that is drawn (copy)
     
     private let dotSize: CGFloat = 6
     
@@ -92,40 +76,36 @@ class TimeDistViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        let imageHeight: CGFloat = 300
+        self.scrollView = UIScrollView()
+        self.scrollView.showsHorizontalScrollIndicator = true
+        
         
         let imageSize = CGSize(width: CGFloat(points.count * gapDelta),
                                height: imageHeight)
         
+        /// draw line
+        let trendLine = UIBezierPath()
+        let bottomLine = UIBezierPath()
+        
         UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
-        
-        
         
         let context = UIGraphicsGetCurrentContext()!
         
-        context.move(to: CGPoint(x: 0, y: imageHeight))
+        /// bottom line
+        bottomLine.move(to: CGPoint(x: 0, y: imageHeight))
+        bottomLine.lineWidth = 2
+        bottomLine.addLine(to: CGPoint(x: CGFloat((points.count - 1) * INTERVAL), y: imageHeight))
+        context.setStrokeColor(UIColor(Color("indent0")).cgColor)
+        bottomLine.stroke()
         
-        context.setLineDash(phase: 0, lengths: [12, 6])
-        context.setStrokeColor(UIColor(Color("grey")).cgColor)
-        context.setLineWidth(2)
-        context.setLineJoin(.round)
-        context.setLineCap(.round)
-        context.addLine(to: CGPoint(x: 1200, y: imageHeight))
-
-        context.drawPath(using: .stroke)
-        
-        context.setLineDash(phase: 0, lengths: [])
+        /// graph line
         context.setStrokeColor(UIColor(Color("accent")).cgColor)
         
-        let trendLine: UIBezierPath = UIBezierPath()
-        
-        for i in 0 ..< points.count {
-            let p = points[i].point
-            
+        for p in points {
             if (trendLine.isEmpty) {
-                trendLine.move(to: CGPointMake(dotSize/2, p.y))
+                trendLine.move(to: CGPointMake(dotSize/2, imageHeight - p.point.y))
             } else {
-                trendLine.addLine(to: CGPointMake(p.x, p.y))
+                trendLine.addLine(to: CGPointMake(p.point.x, imageHeight - p.point.y))
             }
         }
         
@@ -137,18 +117,22 @@ class TimeDistViewController: UIViewController {
         
         trendLine.addLine(to: CGPoint(x: points.last!.point.x, y: imageHeight))
         trendLine.addLine(to: CGPoint(x: 0, y: imageHeight))
-
-        let grad = CGGradient(colorsSpace: .none, 
-                              colors: [
-                                UIColor(staticGradient[0].opacity(0.6)).cgColor,
-                                UIColor(staticGradient[1].opacity(0.2)).cgColor,
-                                UIColor.clear.cgColor
-                              ] as CFArray,
-                              locations: [0.0, 0.4, 1.0])!
+        trendLine.addLine(to: CGPoint(x: 0, y: imageHeight - points.first!.point.y))
+        
+        trendLine.close()
         
         trendLine.addClip()
         
-        context.drawLinearGradient(grad, start: CGPoint(x: 0, y: 0), end: CGPoint(x: 0, y: imageHeight), options: [] )
+        context.drawLinearGradient(CGGradient(colorsSpace: .none,
+                                              colors: [
+                                                UIColor(staticGradient[0].opacity(0.6)).cgColor,
+                                                UIColor(staticGradient[1].opacity(0.2)).cgColor,
+                                                UIColor.clear.cgColor
+                                              ] as CFArray,
+                                              locations: [0.0, 0.4, 1.0])!,
+                                   start: CGPoint(x: 0, y: 0),
+                                   end: CGPoint(x: 0, y: imageHeight),
+                                   options: [] )
         
         context.resetClip()
         
@@ -157,17 +141,10 @@ class TimeDistViewController: UIViewController {
         
         
         let newImage = UIGraphicsGetImageFromCurrentImageContext()!
-
-        self.scrollView = UIScrollView()
-        self.scrollView.showsHorizontalScrollIndicator = true
         
         self.view.clipsToBounds = true
         
         imageView = UIImageView(image: newImage)
-        let fr = imageView.frame
-        self.yOffset = (self.view.frame.height - fr.height) / 2
-        
-        imageView.frame = CGRect(x: fr.minX, y: yOffset, width: fr.width, height: fr.height)
         self.view.addSubview(scrollView)
         
         scrollView.addSubview(imageView)
@@ -175,6 +152,12 @@ class TimeDistViewController: UIViewController {
         scrollView.contentSize = newImage.size
         
         scrollView.isUserInteractionEnabled = true
+        
+        scrollView.layer.borderWidth = 2
+        scrollView.layer.borderColor = UIColor.blue.cgColor
+        
+        self.imageView.layer.borderWidth = 2
+        self.imageView.layer.borderColor = UIColor.black.cgColor
         
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(panning))
         longPressGestureRecognizer.minimumPressDuration = 0.25
@@ -185,15 +168,9 @@ class TimeDistViewController: UIViewController {
         
         self.hightlightedPoint.backgroundColor = .clear
         self.hightlightedPoint.frame = CGRect(x: self.points[1].point.x - 6,
-                                              y: self.points[1].point.y + yOffset - 6,
+                                              y: imageHeight - self.points[1].point.y - 6,
                                               width: 12, height: 12)
         scrollView.addSubview(self.hightlightedPoint)
-        
-        let activityItem: [AnyObject] = [self.imageView.image as! AnyObject]
-
-        let avc = UIActivityViewController(activityItems: activityItem as [AnyObject], applicationActivities: nil)
-
-        self.present(avc, animated: true, completion: nil)
     }
     
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
@@ -207,7 +184,7 @@ class TimeDistViewController: UIViewController {
         var closestPoint = self.points[closestIndex]
         
         self.hightlightedPoint.frame = CGRect(x: closestPoint.point.x - 6,
-                                              y: closestPoint.point.y - 6 + yOffset,
+                                              y: self.imageHeight - closestPoint.point.y - 6,
                                               width: 12, height: 12)
     }
 }
@@ -222,7 +199,9 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     let limits: (min: Double, max: Double)
     
     init(rawDataPoints: [Solve], limits: (min: Double, max: Double), averageValue: Double, gapDelta: Int = 30, proxy: GeometryProxy) {
-        self.points = makeData(rawDataPoints, limits)
+        self.points = rawDataPoints.enumerated().map({ (i, e) in
+            return LineChartPoint(solve: e, position: Double(i * INTERVAL), min: limits.min, max: limits.max, boundsHeight: 300)
+        })
         self.averageValue = averageValue
         self.limits = limits
         self.gapDelta = gapDelta
