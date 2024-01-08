@@ -63,42 +63,85 @@ extension CGPoint {
     }
 }
 
-class TimeDistributionPointView: UIStackView {
-    let size = CGSize(width: 144, height: 44)
-    let solve: Solve
+class TimeDistributionPointCard: UIStackView {
+    var solve: Solve?
     
-    var iconView: UIImageView!
-    var infoStack: UIStackView!
-    var chevron: UIImageView!
+    lazy var iconView: UIImageView = {
+        var iconView = UIImageView()
+        
+        iconView = UIImageView(image: UIImage(named: puzzleTypes[Int(solve?.scrambleType ?? 0)].name))
+        iconView.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
+        iconView.tintColor = .black
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return iconView
+    }()
     
-    init(origin: CGPoint, solve: Solve) {
+    lazy var chevron: UIImageView = {
+        var chevron = UIImageView()
+        
+        chevron = UIImageView(image: UIImage(systemName: "chevron.right"))
+        chevron.tintColor = UIColor.black
+        
+        chevron.preferredSymbolConfiguration = UIImage.SymbolConfiguration(font: .preferredFont(for: .footnote, weight: .medium))
+        chevron.translatesAutoresizingMaskIntoConstraints = false
+        
+        return chevron
+
+    }()
+    
+    lazy var timeLabel: UILabel = {
+        var timeLabel = UILabel()
+        
+        timeLabel.text = self.solve?.timeText ?? ""
+        timeLabel.font = .preferredFont(for: .subheadline, weight: .semibold)
+        timeLabel.adjustsFontForContentSizeCategory = true
+        
+        return timeLabel
+    }()
+    
+    lazy var dateLabel: UILabel = {
+        var dateLabel = UILabel()
+        
+        if let date = self.solve?.date {
+            dateLabel.text = getSolveDateFormatter(date).string(from: date)
+        } else {
+            dateLabel.text = "Unknown Date"
+        }
+        
+        dateLabel.font = .preferredFont(forTextStyle: .footnote)
+        dateLabel.textColor = UIColor(Color("grey"))
+        dateLabel.adjustsFontForContentSizeCategory = true
+        
+        return dateLabel
+    }()
+    
+    lazy var infoStack: UIStackView = {
+        var infoStack = UIStackView(frame: .zero)
+        
+        infoStack.axis = .vertical
+        infoStack.alignment = .leading
+        infoStack.distribution = .fill
+        infoStack.spacing = -2
+        infoStack.addArrangedSubview(self.timeLabel)
+        infoStack.addArrangedSubview(self.dateLabel)
+        infoStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        return infoStack
+    }()
+    
+    init(solve: Solve?) {
         self.solve = solve
         
-        super.init(frame: CGRect(origin: origin, size: size))
+        super.init(frame: .zero)
         
         self.setupCard()
-        self.setupIconView()
-        self.setupLabelView()
-        self.setupChevron()
-        
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.iconView.translatesAutoresizingMaskIntoConstraints = false
-        self.infoStack.translatesAutoresizingMaskIntoConstraints = false
-        self.chevron.translatesAutoresizingMaskIntoConstraints = false
         
         
         self.addArrangedSubview(self.iconView)
         self.addArrangedSubview(self.infoStack)
         self.addArrangedSubview(self.chevron)
         
-        self.distribution = .fill
-        self.alignment = .center
-        self.spacing = 10
-        
-        self.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        self.isLayoutMarginsRelativeArrangement = true
-        
-        self.setCustomSpacing(16, after: self.infoStack)
 
 
         NSLayoutConstraint.activate([
@@ -122,48 +165,27 @@ class TimeDistributionPointView: UIStackView {
         self.layer.shadowOpacity = 0.04
         self.layer.shadowRadius = 6
         self.layer.shadowOffset = CGSize(width: 0.0, height: -2.0)
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+                
+        self.distribution = .fill
+        self.alignment = .center
+        self.spacing = 10
+        
+        self.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        self.isLayoutMarginsRelativeArrangement = true
+        
+        self.setCustomSpacing(16, after: self.infoStack)
     }
     
-    private func setupIconView() {
-        self.iconView = UIImageView(image: UIImage(named: puzzleTypes[Int(solve.scrambleType)].name))
-        self.iconView.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
-        self.iconView.tintColor = .black
-    }
-    
-    private func setupLabelView() {
-        self.infoStack = UIStackView(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: size))
-        self.infoStack.axis = .vertical
-        self.infoStack.alignment = .leading
-        self.infoStack.distribution = .fill
-        self.infoStack.spacing = -2
+    func updateLabel(with solve: Solve) {
+        self.timeLabel.text = solve.timeText
         
-        var timeLabel = UILabel()
-        var dateLabel = UILabel()
-        
-        timeLabel.text = self.solve.timeText
-        timeLabel.font = .preferredFont(for: .subheadline, weight: .semibold)
-        timeLabel.adjustsFontForContentSizeCategory = true
-        
-        if let date = self.solve.date {
-            dateLabel.text = getSolveDateFormatter(date).string(from: date)
+        if let date = solve.date {
+            self.dateLabel.text = getSolveDateFormatter(date).string(from: date)
         } else {
-            dateLabel.text = "Unknown Date"
+            self.dateLabel.text = "Unknown Date"
         }
-        
-        dateLabel.font = .preferredFont(forTextStyle: .footnote)
-        dateLabel.textColor = UIColor(Color("grey"))
-        dateLabel.adjustsFontForContentSizeCategory = true
-        
-        self.infoStack.addArrangedSubview(timeLabel)
-        self.infoStack.addArrangedSubview(dateLabel)
-    }
-    
-    private func setupChevron() {
-        self.chevron = UIImageView(image: UIImage(systemName: "chevron.right"))
-        self.chevron.tintColor = UIColor.black
-        
-        self.chevron.preferredSymbolConfiguration = UIImage.SymbolConfiguration(font: .preferredFont(for: .footnote, weight: .medium))
-
     }
 }
 
@@ -178,9 +200,10 @@ class TimeDistViewController: UIViewController {
     
     var interval: Int
     
-    var hightlightedPoint: HighlightedPoint!
     var scrollView: UIScrollView!
     var imageView: UIImageView!
+    var highlightedPoint: HighlightedPoint!
+    var highlightedCard: TimeDistributionPointCard!
     
     let imageHeight: CGFloat = 300
     
@@ -290,42 +313,60 @@ class TimeDistViewController: UIViewController {
         
         scrollView.isUserInteractionEnabled = true
         
-        scrollView.layer.borderWidth = 2
-        scrollView.layer.borderColor = UIColor.blue.cgColor
-        
-        self.imageView.layer.borderWidth = 2
-        self.imageView.layer.borderColor = UIColor.black.cgColor
+        /// debug: add border
+//        scrollView.layer.borderWidth = 2
+//        scrollView.layer.borderColor = UIColor.blue.cgColor
+//        
+//        self.imageView.layer.borderWidth = 2
+//        self.imageView.layer.borderColor = UIColor.black.cgColor
+        /// end debug
         
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(panning))
         longPressGestureRecognizer.minimumPressDuration = 0.25
         
         scrollView.addGestureRecognizer(longPressGestureRecognizer)
         
-        self.hightlightedPoint = HighlightedPoint(frame: CGRect(x: 10, y: 10, width: 12, height: 12))
+        self.highlightedPoint = HighlightedPoint(frame: CGRect(x: 10, y: 10, width: 12, height: 12))
         
-        self.hightlightedPoint.backgroundColor = .clear
-        self.hightlightedPoint.frame = CGRect(x: self.points[1].point.x - 6,
+        self.highlightedPoint.backgroundColor = .clear
+        self.highlightedPoint.frame = CGRect(x: self.points[1].point.x - 6,
                                               y: self.points[1].point.y - 6,
                                               width: 12, height: 12)
-        scrollView.addSubview(self.hightlightedPoint)
+        self.highlightedPoint.isHidden = true
+        
+        self.scrollView.addSubview(self.highlightedPoint)
         
         
-        self.scrollView.addSubview(TimeDistributionPointView(origin: CGPoint(x: 0, y: 0), solve: self.points.first!.solve))
+        self.highlightedCard = TimeDistributionPointCard(solve: nil)
+        self.highlightedCard.isHidden = true
+        
+        self.scrollView.addSubview(self.highlightedCard)
     }
     
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
+        #warning("when you first long press and don't move the card is at .zero, but only for the first time - other times when you just press it's fine and is at the correct location")
         if (pgr.state == .ended) {
-            self.hightlightedPoint.isHidden = true
+            self.highlightedPoint.isHidden = true
+            self.highlightedCard.isHidden = true
             return
         }
         
-        self.hightlightedPoint.isHidden = false
         let closestIndex = Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(interval))
         let closestPoint = self.points[closestIndex]
         
-        self.hightlightedPoint.frame = CGRect(x: closestPoint.point.x - 6,
-                                              y: closestPoint.point.y - 6,
-                                              width: 12, height: 12)
+        self.highlightedCard.updateLabel(with: closestPoint.solve)
+        
+        self.highlightedPoint.frame.origin = CGPoint(x: closestPoint.point.x - 6,
+                                              y: closestPoint.point.y - 6)
+        
+        #warning("this only work for when there is no scroll offset...")
+        self.highlightedCard.frame.origin = CGPoint(x: min(max(0, closestPoint.point.x - (self.highlightedCard.frame.width / 2)), self.scrollView.frame.width - self.highlightedCard.frame.width),
+                                                    y: closestPoint.point.y - 80)
+        
+        self.highlightedPoint.isHidden = false
+        self.highlightedCard.isHidden = false
+        
+
     }
 }
 
