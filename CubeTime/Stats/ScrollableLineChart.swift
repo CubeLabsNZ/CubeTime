@@ -63,6 +63,112 @@ extension CGPoint {
     }
 }
 
+class TimeDistributionPointView: UIStackView {
+    let size = CGSize(width: 144, height: 44)
+    let solve: Solve
+    
+    var iconView: UIImageView!
+    var infoStack: UIStackView!
+    var chevron: UIImageView!
+    
+    init(origin: CGPoint, solve: Solve) {
+        self.solve = solve
+        
+        super.init(frame: CGRect(origin: origin, size: size))
+        
+        self.setupCard()
+        self.setupIconView()
+        self.setupLabelView()
+        self.setupChevron()
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.iconView.translatesAutoresizingMaskIntoConstraints = false
+        self.infoStack.translatesAutoresizingMaskIntoConstraints = false
+        self.chevron.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        self.addArrangedSubview(self.iconView)
+        self.addArrangedSubview(self.infoStack)
+        self.addArrangedSubview(self.chevron)
+        
+        self.distribution = .fill
+        self.alignment = .center
+        self.spacing = 10
+        
+        self.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        self.isLayoutMarginsRelativeArrangement = true
+        
+        self.setCustomSpacing(16, after: self.infoStack)
+
+
+        NSLayoutConstraint.activate([
+            self.heightAnchor.constraint(equalToConstant: 44),
+            
+            self.iconView.widthAnchor.constraint(equalToConstant: 24),
+            self.iconView.heightAnchor.constraint(equalTo: self.iconView.widthAnchor),
+        ])
+    }
+    
+    required init(coder: NSCoder) {
+        fatalError("not implemented")
+    }
+    
+    private func setupCard() {
+        self.layer.cornerRadius = 6
+        self.layer.cornerCurve = .continuous
+        self.backgroundColor = UIColor(Color("overlay0"))
+        
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOpacity = 0.04
+        self.layer.shadowRadius = 6
+        self.layer.shadowOffset = CGSize(width: 0.0, height: -2.0)
+    }
+    
+    private func setupIconView() {
+        self.iconView = UIImageView(image: UIImage(named: puzzleTypes[Int(solve.scrambleType)].name))
+        self.iconView.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
+        self.iconView.tintColor = .black
+    }
+    
+    private func setupLabelView() {
+        self.infoStack = UIStackView(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: size))
+        self.infoStack.axis = .vertical
+        self.infoStack.alignment = .leading
+        self.infoStack.distribution = .fill
+        self.infoStack.spacing = -2
+        
+        var timeLabel = UILabel()
+        var dateLabel = UILabel()
+        
+        timeLabel.text = self.solve.timeText
+        timeLabel.font = .preferredFont(for: .subheadline, weight: .semibold)
+        timeLabel.adjustsFontForContentSizeCategory = true
+        
+        if let date = self.solve.date {
+            dateLabel.text = getSolveDateFormatter(date).string(from: date)
+        } else {
+            dateLabel.text = "Unknown Date"
+        }
+        
+        dateLabel.font = .preferredFont(forTextStyle: .footnote)
+        dateLabel.textColor = UIColor(Color("grey"))
+        dateLabel.adjustsFontForContentSizeCategory = true
+        
+        self.infoStack.addArrangedSubview(timeLabel)
+        self.infoStack.addArrangedSubview(dateLabel)
+    }
+    
+    private func setupChevron() {
+        self.chevron = UIImageView(image: UIImage(systemName: "chevron.right"))
+        self.chevron.tintColor = UIColor.black
+        
+        self.chevron.preferredSymbolConfiguration = UIImage.SymbolConfiguration(font: .preferredFont(for: .footnote, weight: .medium))
+
+    }
+}
+
+
+
 class TimeDistViewController: UIViewController {
     let points: [LineChartPoint]
     let gapDelta: Int
@@ -202,6 +308,9 @@ class TimeDistViewController: UIViewController {
                                               y: self.points[1].point.y - 6,
                                               width: 12, height: 12)
         scrollView.addSubview(self.hightlightedPoint)
+        
+        
+        self.scrollView.addSubview(TimeDistributionPointView(origin: CGPoint(x: 0, y: 0), solve: self.points.first!.solve))
     }
     
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
