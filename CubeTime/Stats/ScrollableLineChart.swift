@@ -193,7 +193,7 @@ class TimeDistributionPointCard: UIStackView {
 
 class TimeDistViewController: UIViewController {
     let points: [LineChartPoint]
-    var gapDelta: Int {
+    var interval: Int {
         didSet {
             print("gap delta did set")
             self.drawGraph()
@@ -214,9 +214,9 @@ class TimeDistViewController: UIViewController {
     
     private let dotSize: CGFloat = 6
     
-    init(points: [LineChartPoint], gapDelta: Int, averageValue: Double, limits: (min: Double, max: Double)) {
+    init(points: [LineChartPoint], interval: Int, averageValue: Double, limits: (min: Double, max: Double)) {
         self.points = points
-        self.gapDelta = gapDelta
+        self.interval = interval
         self.averageValue = averageValue
         self.limits = limits
         
@@ -233,13 +233,12 @@ class TimeDistViewController: UIViewController {
         self.scrollView = UIScrollView()
         self.scrollView.showsHorizontalScrollIndicator = true
         
-        self.imageView = UIImageView(frame: .zero)
-        
         self.view.clipsToBounds = true
         
         self.view.addSubview(scrollView)
         
-        self.drawGraph()
+        self.imageView = UIImageView(frame: .zero)
+        self.imageView = UIImageView(image: self.drawGraph())
         
         self.scrollView.addSubview(self.imageView)
         self.scrollView.frame = self.view.frame
@@ -247,11 +246,11 @@ class TimeDistViewController: UIViewController {
         self.scrollView.isUserInteractionEnabled = true
         
         /// debug: add border
-        //        scrollView.layer.borderWidth = 2
-        //        scrollView.layer.borderColor = UIColor.blue.cgColor
-        //
-        //        self.imageView.layer.borderWidth = 2
-        //        self.imageView.layer.borderColor = UIColor.black.cgColor
+                scrollView.layer.borderWidth = 2
+                scrollView.layer.borderColor = UIColor.blue.cgColor
+        
+                self.imageView.layer.borderWidth = 2
+                self.imageView.layer.borderColor = UIColor.black.cgColor
         /// end debug
         
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(panning))
@@ -276,8 +275,8 @@ class TimeDistViewController: UIViewController {
         self.scrollView.addSubview(self.highlightedCard)
     }
     
-    private func drawGraph() {
-        let imageSize = CGSize(width: CGFloat(points.count * gapDelta),
+    private func drawGraph() -> UIImage {
+        let imageSize = CGSize(width: CGFloat((points.count - 1) * interval),
                                height: imageHeight)
         
         /// draw line
@@ -291,7 +290,7 @@ class TimeDistViewController: UIViewController {
         /// bottom line
         bottomLine.move(to: CGPoint(x: 0, y: imageHeight))
         bottomLine.lineWidth = 2
-        bottomLine.addLine(to: CGPoint(x: CGFloat((points.count - 1) * self.gapDelta), y: imageHeight))
+        bottomLine.addLine(to: CGPoint(x: CGFloat((points.count - 1) * self.interval), y: imageHeight))
         context.setStrokeColor(UIColor(Color("indent0")).cgColor)
         bottomLine.stroke()
         
@@ -350,10 +349,13 @@ class TimeDistViewController: UIViewController {
         
         self.imageView.image = newImage
         self.scrollView.contentSize = newImage.size
+        
+        return newImage
     }
     
-    @objc func updateGap(_ gapDelta: Int) {
-        self.gapDelta = gapDelta
+    @objc func updateGap(_ interval: Int) {
+        self.interval = interval
+        print(self.interval)
     }
     
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
@@ -364,7 +366,7 @@ class TimeDistViewController: UIViewController {
             return
         }
         
-        let closestIndex = Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(gapDelta))
+        let closestIndex = Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(self.interval))
         let closestPoint = self.points[closestIndex]
         
         self.highlightedCard.updateLabel(with: closestPoint.solve)
@@ -372,7 +374,7 @@ class TimeDistViewController: UIViewController {
         self.highlightedPoint.frame.origin = CGPoint(x: closestPoint.point.x - 6,
                                                      y: closestPoint.point.y - 6)
         
-#warning("this only work for when there is no scroll offset...")
+        #warning("this only work for when there is no scroll offset...")
         self.highlightedCard.frame.origin = CGPoint(x: min(max(0, closestPoint.point.x - (self.highlightedCard.frame.width / 2)), self.scrollView.frame.width - self.highlightedCard.frame.width),
                                                     y: closestPoint.point.y - 80)
         
@@ -388,26 +390,26 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     typealias UIViewControllerType = TimeDistViewController
     
     let points: [LineChartPoint]
-    let gapDelta: Int
+    let interval: Int
     let averageValue: Double
     let proxy: GeometryProxy
     
     let limits: (min: Double, max: Double)
     
-    init(rawDataPoints: [Solve], limits: (min: Double, max: Double), averageValue: Double, gapDelta: Int, proxy: GeometryProxy) {
+    init(rawDataPoints: [Solve], limits: (min: Double, max: Double), averageValue: Double, interval: Int, proxy: GeometryProxy) {
         self.points = rawDataPoints.enumerated().map({ (i, e) in
-            return LineChartPoint(solve: e, position: Double(i * gapDelta), min: limits.min, max: limits.max, boundsHeight: 300)
+            return LineChartPoint(solve: e, position: Double(i * interval), min: limits.min, max: limits.max, boundsHeight: 300)
         })
         self.averageValue = averageValue
         self.limits = limits
-        self.gapDelta = gapDelta
+        self.interval = interval
         self.proxy = proxy
         
-        print("detail time trend reinit with \(gapDelta)")
+        print("detail time trend reinit with \(interval)")
     }
     
     func makeUIViewController(context: Context) -> TimeDistViewController {
-        let timeDistViewController = TimeDistViewController(points: points, gapDelta: gapDelta, averageValue: averageValue, limits: limits)
+        let timeDistViewController = TimeDistViewController(points: points, interval: interval, averageValue: averageValue, limits: limits)
         print(proxy.size.width, proxy.size.height)
         timeDistViewController.view.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
         timeDistViewController.scrollView.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
@@ -417,8 +419,8 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     
     func updateUIViewController(_ uiViewController: TimeDistViewController, context: Context) {
         uiViewController.view?.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
-        print("new gap delta \(gapDelta)")
-        uiViewController.updateGap(gapDelta)
+        print("new gap delta \(interval)")
+        uiViewController.updateGap(interval)
         
         print("vc updated")
     }

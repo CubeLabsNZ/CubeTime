@@ -16,7 +16,7 @@ struct TimeTrendDetail: View {
     @State var selectedLines = [true, false, false, false]
     let labels = ["time", "ao5", "ao12", "ao100"]
     
-    @State var interval: Int = 30
+    @State var interval: Int = 20
     
     var body: some View {
         ZStack {
@@ -61,7 +61,7 @@ struct TimeTrendDetail: View {
                 GeometryReader { proxy in
                     DetailTimeTrendBase(rawDataPoints: stopwatchManager.solvesByDate,
                                         limits: (stopwatchManager.solvesByDate.min(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen, stopwatchManager.solvesByDate.max(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen),
-                                        averageValue: 5, gapDelta: interval,
+                                        averageValue: 5, interval: interval,
                                         proxy: proxy)
                 }
                 
