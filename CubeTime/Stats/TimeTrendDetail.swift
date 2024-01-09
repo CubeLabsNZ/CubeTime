@@ -61,9 +61,8 @@ struct TimeTrendDetail: View {
                 GeometryReader { proxy in
                     DetailTimeTrendBase(rawDataPoints: stopwatchManager.solvesByDate,
                                         limits: (stopwatchManager.solvesByDate.min(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen, stopwatchManager.solvesByDate.max(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen),
-                                        averageValue: 5,
-                                        proxy: proxy,
-                                        interval: $interval)
+                                        averageValue: 5, gapDelta: interval,
+                                        proxy: proxy)
                 }
                 
                 
