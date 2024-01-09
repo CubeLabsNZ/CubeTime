@@ -30,9 +30,10 @@ class ScrambleController: ObservableObject {
         var thread: OpaquePointer? = nil
         
         
-        graal_create_isolate(nil, &isolate, &thread)
+        let ret = graal_create_isolate(nil, &isolate, &thread)
+        print(ret)
                 
-        let s = String(cString: tnoodle_lib_scramble(thread, scrambleType))
+        let s = String(cString: tnoodle_lib_scramble(thread!, scrambleType))
         
         graal_tear_down_isolate(thread);
             
@@ -67,7 +68,7 @@ class ScrambleController: ObservableObject {
                 var svg: String!
                 
                 scramble.withCString { s in
-                    svg = String(cString: tnoodle_lib_draw_scramble(thread, scrTypeAtWorkStart, s))
+                    svg = String(cString: tnoodle_lib_draw_scramble(thread!, scrTypeAtWorkStart, UnsafeMutablePointer(mutating: s)))
                 }
                 
                 graal_tear_down_isolate(thread);

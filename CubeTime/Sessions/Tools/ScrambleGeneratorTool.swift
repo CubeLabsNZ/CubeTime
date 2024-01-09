@@ -104,7 +104,7 @@ class ScrambleGenerator: ObservableObject {
         graal_create_isolate(nil, &isolate, &thread)
         
         self.threads = (0..<ProcessInfo.processInfo.processorCount).map {_ in
-            let t = ScrambleThread(isolate: isolate, semaphore: semaphore, scrGen: self, count: numScramble!, scrType: Int32(scrambleType))
+            let t = ScrambleThread(isolate: isolate!, semaphore: semaphore, scrGen: self, count: numScramble!, scrType: Int32(scrambleType))
             t.qualityOfService = .utility
             return t
         }
