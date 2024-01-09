@@ -192,7 +192,7 @@ class TimeDistributionPointCard: UIStackView {
 
 
 class TimeDistViewController: UIViewController {
-    let points: [LineChartPoint]
+    var points: [LineChartPoint]
     var interval: Int {
         didSet {
             print("gap delta did set")
@@ -348,14 +348,15 @@ class TimeDistViewController: UIViewController {
         let newImage = UIGraphicsGetImageFromCurrentImageContext()!
         
         self.imageView.image = newImage
+        self.imageView.frame.size = newImage.size
         self.scrollView.contentSize = newImage.size
         
         return newImage
     }
     
-    @objc func updateGap(_ interval: Int) {
+    func updateGap(interval: Int, points: [LineChartPoint]) {
+        self.points = points
         self.interval = interval
-        print(self.interval)
     }
     
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
@@ -420,7 +421,7 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: TimeDistViewController, context: Context) {
         uiViewController.view?.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
         print("new gap delta \(interval)")
-        uiViewController.updateGap(interval)
+        uiViewController.updateGap(interval: interval, points: points)
         
         print("vc updated")
     }
