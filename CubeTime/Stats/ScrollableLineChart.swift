@@ -40,7 +40,8 @@ struct LineChartPoint {
 }
 
 func getStandardisedYLocation(value: Double, min: Double, max: Double, imageHeight: CGFloat) -> CGFloat {
-    return imageHeight - (((value - min) / (max - min)) * imageHeight)
+    /// 1 is used to offset the graph by 1 as the lineWidth is 2
+    return imageHeight - (((value - min) / (max - min)) * (imageHeight - 1) + 1)
 }
 
 extension CGPoint {
@@ -197,6 +198,7 @@ class TimeDistViewController: UIViewController {
         didSet {
             print("gap delta did set")
             self.drawGraph()
+            self.drawYAxis()
         }
     }
     let averageValue: Double
@@ -209,6 +211,8 @@ class TimeDistViewController: UIViewController {
     var highlightedCard: TimeDistributionPointCard!
     
     let imageHeight: CGFloat
+    
+    var imageOffset: CGFloat!
     
     // let crossView: CGPath!  // TODO: the crosses for DNFs that is drawn (copy)
     
@@ -244,14 +248,16 @@ class TimeDistViewController: UIViewController {
         self.scrollView.addSubview(self.imageView)
         self.scrollView.frame = self.view.frame
         
+        self.imageOffset = (scrollView.frame.height - imageHeight) / 2
+        
         self.scrollView.isUserInteractionEnabled = true
         
         /// debug: add border
-        //        scrollView.layer.borderWidth = 2
-        //        scrollView.layer.borderColor = UIColor.blue.cgColor
-        //
-        //        self.imageView.layer.borderWidth = 2
-        //        self.imageView.layer.borderColor = UIColor.black.cgColor
+                scrollView.layer.borderWidth = 2
+                scrollView.layer.borderColor = UIColor.blue.cgColor
+        
+                self.imageView.layer.borderWidth = 2
+                self.imageView.layer.borderColor = UIColor.black.cgColor
         /// end debug
         
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(panning))
@@ -274,6 +280,10 @@ class TimeDistViewController: UIViewController {
         self.highlightedCard.isHidden = true
         
         self.scrollView.addSubview(self.highlightedCard)
+        
+        self.imageView.frame.origin = CGPoint(x: 0, y: self.imageOffset)
+        
+        drawYAxis()
     }
     
     private func drawGraph() -> UIImage {
@@ -355,8 +365,26 @@ class TimeDistViewController: UIViewController {
         return newImage
     }
     
-    private func drawAxis() {
+    private func drawYAxis() {
+        let range = self.limits.max - self.limits.min
         
+        for i in 0 ..< 6 {
+            let offset: CGFloat = CGFloat(i) * self.imageHeight / CGFloat(5)
+            
+            var label = UILabel(frame: .zero)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.adjustsFontSizeToFitWidth = true
+            #warning("DP HARD CODED")
+            label.text = formatSolveTime(secs: self.limits.min + Double(i) * range / Double(5), dp: 3)
+            
+            self.scrollView.addSubview(label)
+            
+            #warning("fix this")
+            NSLayoutConstraint.activate([
+                label.centerXAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -offset),
+                label.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            ])
+        }
     }
     
     func updateGap(interval: Int, points: [LineChartPoint]) {
@@ -378,16 +406,14 @@ class TimeDistViewController: UIViewController {
         self.highlightedCard.updateLabel(with: closestPoint.solve)
         
         self.highlightedPoint.frame.origin = CGPoint(x: closestPoint.point.x - 6,
-                                                     y: closestPoint.point.y - 6)
+                                                     y: self.imageOffset + closestPoint.point.y - 6)
         
         #warning("this only work for when there is no scroll offset...")
         self.highlightedCard.frame.origin = CGPoint(x: min(max(0, closestPoint.point.x - (self.highlightedCard.frame.width / 2)), self.scrollView.frame.width - self.highlightedCard.frame.width),
-                                                    y: closestPoint.point.y - 80)
+                                                    y: self.imageOffset + closestPoint.point.y - 80)
         
         self.highlightedPoint.isHidden = false
         self.highlightedCard.isHidden = false
-        
-        
     }
 }
 

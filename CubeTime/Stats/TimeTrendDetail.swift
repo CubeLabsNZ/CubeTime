@@ -16,7 +16,7 @@ struct TimeTrendDetail: View {
     @State var selectedLines = [true, false, false, false]
     let labels = ["time", "ao5", "ao12", "ao100"]
     
-    @State var interval: Int = 20
+    @State var interval: Int = 30
     
     var body: some View {
         ZStack {
