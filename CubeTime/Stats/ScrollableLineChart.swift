@@ -26,10 +26,10 @@ struct LineChartPoint {
     var point: CGPoint
     var solve: Solve
     
-    init(solve: Solve, position: Double, min: Double, max: Double, boundsHeight: CGFloat) {
+    init(solve: Solve, position: Double, min: Double, max: Double, imageHeight: CGFloat) {
         self.solve = solve
         self.point = CGPoint()
-        self.point.y = getStandardisedYLocation(value: solve.timeIncPen, min: min, max: max, boundsHeight: boundsHeight)
+        self.point.y = getStandardisedYLocation(value: solve.timeIncPen, min: min, max: max, imageHeight: imageHeight)
         self.point.x = position
     }
     
@@ -39,8 +39,8 @@ struct LineChartPoint {
     }
 }
 
-func getStandardisedYLocation(value: Double, min: Double, max: Double, boundsHeight: CGFloat) -> CGFloat {
-    return boundsHeight - (((value - min) / (max - min)) * boundsHeight)
+func getStandardisedYLocation(value: Double, min: Double, max: Double, imageHeight: CGFloat) -> CGFloat {
+    return imageHeight - (((value - min) / (max - min)) * imageHeight)
 }
 
 extension CGPoint {
@@ -208,17 +208,18 @@ class TimeDistViewController: UIViewController {
     var highlightedPoint: HighlightedPoint!
     var highlightedCard: TimeDistributionPointCard!
     
-    let imageHeight: CGFloat = 300
+    let imageHeight: CGFloat
     
     // let crossView: CGPath!  // TODO: the crosses for DNFs that is drawn (copy)
     
     private let dotSize: CGFloat = 6
     
-    init(points: [LineChartPoint], interval: Int, averageValue: Double, limits: (min: Double, max: Double)) {
+    init(points: [LineChartPoint], interval: Int, averageValue: Double, limits: (min: Double, max: Double), imageHeight: CGFloat) {
         self.points = points
         self.interval = interval
         self.averageValue = averageValue
         self.limits = limits
+        self.imageHeight = imageHeight
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -246,11 +247,11 @@ class TimeDistViewController: UIViewController {
         self.scrollView.isUserInteractionEnabled = true
         
         /// debug: add border
-                scrollView.layer.borderWidth = 2
-                scrollView.layer.borderColor = UIColor.blue.cgColor
-        
-                self.imageView.layer.borderWidth = 2
-                self.imageView.layer.borderColor = UIColor.black.cgColor
+        //        scrollView.layer.borderWidth = 2
+        //        scrollView.layer.borderColor = UIColor.blue.cgColor
+        //
+        //        self.imageView.layer.borderWidth = 2
+        //        self.imageView.layer.borderColor = UIColor.black.cgColor
         /// end debug
         
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(panning))
@@ -354,6 +355,10 @@ class TimeDistViewController: UIViewController {
         return newImage
     }
     
+    private func drawAxis() {
+        
+    }
+    
     func updateGap(interval: Int, points: [LineChartPoint]) {
         self.points = points
         self.interval = interval
@@ -399,7 +404,10 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     
     init(rawDataPoints: [Solve], limits: (min: Double, max: Double), averageValue: Double, interval: Int, proxy: GeometryProxy) {
         self.points = rawDataPoints.enumerated().map({ (i, e) in
-            return LineChartPoint(solve: e, position: Double(i * interval), min: limits.min, max: limits.max, boundsHeight: 300)
+            return LineChartPoint(solve: e,
+                                  position: Double(i * interval),
+                                  min: limits.min, max: limits.max,
+                                  imageHeight: round(proxy.size.height * 0.618))
         })
         self.averageValue = averageValue
         self.limits = limits
@@ -410,7 +418,7 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     }
     
     func makeUIViewController(context: Context) -> TimeDistViewController {
-        let timeDistViewController = TimeDistViewController(points: points, interval: interval, averageValue: averageValue, limits: limits)
+        let timeDistViewController = TimeDistViewController(points: points, interval: interval, averageValue: averageValue, limits: limits, imageHeight: round(proxy.size.height * 0.618))
         print(proxy.size.width, proxy.size.height)
         timeDistViewController.view.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
         timeDistViewController.scrollView.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
