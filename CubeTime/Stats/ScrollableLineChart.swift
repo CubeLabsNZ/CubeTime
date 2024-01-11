@@ -250,17 +250,22 @@ class TimeDistViewController: UIViewController {
         self.scrollView.isUserInteractionEnabled = true
         
         /// debug: add border
-                scrollView.layer.borderWidth = 2
-                scrollView.layer.borderColor = UIColor.blue.cgColor
+        scrollView.layer.borderWidth = 2
+        scrollView.layer.borderColor = UIColor.blue.cgColor
         
-                self.imageView.layer.borderWidth = 2
-                self.imageView.layer.borderColor = UIColor.black.cgColor
+        self.imageView.layer.borderWidth = 2
+        self.imageView.layer.borderColor = UIColor.black.cgColor
         /// end debug
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(panning))
         longPressGestureRecognizer.minimumPressDuration = 0.25
+        tapGestureRecognizer.require(toFail: longPressGestureRecognizer)
         
+        scrollView.addGestureRecognizer(tapGestureRecognizer)
         scrollView.addGestureRecognizer(longPressGestureRecognizer)
+        
         
         self.highlightedPoint = HighlightedPoint(frame: CGRect(x: 10, y: 10, width: 12, height: 12))
         
@@ -450,8 +455,8 @@ class TimeDistViewController: UIViewController {
             view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             view.heightAnchor.constraint(equalToConstant: self.imageHeight),
         ])
-            
-
+        
+        
         return view
     }
     
@@ -460,13 +465,15 @@ class TimeDistViewController: UIViewController {
         self.interval = interval
     }
     
+    @objc func tapped(_ g: UITapGestureRecognizer) {
+        self.highlightedCard.isHidden = true
+        self.highlightedPoint.isHidden = true
+    }
+    
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
-        #warning("when you first long press and don't move the card is at .zero, but only for the first time - other times when you just press it's fine and is at the correct location")
-        if (pgr.state == .ended) {
-            self.highlightedPoint.isHidden = true
-            self.highlightedCard.isHidden = true
-            return
-        }
+        print(pgr.state.rawValue)
+        self.highlightedPoint.isHidden = false
+        self.highlightedCard.isHidden = false
         
         let closestIndex = Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(self.interval))
         let closestPoint = closestIndex >= self.points.count ? self.points.last! : self.points[closestIndex]
@@ -476,12 +483,11 @@ class TimeDistViewController: UIViewController {
         self.highlightedPoint.frame.origin = CGPoint(x: closestPoint.point.x - 6,
                                                      y: closestPoint.point.y - 6)
         
-        #warning("this only work for when there is no scroll offset...")
-        self.highlightedCard.frame.origin = CGPoint(x: min(max(0, closestPoint.point.x - (self.highlightedCard.frame.width / 2)), self.scrollView.frame.width - self.highlightedCard.frame.width),
+
+        self.highlightedCard.frame.origin = CGPoint(x: min(max(self.scrollView.contentOffset.x,
+                    closestPoint.point.x - (self.highlightedCard.frame.width / 2)),
+                self.scrollView.frame.width - self.highlightedCard.frame.width + self.scrollView.contentOffset.x),
                                                     y: closestPoint.point.y - 80)
-        
-        self.highlightedPoint.isHidden = false
-        self.highlightedCard.isHidden = false
     }
 }
 
