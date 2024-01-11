@@ -105,7 +105,7 @@ struct CTCopyButton: View {
 
 // MARK: - Hierarchical Button
 enum CTButtonType {
-    case mono, coloured, halfcoloured, disabled, red, green
+    case mono, coloured, halfcoloured, disabled, red, green, yellow, orange
 }
 
 enum CTButtonSize {
@@ -153,6 +153,27 @@ struct CTButton<Base: View>: View {
     var body: some View { self.button.buttonStyle(CTButtonStyle()) }
 }
 
+func colourForButtonType(_ type: CTButtonType) -> (colourBg: Color, colourFg: Color, colourShadow: Color) {
+    switch (type) {
+    case .halfcoloured:
+        return (Color("overlay0"), Color("accent"), Color.black.opacity(0.07))
+        
+    case .coloured:
+        return (Color("accent").opacity(0.20), Color("accent"), Color("accent").opacity(0.08))
+        
+    case .mono:
+        return (Color("overlay0"), Color("dark"), Color.black.opacity(0.07))
+        
+    case .disabled:
+        return (Color("grey").opacity(0.15), Color("grey"), Color.clear)
+        
+    case .red, .green, .yellow, .orange:
+        return (Color(String(describing: type)).opacity(0.25),
+                Color(String(describing: type)),
+                Color(String(describing: type)).opacity(0.16))
+    }
+}
+
 #warning("todo: set image scale here instead of per button -> inconsistent!")
 struct CTButtonBase<V: View>: View {
     let content: V
@@ -189,38 +210,7 @@ struct CTButtonBase<V: View>: View {
          supportsDynamicResizing: Bool,
          expandWidth: Bool,
          content: @escaping () -> V) {
-        switch (type) {
-        case .halfcoloured:
-            self.colourBg = Color("overlay0")
-            self.colourFg = Color("accent")
-            self.colourShadow = Color.black.opacity(0.07)
-            
-        case .coloured:
-            self.colourBg = Color("accent").opacity(0.20)
-            self.colourFg = Color("accent")
-            self.colourShadow = Color("accent").opacity(0.08)
-            
-        case .mono:
-            self.colourBg = Color("overlay0")
-            self.colourFg = Color("dark")
-            self.colourShadow = Color.black.opacity(0.07)
-            
-        case .disabled:
-            self.colourBg = Color("grey").opacity(0.15)
-            self.colourFg = Color("grey")
-            self.colourShadow = Color.clear
-            
-        case .red:
-            self.colourBg = Color("red").opacity(0.25)
-            self.colourFg = Color("red")
-            self.colourShadow = Color("red").opacity(0.16)
-            
-        case .green:
-            self.colourBg = Color("green").opacity(0.25)
-            self.colourFg = Color("green")
-            self.colourShadow = Color("green").opacity(0.16)
-
-        }
+        (self.colourBg, self.colourFg, self.colourShadow) = colourForButtonType(type)
         
         self.supportsDynamicResizing = supportsDynamicResizing
         

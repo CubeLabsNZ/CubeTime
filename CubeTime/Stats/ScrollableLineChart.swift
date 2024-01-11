@@ -255,14 +255,6 @@ class TimeDistViewController: UIViewController {
         
         self.scrollView.isUserInteractionEnabled = true
         
-        /// debug: add border
-        scrollView.layer.borderWidth = 2
-        scrollView.layer.borderColor = UIColor.blue.cgColor
-        
-        self.imageView.layer.borderWidth = 2
-        self.imageView.layer.borderColor = UIColor.black.cgColor
-        /// end debug
-        
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(panning))
@@ -472,11 +464,17 @@ class TimeDistViewController: UIViewController {
     func updateGap(interval: Int, points: [LineChartPoint]) {
         self.points = points
         self.interval = interval
+        
+        self.removeSelectedPoint()
+    }
+    
+    private func removeSelectedPoint() {
+        self.highlightedCard.isHidden = true
+        self.highlightedPoint.isHidden = true
     }
     
     @objc func tapped(_ g: UITapGestureRecognizer) {
-        self.highlightedCard.isHidden = true
-        self.highlightedPoint.isHidden = true
+        self.removeSelectedPoint()
     }
     
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
@@ -503,10 +501,7 @@ class TimeDistViewController: UIViewController {
         let solveSheet = UIHostingController(rootView: TimeDetailView(for: self.lastSelectedSolve, currentSolve: .constant(self.lastSelectedSolve)).environmentObject(stopwatchManager))
         
         #warning("BUG: the toolbar doesn't display")
-        self.present(solveSheet, animated: true, completion: {
-            self.highlightedCard.isHidden = true
-            self.highlightedPoint.isHidden = true
-        })
+        self.present(solveSheet, animated: true, completion: self.removeSelectedPoint)
     }
 }
 
