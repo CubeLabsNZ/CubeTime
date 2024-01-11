@@ -201,6 +201,9 @@ class TimeDistViewController: UIViewController {
             self.drawYAxisValues()
         }
     }
+    
+    let stopwatchManager: StopwatchManager
+    
     let averageValue: Double
     
     let limits: (min: Double, max: Double)
@@ -216,11 +219,14 @@ class TimeDistViewController: UIViewController {
     
     var imageWidthConstraint: NSLayoutConstraint!
     
+    var lastSelectedSolve: Solve!
+    
     // let crossView: CGPath!  // TODO: the crosses for DNFs that is drawn (copy)
     
     private let dotSize: CGFloat = 6
     
-    init(points: [LineChartPoint], interval: Int, averageValue: Double, limits: (min: Double, max: Double), imageHeight: CGFloat) {
+    init(stopwatchManager: StopwatchManager, points: [LineChartPoint], interval: Int, averageValue: Double, limits: (min: Double, max: Double), imageHeight: CGFloat) {
+        self.stopwatchManager = stopwatchManager
         self.points = points
         self.interval = interval
         self.averageValue = averageValue
@@ -276,12 +282,18 @@ class TimeDistViewController: UIViewController {
         self.highlightedPoint.isHidden = true
         
         self.imageView.addSubview(self.highlightedPoint)
+        self.imageView.isUserInteractionEnabled = true
         
         
         self.highlightedCard = TimeDistributionPointCard(solve: nil)
+        #warning("BUG: card only tappable when in imageview frame. otherwise not tappable")
+        let cardTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(solveCardTapped))
+        self.highlightedCard.addGestureRecognizer(cardTapGestureRecognizer)
         self.highlightedCard.isHidden = true
         
         self.imageView.addSubview(self.highlightedCard)
+        
+        tapGestureRecognizer.shouldRequireFailure(of: cardTapGestureRecognizer)
         
         self.yAxis = drawYAxisValues()
         
@@ -384,9 +396,6 @@ class TimeDistViewController: UIViewController {
             self.imageView.widthAnchor.constraint(equalToConstant: image.size.width)
         ])
         
-        print(self.imageView.constraints)
-        print(image.size.width)
-        
         return image
     }
     
@@ -415,7 +424,7 @@ class TimeDistViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(view)
         
-        for i in 0 ..< 6 {
+        for i in (0 ..< 6).reversed() {
             var label = UILabel(frame: .zero)
             label.translatesAutoresizingMaskIntoConstraints = false
             label.adjustsFontSizeToFitWidth = true
@@ -471,7 +480,6 @@ class TimeDistViewController: UIViewController {
     }
     
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
-        print(pgr.state.rawValue)
         self.highlightedPoint.isHidden = false
         self.highlightedCard.isHidden = false
         
@@ -483,11 +491,22 @@ class TimeDistViewController: UIViewController {
         self.highlightedPoint.frame.origin = CGPoint(x: closestPoint.point.x - 6,
                                                      y: closestPoint.point.y - 6)
         
+        self.lastSelectedSolve = closestPoint.solve
 
         self.highlightedCard.frame.origin = CGPoint(x: min(max(self.scrollView.contentOffset.x,
                     closestPoint.point.x - (self.highlightedCard.frame.width / 2)),
                 self.scrollView.frame.width - self.highlightedCard.frame.width + self.scrollView.contentOffset.x),
                                                     y: closestPoint.point.y - 80)
+    }
+    
+    @objc func solveCardTapped(_ g: UITapGestureRecognizer) {
+        let solveSheet = UIHostingController(rootView: TimeDetailView(for: self.lastSelectedSolve, currentSolve: .constant(self.lastSelectedSolve)).environmentObject(stopwatchManager))
+        
+        #warning("BUG: the toolbar doesn't display")
+        self.present(solveSheet, animated: true, completion: {
+            self.highlightedCard.isHidden = true
+            self.highlightedPoint.isHidden = true
+        })
     }
 }
 
@@ -495,6 +514,7 @@ class TimeDistViewController: UIViewController {
 struct DetailTimeTrendBase: UIViewControllerRepresentable {
     typealias UIViewControllerType = TimeDistViewController
     
+    let stopwatchManager: StopwatchManager
     let points: [LineChartPoint]
     let interval: Int
     let averageValue: Double
@@ -502,7 +522,8 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     
     let limits: (min: Double, max: Double)
     
-    init(rawDataPoints: [Solve], limits: (min: Double, max: Double), averageValue: Double, interval: Int, proxy: GeometryProxy) {
+    init(stopwatchManager: StopwatchManager, rawDataPoints: [Solve], limits: (min: Double, max: Double), averageValue: Double, interval: Int, proxy: GeometryProxy) {
+        self.stopwatchManager = stopwatchManager
         self.points = rawDataPoints.enumerated().map({ (i, e) in
             return LineChartPoint(solve: e,
                                   position: Double(i * interval),
@@ -518,7 +539,7 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     }
     
     func makeUIViewController(context: Context) -> TimeDistViewController {
-        let timeDistViewController = TimeDistViewController(points: points, interval: interval, averageValue: averageValue, limits: limits, imageHeight: round(proxy.size.height * 0.618))
+        let timeDistViewController = TimeDistViewController(stopwatchManager: stopwatchManager, points: points, interval: interval, averageValue: averageValue, limits: limits, imageHeight: round(proxy.size.height * 0.618))
         print(proxy.size.width, proxy.size.height)
         timeDistViewController.view.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
         timeDistViewController.scrollView.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
