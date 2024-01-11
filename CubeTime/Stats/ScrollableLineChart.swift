@@ -298,9 +298,24 @@ class TimeDistViewController: UIViewController {
             self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
         ])
+        
+        self.view.addSubview(createDNFPoint(at: .zero))
+    }
+    
+    private func createDNFPoint(at pos: CGPoint) -> UIImageView {
+        #warning("for some reason slightly different to swiftui version... config is exactly the same?")
+        var config = UIImage.SymbolConfiguration(font: .preferredFont(for: .caption1, weight: .bold), scale: .medium)
+        config = config.applying(UIImage.SymbolConfiguration(paletteColors: [UIColor(Color("grey"))]))
+        
+        let dnfImageView = UIImageView(image: UIImage(systemName: "xmark", withConfiguration: config)!)
+        dnfImageView.frame = CGRect(origin: pos, size: CGSize(width: 12, height: 12))
+        
+        return dnfImageView
     }
     
     private func drawGraph() -> UIImage {
+        var dnfedIndices: [Int] = []
+        
         let imageSize = CGSize(width: CGFloat((points.count - 1) * interval),
                                height: imageHeight)
         
@@ -339,6 +354,10 @@ class TimeDistViewController: UIViewController {
             
             trendLine.addQuadCurve(to: cur.point,
                                    controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: cur.point))
+            
+            if Penalty(rawValue: cur.solve.penalty) == .dnf {
+                dnfedIndices.append(i)
+            }
         }
         
         trendLine.lineWidth = 2
@@ -373,6 +392,11 @@ class TimeDistViewController: UIViewController {
         let image = UIGraphicsGetImageFromCurrentImageContext()!
         
         self.imageView.image = image
+        
+        for i in dnfedIndices {
+            fatalError("NOT IMPLEMENTED POINT DOESN'T WORK")
+            self.imageView.addSubview(createDNFPoint(at: points[i].point))
+        }
         
         NSLayoutConstraint.deactivate(self.imageView.constraints)
         
