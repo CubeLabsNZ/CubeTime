@@ -271,7 +271,7 @@ class TimeDistViewController: UIViewController {
         self.highlightedPoint.frame = CGRect(x: self.points[1].point.x - 6,
                                              y: self.points[1].point.y - 6,
                                              width: 12, height: 12)
-        self.highlightedPoint.isHidden = true
+        self.highlightedPoint.layer.opacity = 1
         
         self.imageView.addSubview(self.highlightedPoint)
         self.imageView.isUserInteractionEnabled = true
@@ -281,7 +281,7 @@ class TimeDistViewController: UIViewController {
         #warning("BUG: card only tappable when in imageview frame. otherwise not tappable")
         let cardTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(solveCardTapped))
         self.highlightedCard.addGestureRecognizer(cardTapGestureRecognizer)
-        self.highlightedCard.isHidden = true
+        self.highlightedCard.layer.opacity = 1
         
         self.imageView.addSubview(self.highlightedCard)
         
@@ -469,8 +469,10 @@ class TimeDistViewController: UIViewController {
     }
     
     private func removeSelectedPoint() {
-        self.highlightedCard.isHidden = true
-        self.highlightedPoint.isHidden = true
+        UIView.animate(withDuration: 0.28, delay: 0, options: .curveEaseOut, animations: {
+            self.highlightedCard.layer.opacity = 0
+            self.highlightedPoint.layer.opacity = 0
+        })
     }
     
     @objc func tapped(_ g: UITapGestureRecognizer) {
@@ -478,8 +480,8 @@ class TimeDistViewController: UIViewController {
     }
     
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
-        self.highlightedPoint.isHidden = false
-        self.highlightedCard.isHidden = false
+        self.highlightedPoint.layer.opacity = 1
+        self.highlightedCard.layer.opacity = 1
         
         let closestIndex = Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(self.interval))
         let closestPoint = closestIndex >= self.points.count ? self.points.last! : self.points[closestIndex]
@@ -529,8 +531,6 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
         self.limits = limits
         self.interval = interval
         self.proxy = proxy
-        
-        print("detail time trend reinit with \(interval)")
     }
     
     func makeUIViewController(context: Context) -> TimeDistViewController {
@@ -544,9 +544,6 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     
     func updateUIViewController(_ uiViewController: TimeDistViewController, context: Context) {
         uiViewController.view?.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
-        print("new gap delta \(interval)")
         uiViewController.updateGap(interval: interval, points: points)
-        
-        print("vc updated")
     }
 }
