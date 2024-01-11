@@ -32,7 +32,7 @@ struct TimeTrendDetail: View {
                     }
                     
                     CTButton(type: .mono, size: .large, square: true, onTapRun: {
-                        self.interval += self.interval / 2
+                        self.interval = min(100, self.interval + (self.interval / 2))
                     }) {
                         Image(systemName: "plus.magnifyingglass")
                     }
@@ -56,6 +56,7 @@ struct TimeTrendDetail: View {
                         RoundedRectangle(cornerRadius: 6)
                             .fill(Color("overlay0"))
                     )
+                    
                 }
                 
                 GeometryReader { proxy in
@@ -66,36 +67,36 @@ struct TimeTrendDetail: View {
                 }
                 
                 
-//                if #available(iOS 17.0, *) {
-//                    Chart {
-//                        ForEach(Array(zip(stopwatchManager.solvesNoDNFsbyDate.indices, stopwatchManager.solvesNoDNFsbyDate)), id: \.0) { index, solve in
-//                            AreaMark(
-//                                x: PlottableValue.value("index", index),
-//                                y: PlottableValue.value("time", solve.time)
-//                            )
-//                            .interpolationMethod(.monotone)
-//                            .foregroundStyle(
-//                                LinearGradient(colors: [staticGradient[0].opacity(0.6), staticGradient[1].opacity(0.2), .clear], startPoint: .top, endPoint: .bottom)
-//                            )
-//                            
-//                            LineMark(
-//                                x: PlottableValue.value("index", index),
-//                                y: PlottableValue.value("time", solve.time)
-//                            )
-//                            .interpolationMethod(.monotone)
-//                            
-//                        }
-////                        .symbol(BasicChartSymbolShape.circle)
-//                    }
-//                    .chartYAxis() {
-//                        AxisMarks(position: .leading)
-//                    }
-//                    .chartScrollableAxes(.horizontal)
-//                    .chartXVisibleDomain(length: self.visibleDomain)
-//                    .padding(.top)
-//                } else {
-//                    Text("update!")
-//                }
+                //                if #available(iOS 17.0, *) {
+                //                    Chart {
+                //                        ForEach(Array(zip(stopwatchManager.solvesNoDNFsbyDate.indices, stopwatchManager.solvesNoDNFsbyDate)), id: \.0) { index, solve in
+                //                            AreaMark(
+                //                                x: PlottableValue.value("index", index),
+                //                                y: PlottableValue.value("time", solve.time)
+                //                            )
+                //                            .interpolationMethod(.monotone)
+                //                            .foregroundStyle(
+                //                                LinearGradient(colors: [staticGradient[0].opacity(0.6), staticGradient[1].opacity(0.2), .clear], startPoint: .top, endPoint: .bottom)
+                //                            )
+                //
+                //                            LineMark(
+                //                                x: PlottableValue.value("index", index),
+                //                                y: PlottableValue.value("time", solve.time)
+                //                            )
+                //                            .interpolationMethod(.monotone)
+                //
+                //                        }
+                ////                        .symbol(BasicChartSymbolShape.circle)
+                //                    }
+                //                    .chartYAxis() {
+                //                        AxisMarks(position: .leading)
+                //                    }
+                //                    .chartScrollableAxes(.horizontal)
+                //                    .chartXVisibleDomain(length: self.visibleDomain)
+                //                    .padding(.top)
+                //                } else {
+                //                    Text("update!")
+                //                }
             }
             .padding(8)
         }

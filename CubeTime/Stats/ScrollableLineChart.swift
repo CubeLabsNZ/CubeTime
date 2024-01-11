@@ -270,13 +270,13 @@ class TimeDistViewController: UIViewController {
                                              width: 12, height: 12)
         self.highlightedPoint.isHidden = true
         
-        self.scrollView.addSubview(self.highlightedPoint)
+        self.imageView.addSubview(self.highlightedPoint)
         
         
         self.highlightedCard = TimeDistributionPointCard(solve: nil)
         self.highlightedCard.isHidden = true
         
-        self.scrollView.addSubview(self.highlightedCard)
+        self.imageView.addSubview(self.highlightedCard)
         
         self.yAxis = drawYAxisValues()
         
@@ -469,7 +469,7 @@ class TimeDistViewController: UIViewController {
         }
         
         let closestIndex = Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(self.interval))
-        let closestPoint = self.points[closestIndex]
+        let closestPoint = closestIndex >= self.points.count ? self.points.last! : self.points[closestIndex]
         
         self.highlightedCard.updateLabel(with: closestPoint.solve)
         
