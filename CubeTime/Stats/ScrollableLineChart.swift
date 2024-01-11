@@ -198,7 +198,7 @@ class TimeDistViewController: UIViewController {
         didSet {
             print("gap delta did set")
             self.drawGraph()
-            self.drawYAxis()
+            self.drawYAxisValues()
         }
     }
     let averageValue: Double
@@ -206,13 +206,15 @@ class TimeDistViewController: UIViewController {
     let limits: (min: Double, max: Double)
     
     var scrollView: UIScrollView!
-    var imageView: UIImageView!
+    var imageView = UIImageView(frame: .zero)
     var highlightedPoint: HighlightedPoint!
     var highlightedCard: TimeDistributionPointCard!
     
     let imageHeight: CGFloat
     
-    var imageOffset: CGFloat!
+    var yAxis: UIView!
+    
+    var imageWidthConstraint: NSLayoutConstraint!
     
     // let crossView: CGPath!  // TODO: the crosses for DNFs that is drawn (copy)
     
@@ -241,14 +243,9 @@ class TimeDistViewController: UIViewController {
         self.view.clipsToBounds = true
         
         self.view.addSubview(scrollView)
-        
-        self.imageView = UIImageView(frame: .zero)
-        self.imageView = UIImageView(image: self.drawGraph())
-        
         self.scrollView.addSubview(self.imageView)
-        self.scrollView.frame = self.view.frame
         
-        self.imageOffset = (scrollView.frame.height - imageHeight) / 2
+        self.drawGraph()
         
         self.scrollView.isUserInteractionEnabled = true
         
@@ -281,9 +278,17 @@ class TimeDistViewController: UIViewController {
         
         self.scrollView.addSubview(self.highlightedCard)
         
-        self.imageView.frame.origin = CGPoint(x: 0, y: self.imageOffset)
+        self.yAxis = drawYAxisValues()
         
-        drawYAxis()
+        self.scrollView.translatesAutoresizingMaskIntoConstraints = false
+        self.imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            self.scrollView.leadingAnchor.constraint(equalTo: self.yAxis.trailingAnchor),
+            self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+        ])
     }
     
     private func drawGraph() -> UIImage {
@@ -292,18 +297,19 @@ class TimeDistViewController: UIViewController {
         
         /// draw line
         let trendLine = UIBezierPath()
-        let bottomLine = UIBezierPath()
+        let xAxis = UIBezierPath()
         
         UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
         
         let context = UIGraphicsGetCurrentContext()!
         
-        /// bottom line
-        bottomLine.move(to: CGPoint(x: 0, y: imageHeight))
-        bottomLine.lineWidth = 2
-        bottomLine.addLine(to: CGPoint(x: CGFloat((points.count - 1) * self.interval), y: imageHeight))
+        /// x axis
+        xAxis.move(to: CGPoint(x: 0, y: imageHeight))
+        xAxis.lineWidth = 2
+        xAxis.addLine(to: CGPoint(x: CGFloat((points.count - 1) * self.interval), y: imageHeight))
         context.setStrokeColor(UIColor(Color("indent0")).cgColor)
-        bottomLine.stroke()
+        xAxis.stroke()
+        
         
         /// graph line
         context.setStrokeColor(UIColor(Color("accent")).cgColor)
@@ -355,36 +361,98 @@ class TimeDistViewController: UIViewController {
         
         beforeLine.stroke()
         
+        let image = UIGraphicsGetImageFromCurrentImageContext()!
         
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()!
+        self.imageView.image = image
         
-        self.imageView.image = newImage
-        self.imageView.frame.size = newImage.size
-        self.scrollView.contentSize = newImage.size
+        NSLayoutConstraint.deactivate(self.imageView.constraints)
         
-        return newImage
+        NSLayoutConstraint.activate([
+            self.imageView.heightAnchor.constraint(equalToConstant: self.imageHeight),
+            self.imageView.bottomAnchor.constraint(equalTo: self.scrollView.frameLayoutGuide.bottomAnchor),
+            self.imageView.bottomAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.bottomAnchor),
+            
+            self.imageView.leadingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.leadingAnchor),
+            
+            self.imageView.trailingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.trailingAnchor),
+            
+            self.imageView.widthAnchor.constraint(equalToConstant: image.size.width)
+        ])
+        
+        print(self.imageView.constraints)
+        print(image.size.width)
+        
+        return image
     }
     
-    private func drawYAxis() {
+    private func drawYAxisValues() -> UIView {
         let range = self.limits.max - self.limits.min
+        let view = UIStackView(frame: .zero)
+        
+        let stackView = UIStackView(frame: .zero)
+        stackView.distribution = .equalSpacing
+        stackView.axis = .vertical
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addArrangedSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+        ])
+        
+        stackView.sizeToFit()
+        
+        view.alignment = .center
+        view.axis = .horizontal
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(view)
         
         for i in 0 ..< 6 {
-            let offset: CGFloat = CGFloat(i) * self.imageHeight / CGFloat(5)
-            
             var label = UILabel(frame: .zero)
             label.translatesAutoresizingMaskIntoConstraints = false
             label.adjustsFontSizeToFitWidth = true
-            #warning("DP HARD CODED")
-            label.text = formatSolveTime(secs: self.limits.min + Double(i) * range / Double(5), dp: 3)
+            label.font = .preferredFont(forTextStyle: .caption2)
+            label.textColor = UIColor(Color("grey"))
             
-            self.scrollView.addSubview(label)
+            label.text = formatSolveTime(secs: self.limits.min + Double(i) * range / Double(5), dp: SettingsManager.standard.displayDP)
             
-            #warning("fix this")
-            NSLayoutConstraint.activate([
-                label.centerXAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -offset),
-                label.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            ])
+            stackView.addArrangedSubview(label)
+            
+            label.sizeToFit()
+            
         }
+        
+        let imageSize = CGSize(width: 2, height: self.imageHeight)
+        
+        let yAxis = UIBezierPath()
+        
+        UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
+        
+        let context = UIGraphicsGetCurrentContext()!
+        
+        context.setStrokeColor(UIColor(Color("indent0")).cgColor)
+        
+        yAxis.move(to: CGPoint(x: 1, y: 0))
+        yAxis.addLine(to: CGPoint(x: 1, y: self.imageHeight))
+        yAxis.lineWidth = 2
+        yAxis.stroke()
+        
+        let lineView = UIImageView(image: UIGraphicsGetImageFromCurrentImageContext()!)
+        
+        view.spacing = 4
+        view.addArrangedSubview(lineView)
+        
+        NSLayoutConstraint.activate([
+            view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            view.heightAnchor.constraint(equalToConstant: self.imageHeight),
+        ])
+            
+
+        return view
     }
     
     func updateGap(interval: Int, points: [LineChartPoint]) {
@@ -406,11 +474,11 @@ class TimeDistViewController: UIViewController {
         self.highlightedCard.updateLabel(with: closestPoint.solve)
         
         self.highlightedPoint.frame.origin = CGPoint(x: closestPoint.point.x - 6,
-                                                     y: self.imageOffset + closestPoint.point.y - 6)
+                                                     y: closestPoint.point.y - 6)
         
         #warning("this only work for when there is no scroll offset...")
         self.highlightedCard.frame.origin = CGPoint(x: min(max(0, closestPoint.point.x - (self.highlightedCard.frame.width / 2)), self.scrollView.frame.width - self.highlightedCard.frame.width),
-                                                    y: self.imageOffset + closestPoint.point.y - 80)
+                                                    y: closestPoint.point.y - 80)
         
         self.highlightedPoint.isHidden = false
         self.highlightedCard.isHidden = false
