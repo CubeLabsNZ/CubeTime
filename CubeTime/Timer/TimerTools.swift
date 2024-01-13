@@ -138,7 +138,7 @@ struct TimerStat: View {
         self.hasIndividualGesture = hasIndividualGesture
         self._presentedAvg = presentedAvg
         if let average = average {
-            self.value = formatSolveTime(secs: average.average!, penType: average.totalPen)
+            self.value = formatSolveTime(secs: average.average!, penalty: average.totalPen)
         } else {
             self.value = nil
         }
@@ -246,9 +246,9 @@ struct TimerStatsCompSim: View {
     
         VStack(spacing: 0) {
             HStack(spacing: 6) {
-                TimerStatRaw(name: "BPA", value: stopwatchManager.bpa == nil ? nil : formatSolveTime(secs: stopwatchManager.bpa!.average, penType: stopwatchManager.bpa!.penalty), placeholderText: "...")
+                TimerStatRaw(name: "BPA", value: stopwatchManager.bpa == nil ? nil : formatSolveTime(secs: stopwatchManager.bpa!.average, penalty: stopwatchManager.bpa!.penalty), placeholderText: "...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                TimerStatRaw(name: "WPA", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!.average, penType: stopwatchManager.wpa!.penalty), placeholderText: "...")
+                TimerStatRaw(name: "WPA", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!.average, penalty: stopwatchManager.wpa!.penalty), placeholderText: "...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             

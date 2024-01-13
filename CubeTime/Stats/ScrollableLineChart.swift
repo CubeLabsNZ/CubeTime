@@ -450,7 +450,7 @@ class TimeDistViewController: UIViewController {
             label.font = .preferredFont(forTextStyle: .caption2)
             label.textColor = UIColor(Color("grey"))
             
-            label.text = formatSolveTime(secs: self.limits.min + Double(i) * range / Double(5), dp: SettingsManager.standard.displayDP)
+            label.text = formatSolveTime(secs: self.limits.min + Double(i) * range / Double(5))
             
             stackView.addArrangedSubview(label)
             

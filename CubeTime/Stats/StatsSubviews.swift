@@ -148,7 +148,7 @@ struct StatsBlockDetailText: View {
                 
                 ForEach(calculatedAverage.accountedSolves!, id: \.self) { solve in
                     let discarded = calculatedAverage.trimmedSolves!.contains(solve)
-                    let time = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
+                    let time = formatSolveTime(secs: solve.time, penalty: Penalty(rawValue: solve.penalty)!)
                     
                     Text(discarded ? "("+time+")" : time)
                         .font(.body)
@@ -200,7 +200,7 @@ struct StatsBlockSmallText: View {
                             .foregroundColor(Color("grey"))
                         
                         if let datum = data[index] {
-                            Text(formatSolveTime(secs: datum.average ?? 0, penType: datum.totalPen))
+                            Text(formatSolveTime(secs: datum.average ?? 0, penalty: datum.totalPen))
                                 .font(.title2.weight(.bold))
                                 .foregroundColor(Color("dark"))
                                 .modifier(DynamicText())

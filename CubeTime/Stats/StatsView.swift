@@ -90,7 +90,7 @@ struct StatsView: View {
                                         VStack (spacing: 10) {
                                             StatsBlock(title: "BEST SINGLE", blockHeight: blockHeightSmall, background: .coloured) {
                                                 if let bestSingle = stopwatchManager.bestSingle {
-                                                    StatsBlockText(displayText: formatSolveTime(secs: bestSingle.time, penType: Penalty(rawValue: bestSingle.penalty)!), colouredBlock: true, displayDetail: false, nilCondition: true)
+                                                    StatsBlockText(displayText: formatSolveTime(secs: bestSingle.time, penalty: Penalty(rawValue: bestSingle.penalty)!), colouredBlock: true, displayDetail: false, nilCondition: true)
                                                 } else {
                                                     StatsBlockText(displayText: "", colouredBlock: true, nilCondition: false)
                                                 }
@@ -112,7 +112,7 @@ struct StatsView: View {
                                                 }
                                                 
                                                 StatsBlock(title: "BEST AO5", blockHeight: blockHeightSmall) {
-                                                    StatsBlockText(displayText: formatSolveTime(secs: bestAo5.average ?? 0, penType: bestAo5.totalPen), colouredText: true, displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
+                                                    StatsBlockText(displayText: formatSolveTime(secs: bestAo5.average ?? 0, penalty: bestAo5.totalPen), colouredText: true, displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
                                                 }
                                                 
                                                 
@@ -154,7 +154,7 @@ struct StatsView: View {
                                                     }
                                                     
                                                     StatsBlock(title: "CURRENT", blockHeight: blockHeightSmall) {
-                                                        StatsBlockText(displayText: formatSolveTime(secs: currentCompsimAverage.average ?? 0, penType: currentCompsimAverage.totalPen), displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
+                                                        StatsBlockText(displayText: formatSolveTime(secs: currentCompsimAverage.average ?? 0, penalty: currentCompsimAverage.totalPen), displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
                                                     }
                                                 } else {
                                                     StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
@@ -243,7 +243,7 @@ struct StatsView: View {
                                                     }
                                                     
                                                     StatsBlock(title: "BEST", blockHeight: blockHeightSmall, background: .clear) {
-                                                        StatsBlockText(displayText: formatSolveTime(secs: bestCompsimAverage.average ?? 0, penType: bestCompsimAverage.totalPen), colouredBlock: true, displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
+                                                        StatsBlockText(displayText: formatSolveTime(secs: bestCompsimAverage.average ?? 0, penalty: bestCompsimAverage.totalPen), colouredBlock: true, displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
                                                     }
                                                 } else {
                                                     StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
@@ -296,7 +296,7 @@ struct StatsView: View {
                                     HStack(spacing: 10) {
                                         StatsBlock(title: "CURRENT MO10 AO5", blockHeight: blockHeightSmall, isTappable: false) {
                                             if let currentMeanOfTen = stopwatchManager.currentMeanOfTen {
-                                                StatsBlockText(displayText: formatSolveTime(secs: currentMeanOfTen, penType: ((currentMeanOfTen == -1) ? .dnf : Penalty.none)), nilCondition: true)
+                                                StatsBlockText(displayText: formatSolveTime(secs: currentMeanOfTen, penalty: ((currentMeanOfTen == -1) ? .dnf : Penalty.none)), nilCondition: true)
                                                 StatsBlockText(displayText: "", nilCondition: false)
                                             } else {
                                                 StatsBlockText(displayText: "", nilCondition: false)
@@ -306,7 +306,7 @@ struct StatsView: View {
                                         
                                         StatsBlock(title: "BEST MO10 AO5", blockHeight: blockHeightSmall, isTappable: false) {
                                             if let bestMeanOfTen = stopwatchManager.bestMeanOfTen {
-                                                StatsBlockText(displayText: formatSolveTime(secs: bestMeanOfTen, penType: ((bestMeanOfTen == -1) ? .dnf : Penalty.none)), nilCondition: true)
+                                                StatsBlockText(displayText: formatSolveTime(secs: bestMeanOfTen, penalty: ((bestMeanOfTen == -1) ? .dnf : Penalty.none)), nilCondition: true)
                                             } else {
                                                 StatsBlockText(displayText: "", nilCondition: false)
                                             }

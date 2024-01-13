@@ -16,9 +16,9 @@ extension StopwatchManager {
         timeListReloadSolve?(solveItem)
         
         if Penalty(rawValue: solveItem.penalty)! == .plustwo {
-            timerController.secondsStr = formatSolveTime(secs: timerController.secondsElapsed, penType: Penalty(rawValue: solveItem.penalty)!)
+            timerController.secondsStr = formatSolveTime(secs: timerController.secondsElapsed, penalty: Penalty(rawValue: solveItem.penalty)!)
         } else {
-            timerController.secondsStr = formatSolveTime(secs: timerController.secondsElapsed, penType: Penalty(rawValue: solveItem.penalty)!)
+            timerController.secondsStr = formatSolveTime(secs: timerController.secondsElapsed, penalty: Penalty(rawValue: solveItem.penalty)!)
         }
         
         solves.remove(object: solveItem)

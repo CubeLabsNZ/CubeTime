@@ -43,7 +43,7 @@ struct TimeDetailView: View {
     init(for solve: Solve, currentSolve: Binding<Solve?>?, sessionsCanMoveTo: Binding<[Session]?>? = nil, sessionsCanMoveTo_playground: Binding<[Session]?>? = nil) {
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
-        self.time = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
+        self.time = formatSolveTime(secs: solve.time, penalty: Penalty(rawValue: solve.penalty)!)
         self.puzzle_type = puzzleTypes[Int(solve.scrambleType)]
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
                 

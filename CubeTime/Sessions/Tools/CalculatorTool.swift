@@ -68,11 +68,11 @@ struct CalculatorTool: View {
                                 ForEach(Array(zip(solves.indices, solves)), id: \.0) { index, solve in
                                     HStack {
                                         if (solves.count > 3 && (index == solves.firstIndex(of: solves.min() ?? SimpleSolve(time: 0.00, penalty: .none)) || index == solves.lastIndex(of: solves.max() ?? SimpleSolve(time: 0.00, penalty: .none)))) {
-                                            Text("(" + formatSolveTime(secs: solve.time, penType: solve.penalty) + ")")
+                                            Text("(" + formatSolveTime(secs: solve.time, penalty: solve.penalty) + ")")
                                                 .font(.body.weight(.semibold))
                                                 .foregroundColor(Color("grey"))
                                         } else {
-                                            Text(formatSolveTime(secs: solve.time, penType: solve.penalty))
+                                            Text(formatSolveTime(secs: solve.time, penalty: solve.penalty))
                                                 .font(.body.weight(.semibold))
                                                 .foregroundColor(Color("dark"))
                                         }
@@ -167,7 +167,7 @@ struct CalculatorTool: View {
                                         Text("SOLVE \(solves.count + 1)")
                                     } else {
                                         Text("= " + formatSolveTime(secs: StopwatchManager.calculateAverage(forSortedSolves: solves.sorted(), count: 5, trim: 1),
-                                                                    penType: solves.sorted()[3].penalty == .dnf ? Penalty.dnf : Penalty.none ))
+                                                                    penalty: solves.sorted()[3].penalty == .dnf ? Penalty.dnf : Penalty.none ))
                                             .font(.largeTitle.weight(.bold))
                                             .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
                                     }

@@ -194,34 +194,20 @@ extension UIFont {
 
 // MARK: - FUNCS
 // all formatting funcs
-func formatSolveTime(secs: Double, dp: Int) -> String {
-    if secs < 60 {
-        return String(format: "%.\(dp)f", secs); #warning("TODO: set DP")
-    } else {
-        var secs = round(secs * 100) / 100.0
-        let mins: Int = Int((secs / 60).rounded(.down))
-        secs = secs.truncatingRemainder(dividingBy: 60)
-        
-        return String(format: "%d:%0\(dp + 3).\(dp)f", mins, secs)
-    }
-}
-
-func formatSolveTime(secs: Double, penType: Penalty? = Penalty.none) -> String {
-    if penType == Penalty.dnf {
+func formatSolveTime(secs: Double, dp: Int = SettingsManager.standard.displayDP, penalty: Penalty? = Penalty.none) -> String {
+    if penalty == .dnf {
         return "DNF"
     }
     
-    let dp = SettingsManager.standard.displayDP
-    let secsfmt = penType == .plustwo ? ".\(dp)f+" : ".\(dp)f"
+    let formatString = penalty == .plustwo ? ".\(dp)f+" : ".\(dp)f"
     
     if secs < 60 {
-        return String(format: "%\(secsfmt)", secs); #warning("TODO: set DP")
+        return String(format: "%\(formatString)", secs);
     } else {
-        var secs = round(secs * 100) / 100.0
-        let mins: Int = Int((secs / 60).rounded(.down))
-        secs = secs.truncatingRemainder(dividingBy: 60)
+        let mins = Int(secs / 60)
+        let secs = secs.truncatingRemainder(dividingBy: 60)
         
-        return String(format: "%d:%0\(dp + 3)\(secsfmt)", mins, secs)
+        return String(format: "%d:%0\(dp + 3)\(formatString)", mins, secs)
     }
 }
 
@@ -243,7 +229,7 @@ func formatLegendTime(secs: Double, dp: Int) -> String {
 // MARK: - MANUAL ENTRY FUNCS + VIEW MODIFIERS
 // formatting funcs
 @inline(__always) func filteredStrFromTime(_ time: Double?) -> String {
-    return time == nil ? "" : formatSolveTime(secs: time!, dp: 2)
+    return time == nil ? "" : formatSolveTime(secs: time!)
 }
 
 func timeFromStr(_ formattedTime: String) -> Double? {
