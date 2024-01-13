@@ -298,19 +298,14 @@ class TimeDistViewController: UIViewController {
             self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
         ])
-        
-        self.view.addSubview(createDNFPoint(at: .zero))
     }
     
-    private func createDNFPoint(at pos: CGPoint) -> UIImageView {
+    private func createDNFPoint() -> UIImage {
         #warning("for some reason slightly different to swiftui version... config is exactly the same?")
         var config = UIImage.SymbolConfiguration(font: .preferredFont(for: .caption1, weight: .bold), scale: .medium)
-        config = config.applying(UIImage.SymbolConfiguration(paletteColors: [UIColor(Color("grey"))]))
+//        config = config.applying(UIImage.SymbolConfiguration(paletteColors: [UIColor(Color("grey"))]))
         
-        let dnfImageView = UIImageView(image: UIImage(systemName: "xmark", withConfiguration: config)!)
-        dnfImageView.frame = CGRect(origin: pos, size: CGSize(width: 12, height: 12))
-        
-        return dnfImageView
+        return UIImage(systemName: "xmark", withConfiguration: config)!
     }
     
     private func drawGraph() -> UIImage {
@@ -389,14 +384,22 @@ class TimeDistViewController: UIViewController {
         
         beforeLine.stroke()
         
+        /// draw dnf crosses
+        for i in dnfedIndices {
+            let image = createDNFPoint().withRenderingMode(.alwaysOriginal)
+            
+            UIColor.systemPink.set()
+            context.setBlendMode(.difference)
+            
+            context.draw(image.cgImage!,
+                         in: CGRect(x: points[i].point.x - 80, y: points[i].point.y - 80, width: 80, height: 80))
+        }
+        
+        
         let image = UIGraphicsGetImageFromCurrentImageContext()!
         
         self.imageView.image = image
-        
-        for i in dnfedIndices {
-            fatalError("NOT IMPLEMENTED POINT DOESN'T WORK")
-            self.imageView.addSubview(createDNFPoint(at: points[i].point))
-        }
+    
         
         NSLayoutConstraint.deactivate(self.imageView.constraints)
         
