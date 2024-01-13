@@ -303,7 +303,7 @@ class TimeDistViewController: UIViewController {
     private func createDNFPoint() -> UIImage {
         #warning("for some reason slightly different to swiftui version... config is exactly the same?")
         var config = UIImage.SymbolConfiguration(font: .preferredFont(for: .caption1, weight: .bold), scale: .medium)
-//        config = config.applying(UIImage.SymbolConfiguration(paletteColors: [UIColor(Color("grey"))]))
+
         
         return UIImage(systemName: "xmark", withConfiguration: config)!
     }
@@ -384,15 +384,20 @@ class TimeDistViewController: UIViewController {
         
         beforeLine.stroke()
         
+        
+        UIColor.systemGreen.set()
+        
         /// draw dnf crosses
         for i in dnfedIndices {
-            let image = createDNFPoint().withRenderingMode(.alwaysOriginal)
+            let image = createDNFPoint()
             
-            UIColor.systemPink.set()
-            context.setBlendMode(.difference)
             
-            context.draw(image.cgImage!,
-                         in: CGRect(x: points[i].point.x - 80, y: points[i].point.y - 80, width: 80, height: 80))
+            let imageRect = CGRect(x: points[i].point.x - 80, y: points[i].point.y - 80, width: 80, height: 80)
+            
+            context.clip(to: imageRect, mask: image.cgImage!)
+
+            context.addRect(imageRect)
+            context.drawPath(using: .fill)
         }
         
         
