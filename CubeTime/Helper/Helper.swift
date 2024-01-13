@@ -208,7 +208,8 @@ func formatSolveTime(secs: Double, dp: Int = SettingsManager.standard.displayDP,
         let mins = Int(secs / 60)
         let secs = (floor(secs * ratio) / ratio) - Double(mins * 60)
         
-        return String(format: "%d:%0\(dp + 3)\(formatString)", mins, secs)
+        let offset = dp == 0 ? 2 : 3
+        return String(format: "%d:%0\(dp + offset)\(formatString)", mins, secs)
     }
 }
 
