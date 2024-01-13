@@ -26,10 +26,15 @@ struct LineChartPoint {
     var point: CGPoint
     var solve: Solve
     
-    init(solve: Solve, position: Double, min: Double, max: Double, imageHeight: CGFloat) {
+    init(solve: Solve, 
+         position: Double,
+         min: Double, max: Double,
+         imageHeight: CGFloat) {
         self.solve = solve
         self.point = CGPoint()
-        self.point.y = getStandardisedYLocation(value: solve.timeIncPen, min: min, max: max, imageHeight: imageHeight)
+        self.point.y = getStandardisedYLocation(value: solve.timeIncPen, 
+                                                min: min, max: max,
+                                                imageHeight: imageHeight)
         self.point.x = position
     }
     
@@ -39,9 +44,10 @@ struct LineChartPoint {
     }
 }
 
-func getStandardisedYLocation(value: Double, min: Double, max: Double, imageHeight: CGFloat) -> CGFloat {
-    /// 1 is used to offset the graph by 1 as the lineWidth is 2
-    return imageHeight - (((value - min) / (max - min)) * (imageHeight - 1) + 1)
+func getStandardisedYLocation(value: Double, 
+                              min: Double, max: Double,
+                              imageHeight: CGFloat) -> CGFloat {
+    return imageHeight - (((value - min) / (max - min)) * (imageHeight - 2) + 1)
 }
 
 extension CGPoint {
@@ -311,7 +317,7 @@ class TimeDistViewController: UIViewController {
     private func drawGraph() -> UIImage {
         var dnfedIndices: [Int] = []
         
-        let imageSize = CGSize(width: CGFloat((points.count - 1) * interval),
+        let imageSize = CGSize(width: CGFloat((points.count - 1) * interval + 6),
                                height: imageHeight)
         
         /// draw line
@@ -323,9 +329,9 @@ class TimeDistViewController: UIViewController {
         let context = UIGraphicsGetCurrentContext()!
         
         /// x axis
-        xAxis.move(to: CGPoint(x: 0, y: imageHeight))
-        xAxis.lineWidth = 2
-        xAxis.addLine(to: CGPoint(x: CGFloat((points.count - 1) * self.interval), y: imageHeight))
+        xAxis.move(to: CGPoint(x: 0, y: imageHeight - 0.5))
+        xAxis.lineWidth = 1
+        xAxis.addLine(to: CGPoint(x: CGFloat((points.count - 1) * self.interval), y: imageHeight - 0.5))
         context.setStrokeColor(UIColor(Color("indent0")).cgColor)
         xAxis.stroke()
         
@@ -385,14 +391,14 @@ class TimeDistViewController: UIViewController {
         beforeLine.stroke()
         
         
-        UIColor.systemGreen.set()
+        UIColor(Color("grey")).set()
         
         /// draw dnf crosses
         for i in dnfedIndices {
             let image = createDNFPoint()
             
             
-            let imageRect = CGRect(x: points[i].point.x - 80, y: points[i].point.y - 80, width: 80, height: 80)
+            let imageRect = CGRect(x: points[i].point.x - 4, y: points[i].point.y - 4, width: 8, height: 8)
             
             context.clip(to: imageRect, mask: image.cgImage!)
 
@@ -463,7 +469,7 @@ class TimeDistViewController: UIViewController {
             
         }
         
-        let imageSize = CGSize(width: 2, height: self.imageHeight)
+        let imageSize = CGSize(width: 1, height: self.imageHeight)
         
         let yAxis = UIBezierPath()
         
@@ -473,9 +479,9 @@ class TimeDistViewController: UIViewController {
         
         context.setStrokeColor(UIColor(Color("indent0")).cgColor)
         
-        yAxis.move(to: CGPoint(x: 1, y: 0))
-        yAxis.addLine(to: CGPoint(x: 1, y: self.imageHeight))
-        yAxis.lineWidth = 2
+        yAxis.move(to: CGPoint(x: 0.5, y: 0))
+        yAxis.addLine(to: CGPoint(x: 0.5, y: self.imageHeight))
+        yAxis.lineWidth = 1
         yAxis.stroke()
         
         let lineView = UIImageView(image: UIGraphicsGetImageFromCurrentImageContext()!)
