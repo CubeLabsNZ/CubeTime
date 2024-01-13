@@ -192,7 +192,7 @@ class TimeDistributionPointCard: UIStackView {
 
 
 
-class TimeDistViewController: UIViewController {
+class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     var points: [LineChartPoint]
     var interval: Int {
         didSet {
@@ -254,6 +254,7 @@ class TimeDistViewController: UIViewController {
         self.drawGraph()
         
         self.scrollView.isUserInteractionEnabled = true
+        self.scrollView.delegate = self
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         
@@ -273,7 +274,7 @@ class TimeDistViewController: UIViewController {
                                              width: 12, height: 12)
         self.highlightedPoint.layer.opacity = 1
         
-        self.imageView.addSubview(self.highlightedPoint)
+        self.scrollView.addSubview(self.highlightedPoint)
         self.imageView.isUserInteractionEnabled = true
         
         
@@ -283,7 +284,7 @@ class TimeDistViewController: UIViewController {
         self.highlightedCard.addGestureRecognizer(cardTapGestureRecognizer)
         self.highlightedCard.layer.opacity = 1
         
-        self.imageView.addSubview(self.highlightedCard)
+        self.scrollView.addSubview(self.highlightedCard)
         
         tapGestureRecognizer.shouldRequireFailure(of: cardTapGestureRecognizer)
         
@@ -520,15 +521,21 @@ class TimeDistViewController: UIViewController {
         
         self.highlightedCard.updateLabel(with: closestPoint.solve)
         
-        self.highlightedPoint.frame.origin = CGPoint(x: closestPoint.point.x - 6,
-                                                     y: closestPoint.point.y - 6)
+        self.highlightedPoint.frame.origin = imageView.convert(CGPoint(x: closestPoint.point.x - 6,
+                                                                             y: closestPoint.point.y - 6), to: scrollView)
+
         
         self.lastSelectedSolve = closestPoint.solve
 
-        self.highlightedCard.frame.origin = CGPoint(x: min(max(self.scrollView.contentOffset.x,
+        self.highlightedCard.frame.origin = imageView.convert(CGPoint(x: min(max(self.scrollView.contentOffset.x,
                     closestPoint.point.x - (self.highlightedCard.frame.width / 2)),
                 self.scrollView.frame.width - self.highlightedCard.frame.width + self.scrollView.contentOffset.x),
-                                                    y: closestPoint.point.y - 80)
+                                                                      y: closestPoint.point.y - 80), to: scrollView)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.highlightedPoint.layer.opacity = 0
+        self.highlightedCard.layer.opacity = 0
     }
     
     @objc func solveCardTapped(_ g: UITapGestureRecognizer) {
