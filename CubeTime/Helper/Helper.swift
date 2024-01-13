@@ -199,13 +199,14 @@ func formatSolveTime(secs: Double, dp: Int = SettingsManager.standard.displayDP,
         return "DNF"
     }
     
+    let ratio = pow(10.0, Double(dp))
     let formatString = penalty == .plustwo ? ".\(dp)f+" : ".\(dp)f"
     
     if secs < 60 {
-        return String(format: "%\(formatString)", secs);
+        return String(format: "%\(formatString)", floor(secs * ratio) / ratio)
     } else {
         let mins = Int(secs / 60)
-        let secs = secs.truncatingRemainder(dividingBy: 60)
+        let secs = (floor(secs * ratio) / ratio) - Double(mins * 60)
         
         return String(format: "%d:%0\(dp + 3)\(formatString)", mins, secs)
     }
