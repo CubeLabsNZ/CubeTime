@@ -510,8 +510,8 @@ class TimeDistViewController: UIViewController {
         self.highlightedPoint.layer.opacity = 1
         self.highlightedCard.layer.opacity = 1
         
-        let closestIndex = Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(self.interval))
-        let closestPoint = closestIndex >= self.points.count ? self.points.last! : self.points[closestIndex]
+        let closestIndex = max(0, min(self.points.count - 1, Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(self.interval))))
+        let closestPoint = self.points[closestIndex]
         
         self.highlightedCard.updateLabel(with: closestPoint.solve)
         
