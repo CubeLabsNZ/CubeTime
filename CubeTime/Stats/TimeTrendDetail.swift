@@ -116,39 +116,8 @@ struct TimeTrendDetail: View {
                                         limits: (stopwatchManager.solvesByDate.min(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen, stopwatchManager.solvesByDate.max(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen),
                                         averageValue: 5, interval: interval,
                                         proxy: proxy)
+                    .padding(.top, 8)
                 }
-                
-                
-                //                if #available(iOS 17.0, *) {
-                //                    Chart {
-                //                        ForEach(Array(zip(stopwatchManager.solvesNoDNFsbyDate.indices, stopwatchManager.solvesNoDNFsbyDate)), id: \.0) { index, solve in
-                //                            AreaMark(
-                //                                x: PlottableValue.value("index", index),
-                //                                y: PlottableValue.value("time", solve.time)
-                //                            )
-                //                            .interpolationMethod(.monotone)
-                //                            .foregroundStyle(
-                //                                LinearGradient(colors: [staticGradient[0].opacity(0.6), staticGradient[1].opacity(0.2), .clear], startPoint: .top, endPoint: .bottom)
-                //                            )
-                //
-                //                            LineMark(
-                //                                x: PlottableValue.value("index", index),
-                //                                y: PlottableValue.value("time", solve.time)
-                //                            )
-                //                            .interpolationMethod(.monotone)
-                //
-                //                        }
-                ////                        .symbol(BasicChartSymbolShape.circle)
-                //                    }
-                //                    .chartYAxis() {
-                //                        AxisMarks(position: .leading)
-                //                    }
-                //                    .chartScrollableAxes(.horizontal)
-                //                    .chartXVisibleDomain(length: self.visibleDomain)
-                //                    .padding(.top)
-                //                } else {
-                //                    Text("update!")
-                //                }
             }
             .padding(8)
         }

@@ -563,7 +563,7 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
             return LineChartPoint(solve: e,
                                   position: Double(i * interval),
                                   min: limits.min, max: limits.max,
-                                  imageHeight: round(proxy.size.height * 0.618))
+                                  imageHeight: proxy.size.height)
         })
         self.averageValue = averageValue
         self.limits = limits
@@ -572,7 +572,7 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     }
     
     func makeUIViewController(context: Context) -> TimeDistViewController {
-        let timeDistViewController = TimeDistViewController(stopwatchManager: stopwatchManager, points: points, interval: interval, averageValue: averageValue, limits: limits, imageHeight: round(proxy.size.height * 0.618))
+        let timeDistViewController = TimeDistViewController(stopwatchManager: stopwatchManager, points: points, interval: interval, averageValue: averageValue, limits: limits, imageHeight: proxy.size.height)
         print(proxy.size.width, proxy.size.height)
         timeDistViewController.view.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
         timeDistViewController.scrollView.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
