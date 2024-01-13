@@ -116,8 +116,8 @@ struct TimeTrendDetail: View {
                                         limits: (stopwatchManager.solvesByDate.min(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen, stopwatchManager.solvesByDate.max(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen),
                                         averageValue: 5, interval: interval,
                                         proxy: proxy)
-                    .padding(.top, 8)
                 }
+                .padding(.top, 8)
             }
             .padding(8)
         }

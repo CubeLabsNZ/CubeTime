@@ -507,11 +507,16 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         self.removeSelectedPoint()
     }
     
-    private func removeSelectedPoint() {
-        UIView.animate(withDuration: 0.28, delay: 0, options: .curveEaseOut, animations: {
+    private func removeSelectedPoint(animated: Bool = true) {
+        if animated {
+            UIView.animate(withDuration: 0.28, delay: 0, options: .curveEaseOut, animations: {
+                self.highlightedCard.layer.opacity = 0
+                self.highlightedPoint.layer.opacity = 0
+            })
+        } else {
             self.highlightedCard.layer.opacity = 0
             self.highlightedPoint.layer.opacity = 0
-        })
+        }
     }
     
     @objc func tapped(_ g: UITapGestureRecognizer) {
@@ -540,15 +545,14 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.highlightedPoint.layer.opacity = 0
-        self.highlightedCard.layer.opacity = 0
+        removeSelectedPoint(animated: false)
     }
     
     @objc func solveCardTapped(_ g: UITapGestureRecognizer) {
         let solveSheet = UIHostingController(rootView: TimeDetailView(for: self.lastSelectedSolve, currentSolve: .constant(self.lastSelectedSolve)).environmentObject(stopwatchManager))
         
         #warning("BUG: the toolbar doesn't display")
-        self.present(solveSheet, animated: true, completion: self.removeSelectedPoint)
+        self.present(solveSheet, animated: true, completion: { self.removeSelectedPoint() })
     }
 }
 
@@ -570,7 +574,7 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
             return LineChartPoint(solve: e,
                                   position: Double(i * interval),
                                   min: limits.min, max: limits.max,
-                                  imageHeight: proxy.size.height)
+                                  imageHeight: proxy.size.height - 100)
         })
         self.averageValue = averageValue
         self.limits = limits
@@ -579,8 +583,8 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     }
     
     func makeUIViewController(context: Context) -> TimeDistViewController {
-        let timeDistViewController = TimeDistViewController(stopwatchManager: stopwatchManager, points: points, interval: interval, averageValue: averageValue, limits: limits, imageHeight: proxy.size.height)
-        print(proxy.size.width, proxy.size.height)
+        let timeDistViewController = TimeDistViewController(stopwatchManager: stopwatchManager, points: points, interval: interval, averageValue: averageValue, limits: limits, imageHeight: proxy.size.height - 100)
+        
         timeDistViewController.view.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
         timeDistViewController.scrollView.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
         
