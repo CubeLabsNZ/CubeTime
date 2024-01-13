@@ -8,14 +8,30 @@ import UIKit
 import SwiftUI
 
 class HighlightedPoint: UIView {
+    let path = UIBezierPath(ovalIn: CGRect(x: 2, y: 2, width: 8, height: 8))
+    
+    var isRegular = true {
+        didSet { 
+            self.setNeedsDisplay()
+        }
+    }
+    
+    init(at loc: CGPoint) {
+        super.init(frame: CGRect(origin: loc, size: CGSize(width: 12, height: 12)))
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("not implemented")
+    }
+    
     override func draw(_ rect: CGRect) {
-        var path = UIBezierPath()
-        path = UIBezierPath(ovalIn: CGRect(x: 2, y: 2, width: 8, height: 8))
-        UIColor(Color("accent")).setStroke()
         UIColor(Color("overlay0")).setFill()
+        UIColor(Color(self.isRegular ? "accent" : "grey")).setStroke()
+        
         path.lineWidth = 4
         path.stroke()
         path.fill()
+        
     }
 }
 
@@ -272,7 +288,7 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         scrollView.addGestureRecognizer(longPressGestureRecognizer)
         
         
-        self.highlightedPoint = HighlightedPoint(frame: CGRect(x: 10, y: 10, width: 12, height: 12))
+        self.highlightedPoint = HighlightedPoint(at: .zero)
         
         self.highlightedPoint.backgroundColor = .clear
         self.highlightedPoint.frame = CGRect(x: self.points[1].point.x - 6,
@@ -323,6 +339,8 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         
         /// draw line
         let trendLine = UIBezierPath()
+        let gradientLine = UIBezierPath()
+        
         let xAxis = UIBezierPath()
         
         UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
@@ -340,12 +358,18 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         /// graph line
         context.setStrokeColor(UIColor(Color("accent")).cgColor)
         
+        trendLine.lineWidth = 2
+        trendLine.lineCapStyle = .round
+        trendLine.lineJoinStyle = .round
+        
         for i in 0 ..< points.count {
             let prev = points[i - 1 >= 0 ? i - 1 : 0]
             let cur = points[i]
+            let next = points[i + 1 < points.count ? i + 1 : points.count - 1]
             
             if (trendLine.isEmpty) {
-                trendLine.move(to: CGPointMake(dotSize/2, cur.point.y))
+                trendLine.move(to: CGPoint(x: 0, y: cur.point.y))
+                gradientLine.move(to: CGPoint(x: 0, y: cur.point.y))
                 continue
             }
             
@@ -353,8 +377,27 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
             
             trendLine.addQuadCurve(to: mid,
                                    controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: prev.point))
+            gradientLine.addQuadCurve(to: mid,
+                                   controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: prev.point))
+            
+            
+            if Penalty(rawValue: cur.solve.penalty) == .dnf {
+                trendLine.stroke()
+                trendLine.removeAllPoints()
+                trendLine.move(to: mid)
+                context.setStrokeColor(UIColor(Color("indent0")).cgColor)
+            }
+            
+            if Penalty(rawValue: prev.solve.penalty) == .dnf {
+                trendLine.stroke()
+                trendLine.removeAllPoints()
+                trendLine.move(to: mid)
+                context.setStrokeColor(UIColor(Color("accent")).cgColor)
+            }
             
             trendLine.addQuadCurve(to: cur.point,
+                                   controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: cur.point))
+            gradientLine.addQuadCurve(to: cur.point,
                                    controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: cur.point))
             
             if Penalty(rawValue: cur.solve.penalty) == .dnf {
@@ -362,34 +405,29 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
             }
         }
         
-        trendLine.lineWidth = 2
-        trendLine.lineCapStyle = .round
-        trendLine.lineJoinStyle = .round
         
-        let beforeLine = trendLine.copy() as! UIBezierPath
+        gradientLine.addLine(to: CGPoint(x: points.last!.point.x, y: imageHeight))
+        gradientLine.addLine(to: CGPoint(x: 0, y: imageHeight))
+        gradientLine.addLine(to: CGPoint(x: 0, y: points.first!.point.y))
         
-        trendLine.addLine(to: CGPoint(x: points.last!.point.x, y: imageHeight))
-        trendLine.addLine(to: CGPoint(x: 0, y: imageHeight))
-        trendLine.addLine(to: CGPoint(x: 0, y: points.first!.point.y))
+        gradientLine.close()
         
-        trendLine.close()
-        
-        trendLine.addClip()
+        gradientLine.addClip()
         
         context.drawLinearGradient(CGGradient(colorsSpace: .none,
                                               colors: [
                                                 UIColor(staticGradient[0].opacity(0.6)).cgColor,
                                                 UIColor(staticGradient[1].opacity(0.2)).cgColor,
-                                                UIColor.clear.cgColor
+                                                UIColor(staticGradient[1].opacity(0.01)).cgColor
                                               ] as CFArray,
                                               locations: [0.0, 0.4, 1.0])!,
                                    start: CGPoint(x: 0, y: 0),
                                    end: CGPoint(x: 0, y: imageHeight),
-                                   options: [] )
+                                   options: [])
         
         context.resetClip()
         
-        beforeLine.stroke()
+        trendLine.stroke()
         
         
         UIColor(Color("grey")).set()
@@ -456,7 +494,7 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         self.view.addSubview(view)
         
         for i in (0 ..< 6).reversed() {
-            var label = UILabel(frame: .zero)
+            let label = UILabel(frame: .zero)
             label.translatesAutoresizingMaskIntoConstraints = false
             label.adjustsFontSizeToFitWidth = true
             label.font = .preferredFont(forTextStyle: .caption2)
@@ -524,13 +562,12 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
-        self.highlightedPoint.layer.opacity = 1
-        self.highlightedCard.layer.opacity = 1
-        
         let closestIndex = max(0, min(self.points.count - 1, Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(self.interval))))
         let closestPoint = self.points[closestIndex]
         
         self.highlightedCard.updateLabel(with: closestPoint.solve)
+        
+        self.highlightedPoint.isRegular = Penalty(rawValue: closestPoint.solve.penalty) != .dnf
         
         self.highlightedPoint.frame.origin = imageView.convert(CGPoint(x: closestPoint.point.x - 6,
                                                                              y: closestPoint.point.y - 6), to: scrollView)
@@ -542,6 +579,10 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
                     closestPoint.point.x - (self.highlightedCard.frame.width / 2)),
                 self.scrollView.frame.width - self.highlightedCard.frame.width + self.scrollView.contentOffset.x),
                                                                       y: closestPoint.point.y - 80), to: scrollView)
+        
+        self.highlightedPoint.layer.opacity = 1
+        self.highlightedCard.layer.opacity = 1
+        
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

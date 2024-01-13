@@ -25,7 +25,7 @@ struct LegendLabel: View {
             if let symbol = self.symbol {
                 ZStack {
                     RoundedRectangle(cornerRadius: 1)
-                        .fill(Color("indent1"))
+                        .fill(Color("indent0"))
                         .frame(width: 32, height: 2, alignment: .leading)
                     
                     Image(systemName: symbol)
