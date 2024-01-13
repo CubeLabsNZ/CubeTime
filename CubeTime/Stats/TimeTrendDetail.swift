@@ -48,7 +48,6 @@ struct LegendLabel: View {
 
 struct TimeTrendDetail: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    @EnvironmentObject var gradientManager: GradientManager
     
     @State var selectedLines = [true, false, false, false]
     let labels: [(label: String, type: CTButtonType)] = [
@@ -111,8 +110,7 @@ struct TimeTrendDetail: View {
                 .padding(8)
                 
                 GeometryReader { proxy in
-                    DetailTimeTrendBase(stopwatchManager: stopwatchManager,
-                                        rawDataPoints: stopwatchManager.solvesByDate,
+                    DetailTimeTrendBase(rawDataPoints: stopwatchManager.solvesByDate,
                                         limits: (stopwatchManager.solvesByDate.min(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen, stopwatchManager.solvesByDate.max(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen),
                                         averageValue: 5, interval: interval,
                                         proxy: proxy)

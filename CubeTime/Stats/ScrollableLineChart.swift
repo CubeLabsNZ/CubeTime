@@ -301,7 +301,6 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         
         
         self.highlightedCard = TimeDistributionPointCard(solve: nil)
-        #warning("BUG: card only tappable when in imageview frame. otherwise not tappable")
         let cardTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(solveCardTapped))
         self.highlightedCard.addGestureRecognizer(cardTapGestureRecognizer)
         self.highlightedCard.layer.opacity = 1
@@ -324,8 +323,7 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func createDNFPoint() -> UIImage {
-        #warning("for some reason slightly different to swiftui version... config is exactly the same?")
-        var config = UIImage.SymbolConfiguration(font: .preferredFont(for: .caption1, weight: .bold), scale: .medium)
+        var config = UIImage.SymbolConfiguration(font: .preferredFont(for: .caption1, weight: .bold), scale: .large)
 
         
         return UIImage(systemName: "xmark", withConfiguration: config)!
@@ -386,14 +384,13 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
                 trendLine.removeAllPoints()
                 trendLine.move(to: mid)
                 context.setStrokeColor(UIColor(Color("indent0")).cgColor)
-            }
-            
-            if Penalty(rawValue: prev.solve.penalty) == .dnf {
+            } else if Penalty(rawValue: prev.solve.penalty) == .dnf {
                 trendLine.stroke()
                 trendLine.removeAllPoints()
                 trendLine.move(to: mid)
                 context.setStrokeColor(UIColor(Color("accent")).cgColor)
             }
+            
             
             trendLine.addQuadCurve(to: cur.point,
                                    controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: cur.point))
@@ -443,6 +440,8 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
 
             context.addRect(imageRect)
             context.drawPath(using: .fill)
+            
+            context.resetClip()
         }
         
         
@@ -601,7 +600,8 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
 struct DetailTimeTrendBase: UIViewControllerRepresentable {
     typealias UIViewControllerType = TimeDistViewController
     
-    let stopwatchManager: StopwatchManager
+    @EnvironmentObject var stopwatchManager: StopwatchManager
+    
     let points: [LineChartPoint]
     let interval: Int
     let averageValue: Double
@@ -609,8 +609,7 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     
     let limits: (min: Double, max: Double)
     
-    init(stopwatchManager: StopwatchManager, rawDataPoints: [Solve], limits: (min: Double, max: Double), averageValue: Double, interval: Int, proxy: GeometryProxy) {
-        self.stopwatchManager = stopwatchManager
+    init(rawDataPoints: [Solve], limits: (min: Double, max: Double), averageValue: Double, interval: Int, proxy: GeometryProxy) {
         self.points = rawDataPoints.enumerated().map({ (i, e) in
             return LineChartPoint(solve: e,
                                   position: Double(i * interval),
@@ -636,4 +635,28 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
         uiViewController.view?.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
         uiViewController.updateGap(interval: interval, points: points)
     }
+}
+
+
+#Preview {
+    let session = Session(context: PersistenceController.preview.container.viewContext)
+    session.name = "temp"
+    session.lastUsed = Date()
+    session.pinned = false
+    session.scrambleType = Int32(0)
+    session.sessionType = Int16(0)
+    
+    for i in 0 ..< 10 {
+        let solve = Solve(context: PersistenceController.preview.container.viewContext)
+        solve.time = Double.random(in: 0..<10)
+        solve.date = Date()
+        solve.session = session
+        solve.scrambleType = Int32(0)
+        solve.penalty = Int16(0)
+    }
+    
+    let stopwatchManager = StopwatchManager(currentSession: session, managedObjectContext: PersistenceController.preview.container.viewContext)
+    
+    return TimeTrendDetail().environmentObject(stopwatchManager)
+    
 }
