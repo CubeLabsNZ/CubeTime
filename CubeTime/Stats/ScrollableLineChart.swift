@@ -341,111 +341,120 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         
         let xAxis = UIBezierPath()
         
-        UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
+        let format: UIGraphicsImageRendererFormat = UIGraphicsImageRendererFormat.default()
+        format.opaque = false
+        format.scale = 1.0
         
-        let context = UIGraphicsGetCurrentContext()!
+        let renderer = UIGraphicsImageRenderer(size: imageSize, format: format)
         
-        /// x axis
-        xAxis.move(to: CGPoint(x: 0, y: imageHeight - 0.5))
-        xAxis.lineWidth = 1
-        xAxis.addLine(to: CGPoint(x: CGFloat((points.count - 1) * self.interval), y: imageHeight - 0.5))
-        context.setStrokeColor(UIColor(Color("indent0")).cgColor)
-        xAxis.stroke()
-        
-        
-        /// graph line
-        context.setStrokeColor(UIColor(Color("accent")).cgColor)
-        
-        trendLine.lineWidth = 2
-        trendLine.lineCapStyle = .round
-        trendLine.lineJoinStyle = .round
-        
-        for i in 0 ..< points.count {
-            let prev = points[i - 1 >= 0 ? i - 1 : 0]
-            let cur = points[i]
-            let next = points[i + 1 < points.count ? i + 1 : points.count - 1]
+        var image = renderer.image { ctx in
+            /// x axis
+            xAxis.move(to: CGPoint(x: 0, y: imageHeight - 0.5))
+            xAxis.lineWidth = 1
+            xAxis.addLine(to: CGPoint(x: CGFloat((points.count - 1) * self.interval), y: imageHeight - 0.5))
+            ctx.cgContext.setStrokeColor(UIColor(Color("indent0")).cgColor)
+            xAxis.stroke()
             
-            if (trendLine.isEmpty) {
-                trendLine.move(to: CGPoint(x: 0, y: cur.point.y))
-                gradientLine.move(to: CGPoint(x: 0, y: cur.point.y))
-                continue
+            
+            /// graph line
+            ctx.cgContext.setStrokeColor(UIColor(Color("accent")).cgColor)
+            
+            trendLine.lineWidth = 2
+            trendLine.lineCapStyle = .round
+            trendLine.lineJoinStyle = .round
+            
+            for i in 0 ..< points.count {
+                let prev = points[i - 1 >= 0 ? i - 1 : 0]
+                let cur = points[i]
+                let next = points[i + 1 < points.count ? i + 1 : points.count - 1]
+                
+                if (trendLine.isEmpty) {
+                    trendLine.move(to: CGPoint(x: 0, y: cur.point.y))
+                    gradientLine.move(to: CGPoint(x: 0, y: cur.point.y))
+                    continue
+                }
+                
+                let mid = CGPoint.midPointForPoints(p1: prev.point, p2: cur.point)
+                
+                trendLine.addQuadCurve(to: mid,
+                                       controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: prev.point))
+                gradientLine.addQuadCurve(to: mid,
+                                       controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: prev.point))
+                
+                
+                if Penalty(rawValue: cur.solve.penalty) == .dnf {
+                    trendLine.stroke()
+                    trendLine.removeAllPoints()
+                    trendLine.move(to: mid)
+                    ctx.cgContext.setStrokeColor(UIColor(Color("indent0")).cgColor)
+                } else if Penalty(rawValue: prev.solve.penalty) == .dnf {
+                    trendLine.stroke()
+                    trendLine.removeAllPoints()
+                    trendLine.move(to: mid)
+                    ctx.cgContext.setStrokeColor(UIColor(Color("accent")).cgColor)
+                }
+                
+                
+                trendLine.addQuadCurve(to: cur.point,
+                                       controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: cur.point))
+                gradientLine.addQuadCurve(to: cur.point,
+                                       controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: cur.point))
+                
+                if Penalty(rawValue: cur.solve.penalty) == .dnf {
+                    dnfedIndices.append(i)
+                }
             }
             
-            let mid = CGPoint.midPointForPoints(p1: prev.point, p2: cur.point)
             
-            trendLine.addQuadCurve(to: mid,
-                                   controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: prev.point))
-            gradientLine.addQuadCurve(to: mid,
-                                   controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: prev.point))
+            gradientLine.addLine(to: CGPoint(x: points.last!.point.x, y: imageHeight))
+            gradientLine.addLine(to: CGPoint(x: 0, y: imageHeight))
+            gradientLine.addLine(to: CGPoint(x: 0, y: points.first!.point.y))
             
+            gradientLine.close()
             
-            if Penalty(rawValue: cur.solve.penalty) == .dnf {
-                trendLine.stroke()
-                trendLine.removeAllPoints()
-                trendLine.move(to: mid)
-                context.setStrokeColor(UIColor(Color("indent0")).cgColor)
-            } else if Penalty(rawValue: prev.solve.penalty) == .dnf {
-                trendLine.stroke()
-                trendLine.removeAllPoints()
-                trendLine.move(to: mid)
-                context.setStrokeColor(UIColor(Color("accent")).cgColor)
-            }
+            gradientLine.addClip()
             
+            ctx.cgContext.drawLinearGradient(CGGradient(colorsSpace: .none,
+                                                  colors: [
+                                                    UIColor(staticGradient[0].opacity(0.6)).cgColor,
+                                                    UIColor(staticGradient[1].opacity(0.2)).cgColor,
+                                                    UIColor(staticGradient[1].opacity(0.01)).cgColor
+                                                  ] as CFArray,
+                                                  locations: [0.0, 0.4, 1.0])!,
+                                       start: CGPoint(x: 0, y: 0),
+                                       end: CGPoint(x: 0, y: imageHeight),
+                                       options: [])
             
-            trendLine.addQuadCurve(to: cur.point,
-                                   controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: cur.point))
-            gradientLine.addQuadCurve(to: cur.point,
-                                   controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: cur.point))
+            ctx.cgContext.resetClip()
             
-            if Penalty(rawValue: cur.solve.penalty) == .dnf {
-                dnfedIndices.append(i)
-            }
-        }
-        
-        
-        gradientLine.addLine(to: CGPoint(x: points.last!.point.x, y: imageHeight))
-        gradientLine.addLine(to: CGPoint(x: 0, y: imageHeight))
-        gradientLine.addLine(to: CGPoint(x: 0, y: points.first!.point.y))
-        
-        gradientLine.close()
-        
-        gradientLine.addClip()
-        
-        context.drawLinearGradient(CGGradient(colorsSpace: .none,
-                                              colors: [
-                                                UIColor(staticGradient[0].opacity(0.6)).cgColor,
-                                                UIColor(staticGradient[1].opacity(0.2)).cgColor,
-                                                UIColor(staticGradient[1].opacity(0.01)).cgColor
-                                              ] as CFArray,
-                                              locations: [0.0, 0.4, 1.0])!,
-                                   start: CGPoint(x: 0, y: 0),
-                                   end: CGPoint(x: 0, y: imageHeight),
-                                   options: [])
-        
-        context.resetClip()
-        
-        trendLine.stroke()
-        
-        
-        UIColor(Color("grey")).set()
-        
-        /// draw dnf crosses
-        for i in dnfedIndices {
-            let image = createDNFPoint()
+            trendLine.stroke()
             
             
-            let imageRect = CGRect(x: points[i].point.x - 4, y: points[i].point.y - 4, width: 8, height: 8)
+            UIColor(Color("grey")).set()
             
-            context.clip(to: imageRect, mask: image.cgImage!)
+            /// draw dnf crosses
+            for i in dnfedIndices {
+                let image = createDNFPoint()
+                
+                
+                let imageRect = CGRect(x: points[i].point.x - 4, y: points[i].point.y - 4, width: 8, height: 8)
+                
+                ctx.cgContext.clip(to: imageRect, mask: image.cgImage!)
 
-            context.addRect(imageRect)
-            context.drawPath(using: .fill)
-            
-            context.resetClip()
+                ctx.cgContext.addRect(imageRect)
+                ctx.cgContext.drawPath(using: .fill)
+                
+                ctx.cgContext.resetClip()
+            }
         }
         
         
-        let image = UIGraphicsGetImageFromCurrentImageContext()!
+//        UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
+//        
+//        let context = UIGraphicsGetCurrentContext()!
+        
+        
+//        let image = UIGraphicsGetImageFromCurrentImageContext()!
         
         self.imageView.image = image
     
@@ -511,18 +520,28 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         
         let yAxis = UIBezierPath()
         
-        UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
+        let format: UIGraphicsImageRendererFormat = UIGraphicsImageRendererFormat.default()
+        format.opaque = false
+        format.scale = 1.0
+                
+        let renderer = UIGraphicsImageRenderer(size: imageSize, format: format)
         
-        let context = UIGraphicsGetCurrentContext()!
+//        UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
         
-        context.setStrokeColor(UIColor(Color("indent0")).cgColor)
+//        let context = UIGraphicsGetCurrentContext()!
         
-        yAxis.move(to: CGPoint(x: 0.5, y: 0))
-        yAxis.addLine(to: CGPoint(x: 0.5, y: self.imageHeight))
-        yAxis.lineWidth = 1
-        yAxis.stroke()
+        let lineViewImage = renderer.image { ctx in
+            ctx.cgContext.setStrokeColor(UIColor(Color("indent0")).cgColor)
+            
+            yAxis.move(to: CGPoint(x: 0.5, y: 0))
+            yAxis.addLine(to: CGPoint(x: 0.5, y: self.imageHeight))
+            yAxis.lineWidth = 1
+            yAxis.stroke()
+        }
         
-        let lineView = UIImageView(image: UIGraphicsGetImageFromCurrentImageContext()!)
+        
+        
+        let lineView = UIImageView(image: lineViewImage)
         
         view.spacing = 4
         view.addArrangedSubview(lineView)

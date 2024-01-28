@@ -148,12 +148,10 @@ struct MainView: View {
                         
                         switch tabRouter.currentTab {
                         case .timer:
-                            TimeTrendDetail()
-                                .environmentObject(stopwatchManager)
-//                            TimerView()
-//                                .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
-//                                .environmentObject(stopwatchManager.timerController)
-//                                .environmentObject(stopwatchManager.scrambleController)
+                            TimerView()
+                                .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
+                                .environmentObject(stopwatchManager.timerController)
+                                .environmentObject(stopwatchManager.scrambleController)
                         case .solves:
                             TimeListView()
                         case .stats:

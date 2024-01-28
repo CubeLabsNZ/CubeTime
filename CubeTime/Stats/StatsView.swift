@@ -374,8 +374,14 @@ struct StatsView: View {
             TimeDetailView(for: stopwatchManager.bestSingle!, currentSolve: nil)
                 .tint(Color("accent"))
         }
-//        .sheet(isPresented: self.$showTimeTrendModal) {
-//
-//        }
+        .sheet(isPresented: self.$showTimeTrendModal) {
+            ZStack {
+                Color("base")
+                    .ignoresSafeArea()
+                
+                TimeTrendDetail()
+                    .environmentObject(stopwatchManager)
+            }
+        }
     }
 }

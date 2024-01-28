@@ -306,11 +306,19 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
 // MARK: - Override
 
 func offsetImage(image: UIImage, offsetX: CGFloat=0, offsetY: CGFloat=0) -> UIImage? {
-    UIGraphicsBeginImageContextWithOptions(CGSize(width: image.size.width + abs(offsetX), height: image.size.height + abs(offsetY)), false, 0)
-    image.draw(in: CGRect(x: offsetX, y: offsetY, width: image.size.width, height: image.size.height))
+    let format: UIGraphicsImageRendererFormat = UIGraphicsImageRendererFormat.default()
+    format.opaque = false
+    format.scale = 1.0
+    
+    let renderer = UIGraphicsImageRenderer(size: CGSize(width: image.size.width + abs(offsetX), height: image.size.height + abs(offsetY)), format: format)
+    
+    let newImage = renderer.image { ctx in
+        image.draw(in: CGRect(x: offsetX, y: offsetY, width: image.size.width, height: image.size.height))
+    }
+    
 
-    let newImage = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
+//    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+//    UIGraphicsEndImageContext()
 
     return newImage
 }
