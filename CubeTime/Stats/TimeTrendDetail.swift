@@ -49,12 +49,15 @@ struct LegendLabel: View {
 struct TimeTrendDetail: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    @State var selectedLines = [true, false, false, false]
+    #warning("TODO: remove when we readd the lines")
+//    @State var selectedLines = [true, false, false, false]
+    @State var selectedLines = [true]
+    
     let labels: [(label: String, type: CTButtonType)] = [
         ("time", .halfcoloured),
-        ("ao5", .green),
-        ("ao12", .red),
-        ("ao100", .orange)
+//        ("ao5", .green),
+//        ("ao12", .red),
+//        ("ao100", .orange)
     ]
     
     @State var interval: Int = 30
@@ -83,9 +86,8 @@ struct TimeTrendDetail: View {
                     HStack(spacing: 0) {
                         ForEach(Array(zip(self.selectedLines.indices, self.selectedLines)), id: \.0) { index, selected in
                             CTButton(type: selected ? self.labels[index].type : .disabled, size: .large, hasBackground: false, onTapRun: {
-                                print("TAPPED \(index)")
-                                if (self.selectedLines.lazy.filter({ $0 == true}).count != 1 ||
-                                    self.selectedLines.lazy.filter({ $0 == true}).count == 1 && self.selectedLines[index] == false) {
+                                if (self.selectedLines.lazy.filter({ $0 == true }).count != 1 ||
+                                    self.selectedLines.lazy.filter({ $0 == true }).count == 1 && self.selectedLines[index] == false) {
                                     self.selectedLines[index].toggle()
                                 }
                             }) {
