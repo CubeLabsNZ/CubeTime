@@ -21,12 +21,12 @@
 		235D6A7029C2CE09002D90D8 /* CloudkitStatusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6F29C2CE09002D90D8 /* CloudkitStatusManager.swift */; };
 		2377418829A9A05A00A4F917 /* HelperUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2377418729A9A05A00A4F917 /* HelperUI.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
-		238949982B46470100BFE1E6 /* TNoodle.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 238949962B4646B300BFE1E6 /* TNoodle.xcframework */; };
-		238949992B46470100BFE1E6 /* TNoodle.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 238949962B4646B300BFE1E6 /* TNoodle.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		238FB42029B8175C008EC1D4 /* GradientManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238FB41F29B8175C008EC1D4 /* GradientManager.swift */; };
 		239560A629C3056E00735035 /* SplashPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 239560A529C3056E00735035 /* SplashPad.storyboard */; };
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
 		23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */; };
+		23AAC09F2B7A19BC004D31E9 /* TNoodleLibNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23AAC09D2B7A1996004D31E9 /* TNoodleLibNative.xcframework */; };
+		23AAC0A02B7A19BC004D31E9 /* TNoodleLibNative.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 23AAC09D2B7A1996004D31E9 /* TNoodleLibNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		23AAF99629B0219200C5C1FF /* ScrollableLineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AAF99529B0219200C5C1FF /* ScrollableLineChart.swift */; };
 		23AAF99829B072F900C5C1FF /* StatsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AAF99729B072F900C5C1FF /* StatsDetailView.swift */; };
 		23AB648429385D310049993B /* NewSessionRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AB648329385D310049993B /* NewSessionRootView.swift */; };
@@ -111,7 +111,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				238949992B46470100BFE1E6 /* TNoodle.xcframework in Embed Libraries */,
+				23AAC0A02B7A19BC004D31E9 /* TNoodleLibNative.xcframework in Embed Libraries */,
 			);
 			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -135,10 +135,10 @@
 		2377418729A9A05A00A4F917 /* HelperUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperUI.swift; sourceTree = "<group>"; };
 		23783DA429AB55750036FE2B /* getBestAverage.h++ */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "getBestAverage.h++"; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
-		238949962B4646B300BFE1E6 /* TNoodle.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodle.xcframework; sourceTree = "<group>"; };
 		238FB41F29B8175C008EC1D4 /* GradientManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientManager.swift; sourceTree = "<group>"; };
 		239560A529C3056E00735035 /* SplashPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SplashPad.storyboard; sourceTree = "<group>"; };
 		2397131E2791032300268DFA /* AveragePhases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AveragePhases.swift; sourceTree = "<group>"; };
+		23AAC09D2B7A1996004D31E9 /* TNoodleLibNative.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodleLibNative.xcframework; sourceTree = "<group>"; };
 		23AAF99529B0219200C5C1FF /* ScrollableLineChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableLineChart.swift; sourceTree = "<group>"; };
 		23AAF99729B072F900C5C1FF /* StatsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsDetailView.swift; sourceTree = "<group>"; };
 		23AB648329385D310049993B /* NewSessionRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSessionRootView.swift; sourceTree = "<group>"; };
@@ -211,8 +211,8 @@
 			files = (
 				23329E9029C31CA60017AE99 /* libz.1.1.3.tbd in Frameworks */,
 				AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */,
+				23AAC09F2B7A19BC004D31E9 /* TNoodleLibNative.xcframework in Frameworks */,
 				23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */,
-				238949982B46470100BFE1E6 /* TNoodle.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,7 +321,7 @@
 		23B45E7129A855F400BDF49E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				238949962B4646B300BFE1E6 /* TNoodle.xcframework */,
+				23AAC09D2B7A1996004D31E9 /* TNoodleLibNative.xcframework */,
 				23329E8F29C31CA60017AE99 /* libz.1.1.3.tbd */,
 			);
 			path = Frameworks;
