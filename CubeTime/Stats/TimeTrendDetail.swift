@@ -54,7 +54,7 @@ struct TimeTrendDetail: View {
     @State var selectedLines = [true]
     
     let labels: [(label: String, type: CTButtonType)] = [
-        ("time", .halfcoloured),
+        ("time", .halfcoloured(nil)),
         //        ("ao5", .green),
         //        ("ao12", .red),
         //        ("ao100", .orange)
@@ -102,9 +102,10 @@ struct TimeTrendDetail: View {
                     
                 }
                 
+                #warning("TODO URGENT FIX: READD COLOURFORBUTTONTYPE")
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(minimum: 36, maximum: 100), spacing: 16), count: 3), alignment: .leading) {
                     ForEach(self.labels, id: \.0) { label, type in
-                        LegendLabel(colour: colourForButtonType(type).colourFg, label: label)
+                        LegendLabel(colour: .accentColor, label: label)
                     }
                     
                     LegendLabel(colour: Color("grey"), label: "DNF", symbol: "xmark")

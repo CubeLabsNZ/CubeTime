@@ -75,13 +75,7 @@ struct RecursiveMono: ViewModifier {
         content
             .font(Font(FontManager.fontFor(size: size, weight: weight)))
     }
-}
 
-extension View {
-    func recursiveMono(fontSize: CGFloat, weight: Int) -> some View {
-        modifier(RecursiveMono(size: size, weight: weight))
-    }
-    
     static func weightToValue(weight: Font.Weight) -> Int {
         switch weight {
         case .regular:

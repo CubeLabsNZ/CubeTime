@@ -200,7 +200,7 @@ struct StatsBlockSmallText: View {
                             .foregroundColor(Color("grey"))
                         
                         if let datum = data[index] {
-                            Text(formatSolveTime(secs: datum.average ?? 0, penType: datum.totalPen))
+                            Text(formatSolveTime(secs: datum.average ?? 0, penalty: datum.totalPen))
                                 .recursiveMono(style: .title2, weight: .bold)
                                 .foregroundColor(Color("dark"))
                                 .modifier(DynamicText())

@@ -156,26 +156,6 @@ struct CTButton<Base: View>: View {
     var body: some View { self.button.buttonStyle(CTButtonStyle()) }
 }
 
-func colourForButtonType(_ type: CTButtonType) -> (colourBg: Color, colourFg: Color, colourShadow: Color) {
-    switch (type) {
-    case .halfcoloured:
-        return (Color("overlay0"), Color("accent"), Color.black.opacity(0.07))
-        
-    case .coloured:
-        return (Color("accent").opacity(0.20), Color("accent"), Color("accent").opacity(0.08))
-        
-    case .mono:
-        return (Color("overlay0"), Color("dark"), Color.black.opacity(0.07))
-        
-    case .disabled:
-        return (Color("grey").opacity(0.15), Color("grey"), Color.clear)
-        
-    case .red, .green, .yellow, .orange:
-        return (Color(String(describing: type)).opacity(0.25),
-                Color(String(describing: type)),
-                Color(String(describing: type)).opacity(0.16))
-    }
-}
 
 #warning("todo: set image scale here instead of per button -> inconsistent!")
 struct CTButtonBase<V: View>: View {
@@ -214,7 +194,6 @@ struct CTButtonBase<V: View>: View {
          expandWidth: Bool,
          content: @escaping () -> V) {
 
-        #warning("TODO: FIX AND MERGE WITH THE COLOUR FOR BUTTON TYPE")
         switch (type) {
         case .mono:
             self.colourBg = Color("overlay0")

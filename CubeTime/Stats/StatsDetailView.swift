@@ -93,7 +93,7 @@ struct StatsDetailView: View {
                 VStack {
                     VStack(spacing: 4) {
                         HStack(alignment: .bottom) {
-                            Text(formatSolveTime(secs: solves.average!, penType: solves.totalPen))
+                            Text(formatSolveTime(secs: solves.average!, penalty: solves.totalPen))
                                 .recursiveMono(style: .largeTitle, weight: .bold)
                             
                             Spacer()
