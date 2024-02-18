@@ -119,7 +119,6 @@ class LineChartScroll: UIScrollView {
 
     private func createDNFPoint() -> UIImage {
         let config = UIImage.SymbolConfiguration(font: .preferredFont(for: .caption1, weight: .bold), scale: .large)
-
         
         return UIImage(systemName: "xmark", withConfiguration: config)!
     }
@@ -173,21 +172,20 @@ class LineChartScroll: UIScrollView {
         for i in pointsSubset.indices {
             let prev = points[i - 1 >= 0 ? i - 1 : 0]
             let cur = points[i]
-            let next = points[i + 1 < points.count ? i + 1 : points.count - 1]
             
             var prevcgpoint = prev.getPointFor(interval: interval, imageHeight: padded_height)
             var curcgpoint = cur.getPointFor(interval: interval, imageHeight: padded_height)
             curcgpoint.y += CHART_TOP_PADDING
             prevcgpoint.y += CHART_TOP_PADDING
             
-            let drawText = (i % 5) == 0
+            let drawText = (i % (Int(self.bounds.width) / (interval * 2))) == 0 && i != 0
             
             if drawText {
                 let string = "\(i + 1)" as NSString
                 
                 let attributes = [
-                    NSAttributedString.Key.font : UIFont.systemFont(ofSize: 8),
-                                        NSAttributedString.Key.foregroundColor : UIColor.red
+                    NSAttributedString.Key.font : UIFont.systemFont(ofSize: 10),
+                    NSAttributedString.Key.foregroundColor : UIColor(Color("grey"))
                 ]
                 
                 // Get the width and height that the text will occupy.
@@ -206,7 +204,7 @@ class LineChartScroll: UIScrollView {
                 intervalLine.move(to: CGPoint(x: CGFloat(i * interval), y: self.frame.height - CHART_BOTTOM_PADDING - 0.5))
                 intervalLine.lineWidth = 1
                 intervalLine.addLine(to: CGPoint(x: CGFloat(i * interval), y: CHART_TOP_PADDING + 0.5))
-                context.setStrokeColor(UIColor.green.cgColor)
+                context.setStrokeColor(UIColor(Color("indent1")).cgColor)
                 intervalLine.stroke()
 
                 
@@ -214,8 +212,6 @@ class LineChartScroll: UIScrollView {
                 context.setStrokeColor(graphLineColor)
             }
 
-            
-//            let nextcgpoint = next.getPointForImageSize(imageHeight: self.frame.height - CGFloat(CHART_TOP_PADDING))
             
             if (trendLine.isEmpty) {
                 trendLine.move(to: CGPoint(x: 0, y: curcgpoint.y))
