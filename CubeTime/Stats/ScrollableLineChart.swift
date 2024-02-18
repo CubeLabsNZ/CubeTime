@@ -39,22 +39,29 @@ class HighlightedPoint: UIView {
 private let dotDiameter: CGFloat = 6
 
 struct LineChartPoint {
-    var point: CGPoint
+    var x: CGFloat
+    var min: CGFloat
+    var max: CGFloat
+    
+    func getPointForImageSize(imageHeight: CGFloat) -> CGPoint {
+        return CGPoint(x: self.x, y: getStandardisedYLocation(value: solve.timeIncPen,
+                                                              min: min, max: max,
+                                                              imageHeight: imageHeight))
+    }
+    
     var solve: Solve
     
     init(solve: Solve, 
          position: Double,
-         min: Double, max: Double,
-         imageHeight: CGFloat) {
+         min: Double, max: Double) {
         self.solve = solve
-        self.point = CGPoint()
-        self.point.y = getStandardisedYLocation(value: solve.timeIncPen, 
-                                                min: min, max: max,
-                                                imageHeight: imageHeight)
-        self.point.x = position
+        self.x = position
+        self.min = min
+        self.max = max
     }
     
-    func pointIn(_ other: CGPoint) -> Bool {
+    func pointIn(imageHeight: CGFloat, other: CGPoint) -> Bool {
+        let point = getPointForImageSize(imageHeight: imageHeight)
         let rect = CGRect(x: point.x - dotDiameter / 2, y: point.y - dotDiameter / 2, width: dotDiameter, height: dotDiameter)
         return rect.contains(other)
     }
@@ -85,6 +92,176 @@ extension CGPoint {
         return controlPoint
     }
 }
+
+class LineChart: UIView {
+    static private let dotSize: CGFloat = 6
+    
+    var interval: Int
+    var points: [LineChartPoint]
+    weak var scrollView: UIScrollView?
+
+    
+    init(frame: CGRect, interval: Int, points: [LineChartPoint], scrollView: UIScrollView) {
+        self.interval = interval
+        self.points = points
+        self.scrollView = scrollView
+        
+        super.init(frame: frame)
+        self.backgroundColor = .clear
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func createDNFPoint() -> UIImage {
+        let config = UIImage.SymbolConfiguration(font: .preferredFont(for: .caption1, weight: .bold), scale: .large)
+
+        
+        return UIImage(systemName: "xmark", withConfiguration: config)!
+    }
+    
+    static let drawCountAround = 100
+    static let redrawDistance = 20
+    
+    func scrolledMaybeRedraw() {
+    }
+    
+    override func draw(_ rect: CGRect) {
+        print("drawing: \(rect)")
+        return
+        guard let scrollView else { return }
+        print("scrollview not nul!")
+        
+        
+        var dnfedIndices: [Int] = []
+        
+        let imageSize = CGSize(width: CGFloat((points.count - 1) * interval + 6),
+                               height: self.frame.height)
+        
+        /// draw line
+        let trendLine = UIBezierPath()
+        let gradientLine = UIBezierPath()
+        
+        let context = UIGraphicsGetCurrentContext()!
+        
+        let xAxis = UIBezierPath()
+                
+        /// x axis
+        xAxis.move(to: CGPoint(x: 0, y: self.frame.height - 0.5))
+        xAxis.lineWidth = 1
+        xAxis.addLine(to: CGPoint(x: CGFloat((points.count - 1) * self.interval), y: self.frame.height - 0.5))
+        context.setStrokeColor(UIColor(Color("indent0")).cgColor)
+        xAxis.stroke()
+        
+        
+        /// graph line
+        context.setStrokeColor(UIColor(Color("accent")).cgColor)
+        
+        trendLine.lineWidth = 2
+        trendLine.lineCapStyle = .round
+        trendLine.lineJoinStyle = .round
+        
+        
+        let leftX = scrollView.contentOffset.x
+        let rightX = leftX + scrollView.frame.size.width
+        print("DRAWING FROM \(leftX) to \(rightX)")
+        let pointsSubset = points[max(Int(leftX) / interval, 0)...min(Int(rightX) / interval, points.count - 1)]
+        
+        
+        for i in pointsSubset.indices {
+            let prev = points[i - 1 >= 0 ? i - 1 : 0]
+            let cur = points[i]
+            let next = points[i + 1 < points.count ? i + 1 : points.count - 1]
+            
+            let prevcgpoint = prev.getPointForImageSize(imageHeight: self.frame.height)
+            let curcgpoint = cur.getPointForImageSize(imageHeight: self.frame.height)
+            let nextcgpoint = next.getPointForImageSize(imageHeight: self.frame.height)
+            
+            if (trendLine.isEmpty) {
+                trendLine.move(to: CGPoint(x: 0, y: curcgpoint.y))
+                gradientLine.move(to: CGPoint(x: 0, y: curcgpoint.y))
+                continue
+            }
+            
+            let mid = CGPoint.midPointForPoints(p1: prevcgpoint, p2: curcgpoint)
+            
+            trendLine.addQuadCurve(to: mid,
+                                   controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: prevcgpoint))
+            gradientLine.addQuadCurve(to: mid,
+                                   controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: prevcgpoint))
+            
+            
+            if Penalty(rawValue: cur.solve.penalty) == .dnf {
+                trendLine.stroke()
+                trendLine.removeAllPoints()
+                trendLine.move(to: mid)
+                context.setStrokeColor(UIColor(Color("indent0")).cgColor)
+            } else if Penalty(rawValue: prev.solve.penalty) == .dnf {
+                trendLine.stroke()
+                trendLine.removeAllPoints()
+                trendLine.move(to: mid)
+                context.setStrokeColor(UIColor(Color("accent")).cgColor)
+            }
+            
+            
+            trendLine.addQuadCurve(to: curcgpoint,
+                                   controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: curcgpoint))
+            gradientLine.addQuadCurve(to: curcgpoint,
+                                   controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: curcgpoint))
+            
+            if Penalty(rawValue: cur.solve.penalty) == .dnf {
+                dnfedIndices.append(i)
+            }
+        }
+        
+        let lastcgpoint = points.last!.getPointForImageSize(imageHeight: self.frame.height)
+        let firstcgpoint = points.first!.getPointForImageSize(imageHeight: self.frame.height)
+        
+        gradientLine.addLine(to: CGPoint(x: lastcgpoint.x, y: self.frame.height))
+        gradientLine.addLine(to: CGPoint(x: 0, y: self.frame.height))
+        gradientLine.addLine(to: CGPoint(x: 0, y: firstcgpoint.y))
+        
+        gradientLine.close()
+        
+        gradientLine.addClip()
+        
+        context.drawLinearGradient(CGGradient(colorsSpace: .none,
+                                              colors: [
+                                                UIColor(staticGradient[0].opacity(0.6)).cgColor,
+                                                UIColor(staticGradient[1].opacity(0.2)).cgColor,
+                                                UIColor(staticGradient[1].opacity(0.01)).cgColor
+                                              ] as CFArray,
+                                              locations: [0.0, 0.4, 1.0])!,
+                                   start: CGPoint(x: 0, y: 0),
+                                   end: CGPoint(x: 0, y: self.frame.height),
+                                   options: [])
+        
+        context.resetClip()
+        
+        trendLine.stroke()
+        
+        
+        UIColor(Color("grey")).set()
+        
+        /// draw dnf crosses
+        for i in dnfedIndices {
+            let image = createDNFPoint()
+            
+            let cgpoint = points[i].getPointForImageSize(imageHeight: self.frame.height)
+            
+            let imageRect = CGRect(x: cgpoint.x - 4, y: cgpoint.y - 4, width: 8, height: 8)
+            
+            context.clip(to: imageRect, mask: image.cgImage!)
+
+            context.addRect(imageRect)
+            context.drawPath(using: .fill)
+            
+            context.resetClip()
+        }
+    }
+}
+
 
 class TimeDistributionPointCard: UIStackView {
     var solve: Solve?
@@ -231,12 +408,10 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     let limits: (min: Double, max: Double)
     
     var scrollView: UIScrollView!
-    var imageView = UIImageView(frame: .zero)
+    var chartView: LineChart!
     var highlightedPoint: HighlightedPoint!
     var highlightedCard: TimeDistributionPointCard!
-    
-    let imageHeight: CGFloat
-    
+        
     var yAxis: UIView!
     
     var imageWidthConstraint: NSLayoutConstraint!
@@ -247,13 +422,12 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     
     private let dotSize: CGFloat = 6
     
-    init(stopwatchManager: StopwatchManager, points: [LineChartPoint], interval: Int, averageValue: Double, limits: (min: Double, max: Double), imageHeight: CGFloat) {
+    init(stopwatchManager: StopwatchManager, points: [LineChartPoint], interval: Int, averageValue: Double, limits: (min: Double, max: Double)) {
         self.stopwatchManager = stopwatchManager
-        self.points = points
+        self.points = points	
         self.interval = interval
         self.averageValue = averageValue
         self.limits = limits
-        self.imageHeight = imageHeight
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -271,10 +445,15 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         self.view.clipsToBounds = true
         
         self.view.addSubview(scrollView)
-        self.scrollView.addSubview(self.imageView)
         
         self.drawGraph()
         
+        self.chartView = LineChart(frame: .zero, interval: interval, points: points, scrollView: scrollView)
+
+        
+        
+        self.scrollView.addSubview(self.chartView)
+        self.scrollView.frame = self.view.frame
         self.scrollView.isUserInteractionEnabled = true
         self.scrollView.delegate = self
         
@@ -291,13 +470,17 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         self.highlightedPoint = HighlightedPoint(at: .zero)
         
         self.highlightedPoint.backgroundColor = .clear
-        self.highlightedPoint.frame = CGRect(x: self.points[1].point.x - 6,
-                                             y: self.points[1].point.y - 6,
+//        self.highlightedPoint.frame = CGRect(x: self.points[1].point.x - 6,
+//                                             y: self.points[1].point.y - 6,
+//                                             width: 12, height: 12)
+        
+        self.highlightedPoint.frame = CGRect(x: 0,
+                                             y: 0,
                                              width: 12, height: 12)
         self.highlightedPoint.layer.opacity = 1
         
         self.scrollView.addSubview(self.highlightedPoint)
-        self.imageView.isUserInteractionEnabled = true
+        self.chartView.isUserInteractionEnabled = true
         
         
         self.highlightedCard = TimeDistributionPointCard(solve: nil)
@@ -312,7 +495,7 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         self.yAxis = drawYAxisValues()
         
         self.scrollView.translatesAutoresizingMaskIntoConstraints = false
-        self.imageView.translatesAutoresizingMaskIntoConstraints = false
+        self.chartView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             self.scrollView.leadingAnchor.constraint(equalTo: self.yAxis.trailingAnchor),
@@ -320,133 +503,23 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
             self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
         ])
+        
+        NSLayoutConstraint.activate([
+//            self.chartView.heightAnchor.constraint(equalTo: self.scrollView.heightAnchor, constant: -100),
+            self.chartView.topAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.topAnchor, constant: 100),
+            self.chartView.bottomAnchor.constraint(equalTo: self.scrollView.frameLayoutGuide.bottomAnchor),
+            self.chartView.bottomAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.bottomAnchor),
+
+            self.chartView.leadingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.leadingAnchor),
+
+            self.chartView.trailingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.trailingAnchor),
+
+            self.chartView.widthAnchor.constraint(equalToConstant:  CGFloat((points.count - 1) * interval))
+        ])
+
     }
     
-    private func createDNFPoint() -> UIImage {
-        var config = UIImage.SymbolConfiguration(font: .preferredFont(for: .caption1, weight: .bold), scale: .large)
-
-        
-        return UIImage(systemName: "xmark", withConfiguration: config)!
-    }
-    
-    private func drawGraph() -> UIImage {
-        var dnfedIndices: [Int] = []
-        
-        let imageSize = CGSize(width: CGFloat((points.count - 1) * interval + 6),
-                               height: imageHeight)
-        
-        /// draw line
-        let trendLine = UIBezierPath()
-        let gradientLine = UIBezierPath()
-        
-        let xAxis = UIBezierPath()
-        
-        let format: UIGraphicsImageRendererFormat = UIGraphicsImageRendererFormat.default()
-        format.opaque = false
-        format.scale = 1.0
-        
-        let renderer = UIGraphicsImageRenderer(size: imageSize, format: format)
-        
-        var image = renderer.image { ctx in
-            /// x axis
-            xAxis.move(to: CGPoint(x: 0, y: imageHeight - 0.5))
-            xAxis.lineWidth = 1
-            xAxis.addLine(to: CGPoint(x: CGFloat((points.count - 1) * self.interval), y: imageHeight - 0.5))
-            ctx.cgContext.setStrokeColor(UIColor(Color("indent0")).cgColor)
-            xAxis.stroke()
-            
-            
-            /// graph line
-            ctx.cgContext.setStrokeColor(UIColor(Color("accent")).cgColor)
-            
-            trendLine.lineWidth = 2
-            trendLine.lineCapStyle = .round
-            trendLine.lineJoinStyle = .round
-            
-            for i in 0 ..< points.count {
-                let prev = points[i - 1 >= 0 ? i - 1 : 0]
-                let cur = points[i]
-                let next = points[i + 1 < points.count ? i + 1 : points.count - 1]
-                
-                if (trendLine.isEmpty) {
-                    trendLine.move(to: CGPoint(x: 0, y: cur.point.y))
-                    gradientLine.move(to: CGPoint(x: 0, y: cur.point.y))
-                    continue
-                }
-                
-                let mid = CGPoint.midPointForPoints(p1: prev.point, p2: cur.point)
-                
-                trendLine.addQuadCurve(to: mid,
-                                       controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: prev.point))
-                gradientLine.addQuadCurve(to: mid,
-                                       controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: prev.point))
-                
-                
-                if Penalty(rawValue: cur.solve.penalty) == .dnf {
-                    trendLine.stroke()
-                    trendLine.removeAllPoints()
-                    trendLine.move(to: mid)
-                    ctx.cgContext.setStrokeColor(UIColor(Color("indent0")).cgColor)
-                } else if Penalty(rawValue: prev.solve.penalty) == .dnf {
-                    trendLine.stroke()
-                    trendLine.removeAllPoints()
-                    trendLine.move(to: mid)
-                    ctx.cgContext.setStrokeColor(UIColor(Color("accent")).cgColor)
-                }
-                
-                
-                trendLine.addQuadCurve(to: cur.point,
-                                       controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: cur.point))
-                gradientLine.addQuadCurve(to: cur.point,
-                                       controlPoint: CGPoint.controlPointForPoints(p1: mid, p2: cur.point))
-                
-                if Penalty(rawValue: cur.solve.penalty) == .dnf {
-                    dnfedIndices.append(i)
-                }
-            }
-            
-            
-            gradientLine.addLine(to: CGPoint(x: points.last!.point.x, y: imageHeight))
-            gradientLine.addLine(to: CGPoint(x: 0, y: imageHeight))
-            gradientLine.addLine(to: CGPoint(x: 0, y: points.first!.point.y))
-            
-            gradientLine.close()
-            
-            gradientLine.addClip()
-            
-            ctx.cgContext.drawLinearGradient(CGGradient(colorsSpace: .none,
-                                                  colors: [
-                                                    UIColor(staticGradient[0].opacity(0.6)).cgColor,
-                                                    UIColor(staticGradient[1].opacity(0.2)).cgColor,
-                                                    UIColor(staticGradient[1].opacity(0.01)).cgColor
-                                                  ] as CFArray,
-                                                  locations: [0.0, 0.4, 1.0])!,
-                                       start: CGPoint(x: 0, y: 0),
-                                       end: CGPoint(x: 0, y: imageHeight),
-                                       options: [])
-            
-            ctx.cgContext.resetClip()
-            
-            trendLine.stroke()
-            
-            
-            UIColor(Color("grey")).set()
-            
-            /// draw dnf crosses
-            for i in dnfedIndices {
-                let image = createDNFPoint()
-                
-                
-                let imageRect = CGRect(x: points[i].point.x - 4, y: points[i].point.y - 4, width: 8, height: 8)
-                
-                ctx.cgContext.clip(to: imageRect, mask: image.cgImage!)
-
-                ctx.cgContext.addRect(imageRect)
-                ctx.cgContext.drawPath(using: .fill)
-                
-                ctx.cgContext.resetClip()
-            }
-        }
+    private func drawGraph() {
         
         
 //        UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
@@ -456,24 +529,22 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         
 //        let image = UIGraphicsGetImageFromCurrentImageContext()!
         
-        self.imageView.image = image
-    
+//        self.imageView.image = image
+//    
+//        
+//        NSLayoutConstraint.deactivate(self.imageView.constraints)
         
-        NSLayoutConstraint.deactivate(self.imageView.constraints)
-        
-        NSLayoutConstraint.activate([
-            self.imageView.heightAnchor.constraint(equalToConstant: self.imageHeight),
-            self.imageView.bottomAnchor.constraint(equalTo: self.scrollView.frameLayoutGuide.bottomAnchor),
-            self.imageView.bottomAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.bottomAnchor),
-            
-            self.imageView.leadingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.leadingAnchor),
-            
-            self.imageView.trailingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.trailingAnchor),
-            
-            self.imageView.widthAnchor.constraint(equalToConstant: image.size.width)
-        ])
-        
-        return image
+//        NSLayoutConstraint.activate([
+//            self.imageView.heightAnchor.constraint(equalToConstant: self.imageHeight),
+//            self.imageView.bottomAnchor.constraint(equalTo: self.scrollView.frameLayoutGuide.bottomAnchor),
+//            self.imageView.bottomAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.bottomAnchor),
+//            
+//            self.imageView.leadingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.leadingAnchor),
+//            
+//            self.imageView.trailingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.trailingAnchor),
+//            
+//            self.imageView.widthAnchor.constraint(equalToConstant: image.size.width)
+//        ])
     }
     
     private func drawYAxisValues() -> UIView {
@@ -514,34 +585,10 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
             
             label.sizeToFit()
             
-        }
+        }        
         
-        let imageSize = CGSize(width: 1, height: self.imageHeight)
-        
-        let yAxis = UIBezierPath()
-        
-        let format: UIGraphicsImageRendererFormat = UIGraphicsImageRendererFormat.default()
-        format.opaque = false
-        format.scale = 1.0
-                
-        let renderer = UIGraphicsImageRenderer(size: imageSize, format: format)
-        
-//        UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
-        
-//        let context = UIGraphicsGetCurrentContext()!
-        
-        let lineViewImage = renderer.image { ctx in
-            ctx.cgContext.setStrokeColor(UIColor(Color("indent0")).cgColor)
-            
-            yAxis.move(to: CGPoint(x: 0.5, y: 0))
-            yAxis.addLine(to: CGPoint(x: 0.5, y: self.imageHeight))
-            yAxis.lineWidth = 1
-            yAxis.stroke()
-        }
-        
-        
-        
-        let lineView = UIImageView(image: lineViewImage)
+        let lineView = UIView()
+        lineView.backgroundColor = UIColor(Color("indent0"))
         
         view.spacing = 4
         view.addArrangedSubview(lineView)
@@ -549,7 +596,9 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         NSLayoutConstraint.activate([
             view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            view.heightAnchor.constraint(equalToConstant: self.imageHeight),
+            view.heightAnchor.constraint(equalTo: self.chartView.heightAnchor),
+            lineView.widthAnchor.constraint(equalToConstant: 0.5),
+            lineView.heightAnchor.constraint(equalTo: self.chartView.heightAnchor),
         ])
         
         
@@ -582,21 +631,24 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
         let closestIndex = max(0, min(self.points.count - 1, Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(self.interval))))
         let closestPoint = self.points[closestIndex]
+        let closestCGPoint = closestPoint.getPointForImageSize(imageHeight: self.chartView.frame.height)
+        
+        print("CLOSETS: \(closestCGPoint.y), HEIGHT: \(self.chartView.frame.height)")
         
         self.highlightedCard.updateLabel(with: closestPoint.solve)
         
         self.highlightedPoint.isRegular = Penalty(rawValue: closestPoint.solve.penalty) != .dnf
         
-        self.highlightedPoint.frame.origin = imageView.convert(CGPoint(x: closestPoint.point.x - 6,
-                                                                             y: closestPoint.point.y - 6), to: scrollView)
+        self.highlightedPoint.frame.origin = chartView.convert(CGPoint(x: closestCGPoint.x - 6,
+                                                                             y: closestCGPoint.y - 6), to: scrollView)
 
         
         self.lastSelectedSolve = closestPoint.solve
 
-        self.highlightedCard.frame.origin = imageView.convert(CGPoint(x: min(max(self.scrollView.contentOffset.x,
-                    closestPoint.point.x - (self.highlightedCard.frame.width / 2)),
+        self.highlightedCard.frame.origin = chartView.convert(CGPoint(x: min(max(self.scrollView.contentOffset.x,
+                    closestCGPoint.x - (self.highlightedCard.frame.width / 2)),
                 self.scrollView.frame.width - self.highlightedCard.frame.width + self.scrollView.contentOffset.x),
-                                                                      y: closestPoint.point.y - 80), to: scrollView)
+                                                                      y: closestCGPoint.y - 80), to: scrollView)
         
         self.highlightedPoint.layer.opacity = 1
         self.highlightedCard.layer.opacity = 1
@@ -605,6 +657,7 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         removeSelectedPoint(animated: false)
+        self.chartView.setNeedsDisplay()
     }
     
     @objc func solveCardTapped(_ g: UITapGestureRecognizer) {
@@ -629,11 +682,11 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     let limits: (min: Double, max: Double)
     
     init(rawDataPoints: [Solve], limits: (min: Double, max: Double), averageValue: Double, interval: Int, proxy: GeometryProxy) {
-        self.points = rawDataPoints.enumerated().map({ (i, e) in
+        print("HEIGHT IN INIT: \(proxy.size.height)")
+        self.points = rawDataPoints.suffix(2152).enumerated().map({ (i, e) in
             return LineChartPoint(solve: e,
                                   position: Double(i * interval),
-                                  min: limits.min, max: limits.max,
-                                  imageHeight: proxy.size.height - 100)
+                                  min: limits.min, max: limits.max)
         })
         self.averageValue = averageValue
         self.limits = limits
@@ -642,16 +695,13 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     }
     
     func makeUIViewController(context: Context) -> TimeDistViewController {
-        let timeDistViewController = TimeDistViewController(stopwatchManager: stopwatchManager, points: points, interval: interval, averageValue: averageValue, limits: limits, imageHeight: proxy.size.height - 100)
-        
-        timeDistViewController.view.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
-        timeDistViewController.scrollView.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
+        print("HEIGHT IN makeUIViewController: \(proxy.size.height)")
+        let timeDistViewController = TimeDistViewController(stopwatchManager: stopwatchManager, points: points, interval: interval, averageValue: averageValue, limits: limits)
         
         return timeDistViewController
     }
     
     func updateUIViewController(_ uiViewController: TimeDistViewController, context: Context) {
-        uiViewController.view?.frame = CGRect(x: 0, y: 0, width: proxy.size.width, height: proxy.size.height)
         uiViewController.updateGap(interval: interval, points: points)
     }
 }

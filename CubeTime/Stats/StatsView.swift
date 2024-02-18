@@ -38,18 +38,18 @@ struct StatsView: View {
                         VStack {
                             #if DEBUG
                             Button {
-                                for _ in 0..<1 {
+                                for _ in 0..<10000 {
                                     let solve: Solve = Solve(context: managedObjectContext)
-//                                    solve.time = Double.random(in: 0...10)
-                                    solve.time = 7.998
+                                    solve.time = Double.random(in: 0...10)
+//                                    solve.time = 7.998
                                     solve.scramble = "sdlfkjsdlfksdjf"
                                     solve.date = Date()
                                     solve.scrambleType = 2
                                     solve.penalty = Penalty.none.rawValue
                                     solve.session = stopwatchManager.currentSession
-                                    
-                                    try! managedObjectContext.save()
                                 }
+                                
+                                try! managedObjectContext.save()
                                 NSLog("finished")
                             } label: {
                                 Text("generate")
