@@ -37,7 +37,7 @@ struct LegendLabel: View {
                     .fill(colour)
                     .frame(width: 32, height: 2, alignment: .leading)
             }
-                    
+            
             Text(label)
                 .font(.caption2)
                 .foregroundStyle(colour)
@@ -49,15 +49,15 @@ struct LegendLabel: View {
 struct TimeTrendDetail: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
-    #warning("TODO: remove when we readd the lines")
-//    @State var selectedLines = [true, false, false, false]
+#warning("TODO: remove when we readd the lines")
+    //    @State var selectedLines = [true, false, false, false]
     @State var selectedLines = [true]
     
     let labels: [(label: String, type: CTButtonType)] = [
         ("time", .halfcoloured),
-//        ("ao5", .green),
-//        ("ao12", .red),
-//        ("ao100", .orange)
+        //        ("ao5", .green),
+        //        ("ao12", .red),
+        //        ("ao100", .orange)
     ]
     
     @State var interval: Int = 30
@@ -120,10 +120,11 @@ struct TimeTrendDetail: View {
                     }
                 }
                 .padding(.top, 8)
+                
             }
             .padding(8)
         }
         .padding()
-        .padding(.bottom, 60)
+        .padding(.bottom, 32)
     }
 }

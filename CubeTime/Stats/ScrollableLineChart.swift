@@ -11,7 +11,7 @@ import SwiftUI
 fileprivate let CHART_BOTTOM_PADDING: CGFloat = 50 // Allow for x axis
 fileprivate let CHART_TOP_PADDING: CGFloat = 100
 
-fileprivate let axisLabelFont = FontManager.fontFor(size: 11, weight: 350)
+fileprivate let axisLabelFont = FontManager.fontFor(size: 10, weight: 400)
 
 
 class HighlightedPoint: UIView {
@@ -206,6 +206,7 @@ class LineChartScroll: UIScrollView {
                 
                 intervalLine.move(to: CGPoint(x: CGFloat(i * interval), y: self.frame.height - CHART_BOTTOM_PADDING - 0.5))
                 intervalLine.lineWidth = 1
+                intervalLine.setLineDash([6, 6], count: 2, phase: 0)
                 intervalLine.addLine(to: CGPoint(x: CGFloat(i * interval), y: CHART_TOP_PADDING + 0.5))
                 context.setStrokeColor(UIColor(Color("indent1")).cgColor)
                 intervalLine.stroke()
@@ -333,7 +334,7 @@ class TimeDistributionPointCard: UIStackView {
         var timeLabel = UILabel()
         
         timeLabel.text = self.solve?.timeText ?? ""
-        timeLabel.font = .preferredFont(for: .subheadline, weight: .semibold)
+        timeLabel.font = FontManager.fontFor(size: 15, weight: 600)
         timeLabel.adjustsFontForContentSizeCategory = true
         
         return timeLabel
@@ -348,7 +349,7 @@ class TimeDistributionPointCard: UIStackView {
             dateLabel.text = "Unknown Date"
         }
         
-        dateLabel.font = .preferredFont(forTextStyle: .footnote)
+        dateLabel.font = .preferredFont(forTextStyle: .caption1)
         dateLabel.textColor = UIColor(Color("grey"))
         dateLabel.adjustsFontForContentSizeCategory = true
         
@@ -576,6 +577,7 @@ var scrollView: LineChartScroll!
         
         view.alignment = .center
         view.axis = .horizontal
+        view.spacing = 4
         
         view.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(view)
@@ -592,19 +594,19 @@ var scrollView: LineChartScroll!
             stackView.addArrangedSubview(label)
             
             label.sizeToFit()
-            
-        }        
+        }
         
         let lineView = UIView()
         lineView.backgroundColor = UIColor(Color("indent0"))
         
-        view.spacing = 4
+        view.spacing = 6
         view.addArrangedSubview(lineView)
         
         NSLayoutConstraint.activate([
             view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             view.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: CHART_TOP_PADDING),
             view.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor, constant: -CHART_BOTTOM_PADDING),
+            
             lineView.widthAnchor.constraint(equalToConstant: 0.5),
             lineView.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: CHART_TOP_PADDING),
             lineView.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor, constant: -CHART_BOTTOM_PADDING)
