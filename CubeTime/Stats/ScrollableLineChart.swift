@@ -8,8 +8,8 @@ import UIKit
 import SwiftUI
 
 
-fileprivate let VIEW_CHUNK_SIZE = 100
-
+fileprivate let CHART_BOTTOM_PADDING = 5 // Allow for x axis
+fileprivate let CHART_TOP_PADDING: CGFloat = 100
 
 class HighlightedPoint: UIView {
     let path = UIBezierPath(ovalIn: CGRect(x: 2, y: 2, width: 8, height: 8))
@@ -165,14 +165,18 @@ class LineChartScroll: UIScrollView {
         let pointsSubset = points[max(Int(leftX) / interval - 1, 0)...min(Int(rightX) / interval + 1, points.count - 1)]
         
         
+        let padded_height = self.frame.height - CGFloat(CHART_TOP_PADDING)
+        
         for i in pointsSubset.indices {
             let prev = points[i - 1 >= 0 ? i - 1 : 0]
             let cur = points[i]
             let next = points[i + 1 < points.count ? i + 1 : points.count - 1]
             
-            let prevcgpoint = prev.getPointForImageSize(imageHeight: self.frame.height)
-            let curcgpoint = cur.getPointForImageSize(imageHeight: self.frame.height)
-            let nextcgpoint = next.getPointForImageSize(imageHeight: self.frame.height)
+            var prevcgpoint = prev.getPointForImageSize(imageHeight: padded_height)
+            var curcgpoint = cur.getPointForImageSize(imageHeight: padded_height)
+            curcgpoint.y += CHART_TOP_PADDING
+            prevcgpoint.y += CHART_TOP_PADDING
+//            let nextcgpoint = next.getPointForImageSize(imageHeight: self.frame.height - CGFloat(CHART_TOP_PADDING))
             
             if (trendLine.isEmpty) {
                 trendLine.move(to: CGPoint(x: 0, y: curcgpoint.y))
@@ -211,11 +215,11 @@ class LineChartScroll: UIScrollView {
             }
         }
         
-        let lastcgpoint = points.last!.getPointForImageSize(imageHeight: self.frame.height)
-        let firstcgpoint = points.first!.getPointForImageSize(imageHeight: self.frame.height)
+        let lastcgpoint = points.last!.getPointForImageSize(imageHeight: padded_height + CHART_TOP_PADDING)
+        let firstcgpoint = points.first!.getPointForImageSize(imageHeight: padded_height + CHART_TOP_PADDING)
         
-        gradientLine.addLine(to: CGPoint(x: lastcgpoint.x, y: self.frame.height))
-        gradientLine.addLine(to: CGPoint(x: 0, y: self.frame.height))
+        gradientLine.addLine(to: CGPoint(x: lastcgpoint.x, y: padded_height + CHART_TOP_PADDING))
+        gradientLine.addLine(to: CGPoint(x: 0, y: padded_height + CHART_TOP_PADDING))
         gradientLine.addLine(to: CGPoint(x: 0, y: firstcgpoint.y))
         
         gradientLine.close()
@@ -230,7 +234,7 @@ class LineChartScroll: UIScrollView {
                                               ] as CFArray,
                                               locations: [0.0, 0.4, 1.0])!,
                                    start: CGPoint(x: 0, y: 0),
-                                   end: CGPoint(x: 0, y: self.frame.height),
+                                   end: CGPoint(x: 0, y: padded_height + CHART_TOP_PADDING),
                                    options: [])
         
         context.resetClip()
@@ -244,7 +248,8 @@ class LineChartScroll: UIScrollView {
         for i in dnfedIndices {
             let image = createDNFPoint()
             
-            let cgpoint = points[i].getPointForImageSize(imageHeight: self.frame.height)
+            var cgpoint = points[i].getPointForImageSize(imageHeight: padded_height)
+            cgpoint.y += CHART_TOP_PADDING
             
             let imageRect = CGRect(x: cgpoint.x - 4, y: cgpoint.y - 4, width: 8, height: 8)
             
@@ -590,9 +595,9 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         NSLayoutConstraint.activate([
             view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-//            view.heightAnchor.constraint(equalTo: self.chartView.heightAnchor),
+            view.heightAnchor.constraint(equalTo: self.scrollView.heightAnchor, constant: -CHART_TOP_PADDING),
             lineView.widthAnchor.constraint(equalToConstant: 0.5),
-//            lineView.heightAnchor.constraint(equalTo: self.chartView.heightAnchor),
+            lineView.heightAnchor.constraint(equalTo: self.scrollView.heightAnchor, constant: -CHART_TOP_PADDING)
         ])
         
         
@@ -623,29 +628,33 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
-//        let closestIndex = max(0, min(self.points.count - 1, Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(self.interval))))
-//        let closestPoint = self.points[closestIndex]
-//        let closestCGPoint = closestPoint.getPointForImageSize(imageHeight: self.chartView.frame.height)
-//        
-//        print("CLOSETS: \(closestCGPoint.y), HEIGHT: \(self.chartView.frame.height)")
-//        
-//        self.highlightedCard.updateLabel(with: closestPoint.solve)
-//        
-//        self.highlightedPoint.isRegular = Penalty(rawValue: closestPoint.solve.penalty) != .dnf
-//        
+        let closestIndex = max(0, min(self.points.count - 1, Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(self.interval))))
+        let closestPoint = self.points[closestIndex]
+        var closestCGPoint = closestPoint.getPointForImageSize(imageHeight: self.scrollView.frame.height - CHART_TOP_PADDING - 0)
+        closestCGPoint.y += CHART_TOP_PADDING
+        
+        print("CLOSETS: \(closestCGPoint.y), HEIGHT: \(self.scrollView.frame.height)")
+        
+        self.highlightedCard.updateLabel(with: closestPoint.solve)
+        
+        self.highlightedPoint.isRegular = Penalty(rawValue: closestPoint.solve.penalty) != .dnf
+        
 //        self.highlightedPoint.frame.origin = chartView.convert(CGPoint(x: closestCGPoint.x - 6,
 //                                                                             y: closestCGPoint.y - 6), to: scrollView)
-//
-//        
-//        self.lastSelectedSolve = closestPoint.solve
-//
-//        self.highlightedCard.frame.origin = chartView.convert(CGPoint(x: min(max(self.scrollView.contentOffset.x,
-//                    closestCGPoint.x - (self.highlightedCard.frame.width / 2)),
-//                self.scrollView.frame.width - self.highlightedCard.frame.width + self.scrollView.contentOffset.x),
-//                                                                      y: closestCGPoint.y - 80), to: scrollView)
-//        
-//        self.highlightedPoint.layer.opacity = 1
-//        self.highlightedCard.layer.opacity = 1
+        
+        self.highlightedPoint.frame.origin = CGPoint(x: closestCGPoint.x - 6, y: closestCGPoint.y - 6)
+
+        
+        self.lastSelectedSolve = closestPoint.solve
+
+        self.highlightedCard.frame.origin = CGPoint(
+            x: min(max(self.scrollView.contentOffset.x,
+                    closestCGPoint.x - (self.highlightedCard.frame.width / 2)),
+                self.scrollView.frame.width - self.highlightedCard.frame.width + self.scrollView.contentOffset.x),
+                                                                      y: closestCGPoint.y - 80)
+        
+        self.highlightedPoint.layer.opacity = 1
+        self.highlightedCard.layer.opacity = 1
         
     }
     
@@ -677,7 +686,7 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
     
     init(rawDataPoints: [Solve], limits: (min: Double, max: Double), averageValue: Double, interval: Int, proxy: GeometryProxy) {
         print("HEIGHT IN INIT: \(proxy.size.height)")
-        self.points = rawDataPoints.suffix(2152).enumerated().map({ (i, e) in
+        self.points = rawDataPoints.enumerated().map({ (i, e) in
             return LineChartPoint(solve: e,
                                   position: Double(i * interval),
                                   min: limits.min, max: limits.max)
