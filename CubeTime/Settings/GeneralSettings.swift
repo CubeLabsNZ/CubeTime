@@ -52,6 +52,7 @@ struct GeneralSettingsView: View {
     
     // statistics
     @Preference(\.displayDP) private var displayDP
+    @Preference(\.timeTrendSolves) private var timeTrendSolves
     
     
         
@@ -172,6 +173,13 @@ struct GeneralSettingsView: View {
                     }
                 }
                 .pickerStyle(.menu)
+                
+                SettingsPicker(text: "Time Trend Show: ", selection: $timeTrendSolves) {
+                    ForEach([25, 50, 80, 100, 200], id: \.self) {
+                        Text("\($0) Solves")
+                            .tag($0)
+                    }
+                }
             }
         }
         .padding(.horizontal)

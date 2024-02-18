@@ -90,6 +90,9 @@ final class SettingsManager {
     @UserDefault("displayDP")
     var displayDP: Int = 3
     
+    @UserDefault("timeTrendSolves")
+    var timeTrendSolves: Int = 80
+    
     
     // MARK: - Appearance Settings
     

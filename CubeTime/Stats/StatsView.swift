@@ -27,6 +27,8 @@ struct StatsView: View {
     @State private var showBestSinglePopup = false
     @State private var showTimeTrendModal = false
     
+    @Preference(\.timeTrendSolves) private var timeTrendSolves
+    
     
     var body: some View {
         NavigationView {
@@ -328,15 +330,13 @@ struct StatsView: View {
                                                             : stopwatchManager.solvesNoDNFs.map { $0.timeIncPen })
                                 
                                 
-                                #warning("TODO: add settings customisation to choose how many solves to show")
                                 StatsBlock(title: "TIME TREND", blockHeight: (timeTrendData.count < 2 ? blockHeightGraphEmpty : 310), isBigBlock: true, isTappable: false) {
-                                    TimeTrend(data: Array(timeTrendData.suffix(80)), title: nil)
+                                    TimeTrend(data: Array(timeTrendData.suffix(timeTrendSolves)), title: nil)
                                         .drawingGroup()
                                 }
                                 .onTapGesture {
                                     self.showTimeTrendModal = true
                                 }
-                                #warning("TODO: enable for v2.1")
                                  
                                 
                                 StatsBlock(title: "TIME DISTRIBUTION", blockHeight: (timeDistributionData.count < 4 ? blockHeightGraphEmpty : 300), isBigBlock: true, isTappable: false) {
