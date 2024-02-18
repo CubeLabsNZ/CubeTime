@@ -18,31 +18,33 @@ struct StatsTimeList: View {
             VStack(spacing: 0) {
                 HStack(alignment: .bottom) {
                     Text("\(index+1).")
-                        .font(.callout.weight(.bold))
+                        .font(.callout.weight(.semibold))
                         .foregroundColor(Color("accent"))
                     
-                    if isTrimmed {
-                        Text("(" + solve.timeText + ")")
-                            .offset(y: 1)
-                            .font(.title3.weight(.bold))
-                            .foregroundColor(Color("grey"))
-                        
-                    } else {
-                        Text(solve.timeText)
-                            .offset(y: 1)
-                            .font(.title3.weight(.bold))
+                    
+                    Group {
+                        if isTrimmed {
+                            Text("(" + solve.timeText + ")")
+                                .offset(y: 1)
+                                .foregroundColor(Color("grey"))
+                            
+                        } else {
+                            Text(solve.timeText)
+                                .offset(y: 1)
+                        }
                     }
+                    .recursiveMono(style: .title3, weight: .bold)
                     
                     
                     Spacer()
                     
                     if let date = solve.date {
                         Text(date, formatter: getSolveDateFormatter(date))
-                            .recursiveMono(size: 15, weight: .regular)
+                            .font(.subheadline)
                             .foregroundColor(Color("grey"))
                     } else {
                         Text("...")
-                            .recursiveMono(size: 15, weight: .regular)
+                            .font(.subheadline)
                             .foregroundColor(Color("grey"))
                     }
                 }
@@ -62,7 +64,8 @@ struct StatsTimeList: View {
                     
                     Spacer()
                 }
-                .recursiveMono(size: 17, weight: .regular)
+                .recursiveMono(size: 16, weight: .regular)
+                .padding(.top, 4)
                 .padding(.bottom, (index != calculatedAverage.accountedSolves!.indices.last!) ? 8 : 0)
             }
             .onTapGesture {
@@ -91,41 +94,41 @@ struct StatsDetailView: View {
                     VStack(spacing: 4) {
                         HStack(alignment: .bottom) {
                             Text(formatSolveTime(secs: solves.average!, penType: solves.totalPen))
-                                .font(.largeTitle.weight(.bold))
+                                .recursiveMono(style: .largeTitle, weight: .bold)
                             
                             Spacer()
-                            
-                            // if playground, show playground, otherwise show puzzle type
-                            
-                            HStack(alignment: .center) {
-                                if (SessionType(rawValue: session.sessionType)! == .playground) {
-                                    Text("Playground")
-                                        .font(.title3.weight(.semibold))
-                                    
-                                    Image(systemName: "square.on.square")
-                                        .resizable()
-                                        .frame(width: 22, height: 22)
-                                    
-                                } else {
-                                    Text(puzzleTypes[Int(session.scrambleType)].name)
-                                        .font(.title3.weight(.semibold))
-                                    
-                                    Image(puzzleTypes[Int(session.scrambleType)].name)
-                                        .resizable()
-                                        .frame(width: 22, height: 22)
-                                    
-                                }
-                                
-                            }
-                            .offset(y: -4)
                         }
                         
                         ThemedDivider()
                         
-                        Text(solves.name == "Comp Sim Solve" ? "COMPSIM" : solves.name.uppercased())
-                            .recursiveMono(size: 15, weight: .regular)
-                            .foregroundColor(Color("grey"))
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                        HStack {
+                            Text(solves.name == "Comp Sim Solve" ? "COMPSIM" : solves.name.uppercased())
+                            
+                            Text("|")
+                                .offset(y: -1)  // slight offset of bar
+                            
+                            HStack(alignment: .center, spacing: 4) {
+                                if (SessionType(rawValue: session.sessionType)! == .playground) {
+                                    Text("Playground")
+                                    
+                                    Image(systemName: "square.on.square")
+                                        .resizable()
+                                        .frame(width: 16, height: 16)
+                                    
+                                } else {
+                                    Text(puzzleTypes[Int(session.scrambleType)].name)
+                                    
+                                    Image(puzzleTypes[Int(session.scrambleType)].name)
+                                        .resizable()
+                                        .frame(width: 16, height: 16)
+                                    
+                                }
+                                
+                            }
+                            
+                            Spacer()
+                        }
+                        .font(.subheadline.weight(.medium))
                     }
                     .padding(12)
                     .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
@@ -133,7 +136,7 @@ struct StatsDetailView: View {
                     
                     Text("CubeTime.")
                         .recursiveMono(size: 13)
-                        .foregroundColor(Color("indent1"))
+                        .foregroundColor(Color("grey").opacity(0.25))
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .padding(.vertical, -4)
                     
