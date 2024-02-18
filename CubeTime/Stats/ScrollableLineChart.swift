@@ -11,7 +11,8 @@ import SwiftUI
 fileprivate let CHART_BOTTOM_PADDING: CGFloat = 50 // Allow for x axis
 fileprivate let CHART_TOP_PADDING: CGFloat = 100
 
-fileprivate let axisLabelFont = FontManager.fontFor(size: 12, weight: 200)
+fileprivate let axisLabelFont = FontManager.fontFor(size: 11, weight: 350)
+
 
 class HighlightedPoint: UIView {
     let path = UIBezierPath(ovalIn: CGRect(x: 2, y: 2, width: 8, height: 8))
@@ -586,7 +587,7 @@ var scrollView: LineChartScroll!
             label.font = axisLabelFont
             label.textColor = UIColor(Color("grey"))
             
-            label.text = formatSolveTime(secs: self.limits.min + Double(i) * range / Double(5))
+            label.text = formatSolveTime(secs: self.limits.min + Double(i) * range / Double(5), dp: 2)
             
             stackView.addArrangedSubview(label)
             
