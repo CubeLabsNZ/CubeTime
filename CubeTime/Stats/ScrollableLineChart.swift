@@ -7,6 +7,10 @@
 import UIKit
 import SwiftUI
 
+
+fileprivate let VIEW_CHUNK_SIZE = 100
+
+
 class HighlightedPoint: UIView {
     let path = UIBezierPath(ovalIn: CGRect(x: 2, y: 2, width: 8, height: 8))
     
@@ -93,18 +97,16 @@ extension CGPoint {
     }
 }
 
-class LineChart: UIView {
+class LineChartScroll: UIScrollView {
     static private let dotSize: CGFloat = 6
     
     var interval: Int
     var points: [LineChartPoint]
-    weak var scrollView: UIScrollView?
 
     
-    init(frame: CGRect, interval: Int, points: [LineChartPoint], scrollView: UIScrollView) {
+    init(frame: CGRect, interval: Int, points: [LineChartPoint]) {
         self.interval = interval
         self.points = points
-        self.scrollView = scrollView
         
         super.init(frame: frame)
         self.backgroundColor = .clear
@@ -129,15 +131,9 @@ class LineChart: UIView {
     
     override func draw(_ rect: CGRect) {
         print("drawing: \(rect)")
-        return
-        guard let scrollView else { return }
-        print("scrollview not nul!")
         
         
         var dnfedIndices: [Int] = []
-        
-        let imageSize = CGSize(width: CGFloat((points.count - 1) * interval + 6),
-                               height: self.frame.height)
         
         /// draw line
         let trendLine = UIBezierPath()
@@ -163,10 +159,10 @@ class LineChart: UIView {
         trendLine.lineJoinStyle = .round
         
         
-        let leftX = scrollView.contentOffset.x
-        let rightX = leftX + scrollView.frame.size.width
+        let leftX = rect.minX
+        let rightX = leftX + rect.width
         print("DRAWING FROM \(leftX) to \(rightX)")
-        let pointsSubset = points[max(Int(leftX) / interval, 0)...min(Int(rightX) / interval, points.count - 1)]
+        let pointsSubset = points[max(Int(leftX) / interval - 1, 0)...min(Int(rightX) / interval + 1, points.count - 1)]
         
         
         for i in pointsSubset.indices {
@@ -408,7 +404,6 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     let limits: (min: Double, max: Double)
     
     var scrollView: UIScrollView!
-    var chartView: LineChart!
     var highlightedPoint: HighlightedPoint!
     var highlightedCard: TimeDistributionPointCard!
         
@@ -439,7 +434,7 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.scrollView = UIScrollView()
+        self.scrollView = LineChartScroll(frame: .zero, interval: interval, points: points)
         self.scrollView.showsHorizontalScrollIndicator = true
         
         self.view.clipsToBounds = true
@@ -447,12 +442,8 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         self.view.addSubview(scrollView)
         
         self.drawGraph()
+                
         
-        self.chartView = LineChart(frame: .zero, interval: interval, points: points, scrollView: scrollView)
-
-        
-        
-        self.scrollView.addSubview(self.chartView)
         self.scrollView.frame = self.view.frame
         self.scrollView.isUserInteractionEnabled = true
         self.scrollView.delegate = self
@@ -480,7 +471,7 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         self.highlightedPoint.layer.opacity = 1
         
         self.scrollView.addSubview(self.highlightedPoint)
-        self.chartView.isUserInteractionEnabled = true
+        self.scrollView.isUserInteractionEnabled = true
         
         
         self.highlightedCard = TimeDistributionPointCard(solve: nil)
@@ -495,7 +486,6 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         self.yAxis = drawYAxisValues()
         
         self.scrollView.translatesAutoresizingMaskIntoConstraints = false
-        self.chartView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             self.scrollView.leadingAnchor.constraint(equalTo: self.yAxis.trailingAnchor),
@@ -505,18 +495,22 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         ])
         
         NSLayoutConstraint.activate([
-//            self.chartView.heightAnchor.constraint(equalTo: self.scrollView.heightAnchor, constant: -100),
-            self.chartView.topAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.topAnchor, constant: 100),
-            self.chartView.bottomAnchor.constraint(equalTo: self.scrollView.frameLayoutGuide.bottomAnchor),
-            self.chartView.bottomAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.bottomAnchor),
-
-            self.chartView.leadingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.leadingAnchor),
-
-            self.chartView.trailingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.trailingAnchor),
-
-            self.chartView.widthAnchor.constraint(equalToConstant:  CGFloat((points.count - 1) * interval))
+//            self.chartView.topAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.topAnchor, constant: 100),
+//            self.chartView.bottomAnchor.constraint(equalTo: self.scrollView.frameLayoutGuide.bottomAnchor),
+//            self.chartView.bottomAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.bottomAnchor),
+//
+//            self.chartView.leadingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.leadingAnchor),
+//
+//            self.chartView.trailingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.trailingAnchor),
+//
+//            self.chartView.widthAnchor.constraint(equalToConstant:  CGFloat((points.count - 1) * interval))
         ])
+        changeInterval()
 
+    }
+    
+    private func changeInterval() {
+        self.scrollView.contentSize.width = CGFloat((points.count - 1) * interval)
     }
     
     private func drawGraph() {
@@ -596,9 +590,9 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         NSLayoutConstraint.activate([
             view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            view.heightAnchor.constraint(equalTo: self.chartView.heightAnchor),
+//            view.heightAnchor.constraint(equalTo: self.chartView.heightAnchor),
             lineView.widthAnchor.constraint(equalToConstant: 0.5),
-            lineView.heightAnchor.constraint(equalTo: self.chartView.heightAnchor),
+//            lineView.heightAnchor.constraint(equalTo: self.chartView.heightAnchor),
         ])
         
         
@@ -629,35 +623,35 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
-        let closestIndex = max(0, min(self.points.count - 1, Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(self.interval))))
-        let closestPoint = self.points[closestIndex]
-        let closestCGPoint = closestPoint.getPointForImageSize(imageHeight: self.chartView.frame.height)
-        
-        print("CLOSETS: \(closestCGPoint.y), HEIGHT: \(self.chartView.frame.height)")
-        
-        self.highlightedCard.updateLabel(with: closestPoint.solve)
-        
-        self.highlightedPoint.isRegular = Penalty(rawValue: closestPoint.solve.penalty) != .dnf
-        
-        self.highlightedPoint.frame.origin = chartView.convert(CGPoint(x: closestCGPoint.x - 6,
-                                                                             y: closestCGPoint.y - 6), to: scrollView)
-
-        
-        self.lastSelectedSolve = closestPoint.solve
-
-        self.highlightedCard.frame.origin = chartView.convert(CGPoint(x: min(max(self.scrollView.contentOffset.x,
-                    closestCGPoint.x - (self.highlightedCard.frame.width / 2)),
-                self.scrollView.frame.width - self.highlightedCard.frame.width + self.scrollView.contentOffset.x),
-                                                                      y: closestCGPoint.y - 80), to: scrollView)
-        
-        self.highlightedPoint.layer.opacity = 1
-        self.highlightedCard.layer.opacity = 1
+//        let closestIndex = max(0, min(self.points.count - 1, Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(self.interval))))
+//        let closestPoint = self.points[closestIndex]
+//        let closestCGPoint = closestPoint.getPointForImageSize(imageHeight: self.chartView.frame.height)
+//        
+//        print("CLOSETS: \(closestCGPoint.y), HEIGHT: \(self.chartView.frame.height)")
+//        
+//        self.highlightedCard.updateLabel(with: closestPoint.solve)
+//        
+//        self.highlightedPoint.isRegular = Penalty(rawValue: closestPoint.solve.penalty) != .dnf
+//        
+//        self.highlightedPoint.frame.origin = chartView.convert(CGPoint(x: closestCGPoint.x - 6,
+//                                                                             y: closestCGPoint.y - 6), to: scrollView)
+//
+//        
+//        self.lastSelectedSolve = closestPoint.solve
+//
+//        self.highlightedCard.frame.origin = chartView.convert(CGPoint(x: min(max(self.scrollView.contentOffset.x,
+//                    closestCGPoint.x - (self.highlightedCard.frame.width / 2)),
+//                self.scrollView.frame.width - self.highlightedCard.frame.width + self.scrollView.contentOffset.x),
+//                                                                      y: closestCGPoint.y - 80), to: scrollView)
+//        
+//        self.highlightedPoint.layer.opacity = 1
+//        self.highlightedCard.layer.opacity = 1
         
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         removeSelectedPoint(animated: false)
-        self.chartView.setNeedsDisplay()
+        scrollView.setNeedsDisplay()
     }
     
     @objc func solveCardTapped(_ g: UITapGestureRecognizer) {
