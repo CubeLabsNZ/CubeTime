@@ -39,7 +39,7 @@ struct TimeCard: View {
     
     init(solve: Solve, currentSolve: Binding<Solve?>) {
         self.solve = solve
-        self.formattedTime = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
+        self.formattedTime = formatSolveTime(secs: solve.time, penalty: Penalty(rawValue: solve.penalty)!)
         self.pen = Penalty(rawValue: solve.penalty)!
         self._currentSolve = currentSolve
     }

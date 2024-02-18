@@ -17,7 +17,7 @@ class FontManager: ObservableObject {
     @Published var ctFontDescBold: CTFontDescriptor!
     @Published var ctFontDesc: CTFontDescriptor!
     
-    static func fontFor(size: CGFloat, weight: Int) -> Font {
+    static func fontFor(size: CGFloat, weight: Int) -> CTFont {
         let desc = CTFontDescriptorCreateWithAttributes([
             kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
             kCTFontVariationAttribute: [2003265652: weight,
@@ -25,7 +25,7 @@ class FontManager: ObservableObject {
                                         1129468758: 0]
         ] as! CFDictionary)
         
-        return Font(CTFontCreateWithFontDescriptor(desc, size, nil))
+        return CTFontCreateWithFontDescriptor(desc, size, nil)
     }
     
     let changeOnKeys: [PartialKeyPath<SettingsManager>] = [\.fontWeight, \.fontCursive, \.fontCasual, \.scrambleSize]
@@ -73,7 +73,13 @@ struct RecursiveMono: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .font(FontManager.fontFor(size: size, weight: weight))
+            .font(Font(FontManager.fontFor(size: size, weight: weight)))
+    }
+}
+
+extension View {
+    func recursiveMono(fontSize: CGFloat, weight: Int) -> some View {
+        modifier(RecursiveMono(size: size, weight: weight))
     }
     
     static func weightToValue(weight: Font.Weight) -> Int {

@@ -21,11 +21,12 @@ struct StatsView: View {
     @ScaledMetric var blockHeightGraphEmpty = 150
     
     @ScaledMetric(relativeTo: .body) var monospacedFontSizeBody: CGFloat = 17
-
     
     @State private var presentedAvg: CalculatedAverage?
     @State private var showBestSinglePopup = false
     @State private var showTimeTrendModal = false
+    
+    @Preference(\.timeTrendSolves) private var timeTrendSolves
     
     
     var body: some View {
@@ -38,7 +39,7 @@ struct StatsView: View {
                         VStack {
                             #if DEBUG
                             Button {
-                                for _ in 0..<3140 {
+                                for _ in 0..<10000 {
                                     let solve: Solve = Solve(context: managedObjectContext)
                                     solve.time = Double.random(in: 0...10)
                                     solve.scramble = "sdlfkjsdlfksdjf"
@@ -46,9 +47,9 @@ struct StatsView: View {
                                     solve.scrambleType = 2
                                     solve.penalty = Penalty.none.rawValue
                                     solve.session = stopwatchManager.currentSession
-                                    
-                                    try! managedObjectContext.save()
                                 }
+                                
+                                try! managedObjectContext.save()
                                 NSLog("finished")
                             } label: {
                                 Text("generate")
@@ -57,7 +58,7 @@ struct StatsView: View {
                             
                             SessionHeader()
                                 .padding(.horizontal)
-
+                            
                             let compsim: Bool = SessionType(rawValue: stopwatchManager.currentSession.sessionType)! == .compsim
                             
                             /// everything
@@ -90,7 +91,7 @@ struct StatsView: View {
                                         VStack (spacing: 10) {
                                             StatsBlock(title: "BEST SINGLE", blockHeight: blockHeightSmall, background: .coloured) {
                                                 if let bestSingle = stopwatchManager.bestSingle {
-                                                    StatsBlockText(displayText: formatSolveTime(secs: bestSingle.time, penType: Penalty(rawValue: bestSingle.penalty)!), colouredBlock: true, displayDetail: false, nilCondition: true)
+                                                    StatsBlockText(displayText: formatSolveTime(secs: bestSingle.time, penalty: Penalty(rawValue: bestSingle.penalty)!), colouredBlock: true, displayDetail: false, nilCondition: true)
                                                 } else {
                                                     StatsBlockText(displayText: "", colouredBlock: true, nilCondition: false)
                                                 }
@@ -112,7 +113,7 @@ struct StatsView: View {
                                                 }
                                                 
                                                 StatsBlock(title: "BEST AO5", blockHeight: blockHeightSmall) {
-                                                    StatsBlockText(displayText: formatSolveTime(secs: bestAo5.average ?? 0, penType: bestAo5.totalPen), colouredText: true, displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
+                                                    StatsBlockText(displayText: formatSolveTime(secs: bestAo5.average ?? 0, penalty: bestAo5.totalPen), colouredText: true, displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
                                                 }
                                                 
                                                 
@@ -141,7 +142,7 @@ struct StatsView: View {
                                     
                                     if SessionType(rawValue: stopwatchManager.currentSession.sessionType)! == .multiphase {
                                         StatsBlock(title: "AVERAGE PHASES", blockHeight: stopwatchManager.solvesNoDNFs.count == 0 ? blockHeightGraphEmpty : nil, isBigBlock: true, isTappable: false) {
-                                                AveragePhases(phaseTimes: stopwatchManager.phases!, count: stopwatchManager.solvesNoDNFsbyDate.count)
+                                            AveragePhases(phaseTimes: stopwatchManager.phases!, count: stopwatchManager.solvesNoDNFsbyDate.count)
                                         }
                                     }
                                 } else {
@@ -154,7 +155,7 @@ struct StatsView: View {
                                                     }
                                                     
                                                     StatsBlock(title: "CURRENT", blockHeight: blockHeightSmall) {
-                                                        StatsBlockText(displayText: formatSolveTime(secs: currentCompsimAverage.average ?? 0, penType: currentCompsimAverage.totalPen), displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
+                                                        StatsBlockText(displayText: formatSolveTime(secs: currentCompsimAverage.average ?? 0, penalty: currentCompsimAverage.totalPen), displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
                                                     }
                                                 } else {
                                                     StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
@@ -167,7 +168,7 @@ struct StatsView: View {
                                                     StatsBlock(title: "CURRENT", blockHeight: blockHeightSmall) {
                                                         StatsBlockText(displayText: "", nilCondition: false)
                                                     }
-
+                                                    
                                                 }
                                             }
                                             .onTapGesture {
@@ -175,29 +176,6 @@ struct StatsView: View {
                                                     presentedAvg = stopwatchManager.currentCompsimAverage
                                                 }
                                             }
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
                                             
                                             
                                             
@@ -223,19 +201,6 @@ struct StatsView: View {
                                             }
                                             
                                             
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
                                             ZStack(alignment: .topLeading) {
                                                 if let bestCompsimAverage = stopwatchManager.bestCompsimAverage {
                                                     StatsBlock(title: "", blockHeight: blockHeightExtraLarge, background: .coloured) {
@@ -243,7 +208,7 @@ struct StatsView: View {
                                                     }
                                                     
                                                     StatsBlock(title: "BEST", blockHeight: blockHeightSmall, background: .clear) {
-                                                        StatsBlockText(displayText: formatSolveTime(secs: bestCompsimAverage.average ?? 0, penType: bestCompsimAverage.totalPen), colouredBlock: true, displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
+                                                        StatsBlockText(displayText: formatSolveTime(secs: bestCompsimAverage.average ?? 0, penalty: bestCompsimAverage.totalPen), colouredBlock: true, displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
                                                     }
                                                 } else {
                                                     StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
@@ -256,7 +221,7 @@ struct StatsView: View {
                                                     StatsBlock(title: "BEST", blockHeight: blockHeightSmall) {
                                                         StatsBlockText(displayText: "", nilCondition: false)
                                                     }
-
+                                                    
                                                 }
                                             }
                                             .onTapGesture {
@@ -274,7 +239,7 @@ struct StatsView: View {
                                         StatsBlock(title: "TARGET", blockHeight: blockHeightSmall, isTappable: false) {
                                             StatsBlockText(displayText: formatSolveTime(secs: (stopwatchManager.currentSession as! CompSimSession).target, dp: 2), nilCondition: true)
                                         }
-                                            .frame(minWidth: 0, maxWidth: .infinity)
+                                        .frame(minWidth: 0, maxWidth: .infinity)
                                         
                                         StatsBlock(title: "REACHED", blockHeight: blockHeightSmall, isTappable: false) {
                                             if (stopwatchManager.compSimCount == 0) {
@@ -283,7 +248,7 @@ struct StatsView: View {
                                                 StatsBlockText(displayText: String(describing: stopwatchManager.reachedTargets!) + "/" + String(describing: stopwatchManager.compSimCount!), nilCondition: (stopwatchManager.bestSingle != nil))
                                             }
                                         }
-                                            .frame(minWidth: 0, maxWidth: .infinity)
+                                        .frame(minWidth: 0, maxWidth: .infinity)
                                     }
                                     .padding(.horizontal)
                                     
@@ -296,7 +261,7 @@ struct StatsView: View {
                                     HStack(spacing: 10) {
                                         StatsBlock(title: "CURRENT MO10 AO5", blockHeight: blockHeightSmall, isTappable: false) {
                                             if let currentMeanOfTen = stopwatchManager.currentMeanOfTen {
-                                                StatsBlockText(displayText: formatSolveTime(secs: currentMeanOfTen, penType: ((currentMeanOfTen == -1) ? .dnf : Penalty.none)), nilCondition: true)
+                                                StatsBlockText(displayText: formatSolveTime(secs: currentMeanOfTen, penalty: ((currentMeanOfTen == -1) ? .dnf : Penalty.none)), nilCondition: true)
                                                 StatsBlockText(displayText: "", nilCondition: false)
                                             } else {
                                                 StatsBlockText(displayText: "", nilCondition: false)
@@ -306,7 +271,7 @@ struct StatsView: View {
                                         
                                         StatsBlock(title: "BEST MO10 AO5", blockHeight: blockHeightSmall, isTappable: false) {
                                             if let bestMeanOfTen = stopwatchManager.bestMeanOfTen {
-                                                StatsBlockText(displayText: formatSolveTime(secs: bestMeanOfTen, penType: ((bestMeanOfTen == -1) ? .dnf : Penalty.none)), nilCondition: true)
+                                                StatsBlockText(displayText: formatSolveTime(secs: bestMeanOfTen, penalty: ((bestMeanOfTen == -1) ? .dnf : Penalty.none)), nilCondition: true)
                                             } else {
                                                 StatsBlockText(displayText: "", nilCondition: false)
                                             }
@@ -327,16 +292,14 @@ struct StatsView: View {
                                                             : stopwatchManager.solvesNoDNFs.map { $0.timeIncPen })
                                 
                                 
-                                #warning("TODO: add settings customisation to choose how many solves to show")
                                 StatsBlock(title: "TIME TREND", blockHeight: (timeTrendData.count < 2 ? blockHeightGraphEmpty : 310), isBigBlock: true, isTappable: false) {
-                                    TimeTrend(data: Array(timeTrendData.suffix(80)), title: nil)
+                                    TimeTrend(data: Array(timeTrendData.suffix(timeTrendSolves)), title: nil)
                                         .drawingGroup()
                                 }
                                 .onTapGesture {
                                     self.showTimeTrendModal = true
                                 }
-                                #warning("TODO: enable for v2.1")
-                                 
+                                
                                 
                                 StatsBlock(title: "TIME DISTRIBUTION", blockHeight: (timeDistributionData.count < 4 ? blockHeightGraphEmpty : 300), isBigBlock: true, isTappable: false) {
                                     TimeDistribution(solves: timeDistributionData)
@@ -373,18 +336,24 @@ struct StatsView: View {
             TimeDetailView(for: stopwatchManager.bestSingle!, currentSolve: nil)
                 .tint(Color("accent"))
         }
-        .sheet(isPresented: self.$showTimeTrendModal) {
-            let timesOnly = stopwatchManager.solvesNoDNFsbyDate.map { $0.timeIncPen }
-            
-            if #available(iOS 16.0, *) {
-                Chart {
-                    ForEach(Array(zip(stopwatchManager.solvesNoDNFsbyDate.indices, stopwatchManager.solvesNoDNFsbyDate)), id: \.0) { index, solve in
-                        LineMark(x: PlottableValue.value("s", index), y: PlottableValue.value("s", solve.time))
-                            .interpolationMethod(.monotone)
-                    }
+        .sheet(isPresented: $showTimeTrendModal) {
+            NavigationView {
+                ZStack {
+                    Color("base")
+                        .ignoresSafeArea()
+                    
+                    TimeTrendDetail()
+                        .environmentObject(stopwatchManager)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                CTDoneButton(onTapRun: {
+                                    showTimeTrendModal = false
+                                })
+                            }
+                        }
                 }
-            } else {
-                Text("update!")
+                .navigationTitle("Time Trend")
+                .navigationBarTitleDisplayMode(.inline)
             }
         }
     }

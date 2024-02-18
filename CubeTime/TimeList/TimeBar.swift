@@ -52,7 +52,7 @@ struct TimeBar: View {
                 VStack(spacing: 0) {
                     if let calculatedAverage = calculatedAverage {
                         HStack {
-                            Text(formatSolveTime(secs: calculatedAverage.average!, penType: calculatedAverage.totalPen))
+                            Text(formatSolveTime(secs: calculatedAverage.average!, penalty: calculatedAverage.totalPen))
                                 .font(.title2.weight(.bold))
 
                             Spacer()
@@ -68,9 +68,9 @@ struct TimeBar: View {
                                 // CSTODO
                                 for (index, solve) in Array((ar.allObjects as! [Solve]).enumerated()) {
                                     if calculatedAverage.trimmedSolves!.contains(solve) {
-                                        finalStr.append(NSMutableAttributedString(string: "(" + formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)) + ")", attributes: grey))
+                                        finalStr.append(NSMutableAttributedString(string: "(" + formatSolveTime(secs: solve.time, penalty: Penalty(rawValue: solve.penalty)) + ")", attributes: grey))
                                     } else {
-                                        finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)), attributes: normal))
+                                        finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penalty: Penalty(rawValue: solve.penalty)), attributes: normal))
                                     }
                                     if index < solvegroup.solves!.count-1 {
                                         finalStr.append(NSMutableAttributedString(string: ", "))
@@ -105,7 +105,7 @@ struct TimeBar: View {
                                 
                                 // CSTODO
                                 for (index, solve) in Array((solvegroup.solves!.allObjects as! [Solve]).enumerated()) {
-                                    finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)), attributes: normal))
+                                    finalStr.append(NSMutableAttributedString(string: formatSolveTime(secs: solve.time, penalty: Penalty(rawValue: solve.penalty)), attributes: normal))
                                     
                                     if index < solvegroup.solves!.count - 1 {
                                         finalStr.append(NSMutableAttributedString(string: ", "))

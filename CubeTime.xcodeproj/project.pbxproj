@@ -45,6 +45,8 @@
 		23D01FE327A4AA5D0019FCE5 /* Splash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */; };
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
 		23D7722429B1E3540044AFBA /* NewSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D7722329B1E3540044AFBA /* NewSessionView.swift */; };
+		23DDE0DF2B821A3D00059377 /* TNoodle.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23DDE0DD2B821A3400059377 /* TNoodle.xcframework */; };
+		23DDE0E02B821A3D00059377 /* TNoodle.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 23DDE0DD2B821A3400059377 /* TNoodle.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */; };
 		23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDC274DDBE200254D29 /* TimerView.swift */; };
 		23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23DE3BDE274DDBE300254D29 /* Assets.xcassets */; };
@@ -60,6 +62,7 @@
 		23E81E73275D8DEA00B741E3 /* AboutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E81E72275D8DEA00B741E3 /* AboutSettings.swift */; };
 		23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB8A1D2779B6D3000F6663 /* TimeBar.swift */; };
 		23F4113829ADDA77002C4E23 /* ToolsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F4113729ADDA77002C4E23 /* ToolsViewModel.swift */; };
+		23F445812B46552D002B7B81 /* TimeTrendDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F445802B46552D002B7B81 /* TimeTrendDetail.swift */; };
 		7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2B805D279422BD0006AEDD /* AppDelegate.swift */; };
 		7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */; };
 		7D6159F92751B53E00DC9A4C /* TimeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6159F82751B53E00DC9A4C /* TimeCard.swift */; };
@@ -157,6 +160,7 @@
 		23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Splash.storyboard; sourceTree = "<group>"; };
 		23D2FC4C274E12DE00D7071A /* TimeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeListView.swift; sourceTree = "<group>"; };
 		23D7722329B1E3540044AFBA /* NewSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSessionView.swift; sourceTree = "<group>"; };
+		23DDE0DD2B821A3400059377 /* TNoodle.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodle.xcframework; sourceTree = "<group>"; };
 		23DE3BD7274DDBE200254D29 /* CubeTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeTimeApp.swift; sourceTree = "<group>"; };
 		23DE3BDC274DDBE200254D29 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
@@ -176,6 +180,7 @@
 		23EB8A1D2779B6D3000F6663 /* TimeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBar.swift; sourceTree = "<group>"; };
 		23F0C7372B820F1A00634C35 /* TNoodle.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodle.xcframework; sourceTree = "<group>"; };
 		23F4113729ADDA77002C4E23 /* ToolsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsViewModel.swift; sourceTree = "<group>"; };
+		23F445802B46552D002B7B81 /* TimeTrendDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrendDetail.swift; sourceTree = "<group>"; };
 		73B7136529BA3FF00064E02F /* CubeTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CubeTime.entitlements; sourceTree = "<group>"; };
 		7D2B805D279422BD0006AEDD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7D3D3153278D3CA400BBDF55 /* TimerTouchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTouchView.swift; sourceTree = "<group>"; };
@@ -460,6 +465,7 @@
 				23C85EAB29388C9C00C7C3EC /* StatsSubviews.swift */,
 				23AAF99729B072F900C5C1FF /* StatsDetailView.swift */,
 				2319F8B8276872F200644EB3 /* TimeTrend.swift */,
+				23F445802B46552D002B7B81 /* TimeTrendDetail.swift */,
 				23AAF99529B0219200C5C1FF /* ScrollableLineChart.swift */,
 				23E647C52775B2AC00561780 /* TimeDistribution.swift */,
 				23CA845F2783EBA1003901FB /* ReachedTargets.swift */,
@@ -644,6 +650,7 @@
 				23EB8A1E2779B6D3000F6663 /* TimeBar.swift in Sources */,
 				AF8874C129AAC8C0001E49D0 /* ToolsList.swift in Sources */,
 				235D6A6929C2C0D3002D90D8 /* HelperShare.swift in Sources */,
+				23F445812B46552D002B7B81 /* TimeTrendDetail.swift in Sources */,
 				AF8B305B29B5C7010023D23B /* SettingsManager.swift in Sources */,
 				AF8A157429AF15B500F6818E /* ScrambleOnlyTool.swift in Sources */,
 				2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */,

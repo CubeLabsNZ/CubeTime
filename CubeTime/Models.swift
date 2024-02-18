@@ -50,7 +50,7 @@ struct Average: Identifiable, Comparable {
 extension Solve {
     var timeText: String {
         get {
-            return formatSolveTime(secs: self.time, penType: Penalty(rawValue: self.penalty)!)
+            return formatSolveTime(secs: self.time, penalty: Penalty(rawValue: self.penalty)!)
         }
     }
 }

@@ -149,6 +149,7 @@ struct MainView: View {
                         switch tabRouter.currentTab {
                         case .timer:
                             TimerView()
+//                            TimeTrendDetail()
                                 .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
                                 .environmentObject(stopwatchManager.timerController)
                                 .environmentObject(stopwatchManager.scrambleController)
