@@ -11,6 +11,8 @@ import SwiftUI
 fileprivate let CHART_BOTTOM_PADDING: CGFloat = 50 // Allow for x axis
 fileprivate let CHART_TOP_PADDING: CGFloat = 100
 
+fileprivate let axisLabelFont = FontManager.fontFor(size: 12, weight: 200)
+
 class HighlightedPoint: UIView {
     let path = UIBezierPath(ovalIn: CGRect(x: 2, y: 2, width: 8, height: 8))
     
@@ -186,8 +188,8 @@ class LineChartScroll: UIScrollView {
                 let string = "\(i + 1)" as NSString
                 
                 let attributes = [
-                    NSAttributedString.Key.font : UIFont.systemFont(ofSize: 8),
-                                        NSAttributedString.Key.foregroundColor : UIColor.red
+                    NSAttributedString.Key.font : axisLabelFont,
+                    NSAttributedString.Key.foregroundColor : UIColor.red
                 ]
                 
                 // Get the width and height that the text will occupy.
@@ -585,7 +587,7 @@ var scrollView: LineChartScroll!
             let label = UILabel(frame: .zero)
             label.translatesAutoresizingMaskIntoConstraints = false
             label.adjustsFontSizeToFitWidth = true
-            label.font = .preferredFont(forTextStyle: .caption2)
+            label.font = axisLabelFont
             label.textColor = UIColor(Color("grey"))
             
             label.text = formatSolveTime(secs: self.limits.min + Double(i) * range / Double(5))
