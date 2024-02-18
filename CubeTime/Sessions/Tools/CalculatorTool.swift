@@ -113,7 +113,7 @@ struct CalculatorTool: View {
                                                     ThemedDivider(isHorizontal: false)
                                                         .padding(.vertical, 8)
                                                     
-                                                    CTButton(type: .red, size: .medium, square: true, hasShadow: false, hasBackground: false, onTapRun: {
+                                                    CTButton(type: .coloured(Color("red")), size: .medium, square: true, hasShadow: false, hasBackground: false, onTapRun: {
                                                         self.solves.remove(at: index)
                                                         showEditFor = nil
                                                     }) {
@@ -182,7 +182,7 @@ struct CalculatorTool: View {
                                     TextField("0.00", text: $currentTime)
                                         .focused($focused)
                                         .padding(.vertical, 6)
-                                        .recursiveMono(fontSize: 20, weight: .semibold)
+                                        .recursiveMono(size: 20, weight: .semibold)
                                         .multilineTextAlignment(.center)
                                         .foregroundColor(Color("dark"))
                                         .background(Color("indent1"))
@@ -217,7 +217,7 @@ struct CalculatorTool: View {
                                             }
                                         }
                                 } else {
-                                    CTButton(type: .coloured, size: .medium, expandWidth: true, onTapRun: {
+                                    CTButton(type: .coloured(nil), size: .medium, expandWidth: true, onTapRun: {
                                         self.solves = []
                                     }) {
                                         Label("Start Over", systemImage: "arrow.clockwise")

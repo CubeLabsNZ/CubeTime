@@ -120,11 +120,11 @@ struct StatsBlockText: View {
                             )
                     }
                 }
-                .font(.largeTitle.weight(.bold))
+                .recursiveMono(style: .largeTitle, weight: .bold)
                 .modifier(DynamicText())
             } else {
                 Text("-")
-                    .font(.title.weight(.medium))
+                    .recursiveMono(style: .title, weight: .medium)
                     .foregroundColor(colouredBlock
                                      ? Color(hex: 0xF6F7FC) // hardcoded
                                      : Color("grey"))
@@ -151,7 +151,7 @@ struct StatsBlockDetailText: View {
                     let time = formatSolveTime(secs: solve.time, penalty: Penalty(rawValue: solve.penalty)!)
                     
                     Text(discarded ? "("+time+")" : time)
-                        .font(.body)
+                        .recursiveMono(style: .body)
                         .foregroundColor(
                             discarded
                             ? colouredBlock
@@ -200,13 +200,13 @@ struct StatsBlockSmallText: View {
                             .foregroundColor(Color("grey"))
                         
                         if let datum = data[index] {
-                            Text(formatSolveTime(secs: datum.average ?? 0, penalty: datum.totalPen))
-                                .font(.title2.weight(.bold))
+                            Text(formatSolveTime(secs: datum.average ?? 0, penType: datum.totalPen))
+                                .recursiveMono(style: .title2, weight: .bold)
                                 .foregroundColor(Color("dark"))
                                 .modifier(DynamicText())
                         } else {
                             Text("-")
-                                .font(.title3.weight(.medium))
+                                .recursiveMono(style: .title3, weight: .medium)
                                 .foregroundColor(Color("grey"))
                         }
                     }

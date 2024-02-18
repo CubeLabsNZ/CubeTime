@@ -44,7 +44,7 @@ struct TimerMenu: View {
                     .padding(.top, 2)
                     
                     VStack(spacing: 8) {
-                        CTButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+                        CTButton(type: .coloured(nil), size: .large, expandWidth: true, onTapRun: {
                             withAnimation(.customEaseInOut) {
                                 stopwatchManager.currentPadFloatingStage = 1
                                 stopwatchManager.zenMode = true
@@ -63,7 +63,7 @@ struct TimerMenu: View {
                         ThemedDivider()
                             .padding(.horizontal, 4)
                         
-                        CTButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {
+                        CTButton(type: .halfcoloured(nil), size: .large, expandWidth: true, onTapRun: {
                             showTools = true
                         }) {
                             Label(title: {
@@ -75,7 +75,7 @@ struct TimerMenu: View {
                             })
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        CTButton(type: .halfcoloured, size: .large, expandWidth: true, onTapRun: {
+                        CTButton(type: .halfcoloured(nil), size: .large, expandWidth: true, onTapRun: {
                             showSettings = true
                         }) {
                             Label(title: {

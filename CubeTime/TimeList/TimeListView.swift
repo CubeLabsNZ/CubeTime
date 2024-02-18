@@ -62,7 +62,7 @@ struct SortByMenu: View {
                 }
             }
         } label: {
-            CTButtonBase(type: .halfcoloured, size: .large, outlined: false, square: true, hasShadow: hasShadow, hasBackground: true, supportsDynamicResizing: true, expandWidth: true) {
+            CTButtonBase(type: .halfcoloured(nil), size: .large, outlined: false, square: true, hasShadow: hasShadow, hasBackground: true, supportsDynamicResizing: true, expandWidth: true) {
                 Image(systemName: "line.3.horizontal.decrease")
                     .matchedGeometryEffect(id: "label", in: animation)
             }
@@ -373,7 +373,7 @@ struct TimeListView: View {
                                     }
                                 }
                             } label: {
-                                CTButtonBase(type: .coloured, size: .small, outlined: false, square: true, hasShadow: true, hasBackground: true, supportsDynamicResizing: true, expandWidth: true) {
+                                CTButtonBase(type: .coloured(nil), size: .small, outlined: false, square: true, hasShadow: true, hasBackground: true, supportsDynamicResizing: true, expandWidth: true) {
                                     Image(systemName: "ellipsis")
                                         .frame(width: 28, height: 28)
                                         .imageScale(.medium)
@@ -387,7 +387,7 @@ struct TimeListView: View {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         if stopwatchManager.currentSession.sessionType != SessionType.compsim.rawValue {
                             if isSelectMode {
-                                CTButton(type: .coloured, size: .small, onTapRun: {
+                                CTButton(type: .coloured(nil), size: .small, onTapRun: {
                                     withAnimation(Animation.customDampedSpring) {
                                         stopwatchManager.timeListSelectAll?()
                                     }
@@ -403,7 +403,7 @@ struct TimeListView: View {
                                     Text("Cancel")
                                 }
                             } else {
-                                CTButton(type: .coloured, size: .small, onTapRun: {
+                                CTButton(type: .coloured(nil), size: .small, onTapRun: {
                                     isSelectMode = true
                                 }) {
                                     Text("Select")

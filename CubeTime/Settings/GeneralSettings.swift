@@ -54,7 +54,7 @@ struct GeneralSettingsView: View {
     @Preference(\.displayDP) private var displayDP
     @Preference(\.timeTrendSolves) private var timeTrendSolves
     
-    
+    @State private var showResetDialog = false
         
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
@@ -181,11 +181,29 @@ struct GeneralSettingsView: View {
                     }
                 }
             }
+            
+            CTButton(type: .halfcoloured(Color("red")), size: .large, expandWidth: true, onTapRun: {
+                showResetDialog = true
+            }) {
+                HStack {
+                    Image(systemName: "clock.arrow.circlepath")
+                    
+                    Text("Reset General Settings")
+                }
+            }
+            .padding(.top, 12)
         }
         .padding(.horizontal)
         .animation(Animation.customSlowSpring, value: inspectionTime)
         .animation(Animation.customSlowSpring, value: inspectionAlert)
         .animation(Animation.customSlowSpring, value: hapticFeedback)
+        .confirmationDialog("Are you sure you want to reset all general settings? Your solves and sessions will be kept.",
+                            isPresented: $showResetDialog,
+                            titleVisibility: .visible) {
+                                    Button("Reset", role: .destructive) {
+                                        SettingsManager.standard.resetGeneralSettings()
+                                    }
+                                }
     }
 }
 

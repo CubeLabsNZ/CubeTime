@@ -12,7 +12,7 @@ final class ShareButtonUIViewController: UIViewController {
     
     init(toShare: String, buttonText: String) {
         super.init(nibName: nil, bundle: nil)
-        self.hostingController = UIHostingController(rootView: CTButton(type: .coloured, size: .large, expandWidth: true, onTapRun: { [weak self] in
+        self.hostingController = UIHostingController(rootView: CTButton(type: .coloured(nil), size: .large, expandWidth: true, onTapRun: { [weak self] in
             guard let self = self else { return }
             let activityViewController = UIActivityViewController(activityItems: [toShare], applicationActivities: nil)
             activityViewController.isModalInPresentation = !UIDevice.deviceIsPad
@@ -66,7 +66,7 @@ struct CTCopyButton: View {
     @State private var offsetValue: CGFloat = -25
     
     var body: some View {
-        CTButton(type: .coloured, size: .large, expandWidth: true, onTapRun: {
+        CTButton(type: .coloured(nil), size: .large, expandWidth: true, onTapRun: {
             UIPasteboard.general.string = toCopy
             
             withAnimation(Animation.customSlowSpring.delay(0.25)) {
@@ -105,7 +105,10 @@ struct CTCopyButton: View {
 
 // MARK: - Hierarchical Button
 enum CTButtonType {
-    case mono, coloured, halfcoloured, disabled, red, green, yellow, orange
+    case mono
+    case coloured(Color?)
+    case halfcoloured(Color?)
+    case disabled
 }
 
 enum CTButtonSize {
@@ -210,7 +213,30 @@ struct CTButtonBase<V: View>: View {
          supportsDynamicResizing: Bool,
          expandWidth: Bool,
          content: @escaping () -> V) {
-        (self.colourBg, self.colourFg, self.colourShadow) = colourForButtonType(type)
+
+        #warning("TODO: FIX AND MERGE WITH THE COLOUR FOR BUTTON TYPE")
+        switch (type) {
+        case .mono:
+            self.colourBg = Color("overlay0")
+            self.colourFg = Color("dark")
+            self.colourShadow = Color.black.opacity(0.07)
+            
+        case .halfcoloured(let colour):
+            self.colourBg = Color("overlay0")
+            self.colourFg = colour ?? Color("accent")
+            self.colourShadow = Color.black.opacity(0.07)
+            
+        case .coloured(let colour):
+            self.colourBg = colour?.opacity(0.25) ?? Color("accent").opacity(0.20)
+            self.colourFg = colour ?? Color("accent")
+            self.colourShadow = colour?.opacity(0.16) ?? Color("accent").opacity(0.08)
+            
+        case .disabled:
+            self.colourBg = Color("grey").opacity(0.15)
+            self.colourFg = Color("grey")
+            self.colourShadow = Color.clear
+        }
+
         
         self.supportsDynamicResizing = supportsDynamicResizing
         

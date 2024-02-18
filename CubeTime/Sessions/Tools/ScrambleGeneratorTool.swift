@@ -171,7 +171,7 @@ struct ScrambleGeneratorTool: View {
                     
                     if let num = scrambleGenerator.numScramble {
                         if (num > 0 && (scrambleGenerator.scrambles?.count == nil)) {
-                            CTButton(type: .coloured, size: .large, onTapRun: {
+                            CTButton(type: .coloured(nil), size: .large, onTapRun: {
                                 scrambleGenerator.generate()
                             }) {
                                 Text("Generate!")
@@ -205,7 +205,7 @@ struct ScrambleGeneratorTool: View {
                                                 .offset(y: 1)
                                             
                                             Text(scramble)
-                                                .recursiveMono(fontSize: 17, weight: .medium)
+                                                .recursiveMono(size: 17, weight: .medium)
                                                 .textSelection(.enabled)
                                                 .padding(.bottom, 6)
                                         }

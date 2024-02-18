@@ -16,6 +16,43 @@ final class SettingsManager {
             preferencesChangedSubject.send(keyPath)
         }
     }
+    
+    // do not look at the functions below, unsafe for consumption
+    func resetGeneralSettings() {
+        holdDownTime = 0.5
+        inspection = false
+        inspectionCountsDown = false
+        showCancelInspection = true
+        inspectionAlert = true
+        inspectionAlertType = 0
+        inspectionAlertFollowsSilent = false
+        inputMode = .timer
+        timeDpWhenRunning = 3
+        showSessionType = false
+        hapticEnabled = true
+        hapticType = .rigid
+        gestureDistance = 50
+        gestureDistanceTrackpad = 500
+        showScramble = true
+        showStats = true
+        forceAppZoom = false
+        appZoom = AppZoom(rawValue: 3)
+        showPrevTime = false
+        displayDP = 3
+    }
+    
+    func resetAppearanceSettings() {
+        overrideDM = false
+        dmBool = false
+        isStaticGradient = true
+        graphGlow = true
+        graphAnimation = true
+        scrambleSize = UIDevice.deviceIsPad ? 26 : 18
+        fontWeight = 516.0
+        fontCasual = 0.0
+        fontCursive = false
+        showZenMode = false
+    }
 
     init(userDefaults: NSUbiquitousKeyValueStore) {
         self.userDefaults = userDefaults

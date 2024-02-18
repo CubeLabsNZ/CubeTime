@@ -12,6 +12,8 @@
 		231B2E2E29BDECF9007E5DC2 /* HelperButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */; };
 		2326436028C4927600F6322E /* TimerHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435F28C4927600F6322E /* TimerHeader.swift */; };
 		23329E9029C31CA60017AE99 /* libz.1.1.3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 23329E8F29C31CA60017AE99 /* libz.1.1.3.tbd */; settings = {ATTRIBUTES = (Required, ); }; };
+		233F86382B82125A00459A45 /* TNoodle.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23F0C7372B820F1A00634C35 /* TNoodle.xcframework */; };
+		233F86392B82125A00459A45 /* TNoodle.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 23F0C7372B820F1A00634C35 /* TNoodle.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		233FE7B6274F109600C6F1DF /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Helper.swift */; };
 		2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2359689227A367A0003ED9E1 /* StopwatchManager.swift */; };
 		235CDA0327A786D800F48C89 /* Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235CDA0227A786D800F48C89 /* Updates.swift */; };
@@ -112,7 +114,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				23DDE0E02B821A3D00059377 /* TNoodle.xcframework in Embed Libraries */,
+				233F86392B82125A00459A45 /* TNoodle.xcframework in Embed Libraries */,
 			);
 			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -176,6 +178,7 @@
 		23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettings.swift; sourceTree = "<group>"; };
 		23E81E72275D8DEA00B741E3 /* AboutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettings.swift; sourceTree = "<group>"; };
 		23EB8A1D2779B6D3000F6663 /* TimeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBar.swift; sourceTree = "<group>"; };
+		23F0C7372B820F1A00634C35 /* TNoodle.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodle.xcframework; sourceTree = "<group>"; };
 		23F4113729ADDA77002C4E23 /* ToolsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsViewModel.swift; sourceTree = "<group>"; };
 		23F445802B46552D002B7B81 /* TimeTrendDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrendDetail.swift; sourceTree = "<group>"; };
 		73B7136529BA3FF00064E02F /* CubeTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CubeTime.entitlements; sourceTree = "<group>"; };
@@ -214,7 +217,7 @@
 				23329E9029C31CA60017AE99 /* libz.1.1.3.tbd in Frameworks */,
 				AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */,
 				23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */,
-				23DDE0DF2B821A3D00059377 /* TNoodle.xcframework in Frameworks */,
+				233F86382B82125A00459A45 /* TNoodle.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,7 +326,7 @@
 		23B45E7129A855F400BDF49E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				23DDE0DD2B821A3400059377 /* TNoodle.xcframework */,
+				23F0C7372B820F1A00634C35 /* TNoodle.xcframework */,
 				23329E8F29C31CA60017AE99 /* libz.1.1.3.tbd */,
 			);
 			path = Frameworks;
@@ -443,13 +446,13 @@
 		23E81E6D275D8DB500B741E3 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				AF8B305A29B5C7010023D23B /* SettingsManager.swift */,
 				7D7A9EC5274F396E00C2E125 /* SettingsView.swift */,
 				237B354F2761995F00CC39BF /* SettingsCard.swift */,
 				23E81E6B275D8DAE00B741E3 /* GeneralSettings.swift */,
 				23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */,
 				23E81E72275D8DEA00B741E3 /* AboutSettings.swift */,
 				7D7E2011275DD52600ADF01D /* Licenses.swift */,
-				AF8B305A29B5C7010023D23B /* SettingsManager.swift */,
 				AFA444A129C4290400795434 /* SettingsWidgets.swift */,
 			);
 			path = Settings;

@@ -22,8 +22,6 @@ struct SettingsGroup<L: View, V: View>: View {
         self.content = content
     }
     
-
-    
     var body: some View {
         VStack(alignment: .leading) {
             label
@@ -34,7 +32,7 @@ struct SettingsGroup<L: View, V: View>: View {
                 .padding(.horizontal)
         }
         .padding(.bottom, 12)
-        .background(Color("overlay0").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
+        .background(Color("overlay1").clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)))
     }
 }
 

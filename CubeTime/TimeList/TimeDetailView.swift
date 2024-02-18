@@ -7,7 +7,7 @@ func getSolveDateFormatter(_ date: Date) -> DateFormatter {
     #warning("l10n")
     
     if (Calendar.current.isDateInToday(date)) {
-        dateFormatter.dateFormat = "h:mm a"
+        dateFormatter.dateFormat = "h:mm:ss a"
     } else {
         dateFormatter.dateFormat = "dd/MM/yy"
     }
@@ -80,7 +80,7 @@ struct TimeDetailView: View {
                                         
                                         if (dynamicTypeSize <= .xLarge) {
                                             Text("(\(formatSolveTime(secs: solve.time)))")
-                                                .font(.title3.weight(.semibold))
+                                                .recursiveMono(style: .title3, weight: .semibold)
                                                 .foregroundColor(Color("grey"))
                                                 .padding(.leading, 8)
                                                 .offset(y: -4)
@@ -88,12 +88,12 @@ struct TimeDetailView: View {
                                         
                                     case Penalty.plustwo.rawValue:
                                         Text("\(formatSolveTime(secs: (solve.time + 2)))")
-                                            .font(.largeTitle.weight(.bold))
+                                            .recursiveMono(style: .largeTitle, weight: .bold)
                                             .modifier(DynamicText())
                                         
                                         if (dynamicTypeSize <= .xLarge) {
                                             Text("(\(time))")
-                                                .font(.title3.weight(.semibold))
+                                                .recursiveMono(style: .title3, weight: .semibold)
                                                 .foregroundColor(Color("grey"))
                                                 .padding(.leading, 8)
                                                 .modifier(DynamicText())
@@ -101,21 +101,11 @@ struct TimeDetailView: View {
                                         }
                                     default:
                                         Text(time)
-                                            .font(.largeTitle.weight(.bold))
+                                            .recursiveMono(style: .largeTitle, weight: .bold)
                                             .modifier(DynamicText())
                                     }
                                     
                                     Spacer()
-                                    
-                                    HStack(alignment: .center) {
-                                        Text(puzzle_type.name)
-                                            .font(.title3.weight(.semibold))
-                                        
-                                        Image(puzzle_type.name)
-                                            .resizable()
-                                            .frame(width: 22, height: 22)
-                                    }
-                                    .offset(y: -4)
                                 }
                                 
                                 ThemedDivider()
@@ -123,11 +113,21 @@ struct TimeDetailView: View {
                                 
                                 HStack {
                                     Text(date, formatter: getSolveDateFormatter(date))
-                                        .recursiveMono(fontSize: 15, weight: .regular)
-                                        .foregroundColor(Color("grey"))
+                                    
+                                    Text("|")
+                                        .offset(y: -1)  // slight offset of bar
+                                    
+                                    HStack(alignment: .center, spacing: 4) {
+                                        Text(puzzle_type.name)
+                                        
+                                        Image(puzzle_type.name)
+                                            .resizable()
+                                            .frame(width: 16, height: 16)
+                                    }
                                     
                                     Spacer()
                                 }
+                                .font(.subheadline.weight(.medium))
                                 
                                 Group {
                                     if puzzle_type.name == "Megaminx" {
@@ -141,7 +141,7 @@ struct TimeDetailView: View {
                                         Text(scramble)
                                     }
                                 }
-                                .recursiveMono(fontSize: 17, weight: .medium)
+                                .recursiveMono(size: 17, weight: .semibold)
                                 .padding(.top, 28)
                                 
                                 AsyncSVGView(puzzle: solve.scrambleType, scramble: scramble)
@@ -153,13 +153,13 @@ struct TimeDetailView: View {
                                 HStack(spacing: 6) {
                                     Spacer()
                                     
-                                    CTButton(type: solve.penalty == Penalty.none.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    CTButton(type: solve.penalty == Penalty.none.rawValue ? .halfcoloured(nil) : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .none)
                                     }) {
                                         Label("OK", systemImage: "checkmark.circle")
                                     }
                                     
-                                    CTButton(type: solve.penalty == Penalty.plustwo.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    CTButton(type: solve.penalty == Penalty.plustwo.rawValue ? .halfcoloured(nil) : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .plustwo)
                                     }) {
                                         Label(title: {
@@ -170,7 +170,7 @@ struct TimeDetailView: View {
                                         })
                                     }
                                     
-                                    CTButton(type: solve.penalty == Penalty.dnf.rawValue ? .halfcoloured : .mono, size: .medium, onTapRun: {
+                                    CTButton(type: solve.penalty == Penalty.dnf.rawValue ? .halfcoloured(nil) : .mono, size: .medium, onTapRun: {
                                         stopwatchManager.changePen(solve: self.solve, pen: .dnf)
                                     }) {
                                         Label("DNF", systemImage: "xmark.circle")
@@ -186,8 +186,8 @@ struct TimeDetailView: View {
                                 Spacer()
                                 
                                 Text("CubeTime.")
-                                    .recursiveMono(fontSize: 13)
-                                    .foregroundColor(Color("indent1"))
+                                    .recursiveMono(size: 13)
+                                    .foregroundColor(Color("grey").opacity(0.25))
                             }
                             .padding(.vertical, -4)
 
@@ -203,7 +203,7 @@ struct TimeDetailView: View {
                                 CTShareButton(toShare: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: "Share Solve")
                                 
                                 
-                                CTButton(type: .red, size: .large, square: true, onTapRun: {
+                                CTButton(type: .coloured(Color("red")), size: .large, square: true, onTapRun: {
                                     if currentSolve == nil {
                                         dismiss()
                                     }

@@ -95,11 +95,11 @@ struct AboutSettingsView: View {
                 
                 VStack(alignment: .leading, spacing: 0) {
                     Text("CubeTime.")
-                        .recursiveMono(fontSize: 28)
+                        .recursiveMono(size: 28)
                         .foregroundColor(Color("dark"))
                     
                     Text("v" + versionString)
-                        .recursiveMono(fontSize: 15, weight: .semibold)
+                        .recursiveMono(size: 15, weight: .semibold)
                         .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
                 }
                 
@@ -117,7 +117,7 @@ struct AboutSettingsView: View {
                 .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
             
-            CTButton(type: .halfcoloured, size: .medium, onTapRun: {
+            CTButton(type: .halfcoloured(nil), size: .medium, onTapRun: {
                 showLicenses = true
             }) {
                 Label("Open Licenses & Privacy Policy", systemImage: "arrow.up.forward.square")
@@ -152,7 +152,7 @@ struct AboutSettingsView: View {
             Text("\nIf you run into any issues, please visit our GitHub page and submit an issue. \nhttps://github.com/CubeStuffs/CubeTime/issues")
                 .fixedSize(horizontal: false, vertical: true)
             
-            CTButton(type: .halfcoloured, size: .medium, onTapRun: {
+            CTButton(type: .halfcoloured(nil), size: .medium, onTapRun: {
                 self.showUpdates = true
             }) {
                 Text("Show Updates List")

@@ -153,7 +153,7 @@ struct TimeDistribution: View {
                                     Text("\(data[datum].1)")
                                         .position(x: xloc, y: (220 - max_height * CGFloat(data[datum].1)) - 10)
                                         .multilineTextAlignment(.center)
-                                        .recursiveMono(fontSize: 10, weight: .semibold)
+                                        .recursiveMono(size: 10, weight: .semibold)
                                 }
                                 .if(graphGlow) { view in
                                     view.colouredGlow(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient)
@@ -161,7 +161,7 @@ struct TimeDistribution: View {
                             
                             Text((datum == 0 ? "<" : (datum == data.count-1 ? ">" : ""))+formatLegendTime(secs: data[datum].0, dp: 1)+(datum != 0 && datum != data.count-1 ? "+" : ""))
                                 .foregroundColor(Color("grey"))
-                                .recursiveMono(fontSize: 10, weight: .regular)
+                                .recursiveMono(size: 10, weight: .regular)
                                 .position(x: xloc, y: 240)
                         }
                         .padding(.horizontal)
@@ -173,7 +173,7 @@ struct TimeDistribution: View {
                             .foregroundColor(Color("dark"))
                         
                         Text(formatSolveTime(secs: stopwatchManager.normalMedian.0!))
-                            .recursiveMono(fontSize: 11, weight: .semibold)
+                            .recursiveMono(size: 11, weight: .semibold)
                             .foregroundColor(Color("dark"))
                     }
                     .position(x: medianxloc, y: -16)
@@ -183,7 +183,7 @@ struct TimeDistribution: View {
             }
         } else {
             Text("not enough solves to\ndisplay graph")
-                .recursiveMono(fontSize: 17, weight: .medium)
+                .recursiveMono(size: 17, weight: .medium)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color("grey"))
                 .offset(y: 5)

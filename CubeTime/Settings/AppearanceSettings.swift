@@ -25,6 +25,8 @@ struct AppearanceSettingsView: View {
     @EnvironmentObject var fontManager: FontManager
     @EnvironmentObject var gradientManager: GradientManager
     
+    @State private var showResetDialog = false
+    
     var body: some View {
         VStack(spacing: 16) {
             SettingsGroup(Label("Colours", systemImage: "paintbrush.pointed.fill")) {
@@ -162,8 +164,26 @@ struct AppearanceSettingsView: View {
                 SettingsDragger(text: "Font Casualness", value: $fontCasual, in: 0...1)
                 SettingsToggle("Cursive Font", $fontCursive)
             }
+            
+            CTButton(type: .halfcoloured(Color("red")), size: .large, expandWidth: true, onTapRun: {
+                showResetDialog = true
+            }) {
+                HStack {
+                    Image(systemName: "clock.arrow.circlepath")
+                    
+                    Text("Reset Appearance Settings")
+                }
+            }
+            .padding(.top, 12)
         }
         .padding(.horizontal)
+        .confirmationDialog("Are you sure you want to reset all appearance settings? Your solves and sessions will be kept.",
+                            isPresented: $showResetDialog,
+                            titleVisibility: .visible) {
+                                    Button("Reset", role: .destructive) {
+                                        SettingsManager.standard.resetAppearanceSettings()
+                                    }
+                                }
     }
 }
 
