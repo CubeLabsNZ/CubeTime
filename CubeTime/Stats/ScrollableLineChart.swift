@@ -8,7 +8,7 @@ import UIKit
 import SwiftUI
 
 
-fileprivate let CHART_BOTTOM_PADDING = 5 // Allow for x axis
+fileprivate let CHART_BOTTOM_PADDING: CGFloat = 50 // Allow for x axis
 fileprivate let CHART_TOP_PADDING: CGFloat = 100
 
 class HighlightedPoint: UIView {
@@ -43,12 +43,13 @@ class HighlightedPoint: UIView {
 private let dotDiameter: CGFloat = 6
 
 struct LineChartPoint {
-    var x: CGFloat
     var min: CGFloat
     var max: CGFloat
+    var idx: Int
     
-    func getPointForImageSize(imageHeight: CGFloat) -> CGPoint {
-        return CGPoint(x: self.x, y: getStandardisedYLocation(value: solve.timeIncPen,
+    
+    func getPointFor(interval: Int, imageHeight: CGFloat) -> CGPoint {
+        return CGPoint(x: CGFloat(interval * self.idx), y: getStandardisedYLocation(value: solve.timeIncPen,
                                                               min: min, max: max,
                                                               imageHeight: imageHeight))
     }
@@ -56,16 +57,16 @@ struct LineChartPoint {
     var solve: Solve
     
     init(solve: Solve, 
-         position: Double,
+         idx: Int,
          min: Double, max: Double) {
         self.solve = solve
-        self.x = position
+        self.idx = idx
         self.min = min
         self.max = max
     }
     
-    func pointIn(imageHeight: CGFloat, other: CGPoint) -> Bool {
-        let point = getPointForImageSize(imageHeight: imageHeight)
+    func pointIn(interval: Int, imageHeight: CGFloat, other: CGPoint) -> Bool {
+        let point = getPointFor(interval: interval, imageHeight: imageHeight)
         let rect = CGRect(x: point.x - dotDiameter / 2, y: point.y - dotDiameter / 2, width: dotDiameter, height: dotDiameter)
         return rect.contains(other)
     }
@@ -126,11 +127,8 @@ class LineChartScroll: UIScrollView {
     static let drawCountAround = 100
     static let redrawDistance = 20
     
-    func scrolledMaybeRedraw() {
-    }
-    
     override func draw(_ rect: CGRect) {
-        print("drawing: \(rect)")
+        print("drawing: interval: \(interval), rect: \(rect)")
         
         
         var dnfedIndices: [Int] = []
@@ -143,39 +141,80 @@ class LineChartScroll: UIScrollView {
         
         let xAxis = UIBezierPath()
                 
+        let leftX = rect.minX
+        let rightX = leftX + rect.width
+        
         /// x axis
-        xAxis.move(to: CGPoint(x: 0, y: self.frame.height - 0.5))
+        xAxis.move(to: CGPoint(x: leftX, y: self.frame.height - CHART_BOTTOM_PADDING - 0.5))
         xAxis.lineWidth = 1
-        xAxis.addLine(to: CGPoint(x: CGFloat((points.count - 1) * self.interval), y: self.frame.height - 0.5))
+        xAxis.addLine(to: CGPoint(x: rightX, y: self.frame.height - CHART_BOTTOM_PADDING - 0.5))
         context.setStrokeColor(UIColor(Color("indent0")).cgColor)
         xAxis.stroke()
         
         
         /// graph line
-        context.setStrokeColor(UIColor(Color("accent")).cgColor)
+        let graphLineColor = UIColor(Color("accent")).cgColor
+        context.setStrokeColor(graphLineColor)
         
         trendLine.lineWidth = 2
         trendLine.lineCapStyle = .round
         trendLine.lineJoinStyle = .round
         
         
-        let leftX = rect.minX
-        let rightX = leftX + rect.width
         print("DRAWING FROM \(leftX) to \(rightX)")
         let pointsSubset = points[max(Int(leftX) / interval - 1, 0)...min(Int(rightX) / interval + 1, points.count - 1)]
         
         
-        let padded_height = self.frame.height - CGFloat(CHART_TOP_PADDING)
+        let padded_height = self.frame.height - CHART_TOP_PADDING - CHART_BOTTOM_PADDING
+        
+        let intervalLine = UIBezierPath()
+        intervalLine.lineWidth = 1
         
         for i in pointsSubset.indices {
             let prev = points[i - 1 >= 0 ? i - 1 : 0]
             let cur = points[i]
             let next = points[i + 1 < points.count ? i + 1 : points.count - 1]
             
-            var prevcgpoint = prev.getPointForImageSize(imageHeight: padded_height)
-            var curcgpoint = cur.getPointForImageSize(imageHeight: padded_height)
+            var prevcgpoint = prev.getPointFor(interval: interval, imageHeight: padded_height)
+            var curcgpoint = cur.getPointFor(interval: interval, imageHeight: padded_height)
             curcgpoint.y += CHART_TOP_PADDING
             prevcgpoint.y += CHART_TOP_PADDING
+            
+            let drawText = (i % 5) == 0
+            
+            if drawText {
+                let string = "\(i + 1)" as NSString
+                
+                let attributes = [
+                    NSAttributedString.Key.font : UIFont.systemFont(ofSize: 8),
+                                        NSAttributedString.Key.foregroundColor : UIColor.red
+                ]
+                
+                // Get the width and height that the text will occupy.
+                let stringSize = string.size(withAttributes: attributes)
+                
+                string.draw(
+                    in: CGRectMake(
+                        CGFloat(i) * CGFloat(interval) - stringSize.width / 2,
+                        padded_height + CHART_TOP_PADDING,
+                        stringSize.width,
+                        stringSize.height
+                    ),
+                    withAttributes: attributes
+                )
+                
+                intervalLine.move(to: CGPoint(x: CGFloat(i * interval), y: self.frame.height - CHART_BOTTOM_PADDING - 0.5))
+                intervalLine.lineWidth = 1
+                intervalLine.addLine(to: CGPoint(x: CGFloat(i * interval), y: CHART_TOP_PADDING + 0.5))
+                context.setStrokeColor(UIColor.green.cgColor)
+                intervalLine.stroke()
+
+                
+                // String drawing changes color
+                context.setStrokeColor(graphLineColor)
+            }
+
+            
 //            let nextcgpoint = next.getPointForImageSize(imageHeight: self.frame.height - CGFloat(CHART_TOP_PADDING))
             
             if (trendLine.isEmpty) {
@@ -215,8 +254,8 @@ class LineChartScroll: UIScrollView {
             }
         }
         
-        let lastcgpoint = points.last!.getPointForImageSize(imageHeight: padded_height + CHART_TOP_PADDING)
-        let firstcgpoint = points.first!.getPointForImageSize(imageHeight: padded_height + CHART_TOP_PADDING)
+        let lastcgpoint = points.last!.getPointFor(interval: interval, imageHeight: padded_height + CHART_TOP_PADDING)
+        let firstcgpoint = points.first!.getPointFor(interval: interval, imageHeight: padded_height + CHART_TOP_PADDING)
         
         gradientLine.addLine(to: CGPoint(x: lastcgpoint.x, y: padded_height + CHART_TOP_PADDING))
         gradientLine.addLine(to: CGPoint(x: 0, y: padded_height + CHART_TOP_PADDING))
@@ -248,7 +287,7 @@ class LineChartScroll: UIScrollView {
         for i in dnfedIndices {
             let image = createDNFPoint()
             
-            var cgpoint = points[i].getPointForImageSize(imageHeight: padded_height)
+            var cgpoint = points[i].getPointFor(interval: interval, imageHeight: padded_height)
             cgpoint.y += CHART_TOP_PADDING
             
             let imageRect = CGRect(x: cgpoint.x - 4, y: cgpoint.y - 4, width: 8, height: 8)
@@ -397,8 +436,10 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     var interval: Int {
         didSet {
             print("gap delta did set")
-            self.drawGraph()
             self.drawYAxisValues()
+            self.scrollView.interval = interval
+            recalculateScrollViewSize()
+            self.scrollView.setNeedsDisplay()
         }
     }
     
@@ -408,7 +449,7 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     
     let limits: (min: Double, max: Double)
     
-    var scrollView: UIScrollView!
+var scrollView: LineChartScroll!
     var highlightedPoint: HighlightedPoint!
     var highlightedCard: TimeDistributionPointCard!
         
@@ -445,9 +486,6 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         self.view.clipsToBounds = true
         
         self.view.addSubview(scrollView)
-        
-        self.drawGraph()
-                
         
         self.scrollView.frame = self.view.frame
         self.scrollView.isUserInteractionEnabled = true
@@ -510,40 +548,12 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
 //
 //            self.chartView.widthAnchor.constraint(equalToConstant:  CGFloat((points.count - 1) * interval))
         ])
-        changeInterval()
+        recalculateScrollViewSize()
 
     }
     
-    private func changeInterval() {
+    func recalculateScrollViewSize() {
         self.scrollView.contentSize.width = CGFloat((points.count - 1) * interval)
-    }
-    
-    private func drawGraph() {
-        
-        
-//        UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
-//        
-//        let context = UIGraphicsGetCurrentContext()!
-        
-        
-//        let image = UIGraphicsGetImageFromCurrentImageContext()!
-        
-//        self.imageView.image = image
-//    
-//        
-//        NSLayoutConstraint.deactivate(self.imageView.constraints)
-        
-//        NSLayoutConstraint.activate([
-//            self.imageView.heightAnchor.constraint(equalToConstant: self.imageHeight),
-//            self.imageView.bottomAnchor.constraint(equalTo: self.scrollView.frameLayoutGuide.bottomAnchor),
-//            self.imageView.bottomAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.bottomAnchor),
-//            
-//            self.imageView.leadingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.leadingAnchor),
-//            
-//            self.imageView.trailingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.trailingAnchor),
-//            
-//            self.imageView.widthAnchor.constraint(equalToConstant: image.size.width)
-//        ])
     }
     
     private func drawYAxisValues() -> UIView {
@@ -593,11 +603,12 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
         view.addArrangedSubview(lineView)
         
         NSLayoutConstraint.activate([
-            view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            view.heightAnchor.constraint(equalTo: self.scrollView.heightAnchor, constant: -CHART_TOP_PADDING),
+            view.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: CHART_TOP_PADDING),
+            view.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor, constant: -CHART_BOTTOM_PADDING),
             lineView.widthAnchor.constraint(equalToConstant: 0.5),
-            lineView.heightAnchor.constraint(equalTo: self.scrollView.heightAnchor, constant: -CHART_TOP_PADDING)
+            lineView.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: CHART_TOP_PADDING),
+            lineView.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor, constant: -CHART_BOTTOM_PADDING)
         ])
         
         
@@ -630,7 +641,7 @@ class TimeDistViewController: UIViewController, UIScrollViewDelegate {
     @objc func panning(_ pgr: UILongPressGestureRecognizer) {
         let closestIndex = max(0, min(self.points.count - 1, Int((pgr.location(in: self.scrollView).x + 6) / CGFloat(self.interval))))
         let closestPoint = self.points[closestIndex]
-        var closestCGPoint = closestPoint.getPointForImageSize(imageHeight: self.scrollView.frame.height - CHART_TOP_PADDING - 0)
+        var closestCGPoint = closestPoint.getPointFor(interval: interval, imageHeight: self.scrollView.frame.height - CHART_TOP_PADDING - CHART_BOTTOM_PADDING)
         closestCGPoint.y += CHART_TOP_PADDING
         
         print("CLOSETS: \(closestCGPoint.y), HEIGHT: \(self.scrollView.frame.height)")
@@ -688,7 +699,7 @@ struct DetailTimeTrendBase: UIViewControllerRepresentable {
         print("HEIGHT IN INIT: \(proxy.size.height)")
         self.points = rawDataPoints.enumerated().map({ (i, e) in
             return LineChartPoint(solve: e,
-                                  position: Double(i * interval),
+                                  idx: i,
                                   min: limits.min, max: limits.max)
         })
         self.averageValue = averageValue
