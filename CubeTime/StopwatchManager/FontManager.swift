@@ -125,22 +125,13 @@ struct RecursiveMono: ViewModifier {
 }
 
 extension View {
-    func recursiveMono(size: CGFloat, weight: Int) -> some View {
-        modifier(RecursiveMono(size: size, weight: weight))
-    }
-    
-    func recursiveMono(size: CGFloat, weight: Font.Weight) -> some View {
+    func recursiveMono(size: CGFloat, weight: Font.Weight=Font.Weight.regular) -> some View {
         modifier(RecursiveMono(size: size,
-                                      weight: RecursiveMono.weightToValue(weight: weight)))
-    }
-    
-    func recursiveMono(style: Font.TextStyle, weight: Font.Weight) -> some View {
-        modifier(RecursiveMono(size: RecursiveMono.styleToValue(style: style),
                                weight: RecursiveMono.weightToValue(weight: weight)))
     }
     
-    func recursiveMono(style: Font.TextStyle, weight: Int) -> some View {
+    func recursiveMono(style: Font.TextStyle, weight: Font.Weight=Font.Weight.regular) -> some View {
         modifier(RecursiveMono(size: RecursiveMono.styleToValue(style: style),
-                               weight: weight))
+                               weight: RecursiveMono.weightToValue(weight: weight)))
     }
 }
