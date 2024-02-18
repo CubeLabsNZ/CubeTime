@@ -16,7 +16,7 @@ struct ScrambleOnlyTool: View {
             if let scr = scrambleController.scrambleStr {
                 Text(scr)
                     .multilineTextAlignment(.center)
-                    .recursiveMono(fontSize: 24, weight: .medium)
+                    .recursiveMono(size: 24, weight: .medium)
                     .padding(.horizontal)
             } else {
                 LoadingIndicator(animation: .circleRunner, color: Color("accent"), size: .small, speed: .fast)

@@ -38,11 +38,11 @@ struct StatsTimeList: View {
                     
                     if let date = solve.date {
                         Text(date, formatter: getSolveDateFormatter(date))
-                            .recursiveMono(fontSize: 15, weight: .regular)
+                            .recursiveMono(size: 15, weight: .regular)
                             .foregroundColor(Color("grey"))
                     } else {
                         Text("...")
-                            .recursiveMono(fontSize: 15, weight: .regular)
+                            .recursiveMono(size: 15, weight: .regular)
                             .foregroundColor(Color("grey"))
                     }
                 }
@@ -62,7 +62,7 @@ struct StatsTimeList: View {
                     
                     Spacer()
                 }
-                .recursiveMono(fontSize: 17, weight: .regular)
+                .recursiveMono(size: 17, weight: .regular)
                 .padding(.bottom, (index != calculatedAverage.accountedSolves!.indices.last!) ? 8 : 0)
             }
             .onTapGesture {
@@ -123,7 +123,7 @@ struct StatsDetailView: View {
                         ThemedDivider()
                         
                         Text(solves.name == "Comp Sim Solve" ? "COMPSIM" : solves.name.uppercased())
-                            .recursiveMono(fontSize: 15, weight: .regular)
+                            .recursiveMono(size: 15, weight: .regular)
                             .foregroundColor(Color("grey"))
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -132,7 +132,7 @@ struct StatsDetailView: View {
                     .padding(.top)
                     
                     Text("CubeTime.")
-                        .recursiveMono(fontSize: 13)
+                        .recursiveMono(size: 13)
                         .foregroundColor(Color("indent1"))
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .padding(.vertical, -4)

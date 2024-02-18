@@ -120,6 +120,7 @@ struct StatsBlockText: View {
                             )
                     }
                 }
+                .recursiveMono(size: <#T##CGFloat#>, weight: <#T##Int#>)
                 .font(.largeTitle.weight(.bold))
                 .modifier(DynamicText())
             } else {

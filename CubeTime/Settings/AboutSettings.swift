@@ -95,11 +95,11 @@ struct AboutSettingsView: View {
                 
                 VStack(alignment: .leading, spacing: 0) {
                     Text("CubeTime.")
-                        .recursiveMono(fontSize: 28)
+                        .recursiveMono(size: 28)
                         .foregroundColor(Color("dark"))
                     
                     Text("v" + versionString)
-                        .recursiveMono(fontSize: 15, weight: .semibold)
+                        .recursiveMono(size: 15, weight: .semibold)
                         .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
                 }
                 

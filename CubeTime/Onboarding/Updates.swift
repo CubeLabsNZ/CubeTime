@@ -39,7 +39,7 @@ struct ListLine: View {
     var body: some View {
         HStack(alignment: .top, spacing: 8) {
             Text("–")
-                .recursiveMono(fontSize: 17, weight: .regular)
+                .recursiveMono(size: 17, weight: .regular)
             
             Text(text)
         }
@@ -205,14 +205,14 @@ struct Update: View {
         VStack(alignment: .leading, spacing: 0) {
             Text("CubeTime v2 is here!")
                 .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
-                .recursiveMono(fontSize: 21, weight: .semibold)
+                .recursiveMono(size: 21, weight: .semibold)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.vertical, 12)
             
             Group {
                 Text("v2.1.2 changes:")
                     .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
-                    .recursiveMono(fontSize: 15, weight: .semibold)
+                    .recursiveMono(size: 15, weight: .semibold)
                     .padding(.top, 8)
                 
                 ListLine(1, .init(stringLiteral: "fixed timelist column count on iPhone 11 Pro Max"))
@@ -220,7 +220,7 @@ struct Update: View {
                 
                 Text("v2.1.1 changes:")
                     .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
-                    .recursiveMono(fontSize: 15, weight: .semibold)
+                    .recursiveMono(size: 15, weight: .semibold)
                     .padding(.top, 8)
                 
                 ListLine(1, .init(stringLiteral: "fixed time trend graph bug"))
@@ -231,7 +231,7 @@ struct Update: View {
             Group {
                 Text("v2.1 changes:")
                     .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
-                    .recursiveMono(fontSize: 15, weight: .semibold)
+                    .recursiveMono(size: 15, weight: .semibold)
                     .padding(.top, 8)
 
                 
@@ -271,7 +271,7 @@ struct Update: View {
             
             Text("v2.0 changes:")
                 .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
-                .recursiveMono(fontSize: 15, weight: .semibold)
+                .recursiveMono(size: 15, weight: .semibold)
             
             if let majorAdditions = majorAdditions {
                 Text("Major Additions: ")

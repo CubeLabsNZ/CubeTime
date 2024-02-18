@@ -182,7 +182,7 @@ struct CalculatorTool: View {
                                     TextField("0.00", text: $currentTime)
                                         .focused($focused)
                                         .padding(.vertical, 6)
-                                        .recursiveMono(fontSize: 20, weight: .semibold)
+                                        .recursiveMono(size: 20, weight: .semibold)
                                         .multilineTextAlignment(.center)
                                         .foregroundColor(Color("dark"))
                                         .background(Color("indent1"))

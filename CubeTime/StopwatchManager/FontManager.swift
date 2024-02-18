@@ -63,38 +63,84 @@ class FontManager: ObservableObject {
 }
 
 struct RecursiveMono: ViewModifier {
-    @ScaledMetric var fontSize: CGFloat
+    @ScaledMetric var size: CGFloat
     let weight: Int
     
-    init(fontSize: CGFloat, weight: Int) {
-        self._fontSize = ScaledMetric(wrappedValue: fontSize)
+    init(size: CGFloat, weight: Int) {
+        self._size = ScaledMetric(wrappedValue: size)
         self.weight = weight
     }
     
     func body(content: Content) -> some View {
         content
-            .font(FontManager.fontFor(size: fontSize, weight: weight))
+            .font(FontManager.fontFor(size: size, weight: weight))
+    }
+    
+    static func weightToValue(weight: Font.Weight) -> Int {
+        switch weight {
+        case .regular:
+            return 400
+        case .medium:
+            return 500
+        case .semibold:
+            return 600
+        case .bold:
+            return 700
+            
+        default:
+            return 400
+        }
+    }
+    
+    static func styleToValue(style: Font.TextStyle) -> CGFloat {
+        // using default (Large) dynamic type sizes
+        switch style {
+        case .largeTitle:
+            return 34
+        case .title:
+            return 28
+        case .title2:
+            return 22
+        case .title3:
+            return 20
+        
+        case .body:
+            return 17
+        case .callout:
+            return 16
+        case .subheadline:
+            return 16
+        
+        case .footnote:
+            return 13
+        case .caption:
+            return 12
+        case .caption2:
+            return 11
+            
+        default:
+            return 17
+        }
     }
 }
 
 extension View {
-    func recursiveMono(fontSize: CGFloat, weight: Int) -> some View {
-        modifier(RecursiveMono(fontSize: fontSize, weight: weight))
+    func recursiveMono(size: CGFloat, weight: Int) -> some View {
+        modifier(RecursiveMono(size: size, weight: weight))
     }
     
-    func recursiveMono(fontSize: CGFloat, weight: Font.Weight=Font.Weight.regular) -> some View {
-        switch (weight) {
-        case .regular:
-            return modifier(RecursiveMono(fontSize: fontSize, weight: 400))
-        case .medium:
-            return modifier(RecursiveMono(fontSize: fontSize, weight: 500))
-        case .semibold:
-            return modifier(RecursiveMono(fontSize: fontSize, weight: 600))
-        case .bold:
-            return modifier(RecursiveMono(fontSize: fontSize, weight: 700))
-            
-        default:
-            return modifier(RecursiveMono(fontSize: fontSize, weight: 400))
-        }
+    func recursiveMono(size: CGFloat, weight: Font.Weight) -> some View {
+        modifier(RecursiveMono(size: size,
+                                      weight: RecursiveMono.weightToValue(weight: weight)))
+    }
+    
+    func recursiveMono(style: Font.TextStyle, weight: Font.Weight) -> some View {
+        modifier(RecursiveMono(size: RecursiveMono.styleToValue(style: style),
+                               weight: RecursiveMono.weightToValue(weight: weight)))
+    }
+    
+    func recursiveMono(style: Font.TextStyle, weight: Int) -> some View {
+        modifier(RecursiveMono(size: RecursiveMono.styleToValue(style: style),
+                               weight: weight))
     }
 }

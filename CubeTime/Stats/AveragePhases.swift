@@ -72,11 +72,11 @@ struct AveragePhases: View {
                             
                             HStack(spacing: 12) {
                                 Text(formatSolveTime(secs: phase))
-                                    .recursiveMono(fontSize: 16, weight: .medium)
+                                    .recursiveMono(size: 16, weight: .medium)
                                 
                                 Text("("+String(format: "%.1f", (phase / phaseTimes.reduce(0, +))*100)+"%)")
                                     .foregroundColor(Color("grey"))
-                                    .recursiveMono(fontSize: 15, weight: .regular)
+                                    .recursiveMono(size: 15, weight: .regular)
                             }
                             
                             Spacer()
@@ -89,7 +89,7 @@ struct AveragePhases: View {
             .padding(.bottom, 12)
         } else {
             Text("not enough solves to\ndisplay graph")
-                .recursiveMono(fontSize: 17, weight: .medium)
+                .recursiveMono(size: 17, weight: .medium)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color("grey"))
                 .offset(y: 5)
