@@ -30,12 +30,6 @@ struct SettingsViewInner: View {
                     SettingsCard(currentCard: $currentCard, info: settingsCards[0], namespace: namespace)
                     SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
                 }
-                /* bring this back (the 4 grid) once importexport added
-                HStack (spacing: 16) {
-                    SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
-//                            SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
-                }
-                 */
                 
                 SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
                 
@@ -198,9 +192,6 @@ struct SettingsDetail: View {
                             GeneralSettingsView()
                         case "Appearance":
                             AppearanceSettingsView()
-                        case "Import &\nExport":
-                            EmptyView()
-    //                        ImportExportSettingsView()
                         case "Help &\nAbout Us":
                             AboutSettingsView(parentGeo: geo)
                         default:
