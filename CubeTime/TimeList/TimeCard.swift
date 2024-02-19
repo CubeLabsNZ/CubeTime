@@ -53,16 +53,12 @@ struct TimeCard: View {
                 
             VStack {
                 Text(formattedTime)
-                    .font(.body.weight(.bold))
+                    .recursiveMono(style: .body, weightValue: 650)
             }
         }
         .frame(maxWidth: cardWidth, minHeight: cardHeight, maxHeight: cardHeight)
-        .onTapGesture {
-            currentSolve = solve
-        }
-        .onLongPressGesture {
-            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-        }
+        .onTapGesture { currentSolve = solve }
+        .onLongPressGesture { UIImpactFeedbackGenerator(style: .heavy).impactOccurred() }
 
         .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 8, style: .continuous))
         .contextMenu {

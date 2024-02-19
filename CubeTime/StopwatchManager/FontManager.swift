@@ -134,4 +134,9 @@ extension View {
         modifier(RecursiveMono(size: RecursiveMono.styleToValue(style: style),
                                weight: RecursiveMono.weightToValue(weight: weight)))
     }
+    
+    func recursiveMono(style: Font.TextStyle, weightValue: Int) -> some View {
+        modifier(RecursiveMono(size: RecursiveMono.styleToValue(style: style),
+                               weight: weightValue))
+    }
 }
