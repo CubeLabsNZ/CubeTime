@@ -89,16 +89,18 @@ struct StatsView: View {
                                     
                                     HStack(spacing: 10) {
                                         VStack (spacing: 10) {
-                                            StatsBlock(title: "BEST SINGLE", blockHeight: blockHeightSmall, background: .coloured) {
-                                                if let bestSingle = stopwatchManager.bestSingle {
-                                                    StatsBlockText(displayText: formatSolveTime(secs: bestSingle.time, penalty: Penalty(rawValue: bestSingle.penalty)!), colouredBlock: true, displayDetail: false, nilCondition: true)
-                                                } else {
-                                                    StatsBlockText(displayText: "", colouredBlock: true, nilCondition: false)
+                                            Button {
+                                                if stopwatchManager.bestSingle != nil { showBestSinglePopup = true }
+                                            } label: {
+                                                StatsBlock(title: "BEST SINGLE", blockHeight: blockHeightSmall, background: .coloured) {
+                                                    if let bestSingle = stopwatchManager.bestSingle {
+                                                        StatsBlockText(displayText: formatSolveTime(secs: bestSingle.time, penalty: Penalty(rawValue: bestSingle.penalty)!), colouredBlock: true, displayDetail: false, nilCondition: true)
+                                                    } else {
+                                                        StatsBlockText(displayText: "", colouredBlock: true, nilCondition: false)
+                                                    }
                                                 }
                                             }
-                                            .onTapGesture {
-                                                if stopwatchManager.bestSingle != nil { showBestSinglePopup = true }
-                                            }
+                                            .buttonStyle(CTButtonStyle())
                                             
                                             StatsBlock(title: "BEST STATS", blockHeight: blockHeightMedium) {
                                                 StatsBlockSmallText(titles: ["AO12", "AO100"], data: [stopwatchManager.bestAo12, stopwatchManager.bestAo100], presentedAvg: $presentedAvg, blockHeight: blockHeightMedium)
@@ -106,6 +108,7 @@ struct StatsView: View {
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
+                                        #warning("TODO: FIX ALL OF THESE CHANGE TO BUTTON WITH CUSTOM BUTTON STYLE")
                                         ZStack(alignment: .topLeading) {
                                             if let bestAo5 = stopwatchManager.bestAo5 {
                                                 StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
