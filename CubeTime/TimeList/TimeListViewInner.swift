@@ -74,11 +74,9 @@ class TimeCardCell: UICollectionViewCell {
     }
     
     override init(frame: CGRect) {
-        
         super.init(frame: frame)
         
         self.layer.backgroundColor = UIColor(named: isSelected ? "indent0" : "overlay0")!.cgColor
-//        self.timeCardLabel.checkbox.isHidden = !self.isSelected
         
         self.layer.cornerRadius = 8
         self.layer.cornerCurve = .continuous
@@ -86,7 +84,7 @@ class TimeCardCell: UICollectionViewCell {
         self.label.textAlignment = .center
         
         
-        self.label.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
+        self.label.font = FontManager.fontFor(size: 17, weight: 650)
         self.label.isUserInteractionEnabled = false
         
         self.label.numberOfLines = 1

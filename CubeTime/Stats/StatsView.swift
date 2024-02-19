@@ -292,13 +292,11 @@ struct StatsView: View {
                                                             : stopwatchManager.solvesNoDNFs.map { $0.timeIncPen })
                                 
                                 
-                                StatsBlock(title: "TIME TREND", blockHeight: (timeTrendData.count < 2 ? blockHeightGraphEmpty : 310), isBigBlock: true, isTappable: false) {
+                                StatsBlock(title: "TIME TREND", blockHeight: (timeTrendData.count < 2 ? blockHeightGraphEmpty : 310), isBigBlock: true, isTappable: true) {
                                     TimeTrend(data: Array(timeTrendData.suffix(timeTrendSolves)), title: nil)
                                         .drawingGroup()
                                 }
-                                .onTapGesture {
-                                    self.showTimeTrendModal = true
-                                }
+                                .onTapGesture { self.showTimeTrendModal = true }
                                 
                                 
                                 StatsBlock(title: "TIME DISTRIBUTION", blockHeight: (timeDistributionData.count < 4 ? blockHeightGraphEmpty : 300), isBigBlock: true, isTappable: false) {
