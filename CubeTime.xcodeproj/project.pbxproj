@@ -86,6 +86,7 @@
 		AF8A157429AF15B500F6818E /* ScrambleOnlyTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8A157329AF15B500F6818E /* ScrambleOnlyTool.swift */; };
 		AF8B305B29B5C7010023D23B /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8B305A29B5C7010023D23B /* SettingsManager.swift */; };
 		AFA444A229C4290500795434 /* SettingsWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA444A129C4290400795434 /* SettingsWidgets.swift */; };
+		E5A559602B83456F004093B3 /* ExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A5595F2B83456F004093B3 /* ExportViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -204,6 +205,7 @@
 		AF8B305A29B5C7010023D23B /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		AF977E5B29BEE9E100A246C0 /* CubeTimeData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CubeTimeData.xcdatamodel; sourceTree = "<group>"; };
 		AFA444A129C4290400795434 /* SettingsWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWidgets.swift; sourceTree = "<group>"; };
+		E5A5595F2B83456F004093B3 /* ExportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -343,6 +345,7 @@
 				AF81757629B07712004838B9 /* FontManager.swift */,
 				238FB41F29B8175C008EC1D4 /* GradientManager.swift */,
 				235D6A6F29C2CE09002D90D8 /* CloudkitStatusManager.swift */,
+				E5A5595F2B83456F004093B3 /* ExportViewModel.swift */,
 			);
 			path = StopwatchManager;
 			sourceTree = "<group>";
@@ -638,6 +641,7 @@
 				23AAF99629B0219200C5C1FF /* ScrollableLineChart.swift in Sources */,
 				7D3D3154278D3CA400BBDF55 /* TimerTouchView.swift in Sources */,
 				231F37C52B81FD290016A137 /* ImportExport.swift in Sources */,
+				E5A559602B83456F004093B3 /* ExportViewModel.swift in Sources */,
 				7D2B805E279422BD0006AEDD /* AppDelegate.swift in Sources */,
 				238FB42029B8175C008EC1D4 /* GradientManager.swift in Sources */,
 				AF6EAC2029ADDA1C00171F73 /* TimerMenu.swift in Sources */,
