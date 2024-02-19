@@ -31,7 +31,7 @@ struct SettingsViewInner: View {
                     SettingsCard(currentCard: $currentCard, info: settingsCards[1], namespace: namespace)
                 }
                 
-                SettingsCard(currentCard: $currentCard, info: settingsCards[3], namespace: namespace)
+                SettingsCard(currentCard: $currentCard, info: settingsCards[2], namespace: namespace)
                 
                 
                 Spacer()
