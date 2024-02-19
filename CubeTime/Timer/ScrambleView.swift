@@ -26,22 +26,20 @@ struct AsyncSVGView: View {
                 
                 
                 
-//                graal_create_isolate(nil, &isolate, &thread)
-//                
-//                var svg: String!
-//                
-//                #warning("todo: infinite loading if :boom:")
-//                scramble.withCString { s in
-//                    if let drawnSvg = tnoodle_lib_draw_scramble(thread, puzzle, s) {
-//                        svg = String(cString: drawnSvg)
-//                    } else {
-//                        svg = nil
-//                    }
-//                }
-//                
-//                graal_tear_down_isolate(thread);
+                graal_create_isolate(nil, &isolate, &thread)
                 
-                let svg = ""
+                var svg: String!
+                
+                #warning("todo: infinite loading if :boom:")
+                scramble.withCString { s in
+                    if let drawnSvg = tnoodle_lib_draw_scramble(thread, puzzle, s) {
+                        svg = String(cString: drawnSvg)
+                    } else {
+                        svg = nil
+                    }
+                }
+                
+                graal_tear_down_isolate(thread);
                 
                 return svg
             }

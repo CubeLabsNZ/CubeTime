@@ -44,27 +44,27 @@ class ScrambleThread: Thread {
         
         
 //        graal_create_isolate(nil, &isolate, &thread)
-//        graal_attach_thread(isolate, &thread)
-//        while (true) {
-//            let s = String(cString: tnoodle_lib_scramble(thread, scrType))
-//            
-//            if isCancelled {
-//                break
-//            }
-//            semaphore.wait()
-//            if scrGen.scrambles.unsafelyUnwrapped.count < count {
-//                DispatchQueue.main.async { [self] in
-//                    scrGen.scrambles!.append(s)
-//                    semaphore.signal()
-//                }
-//            } else {
-//                semaphore.signal()
-//                break
-//            }
-//        }
+        graal_attach_thread(isolate, &thread)
+        while (true) {
+            let s = String(cString: tnoodle_lib_scramble(thread, scrType))
+            
+            if isCancelled {
+                break
+            }
+            semaphore.wait()
+            if scrGen.scrambles.unsafelyUnwrapped.count < count {
+                DispatchQueue.main.async { [self] in
+                    scrGen.scrambles!.append(s)
+                    semaphore.signal()
+                }
+            } else {
+                semaphore.signal()
+                break
+            }
+        }
         
 //        graal_tear_down_isolate(thread);
-//        graal_detach_thread(thread)
+        graal_detach_thread(thread)
         waiter.leave()
         
         #if DEBUG
@@ -97,25 +97,25 @@ class ScrambleGenerator: ObservableObject {
     var thread: OpaquePointer?
     
     func generate() {
-//        let semaphore = DispatchSemaphore(value: 1)
-//        
-//        self.scrambles = []
-//        
-//        graal_create_isolate(nil, &isolate, &thread)
-//        
-//        self.threads = (0..<ProcessInfo.processInfo.processorCount).map {_ in
-//            let t = ScrambleThread(isolate: isolate, semaphore: semaphore, scrGen: self, count: numScramble!, scrType: Int32(scrambleType))
-//            t.qualityOfService = .utility
-//            return t
-//        }
-//        threads.forEach {$0.start()}
+        let semaphore = DispatchSemaphore(value: 1)
+        
+        self.scrambles = []
+        
+        graal_create_isolate(nil, &isolate, &thread)
+        
+        self.threads = (0..<ProcessInfo.processInfo.processorCount).map {_ in
+            let t = ScrambleThread(isolate: isolate, semaphore: semaphore, scrGen: self, count: numScramble!, scrType: Int32(scrambleType))
+            t.qualityOfService = .utility
+            return t
+        }
+        threads.forEach {$0.start()}
     }
     
     func cancel() {
-//        self.threads?.forEach({
-//            $0.cancel()
-//        })
-//        graal_tear_down_isolate(thread)
+        self.threads?.forEach({
+            $0.cancel()
+        })
+        graal_tear_down_isolate(thread)
     }
 }
 
