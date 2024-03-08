@@ -169,6 +169,7 @@ struct CTButtonBase<V: View>: View {
     var staticHeight: CGFloat = 0
     
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.colorScheme) private var colourScheme
     
     let horizontalPadding: CGFloat
     let fontType: Font
@@ -206,7 +207,7 @@ struct CTButtonBase<V: View>: View {
             self.colourShadow = Color.black.opacity(0.07)
             
         case .coloured(let colour):
-            self.colourBg = colour?.opacity(0.25) ?? Color("accent").opacity(0.20)
+            self.colourBg = colour?.opacity(0.25) ?? Color("accent").opacity(0.22)
             self.colourFg = colour ?? Color("accent")
             self.colourShadow = colour?.opacity(0.16) ?? Color("accent").opacity(0.08)
             
@@ -277,21 +278,24 @@ struct CTButtonBase<V: View>: View {
         ZStack {
             let frameHeight: CGFloat = (self.supportsDynamicResizing ? self.dynamicHeight : self.staticHeight)
             
-            if (self.hasBackground) {
+            if (self.hasBackground && colourScheme == .light) {
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .fill(Material.thinMaterial)
+                    .fill(Material.ultraThinMaterial)
                     .frame(width: square ? frameHeight : nil, height: frameHeight)
             }
             
             RoundedRectangle(cornerRadius: 6, style: .continuous)
                 .fill(self.hasBackground ? self.colourBg.opacity(0.92) : Color.white.opacity(0.001))
                 .frame(width: square ? frameHeight : nil, height: frameHeight)
-                .shadow(color: self.hasShadow
-                        ? self.colourShadow
-                        : Color.clear,
-                        radius: self.hasShadow ? 4 : 0,
-                        x: 0,
-                        y: self.hasShadow ? 1 : 0)
+                .if(colourScheme == .light) { view in
+                    view
+                        .shadow(color: self.hasShadow
+                                ? self.colourShadow
+                                : Color.clear,
+                                radius: self.hasShadow ? 4 : 0,
+                                x: 0,
+                                y: self.hasShadow ? 1 : 0)
+                }
             
             Group {
                 if (dynamicTypeSize > .xLarge) {

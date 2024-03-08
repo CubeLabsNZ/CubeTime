@@ -102,11 +102,6 @@ struct StatsDetailView: View {
                         ThemedDivider()
                         
                         HStack {
-                            Text(solves.name == "Comp Sim Solve" ? "COMPSIM" : solves.name.uppercased())
-                            
-                            Text("|")
-                                .offset(y: -1)  // slight offset of bar
-                            
                             HStack(alignment: .center, spacing: 4) {
                                 if (SessionType(rawValue: session.sessionType)! == .playground) {
                                     Text("Playground")
@@ -123,8 +118,13 @@ struct StatsDetailView: View {
                                         .frame(width: 16, height: 16)
                                     
                                 }
-                                
                             }
+                            
+                            Text("|")
+                                .offset(y: -1)  // slight offset of bar
+                            
+                            Text(solves.name == "Comp Sim Solve" ? "compsim" : solves.name.lowercased())
+
                             
                             Spacer()
                         }
@@ -180,7 +180,7 @@ struct StatsDetailView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle(solves.name == "Comp Sim Solve" ? "Comp Sim" : solves.name)
+            .navigationTitle("Stats Detail")
             
             .sheet(item: $solveDetail) { item in
                 TimeDetailView(for: item, currentSolve: $solveDetail)

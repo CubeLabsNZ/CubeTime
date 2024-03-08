@@ -126,7 +126,7 @@ extension StopwatchManager {
             return nil
         }
         
-        return Self.getCalculatedAverage(forSolves: solvesByDate.suffix(period), name: "Current ao", isCompsim: false)
+        return Self.getCalculatedAverage(forSolves: solvesByDate.suffix(period), name: "current ao", isCompsim: false)
     }
 }
 
@@ -382,7 +382,7 @@ extension StopwatchManager {
                 )
                 || (currentAo5.totalPen, bestAo5!.totalPen) == (Penalty.none, Penalty.dnf) { // current is none and best is dnf
                 self.bestAo5 = currentAo5
-                self.bestAo5?.name = "Best ao5"
+                self.bestAo5?.name = "best ao5"
                 #warning("TODO:  unhardcode")
             }
         }
@@ -394,7 +394,7 @@ extension StopwatchManager {
                 )
                 || (currentAo12.totalPen, bestAo12!.totalPen) == (Penalty.none, Penalty.dnf) { // current is none and best is dnf
                 self.bestAo12 = currentAo12
-                self.bestAo12?.name = "Best ao12"
+                self.bestAo12?.name = "best ao12"
                 #warning("TODO:  unhardcode")
             }
         }
@@ -406,7 +406,7 @@ extension StopwatchManager {
                 )
                 || (currentAo100.totalPen, bestAo100!.totalPen) == (Penalty.none, Penalty.dnf) { // current is none and best is dnf
                 self.bestAo100 = currentAo100
-                self.bestAo100?.name = "Best ao100"
+                self.bestAo100?.name = "best ao100"
                 #warning("TODO:  unhardcode")
             }
         }
@@ -489,7 +489,7 @@ extension StopwatchManager {
                 if groupLastSolve.count != 5 {
                     return nil
                 } else {
-                    return Self.getCalculatedAverage(forSolves: groupLastSolve, name: "Current Comp Sim", isCompsim: true)
+                    return Self.getCalculatedAverage(forSolves: groupLastSolve, name: "current compsim", isCompsim: true)
                 }
                 
             } else {
@@ -499,10 +499,10 @@ extension StopwatchManager {
                 
                 if lastInGroup.count == 5 {
                     
-                    return Self.getCalculatedAverage(forSolves: lastInGroup, name: "Current Comp Sim", isCompsim: true)
+                    return Self.getCalculatedAverage(forSolves: lastInGroup, name: "current compsim", isCompsim: true)
                 } else {
                     
-                    return Self.getCalculatedAverage(forSolves: (groupLastTwoSolves.last!.solves!.allObjects as! [Solve]), name: "Current Comp Sim", isCompsim: true)
+                    return Self.getCalculatedAverage(forSolves: (groupLastTwoSolves.last!.solves!.allObjects as! [Solve]), name: "current compsim", isCompsim: true)
                 }
             }
         } else {
@@ -528,7 +528,7 @@ extension StopwatchManager {
                     if solvegroup.solves!.allObjects.count == 5 {
                         
                         
-                        let currentAvg = Self.getCalculatedAverage(forSolves: solvegroup.solves!.allObjects as! [Solve], name: "Best Comp Sim", isCompsim: true)
+                        let currentAvg = Self.getCalculatedAverage(forSolves: solvegroup.solves!.allObjects as! [Solve], name: "best compsim", isCompsim: true)
                         
                         if currentAvg?.totalPen == .dnf {
                             continue
@@ -689,13 +689,13 @@ extension StopwatchManager {
             let allSolves = trimmedSolves + countedSolvesIndices.map({ solvesByDate[Int($0)] })
             
             if (bestAverage == .infinity) {
-                return CalculatedAverage(name: "Best ao \(width)",
+                return CalculatedAverage(name: "best ao \(width)",
                                          average: bestAverage,
                                          accountedSolves: allSolves,
                                          totalPen: .dnf,
                                          trimmedSolves: trimmedSolves)
             } else {
-                return CalculatedAverage(name: "Best ao\(width)",
+                return CalculatedAverage(name: "best ao\(width)",
                                          average: bestAverage,
                                          accountedSolves: allSolves,
                                          totalPen: .none,

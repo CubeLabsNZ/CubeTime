@@ -112,11 +112,6 @@ struct TimeDetailView: View {
                                 
                                 
                                 HStack {
-                                    Text(date, formatter: getSolveDateFormatter(date))
-                                    
-                                    Text("|")
-                                        .offset(y: -1)  // slight offset of bar
-                                    
                                     HStack(alignment: .center, spacing: 4) {
                                         Text(puzzle_type.name)
                                         
@@ -124,6 +119,12 @@ struct TimeDetailView: View {
                                             .resizable()
                                             .frame(width: 16, height: 16)
                                     }
+                                    
+                                    Text("|")
+                                        .offset(y: -1)  // slight offset of bar
+                                    
+                                    Text(date, formatter: getSolveDateFormatter(date))
+                                    
                                     
                                     Spacer()
                                 }
