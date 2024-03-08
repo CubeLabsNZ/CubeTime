@@ -312,7 +312,7 @@ class TimeDistributionPointCard: UIStackView {
         
         iconView = UIImageView(image: UIImage(named: puzzleTypes[Int(solve?.scrambleType ?? 0)].name))
         iconView.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
-        iconView.tintColor = .black
+        iconView.tintColor = UIColor(Color("dark"))
         iconView.translatesAutoresizingMaskIntoConstraints = false
         
         return iconView
@@ -322,7 +322,7 @@ class TimeDistributionPointCard: UIStackView {
         var chevron = UIImageView()
         
         chevron = UIImageView(image: UIImage(systemName: "chevron.right"))
-        chevron.tintColor = UIColor.black
+        chevron.tintColor = UIColor(Color("dark"))
         
         chevron.preferredSymbolConfiguration = UIImage.SymbolConfiguration(font: .preferredFont(for: .footnote, weight: .medium))
         chevron.translatesAutoresizingMaskIntoConstraints = false
