@@ -83,7 +83,7 @@ struct TimerDrawScramble: View {
             if let svg = scrambleController.scrambleSVG {
                 if let scr = scrambleController.scrambleStr {
                     SVGView(string: svg)
-                        .padding(2)
+                        .padding(4)
                         .frame(width: geo.size.width, height: geo.size.height)
                         .aspectRatio(contentMode: .fit)
                         .onTapGesture {
@@ -111,12 +111,12 @@ struct TimerStatRaw: View {
             
             if let value = value {
                 Text(value)
-                    .font(.system(size: 24, weight: .bold))
+                    .recursiveMono(size: 22, weight: .bold)
                     .modifier(DynamicText())
                     
             } else {
                 Text(placeholderText)
-                    .font(.system(size: 24, weight: .medium, design: .default))
+                    .recursiveMono(size: 22, weight: .medium)
                     .foregroundColor(Color("grey"))
             }
         }
