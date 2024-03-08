@@ -308,7 +308,7 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
 func offsetImage(image: UIImage, offsetX: CGFloat=0, offsetY: CGFloat=0) -> UIImage? {
     let format: UIGraphicsImageRendererFormat = UIGraphicsImageRendererFormat.default()
     format.opaque = false
-    format.scale = 1.0
+    format.scale = UIScreen.main.scale
     
     let renderer = UIGraphicsImageRenderer(size: CGSize(width: image.size.width + abs(offsetX), height: image.size.height + abs(offsetY)), format: format)
     
