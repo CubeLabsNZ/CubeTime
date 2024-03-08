@@ -184,6 +184,7 @@ class LineChartScroll: UIScrollView {
             let drawText = (i % (Int(self.bounds.width) / (interval * 2))) == 0 && i != 0
             
             if drawText {
+                context.saveGState()
                 let string = "\(i + 1)" as NSString
                 
                 let attributes = [
@@ -213,7 +214,7 @@ class LineChartScroll: UIScrollView {
 
                 
                 // String drawing changes color
-                context.setStrokeColor(graphLineColor)
+                context.restoreGState()
             }
 
             
