@@ -1,11 +1,11 @@
 <h1 align="center">CubeTime</h1>
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/65262710/146141635-06fff458-003e-45af-b7ee-6860d7b4ea72.png"
-       width="200"
-       height="200">
+  <img src="https://github.com/CubeStuffs/CubeTime/assets/65262710/26f415a3-ebc5-48c0-aaf6-10f5573cde29"
+       width="225"
+       height="225">
 <p align="center">
-<h4 align="center">SPEEDCUBING TIMER & UTILITY APP</h4>
+<h4 align="center">a speedcubing timer & utility app</h4>
 <p align="center">
   <a href="https://apps.apple.com/us/app/cubetime/id1600392245">
     <img src="https://user-images.githubusercontent.com/24711088/146530953-94bc8542-8a1a-49a5-9faf-75c63281f2fc.png"
@@ -18,13 +18,6 @@
 </p>
 
 ---
-
-[![Build](https://github.com/CubeStuffs/CubeTime/actions/workflows/ios.yml/badge.svg?branch=main)](https://github.com/CubeStuffs/CubeTime/actions/workflows/ios.yml)
-[![App Store](https://img.shields.io/badge/dynamic/json?label=App%20Store&query=%24.results[0].averageUserRatingForCurrentVersion&suffix=%20%E2%98%85&url=http%3A%2F%2Fitunes.apple.com%2Flookup%3Fid%3D1600392245&color=0D96F6&logo=appstore&logoColor=white)](https://apps.apple.com/app/cubetime/id1600392245)
-![SwiftUI](https://img.shields.io/badge/Built%20Using-SwifUI-F05138?logo=Swift&logoColor=white)
-[![Scrambles](https://img.shields.io/badge/Scrambles-WCA%20TNoodle-yellow?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAC0AAAAtAHrlyx7AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAsBJREFUKJFVkltIkwEcxc//+/btkmtb2eZSSy1z3lop0R2s6EpFEHaTLm+llogIZogUGlYkGXQjH0J66CEKCwl9sCvahYwowkgC7zi3MVvf3OXbvv17EIXO8/nB4ZxDzIxZtfS25LkDU/eG/WNrgtGgvmW9CoGMYUFI7ZP0llK7vbp/1kuzYGP3tZae8feVoViYkhJsEbu01HXGESejYdgej3u1JCSwTreuOTm1tmYObHh59ebLoTeV1nmLFGdifm3wq7Pww1dXSVxl2lBgf1Z25NsHov7LcdWr1Ru2XE9Ora2hiaZLuU0rvN8nYlOqw33ohs/NZX5ZMStRFarKMM3XwqCT5OwMaj2w7XGFGDCL+hFHjliVuaJ93aOetJRtxV/aX8WODI769edOFmJVjhWrcm1Y6bDiUcdP3ZgrunH134V9ts8dS1g/P59Gdm4PEZi5tXBoOjia0/F2N3x+G8IRFZIkgOOMZNmF/b1tMGRlftdkjjkg6lSBPR4dbPZxBpPFUoySvaMo3tEFQgDs+4PjfQ9R/OMpJK8bYCYyJ7kQ8Bg0YAaIaaZkASQswJKUQlSU3IdweBgIh2FovY/InbsAETMTAYBANlsEk5PJAECIIRJ6gWn59ty2otMJxBnS0WMzoN9lh9EaEoSMjC+q22MQpywciXyE0VQHUZM3B2qcTgTr6xFuvg7ZaCYEvFpYl30SxLSU06bOLjUhvWy5JOXeCE63hTSaxTOxiaD+GgC0WsW7dd/NqqmC7ItKTUxMSi8Vm7tfe8JRxQCgSCNlr9FIRfVR5dMks5wndAYhpqV3PSg41db2Wzjv8YW0awvSmvacKHkydzmfz9dIxHUACCCFOeqqu/YOg66QfdI7rTUZdVy0NuVKQ/Wuuv++CgCyLGdFo8otImwigv5g+XMyGXWhZanmj9ZES/mFs5sHZr3/AICCMe4nisHSAAAAAElFTkSuQmCC)](https://github.com/thewca/tnoodle-lib)
-
-
 
 # Contents
 1. [Overview](#overview)
