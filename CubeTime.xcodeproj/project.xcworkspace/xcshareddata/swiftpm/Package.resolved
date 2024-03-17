@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "lzstring-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Ibrahimhass/lzstring-swift",
+      "state" : {
+        "branch" : "main",
+        "revision" : "7f62f21de5b18582a950e1753b775cc614722407"
+      }
+    },
+    {
       "identity" : "svgview",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/exyte/SVGView",

@@ -53,14 +53,15 @@ struct ExportFlowPickSessions: View {
 
 struct ExportFlowPickFormats: View {
     @EnvironmentObject var exportViewModel: ExportViewModel
+    @State var showFilePathSave = false
     
     var body: some View {
-        let zippedArray = Array(zip(ExportViewModel.allFormats.indices, ExportViewModel.allFormats))
+        let zippedArray = Array(zip(exportViewModel.allFormats.indices, exportViewModel.allFormats))
         ForEach(zippedArray, id: \.0) { (_, format) in
 //            let selected = exportViewModel.selectedFormats.contains(format)
             let indexInSelected = exportViewModel.selectedFormats.firstIndex(where: {$0 === format})
             HStack {
-                Text(format.name)
+                Text(format.getName())
                 Spacer()
                 Image(systemName: indexInSelected != nil ? "checkmark.circle.fill" : "checkmark.circle")
             }
@@ -73,9 +74,38 @@ struct ExportFlowPickFormats: View {
             }
         }
         .navigationTitle("Export Sessions")
-
+        
+        CTButton(type: exportViewModel.selectedSessions.count == 0 ? .disabled : .halfcoloured(nil), size: .large, onTapRun: { showFilePathSave = true }) {
+            HStack {
+                Text("Confirm Export")
+                
+                Image(systemName: "arrow.forward")
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .trailing)
+        .padding(.trailing)
+        .fileExporter(isPresented: $showFilePathSave, documents: exportViewModel.selectedFormats, contentType: .data ,onCompletion: { result in
+            exportViewModel.finishExport(result: result)
+        })
     }
 }
+
+
+struct ExportFlowFinished: View {
+    @EnvironmentObject var exportViewModel: ExportViewModel
+    
+    var result: Result<[URL], Error>
+    
+    var body: some View {
+        switch result {
+        case .success:
+            Text("Export Success!")
+        case .failure(let failure):
+            Text("Export failed: \(failure.localizedDescription)")
+        }
+    }
+}
+
 
 struct ExportFlow: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
@@ -90,6 +120,8 @@ struct ExportFlow: View {
                 ExportFlowPickSessions(sessions: sessions)
             case .pickingFormats:
                 ExportFlowPickFormats()
+            case .finished(let result):
+                ExportFlowFinished(result: result)
             }
         }
         .safeAreaInset(safeArea: .tabBar)

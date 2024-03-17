@@ -148,6 +148,7 @@ enum SessionType: Int16 {
 // MARK: - Wrappers
 struct PuzzleType {
     let name: String
+    let cstimerName: String
 //    let puzzle: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
 }
 
