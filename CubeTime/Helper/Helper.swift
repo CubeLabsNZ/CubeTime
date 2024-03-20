@@ -4,6 +4,7 @@ import UIKit
 import Combine
 import CoreData
 import AVFoundation
+import ZIPFoundation
 
 // MARK: - GLOBAL LETS
 let sessionTypeForID: [SessionType: Session.Type] = [
@@ -95,6 +96,13 @@ extension RandomAccessCollection where Element: Solve {
     }
 }
 
+extension Archive {
+    func addEntry(with: String, data: Data) throws {
+        try addEntry(with: with, type: .file, uncompressedSize: Int64(data.count), provider: { (position: Int64, size) -> Data in
+            return data.subdata(in: Int(position)..<Int(position)+size)
+        })
+    }
+}
 
 // MARK: - UIDEVICE EXTENSIONS
 extension UIDevice {

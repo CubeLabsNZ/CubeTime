@@ -9,6 +9,8 @@ import SwiftUI
 import Foundation
 import UniformTypeIdentifiers
 import Combine
+import ZIPFoundation
+import libxml2
 
 enum ExportFlowState {
     case pickingSessions
@@ -99,6 +101,206 @@ class CSVExportFormat: ExportFormat {
     }
 }
 
+#warning("TODO: somehow minifiy without killing readability")
+
+let metaInf = ##"""
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest:manifest xmlns:manifest="urn:oasis:names:tc:opendocument:xmlns:manifest:1.0" manifest:version="1.2">
+ <manifest:file-entry manifest:full-path="/" manifest:version="1.2" manifest:media-type="application/vnd.oasis.opendocument.spreadsheet"/>
+ <manifest:file-entry manifest:full-path="content.xml" manifest:media-type="text/xml"/>
+ <manifest:file-entry manifest:full-path="styles.xml" manifest:media-type="text/xml"/>
+</manifest:manifest>
+"""##.data(using: .utf8)!
+
+let styles = ##"""
+<?xml version="1.0" encoding="UTF-8"?>
+<office:document-styles xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0">'
+  <office:styles>
+    <number:date-style style:name="NUMFMT_DATE">
+      <number:month/>
+      <number:text>/</number:text>
+      <number:day/>
+      <number:text>/</number:text>
+      <number:year number:style="long"/>
+      <number:text> </number:text>
+      <number:hours/>
+      <number:text>:</number:text>
+      <number:minutes number:style="long"/>
+      <number:text> </number:text>
+      <number:am-pm/>
+    </number:date-style>
+  </office:styles>
+</office:document-styles>
+"""##.data(using: .utf8)!
+
+/*
+ <manifest:file-entry manifest:full-path="Thumbnails/thumbnail.png" manifest:media-type="image/png"/>
+ <manifest:file-entry manifest:full-path="meta.xml" manifest:media-type="text/xml"/>
+ <manifest:file-entry manifest:full-path="manifest.rdf" manifest:media-type="application/rdf+xml"/>
+*/
+
+/*
+ */
+ 
+
+class ODSExportFormat: ExportFormat {
+    override func getName() -> String {
+        return "ODF (MS Excel/Google Sheets)"
+    }
+    
+    static var _readableContentTypes: [UTType] = [.zip]
+    
+    override func fileWrapper(snapshot: Set<Session>, configuration: WriteConfiguration) throws -> FileWrapper {
+        // TODO: thumbnail
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        
+        // Keep in sync with style above!
+        let dateFormatterPretty = DateFormatter()
+        dateFormatterPretty.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatterPretty.dateFormat = "M/d/yyyy h:mm a"
+
+        
+        let archive = try Archive(accessMode: .create)
+        let mimetype = "application/vnd.oasis.opendocument.spreadsheet"
+        try archive.addEntry(with: "mimetype", data: mimetype.data(using: .utf8)!)
+        let buf = libxml2.xmlBufferCreate()!
+        
+        func writeCell(writer: xmlTextWriterPtr, content: String?, type: String = "string") {
+            libxml2.xmlTextWriterStartElement(writer, "table:table-cell")
+            libxml2.xmlTextWriterWriteAttribute(writer, "office:value-type", type)
+            if let content, type == "float" {
+                libxml2.xmlTextWriterWriteAttribute(writer, "office:value", content)
+            }
+            libxml2.xmlTextWriterWriteAttribute(writer, "calcext:value-type", type)
+            if let content {
+                libxml2.xmlTextWriterWriteElement(writer, "text:p", content)
+            }
+            libxml2.xmlTextWriterEndElement(writer)
+        }
+        
+        func writeCell(writer: xmlTextWriterPtr, date: Date) {
+            libxml2.xmlTextWriterStartElement(writer, "table:table-cell")
+            libxml2.xmlTextWriterWriteAttribute(writer, "table:style-name", "CELL_DATE")
+            libxml2.xmlTextWriterWriteAttribute(writer, "office:value-type", "date")
+            libxml2.xmlTextWriterWriteAttribute(writer, "office:date-value", dateFormatter.string(from: date))
+            libxml2.xmlTextWriterWriteAttribute(writer, "calcext:value-type", "date")
+            libxml2.xmlTextWriterWriteElement(writer, "text:p", dateFormatterPretty.string(from: date))
+            libxml2.xmlTextWriterEndElement(writer)
+        }
+
+        
+        
+        let writer = libxml2.xmlNewTextWriterMemory(buf, 0)!
+        libxml2.xmlTextWriterStartDocument(writer, "1.0", "UTF-8", nil)
+        libxml2.xmlTextWriterStartElement(writer, "office:document-content")
+        libxml2.xmlTextWriterWriteAttribute(writer, "xmlns:office", "urn:oasis:names:tc:opendocument:xmlns:office:1.0")
+        libxml2.xmlTextWriterWriteAttribute(writer, "xmlns:text", "urn:oasis:names:tc:opendocument:xmlns:text:1.0")
+        libxml2.xmlTextWriterWriteAttribute(writer, "xmlns:table", "urn:oasis:names:tc:opendocument:xmlns:table:1.0")
+        libxml2.xmlTextWriterWriteAttribute(writer, "xmlns:calcext", "urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0")
+        libxml2.xmlTextWriterWriteAttribute(writer, "xmlns:style", "urn:oasis:names:tc:opendocument:xmlns:style:1.0")
+        libxml2.xmlTextWriterWriteAttribute(writer, "office:version", "1.2")
+        
+        
+        libxml2.xmlTextWriterStartElement(writer, "office:automatic-styles")
+        
+        libxml2.xmlTextWriterStartElement(writer, "style:style")
+        libxml2.xmlTextWriterWriteAttribute(writer, "style:name", "COL_DATE")
+        libxml2.xmlTextWriterWriteAttribute(writer, "style:family", "table-column")
+        libxml2.xmlTextWriterStartElement(writer, "style:table-column-properties")
+        libxml2.xmlTextWriterWriteAttribute(writer, "style:column-width", "100.00pt")
+        libxml2.xmlTextWriterEndElement(writer)
+        libxml2.xmlTextWriterEndElement(writer)
+        
+        libxml2.xmlTextWriterStartElement(writer, "style:style")
+        libxml2.xmlTextWriterWriteAttribute(writer, "style:name", "COL_SCR")
+        libxml2.xmlTextWriterWriteAttribute(writer, "style:family", "table-column")
+        libxml2.xmlTextWriterStartElement(writer, "style:table-column-properties")
+        libxml2.xmlTextWriterWriteAttribute(writer, "style:column-width", "200.00pt")
+        libxml2.xmlTextWriterEndElement(writer)
+        libxml2.xmlTextWriterEndElement(writer)
+        
+        libxml2.xmlTextWriterStartElement(writer, "style:style")
+        libxml2.xmlTextWriterWriteAttribute(writer, "style:name", "CELL_DATE")
+        libxml2.xmlTextWriterWriteAttribute(writer, "style:family", "table-cell")
+        libxml2.xmlTextWriterWriteAttribute(writer, "style:data-style-name", "NUMFMT_DATE")
+        libxml2.xmlTextWriterEndElement(writer)
+
+        
+        libxml2.xmlTextWriterEndElement(writer)
+        
+        
+        libxml2.xmlTextWriterStartElement(writer, "office:body")
+        libxml2.xmlTextWriterStartElement(writer, "office:spreadsheet")
+        
+        // Shut up MS Excel warning
+        libxml2.xmlTextWriterStartElement(writer, "table:calculation-settings")
+        libxml2.xmlTextWriterWriteAttribute(writer, "table:use-regular-expressions", "false")
+        libxml2.xmlTextWriterEndElement(writer)
+        
+        for session in self.selectedSessions {
+            libxml2.xmlTextWriterStartElement(writer, "table:table")
+            libxml2.xmlTextWriterWriteAttribute(writer, "table:name", "\(session.name!)")
+            
+            libxml2.xmlTextWriterStartElement(writer, "table:table-column")
+            libxml2.xmlTextWriterWriteAttribute(writer, "table:number-columns-repeated", "3")
+            libxml2.xmlTextWriterEndElement(writer)
+            
+            libxml2.xmlTextWriterStartElement(writer, "table:table-column")
+            libxml2.xmlTextWriterWriteAttribute(writer, "table:style-name", "COL_SCR")
+            libxml2.xmlTextWriterEndElement(writer)
+            
+            libxml2.xmlTextWriterStartElement(writer, "table:table-column")
+            libxml2.xmlTextWriterWriteAttribute(writer, "table:style-name", "COL_DATE")
+            libxml2.xmlTextWriterEndElement(writer)
+
+            
+            for solve in session.solves?.allObjects as! [Solve] {
+                libxml2.xmlTextWriterStartElement(writer, "table:table-row")
+                
+                let t = numberFormatter.string(from: NSNumber(value: solve.time))!
+                
+                writeCell(writer: writer, content: t, type: "float")
+                #warning("TODO: maybe make the penalty cell a dropdown?")
+                writeCell(writer: writer, content: Penalty(rawValue: solve.penalty)!.exportName())
+                writeCell(writer: writer, content: solve.comment)
+                writeCell(writer: writer, content: solve.scramble!)
+                writeCell(writer: writer, date: solve.date!)
+                
+                libxml2.xmlTextWriterEndElement(writer)
+            }
+            
+            
+            libxml2.xmlTextWriterEndElement(writer)
+            
+        }
+        libxml2.xmlTextWriterEndElement(writer)
+        libxml2.xmlTextWriterEndElement(writer)
+        libxml2.xmlTextWriterEndElement(writer)
+        libxml2.xmlTextWriterEndDocument(writer)
+        
+        let content = Data(bytes: buf.pointee.content, count: Int(buf.pointee.use))
+        libxml2.xmlFreeTextWriter(writer)
+        
+        
+        libxml2.xmlBufferFree(buf)
+        try archive.addEntry(with: "content.xml", data: content)
+        // Yes, MS Excel really needs this, even though it's empty.
+        try archive.addEntry(with: "styles.xml", data: styles)
+        try archive.addEntry(with: "META-INF/manifest.xml", data: metaInf)
+        
+        let wrapper = FileWrapper(regularFileWithContents: archive.data!)
+        wrapper.preferredFilename = "CubeTime Export.ods"
+        return wrapper
+    }
+}
+
+
+
 class CSTimerExportFormat: ExportFormat {
     override func getName() -> String {
         return "csTimer (JSON)"
@@ -150,7 +352,7 @@ class CSTimerExportFormat: ExportFormat {
 }
 
 class ExportViewModel: ObservableObject {
-    let allFormats: [ExportFormat] = [CSVExportFormat(), CSTimerExportFormat()]
+    let allFormats: [ExportFormat] = [CSVExportFormat(), ODSExportFormat(), CSTimerExportFormat()]
 
     @Published var exportFlowState: ExportFlowState = .pickingSessions
     

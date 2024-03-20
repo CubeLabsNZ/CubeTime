@@ -134,6 +134,17 @@ enum Penalty: Int16, Hashable {
     case none
     case plustwo
     case dnf
+    
+    func exportName() -> String? {
+        return switch self {
+        case .plustwo:
+            "PlusTwo"
+        case .dnf:
+            "DNF"
+        default:
+            nil
+        }
+    }
 }
 
 enum SessionType: Int16 {
