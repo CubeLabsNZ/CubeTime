@@ -109,7 +109,7 @@ struct SessionsView: View {
                                 .imageScale(.small)
                         }
                     } label: {
-                        CTButtonBase(type: .coloured(nil), size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, supportsDynamicResizing: true, expandWidth: false) {
+                        CTBubble(type: .coloured(nil), size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, supportsDynamicResizing: true, expandWidth: false) {
                             Label("Import & Export", systemImage: "square.and.arrow.up.on.square")
                                 .labelStyle(.titleAndIcon)
                                 .imageScale(.small)

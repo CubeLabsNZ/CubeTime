@@ -1,21 +1,15 @@
 import SwiftUI
 import Foundation
 
-struct SessionCard: View {
+
+struct SessionCardBase: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
-    @Environment(\.managedObjectContext) var managedObjectContext
-    
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    
-    @State private var isShowingDeleteDialog = false
-    @State private var isShowingCustomizeDialog = false
     
     @ScaledMetric private var pinnedSessionHeight: CGFloat = 110
     @ScaledMetric private var regularSessionHeight: CGFloat = 65
     
-    
     var item: Session
-    var allSessions: FetchedResults<Session>
     
     let pinned: Bool
     let sessionType: SessionType
@@ -23,19 +17,25 @@ struct SessionCard: View {
     let scrambleType: Int
     let solveCount: Int
     
-    @Namespace var namespace
+    let forExportUse: Bool
     
-    init (item: Session, allSessions: FetchedResults<Session>) {
+    var selected: Bool
+    
+    init(item: Session, pinned: Bool, sessionType: SessionType, name: String, scrambleType: Int, solveCount: Int, selected: Bool, forExportUse: Bool=false) {
         self.item = item
-        self.allSessions = allSessions
         
-        // Copy out the things so that it won't change to null coalesced defaults on deletion
-        self.pinned = item.pinned
-        self.sessionType = SessionType(rawValue: item.sessionType)!
-        self.name = item.name ?? "Unknown session name"
-        self.scrambleType = Int(item.scrambleType)
-        self.solveCount = item.solves?.count ?? -1
+        self.pinned = pinned
+        self.sessionType = sessionType
+        self.name = name
+        self.scrambleType = scrambleType
+        self.solveCount = solveCount
+        
+        self.selected = selected
+        
+        self.forExportUse = forExportUse
     }
+    
+    @Namespace var namespace
     
     var body: some View {
         HStack {
@@ -59,37 +59,85 @@ struct SessionCard: View {
                     }
                 }
             }
-            .padding(.leading, stopwatchManager.currentSession == item ? 24 : 10)
+            .padding(.leading, self.selected && !self.forExportUse ? 24 : 10)
             .padding(.vertical, 10)
             .offset(y: -1)
             
             Spacer()
             
-            Image(puzzleTypes[scrambleType].name)
-                .resizable()
-                .frame(width: 45, height: 45)
-                .aspectRatio(contentMode: .fit)
-                .foregroundColor(Color("dark"))
-                .padding([.vertical, .trailing], 10)
-                .frame(maxHeight: .infinity, alignment: .topTrailing)
+            if (!forExportUse) {
+                Image(puzzleTypes[scrambleType].name)
+                    .resizable()
+                    .frame(width: 45, height: 45)
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(Color("dark"))
+                    .padding([.vertical, .trailing], 10)
+                    .frame(maxHeight: .infinity, alignment: .topTrailing)
+            } else if (selected) {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(Color("accent"), Color("overlay0"))
+                    .padding(.trailing, 24)
+            }
         }
-    
+        
         
         .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight, alignment: .center)
         
-        .background( Group {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Color("indent1"))
-                .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight)
-            
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Color("overlay0"))
-                .frame(width: stopwatchManager.currentSession == item ? 16 : nil,
-                       height: item.pinned ? pinnedSessionHeight : regularSessionHeight)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-        })
+        .background(
+            Group {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color("indent1"))
+                    .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight)
+                
+                if (forExportUse) {
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(Color("overlay0"))
+                        .frame(width: nil,
+                               height: item.pinned ? pinnedSessionHeight : regularSessionHeight)
+                        .opacity(selected ? 0 : 1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                } else {
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(Color("overlay0"))
+                        .frame(width: selected ? 16 : nil,
+                               height: item.pinned ? pinnedSessionHeight : regularSessionHeight)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+        )
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+}
+
+
+struct SessionCard: View {
+    @EnvironmentObject var stopwatchManager: StopwatchManager
+    
+    @Environment(\.managedObjectContext) var managedObjectContext
+    
+    @State private var isShowingDeleteDialog = false
+    @State private var isShowingCustomizeDialog = false
+    
+    
+    var item: Session
+    var allSessions: FetchedResults<Session>
+    
+    init (item: Session, allSessions: FetchedResults<Session>) {
+        self.item = item
+        self.allSessions = allSessions
+    }
+    
+    var body: some View {
+        SessionCardBase(item: item,
+                        pinned: item.pinned,
+                        sessionType: SessionType(rawValue: item.sessionType)!,
+                        name: item.name ?? "Unknown session name",
+                        scrambleType: Int(item.scrambleType),
+                        solveCount: item.solves?.count ?? -1,
+                        selected: item == stopwatchManager.currentSession)
+        
         .onTapGesture {
             withAnimation(Animation.customDampedSpring) {
                 if stopwatchManager.currentSession != item {
@@ -97,7 +145,6 @@ struct SessionCard: View {
                 }
             }
         }
-        
         
         
         .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 12, style: .continuous))
@@ -133,7 +180,7 @@ struct SessionCard: View {
                 .tint(Color("accent"))
         }
         
-        .confirmationDialog(String("Are you sure you want to delete \"\(name)\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
+        .confirmationDialog(String("Are you sure you want to delete \"\(self.item.name)\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
                 if item == stopwatchManager.currentSession {
                     var next: Session? = nil
