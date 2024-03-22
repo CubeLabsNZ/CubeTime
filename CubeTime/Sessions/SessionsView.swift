@@ -117,7 +117,7 @@ struct SessionsView: View {
                     }
                     .background(
                         Group {
-                            NavigationLink(destination: ExportFlow(sessions: sessions), isActive: $showExport) { EmptyView() }
+                            NavigationLink(destination: ExportFlowPickSessions(sessions: sessions), isActive: $showExport) { EmptyView() }
                             NavigationLink(destination: ImportFlow(), isActive: $showImport) { EmptyView() }
                         }
                     )
