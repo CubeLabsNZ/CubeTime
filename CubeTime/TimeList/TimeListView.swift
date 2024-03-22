@@ -25,6 +25,16 @@ struct SortByMenu: View {
     
     var body: some View {
         Menu {
+            if let phaseCount = (stopwatchManager.currentSession as? MultiphaseSession)?.phaseCount {
+                Menu("Phase") {
+                    Picker("", selection: $stopwatchManager.timeListShownPhase) {
+                        Text("All phases").tag(Optional<Int16>.none)
+                        ForEach(0..<phaseCount, id: \.self) { idx in
+                            Text("Phase \(idx + 1)").tag(Optional<Int16>.some(idx))
+                        }
+                    }
+                }
+            }
             #warning("TODO: headers not working")
             Section("Sort by") {
                 Picker("", selection: $stopwatchManager.timeListSortBy) {

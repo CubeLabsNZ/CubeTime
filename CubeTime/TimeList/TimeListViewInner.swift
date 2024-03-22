@@ -125,6 +125,8 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Solve>
     private let timeResuseIdentifier = "TimeCard"
     
+    
+    #warning("TODO: subscribe to changes of dynamic type?")
     private lazy var cardHeight: CGFloat = {
         if traitCollection.preferredContentSizeCategory > UIContentSizeCategory.extraLarge {
             return 60
@@ -165,7 +167,8 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     let stopwatchManager: StopwatchManager
     let onClickSolve: (Solve) -> ()
     
-    var subscriber: AnyCancellable?
+    var subscribers: Set<AnyCancellable> = []
+    var shownPhase: Int16? = nil
     
     lazy var dataSource = makeDataSource()
     
@@ -178,10 +181,18 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         
         super.init(collectionViewLayout: layout)
         
-        subscriber = stopwatchManager.$timeListSolvesFiltered
+        stopwatchManager.$timeListSolvesFiltered
             .sink(receiveValue: { [weak self] i in
                 self?.applySnapshot(i)
             })
+            .store(in: &subscribers)
+        
+        stopwatchManager.$timeListShownPhase
+            .sink(receiveValue: { [weak self] newValue in
+                self?.shownPhase = newValue
+                self?.collectionView.reloadData()
+            })
+            .store(in: &subscribers)
     }
     
     required init?(coder: NSCoder) {
@@ -198,7 +209,15 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         let solveCellRegistration = UICollectionView.CellRegistration<TimeCardCell, Solve> { [weak self] cell, _, item in
             guard let self else { return }
             
-            cell.label.text = item.timeText
+            if let multiphaseSolve = item as? MultiphaseSolve,
+               let phase = shownPhase,
+               let phases = multiphaseSolve.phases,
+               let time = ([0] + phases).chunked().map({ $0[1] - $0[0] })[safe: Int(phase)] {
+//               let time = phases[safe: Int(phase)] {
+                cell.label.text = formatSolveTime(secs: time)
+            } else {
+                cell.label.text = item.timeText
+            }
             cell.label.frame = CGRect(origin: .zero, size: cell.frame.size)
             
             cell.item = item

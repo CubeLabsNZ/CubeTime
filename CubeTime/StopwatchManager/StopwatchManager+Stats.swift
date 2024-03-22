@@ -145,8 +145,19 @@ extension StopwatchManager {
         if timeListFilter.isEmpty {
             timeListSolvesFiltered = timeListSolves
         } else {
+
+
             timeListSolvesFiltered = timeListSolves.filter{
-                formatSolveTime(secs: $0.time).hasPrefix(timeListFilter) ||
+                let time = if let multiphaseSolve = $0 as? MultiphaseSolve,
+                    let phase = timeListShownPhase,
+                    let phases = multiphaseSolve.phases,
+                    let time = ([0] + phases).chunked().map({ $0[1] - $0[0] })[safe: Int(phase)] {
+                        time
+                    } else {
+                        $0.time
+                    }
+                
+                return formatSolveTime(secs: time).hasPrefix(timeListFilter) ||
                 ($0.comment ?? "").lowercased().contains(timeListFilter.lowercased())
             }
         }

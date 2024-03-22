@@ -249,6 +249,12 @@ class StopwatchManager: ObservableObject {
         }
     }
     
+    @Published var timeListShownPhase: Int16? = nil {
+        didSet {
+            changedTimeListSort()
+        }
+    }
+    
     var timeListReloadSolve: ((Solve) -> ())?
     var timeListSelectAll: (() -> ())?
     
