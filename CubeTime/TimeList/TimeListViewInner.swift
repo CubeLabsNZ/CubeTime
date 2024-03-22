@@ -21,7 +21,11 @@ class TimeCardView: UIStackView {
         var config = UIImage.SymbolConfiguration(paletteColors: [UIColor(named: "accent")!, UIColor(named: "overlay0")!])
         config = config.applying(UIImage.SymbolConfiguration(weight: .semibold))
         checkbox.preferredSymbolConfiguration = config
-        
+        checkbox.layer.shadowColor = UIColor.black.cgColor
+        checkbox.layer.shadowOffset = .init(width: 0, height: 2)
+        checkbox.layer.shadowRadius = 8
+        checkbox.layer.shadowOpacity = 0.12
+
         self.axis = .vertical
         self.alignment = .center
         self.distribution = .equalCentering
