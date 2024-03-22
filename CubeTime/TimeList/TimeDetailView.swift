@@ -7,7 +7,7 @@ func getSolveDateFormatter(_ date: Date) -> DateFormatter {
     #warning("l10n")
     
     if (Calendar.current.isDateInToday(date)) {
-        dateFormatter.dateFormat = "h:mm a"
+        dateFormatter.dateFormat = "h:mm:ss a"
     } else {
         dateFormatter.dateFormat = "dd/MM/yy"
     }
@@ -43,7 +43,7 @@ struct TimeDetailView: View {
     init(for solve: Solve, currentSolve: Binding<Solve?>?, sessionsCanMoveTo: Binding<[Session]?>? = nil, sessionsCanMoveTo_playground: Binding<[Session]?>? = nil) {
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
-        self.time = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
+        self.time = formatSolveTime(secs: solve.time, penalty: Penalty(rawValue: solve.penalty)!)
         self.puzzle_type = puzzleTypes[Int(solve.scrambleType)]
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
                 
@@ -80,7 +80,7 @@ struct TimeDetailView: View {
                                         
                                         if (dynamicTypeSize <= .xLarge) {
                                             Text("(\(formatSolveTime(secs: solve.time)))")
-                                                .font(.title3.weight(.semibold))
+                                                .recursiveMono(style: .title3, weight: .semibold)
                                                 .foregroundColor(Color("grey"))
                                                 .padding(.leading, 8)
                                                 .offset(y: -4)
@@ -88,12 +88,12 @@ struct TimeDetailView: View {
                                         
                                     case Penalty.plustwo.rawValue:
                                         Text("\(formatSolveTime(secs: (solve.time + 2)))")
-                                            .font(.largeTitle.weight(.bold))
+                                            .recursiveMono(style: .largeTitle, weight: .bold)
                                             .modifier(DynamicText())
                                         
                                         if (dynamicTypeSize <= .xLarge) {
                                             Text("(\(time))")
-                                                .font(.title3.weight(.semibold))
+                                                .recursiveMono(style: .title3, weight: .semibold)
                                                 .foregroundColor(Color("grey"))
                                                 .padding(.leading, 8)
                                                 .modifier(DynamicText())
@@ -101,33 +101,34 @@ struct TimeDetailView: View {
                                         }
                                     default:
                                         Text(time)
-                                            .font(.largeTitle.weight(.bold))
+                                            .recursiveMono(style: .largeTitle, weight: .bold)
                                             .modifier(DynamicText())
                                     }
                                     
                                     Spacer()
-                                    
-                                    HStack(alignment: .center) {
-                                        Text(puzzle_type.name)
-                                            .font(.title3.weight(.semibold))
-                                        
-                                        Image(puzzle_type.name)
-                                            .resizable()
-                                            .frame(width: 22, height: 22)
-                                    }
-                                    .offset(y: -4)
                                 }
                                 
                                 ThemedDivider()
                                 
                                 
                                 HStack {
+                                    HStack(alignment: .center, spacing: 4) {
+                                        Text(puzzle_type.name)
+                                        
+                                        Image(puzzle_type.name)
+                                            .resizable()
+                                            .frame(width: 16, height: 16)
+                                    }
+                                    
+                                    Text("|")
+                                        .offset(y: -1)  // slight offset of bar
+                                    
                                     Text(date, formatter: getSolveDateFormatter(date))
-                                        .recursiveMono(fontSize: 15, weight: .regular)
-                                        .foregroundColor(Color("grey"))
+                                    
                                     
                                     Spacer()
                                 }
+                                .font(.subheadline.weight(.medium))
                                 
                                 Group {
                                     if puzzle_type.name == "Megaminx" {
@@ -141,7 +142,7 @@ struct TimeDetailView: View {
                                         Text(scramble)
                                     }
                                 }
-                                .recursiveMono(fontSize: 17, weight: .medium)
+                                .recursiveMono(size: 17, weight: .semibold)
                                 .padding(.top, 28)
                                 
                                 AsyncSVGView(puzzle: solve.scrambleType, scramble: scramble)
@@ -186,8 +187,8 @@ struct TimeDetailView: View {
                                 Spacer()
                                 
                                 Text("CubeTime.")
-                                    .recursiveMono(fontSize: 13)
-                                    .foregroundColor(Color("indent1"))
+                                    .recursiveMono(size: 13)
+                                    .foregroundColor(Color("grey").opacity(0.25))
                             }
                             .padding(.vertical, -4)
 
@@ -245,7 +246,7 @@ struct TimeDetailView: View {
                                     currentSolve = nil
                                     dismiss()
                                 } label: {
-                                    CTButtonBase(type: .mono, size: .medium, outlined: false, square: false, hasShadow: true, hasBackground: true, supportsDynamicResizing: true, expandWidth: false) {
+                                    CTBubble(type: .mono, size: .medium, outlined: false, square: false, hasShadow: true, hasBackground: true, hasMaterial: true, supportsDynamicResizing: true, expandWidth: false) {
                                         Label("Move to…", systemImage: "arrow.up.right")
                                     }
                                 }

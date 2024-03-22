@@ -68,11 +68,11 @@ struct CalculatorTool: View {
                                 ForEach(Array(zip(solves.indices, solves)), id: \.0) { index, solve in
                                     HStack {
                                         if (solves.count > 3 && (index == solves.firstIndex(of: solves.min() ?? SimpleSolve(time: 0.00, penalty: .none)) || index == solves.lastIndex(of: solves.max() ?? SimpleSolve(time: 0.00, penalty: .none)))) {
-                                            Text("(" + formatSolveTime(secs: solve.time, penType: solve.penalty) + ")")
+                                            Text("(" + formatSolveTime(secs: solve.time, penalty: solve.penalty) + ")")
                                                 .font(.body.weight(.semibold))
                                                 .foregroundColor(Color("grey"))
                                         } else {
-                                            Text(formatSolveTime(secs: solve.time, penType: solve.penalty))
+                                            Text(formatSolveTime(secs: solve.time, penalty: solve.penalty))
                                                 .font(.body.weight(.semibold))
                                                 .foregroundColor(Color("dark"))
                                         }
@@ -167,13 +167,12 @@ struct CalculatorTool: View {
                                         Text("SOLVE \(solves.count + 1)")
                                     } else {
                                         Text("= " + formatSolveTime(secs: StopwatchManager.calculateAverage(forSortedSolves: solves.sorted(), count: 5, trim: 1),
-                                                                    penType: solves.sorted()[3].penalty == .dnf ? Penalty.dnf : Penalty.none ))
+                                                                    penalty: solves.sorted()[3].penalty == .dnf ? Penalty.dnf : Penalty.none ))
                                             .font(.largeTitle.weight(.bold))
-                                            .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
                                     }
                                 }
                             }
-                            .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
+                            .foregroundStyle(Color("dark"))
                             .font(.callout.weight(.semibold))
                             .padding(.top, 10)
 
@@ -182,40 +181,12 @@ struct CalculatorTool: View {
                                     TextField("0.00", text: $currentTime)
                                         .focused($focused)
                                         .padding(.vertical, 6)
-                                        .recursiveMono(fontSize: 20, weight: .semibold)
+                                        .recursiveMono(size: 20, weight: .semibold)
                                         .multilineTextAlignment(.center)
                                         .foregroundColor(Color("dark"))
                                         .background(Color("indent1"))
                                         .cornerRadius(6)
                                         .modifier(ManualInputTextField(text: $currentTime))
-                                        .toolbar {
-                                            ToolbarItemGroup(placement: .keyboard) {
-                                                HStack {
-                                                    Button("Cancel") {
-                                                        focused = false
-                                                        self.editNumber = nil
-                                                    }
-                                                    .keyboardShortcut(KeyboardShortcut.cancelAction)
-                                                    
-                                                    Spacer()
-                                                    
-                                                    Button("Done") {
-                                                        if let time = timeFromStr(currentTime) {
-                                                            if let editNumber = editNumber {
-                                                                self.solves[editNumber].time = time
-                                                            } else {
-                                                                let solve = SimpleSolve(time: time, penalty: Penalty.none)
-                                                                self.solves.append(solve)
-                                                            }
-                                                            
-                                                            self.editNumber = nil
-                                                            currentTime = ""
-                                                        }
-                                                    }
-                                                    .keyboardShortcut(KeyboardShortcut.defaultAction)
-                                                }
-                                            }
-                                        }
                                 } else {
                                     CTButton(type: .coloured(nil), size: .medium, expandWidth: true, onTapRun: {
                                         self.solves = []
@@ -235,6 +206,34 @@ struct CalculatorTool: View {
                     }
                     .padding(.horizontal)
                     .padding(.bottom, geo.size.height / 2.25)
+                    .toolbar {
+                        ToolbarItem(placement: .keyboard) {
+                            HStack {
+                                Button("Cancel") {
+                                    focused = false
+                                    self.editNumber = nil
+                                }
+                                .keyboardShortcut(KeyboardShortcut.cancelAction)
+                                
+                                Spacer()
+                                
+                                Button("Done") {
+                                    if let time = timeFromStr(currentTime) {
+                                        if let editNumber = editNumber {
+                                            self.solves[editNumber].time = time
+                                        } else {
+                                            let solve = SimpleSolve(time: time, penalty: Penalty.none)
+                                            self.solves.append(solve)
+                                        }
+                                        
+                                        self.editNumber = nil
+                                        currentTime = ""
+                                    }
+                                }
+                                .keyboardShortcut(KeyboardShortcut.defaultAction)
+                            }
+                        }
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }

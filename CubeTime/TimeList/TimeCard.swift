@@ -39,7 +39,7 @@ struct TimeCard: View {
     
     init(solve: Solve, currentSolve: Binding<Solve?>) {
         self.solve = solve
-        self.formattedTime = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
+        self.formattedTime = formatSolveTime(secs: solve.time, penalty: Penalty(rawValue: solve.penalty)!)
         self.pen = Penalty(rawValue: solve.penalty)!
         self._currentSolve = currentSolve
     }
@@ -53,16 +53,12 @@ struct TimeCard: View {
                 
             VStack {
                 Text(formattedTime)
-                    .font(.body.weight(.bold))
+                    .recursiveMono(style: .body, weightValue: 650)
             }
         }
         .frame(maxWidth: cardWidth, minHeight: cardHeight, maxHeight: cardHeight)
-        .onTapGesture {
-            currentSolve = solve
-        }
-        .onLongPressGesture {
-            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-        }
+        .onTapGesture { currentSolve = solve }
+        .onLongPressGesture { UIImpactFeedbackGenerator(style: .heavy).impactOccurred() }
 
         .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 8, style: .continuous))
         .contextMenu {

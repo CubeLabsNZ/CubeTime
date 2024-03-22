@@ -40,94 +40,42 @@ struct SessionCard: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                HStack(alignment: .center, spacing: 0) {
-                    Group {
-                        switch sessionType {
-                        case .algtrainer:
-                            Image(systemName: "command.square")
-                                .font(.system(size: 26, weight: .semibold))
-                            
-                        case .playground:
-                            Image(systemName: "square.on.square")
-                                .font(.system(size: 22, weight: .semibold))
-                            
-                        case .multiphase:
-                            Image(systemName: "square.stack")
-                                .font(.system(size: 22, weight: .semibold))
-                            
-                        case .compsim:
-                            Image(systemName: "globe.asia.australia")
-                                .font(.system(size: 26, weight: .bold))
-                            
-                        default:
-                            EmptyView()
-                        }
-                    }
-                    .foregroundColor(Color("accent"))
-                    .padding(.trailing, 12)
-                    .background( Group {
-                        if sessionType != .standard {
-                            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                .fill(Color("accent").opacity(0.33))
-                                .frame(width: 40, height: 40)
-                                .padding(.trailing, 12)
-                        }
-                    })
-                    
-                    
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(name)
-                            .font(.title2.weight(.semibold))
-                            .foregroundColor(Color("dark"))
-                        
-                        Group {
-                            switch sessionType {
-                            case .standard:
-                                Text(puzzleTypes[scrambleType].name)
-                            case .playground:
-                                Text("Playground")
-                            case .multiphase:
-                                Text("Multiphase - \(puzzleTypes[scrambleType].name)")
-                            case .compsim:
-                                Text("Comp Sim - \(puzzleTypes[scrambleType].name)")
-                            default:
-                                EmptyView()
-                            }
-                        }
-                        .font(.subheadline.weight(.regular))
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(name)
+                        .font(.title2.weight(.semibold))
                         .foregroundColor(Color("dark"))
-                        .offset(y: pinned ? 0 : -2)
+                    
+                    HStack(spacing: 4) {
+                        CTSessionBubble(sessionType: self.sessionType, scrambleType: self.scrambleType)
                     }
                 }
                 
                 if pinned {
                     Spacer()
                     
-                    Text("\(solveCount) Solves")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundColor(Color("grey"))
-                        .padding(.bottom, 4)
+                    CTBubble(type: .coloured(nil), size: .bubble, hasMaterial: false) {
+                        Text("\(solveCount) Solves")
+                            .padding(.horizontal, 2)
+                    }
                 }
             }
-            .offset(x: stopwatchManager.currentSession == item ? 16 : 0)
+            .padding(.leading, stopwatchManager.currentSession == item ? 24 : 10)
+            .padding(.vertical, 10)
+            .offset(y: -1)
             
             Spacer()
             
-            if (sessionType != .playground) {
-                Image(puzzleTypes[scrambleType].name)
-                    .resizable()
-                    .frame(width: item.pinned ? nil : 40, height: item.pinned ? nil : 40)
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(Color("dark"))
-                    .padding(.trailing, item.pinned ? 12 : 8)
-                    .padding(.vertical, item.pinned ? 6 : 0)
-            }
+            Image(puzzleTypes[scrambleType].name)
+                .resizable()
+                .frame(width: 45, height: 45)
+                .aspectRatio(contentMode: .fit)
+                .foregroundColor(Color("dark"))
+                .padding([.vertical, .trailing], 10)
+                .frame(maxHeight: .infinity, alignment: .topTrailing)
         }
-        .padding(.leading)
-        .padding(.trailing, pinned ? 6 : 4)
-        .padding(.vertical, pinned ? 12 : 8)
+    
         
-        .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight)
+        .frame(height: pinned ? pinnedSessionHeight : regularSessionHeight, alignment: .center)
         
         .background( Group {
             RoundedRectangle(cornerRadius: 12, style: .continuous)

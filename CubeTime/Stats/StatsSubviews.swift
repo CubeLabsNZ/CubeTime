@@ -32,12 +32,12 @@ struct StatsBlock<Content: View>: View {
         switch (background) {
         case .default:
             self.background = (AnyView(isTappable
-                                      ? Color("overlay0")
+                                       ? Color("overlay0")
                                        : Color("overlay1")), .default)
-        
+            
         case .coloured:
             self.background = (AnyView(Color.red), .coloured)
-             
+            
         case .clear:
             self.background = (AnyView(Color.white.opacity(0.0001)), .clear)
         }
@@ -79,7 +79,7 @@ struct StatsBlockText: View {
     @Environment(\.globalGeometrySize) var globalGeometrySize
     @EnvironmentObject var gradientManager: GradientManager
     @Preference(\.isStaticGradient) private var isStaticGradient
-
+    
     
     let displayText: String
     let colouredText: Bool
@@ -120,11 +120,11 @@ struct StatsBlockText: View {
                             )
                     }
                 }
-                .font(.largeTitle.weight(.bold))
+                .recursiveMono(style: .largeTitle, weight: .bold)
                 .modifier(DynamicText())
             } else {
                 Text("-")
-                    .font(.title.weight(.medium))
+                    .recursiveMono(style: .title, weight: .medium)
                     .foregroundColor(colouredBlock
                                      ? Color(hex: 0xF6F7FC) // hardcoded
                                      : Color("grey"))
@@ -148,10 +148,10 @@ struct StatsBlockDetailText: View {
                 
                 ForEach(calculatedAverage.accountedSolves!, id: \.self) { solve in
                     let discarded = calculatedAverage.trimmedSolves!.contains(solve)
-                    let time = formatSolveTime(secs: solve.time, penType: Penalty(rawValue: solve.penalty)!)
+                    let time = formatSolveTime(secs: solve.time, penalty: Penalty(rawValue: solve.penalty)!)
                     
                     Text(discarded ? "("+time+")" : time)
-                        .font(.body)
+                        .recursiveMono(style: .body)
                         .foregroundColor(
                             discarded
                             ? colouredBlock
@@ -174,7 +174,7 @@ struct StatsBlockDetailText: View {
 
 struct StatsBlockSmallText: View {
     @ScaledMetric private var spacing: CGFloat = -4
-        
+    
     let titles: [String]
     let data: [CalculatedAverage?]
     @Binding var presentedAvg: CalculatedAverage?
@@ -191,42 +191,40 @@ struct StatsBlockSmallText: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
-            ForEach(Array(zip(titles.indices, titles)), id: \.0) { index, title in
-                HStack {
-                    VStack(alignment: .leading, spacing: spacing) {
-                        Text(title)
-                            .font(.footnote.weight(.medium))
-                            .foregroundColor(Color("grey"))
-                        
-                        if let datum = data[index] {
-                            Text(formatSolveTime(secs: datum.average ?? 0, penType: datum.totalPen))
-                                .font(.title2.weight(.bold))
-                                .foregroundColor(Color("dark"))
-                                .modifier(DynamicText())
-                        } else {
-                            Text("-")
-                                .font(.title3.weight(.medium))
+        GeometryReader { proxy in
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(Array(zip(titles.indices, titles)), id: \.0) { index, title in
+                    HStack {
+                        VStack(alignment: .leading, spacing: spacing) {
+                            Text(title)
+                                .font(.footnote.weight(.medium))
                                 .foregroundColor(Color("grey"))
+                            
+                            if let datum = data[index] {
+                                Text(formatSolveTime(secs: datum.average ?? 0, penalty: datum.totalPen))
+                                    .recursiveMono(style: .title2, weight: .bold)
+                                    .foregroundColor(Color("dark"))
+                                    .modifier(DynamicText())
+                            } else {
+                                Text("-")
+                                    .recursiveMono(style: .title3, weight: .medium)
+                                    .foregroundColor(Color("grey"))
+                            }
+                        }
+                        
+                        Spacer()
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        if data[index] != nil {
+                            presentedAvg = data[index]
                         }
                     }
-                    
-                    Spacer()
-                }
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    if data[index] != nil {
-                        presentedAvg = data[index]
-                    }
-                }
-                
-                if (index < titles.count-1) {
-                    Spacer(minLength: 0)
+                    .frame(height: (proxy.size.height - CGFloat((titles.count - 1) * 8)) / CGFloat(titles.count) + 8)
                 }
             }
         }
-        .frame(height: blockHeight-28-20)
         .padding(.top, 28)
-        .padding(.bottom, 20)
+        .padding(.bottom, 12)
     }
 }

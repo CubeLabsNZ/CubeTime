@@ -268,21 +268,6 @@ extension CGPoint {
         return sqrt((pow(self.x - point.x, 2) + pow(self.y - point.y, 2)))
     }
     
-    static func midPointForPoints(p1:CGPoint, p2:CGPoint) -> CGPoint {
-        return CGPoint(x:(p1.x + p2.x) / 2,y: (p1.y + p2.y) / 2)
-    }
-    
-    static func controlPointForPoints(p1:CGPoint, p2:CGPoint) -> CGPoint {
-        var controlPoint = CGPoint.midPointForPoints(p1:p1, p2:p2)
-        let diffY = abs(p2.y - controlPoint.y)
-        
-        if (p1.y < p2.y){
-            controlPoint.y += diffY
-        } else if (p1.y > p2.y) {
-            controlPoint.y -= diffY
-        }
-        return controlPoint
-    }
 }
 
 
@@ -399,7 +384,7 @@ struct Legend: View {
                         Text(formatLegendTime(secs: self.getYLegendSafe(height: height), dp: 1))
                             .offset(x: 2, y: self.getYposition(height: height))
                             .foregroundColor(Color("grey"))
-                            .recursiveMono(fontSize: 10, weight: .regular)
+                            .recursiveMono(size: 10, weight: .regular)
 
                     }
                     .offset(y: 3)
@@ -408,7 +393,7 @@ struct Legend: View {
                     
                     withAnimation(.easeOut(duration: 0.2)) {
                         self.line(atHeight: self.getYLegendSafe(height: height), width: self.frame.width)
-                            .stroke(Color("grey"), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5,height == 0 ? 0 : 10]))
+                            .stroke(Color("indent0"), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [5,height == 0 ? 0 : 10]))
                             .rotationEffect(.degrees(180), anchor: .center)
                             .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
                             .clipped()
@@ -513,7 +498,7 @@ struct TimeTrend: View {
             .offset(y: 6)
         } else {
             Text("not enough solves to\ndisplay graph")
-                .recursiveMono(fontSize: 17, weight: .medium)
+                .recursiveMono(size: 17, weight: .medium)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color("grey"))
                 .offset(y: 5)

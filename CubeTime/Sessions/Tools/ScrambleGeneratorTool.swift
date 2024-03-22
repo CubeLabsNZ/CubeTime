@@ -205,7 +205,7 @@ struct ScrambleGeneratorTool: View {
                                                 .offset(y: 1)
                                             
                                             Text(scramble)
-                                                .recursiveMono(fontSize: 17, weight: .medium)
+                                                .recursiveMono(size: 17, weight: .medium)
                                                 .textSelection(.enabled)
                                                 .padding(.bottom, 6)
                                         }

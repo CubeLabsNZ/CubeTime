@@ -83,7 +83,7 @@ struct TimerDrawScramble: View {
             if let svg = scrambleController.scrambleSVG {
                 if let scr = scrambleController.scrambleStr {
                     SVGView(string: svg)
-                        .padding(2)
+                        .padding(4)
                         .frame(width: geo.size.width, height: geo.size.height)
                         .aspectRatio(contentMode: .fit)
                         .onTapGesture {
@@ -111,12 +111,12 @@ struct TimerStatRaw: View {
             
             if let value = value {
                 Text(value)
-                    .font(.system(size: 24, weight: .bold))
+                    .recursiveMono(size: 22, weight: .bold)
                     .modifier(DynamicText())
                     
             } else {
                 Text(placeholderText)
-                    .font(.system(size: 24, weight: .medium, design: .default))
+                    .recursiveMono(size: 22, weight: .medium)
                     .foregroundColor(Color("grey"))
             }
         }
@@ -138,7 +138,7 @@ struct TimerStat: View {
         self.hasIndividualGesture = hasIndividualGesture
         self._presentedAvg = presentedAvg
         if let average = average {
-            self.value = formatSolveTime(secs: average.average!, penType: average.totalPen)
+            self.value = formatSolveTime(secs: average.average!, penalty: average.totalPen)
         } else {
             self.value = nil
         }
@@ -246,9 +246,9 @@ struct TimerStatsCompSim: View {
     
         VStack(spacing: 0) {
             HStack(spacing: 6) {
-                TimerStatRaw(name: "BPA", value: stopwatchManager.bpa == nil ? nil : formatSolveTime(secs: stopwatchManager.bpa!.average, penType: stopwatchManager.bpa!.penalty), placeholderText: "...")
+                TimerStatRaw(name: "BPA", value: stopwatchManager.bpa == nil ? nil : formatSolveTime(secs: stopwatchManager.bpa!.average, penalty: stopwatchManager.bpa!.penalty), placeholderText: "...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                TimerStatRaw(name: "WPA", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!.average, penType: stopwatchManager.wpa!.penalty), placeholderText: "...")
+                TimerStatRaw(name: "WPA", value: stopwatchManager.wpa == nil ? nil : formatSolveTime(secs: stopwatchManager.wpa!.average, penalty: stopwatchManager.wpa!.penalty), placeholderText: "...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             

@@ -21,7 +21,11 @@ class TimeCardView: UIStackView {
         var config = UIImage.SymbolConfiguration(paletteColors: [UIColor(named: "accent")!, UIColor(named: "overlay0")!])
         config = config.applying(UIImage.SymbolConfiguration(weight: .semibold))
         checkbox.preferredSymbolConfiguration = config
-        
+        checkbox.layer.shadowColor = UIColor.black.cgColor
+        checkbox.layer.shadowOffset = .init(width: 0, height: 2)
+        checkbox.layer.shadowRadius = 8
+        checkbox.layer.shadowOpacity = 0.12
+
         self.axis = .vertical
         self.alignment = .center
         self.distribution = .equalCentering
@@ -74,11 +78,9 @@ class TimeCardCell: UICollectionViewCell {
     }
     
     override init(frame: CGRect) {
-        
         super.init(frame: frame)
         
         self.layer.backgroundColor = UIColor(named: isSelected ? "indent0" : "overlay0")!.cgColor
-//        self.timeCardLabel.checkbox.isHidden = !self.isSelected
         
         self.layer.cornerRadius = 8
         self.layer.cornerCurve = .continuous
@@ -86,7 +88,7 @@ class TimeCardCell: UICollectionViewCell {
         self.label.textAlignment = .center
         
         
-        self.label.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
+        self.label.font = FontManager.fontFor(size: 17, weight: 650)
         self.label.isUserInteractionEnabled = false
         
         self.label.numberOfLines = 1

@@ -172,36 +172,52 @@ struct RoundedCorner: Shape {
 }
 
 
-// MARK: - FUNCS
-// all formatting funcs
-func formatSolveTime(secs: Double, dp: Int) -> String {
-    if secs < 60 {
-        return String(format: "%.\(dp)f", secs); #warning("TODO: set DP")
-    } else {
-        var secs = round(secs * 100) / 100.0
-        let mins: Int = Int((secs / 60).rounded(.down))
-        secs = secs.truncatingRemainder(dividingBy: 60)
-        
-        return String(format: "%d:%0\(dp + 3).\(dp)f", mins, secs)
+// source https://stackoverflow.com/a/62687023/17569741
+extension UIFont {
+    static func preferredFont(for style: TextStyle, weight: Weight, italic: Bool = false) -> UIFont {
+
+        // Get the style's default pointSize
+        let traits = UITraitCollection(preferredContentSizeCategory: .large)
+        let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style, compatibleWith: traits)
+
+        // Get the font at the default size and preferred weight
+        var font = UIFont.systemFont(ofSize: desc.pointSize, weight: weight)
+        if italic == true {
+            font = font.with([.traitItalic])
+        }
+
+        // Setup the font to be auto-scalable
+        let metrics = UIFontMetrics(forTextStyle: style)
+        return metrics.scaledFont(for: font)
+    }
+    
+    private func with(_ traits: UIFontDescriptor.SymbolicTraits...) -> UIFont {
+        guard let descriptor = fontDescriptor.withSymbolicTraits(UIFontDescriptor.SymbolicTraits(traits).union(fontDescriptor.symbolicTraits)) else {
+            return self
+        }
+        return UIFont(descriptor: descriptor, size: 0)
     }
 }
 
-func formatSolveTime(secs: Double, penType: Penalty? = Penalty.none) -> String {
-    if penType == Penalty.dnf {
+
+// MARK: - FUNCS
+// all formatting funcs
+func formatSolveTime(secs: Double, dp: Int = SettingsManager.standard.displayDP, penalty: Penalty? = Penalty.none) -> String {
+    if penalty == .dnf {
         return "DNF"
     }
     
-    let dp = SettingsManager.standard.displayDP
-    let secsfmt = penType == .plustwo ? ".\(dp)f+" : ".\(dp)f"
+    let ratio = pow(10.0, Double(dp))
+    let formatString = penalty == .plustwo ? ".\(dp)f+" : ".\(dp)f"
     
     if secs < 60 {
-        return String(format: "%\(secsfmt)", secs); #warning("TODO: set DP")
+        return String(format: "%\(formatString)", floor(secs * ratio) / ratio)
     } else {
-        var secs = round(secs * 100) / 100.0
-        let mins: Int = Int((secs / 60).rounded(.down))
-        secs = secs.truncatingRemainder(dividingBy: 60)
+        let mins = Int(secs / 60)
+        let secs = (floor(secs * ratio) / ratio) - Double(mins * 60)
         
-        return String(format: "%d:%0\(dp + 3)\(secsfmt)", mins, secs)
+        let offset = dp == 0 ? 2 : 3
+        return String(format: "%d:%0\(dp + offset)\(formatString)", mins, secs)
     }
 }
 
@@ -236,7 +252,7 @@ func jsonSerialize(obj: Any) throws -> Data {
 // MARK: - MANUAL ENTRY FUNCS + VIEW MODIFIERS
 // formatting funcs
 @inline(__always) func filteredStrFromTime(_ time: Double?) -> String {
-    return time == nil ? "" : formatSolveTime(secs: time!, dp: 2)
+    return time == nil ? "" : formatSolveTime(secs: time!)
 }
 
 func timeFromStr(_ formattedTime: String) -> Double? {
@@ -311,11 +327,19 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
 // MARK: - Override
 
 func offsetImage(image: UIImage, offsetX: CGFloat=0, offsetY: CGFloat=0) -> UIImage? {
-    UIGraphicsBeginImageContextWithOptions(CGSize(width: image.size.width + abs(offsetX), height: image.size.height + abs(offsetY)), false, 0)
-    image.draw(in: CGRect(x: offsetX, y: offsetY, width: image.size.width, height: image.size.height))
+    let format: UIGraphicsImageRendererFormat = UIGraphicsImageRendererFormat.default()
+    format.opaque = false
+    format.scale = UIScreen.main.scale
+    
+    let renderer = UIGraphicsImageRenderer(size: CGSize(width: image.size.width + abs(offsetX), height: image.size.height + abs(offsetY)), format: format)
+    
+    let newImage = renderer.image { ctx in
+        image.draw(in: CGRect(x: offsetX, y: offsetY, width: image.size.width, height: image.size.height))
+    }
+    
 
-    let newImage = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
+//    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+//    UIGraphicsEndImageContext()
 
     return newImage
 }
