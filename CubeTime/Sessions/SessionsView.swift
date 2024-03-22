@@ -30,31 +30,73 @@ struct SessionsView: View {
             GeometryReader { geo in
                 ScrollView {
                     VStack (spacing: 10) {
-                        if let status = cloudkitStatusManager.currentStatus {
-                            Group {
-                                switch (status) {
-                                case 0:
-                                    Text("Synced to iCloud")
-                                        .foregroundColor(Color("accent"))
-                                    
-                                case 1:
-                                    Text("Sync to iCloud failed")
-                                        .foregroundColor(Color("grey"))
-                                    
-                                case 2:
-                                    Text("iCloud unavailable")
-                                        .foregroundColor(Color("grey"))
-                                    
-                                default:
-                                    EmptyView()
+                        HStack {
+                            Menu {
+                                Button() {
+                                    showExport = true
+                                } label: {
+                                    Label("Export Sessions", systemImage: "square.and.arrow.up")
+                                        .labelStyle(.titleAndIcon)
+                                        .imageScale(.small)
+                                }
+                                
+                                Button() {
+                                    showImport = true
+                                } label: {
+                                    Label("Import Sessions", systemImage: "square.and.arrow.down")
+                                        .labelStyle(.titleAndIcon)
+                                        .imageScale(.small)
+                                }
+                            } label: {
+                                CTBubble(type: .coloured(nil), size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, supportsDynamicResizing: true, expandWidth: false) {
+                                    Label("Import & Export", systemImage: "square.and.arrow.up.on.square")
+                                        .labelStyle(.titleAndIcon)
+                                        .imageScale(.small)
                                 }
                             }
-                            .font(.subheadline.weight(.medium))
-                            .frame(height: height)
-                        } else {
-                            LoadingIndicator(animation: .bar, color: Color("accent"), size: .small, speed: .normal)
-                                .frame(height: height)
+                            .background(
+                                Group {
+                                    NavigationLink(destination: ExportFlowPickSessions(sessions: sessions), isActive: $showExport) { EmptyView() }
+                                    NavigationLink(destination: ImportFlow(), isActive: $showImport) { EmptyView() }
+                                }
+                            )
+                            
+                            
+                            Spacer()
+                            
+                            
+                            Group {
+                                if let status = cloudkitStatusManager.currentStatus {
+                                    Group {
+                                        switch (status) {
+                                        case 0:
+                                            Text("Synced to iCloud")
+                                                .foregroundColor(Color("accent"))
+                                            
+                                        case 1:
+                                            Text("Sync to iCloud failed")
+                                                .foregroundColor(Color("grey"))
+                                            
+                                        case 2:
+                                            Text("iCloud unavailable")
+                                                .foregroundColor(Color("grey"))
+                                            
+                                        default:
+                                            EmptyView()
+                                        }
+                                    }
+                                    .font(.subheadline.weight(.medium))
+                                    .frame(height: height)
+                                } else {
+                                    LoadingIndicator(animation: .bar, color: Color("accent"), size: .small, speed: .normal)
+                                        .frame(height: height)
+                                }
+                                
+                                
+                            }
+                            .frame(maxWidth: .infinity, alignment: .trailing)
                         }
+                        .padding(.horizontal)
                         
                         ForEach(sessions) { item in
                             SessionCard(item: item, allSessions: sessions)
@@ -91,38 +133,6 @@ struct SessionsView: View {
             .navigationTitle("Sessions")
             .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Menu {
-                        Button() {
-                            showExport = true
-                        } label: {
-                            Label("Export Sessions", systemImage: "square.and.arrow.up")
-                                .labelStyle(.titleAndIcon)
-                                .imageScale(.small)
-                        }
-                        
-                        Button() {
-                            showImport = true
-                        } label: {
-                            Label("Import Sessions", systemImage: "square.and.arrow.down")
-                                .labelStyle(.titleAndIcon)
-                                .imageScale(.small)
-                        }
-                    } label: {
-                        CTBubble(type: .coloured(nil), size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, supportsDynamicResizing: true, expandWidth: false) {
-                            Label("Import & Export", systemImage: "square.and.arrow.up.on.square")
-                                .labelStyle(.titleAndIcon)
-                                .imageScale(.small)
-                        }
-                    }
-                    .background(
-                        Group {
-                            NavigationLink(destination: ExportFlowPickSessions(sessions: sessions), isActive: $showExport) { EmptyView() }
-                            NavigationLink(destination: ImportFlow(), isActive: $showImport) { EmptyView() }
-                        }
-                    )
-                }
-                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !(UIDevice.deviceIsPad && hSizeClass == .regular) {
                         NavigationLink(destination: ToolsList()) {
@@ -279,7 +289,7 @@ struct EventPicker: View {
                     Text(puzzleTypes[Int(sessionEventType)].name)
                         .font(.body)
                         .frame(maxWidth: 120, alignment: .trailing)
-
+                    
                 }
             }
             .frame(maxWidth: .infinity)
@@ -291,9 +301,9 @@ struct EventPicker: View {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: spacing), spacing: 8)], spacing: 8) {
                 ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
                     CTButton(type: (index == sessionEventType) ? .halfcoloured(nil) : .mono,
-                                      size: .ultraLarge,
-                                      square: true,
-                                      onTapRun: {
+                             size: .ultraLarge,
+                             square: true,
+                             onTapRun: {
                         sessionEventType = Int32(index)
                     }) {
                         Image(element.name)
