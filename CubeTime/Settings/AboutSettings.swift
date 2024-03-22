@@ -86,7 +86,7 @@ struct AboutSettingsView: View {
     var body: some View {
         VStack (alignment: .leading) {
             HStack(alignment: .bottom) {
-                Image("about-icon")
+                Image("launchImage")
                     .resizable()
                     .frame(width: iconSize, height: iconSize)
                     .aspectRatio(contentMode: .fit)

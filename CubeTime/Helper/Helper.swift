@@ -398,3 +398,42 @@ func setupAudioSession(with category: AVAudioSession.Category = .playback) {
         #endif
     }
 }
+
+
+// ignore... doesn't work with splash screen
+/*
+@IBDesignable
+class SplashShadowView: UIImageView {
+    @IBInspectable var shadowColor: UIColor = UIColor(named: "accent3")! {
+        didSet {
+            self.updateView()
+        }
+    }
+    
+    @IBInspectable var shadowOpacity: Float = 0.5 {
+        didSet {
+            self.updateView()
+        }
+    }
+    
+    @IBInspectable var shadowOffset = CGSize(width: 0, height: 0) {
+        didSet {
+            self.updateView()
+        }
+    }
+    
+    @IBInspectable var shadowRadius: CGFloat = 12.0 {
+        didSet {
+            self.updateView()
+        }
+    }
+    
+    
+    func updateView() {
+        self.layer.shadowColor = shadowColor.cgColor
+        self.layer.shadowOpacity = shadowOpacity
+        self.layer.shadowOffset = shadowOffset
+        self.layer.shadowRadius = shadowRadius
+    }
+}
+*/
