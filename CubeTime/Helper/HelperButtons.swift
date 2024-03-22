@@ -108,11 +108,12 @@ enum CTButtonType {
     case mono
     case coloured(Color?)
     case halfcoloured(Color?)
+    case lightMono
     case disabled
 }
 
 enum CTButtonSize {
-    case small, medium, large, ultraLarge
+    case bubble, small, medium, large, ultraLarge
 }
 
 struct CTButtonStyle: ButtonStyle {
@@ -125,7 +126,7 @@ struct CTButtonStyle: ButtonStyle {
 }
 
 struct CTButton<Base: View>: View {
-    let button: Button<CTButtonBase<Base>>
+    let button: Button<CTBubble<Base>>
     
     init(type: CTButtonType,
          size: CTButtonSize,
@@ -133,6 +134,7 @@ struct CTButton<Base: View>: View {
          square: Bool=false,
          hasShadow: Bool=true,
          hasBackground: Bool=true,
+         hasMaterial: Bool=true,
          supportsDynamicResizing: Bool=true,
          expandWidth: Bool=false,
          onTapRun: @escaping () -> Void,
@@ -141,15 +143,16 @@ struct CTButton<Base: View>: View {
         self.button = Button {
             onTapRun()
         } label: {
-            CTButtonBase(type: type,
-                         size: size,
-                         outlined: outlined,
-                         square: square,
-                         hasShadow: hasShadow,
-                         hasBackground: hasBackground,
-                         supportsDynamicResizing: supportsDynamicResizing,
-                         expandWidth: expandWidth,
-                         content: content)
+            CTBubble(type: type,
+                     size: size,
+                     outlined: outlined,
+                     square: square,
+                     hasShadow: hasShadow,
+                     hasBackground: hasBackground,
+                     hasMaterial: hasMaterial,
+                     supportsDynamicResizing: supportsDynamicResizing,
+                     expandWidth: expandWidth,
+                     content: content)
         }
     }
     
@@ -158,7 +161,7 @@ struct CTButton<Base: View>: View {
 
 
 #warning("todo: set image scale here instead of per button -> inconsistent!")
-struct CTButtonBase<V: View>: View {
+struct CTBubble<V: View>: View {
     let content: V
     
     let colourBg: Color
@@ -178,21 +181,25 @@ struct CTButtonBase<V: View>: View {
     
     let hasShadow: Bool
     let hasBackground: Bool
-    
+    let hasMaterial: Bool
+
     let supportsDynamicResizing: Bool
     
     let expandWidth: Bool
+    
+    var cornerRadius: CGFloat = 6
     
     @State private var hovering: Bool = false
     
     init(type: CTButtonType,
          size: CTButtonSize,
-         outlined: Bool,
-         square: Bool,
-         hasShadow: Bool,
-         hasBackground: Bool,
-         supportsDynamicResizing: Bool,
-         expandWidth: Bool,
+         outlined: Bool=false,
+         square: Bool=false,
+         hasShadow: Bool=true,
+         hasBackground: Bool=true,
+         hasMaterial: Bool=true,
+         supportsDynamicResizing: Bool=true,
+         expandWidth: Bool=false,
          content: @escaping () -> V) {
 
         switch (type) {
@@ -215,12 +222,29 @@ struct CTButtonBase<V: View>: View {
             self.colourBg = Color("grey").opacity(0.15)
             self.colourFg = Color("grey")
             self.colourShadow = Color.clear
+            
+        case .lightMono:
+            self.colourBg = Color("indent0").opacity(0.28)
+            self.colourFg = Color("dark")
+            self.colourShadow = Color.clear
         }
 
         
         self.supportsDynamicResizing = supportsDynamicResizing
         
         switch (size) {
+        case .bubble:
+            if (supportsDynamicResizing) {
+                self._dynamicHeight = ScaledMetric(wrappedValue: 20, relativeTo: .caption2)
+            } else {
+                self.staticHeight = 20
+            }
+            
+            self.cornerRadius = 4
+            
+            self.horizontalPadding = 3
+            self.fontType = Font.caption2.weight(.medium)
+
         case .small:
             if (supportsDynamicResizing) {
                 self._dynamicHeight = ScaledMetric(wrappedValue: 28, relativeTo: .callout)
@@ -269,6 +293,7 @@ struct CTButtonBase<V: View>: View {
         
         self.hasShadow = hasShadow
         self.hasBackground = hasBackground
+        self.hasMaterial = hasMaterial
         self.expandWidth = expandWidth
         
         self.content = content()
@@ -278,13 +303,13 @@ struct CTButtonBase<V: View>: View {
         ZStack {
             let frameHeight: CGFloat = (self.supportsDynamicResizing ? self.dynamicHeight : self.staticHeight)
             
-            if (self.hasBackground && colourScheme == .light) {
-                RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .fill(Material.ultraThinMaterial)
+            if (self.hasBackground && colourScheme == .light && self.hasMaterial) {
+                RoundedRectangle(cornerRadius: self.cornerRadius, style: .continuous)
+                    .fill(Material.regularMaterial)
                     .frame(width: square ? frameHeight : nil, height: frameHeight)
             }
             
-            RoundedRectangle(cornerRadius: 6, style: .continuous)
+            RoundedRectangle(cornerRadius: self.cornerRadius, style: .continuous)
                 .fill(self.hasBackground ? self.colourBg.opacity(0.92) : Color.white.opacity(0.001))
                 .frame(width: square ? frameHeight : nil, height: frameHeight)
                 .if(colourScheme == .light) { view in
@@ -311,7 +336,7 @@ struct CTButtonBase<V: View>: View {
             .font(self.fontType)
             .padding(.horizontal, square ? 0 : self.horizontalPadding)
         }
-        .contentShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: self.cornerRadius, style: .continuous))
         .fixedSize(horizontal: !expandWidth, vertical: true)
     }
 }

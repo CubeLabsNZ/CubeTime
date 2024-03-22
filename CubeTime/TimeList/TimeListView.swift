@@ -62,7 +62,7 @@ struct SortByMenu: View {
                 }
             }
         } label: {
-            CTButtonBase(type: .halfcoloured(nil), size: .large, outlined: false, square: true, hasShadow: hasShadow, hasBackground: true, supportsDynamicResizing: true, expandWidth: true) {
+            CTBubble(type: .halfcoloured(nil), size: .large, outlined: false, square: true, hasShadow: hasShadow, hasBackground: true, hasMaterial: true, supportsDynamicResizing: true, expandWidth: true) {
                 Image(systemName: "line.3.horizontal.decrease")
                     .matchedGeometryEffect(id: "label", in: animation)
             }
@@ -373,7 +373,7 @@ struct TimeListView: View {
                                     }
                                 }
                             } label: {
-                                CTButtonBase(type: .coloured(nil), size: .small, outlined: false, square: true, hasShadow: true, hasBackground: true, supportsDynamicResizing: true, expandWidth: true) {
+                                CTBubble(type: .coloured(nil), size: .small, outlined: false, square: true, hasShadow: true, hasBackground: true, hasMaterial: true, supportsDynamicResizing: true, expandWidth: true) {
                                     Image(systemName: "ellipsis")
                                         .frame(width: 28, height: 28)
                                         .imageScale(.medium)
