@@ -4,6 +4,7 @@ import UIKit
 import Combine
 import CoreData
 import AVFoundation
+import ZIPFoundation
 
 // MARK: - GLOBAL LETS
 let sessionTypeForID: [SessionType: Session.Type] = [
@@ -28,21 +29,21 @@ let iconNamesForType: [SessionType: String] = [
 
 
 let puzzleTypes: [PuzzleType] = [
-    PuzzleType(name: "2x2"),
-    PuzzleType(name: "3x3"),
-    PuzzleType(name: "4x4"),
-    PuzzleType(name: "5x5"),
-    PuzzleType(name: "6x6"),
-    PuzzleType(name: "7x7"),
-    PuzzleType(name: "Square-1"),
-    PuzzleType(name: "Megaminx"),
-    PuzzleType(name: "Pyraminx"),
-    PuzzleType(name: "Clock"),
-    PuzzleType(name: "Skewb"),
-    PuzzleType(name: "3x3 OH"),
-    PuzzleType(name: "3x3 BLD"),
-    PuzzleType(name: "4x4 BLD"),
-    PuzzleType(name: "5x5 BLD"),
+    PuzzleType(name: "2x2", cstimerName: "222so"),
+    PuzzleType(name: "3x3", cstimerName: "333"),
+    PuzzleType(name: "4x4", cstimerName: "444wca"),
+    PuzzleType(name: "5x5", cstimerName: "555wca"),
+    PuzzleType(name: "6x6", cstimerName: "666wca"),
+    PuzzleType(name: "7x7", cstimerName: "777wca"),
+    PuzzleType(name: "Square-1", cstimerName: "sqrs"),
+    PuzzleType(name: "Megaminx", cstimerName: "mgmp"),
+    PuzzleType(name: "Pyraminx", cstimerName: "pyrso"),
+    PuzzleType(name: "Clock", cstimerName: "clkwca"),
+    PuzzleType(name: "Skewb", cstimerName: "skbso"),
+    PuzzleType(name: "3x3 OH", cstimerName: "333oh"),
+    PuzzleType(name: "3x3 BLD", cstimerName: "333bld"),
+    PuzzleType(name: "4x4 BLD", cstimerName: "444bld"),
+    PuzzleType(name: "5x5 BLD", cstimerName: "555bld"),
 ]
 
 
@@ -95,6 +96,13 @@ extension RandomAccessCollection where Element: Solve {
     }
 }
 
+extension Archive {
+    func addEntry(with: String, data: Data) throws {
+        try addEntry(with: with, type: .file, uncompressedSize: Int64(data.count), provider: { (position: Int64, size) -> Data in
+            return data.subdata(in: Int(position)..<Int(position)+size)
+        })
+    }
+}
 
 // MARK: - UIDEVICE EXTENSIONS
 extension UIDevice {
@@ -210,6 +218,19 @@ func formatLegendTime(secs: Double, dp: Int) -> String {
         let mins: Int = Int((secs / 60).rounded(.down))
         return String(format: "%dm", mins)
     }
+}
+
+func jsonSerialize(obj: Any) throws -> Data {
+    var error: NSError?
+    let exportStream = OutputStream(toMemory: ())
+    exportStream.open()
+    JSONSerialization.writeJSONObject(obj, to: exportStream, error: &error)
+    exportStream.close()
+    if let error {
+        throw error
+    }
+    return (exportStream.property(forKey: .dataWrittenToMemoryStreamKey) as! NSData) as Data
+
 }
 
 // MARK: - MANUAL ENTRY FUNCS + VIEW MODIFIERS

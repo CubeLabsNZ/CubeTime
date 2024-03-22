@@ -87,6 +87,8 @@
 		AF8B305B29B5C7010023D23B /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8B305A29B5C7010023D23B /* SettingsManager.swift */; };
 		AFA444A229C4290500795434 /* SettingsWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA444A129C4290400795434 /* SettingsWidgets.swift */; };
 		E5A559602B83456F004093B3 /* ExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A5595F2B83456F004093B3 /* ExportViewModel.swift */; };
+		E5A742D42BA8184100321D24 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = E5A742D32BA8184100321D24 /* ZIPFoundation */; };
+		E5B3B1532BA5B68600179BDC /* LZString in Frameworks */ = {isa = PBXBuildFile; productRef = E5B3B1522BA5B68600179BDC /* LZString */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -217,6 +219,8 @@
 				AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */,
 				23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */,
 				231F37C22B81F7F60016A137 /* TNoodle.xcframework in Frameworks */,
+				E5B3B1532BA5B68600179BDC /* LZString in Frameworks */,
+				E5A742D42BA8184100321D24 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,6 +511,8 @@
 			packageProductDependencies = (
 				23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */,
 				AF7697DB293C1EFA00FF1C50 /* SVGView */,
+				E5B3B1522BA5B68600179BDC /* LZString */,
+				E5A742D32BA8184100321D24 /* ZIPFoundation */,
 			);
 			productName = txmer;
 			productReference = 23DE3BD7274DDBE200254D29 /* CubeTime.app */;
@@ -583,6 +589,8 @@
 			packageReferences = (
 				23A1CDBB29399FE000F0895D /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */,
 				AF7697DA293C1EFA00FF1C50 /* XCRemoteSwiftPackageReference "SVGView" */,
+				E5B3B1512BA5B68600179BDC /* XCRemoteSwiftPackageReference "lzstring-swift" */,
+				E5A742D22BA8184100321D24 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			productRefGroup = 23DE3BD8274DDBE200254D29 /* Products */;
 			projectDirPath = "";
@@ -1097,6 +1105,22 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		E5A742D22BA8184100321D24 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.18;
+			};
+		};
+		E5B3B1512BA5B68600179BDC /* XCRemoteSwiftPackageReference "lzstring-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Ibrahimhass/lzstring-swift";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1109,6 +1133,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AF7697DA293C1EFA00FF1C50 /* XCRemoteSwiftPackageReference "SVGView" */;
 			productName = SVGView;
+		};
+		E5A742D32BA8184100321D24 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5A742D22BA8184100321D24 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+		E5B3B1522BA5B68600179BDC /* LZString */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5B3B1512BA5B68600179BDC /* XCRemoteSwiftPackageReference "lzstring-swift" */;
+			productName = LZString;
 		};
 /* End XCSwiftPackageProductDependency section */
 
