@@ -22,6 +22,9 @@ struct SessionsView: View {
         ]
     ) var sessions: FetchedResults<Session>
     
+    @State private var showImport = false
+    @State private var showExport = false
+    
     var body: some View {
         NavigationView {
             GeometryReader { geo in
@@ -88,6 +91,38 @@ struct SessionsView: View {
             .navigationTitle("Sessions")
             .navigationBarTitleDisplayMode((UIDevice.deviceIsPad && hSizeClass == .regular) ? .inline : .large)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Menu {
+                        Button() {
+                            showExport = true
+                        } label: {
+                            Label("Export Sessions", systemImage: "square.and.arrow.up")
+                                .labelStyle(.titleAndIcon)
+                                .imageScale(.small)
+                        }
+                        
+                        Button() {
+                            showImport = true
+                        } label: {
+                            Label("Import Sessions", systemImage: "square.and.arrow.down")
+                                .labelStyle(.titleAndIcon)
+                                .imageScale(.small)
+                        }
+                    } label: {
+                        CTButtonBase(type: .coloured(nil), size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, supportsDynamicResizing: true, expandWidth: false) {
+                            Label("Import & Export", systemImage: "square.and.arrow.up.on.square")
+                                .labelStyle(.titleAndIcon)
+                                .imageScale(.small)
+                        }
+                    }
+                    .background(
+                        Group {
+                            NavigationLink(destination: ExportFlow(sessions: sessions), isActive: $showExport) { EmptyView() }
+                            NavigationLink(destination: ImportFlow(), isActive: $showImport) { EmptyView() }
+                        }
+                    )
+                }
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !(UIDevice.deviceIsPad && hSizeClass == .regular) {
                         NavigationLink(destination: ToolsList()) {

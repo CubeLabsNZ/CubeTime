@@ -134,6 +134,17 @@ enum Penalty: Int16, Hashable {
     case none
     case plustwo
     case dnf
+    
+    func exportName() -> String? {
+        return switch self {
+        case .plustwo:
+            "PlusTwo"
+        case .dnf:
+            "DNF"
+        default:
+            nil
+        }
+    }
 }
 
 enum SessionType: Int16 {
@@ -148,6 +159,7 @@ enum SessionType: Int16 {
 // MARK: - Wrappers
 struct PuzzleType {
     let name: String
+    let cstimerName: String
 //    let puzzle: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
 }
 
