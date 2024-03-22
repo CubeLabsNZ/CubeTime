@@ -145,7 +145,10 @@ extension StopwatchManager {
         if timeListFilter.isEmpty {
             timeListSolvesFiltered = timeListSolves
         } else {
-            timeListSolvesFiltered = timeListSolves.filter{ formatSolveTime(secs: $0.time).hasPrefix(timeListFilter) }
+            timeListSolvesFiltered = timeListSolves.filter{
+                formatSolveTime(secs: $0.time).hasPrefix(timeListFilter) ||
+                ($0.comment ?? "").lowercased().contains(timeListFilter.lowercased())
+            }
         }
         
         if hasPenaltyOnly || hasCommentOnly {

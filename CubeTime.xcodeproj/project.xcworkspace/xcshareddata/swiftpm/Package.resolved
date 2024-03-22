@@ -1,5 +1,4 @@
 {
-  "originHash" : "bd0066f47568b67feb1deaee757eb87a190ba2aad49ef359417423e2412468a4",
   "pins" : [
     {
       "identity" : "lzstring-swift",
@@ -38,5 +37,5 @@
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }

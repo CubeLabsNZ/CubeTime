@@ -10,13 +10,9 @@
 		231827E729B5E86B00A40C78 /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231827E629B5E86B00A40C78 /* FloatingPanel.swift */; };
 		2319F8B9276872F200644EB3 /* TimeTrend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2319F8B8276872F200644EB3 /* TimeTrend.swift */; };
 		231B2E2E29BDECF9007E5DC2 /* HelperButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */; };
-		231F37C22B81F7F60016A137 /* TNoodle.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 231F37C02B81F7F00016A137 /* TNoodle.xcframework */; };
-		231F37C32B81F7F60016A137 /* TNoodle.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 231F37C02B81F7F00016A137 /* TNoodle.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		231F37C52B81FD290016A137 /* ImportExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231F37C42B81FD290016A137 /* ImportExport.swift */; };
 		2326436028C4927600F6322E /* TimerHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2326435F28C4927600F6322E /* TimerHeader.swift */; };
 		23329E9029C31CA60017AE99 /* libz.1.1.3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 23329E8F29C31CA60017AE99 /* libz.1.1.3.tbd */; settings = {ATTRIBUTES = (Required, ); }; };
-		233F86382B82125A00459A45 /* TNoodle.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23F0C7372B820F1A00634C35 /* TNoodle.xcframework */; };
-		233F86392B82125A00459A45 /* TNoodle.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 23F0C7372B820F1A00634C35 /* TNoodle.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		233FE7B6274F109600C6F1DF /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FE7B5274F109600C6F1DF /* Helper.swift */; };
 		2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2359689227A367A0003ED9E1 /* StopwatchManager.swift */; };
 		235CDA0327A786D800F48C89 /* Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235CDA0227A786D800F48C89 /* Updates.swift */; };
@@ -48,8 +44,6 @@
 		23D01FE327A4AA5D0019FCE5 /* Splash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */; };
 		23D2FC4D274E12DE00D7071A /* TimeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2FC4C274E12DE00D7071A /* TimeListView.swift */; };
 		23D7722429B1E3540044AFBA /* NewSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D7722329B1E3540044AFBA /* NewSessionView.swift */; };
-		23DDE0DF2B821A3D00059377 /* TNoodle.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23DDE0DD2B821A3400059377 /* TNoodle.xcframework */; };
-		23DDE0E02B821A3D00059377 /* TNoodle.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 23DDE0DD2B821A3400059377 /* TNoodle.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */; };
 		23DE3BDD274DDBE200254D29 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DE3BDC274DDBE200254D29 /* TimerView.swift */; };
 		23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23DE3BDE274DDBE300254D29 /* Assets.xcassets */; };
@@ -93,8 +87,8 @@
 		AFA444A229C4290500795434 /* SettingsWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA444A129C4290400795434 /* SettingsWidgets.swift */; };
 		E5A559602B83456F004093B3 /* ExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A5595F2B83456F004093B3 /* ExportViewModel.swift */; };
 		E5A742D42BA8184100321D24 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = E5A742D32BA8184100321D24 /* ZIPFoundation */; };
+		E5B1FCED2BAD892A007C1688 /* TNoodle.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B1FCEC2BAD892A007C1688 /* TNoodle.xcframework */; };
 		E5B3B1532BA5B68600179BDC /* LZString in Frameworks */ = {isa = PBXBuildFile; productRef = E5B3B1522BA5B68600179BDC /* LZString */; };
-		E5A5782E2B47B46600F29195 /* TNoodle.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5A5782D2B47B46600F29195 /* TNoodle.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,20 +107,6 @@
 			remoteInfo = txmer;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		23B45E5929A83C1100BDF49E /* Embed Libraries */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				231F37C32B81F7F60016A137 /* TNoodle.xcframework in Embed Libraries */,
-			);
-			name = "Embed Libraries";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		231827E629B5E86B00A40C78 /* FloatingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FloatingPanel.swift; path = CubeTime/Tabs/FloatingPanel.swift; sourceTree = SOURCE_ROOT; };
@@ -169,7 +149,6 @@
 		23D01FE227A4AA5D0019FCE5 /* Splash.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Splash.storyboard; sourceTree = "<group>"; };
 		23D2FC4C274E12DE00D7071A /* TimeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeListView.swift; sourceTree = "<group>"; };
 		23D7722329B1E3540044AFBA /* NewSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSessionView.swift; sourceTree = "<group>"; };
-		23DDE0DD2B821A3400059377 /* TNoodle.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodle.xcframework; sourceTree = "<group>"; };
 		23DE3BD7274DDBE200254D29 /* CubeTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		23DE3BDA274DDBE200254D29 /* CubeTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeTimeApp.swift; sourceTree = "<group>"; };
 		23DE3BDC274DDBE200254D29 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
@@ -187,7 +166,6 @@
 		23E81E6E275D8DCA00B741E3 /* AppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettings.swift; sourceTree = "<group>"; };
 		23E81E72275D8DEA00B741E3 /* AboutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettings.swift; sourceTree = "<group>"; };
 		23EB8A1D2779B6D3000F6663 /* TimeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBar.swift; sourceTree = "<group>"; };
-		23F0C7372B820F1A00634C35 /* TNoodle.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodle.xcframework; sourceTree = "<group>"; };
 		23F4113729ADDA77002C4E23 /* ToolsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsViewModel.swift; sourceTree = "<group>"; };
 		23F445802B46552D002B7B81 /* TimeTrendDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrendDetail.swift; sourceTree = "<group>"; };
 		73B7136529BA3FF00064E02F /* CubeTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CubeTime.entitlements; sourceTree = "<group>"; };
@@ -217,7 +195,7 @@
 		AF977E5B29BEE9E100A246C0 /* CubeTimeData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CubeTimeData.xcdatamodel; sourceTree = "<group>"; };
 		AFA444A129C4290400795434 /* SettingsWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWidgets.swift; sourceTree = "<group>"; };
 		E5A5595F2B83456F004093B3 /* ExportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportViewModel.swift; sourceTree = "<group>"; };
-		E5A5782D2B47B46600F29195 /* TNoodle.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodle.xcframework; sourceTree = "<group>"; };
+		E5B1FCEC2BAD892A007C1688 /* TNoodle.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodle.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,11 +204,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				23329E9029C31CA60017AE99 /* libz.1.1.3.tbd in Frameworks */,
+				E5B1FCED2BAD892A007C1688 /* TNoodle.xcframework in Frameworks */,
 				AF7697DC293C1EFA00FF1C50 /* SVGView in Frameworks */,
 				23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */,
 				E5B3B1532BA5B68600179BDC /* LZString in Frameworks */,
 				E5A742D42BA8184100321D24 /* ZIPFoundation in Frameworks */,
-				E5A5782E2B47B46600F29195 /* TNoodle.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,7 +318,7 @@
 		23B45E7129A855F400BDF49E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E5A5782D2B47B46600F29195 /* TNoodle.xcframework */,
+				E5B1FCEC2BAD892A007C1688 /* TNoodle.xcframework */,
 				23329E8F29C31CA60017AE99 /* libz.1.1.3.tbd */,
 			);
 			path = Frameworks;
@@ -381,6 +359,7 @@
 				23DE3BF9274DDBE400254D29 /* CubeTimeUITests */,
 				23DE3BD8274DDBE200254D29 /* Products */,
 				23E647C22775B21B00561780 /* Frameworks */,
+				E5B1FCE92BAD87BF007C1688 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -502,6 +481,14 @@
 			path = Tools;
 			sourceTree = "<group>";
 		};
+		E5B1FCE92BAD87BF007C1688 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				231F37C02B81F7F00016A137 /* TNoodle.xcframework */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -512,7 +499,6 @@
 				23DE3BD3274DDBE200254D29 /* Sources */,
 				23DE3BD4274DDBE200254D29 /* Frameworks */,
 				23DE3BD5274DDBE200254D29 /* Resources */,
-				23B45E5929A83C1100BDF49E /* Embed Libraries */,
 			);
 			buildRules = (
 			);
