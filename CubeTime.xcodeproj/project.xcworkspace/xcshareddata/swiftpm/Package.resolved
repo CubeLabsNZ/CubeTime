@@ -1,4 +1,5 @@
 {
+  "originHash" : "bd0066f47568b67feb1deaee757eb87a190ba2aad49ef359417423e2412468a4",
   "pins" : [
     {
       "identity" : "lzstring-swift",
@@ -14,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/exyte/SVGView",
       "state" : {
-        "revision" : "18bf73efc2f2dede5dfa73f517ddf4e054061294",
-        "version" : "1.0.4"
+        "revision" : "6465962facdd25cb96eaebc35603afa2f15d2c0d",
+        "version" : "1.0.6"
       }
     },
     {
@@ -37,5 +38,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
