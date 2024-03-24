@@ -117,7 +117,7 @@ struct TimerHeader: View {
                     // i hate swiftui i hate apple i hate everything
                     if #available(iOS 16, *) {
                         Picker("", selection: $stopwatchManager.playgroundScrambleType) {
-                            ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
+                            ForEach(Array(zip(PUZZLE_TYPES.indices, PUZZLE_TYPES)), id: \.0) { index, element in
                                 Text(element.name).tag(Int32(index)).font(.body)
                             }
                         }
@@ -127,7 +127,7 @@ struct TimerHeader: View {
                         .frame(maxHeight: .infinity)
                     } else {
                         Picker("", selection: $stopwatchManager.playgroundScrambleType) {
-                            ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
+                            ForEach(Array(zip(PUZZLE_TYPES.indices, PUZZLE_TYPES)), id: \.0) { index, element in
                                 Text(element.name).tag(Int32(index)).font(.body)
                             }
                         }

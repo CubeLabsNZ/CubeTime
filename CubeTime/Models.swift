@@ -61,22 +61,39 @@ extension Session {
         get {
             switch (SessionType(rawValue: sessionType)!) {
             case .standard:
-                return "Standard Session"
+                return PUZZLE_TYPES[Int(scrambleType)].name
             case .algtrainer:
-                return "Alg trainer"
+                return "Algorithm Trainer"
             case .multiphase:
                 return "Multiphase"
             case .playground:
                 return "Playground"
             case .compsim:
-                return "Comp Sim"
+                return "Compsim"
+            }
+        }
+    }
+    
+    var icon: Image {
+        get {
+            switch (SessionType(rawValue: sessionType)!) {
+            case .standard:
+                return Image(PUZZLE_TYPES[Int(scrambleType)].name)
+            case .algtrainer:
+                return Image(systemName: "command.square")
+            case .multiphase:
+                return Image(systemName: "square.stack")
+            case .playground:
+                return Image(systemName: "square.on.square")
+            case .compsim:
+                return Image(systemName: "globe.asia.australia")
             }
         }
     }
     
     var shortcutName: String {
         get {
-            let scrname = puzzleTypes[Int(scrambleType)].name
+            let scrname = PUZZLE_TYPES[Int(scrambleType)].name
             switch (SessionType(rawValue: sessionType)!) {
             case .standard:
                 return scrname

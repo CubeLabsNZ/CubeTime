@@ -36,7 +36,7 @@ struct NewSessionView: View {
                 VStack (spacing: 16) {
                     VStack (alignment: .center, spacing: 0) {
                         if sessionType != SessionType.playground {
-                            PuzzleHeaderImage(imageName: puzzleTypes[Int(sessionEventType)].name)
+                            PuzzleHeaderImage(imageName: PUZZLE_TYPES[Int(sessionEventType)].name)
                         }
                         
                         SessionNameField(name: $name)

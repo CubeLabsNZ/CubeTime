@@ -30,7 +30,7 @@ struct ScrambleOnlyTool: View {
             
             ToolHeader(name: tools[1].name, image: tools[1].iconName, content: {
                 Picker("", selection: $scrambleController.scrambleType) {
-                    ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
+                    ForEach(Array(zip(PUZZLE_TYPES.indices, PUZZLE_TYPES)), id: \.0) { index, element in
                         Text(element.name).tag(Int32(index))
                             .font(.system(size: 15, weight: .regular))
                     }

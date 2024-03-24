@@ -92,7 +92,7 @@ class StopwatchManager: ObservableObject {
         """, currentSession)
         
         let results = try! managedObjectContext.fetch(req)
-        sessionsCanMoveToPlayground = Array(repeating: [], count: puzzleTypes.count)
+        sessionsCanMoveToPlayground = Array(repeating: [], count: PUZZLE_TYPES.count)
         
         for result in results {
             if result.sessionType == SessionType.playground.rawValue {

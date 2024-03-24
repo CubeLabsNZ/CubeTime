@@ -28,7 +28,7 @@ let iconNamesForType: [SessionType: String] = [
 ]
 
 
-let puzzleTypes: [PuzzleType] = [
+let PUZZLE_TYPES: [PuzzleType] = [
     PuzzleType(name: "2x2", cstimerName: "222so"),
     PuzzleType(name: "3x3", cstimerName: "333"),
     PuzzleType(name: "4x4", cstimerName: "444wca"),

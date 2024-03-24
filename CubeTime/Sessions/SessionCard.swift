@@ -46,7 +46,7 @@ struct SessionCardBase: View {
                         .foregroundColor(Color("dark"))
                     
                     HStack(spacing: 4) {
-                        CTSessionBubble(sessionType: self.sessionType, scrambleType: self.scrambleType)
+                        CTSessionBubble(session: item)
                     }
                 }
                 
@@ -66,7 +66,7 @@ struct SessionCardBase: View {
             Spacer()
             
             if (!forExportUse) {
-                Image(puzzleTypes[scrambleType].name)
+                Image(PUZZLE_TYPES[scrambleType].name)
                     .resizable()
                     .frame(width: 45, height: 45)
                     .aspectRatio(contentMode: .fit)

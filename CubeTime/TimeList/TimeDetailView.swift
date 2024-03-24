@@ -44,7 +44,7 @@ struct TimeDetailView: View {
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
         self.time = formatSolveTime(secs: solve.time, penalty: Penalty(rawValue: solve.penalty)!)
-        self.puzzle_type = puzzleTypes[Int(solve.scrambleType)]
+        self.puzzle_type = PUZZLE_TYPES[Int(solve.scrambleType)]
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
                 
         if let multiphaseSolve = (solve as? MultiphaseSolve), let phases = multiphaseSolve.phases {

@@ -224,7 +224,6 @@ struct GlobalGeometryGetter: View {
 }
 
 
-
 // MARK: - BUBBLE
 struct CTSessionBubble: View {
     @ScaledMetric private var iconSize: CGFloat = 11
@@ -234,31 +233,15 @@ struct CTSessionBubble: View {
     
     let scrambleType: Int
     
+    let hasMultiple: Bool
     
-    init(sessionType: SessionType, scrambleType: Int) {
-        self.scrambleType = scrambleType
+    
+    init(session: Session) {
+        self.icon = session.icon
+        self.text = session.typeName
+        self.scrambleType = Int(session.scrambleType)
         
-        switch sessionType {
-        case .playground:
-            self.icon = Image(systemName: "square.on.square")
-            self.text = "Playground"
-        
-        case .algtrainer:
-            self.icon = Image(systemName: "command.square")
-            self.text = "Algorithm Trainer"
-            
-        case .multiphase:
-            self.icon = Image(systemName: "square.stack")
-            self.text = "Multiphase"
-            
-        case .compsim:
-            self.icon = Image(systemName: "globe.asia.australia")
-            self.text = "Compsim"
-            
-        case .standard:
-            self.icon = nil
-            self.text = nil
-        }
+        self.hasMultiple = [SessionType.compsim, SessionType.multiphase].contains(SessionType(rawValue: session.sessionType))
     }
     
     var body: some View {
@@ -275,8 +258,7 @@ struct CTSessionBubble: View {
                 }
             }
             
-            #warning("todo: make better")
-            if self.text == "Compsim" || self.text == "Multiphase" {
+            if (hasMultiple) {
                 CTPuzzleBubble(scrambleType: scrambleType)
             }
         } else {
@@ -292,8 +274,13 @@ struct CTPuzzleBubble: View {
     let text: String
     
     init(scrambleType: Int) {
-        icon = Image(puzzleTypes[scrambleType].name)
-        text = puzzleTypes[scrambleType].name
+        icon = Image(PUZZLE_TYPES[scrambleType].name)
+        text = PUZZLE_TYPES[scrambleType].name
+    }
+    
+    init(session: Session) {
+        icon = session.icon
+        text = session.typeName
     }
     
     var body: some View {
@@ -308,25 +295,5 @@ struct CTPuzzleBubble: View {
                 Text(text)
             }
         }
-    }
-}
-
-#Preview {
-    VStack {
-        CTBubble(type: .lightMono, size: .bubble) {
-            HStack(spacing: 4) {
-                Image(systemName: "square.on.square")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: 14, maxHeight: 14)
-                    .font(.system(size: 11, weight: .semibold, design: .default))
-                
-                Text("Playground")
-            }
-        }
-        
-        CTSessionBubble(sessionType: .multiphase, scrambleType: 3)
-        
-        CTPuzzleBubble(scrambleType: 3)
     }
 }

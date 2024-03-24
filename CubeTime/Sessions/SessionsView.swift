@@ -200,7 +200,7 @@ struct CustomiseSessionView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         VStack(alignment: .center, spacing: 0) {
-                            PuzzleHeaderImage(imageName: puzzleTypes[Int(sessionEventType)].name)
+                            PuzzleHeaderImage(imageName: PUZZLE_TYPES[Int(sessionEventType)].name)
                             
                             SessionNameField(name: $name)
                         }
@@ -280,13 +280,13 @@ struct EventPicker: View {
                 
                 Menu {
                     Picker("", selection: $sessionEventType) {
-                        ForEach(Array(puzzleTypes.enumerated()), id: \.offset) {index, element in
+                        ForEach(Array(PUZZLE_TYPES.enumerated()), id: \.offset) {index, element in
                             Text(element.name).tag(Int32(index))
                                 .font(.body)
                         }
                     }
                 } label: {
-                    Text(puzzleTypes[Int(sessionEventType)].name)
+                    Text(PUZZLE_TYPES[Int(sessionEventType)].name)
                         .font(.body)
                         .frame(maxWidth: 120, alignment: .trailing)
                     
@@ -299,7 +299,7 @@ struct EventPicker: View {
                 .padding(.horizontal)
             
             LazyVGrid(columns: [GridItem(.adaptive(minimum: spacing), spacing: 8)], spacing: 8) {
-                ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
+                ForEach(Array(zip(PUZZLE_TYPES.indices, PUZZLE_TYPES)), id: \.0) { index, element in
                     CTButton(type: (index == sessionEventType) ? .halfcoloured(nil) : .mono,
                              size: .ultraLarge,
                              square: true,

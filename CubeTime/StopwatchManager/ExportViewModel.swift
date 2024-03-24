@@ -329,7 +329,7 @@ class CSTimerExportFormat: ExportFormat {
                         
             sessionData["\(idx+1)"] = [
                 "name": "CubeTime Export - \(session.name ?? "")",
-                "scrType": puzzleTypes[Int(session.scrambleType)].cstimerName
+                "scrType": PUZZLE_TYPES[Int(session.scrambleType)].cstimerName
             ]
         }
         

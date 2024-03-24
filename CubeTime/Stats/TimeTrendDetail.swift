@@ -70,7 +70,7 @@ struct TimeTrendDetail: View {
             VStack {
                 HStack(spacing: 8) {
                     CTButton(type: .mono, size: .large, square: true, onTapRun: {
-                        self.interval = max(10, self.interval - (self.interval / 2))
+                        self.interval = max(2, self.interval - (self.interval / 2))
                     }) {
                         Image(systemName: "minus.magnifyingglass")
                     }

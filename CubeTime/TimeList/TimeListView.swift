@@ -64,7 +64,7 @@ struct SortByMenu: View {
                     Menu("Puzzle Type") {
                         Picker("", selection: $stopwatchManager.scrambleTypeFilter) {
                             Text("All Puzzles").tag(-1)
-                            ForEach(Array(zip(puzzleTypes.indices, puzzleTypes)), id: \.0) { index, element in
+                            ForEach(Array(zip(PUZZLE_TYPES.indices, PUZZLE_TYPES)), id: \.0) { index, element in
                                 Label(element.name, image: element.name).tag(index)
                             }
                         }
@@ -98,7 +98,7 @@ struct SessionHeader: View {
             Spacer()
             
             if (SessionType(rawValue: stopwatchManager.currentSession.sessionType) != .playground) {
-                Text(puzzleTypes[Int(stopwatchManager.currentSession.scrambleType)].name)
+                Text(PUZZLE_TYPES[Int(stopwatchManager.currentSession.scrambleType)].name)
                     .font(.body.weight(.medium))
                     .padding(.trailing)
             }

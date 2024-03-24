@@ -29,13 +29,16 @@ class ScrambleController: ObservableObject {
         var isolate: OpaquePointer? = nil
         var thread: OpaquePointer? = nil
         
-        
+        /*
         let ret = graal_create_isolate(nil, &isolate, &thread)
         print(ret)
                 
         let s = String(cString: tnoodle_lib_scramble(thread!, scrambleType))
         
         graal_tear_down_isolate(thread);
+        */
+        
+        let s = ""
             
         return s
     }
@@ -65,6 +68,7 @@ class ScrambleController: ObservableObject {
                 
                 graal_create_isolate(nil, &isolate, &thread)
                 
+                /*
                 var svg: String!
                 
                 scramble.withCString { s in
@@ -72,6 +76,9 @@ class ScrambleController: ObservableObject {
                 }
                 
                 graal_tear_down_isolate(thread);
+                 */
+                
+                let svg = ""
                 
             
                 DispatchQueue.main.async {
