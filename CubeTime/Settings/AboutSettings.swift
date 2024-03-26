@@ -1,4 +1,11 @@
 import SwiftUI
+import StoreKit
+
+class CTDonation {
+    static let fiveDonationIdentifier = "com.cubetime.cubetime.5donation"
+    static let tenDonationIdentifier = "com.cubetime.cubetime.10donation"
+    static let fiftyDonationIdentifity = "com.cubetime.cubetime.50donation"
+}
 
 
 enum ProjectLicense: String {
