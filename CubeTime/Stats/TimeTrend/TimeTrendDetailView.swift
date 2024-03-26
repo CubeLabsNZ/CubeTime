@@ -102,7 +102,7 @@ struct TimeTrendDetail: View {
                     
                 }
                 
-                #warning("TODO URGENT FIX: READD COLOURFORBUTTONTYPE")
+#warning("TODO URGENT FIX: READD COLOURFORBUTTONTYPE")
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(minimum: 36, maximum: 100), spacing: 16), count: 3), alignment: .leading) {
                     ForEach(self.labels, id: \.0) { label, type in
                         LegendLabel(colour: .accentColor, label: label)
@@ -114,10 +114,10 @@ struct TimeTrendDetail: View {
                 
                 GeometryReader { proxy in
                     if proxy.size.height > 0 {
-                        DetailTimeTrendBase(rawDataPoints: stopwatchManager.solvesByDate,
-                                            limits: (stopwatchManager.solvesByDate.min(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen, stopwatchManager.solvesByDate.max(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen),
-                                            averageValue: 5, interval: interval,
-                                            proxy: proxy)
+                        TimeTrendViewRepresentable(rawDataPoints: stopwatchManager.solvesByDate,
+                                                   limits: (stopwatchManager.solvesByDate.min(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen, stopwatchManager.solvesByDate.max(by: { $0.timeIncPen < $1.timeIncPen })!.timeIncPen),
+                                                   averageValue: 5, interval: interval,
+                                                   proxy: proxy)
                     }
                 }
                 .padding(.top, 8)

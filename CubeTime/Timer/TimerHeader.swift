@@ -60,7 +60,7 @@ struct TimerHeader: View {
                             }
                         }
                         
-                        Text("PREVIEW")
+                        Text("Preview")
                             .font(.system(size: 17, weight: .medium))
                             .padding(.trailing)
                     }

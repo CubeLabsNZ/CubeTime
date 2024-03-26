@@ -181,7 +181,7 @@ struct SessionCard: View {
                 .tint(Color("accent"))
         }
         
-        .confirmationDialog(String("Are you sure you want to delete \"\(self.item.name)\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
+        .confirmationDialog(String("Are you sure you want to delete \"\(self.item.name ?? "this session")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
                 if item == stopwatchManager.currentSession {
                     var next: Session? = nil
