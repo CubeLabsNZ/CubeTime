@@ -109,7 +109,7 @@ struct AppearanceSettingsView: View {
                     .padding(.top, 8)
                 }
                 
-                ThemedDivider()
+                CTDivider()
                 
                 DescribedSetting(description: "Turn on/off the glow effect on graphs.", {
                     SettingsToggle("Graph Glow", $graphGlow)

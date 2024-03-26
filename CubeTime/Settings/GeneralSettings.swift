@@ -94,11 +94,11 @@ struct GeneralSettingsView: View {
                     }
                 }
                 
-                ThemedDivider()
+                CTDivider()
                 
                 SettingsStepper(text: "Hold Down Time: ", format: "%.2fs", value: $holdDownTime, in: 0.00...1.0, step: 0.05)
                 
-                ThemedDivider()
+                CTDivider()
                 
                 VStack(spacing: 4) {
                     SettingsPicker(text: "Timer Mode", selection: $inputMode) {
@@ -155,7 +155,7 @@ struct GeneralSettingsView: View {
                     .pickerStyle(.menu)
                 }
                 
-                ThemedDivider()
+                CTDivider()
                 
                 SettingsDragger(text: UIDevice.deviceIsPad ? "Touch Gesture Activation Distance" : "Gesture Activation Distance", value: $gestureActivationDistance, in: 20...300)
                 

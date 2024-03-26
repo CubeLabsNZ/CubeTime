@@ -91,20 +91,22 @@ struct SessionHeader: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
             SessionIconView(session: stopwatchManager.currentSession)
-            
-            Text(stopwatchManager.currentSession.name ?? "Unknown Session Name")
-                .font(.body.weight(.medium))
-            
-            Spacer()
             
             if (SessionType(rawValue: stopwatchManager.currentSession.sessionType) != .playground) {
                 Text(PUZZLE_TYPES[Int(stopwatchManager.currentSession.scrambleType)].name)
                     .font(.body.weight(.medium))
-                    .padding(.trailing)
             }
+            
+            CTDivider(isHorizontal: false)
+                .padding([.vertical, .trailing], 8)
+                .padding(.leading, SessionType(rawValue: stopwatchManager.currentSession.sessionType) != .playground ? 8 : 2)
+           
+            Text(stopwatchManager.currentSession.name ?? "")
+                .font(.body.weight(.medium))
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .frame(height: frameHeight)
         .background(
             Color("overlay1")
@@ -250,7 +252,7 @@ struct CompSimTimeListInner: View {
                         }
                         
                         if groups.count > 1 {
-                            ThemedDivider()
+                            CTDivider()
                                 .padding(.horizontal, 8)
                         }
                     } else {

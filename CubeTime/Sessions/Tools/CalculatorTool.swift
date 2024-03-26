@@ -110,7 +110,7 @@ struct CalculatorTool: View {
                                                             .imageScale(.medium)
                                                     }
                                                     
-                                                    ThemedDivider(isHorizontal: false)
+                                                    CTDivider(isHorizontal: false)
                                                         .padding(.vertical, 8)
                                                     
                                                     CTButton(type: .coloured(Color("red")), size: .medium, square: true, hasShadow: false, hasBackground: false, onTapRun: {

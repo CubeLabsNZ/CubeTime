@@ -147,7 +147,7 @@ extension View {
 
 
 // MARK: - Other Views
-struct ThemedDivider: View {
+struct CTDivider: View {
     let isHorizontal: Bool
     
     init(isHorizontal: Bool = true) {
@@ -156,7 +156,7 @@ struct ThemedDivider: View {
     
     var body: some View {
         Capsule()
-            .fill(Color("indent0"))
+            .fill(Color("dark").opacity(0.16))
             .frame(width: isHorizontal ? nil : 1.15, height: isHorizontal ? 1.15 : nil)
     }
 }

@@ -136,7 +136,7 @@ struct TimerHeader: View {
                         .font(.system(size: 15, weight: .regular))
                         .padding(.horizontal, 2)
                     
-                    ThemedDivider(isHorizontal: false)
+                    CTDivider(isHorizontal: false)
                         .padding(.vertical, 6)
                     
                     HStack (spacing: 10) {

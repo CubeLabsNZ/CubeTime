@@ -305,7 +305,7 @@ struct EventPicker: View {
             .frame(maxWidth: .infinity)
             .padding([.horizontal, .top])
             
-            ThemedDivider()
+            CTDivider()
                 .padding(.horizontal)
             
             LazyVGrid(columns: [GridItem(.adaptive(minimum: spacing), spacing: 8)], spacing: 8) {

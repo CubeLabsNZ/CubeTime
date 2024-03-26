@@ -60,7 +60,7 @@ struct TimerMenu: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
                         
-                        ThemedDivider()
+                        CTDivider()
                             .padding(.horizontal, 4)
                         
                         CTButton(type: .halfcoloured(nil), size: .large, expandWidth: true, onTapRun: {

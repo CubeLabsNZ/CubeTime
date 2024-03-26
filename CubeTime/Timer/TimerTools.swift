@@ -172,7 +172,7 @@ struct TimerStatsStandard: View {
             }
             .frame(maxHeight: .infinity)
             
-            ThemedDivider()
+            CTDivider()
                 .padding(.horizontal, 18)
             
             HStack(spacing: 6) {
@@ -201,7 +201,7 @@ struct TimerStatsPad: View {
             }
             .frame(maxHeight: .infinity)
             
-            ThemedDivider()
+            CTDivider()
                 .padding(.horizontal, 18)
             
             
@@ -252,7 +252,7 @@ struct TimerStatsCompSim: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             
-            ThemedDivider()
+            CTDivider()
                 .padding(.horizontal, 18)
             
             TimerStatRaw(name: "TO REACH TARGET", value: timeNeededText, placeholderText: "...")

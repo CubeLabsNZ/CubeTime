@@ -99,7 +99,7 @@ struct StatsDetailView: View {
                             Spacer()
                         }
                         
-                        ThemedDivider()
+                        CTDivider()
                         
                         HStack {
                             HStack(alignment: .center, spacing: 4) {
@@ -154,7 +154,7 @@ struct StatsDetailView: View {
                         Text("TIMES")
                             .font(.subheadline.weight(.semibold))
                         
-                        ThemedDivider()
+                        CTDivider()
                         
                         StatsTimeList(solveDetail: $solveDetail, calculatedAverage: solves)
                         

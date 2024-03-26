@@ -89,14 +89,14 @@ struct NewSessionRootView: View {
                                 NewSessionTypeCard(name: "Standard Session", icon: SessionTypeIcon(iconName: "timer.square"))
                             }
                             
-                            ThemedDivider()
+                            CTDivider()
                                 .padding(.leading, 48)
                             
                             NavigationLink(destination: NewSessionView(sessionType: SessionType.multiphase, typeName: "Multiphase", showNewSessionPopUp: $showNewSessionPopUp)) {
                                 NewSessionTypeCard(name: "Multiphase", icon: SessionTypeIcon(size: 24, iconName: "square.stack", padding: (10, 6)))
                             }
                             
-                            ThemedDivider()
+                            CTDivider()
                                 .padding(.leading, 48)
                             
                             NavigationLink(destination: NewSessionView(sessionType: SessionType.playground, typeName: "Playground", showNewSessionPopUp: $showNewSessionPopUp)) {

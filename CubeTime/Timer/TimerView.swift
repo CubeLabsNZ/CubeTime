@@ -438,7 +438,7 @@ struct TimerView: View {
                                 PenaltyButton(penType: .none, penSymbol: "checkmark.circle", imageSymbol: false, canType: false, colour: Color("green"))
                                 
                                 if (showPlus) {
-                                    ThemedDivider(isHorizontal: false)
+                                    CTDivider(isHorizontal: false)
                                         .padding(.vertical, 6)
                                 }
                             }

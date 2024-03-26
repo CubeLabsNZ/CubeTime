@@ -108,7 +108,7 @@ struct TimeDetailView: View {
                                     Spacer()
                                 }
                                 
-                                ThemedDivider()
+                                CTDivider()
                                 
                                 
                                 HStack {
@@ -230,7 +230,7 @@ struct TimeDetailView: View {
                                 Text("SESSION")
                                     .font(.subheadline.weight(.semibold))
                                 
-                                ThemedDivider()
+                                CTDivider()
                                 
                                 HStack {
                                     Image(systemName: "square.on.square")
@@ -263,7 +263,7 @@ struct TimeDetailView: View {
                                         Text("PHASES")
                                             .font(.subheadline.weight(.semibold))
                                         
-                                        ThemedDivider()
+                                        CTDivider()
                                         
                                         AveragePhases(phaseTimes: phases, count: phases.count)
                                             .padding(.top, -24)
@@ -279,7 +279,7 @@ struct TimeDetailView: View {
                                 Text("COMMENT")
                                     .font(.subheadline.weight(.semibold))
                                 
-                                ThemedDivider()
+                                CTDivider()
                                 
                                 ZStack {
                                     Group {
