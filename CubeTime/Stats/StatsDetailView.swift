@@ -134,9 +134,9 @@ struct StatsDetailView: View {
                     .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Color("overlay1")))
                     .padding(.top)
                     
-                    Text("CubeTime.")
+                    Text("CubeTime")
                         .recursiveMono(size: 13)
-                        .foregroundColor(Color("grey").opacity(0.25))
+                        .foregroundColor(Color("grey").opacity(0.36))
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .padding(.vertical, -4)
                     

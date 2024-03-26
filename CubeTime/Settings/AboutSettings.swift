@@ -94,7 +94,7 @@ struct AboutSettingsView: View {
                     .padding(.trailing, 6)
                 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("CubeTime.")
+                    Text("CubeTime")
                         .recursiveMono(size: 28)
                         .foregroundColor(Color("dark"))
                     
@@ -135,17 +135,11 @@ struct AboutSettingsView: View {
                 guard let kofiLink = URL(string: "https://ko-fi.com/cubetime"), UIApplication.shared.canOpenURL(kofiLink) else { return }
                 UIApplication.shared.open(kofiLink, options: [:], completionHandler: nil)
             } label: {
-                HStack {
-                    Spacer()
-                    
-                    Image("kofiButton")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: parentGeo.size.width * 0.618)
-                        .frame(maxHeight: 40)
-                    
-                    Spacer()
-                }
+                Image("kofiButton")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: parentGeo.size.width * 0.618)
+                    .frame(maxHeight: 40)
             }
             .padding(.top, -8)
             
@@ -166,6 +160,11 @@ struct AboutSettingsView: View {
                 showOnboarding = true
             }
             #endif
+            
+            Text("© 2021–2024 Tim Xie & Reagan Bohan.")
+                .font(.system(size: 13))
+                .foregroundColor(Color("grey").opacity(0.36))
+                .padding(.top, 32)
         }
         .padding(.horizontal)
         .sheet(isPresented: $showLicenses) {

@@ -263,6 +263,11 @@ struct CTPuzzleBubble: View {
         text = PUZZLE_TYPES[scrambleType].name
     }
     
+    init(scrambleType: PuzzleType) {
+        icon = Image(scrambleType.name)
+        text = scrambleType.name
+    }
+    
     init(session: Session) {
         icon = session.icon() as! Image
         text = session.typeName

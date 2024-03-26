@@ -29,7 +29,7 @@ struct TimeDetailView: View {
     
     private let date: Date
     private let time: String
-    private let puzzle_type: PuzzleType
+    private let puzzleType: PuzzleType
     private let scramble: String
     private let phases: Array<Double>?
     
@@ -44,7 +44,7 @@ struct TimeDetailView: View {
         self.solve = solve
         self.date = solve.date ?? Date(timeIntervalSince1970: 0)
         self.time = formatSolveTime(secs: solve.time, penalty: Penalty(rawValue: solve.penalty)!)
-        self.puzzle_type = PUZZLE_TYPES[Int(solve.scrambleType)]
+        self.puzzleType = PUZZLE_TYPES[Int(solve.scrambleType)]
         self.scramble = solve.scramble ?? "Retrieving scramble failed."
                 
         if let multiphaseSolve = (solve as? MultiphaseSolve), let phases = multiphaseSolve.phases {
@@ -113,9 +113,9 @@ struct TimeDetailView: View {
                                 
                                 HStack {
                                     HStack(alignment: .center, spacing: 4) {
-                                        Text(puzzle_type.name)
+                                        Text(puzzleType.name)
                                         
-                                        Image(puzzle_type.name)
+                                        Image(puzzleType.name)
                                             .resizable()
                                             .frame(width: 16, height: 16)
                                     }
@@ -129,9 +129,10 @@ struct TimeDetailView: View {
                                     Spacer()
                                 }
                                 .font(.subheadline.weight(.medium))
+                                .frame(maxWidth: .infinity, alignment: .leading)
                                 
                                 Group {
-                                    if puzzle_type.name == "Megaminx" {
+                                    if puzzleType.name == "Megaminx" {
                                         Text(scramble)
                                             .fixedSize(horizontal: true, vertical: false)
                                             .multilineTextAlignment(.leading)
@@ -186,9 +187,9 @@ struct TimeDetailView: View {
                             HStack {
                                 Spacer()
                                 
-                                Text("CubeTime.")
+                                Text("CubeTime")
                                     .recursiveMono(size: 13)
-                                    .foregroundColor(Color("grey").opacity(0.25))
+                                    .foregroundColor(Color("grey").opacity(0.36))
                             }
                             .padding(.vertical, -4)
 
