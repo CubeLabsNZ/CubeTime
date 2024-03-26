@@ -1,10 +1,8 @@
 import SwiftUI
 
 struct SessionIconView: View {
-    @ScaledMetric(wrappedValue: 35, relativeTo: .body) private var size: CGFloat
-    @ScaledMetric(wrappedValue: 22, relativeTo: .body) private var iconSmall: CGFloat
-    @ScaledMetric(wrappedValue: 26, relativeTo: .body) private var iconLarge: CGFloat
-    
+    @ScaledMetric(wrappedValue: 35, relativeTo: .body) private var bgSize: CGFloat
+
     let isDynamicType: Bool
     let session: Session
     
@@ -17,27 +15,11 @@ struct SessionIconView: View {
         ZStack(alignment: .center) {
             Rectangle()
                 .fill(Color.clear)
-                .frame(width: isDynamicType ? size : 35, height: isDynamicType ? size : 35)
+                .frame(width: isDynamicType ? bgSize : 35, height: isDynamicType ? bgSize : 35)
             
-            switch SessionType(rawValue: session.sessionType)! {
-            case .standard:
-                Image(systemName: "timer.square")
-                    .font(.system(size: isDynamicType ? iconLarge : 26, weight: .regular))
-            case .algtrainer:
-                Image(systemName: "command.square")
-                    .font(.system(size: isDynamicType ? iconLarge : 26, weight: .regular))
-            case .multiphase:
-                Image(systemName: "square.stack")
-                    .font(.system(size: isDynamicType ? iconSmall : 22, weight: .regular))
-            case .playground:
-                Image(systemName: "square.on.square")
-                    .font(.system(size: isDynamicType ? iconSmall : 22, weight: .regular))
-            case .compsim:
-                Image(systemName: "globe.asia.australia")
-                    .font(.system(size: isDynamicType ? iconSmall : 22, weight: .medium))
-            }
+            session.icon(size: 26)
         }
-        .frame(width: isDynamicType ? size : 35, height: isDynamicType ? size : 35)
+        .frame(width: isDynamicType ? bgSize : 35, height: isDynamicType ? bgSize : 35)
     }
 }
 

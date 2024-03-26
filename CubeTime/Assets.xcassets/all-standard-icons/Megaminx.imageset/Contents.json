@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Megaminx.png",
+      "filename" : "mega@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Megaminx@2x.png",
+      "filename" : "mega@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Megaminx@3x.png",
+      "filename" : "mega@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -74,20 +74,23 @@ extension Session {
         }
     }
     
-    var icon: Image {
-        get {
-            switch (SessionType(rawValue: sessionType)!) {
-            case .standard:
-                return Image(PUZZLE_TYPES[Int(scrambleType)].name)
-            case .algtrainer:
-                return Image(systemName: "command.square")
-            case .multiphase:
-                return Image(systemName: "square.stack")
-            case .playground:
-                return Image(systemName: "square.on.square")
-            case .compsim:
-                return Image(systemName: "globe.asia.australia")
-            }
+    @ViewBuilder func icon(size: CGFloat=24) -> some View {
+        let scaledSize = size * 0.88
+        
+        switch (SessionType(rawValue: sessionType)!) {
+        case .standard:
+            Image(PUZZLE_TYPES[Int(scrambleType)].name)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: size, height: size)
+        case .algtrainer:
+            Image(systemName: "command.square").font(.system(size: scaledSize))
+        case .multiphase:
+            Image(systemName: "square.stack").font(.system(size: scaledSize))
+        case .playground:
+            Image(systemName: "square.on.square").font(.system(size: scaledSize))
+        case .compsim:
+            Image(systemName: "globe.asia.australia").font(.system(size: scaledSize))
         }
     }
     

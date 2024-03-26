@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "3x3 Blindfolded.png",
+      "filename" : "3bld@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "3x3 Blindfolded@2x.png",
+      "filename" : "3bld@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "3x3 Blindfolded@3x.png",
+      "filename" : "3bld@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

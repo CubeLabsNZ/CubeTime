@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Clock.png",
+      "filename" : "clock@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Clock@2x.png",
+      "filename" : "clock@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Clock@3x.png",
+      "filename" : "clock@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

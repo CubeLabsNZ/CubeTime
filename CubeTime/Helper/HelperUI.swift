@@ -226,43 +226,28 @@ struct GlobalGeometryGetter: View {
 
 // MARK: - BUBBLE
 struct CTSessionBubble: View {
-    @ScaledMetric private var iconSize: CGFloat = 11
-    
-    let icon: Image?
-    let text: String?
-    
-    let scrambleType: Int
+    let session: Session
     
     let hasMultiple: Bool
     
     
     init(session: Session) {
-        self.icon = session.icon
-        self.text = session.typeName
-        self.scrambleType = Int(session.scrambleType)
+        self.session = session
         
         self.hasMultiple = [SessionType.compsim, SessionType.multiphase].contains(SessionType(rawValue: session.sessionType))
     }
     
     var body: some View {
-        if let icon = icon, let text = text {
-            CTBubble(type: .lightMono, size: .bubble) {
-                HStack(spacing: 4) {
-                    icon
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: 14, maxHeight: 14)
-                        .font(.system(size: iconSize, weight: .semibold, design: .default))
-                    
-                    Text(text)
-                }
+        CTBubble(type: .lightMono, size: .bubble) {
+            HStack(spacing: 4) {
+                session.icon(size: 14)
+                
+                Text(session.typeName)
             }
-            
-            if (hasMultiple) {
-                CTPuzzleBubble(scrambleType: scrambleType)
-            }
-        } else {
-            CTPuzzleBubble(scrambleType: scrambleType)
+        }
+        
+        if (hasMultiple) {
+            CTPuzzleBubble(scrambleType: Int(session.scrambleType))
         }
     }
 }
@@ -279,7 +264,7 @@ struct CTPuzzleBubble: View {
     }
     
     init(session: Session) {
-        icon = session.icon
+        icon = session.icon() as! Image
         text = session.typeName
     }
     

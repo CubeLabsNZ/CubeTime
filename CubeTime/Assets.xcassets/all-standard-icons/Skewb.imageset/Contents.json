@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Skewb.png",
+      "filename" : "skewb@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Skewb@2x.png",
+      "filename" : "skewb@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Skewb@3x.png",
+      "filename" : "skewb@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

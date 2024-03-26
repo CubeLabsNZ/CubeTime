@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Pyraminx.png",
+      "filename" : "pyra@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Pyraminx@2x.png",
+      "filename" : "pyra@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Pyraminx@3x.png",
+      "filename" : "pyra@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
