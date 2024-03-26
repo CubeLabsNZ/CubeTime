@@ -28,8 +28,6 @@ struct AsyncSVGView: View {
                 
                 graal_create_isolate(nil, &isolate, &thread)
                 
-                var svg = ""
-                /*
                 var svg: String!
                 
                 #warning("todo: infinite loading if :boom:")
@@ -42,7 +40,6 @@ struct AsyncSVGView: View {
                 }
                 
                 graal_tear_down_isolate(thread);
-                 */
                 
                 return svg
             }
