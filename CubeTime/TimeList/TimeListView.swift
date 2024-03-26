@@ -29,6 +29,7 @@ struct SortByMenu: View {
                 Menu("Phase") {
                     Picker("", selection: $stopwatchManager.timeListShownPhase) {
                         Text("All phases").tag(Optional<Int16>.none)
+                        
                         ForEach(0..<phaseCount, id: \.self) { idx in
                             Text("Phase \(idx + 1)").tag(Optional<Int16>.some(idx))
                         }
@@ -75,6 +76,7 @@ struct SortByMenu: View {
             CTBubble(type: .halfcoloured(nil), size: .large, outlined: false, square: true, hasShadow: hasShadow, hasBackground: true, hasMaterial: true, supportsDynamicResizing: true, expandWidth: true) {
                 Image(systemName: "line.3.horizontal.decrease")
                     .matchedGeometryEffect(id: "label", in: animation)
+                    .font(.body.weight(.medium))
             }
             .animation(Animation.customEaseInOut, value: self.hasShadow)
             .frame(width: frameHeight, height: frameHeight)
@@ -133,23 +135,27 @@ struct TimeListHeader: View {
             }
             
             if (stopwatchManager.currentSession.sessionType != SessionType.compsim.rawValue) {
+                
                 // search bar
                 ZStack {
                     RoundedRectangle(cornerRadius: 6, style: .continuous)
                         .fill(Color("overlay0"))
                         .shadowDark(x: 0, y: 1)
-                    HStack {
+                    
+                    HStack(spacing: 4) {
                         Image(systemName: "magnifyingglass")
-                            .padding(.horizontal, searchExpanded ? 9 : 0)
+                            .padding(.leading, searchExpanded ? 8 : 0)
+                            .padding(.trailing, searchExpanded ? 4 : 0)
                             .foregroundColor(Color("accent"))
                             .font(.body.weight(.medium))
                         
                         #warning("todo make search bar search for comments too?")
                         if searchExpanded {
-                            TextField("Search for a time...", text: $stopwatchManager.timeListFilter)
-                                .frame(maxWidth: .infinity)
+                            TextField("Search…", text: $stopwatchManager.timeListFilter)
+                                .recursiveMono(style: stopwatchManager.timeListFilter.isEmpty ? .callout : .body, weight: .medium)
                                 .foregroundColor(Color(stopwatchManager.timeListFilter.isEmpty ? "grey" : "dark"))
-                            
+                                .frame(maxWidth: .infinity)
+
                             Button {
                                 withAnimation(Animation.customEaseInOut) {
                                     stopwatchManager.timeListFilter = ""
@@ -158,7 +164,7 @@ struct TimeListHeader: View {
                             } label: {
                                 Image(systemName: "xmark")
                             }
-                            .font(.body)
+                            .font(.body.weight(.medium))
                             .buttonStyle(CTButtonStyle())
                             .foregroundColor(searchExpanded ? Color("accent") : Color.clear)
                             .padding(.horizontal, 8)
@@ -196,7 +202,7 @@ struct TimeListHeader: View {
                 
                 // sort by menu
                 SortByMenu(hasShadow: !searchExpanded, animation: animation)
-                    .offset(x: searchExpanded ? -43 : 0)
+                    .offset(x: searchExpanded ? -36 : 0)
             }
         }
         .padding(.horizontal)

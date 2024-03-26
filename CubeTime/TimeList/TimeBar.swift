@@ -21,7 +21,7 @@ struct TimeBar: View {
     
     @State var isSelected = false
     
-    @ScaledMetric(wrappedValue: 17, relativeTo: .body) private var attributedStringSize: CGFloat
+    @ScaledMetric(wrappedValue: 16, relativeTo: .body) private var attributedStringSize: CGFloat
     
     let current: Bool
     
@@ -53,7 +53,7 @@ struct TimeBar: View {
                     if let calculatedAverage = calculatedAverage {
                         HStack {
                             Text(formatSolveTime(secs: calculatedAverage.average!, penalty: calculatedAverage.totalPen))
-                                .font(.title2.weight(.bold))
+                                .recursiveMono(style: .title2, weight: .bold)
 
                             Spacer()
                         }
@@ -61,9 +61,16 @@ struct TimeBar: View {
                         let displayText: NSMutableAttributedString = {
                             let finalStr = NSMutableAttributedString(string: "")
                             
-                            let grey: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.systemGray, .font: UIFont.systemFont(ofSize: attributedStringSize, weight: .medium)]
-                            let normal: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: attributedStringSize, weight: .medium)]
+                            let grey: [NSAttributedString.Key: Any] = [
+                                .foregroundColor: UIColor.systemGray,
+                                .font: FontManager.fontFor(size: attributedStringSize, weight: 500)
+                            ]
+                            
+                            let normal: [NSAttributedString.Key: Any] = [
+                                .font: FontManager.fontFor(size: attributedStringSize, weight: 500)
+                            ]
                           
+                            
                             if let ar = solvegroup.solves {
                                 // CSTODO
                                 for (index, solve) in Array((ar.allObjects as! [Solve]).enumerated()) {
@@ -91,7 +98,7 @@ struct TimeBar: View {
                         if let solves = solvegroup.solves, solves.count < 5 {
                             HStack {
                                 Text("Current Average")
-                                    .font(.title2.weight(.bold))
+                                    .recursiveMono(style: .title2, weight: .bold)
 
                                 Spacer()
                             }
@@ -100,7 +107,7 @@ struct TimeBar: View {
                                 let finalStr = NSMutableAttributedString(string: "")
                                 
                                 let normal: [NSAttributedString.Key: Any] = [
-                                    .font: UIFont.preferredFont(forTextStyle: .body),
+                                    .font: FontManager.fontFor(size: attributedStringSize, weight: 500)
                                 ]
                                 
                                 // CSTODO
@@ -116,10 +123,6 @@ struct TimeBar: View {
                             }()
 
                             
-                            
-                            
-                            
-                            
                             HStack(spacing: 0) {
                                 Text(AttributedString(displayText))
                                 
@@ -128,7 +131,7 @@ struct TimeBar: View {
                         } else {
                             HStack {
                                 Text("Loading...")
-                                    .font(.title2.weight(.bold))
+                                    .recursiveMono(style: .title2, weight: .bold)
 
                                 Spacer()
                             }

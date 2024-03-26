@@ -61,9 +61,7 @@ struct SessionsView: View {
                                 }
                             )
                             
-                            
                             Spacer()
-                            
                             
                             Group {
                                 if let status = cloudkitStatusManager.currentStatus {
@@ -72,17 +70,12 @@ struct SessionsView: View {
                                         case 0:
                                             Text("Synced to iCloud")
                                                 .foregroundColor(Color("accent"))
-                                            
                                         case 1:
                                             Text("Sync to iCloud failed")
                                                 .foregroundColor(Color("grey"))
-                                            
-                                        case 2:
+                                        default:
                                             Text("iCloud unavailable")
                                                 .foregroundColor(Color("grey"))
-                                            
-                                        default:
-                                            EmptyView()
                                         }
                                     }
                                     .font(.subheadline.weight(.medium))
@@ -97,8 +90,25 @@ struct SessionsView: View {
                             .frame(maxWidth: .infinity, alignment: .trailing)
                         }
                         .padding(.horizontal)
+                                                
+                        if ((sessions.firstIndex(where: { !$0.pinned }) ?? 0) != 0) {
+                            Text("PINNED SESSIONS")
+                                .font(.subheadline.weight(.semibold))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading)
+                                .offset(y: 4)
+                                .padding(.top, 4)
+                        }
                         
-                        ForEach(sessions) { item in
+                        ForEach(Array(zip(sessions.indices, sessions)), id: \.0) { index, item in
+                            if (index == (sessions.firstIndex(where: { !$0.pinned }) ?? 0)) {
+                                Text("SESSIONS")
+                                    .font(.subheadline.weight(.semibold))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.leading)
+                                    .offset(y: 4)
+                            }
+                            
                             SessionCard(item: item, allSessions: sessions)
                         }
                     }

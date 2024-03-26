@@ -103,6 +103,7 @@ struct SessionCardBase: View {
                         .frame(width: selected ? 16 : nil,
                                height: item.pinned ? pinnedSessionHeight : regularSessionHeight)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .shadowDark(x: 1, y: 0)
                 }
             }
         )

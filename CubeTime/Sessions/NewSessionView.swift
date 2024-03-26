@@ -46,6 +46,7 @@ struct NewSessionView: View {
                         
                         if let sessionDescription = sessionDescriptions[sessionType] {
                             Text(sessionDescription)
+                                .font(.callout)
                                 .multilineTextAlignment(.leading)
                                 .foregroundColor(Color("grey"))
                                 .padding([.horizontal, .bottom])
