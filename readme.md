@@ -1,7 +1,7 @@
 <h1 align="center">CubeTime</h1>
 
 <p align="center">
-  <img src="https://github.com/CubeStuffs/CubeTime/assets/65262710/1b25471a-274b-42ba-8e86-0b862f7220f6"
+  <img src="https://github.com/CubeStuffs/CubeTime/assets/65262710/4dcd721c-2e15-4ca4-8443-36be7d24f3c2"
        width="225"
        height="225">
 <p align="center">
