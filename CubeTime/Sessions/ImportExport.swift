@@ -82,12 +82,6 @@ struct ExportFlowPickSessions: View {
                 .padding(.bottom, UIDevice.deviceIsPad && hSizeClass == .regular ? 8 : (UIDevice.hasBottomBar ? 0 : nil))
             }
         }
-        .onAppear {
-            tabRouter.hideTabBar = true
-        }
-        .onDisappear {
-            tabRouter.hideTabBar = false
-        }
     }
 }
 
