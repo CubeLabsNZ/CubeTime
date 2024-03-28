@@ -303,7 +303,7 @@ class ODSExportFormat: ExportFormat {
 
 class CSTimerExportFormat: ExportFormat {
     override func getName() -> String {
-        return "csTimer (JSON)"
+        return "JSON (csTimer)"
     }
 
     static var _readableContentTypes: [UTType] = [.commaSeparatedText]

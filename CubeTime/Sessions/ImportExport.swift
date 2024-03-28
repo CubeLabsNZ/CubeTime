@@ -121,7 +121,7 @@ struct ExportFlowPickFormats: View {
                         
                         HStack {
                             Text(format.getName())
-                                .font(.title2.weight(.semibold))
+                                .font(.title3.weight(.semibold))
                                 .foregroundColor(Color("dark"))
                             
                             Spacer()

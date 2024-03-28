@@ -40,6 +40,7 @@ struct SessionsView: View {
                                         .imageScale(.small)
                                 }
                                 
+                                /*
                                 Button() {
                                     showImport = true
                                 } label: {
@@ -47,9 +48,11 @@ struct SessionsView: View {
                                         .labelStyle(.titleAndIcon)
                                         .imageScale(.small)
                                 }
+                                 */
                             } label: {
                                 CTBubble(type: .coloured(nil), size: .small, outlined: false, square: false, hasShadow: true, hasBackground: true, supportsDynamicResizing: true, expandWidth: false) {
-                                    Label("Import & Export", systemImage: "square.and.arrow.up.on.square")
+//                                    Label("Import & Export", systemImage: "square.and.arrow.up.on.square")
+                                    Label("Export", systemImage: "square.and.arrow.up.on.square")
                                         .labelStyle(.titleAndIcon)
                                         .imageScale(.small)
                                 }
