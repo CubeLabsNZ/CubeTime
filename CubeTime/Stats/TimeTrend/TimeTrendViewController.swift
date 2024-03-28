@@ -277,7 +277,7 @@ class TimeTrendLineChartScrollView: UIScrollView {
         xAxis.move(to: CGPoint(x: leftX, y: self.frame.height - CHART_BOTTOM_PADDING - 0.5))
         xAxis.lineWidth = 1
         xAxis.addLine(to: CGPoint(x: rightX, y: self.frame.height - CHART_BOTTOM_PADDING - 0.5))
-        context.setStrokeColor(UIColor(Color("indent0")).cgColor)
+        context.setStrokeColor(UIColor(Color("dark").opacity(0.16)).cgColor)
         xAxis.stroke()
         
         
@@ -362,7 +362,7 @@ class TimeTrendLineChartScrollView: UIScrollView {
                 trendLine.stroke()
                 trendLine.removeAllPoints()
                 trendLine.move(to: mid)
-                context.setStrokeColor(UIColor(Color("indent0")).cgColor)
+                context.setStrokeColor(UIColor(Color("dark").opacity(0.16)).cgColor)
             } else if Penalty(rawValue: prev.solve.penalty) == .dnf {
                 trendLine.stroke()
                 trendLine.removeAllPoints()
@@ -579,7 +579,7 @@ class TimeTrendViewController: UIViewController, UIScrollViewDelegate {
         }
         
         let lineView = UIView()
-        lineView.backgroundColor = UIColor(Color("indent0"))
+        lineView.backgroundColor = UIColor(Color("dark").opacity(0.16))
         
         view.spacing = 6
         view.addArrangedSubview(lineView)

@@ -17,7 +17,7 @@
 		23418F592BB2A8C900398EE2 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23418F582BB2A8C900398EE2 /* StoreKit.framework */; };
 		2359689327A367A0003ED9E1 /* StopwatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2359689227A367A0003ED9E1 /* StopwatchManager.swift */; };
 		235CD3022BB37C2200F6095A /* TNoodle.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B1FCEC2BAD892A007C1688 /* TNoodle.xcframework */; };
-		235CD3032BB37C2200F6095A /* TNoodle.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E5B1FCEC2BAD892A007C1688 /* TNoodle.xcframework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		235CD3032BB37C2200F6095A /* TNoodle.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E5B1FCEC2BAD892A007C1688 /* TNoodle.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		235CDA0327A786D800F48C89 /* Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235CDA0227A786D800F48C89 /* Updates.swift */; };
 		235D6A6729C2C060002D90D8 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6629C2C060002D90D8 /* Models.swift */; };
 		235D6A6929C2C0D3002D90D8 /* HelperShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6829C2C0D3002D90D8 /* HelperShare.swift */; };
