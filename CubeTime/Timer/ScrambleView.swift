@@ -32,7 +32,7 @@ struct AsyncSVGView: View {
                 
                 #warning("todo: infinite loading if :boom:")
                 scramble.withCString { s in
-                    if let drawnSvg = tnoodle_lib_draw_scramble(thread!, puzzle, UnsafeMutablePointer(mutating: s)) {
+                    if let drawnSvg = tnoodle_lib_draw_scramble(thread, puzzle, s) {
                         svg = String(cString: drawnSvg)
                     } else {
                         svg = nil

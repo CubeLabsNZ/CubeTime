@@ -43,7 +43,6 @@ class ScrambleThread: Thread {
         #endif
         
         
-//        graal_create_isolate(nil, &isolate, &thread)
         graal_attach_thread(isolate, &thread)
         while (true) {
             let s = String(cString: tnoodle_lib_scramble(thread, scrType))
@@ -63,7 +62,6 @@ class ScrambleThread: Thread {
             }
         }
         
-//        graal_tear_down_isolate(thread);
         graal_detach_thread(thread)
         waiter.leave()
         
