@@ -8,6 +8,8 @@ struct SessionsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.horizontalSizeClass) var hSizeClass
     
+    @EnvironmentObject var tabRouter: TabRouter
+    
     @State var showNewSessionPopUp = false
     
     @StateObject var cloudkitStatusManager = CloudkitStatusManager()
@@ -63,6 +65,12 @@ struct SessionsView: View {
                                     NavigationLink(destination: ImportFlow(), isActive: $showImport) { EmptyView() }
                                 }
                             )
+                            .onChange(of: showExport) { newValue in
+                                tabRouter.hideTabBar = newValue
+                            }
+                            .onChange(of: showImport) { newValue in
+                                tabRouter.hideTabBar = showImport
+                            }
                             
                             Spacer()
                             
