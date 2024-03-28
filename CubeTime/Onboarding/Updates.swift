@@ -50,10 +50,54 @@ struct ListLine: View {
 let updatesList: [String: (majorAdditions: [ListPoint]?,
                            minorAdditions: [ListPoint]?,
                            bugFixes: [ListPoint]?)] = [
+"3.0.0": (
+    majorAdditions: [
+        ListPoint(1, "export functionality added"),
+            ListPoint(2, "Export options to CSV, JSON (csTimer), ODT / Excel"),
+        ListPoint(1, "interactive time trend graph added"),
+            ListPoint(2, "View time trend in more detail, and hover on points to view solve"),
+        ListPoint(1, "new icon!"),
+    ],
+    minorAdditions: [
+        ListPoint(1, "many UI improvements throughout"),
+        ListPoint(1, "new rounded WCA icons"),
+        ListPoint(1, "added preference for last x solves in summarised time trend view"),
+        ListPoint(1, "added ability to select specific phase to view in time list"),
+        ListPoint(1, "added ability to search comments in time list"),
+        ListPoint(1, "added button to reset settings"),
+        ListPoint(1, "added 0s freeze time option"),
+    ],
+    bugFixes: [
+        ListPoint(1, "many crashes fixed"),
+        ListPoint(1, "fixed rounding vs truncating of times"),
+        ListPoint(1, "fixed incorrect timer display when using 0 d.p"),
+        ListPoint(1, "fixed bug where regular solve could be moved to multiphase session")
+    ]
+),
+
+
+"2.1.2": (
+    majorAdditions: nil,
+    minorAdditions: nil,
+    bugFixes: [
+        ListPoint(1, "fixed timelist column count on iPhone 11 Pro Max"),
+    ]
+),
+
+
+"2.1.1": (
+    majorAdditions: nil,
+    minorAdditions: nil,
+    bugFixes: [
+        ListPoint(1, "fixed time trend graph bug"),
+    ]
+),
+
+
 "2.1": (
     majorAdditions: [
         ListPoint(1, "added settings sync between devices"),
-        ListPoint(1, "**added ability to two-finger swipe on iPad trackpad to resize floating panel**")
+        ListPoint(1, "added ability to two-finger swipe on iPad trackpad to resize floating panel")
     ],
     minorAdditions: [
         ListPoint(1, "made 3-solve display show current average in compsim"),
@@ -78,34 +122,34 @@ let updatesList: [String: (majorAdditions: [ListPoint]?,
                             
 "2.0": (
     majorAdditions: [
-    ListPoint(1, "**Fresh new UI design**"),
+    ListPoint(1, "fresh new UI design"),
         ListPoint(2, "TONS of UI fixes throughout the app"),
         ListPoint(2, "improved design consistency"),
-    ListPoint(1 , "**Dynamic type support!**"),
+    ListPoint(1 , "dynamic type support!"),
         ListPoint(2, "all major UI elements now conform to Apple's DynamicType accessbility font sizes"),
         ListPoint(2, "this is the first version, if you do notice anything out of place, please open an issue and tag it with 'DynamicType' on our Github page."),
-    ListPoint(1, "**Changed tnoodle compatibility layer**"),
+    ListPoint(1, "changed tnoodle compatibility layer"),
         ListPoint(2, "**30x faster scramble generation**"),
         ListPoint(2, "**20x less memory usage**"),
             ListPoint(3, "fixes OOM crashes on older phones"),
             ListPoint(3, "fixes launch crash on iPod 7th Gen"),
-    ListPoint(1, "**Improved stats engine**"),
-        ListPoint(2, "over 100x faster"),
-    ListPoint(1, "**iPad Mode is here!**"),
+    ListPoint(1, "improved stats engine"),
+        ListPoint(2, "**over 100x faster**"),
+    ListPoint(1, "iPad Mode is here!"),
         ListPoint(2, "iPad mode supports many keyboard shortcuts, along with **trackpad gestures**"),
             ListPoint(3, "you can two-finger swipe on your trackpad, just like using a finger"),
         ListPoint(2, "new design with a floating panel"),
         ListPoint(2, "to see your times, drag down on the panel handle"),
-    ListPoint(1, "**Added tools!**"),
+    ListPoint(1, "added tools!"),
         ListPoint(2, "scramble generator: batch generate multiple scrambles to use or share"),
         ListPoint(2, "timer and scramble only mode: for use at comps"),
         ListPoint(2, "average calculator: to quickly calculate averages!"),
-    ListPoint(1, "**Added voice alerts for inspection**"),
-    ListPoint(1, "Added manual entry mode"),
+    ListPoint(1, "added voice alerts for inspection"),
+    ListPoint(1, "added manual entry mode"),
         ListPoint(2, "you can switch to entering times by typing instead of a timer in General Settings > Timer Settings > Timer Mode > Typing"),
-    ListPoint(1, "Quick actions!"),
+    ListPoint(1, "quick actions!"),
         ListPoint(2, "long press on icon to quickly go to your recently used sessions"),
-    ListPoint(1, "Cleaned up to make the app run smoother!"),
+    ListPoint(1, "cleaned up to make the app run smoother!"),
         ListPoint(2, "we've written over 20,000 lines of code for this update!")],
     
     minorAdditions: [
@@ -163,11 +207,28 @@ struct Updates: View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
+                    Text("CubeTime v3.0.0 is here!")
+                        .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
+                        .recursiveMono(size: 21, weight: .semibold)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.vertical, 12)
+                    
                     Group {
-                        Update(update: updatesList["2.0"]!)
+                        Update("3.0.0")
                         
-                        Text("Thanks for using this app! If anything goes wrong, please message me on discord (tim#0911) or open an issue on our github page (https://github.com/CubeStuffs/CubeTime/issues).")
+                        Text("Thanks for using this app! If you have any feedback (good or bad!), please open an issue on [our github page](https://github.com/CubeStuffs/CubeTime/issues) or [contact me personally](https://tim-xie.com/contact).")
                             .font(.body).fontWeight(.medium)
+                            .accentColor(Color("accent"))
+                        
+                        Text("Older changes")
+                            .padding(.top, 64)
+                            .font(.title3.weight(.semibold))
+                        
+                        Update("2.1.2")
+                        
+                        Update("2.1.1")
+                        
+                        Update("2.0")
                     }
                     
                     Spacer()
@@ -193,123 +254,74 @@ struct Update: View {
     var minorAdditions: [ListPoint]?
     var bugFixes: [ListPoint]?
     
-    init(update: (majorAdditions: [ListPoint]?,
-          minorAdditions: [ListPoint]?,
-          bugFixes: [ListPoint]?)) {
-        self.majorAdditions = update.majorAdditions
-        self.minorAdditions = update.minorAdditions
-        self.bugFixes = update.bugFixes
+    let version: String
+    
+    init(_ version: String) {
+        self.version = version
+        
+        if let update = updatesList[version] {
+            self.majorAdditions = update.majorAdditions
+            self.minorAdditions = update.minorAdditions
+            self.bugFixes = update.bugFixes
+        }
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("CubeTime v2 is here!")
-                .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
-                .recursiveMono(size: 21, weight: .semibold)
-                .frame(maxWidth: .infinity, alignment: .center)
-                .padding(.vertical, 12)
-            
             Group {
-                Text("v2.1.2 changes:")
-                    .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
+                Text("v\(version) changes:")
                     .recursiveMono(size: 15, weight: .semibold)
-                    .padding(.top, 8)
+                    .padding(.top)
                 
-                ListLine(1, .init(stringLiteral: "fixed timelist column count on iPhone 11 Pro Max"))
+                CTDivider()
+                    .padding(.top, 4)
+                    .padding(.bottom, 8)
                 
-                
-                Text("v2.1.1 changes:")
-                    .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
-                    .recursiveMono(size: 15, weight: .semibold)
-                    .padding(.top, 8)
-                
-                ListLine(1, .init(stringLiteral: "fixed time trend graph bug"))
-            }
-            
-            
-            
-            Group {
-                Text("v2.1 changes:")
-                    .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
-                    .recursiveMono(size: 15, weight: .semibold)
-                    .padding(.top, 8)
-
-                
-                Text("Major Additions: ")
-                    .font(.title3).fontWeight(.semibold)
-                
-                VStack(alignment: .leading, spacing: 2) {
-                    ForEach(updatesList["2.1"]!.majorAdditions!, id: \.self) { point in
-                        ListLine(point.depth, .init(stringLiteral: point.text))
+                if let majorAdditions = majorAdditions {
+                    Text("Major Additions: ")
+                        .font(.title3).fontWeight(.semibold)
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        ForEach(majorAdditions, id: \.self) { point in
+                            ListLine(point.depth, .init(stringLiteral: point.text))
+                                .if(point.depth == 1) { body in
+                                    body.font(.body.weight(.semibold))
+                                }
+                        }
                     }
+                    .padding(.bottom)
                 }
-                .padding(.bottom)
             
-                Text("Minor Additions: ")
-                    .font(.title3).fontWeight(.semibold)
-                
-                VStack(alignment: .leading, spacing: 2) {
-                    ForEach(updatesList["2.1"]!.minorAdditions!, id: \.self) { point in
-                        ListLine(point.depth, .init(stringLiteral: point.text))
+                if let minorAdditions = minorAdditions {
+                    Text("Minor Additions: ")
+                        .font(.title3).fontWeight(.semibold)
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        ForEach(minorAdditions, id: \.self) { point in
+                            ListLine(point.depth, .init(stringLiteral: point.text))
+                        }
                     }
+                    .padding(.bottom)
                 }
-                .padding(.bottom)
                 
-                Text("Bug Fixes: ")
-                    .font(.title3).fontWeight(.semibold)
-                
-                VStack(alignment: .leading, spacing: 2) {
-                    ForEach(updatesList["2.1"]!.bugFixes!, id: \.self) { point in
-                        ListLine(point.depth, .init(stringLiteral: point.text))
+                if let bugFixes = bugFixes {
+                    Text("Bug Fixes: ")
+                        .font(.title3).fontWeight(.semibold)
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        ForEach(bugFixes, id: \.self) { point in
+                            ListLine(point.depth, .init(stringLiteral: point.text))
+                        }
                     }
+                    .padding(.bottom)
+                    .font(.callout)
                 }
-                .padding(.bottom)
-                .font(.callout)
-            }
-            
-            
-            
-            Text("v2.0 changes:")
-                .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
-                .recursiveMono(size: 15, weight: .semibold)
-            
-            if let majorAdditions = majorAdditions {
-                Text("Major Additions: ")
-                    .font(.title3).fontWeight(.semibold)
-                
-                VStack(alignment: .leading, spacing: 2) {
-                    ForEach(majorAdditions, id: \.self) { point in
-                        ListLine(point.depth, .init(stringLiteral: point.text))
-                    }
-                }
-                .padding(.bottom)
-            }
-                
-            if let minorAdditions = minorAdditions {
-                Text("Minor Additions: ")
-                    .font(.title3).fontWeight(.semibold)
-                
-                VStack(alignment: .leading, spacing: 2) {
-                    ForEach(minorAdditions, id: \.self) { point in
-                        ListLine(point.depth, .init(stringLiteral: point.text))
-                    }
-                }
-                .padding(.bottom)
-            }
-                
-            if let bugFixes = bugFixes {
-                Text("Bug Fixes: ")
-                    .font(.title3).fontWeight(.semibold)
-                
-                VStack(alignment: .leading, spacing: 2) {
-                    ForEach(bugFixes, id: \.self) { point in
-                        ListLine(point.depth, .init(stringLiteral: point.text))
-                    }
-                }
-                .padding(.bottom)
-                .font(.callout)
             }
         }
         .padding(.bottom)
     }
+}
+
+#Preview {
+    Updates(showUpdates: .constant(true))
 }

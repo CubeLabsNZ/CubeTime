@@ -30,7 +30,7 @@ class ScrambleController: ObservableObject {
         var thread: OpaquePointer? = nil
         
         let ret = graal_create_isolate(nil, &isolate, &thread)
-                
+        
         let s = String(cString: tnoodle_lib_scramble(thread!, scrambleType))
         
         graal_tear_down_isolate(thread);
