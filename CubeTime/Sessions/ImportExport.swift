@@ -15,6 +15,7 @@ struct ImportFlow: View {
 
 struct ExportFlowPickSessions: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
+    @EnvironmentObject var tabRouter: TabRouter
     @StateObject var exportViewModel: ExportViewModel = ExportViewModel()
     
     @Environment(\.horizontalSizeClass) var hSizeClass
@@ -78,16 +79,14 @@ struct ExportFlowPickSessions: View {
                     }
                 }
                 .padding(.horizontal)
-                .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
-                    view
-                        .padding(.bottom, 58)
-                        .padding(.bottom, UIDevice.hasBottomBar ? 0 : nil)
-                }
-                .if(UIDevice.deviceIsPad && hSizeClass == .regular) { view in
-                    view
-                        .padding(.bottom, 8)
-                }
+                .padding(.bottom, UIDevice.deviceIsPad && hSizeClass == .regular ? 8 : (UIDevice.hasBottomBar ? 0 : nil))
             }
+        }
+        .onAppear {
+            tabRouter.hideTabBar = true
+        }
+        .onDisappear {
+            tabRouter.hideTabBar = false
         }
     }
 }
@@ -172,15 +171,7 @@ struct ExportFlowPickFormats: View {
                     }
                 }
                 .padding(.horizontal)
-                .if(!(UIDevice.deviceIsPad && hSizeClass == .regular)) { view in
-                    view
-                        .padding(.bottom, 58)
-                        .padding(.bottom, UIDevice.hasBottomBar ? 0 : nil)
-                }
-                .if(UIDevice.deviceIsPad && hSizeClass == .regular) { view in
-                    view
-                        .padding(.bottom, 8)
-                }
+                .padding(.bottom, UIDevice.deviceIsPad && hSizeClass == .regular ? 8 : (UIDevice.hasBottomBar ? 0 : nil))
             }
         }
         .fileExporter(isPresented: $showFilePathSave, documents: exportViewModel.selectedFormats, contentType: .data ,onCompletion: { result in
