@@ -37,7 +37,7 @@ struct AveragePhases: View {
     let count: Int
     
     var body: some View {
-        let selectedGradient = getGradientColours(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient)
+        let selectedGradient = GradientManager.getGradientColours(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient)
         
         let gradientStart: UIColor = UIColor(selectedGradient[0])
         let gradientEnd: UIColor = UIColor(selectedGradient[1])

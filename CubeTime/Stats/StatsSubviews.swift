@@ -65,7 +65,7 @@ struct StatsBlock<Content: View>: View {
         .padding(.horizontal, 12)
         .background(
             (self.background.1 == .coloured
-            ? AnyView(getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient))
+            ? AnyView(GradientManager.getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient))
             : self.background.0)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         )
@@ -110,7 +110,7 @@ struct StatsBlockText: View {
                 Group {
                     if (colouredText) {
                         Text(displayText)
-                            .foregroundStyle(getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient))
+                            .foregroundStyle(GradientManager.getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient))
                     } else {
                         Text(displayText)
                             .foregroundColor(

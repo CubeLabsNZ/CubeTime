@@ -275,7 +275,7 @@ extension View {
     func colouredGlow(gradientSelected: Int, isStaticGradient: Bool) -> some View {
         ForEach(0..<2) { i in
             Rectangle()
-                .fill(getGradient(gradientSelected: gradientSelected, isStaticGradient: isStaticGradient).opacity(0.5))
+                .fill(GradientManager.getGradient(gradientSelected: gradientSelected, isStaticGradient: isStaticGradient).opacity(0.5))
                 .mask(self.blur(radius: 20))
                 .overlay(self.blur(radius: 5 - CGFloat(i * 5)))
         }
@@ -333,7 +333,7 @@ struct Line: View {
     var body: some View {
         self.path
             .trim(from: 0, to: self.showFull ? 1 : 0)
-            .stroke(getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient), style: StrokeStyle(lineWidth: 3, lineJoin: .round))
+            .stroke(GradientManager.getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient), style: StrokeStyle(lineWidth: 3, lineJoin: .round))
             .rotationEffect(.degrees(180), anchor: .center)
             .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
             .animation(.easeInOut(duration: graphAnimation ? 1.2 : 0), value: self.showFull)

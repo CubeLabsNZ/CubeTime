@@ -208,7 +208,7 @@ struct Updates: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     Text("CubeTime v3.0.0 is here!")
-                        .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
+                        .foregroundStyle(GradientManager.getGradient(gradientSelected: 0, isStaticGradient: true))
                         .recursiveMono(size: 21, weight: .semibold)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.vertical, 12)

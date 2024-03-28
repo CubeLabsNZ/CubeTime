@@ -61,7 +61,7 @@ struct AppearanceSettingsView: View {
                                 
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                        .fill(getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: true))
+                                        .fill(GradientManager.getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: true))
                                         .frame(height: 50)
                                         .onTapGesture {
                                             isStaticGradient = true
@@ -84,7 +84,7 @@ struct AppearanceSettingsView: View {
                                     HStack(spacing: 0) {
                                         ForEach(0..<10, id: \.self) { index in
                                             Rectangle()
-                                                .fill(getGradient(gradientSelected: index, isStaticGradient: false))
+                                                .fill(GradientManager.getGradient(gradientSelected: index, isStaticGradient: false))
                                                 .frame(height: 175)
                                         }
                                     }

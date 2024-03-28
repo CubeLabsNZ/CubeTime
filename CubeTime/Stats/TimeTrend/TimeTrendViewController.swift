@@ -394,9 +394,9 @@ class TimeTrendLineChartScrollView: UIScrollView {
         
         context.drawLinearGradient(CGGradient(colorsSpace: .none,
                                               colors: [
-                                                UIColor(staticGradient[0].opacity(0.6)).cgColor,
-                                                UIColor(staticGradient[1].opacity(0.2)).cgColor,
-                                                UIColor(staticGradient[1].opacity(0.01)).cgColor
+                                                UIColor(GradientManager.STATIC_GRADIENT[0].opacity(0.6)).cgColor,
+                                                UIColor(GradientManager.STATIC_GRADIENT[1].opacity(0.2)).cgColor,
+                                                UIColor(GradientManager.STATIC_GRADIENT[1].opacity(0.01)).cgColor
                                               ] as CFArray,
                                               locations: [0.0, 0.4, 1.0])!,
                                    start: CGPoint(x: 0, y: 0),

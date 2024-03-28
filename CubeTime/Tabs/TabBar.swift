@@ -145,19 +145,15 @@ struct TabIcon: View {
         ZStack {
             if (hasLittleGuy && currentTab == assignedTab) {
                 Capsule()
-                    .fill(currentTab == .timer
-                          ? colourScheme == .dark
-                            ? Color("accent")
-                            : Color("accent2")
-                          : Color("dark"))
+                    .fill(currentTab == .timer ? AnyShapeStyle(GradientManager.getGradient(gradientSelected: 0, isStaticGradient: true).opacity(0.8)) : AnyShapeStyle(Color("dark")))
                     .matchedGeometryEffect(id: "littleguy", in: namespace, properties: .frame)
                     .shadow(color: currentTab == .timer
-                            ? Color("accent3")
+                            ? Color("accent2")
                             : colourScheme == .dark
                               ? Color.clear
                               : Color("indent0"),
-                            radius: 2,
-                            x: 0, y: 0.5)
+                            radius: 3,
+                            x: 0, y: 0)
                     .frame(width: 32, height: 2.25)
                     .offset(y: 47.75 - 48/2)
             }

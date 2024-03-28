@@ -107,7 +107,7 @@ struct AboutSettingsView: View {
                     
                     Text("v" + versionString)
                         .recursiveMono(size: 15, weight: .semibold)
-                        .foregroundStyle(getGradient(gradientSelected: 0, isStaticGradient: true))
+                        .foregroundStyle(GradientManager.getGradient(gradientSelected: 0, isStaticGradient: true))
                 }
                 
                 Spacer()
@@ -171,7 +171,7 @@ struct AboutSettingsView: View {
             Text("© 2021–2024 Tim Xie & Reagan Bohan.")
                 .font(.system(size: 13))
                 .foregroundColor(Color("grey").opacity(0.36))
-                .padding(.top, 32)
+                .padding(.top, 64)
         }
         .padding(.horizontal)
         .sheet(isPresented: $showLicenses) {

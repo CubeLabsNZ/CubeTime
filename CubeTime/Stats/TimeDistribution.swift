@@ -135,7 +135,7 @@ struct TimeDistribution: View {
                         let xloc: CGFloat = (geometry.size.width / (count < 8 ? CGFloat(count+2) : 10)) * CGFloat(datum)
                         ZStack {
                             Rectangle()
-                                .fill(getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient))
+                                .fill(GradientManager.getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient))
                                 .frame(width: geometry.size.width, height: 260)
                                 .mask {
                                     Path { path in
@@ -146,7 +146,7 @@ struct TimeDistribution: View {
                                 }
                             
                             Rectangle()
-                                .fill(getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient))
+                                .fill(GradientManager.getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient))
                                 .frame(width: geometry.size.width, height: 260)
                                 .offset(x: -20, y: -20)
                                 .mask {
