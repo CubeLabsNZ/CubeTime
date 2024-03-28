@@ -16,7 +16,7 @@ struct ImportFlow: View {
 struct ExportFlowPickSessions: View {
     @EnvironmentObject var stopwatchManager: StopwatchManager
     @EnvironmentObject var tabRouter: TabRouter
-    @StateObject var exportViewModel: ExportViewModel = ExportViewModel()
+    @EnvironmentObject var exportViewModel: ExportViewModel
     
     @Environment(\.horizontalSizeClass) var hSizeClass
     
@@ -182,15 +182,35 @@ struct ExportFlowFinished: View {
     
     var body: some View {
         ZStack {
-            BackgroundColour()
+            GradientManager.getGradient(gradientSelected: 0, isStaticGradient: true)
+                .opacity(0.64)
                 .ignoresSafeArea()
-            switch result {
-            case .success:
-                Text("Export Success!")
-                
-            case .failure(let failure):
-                Text("Export failed: \(failure.localizedDescription)")
+            
+            VStack(spacing: 32) {
+                Group {
+                    switch result {
+                    case .success:
+                        Text("Successfully exported!")
+                            .font(.title2.weight(.semibold))
+                        
+                    case .failure(let failure):
+                        VStack(spacing: 8) {
+                            Text("Oops! Export failed...")
+                                .font(.title2.weight(.semibold))
+                            
+                            Text("\(failure.localizedDescription)")
+                                .font(.body.weight(.medium))
+                        }
+                    }
+                }
+                .foregroundColor(.white)
+
+                CTButton(type: .mono, size: .large, onTapRun: { exportViewModel.showExport = false }) {
+                    Text("Take me home")
+                }
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
     }
 }

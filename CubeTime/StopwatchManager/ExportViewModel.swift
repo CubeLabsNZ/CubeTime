@@ -358,6 +358,9 @@ class ExportViewModel: ObservableObject {
     
     @Published var selectedSessions = Set<Session>()
     @Published var selectedFormats: [ExportFormat] = []
+    
+    @Published var showImport = false
+    @Published var showExport = false
         
     private var cancellables: Set<AnyCancellable> = []
     
@@ -373,5 +376,8 @@ class ExportViewModel: ObservableObject {
     
     func finishExport(result: Result<[URL], Error>) {
         self.exportFlowState = .finished(result)
+        
+        self.selectedFormats.removeAll()
+        self.selectedSessions.removeAll()
     }
 }

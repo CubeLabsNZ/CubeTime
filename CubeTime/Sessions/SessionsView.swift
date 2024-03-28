@@ -7,7 +7,10 @@ import SwiftfulLoadingIndicators
 struct SessionsView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.horizontalSizeClass) var hSizeClass
+
+    @StateObject var exportViewModel: ExportViewModel = ExportViewModel()
     
+
     @EnvironmentObject var tabRouter: TabRouter
     
     @State var showNewSessionPopUp = false
@@ -23,10 +26,7 @@ struct SessionsView: View {
             NSSortDescriptor(keyPath: \Session.name, ascending: true)
         ]
     ) var sessions: FetchedResults<Session>
-    
-    @State private var showImport = false
-    @State private var showExport = false
-    
+
     var body: some View {
         NavigationView {
             GeometryReader { geo in
@@ -35,7 +35,7 @@ struct SessionsView: View {
                         HStack {
                             Menu {
                                 Button() {
-                                    showExport = true
+                                    exportViewModel.showExport = true
                                 } label: {
                                     Label("Export Sessions", systemImage: "square.and.arrow.up")
                                         .labelStyle(.titleAndIcon)
@@ -61,15 +61,15 @@ struct SessionsView: View {
                             }
                             .background(
                                 Group {
-                                    NavigationLink(destination: ExportFlowPickSessions(sessions: sessions), isActive: $showExport) { EmptyView() }
-                                    NavigationLink(destination: ImportFlow(), isActive: $showImport) { EmptyView() }
+                                    NavigationLink(destination: ExportFlowPickSessions(sessions: sessions).environmentObject(exportViewModel), isActive: $exportViewModel.showExport) { EmptyView() }
+                                    NavigationLink(destination: ImportFlow(), isActive: $exportViewModel.showImport) { EmptyView() }
                                 }
                             )
-                            .onChange(of: showExport) { newValue in
+                            .onChange(of: exportViewModel.showExport) { newValue in
                                 tabRouter.hideTabBar = newValue
                             }
-                            .onChange(of: showImport) { newValue in
-                                tabRouter.hideTabBar = showImport
+                            .onChange(of: exportViewModel.showImport) { newValue in
+                                tabRouter.hideTabBar = newValue
                             }
                             
                             Spacer()
