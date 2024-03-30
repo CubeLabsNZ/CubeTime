@@ -2,8 +2,8 @@
 
 <p align="center">
   <img src="https://github.com/CubeStuffs/CubeTime/assets/65262710/4dcd721c-2e15-4ca4-8443-36be7d24f3c2"
-       width="225"
-       height="225">
+       width="200"
+       height="200">
 <p align="center">
 <h4 align="center">a speedcubing timer & utility app</h4>
 <p align="center">
