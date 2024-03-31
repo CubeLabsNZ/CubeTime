@@ -12,7 +12,7 @@
          height="48">
   </a>
   <a href="https://ko-fi.com/cubetime">
-      <img src="https://user-images.githubusercontent.com/65262710/151313673-05574ab7-371c-4735-ab95-319b6dd40d82.png"
+      <img src="https://github.com/CubeStuffs/CubeTime/assets/65262710/544abfd5-3221-4950-8bb1-f2364ff4cb97"
            height="48">
   </a>
 </p>
