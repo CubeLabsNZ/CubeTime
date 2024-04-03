@@ -108,6 +108,10 @@ extension StopwatchManager {
             
             
         } else {
+            // I don't know why this is needed
+            if !solves.indices.contains(cnt/2) {
+                return (nil, nil)
+            }
             let median = Double(solves[(cnt/2)].timeIncPen)
             
             if let truncatedMin = truncatedValues.0, let truncatedMax = truncatedValues.1 {
