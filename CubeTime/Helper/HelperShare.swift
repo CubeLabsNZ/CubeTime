@@ -65,12 +65,16 @@ func getShareStr(solves: CalculatedAverage) -> String {
         str+=": \(formatSolveTime(secs: avg, penalty: solves.totalPen))"
     }
     str += "\n\n"
+    
+    guard let accountedSolves = solves.accountedSolves else {
+        return str + "No times to show."
+    }
+    
     str += "Time List:"
     
-    #warning("oopsies more force unwrapping")
-    let sortedAccountedSolves = solves.accountedSolves?.sorted(by: { $0.date! > $1.date! })
+    let sortedAccountedSolves = accountedSolves.sorted(by: { $0.date ?? .distantPast > $1.date ?? .distantPast })
     
-    for pair in zip(sortedAccountedSolves!.indices, sortedAccountedSolves!) {
+    for pair in zip(sortedAccountedSolves.indices, sortedAccountedSolves) {
         str += "\n\(pair.0 + 1). "
         let formattedTime = formatSolveTime(secs: pair.1.time, penalty: Penalty(rawValue: pair.1.penalty))
         if solves.trimmedSolves!.contains(pair.1) {
