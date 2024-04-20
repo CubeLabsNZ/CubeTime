@@ -132,9 +132,6 @@ struct AboutSettingsView: View {
             }
             .padding(.top, -6)
             
-            Text("\nCubeTime is made possible by [speedcube.co.nz](https://www.speedcube.co.nz/).")
-                .fixedSize(horizontal: false, vertical: true)
-            
             Text("\nSupport us directly by donating on Ko-Fi:")
                 .fixedSize(horizontal: false, vertical: true)
             
