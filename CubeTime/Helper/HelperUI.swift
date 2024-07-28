@@ -259,12 +259,12 @@ struct CTPuzzleBubble: View {
     let text: String
     
     init(scrambleType: Int) {
-        icon = Image(PUZZLE_TYPES[scrambleType].name)
+        icon = Image(PUZZLE_TYPES[scrambleType].imageName)
         text = PUZZLE_TYPES[scrambleType].name
     }
     
     init(scrambleType: PuzzleType) {
-        icon = Image(scrambleType.name)
+        icon = Image(scrambleType.imageName)
         text = scrambleType.name
     }
     

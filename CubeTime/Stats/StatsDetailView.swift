@@ -111,7 +111,7 @@ struct StatsDetailView: View {
                                         .frame(width: 16, height: 16)
                                     
                                 } else {
-                                    Image(PUZZLE_TYPES[Int(session.scrambleType)].name)
+                                    Image(PUZZLE_TYPES[Int(session.scrambleType)].imageName)
                                         .resizable()
                                         .frame(width: 16, height: 16)
                                     

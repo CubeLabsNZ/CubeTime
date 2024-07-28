@@ -85,7 +85,7 @@ struct CubeTime: App {
                 .if(dynamicTypeSize != DynamicTypeSize.large) { view in
                     view
                         .alert(isPresented: $showUpdates) {
-                            Alert(title: Text("DynamicType Detected"), message: Text("CubeTime only supports standard DyanmicType sizes. Accessibility DynamicType modes are currently not supported, so layouts may not be rendered correctly."), dismissButton: .default(Text("Got it!")))
+                            Alert(title: Text("DynamicType Detected"), message: Text("CubeTime only supports standard DynamicType sizes. Accessibility DynamicType modes are currently not supported, so layouts may not be rendered correctly."), dismissButton: .default(Text("Got it!")))
                         }
                 }
                 .environment(\.managedObjectContext, moc)

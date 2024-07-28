@@ -63,13 +63,13 @@ extension Session {
             case .standard:
                 return PUZZLE_TYPES[Int(scrambleType)].name
             case .algtrainer:
-                return "Algorithm Trainer"
+                return String(localized: "Algorithm Trainer")
             case .multiphase:
-                return "Multiphase"
+                return String(localized: "Multiphase")
             case .playground:
-                return "Playground"
+                return String(localized: "Playground")
             case .compsim:
-                return "Compsim"
+                return String(localized: "Compsim")
             }
         }
     }
@@ -79,7 +79,7 @@ extension Session {
         
         switch (SessionType(rawValue: sessionType)!) {
         case .standard:
-            Image(PUZZLE_TYPES[Int(scrambleType)].name)
+            Image(PUZZLE_TYPES[Int(scrambleType)].imageName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: size, height: size)
@@ -120,7 +120,7 @@ extension CompSimSolveGroup {
     }
     
     var avg: CalculatedAverage? {
-        return StopwatchManager.getCalculatedAverage(forSolves: self.solves!.allObjects as! [Solve], name: "Comp Sim Group", isCompsim: true)
+        return StopwatchManager.getCalculatedAverage(forSolves: self.solves!.allObjects as! [Solve], name: String(localized: "Comp Sim Group"), isCompsim: true)
     }
 }
 
@@ -180,6 +180,7 @@ enum SessionType: Int16 {
 struct PuzzleType {
     let name: String
     let cstimerName: String
+    let imageName: String
 //    let puzzle: OrgWorldcubeassociationTnoodleScramblesPuzzleRegistry
 }
 
@@ -195,13 +196,13 @@ struct AppZoom: RawRepresentable, Identifiable {
     ]
     
     static private let appZoomNames: [DynamicTypeSize: String] = [
-            DynamicTypeSize.xSmall: "Extra Small",
-            DynamicTypeSize.small: "Small",
-            DynamicTypeSize.medium: "Medium",
-            DynamicTypeSize.large: "Large (Default)",
-            DynamicTypeSize.xLarge: "Extra Large",
-            DynamicTypeSize.xxLarge: "Extra Extra Large",
-            DynamicTypeSize.xxxLarge: "Extra Extra Extra Large",
+        DynamicTypeSize.xSmall: String(localized: "Extra Small"),
+        DynamicTypeSize.small: String(localized: "Small"),
+        DynamicTypeSize.medium: String(localized: "Medium"),
+        DynamicTypeSize.large: String(localized: "Large (Default)"),
+        DynamicTypeSize.xLarge: String(localized: "Extra Large"),
+        DynamicTypeSize.xxLarge: String(localized: "Extra Extra Large"),
+        DynamicTypeSize.xxxLarge: String(localized: "Extra Extra Extra Large"),
     ]
     
     typealias RawValue = Int

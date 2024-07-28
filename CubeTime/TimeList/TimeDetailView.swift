@@ -113,7 +113,7 @@ struct TimeDetailView: View {
                                 
                                 HStack {
                                     HStack(alignment: .center, spacing: 4) {
-                                        Image(puzzleType.name)
+                                        Image(puzzleType.imageName)
                                             .resizable()
                                             .frame(width: 16, height: 16)
                                         

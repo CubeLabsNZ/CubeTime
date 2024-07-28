@@ -13,9 +13,9 @@ let sessionTypeForID: [SessionType: Session.Type] = [
 ]
 
 let sessionDescriptions: [SessionType: String] = [
-    .multiphase: "A multiphase session gives you the ability to breakdown your solves into sections, such as memo/exec stages in blindfolded solving or stages in 3x3 solves.\n\nTap anywhere on the timer during a solve to record a phase lap. You can access your breakdown statistics in each time card and view overall statistics in the Stats view.",
-    .playground: "A playground session allows you to quickly change the scramble type within a session without having to specify a scramble type for the whole session.",
-    .compsim: "A comp sim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach."
+    .multiphase: String(localized: "A multiphase session gives you the ability to breakdown your solves into sections, such as memo/exec stages in blindfolded solving or stages in 3x3 solves.\n\nTap anywhere on the timer during a solve to record a phase lap. You can access your breakdown statistics in each time card and view overall statistics in the Stats view."),
+    .playground: String(localized: "A playground session allows you to quickly change the scramble type within a session without having to specify a scramble type for the whole session."),
+    .compsim: String(localized: "A comp sim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach.")
 ]
 
 
@@ -29,21 +29,21 @@ let iconNamesForType: [SessionType: String] = [
 
 
 let PUZZLE_TYPES: [PuzzleType] = [
-    PuzzleType(name: "2x2", cstimerName: "222so"),
-    PuzzleType(name: "3x3", cstimerName: "333"),
-    PuzzleType(name: "4x4", cstimerName: "444wca"),
-    PuzzleType(name: "5x5", cstimerName: "555wca"),
-    PuzzleType(name: "6x6", cstimerName: "666wca"),
-    PuzzleType(name: "7x7", cstimerName: "777wca"),
-    PuzzleType(name: "Square-1", cstimerName: "sqrs"),
-    PuzzleType(name: "Megaminx", cstimerName: "mgmp"),
-    PuzzleType(name: "Pyraminx", cstimerName: "pyrso"),
-    PuzzleType(name: "Clock", cstimerName: "clkwca"),
-    PuzzleType(name: "Skewb", cstimerName: "skbso"),
-    PuzzleType(name: "3x3 OH", cstimerName: "333oh"),
-    PuzzleType(name: "3x3 BLD", cstimerName: "333bld"),
-    PuzzleType(name: "4x4 BLD", cstimerName: "444bld"),
-    PuzzleType(name: "5x5 BLD", cstimerName: "555bld"),
+    PuzzleType(name: String(localized: "2x2"), cstimerName: "222so", imageName: "puzzle-2x2"),
+    PuzzleType(name: String(localized: "3x3"), cstimerName: "333", imageName: "puzzle-3x3"),
+    PuzzleType(name: String(localized: "4x4"), cstimerName: "444wca", imageName: "puzzle-4x4"),
+    PuzzleType(name: String(localized: "5x5"), cstimerName: "555wca", imageName: "puzzle-5x5"),
+    PuzzleType(name: String(localized: "6x6"), cstimerName: "666wca", imageName: "puzzle-6x6"),
+    PuzzleType(name: String(localized: "7x7"), cstimerName: "777wca", imageName: "puzzle-7x7"),
+    PuzzleType(name: String(localized: "Square-1"), cstimerName: "sqrs", imageName: "puzzle-square-1"),
+    PuzzleType(name: String(localized: "Megaminx"), cstimerName: "mgmp", imageName: "puzzle-megaminx"),
+    PuzzleType(name: String(localized: "Pyraminx"), cstimerName: "pyrso", imageName: "puzzle-pyraminx"),
+    PuzzleType(name: String(localized: "Clock"), cstimerName: "clkwca", imageName: "puzzle-clock"),
+    PuzzleType(name: String(localized: "Skewb"), cstimerName: "skbso", imageName: "puzzle-skewb"),
+    PuzzleType(name: String(localized: "3x3 OH"), cstimerName: "333oh", imageName: "puzzle-3x3-oh"),
+    PuzzleType(name: String(localized: "3x3 BLD"), cstimerName: "333bld", imageName: "puzzle-3x3-bld"),
+    PuzzleType(name: String(localized: "4x4 BLD"), cstimerName: "444bld", imageName: "puzzle-4x4-bld"),
+    PuzzleType(name: String(localized: "5x5 BLD"), cstimerName: "555bld", imageName: "puzzle-5x5-bld"),
 ]
 
 

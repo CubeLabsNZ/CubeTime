@@ -110,7 +110,7 @@ class TimeTrendHoverCardView: UIStackView {
     lazy var iconView: UIImageView = {
         var iconView = UIImageView()
         
-        iconView = UIImageView(image: UIImage(named: PUZZLE_TYPES[Int(solve?.scrambleType ?? 0)].name))
+        iconView = UIImageView(image: UIImage(named: PUZZLE_TYPES[Int(solve?.scrambleType ?? 0)].imageName))
         iconView.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
         iconView.tintColor = UIColor(Color("dark"))
         iconView.translatesAutoresizingMaskIntoConstraints = false

@@ -112,25 +112,25 @@ struct AppearanceSettingsView: View {
                 CTDivider()
                 
                 DescribedSetting(description: "Turn on/off the glow effect on graphs.", {
-                    SettingsToggle("Graph Glow", $graphGlow)
+                    SettingsToggle(String(localized: "Graph Glow"), $graphGlow)
                 })
                 
                 DescribedSetting(description: "Turn on/off the line animation for the time trend graph.", {
-                    SettingsToggle("Graph Animation", $graphAnimation)
+                    SettingsToggle(String(localized: "Graph Animation"), $graphAnimation)
                 })
             }
             .clipped()
             
             SettingsGroup(Label("System Settings", systemImage: "command")) {
-                SettingsToggle("Override System Appearance", $overrideSystemAppearance)
+                SettingsToggle(String(localized: "Override System Appearance"), $overrideSystemAppearance)
                 if overrideSystemAppearance {
-                    SettingsToggle("Dark Mode", $darkMode)
+                    SettingsToggle(String(localized: "Dark Mode"), $darkMode)
                 }
             }
             
             
             SettingsGroup(Label("Font Settings", systemImage: "textformat")) {
-                SettingsStepper(text: "Scramble Size: ", format: "%d", value: $scrambleSize, in: 15...36, step: 1)
+                SettingsStepper(text: String(localized: "Scramble Size: "), format: "%d", value: $scrambleSize, in: 15...36, step: 1)
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Preview")
                         .modifier(SettingsFootnote())
@@ -162,7 +162,7 @@ struct AppearanceSettingsView: View {
                 
                 SettingsDragger(text: "Font Weight", value: $fontWeight, in: 300...800)
                 SettingsDragger(text: "Font Casualness", value: $fontCasual, in: 0...1)
-                SettingsToggle("Cursive Font", $fontCursive)
+                SettingsToggle(String(localized: "Cursive Font"), $fontCursive)
             }
             
             CTButton(type: .halfcoloured(Color("red")), size: .large, expandWidth: true, onTapRun: {

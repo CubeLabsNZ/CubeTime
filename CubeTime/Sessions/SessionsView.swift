@@ -221,7 +221,7 @@ struct CustomiseSessionView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         VStack(alignment: .center, spacing: 0) {
-                            PuzzleHeaderImage(imageName: PUZZLE_TYPES[Int(sessionEventType)].name)
+                            PuzzleHeaderImage(imageName: PUZZLE_TYPES[Int(sessionEventType)].imageName)
                             
                             SessionNameField(name: $name)
                         }

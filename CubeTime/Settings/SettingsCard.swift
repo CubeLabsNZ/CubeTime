@@ -10,7 +10,7 @@ struct SettingsCardInfo: Hashable {
 }
 
 var settingsCards: [SettingsCardInfo] = [
-    SettingsCardInfo(name: "General", icon: "gearshape.2", iconStyle: defaultIconStyle),
-    SettingsCardInfo(name: "Appearance", icon: "paintpalette", iconStyle: defaultIconStyle),
-    SettingsCardInfo(name: "Help &\nAbout Us", icon: "info", iconStyle: defaultIconStyle),
+    SettingsCardInfo(name: String(localized: "General"), icon: "gearshape.2", iconStyle: defaultIconStyle),
+    SettingsCardInfo(name: String(localized: "Appearance"), icon: "paintpalette", iconStyle: defaultIconStyle),
+    SettingsCardInfo(name: String(localized: "Help &\nAbout Us"), icon: "info", iconStyle: defaultIconStyle),
 ]

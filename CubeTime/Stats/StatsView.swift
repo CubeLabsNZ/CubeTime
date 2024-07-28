@@ -65,17 +65,17 @@ struct StatsView: View {
                             VStack(spacing: 10) {
                                 if !compsim {
                                     HStack(spacing: 10) {
-                                        StatsBlock(title: "CURRENT STATS", blockHeight: blockHeightLarge) {
+                                        StatsBlock(title: String(localized: "CURRENT STATS"), blockHeight: blockHeightLarge) {
                                             StatsBlockSmallText(titles: ["AO5", "AO12", "AO100"], data: [stopwatchManager.currentAo5, stopwatchManager.currentAo12, stopwatchManager.currentAo100], presentedAvg: $presentedAvg, blockHeight: blockHeightLarge)
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
                                         VStack(spacing: 10) {
-                                            StatsBlock(title: "SOLVE COUNT", blockHeight: blockHeightSmall, isTappable: false) {
+                                            StatsBlock(title: String(localized: "SOLVE COUNT"), blockHeight: blockHeightSmall, isTappable: false) {
                                                 StatsBlockText(displayText: "\(stopwatchManager.getNumberOfSolves())", nilCondition: true)
                                             }
                                             
-                                            StatsBlock(title: "SESSION MEAN", blockHeight: blockHeightSmall, isTappable: false) {
+                                            StatsBlock(title: String(localized: "SESSION MEAN"), blockHeight: blockHeightSmall, isTappable: false) {
                                                 if let sessionMean = stopwatchManager.sessionMean {
                                                     StatsBlockText(displayText: formatSolveTime(secs: sessionMean), nilCondition: true)
                                                 } else {
@@ -92,7 +92,7 @@ struct StatsView: View {
                                             Button {
                                                 if stopwatchManager.bestSingle != nil { showBestSinglePopup = true }
                                             } label: {
-                                                StatsBlock(title: "BEST SINGLE", blockHeight: blockHeightSmall, background: .coloured) {
+                                                StatsBlock(title: String(localized: "BEST SINGLE"), blockHeight: blockHeightSmall, background: .coloured) {
                                                     if let bestSingle = stopwatchManager.bestSingle {
                                                         StatsBlockText(displayText: formatSolveTime(secs: bestSingle.time, penalty: Penalty(rawValue: bestSingle.penalty)!), colouredBlock: true, displayDetail: false, nilCondition: true)
                                                     } else {
@@ -102,7 +102,7 @@ struct StatsView: View {
                                             }
                                             .buttonStyle(CTButtonStyle())
                                             
-                                            StatsBlock(title: "BEST STATS", blockHeight: blockHeightMedium) {
+                                            StatsBlock(title: String(localized: "BEST STATS"), blockHeight: blockHeightMedium) {
                                                 StatsBlockSmallText(titles: ["AO12", "AO100"], data: [stopwatchManager.bestAo12, stopwatchManager.bestAo100], presentedAvg: $presentedAvg, blockHeight: blockHeightMedium)
                                             }
                                         }
@@ -111,24 +111,24 @@ struct StatsView: View {
                                         #warning("TODO: FIX ALL OF THESE CHANGE TO BUTTON WITH CUSTOM BUTTON STYLE")
                                         ZStack(alignment: .topLeading) {
                                             if let bestAo5 = stopwatchManager.bestAo5 {
-                                                StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
+                                                StatsBlock(title: String(localized: ""), blockHeight: blockHeightExtraLarge) {
                                                     StatsBlockDetailText(calculatedAverage: bestAo5, colouredBlock: false)
                                                 }
                                                 
-                                                StatsBlock(title: "BEST AO5", blockHeight: blockHeightSmall) {
+                                                StatsBlock(title: String(localized: "BEST AO5"), blockHeight: blockHeightSmall) {
                                                     StatsBlockText(displayText: formatSolveTime(secs: bestAo5.average ?? 0, penalty: bestAo5.totalPen), colouredText: true, displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
                                                 }
                                                 
                                                 
                                             } else {
-                                                StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
+                                                StatsBlock(title: String(localized: ""), blockHeight: blockHeightExtraLarge) {
                                                     HStack {
                                                         Text("")
                                                         Spacer()
                                                     }
                                                 }
                                                 
-                                                StatsBlock(title: "BEST AO5", blockHeight: blockHeightSmall) {
+                                                StatsBlock(title: String(localized: "BEST AO5"), blockHeight: blockHeightSmall) {
                                                     StatsBlockText(displayText: "", nilCondition: false)
                                                 }
                                             }
@@ -144,7 +144,7 @@ struct StatsView: View {
                                     
                                     
                                     if SessionType(rawValue: stopwatchManager.currentSession.sessionType)! == .multiphase {
-                                        StatsBlock(title: "AVERAGE PHASES", blockHeight: stopwatchManager.solvesNoDNFs.count == 0 ? blockHeightGraphEmpty : nil, isBigBlock: true, isTappable: false) {
+                                        StatsBlock(title: String(localized: "AVERAGE PHASES"), blockHeight: stopwatchManager.solvesNoDNFs.count == 0 ? blockHeightGraphEmpty : nil, isBigBlock: true, isTappable: false) {
                                             AveragePhases(phaseTimes: stopwatchManager.phases!, count: stopwatchManager.solvesNoDNFsbyDate.count)
                                         }
                                     }
@@ -153,22 +153,22 @@ struct StatsView: View {
                                         VStack(spacing: 10) {
                                             ZStack(alignment: .topLeading) {
                                                 if let currentCompsimAverage = stopwatchManager.currentCompsimAverage {
-                                                    StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
+                                                    StatsBlock(title: String(localized: ""), blockHeight: blockHeightExtraLarge) {
                                                         StatsBlockDetailText(calculatedAverage: currentCompsimAverage, colouredBlock: false)
                                                     }
                                                     
-                                                    StatsBlock(title: "CURRENT", blockHeight: blockHeightSmall) {
+                                                    StatsBlock(title: String(localized: "CURRENT"), blockHeight: blockHeightSmall) {
                                                         StatsBlockText(displayText: formatSolveTime(secs: currentCompsimAverage.average ?? 0, penalty: currentCompsimAverage.totalPen), displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
                                                     }
                                                 } else {
-                                                    StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
+                                                    StatsBlock(title: String(localized: ""), blockHeight: blockHeightExtraLarge) {
                                                         HStack {
                                                             Text("")
                                                             Spacer()
                                                         }
                                                     }
                                                     
-                                                    StatsBlock(title: "CURRENT", blockHeight: blockHeightSmall) {
+                                                    StatsBlock(title: String(localized: "CURRENT"), blockHeight: blockHeightSmall) {
                                                         StatsBlockText(displayText: "", nilCondition: false)
                                                     }
                                                     
@@ -183,14 +183,14 @@ struct StatsView: View {
                                             
                                             
                                             
-                                            StatsBlock(title: "AVERAGES", blockHeight: blockHeightSmall, isTappable: false) {
+                                            StatsBlock(title: String(localized: "AVERAGES"), blockHeight: blockHeightSmall, isTappable: false) {
                                                 StatsBlockText(displayText: String(describing: stopwatchManager.compSimCount!), nilCondition: true)
                                             }
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
                                         VStack(spacing: 10) {
-                                            StatsBlock(title: "BEST SINGLE", blockHeight: blockHeightSmall) {
+                                            StatsBlock(title: String(localized: "BEST SINGLE"), blockHeight: blockHeightSmall) {
                                                 if let bestSingle = stopwatchManager.bestSingle {
                                                     StatsBlockText(displayText: formatSolveTime(secs: bestSingle.time), colouredText: true, nilCondition: true)
                                                 } else {
@@ -206,22 +206,22 @@ struct StatsView: View {
                                             
                                             ZStack(alignment: .topLeading) {
                                                 if let bestCompsimAverage = stopwatchManager.bestCompsimAverage {
-                                                    StatsBlock(title: "", blockHeight: blockHeightExtraLarge, background: .coloured) {
+                                                    StatsBlock(title: String(localized: ""), blockHeight: blockHeightExtraLarge, background: .coloured) {
                                                         StatsBlockDetailText(calculatedAverage: bestCompsimAverage, colouredBlock: true)
                                                     }
                                                     
-                                                    StatsBlock(title: "BEST", blockHeight: blockHeightSmall, background: .clear) {
+                                                    StatsBlock(title: String(localized: "BEST"), blockHeight: blockHeightSmall, background: .clear) {
                                                         StatsBlockText(displayText: formatSolveTime(secs: bestCompsimAverage.average ?? 0, penalty: bestCompsimAverage.totalPen), colouredBlock: true, displayDetail: true, nilCondition: true, blockHeight: blockHeightSmall)
                                                     }
                                                 } else {
-                                                    StatsBlock(title: "", blockHeight: blockHeightExtraLarge) {
+                                                    StatsBlock(title: String(localized: ""), blockHeight: blockHeightExtraLarge) {
                                                         HStack {
                                                             Text("")
                                                             Spacer()
                                                         }
                                                     }
                                                     
-                                                    StatsBlock(title: "BEST", blockHeight: blockHeightSmall) {
+                                                    StatsBlock(title: String(localized: "BEST"), blockHeight: blockHeightSmall) {
                                                         StatsBlockText(displayText: "", nilCondition: false)
                                                     }
                                                     
@@ -239,12 +239,12 @@ struct StatsView: View {
                                     
                                     
                                     HStack(spacing: 10) {
-                                        StatsBlock(title: "TARGET", blockHeight: blockHeightSmall, isTappable: false) {
+                                        StatsBlock(title: String(localized: "TARGET"), blockHeight: blockHeightSmall, isTappable: false) {
                                             StatsBlockText(displayText: formatSolveTime(secs: (stopwatchManager.currentSession as! CompSimSession).target, dp: 2), nilCondition: true)
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
-                                        StatsBlock(title: "REACHED", blockHeight: blockHeightSmall, isTappable: false) {
+                                        StatsBlock(title: String(localized: "REACHED"), blockHeight: blockHeightSmall, isTappable: false) {
                                             if (stopwatchManager.compSimCount == 0) {
                                                 StatsBlockText(displayText: "", nilCondition: false)
                                             } else {
@@ -256,13 +256,13 @@ struct StatsView: View {
                                     .padding(.horizontal)
                                     
                                     
-                                    StatsBlock(title: "REACHED TARGETS", blockHeight: blockHeightReachedTargets, isBigBlock: true, isTappable: false) {
+                                    StatsBlock(title: String(localized: "REACHED TARGETS"), blockHeight: blockHeightReachedTargets, isBigBlock: true, isTappable: false) {
                                         ReachedTargets(reachedCount: stopwatchManager.reachedTargets, totalCount: stopwatchManager.compSimCount)
                                     }
                                     
                                     
                                     HStack(spacing: 10) {
-                                        StatsBlock(title: "CURRENT MO10 AO5", blockHeight: blockHeightSmall, isTappable: false) {
+                                        StatsBlock(title: String(localized: "CURRENT MO10 AO5"), blockHeight: blockHeightSmall, isTappable: false) {
                                             if let currentMeanOfTen = stopwatchManager.currentMeanOfTen {
                                                 StatsBlockText(displayText: formatSolveTime(secs: currentMeanOfTen, penalty: ((currentMeanOfTen == -1) ? .dnf : Penalty.none)), nilCondition: true)
                                                 StatsBlockText(displayText: "", nilCondition: false)
@@ -272,7 +272,7 @@ struct StatsView: View {
                                         }
                                         .frame(minWidth: 0, maxWidth: .infinity)
                                         
-                                        StatsBlock(title: "BEST MO10 AO5", blockHeight: blockHeightSmall, isTappable: false) {
+                                        StatsBlock(title: String(localized: "BEST MO10 AO5"), blockHeight: blockHeightSmall, isTappable: false) {
                                             if let bestMeanOfTen = stopwatchManager.bestMeanOfTen {
                                                 StatsBlockText(displayText: formatSolveTime(secs: bestMeanOfTen, penalty: ((bestMeanOfTen == -1) ? .dnf : Penalty.none)), nilCondition: true)
                                             } else {
@@ -295,14 +295,14 @@ struct StatsView: View {
                                                             : stopwatchManager.solvesNoDNFs.map { $0.timeIncPen })
                                 
                                 
-                                StatsBlock(title: "TIME TREND", blockHeight: (timeTrendData.count < 2 ? blockHeightGraphEmpty : 310), isBigBlock: true, isTappable: true) {
+                                StatsBlock(title: String(localized: "TIME TREND"), blockHeight: (timeTrendData.count < 2 ? blockHeightGraphEmpty : 310), isBigBlock: true, isTappable: true) {
                                     TimeTrend(data: Array(timeTrendData.suffix(timeTrendSolves)), title: nil)
                                         .drawingGroup()
                                 }
                                 .onTapGesture { self.showTimeTrendModal = true }
                                 
                                 
-                                StatsBlock(title: "TIME DISTRIBUTION", blockHeight: (timeDistributionData.count < 4 ? blockHeightGraphEmpty : 300), isBigBlock: true, isTappable: false) {
+                                StatsBlock(title: String(localized: "TIME DISTRIBUTION"), blockHeight: (timeDistributionData.count < 4 ? blockHeightGraphEmpty : 300), isBigBlock: true, isTappable: false) {
                                     TimeDistribution(solves: timeDistributionData)
                                         .drawingGroup()
                                         .frame(height: timeDistributionData.count < 4 ? blockHeightGraphEmpty : 300)

@@ -23,6 +23,7 @@
 		235D6A6929C2C0D3002D90D8 /* HelperShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6829C2C0D3002D90D8 /* HelperShare.swift */; };
 		235D6A6E29C2C34E002D90D8 /* ManualInputTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6D29C2C34E002D90D8 /* ManualInputTextField.swift */; };
 		235D6A7029C2CE09002D90D8 /* CloudkitStatusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235D6A6F29C2CE09002D90D8 /* CloudkitStatusManager.swift */; };
+		236850DD2C54D5CA00548BEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 236850DC2C54D5CA00548BEA /* Localizable.xcstrings */; };
 		2377418829A9A05A00A4F917 /* HelperUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2377418729A9A05A00A4F917 /* HelperUI.swift */; };
 		237B35502761995F00CC39BF /* SettingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B354F2761995F00CC39BF /* SettingsCard.swift */; };
 		238FB42029B8175C008EC1D4 /* GradientManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238FB41F29B8175C008EC1D4 /* GradientManager.swift */; };
@@ -128,7 +129,6 @@
 		231827E629B5E86B00A40C78 /* FloatingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FloatingPanel.swift; path = CubeTime/Tabs/FloatingPanel.swift; sourceTree = SOURCE_ROOT; };
 		2319F8B8276872F200644EB3 /* TimeTrend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrend.swift; sourceTree = "<group>"; };
 		231B2E2D29BDECF9007E5DC2 /* HelperButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperButtons.swift; sourceTree = "<group>"; };
-		231F37C02B81F7F00016A137 /* TNoodle.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = TNoodle.xcframework; sourceTree = "<group>"; };
 		231F37C42B81FD290016A137 /* ImportExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExport.swift; sourceTree = "<group>"; };
 		2326435F28C4927600F6322E /* TimerHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerHeader.swift; sourceTree = "<group>"; };
 		23329E8F29C31CA60017AE99 /* libz.1.1.3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.1.3.tbd; path = usr/lib/libz.1.1.3.tbd; sourceTree = SDKROOT; };
@@ -142,6 +142,7 @@
 		235D6A6829C2C0D3002D90D8 /* HelperShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperShare.swift; sourceTree = "<group>"; };
 		235D6A6D29C2C34E002D90D8 /* ManualInputTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualInputTextField.swift; sourceTree = "<group>"; };
 		235D6A6F29C2CE09002D90D8 /* CloudkitStatusManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudkitStatusManager.swift; sourceTree = "<group>"; };
+		236850DC2C54D5CA00548BEA /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		2377418729A9A05A00A4F917 /* HelperUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperUI.swift; sourceTree = "<group>"; };
 		23783DA429AB55750036FE2B /* getBestAverage.h++ */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "getBestAverage.h++"; sourceTree = "<group>"; };
 		237B354F2761995F00CC39BF /* SettingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCard.swift; sourceTree = "<group>"; };
@@ -383,13 +384,13 @@
 		23DE3BCE274DDBE200254D29 = {
 			isa = PBXGroup;
 			children = (
+				236850DC2C54D5CA00548BEA /* Localizable.xcstrings */,
 				23B45E7129A855F400BDF49E /* Frameworks */,
 				23DE3BD9274DDBE200254D29 /* CubeTime */,
 				23DE3BEF274DDBE400254D29 /* CubeTimeTests */,
 				23DE3BF9274DDBE400254D29 /* CubeTimeUITests */,
 				23DE3BD8274DDBE200254D29 /* Products */,
 				23E647C22775B21B00561780 /* Frameworks */,
-				E5B1FCE92BAD87BF007C1688 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -510,14 +511,6 @@
 			path = Tools;
 			sourceTree = "<group>";
 		};
-		E5B1FCE92BAD87BF007C1688 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				231F37C02B81F7F00016A137 /* TNoodle.xcframework */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -589,7 +582,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1310;
-				LastUpgradeCheck = 1530;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					23DE3BD6274DDBE200254D29 = {
 						CreatedOnToolsVersion = 13.1;
@@ -611,6 +604,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 23DE3BCE274DDBE200254D29;
 			packageReferences = (
@@ -637,6 +631,7 @@
 			files = (
 				23DE3BE2274DDBE300254D29 /* Preview Assets.xcassets in Resources */,
 				23DE3BDF274DDBE300254D29 /* Assets.xcassets in Resources */,
+				236850DD2C54D5CA00548BEA /* Localizable.xcstrings in Resources */,
 				239560A629C3056E00735035 /* SplashPad.storyboard in Resources */,
 				23AB648C293867EA0049993B /* 12sec-audio.wav in Resources */,
 				23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */,
@@ -772,6 +767,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -832,6 +828,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
