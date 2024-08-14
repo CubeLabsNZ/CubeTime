@@ -54,7 +54,7 @@ struct TimeTrendDetail: View {
     @State var selectedLines = [true]
     
     let labels: [(label: String, type: CTButtonType)] = [
-        ("time", .halfcoloured(nil)),
+        (String(localized: "time"), .halfcoloured(nil)),
         //        ("ao5", .green),
         //        ("ao12", .red),
         //        ("ao100", .orange)

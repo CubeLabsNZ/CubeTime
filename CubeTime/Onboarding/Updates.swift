@@ -109,7 +109,7 @@ let updatesList: [String: (majorAdditions: [ListPoint]?,
     bugFixes: [
         ListPoint(1, "fixed various dynamic type bugs"),
         ListPoint(1, "fixed calculator tool bugs"),
-        ListPoint(1, "fixed comp sim crashing"),
+        ListPoint(1, "fixed compsim crashing"),
         ListPoint(1, "fixed time distribution crashing"),
         ListPoint(1, "fixed inverted iPad trackpad gesture to show penalty bar"),
         ListPoint(1, "fixed select all only selected shown solves"),

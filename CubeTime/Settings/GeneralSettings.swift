@@ -1,8 +1,10 @@
 import SwiftUI
 
-enum InputMode: String, Codable, CaseIterable {
+enum InputMode: LocalizedStringKey, Codable, CaseIterable, Identifiable {
     case timer = "Timer"
     case typing = "Typing"
+    
+    var id: InputMode { self }
     /*, stackmat, smartcube, virtual*/
 }
 

@@ -209,7 +209,7 @@ struct SettingsDetail: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12, style: .continuous)
                                 .fill(Color("overlay0"))
-                                .matchedGeometryEffect(id: "bg " + currentCard.name, in: namespace)
+                                .matchedGeometryEffect(id: "bg \(currentCard.id)", in: namespace)
                                 .ignoresSafeArea()
                                 .shadowLight(x: 0, y: 3)
                             

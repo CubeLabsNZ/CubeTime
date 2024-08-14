@@ -59,7 +59,7 @@ class ExportFormat: ReferenceFileDocument {
 
 class CSVExportFormat: ExportFormat {
     override func getName() -> String {
-        return "CSV (generic)"
+        return String(localized: "CSV (generic)")
     }
     
     static var _readableContentTypes: [UTType] = [.commaSeparatedText]
@@ -145,7 +145,7 @@ let styles = ##"""
 
 class ODSExportFormat: ExportFormat {
     override func getName() -> String {
-        return "ODF (MS Excel/Google Sheets)"
+        return String(localized: "ODF (MS Excel/Google Sheets)")
     }
     
     static var _readableContentTypes: [UTType] = [.zip]
@@ -303,7 +303,7 @@ class ODSExportFormat: ExportFormat {
 
 class CSTimerExportFormat: ExportFormat {
     override func getName() -> String {
-        return "JSON (csTimer)"
+        return String(localized: "JSON (csTimer)")
     }
 
     static var _readableContentTypes: [UTType] = [.commaSeparatedText]

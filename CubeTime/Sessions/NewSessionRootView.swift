@@ -84,29 +84,29 @@ struct NewSessionRootView: View {
                     
                     
                     VStack(alignment: .leading, spacing: 48) {
-                        NewSessionTypeCardGroup(title: "Normal Sessions") {
+                        NewSessionTypeCardGroup(title: String(localized: "Normal Sessions")) {
                             NavigationLink(destination: NewSessionView(sessionType: SessionType.standard, typeName: "Standard", showNewSessionPopUp: $showNewSessionPopUp)) {
-                                NewSessionTypeCard(name: "Standard Session", icon: SessionTypeIcon(iconName: "timer.square"))
+                                NewSessionTypeCard(name: String(localized: "Standard Session"), icon: SessionTypeIcon(iconName: "timer.square"))
                             }
                             
                             CTDivider()
                                 .padding(.leading, 48)
                             
                             NavigationLink(destination: NewSessionView(sessionType: SessionType.multiphase, typeName: "Multiphase", showNewSessionPopUp: $showNewSessionPopUp)) {
-                                NewSessionTypeCard(name: "Multiphase", icon: SessionTypeIcon(size: 24, iconName: "square.stack", padding: (10, 6)))
+                                NewSessionTypeCard(name: String(localized: "Multiphase"), icon: SessionTypeIcon(size: 24, iconName: "square.stack", padding: (10, 6)))
                             }
                             
                             CTDivider()
                                 .padding(.leading, 48)
                             
                             NavigationLink(destination: NewSessionView(sessionType: SessionType.playground, typeName: "Playground", showNewSessionPopUp: $showNewSessionPopUp)) {
-                                NewSessionTypeCard(name: "Playground", icon: SessionTypeIcon(size: 24, iconName: "square.on.square"))
+                                NewSessionTypeCard(name: String(localized: "Playground"), icon: SessionTypeIcon(size: 24, iconName: "square.on.square"))
                             }
                         }
                         
-                        NewSessionTypeCardGroup(title: "Other Sessions") {
-                            NavigationLink(destination: NewSessionView(sessionType: SessionType.compsim, typeName: "Comp Sim", showNewSessionPopUp: $showNewSessionPopUp)) {
-                                NewSessionTypeCard(name: "Comp Sim", icon: SessionTypeIcon(iconName: "globe.asia.australia", weight: .medium))
+                        NewSessionTypeCardGroup(title: String(localized: "Other Sessions")) {
+                            NavigationLink(destination: NewSessionView(sessionType: SessionType.compsim, typeName: "Compsim", showNewSessionPopUp: $showNewSessionPopUp)) {
+                                NewSessionTypeCard(name: String(localized: "Compsim"), icon: SessionTypeIcon(iconName: "globe.asia.australia", weight: .medium))
                             }
                         }
                     }

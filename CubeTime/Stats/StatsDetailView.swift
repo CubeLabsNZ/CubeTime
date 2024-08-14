@@ -122,7 +122,7 @@ struct StatsDetailView: View {
                             Text("|")
                                 .offset(y: -1)  // slight offset of bar
                             
-                            Text(solves.name == "Comp Sim Solve" ? "compsim" : solves.name.lowercased())
+                            Text(solves.name == "Compsim Solve" ? "compsim" : solves.name.lowercased())
 
                             
                             Spacer()
@@ -142,9 +142,9 @@ struct StatsDetailView: View {
                     let shareStr = getShareStr(solves: solves)
                     
                     HStack(spacing: 8) {
-                        CTCopyButton(toCopy: shareStr, buttonText: "Copy Average")
+                        CTCopyButton(toCopy: shareStr, buttonText: String(localized: "Copy Average"))
                         
-                        CTShareButton(toShare: shareStr, buttonText: "Share Average")
+                        CTShareButton(toShare: shareStr, buttonText: String(localized: "Share Average"))
                     }
                     .padding(.top, 16)
                     .padding(.bottom, 4)

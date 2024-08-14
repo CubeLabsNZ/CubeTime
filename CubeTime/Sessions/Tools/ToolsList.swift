@@ -5,21 +5,28 @@ class ToolsViewModel: ObservableObject {
 }
 
 
+enum ToolType: Identifiable {
+    case timerOnly, scrambleOnly, scrambleGenerator, calculator
+    
+    var id: ToolType { self }
+}
+
 struct Tool: Identifiable, Equatable {
-    var id: String {
-        get { return name }
+    var id: ToolType {
+        get { return self.toolType }
     }
     
     let name: String
+    let toolType: ToolType
     let iconName: String
     let description: String
 }
 
 let tools: [Tool] = [
-    Tool(name: "Timer Only", iconName: "stopwatch", description: "Just a timer. No scrambles are shown. Your solves are **not** recorded and are not saved to a session."),
-    Tool(name: "Scramble Only", iconName: "cube", description: "Displays one scramble at a time. A timer is not shown. Tap to generate the next scramble."),
-    Tool(name: "Scramble Generator", iconName: "server.rack", description: "Generate multiple scrambles at once, to share, save or use."),
-    Tool(name: "Calculator", iconName: "function", description: "Simple average and mean calculator."),
+    Tool(name: String(localized: "Timer Only"), toolType: .timerOnly, iconName: "stopwatch", description: String(localized: "Just a timer. No scrambles are shown. Your solves are **not** recorded and are not saved to a session.")),
+    Tool(name: String(localized: "Scramble Only"), toolType: .scrambleOnly, iconName: "cube", description: String(localized: "Displays one scramble at a time. A timer is not shown. Tap to generate the next scramble.")),
+    Tool(name: String(localized: "Scramble Generator"), toolType: .scrambleGenerator, iconName: "server.rack", description: String(localized: "Generate multiple scrambles at once, to share, save or use.")),
+    Tool(name: String(localized: "Calculator"), toolType: .calculator, iconName: "function", description: String(localized: "Simple average and mean calculator.")),
     /*
     Tool(name: "Tracker", iconName: "scope", description: "Track someone's average at a comp. Calculates times needed for a chance for a target, BPA, WPA, and more."),
     Tool(name: "Scorecard Generator", iconName: "printer", description: "Export scorecards for use at meetups (or comps!)."),
@@ -76,26 +83,18 @@ struct ToolsList: View {
                     
                     Group {
                         if let tool = toolsViewModel.currentTool {
-                            switch (tool.name) {
-                            case "Timer Only":
+                            switch (tool.toolType) {
+                            case .timerOnly:
                                 TimerOnlyTool()
                                 
-                            case "Scramble Only":
+                            case .scrambleOnly:
                                 ScrambleOnlyTool()
                                 
-                            case "Scramble Generator":
+                            case .scrambleGenerator:
                                 ScrambleGeneratorTool()
                                     
-                            case "Calculator":
+                            case .calculator:
                                 CalculatorTool()
-                            
-                                /*
-                            case "Tracker":
-                                EmptyView()
-                                
-                            case "Scorecard Generator":
-                                EmptyView()
-                                 */
                             
                             default:
                                 EmptyView()

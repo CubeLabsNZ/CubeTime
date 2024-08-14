@@ -15,7 +15,7 @@ let sessionTypeForID: [SessionType: Session.Type] = [
 let sessionDescriptions: [SessionType: String] = [
     .multiphase: String(localized: "A multiphase session gives you the ability to breakdown your solves into sections, such as memo/exec stages in blindfolded solving or stages in 3x3 solves.\n\nTap anywhere on the timer during a solve to record a phase lap. You can access your breakdown statistics in each time card and view overall statistics in the Stats view."),
     .playground: String(localized: "A playground session allows you to quickly change the scramble type within a session without having to specify a scramble type for the whole session."),
-    .compsim: String(localized: "A comp sim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach.")
+    .compsim: String(localized: "A compsim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach.")
 ]
 
 
@@ -321,7 +321,7 @@ func getAvgOfSolveGroup(_ compsimsolvegroup: CompSimSolveGroup) -> CalculatedAve
     let trimmedSolves: [Solve] = sorted.prefix(trim) + sorted.suffix(trim)
     
     return CalculatedAverage(
-        name: "Comp Sim",
+        name: "Compsim",
         average: sorted.dropFirst(trim).dropLast(trim)
             .reduce(0, { $0 + $1.timeIncPen }) / Double(3),
         accountedSolves: sorted,

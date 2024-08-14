@@ -409,14 +409,15 @@ struct ContextMenuButton: View {
     }
     
     var body: some View {
-        Button(role: title == "Delete Session" ? .destructive : nil, action: delayedAction) {
+        Button(role: systemImage == "trash" ? .destructive : nil, action: delayedAction) {
             HStack {
                 Text(title)
                 if image != nil {
                     Image(uiImage: image!)
                 }
             }
-        }.disabled(disableButton ?? false)
+        }
+        .disabled(disableButton ?? false)
     }
     
     private var image: UIImage? {

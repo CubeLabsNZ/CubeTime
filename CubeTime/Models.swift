@@ -120,7 +120,7 @@ extension CompSimSolveGroup {
     }
     
     var avg: CalculatedAverage? {
-        return StopwatchManager.getCalculatedAverage(forSolves: self.solves!.allObjects as! [Solve], name: String(localized: "Comp Sim Group"), isCompsim: true)
+        return StopwatchManager.getCalculatedAverage(forSolves: self.solves!.allObjects as! [Solve], name: String(localized: "Compsim Group"), isCompsim: true)
     }
 }
 

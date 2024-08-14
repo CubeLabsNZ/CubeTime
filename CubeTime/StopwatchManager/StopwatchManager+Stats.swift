@@ -540,7 +540,7 @@ extension StopwatchManager {
                 return (nil, [])
             } else {
                 var bestAverage: CalculatedAverage?
-//                var bestAverage: CalculatedAverage = calculateAverage(((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]), "Best Comp Sim", true)!
+//                var bestAverage: CalculatedAverage = calculateAverage(((compsimSession.solvegroups!.firstObject as! CompSimSolveGroup).solves!.array as! [Solves]), "Best Compsim", true)!
                 
                 for solvegroup in compsimSolveGroups {
                     if solvegroup.solves!.allObjects.count == 5 {

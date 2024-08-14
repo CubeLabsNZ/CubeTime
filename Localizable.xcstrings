@@ -126,7 +126,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld d.p"
+            "value" : "%lld位数"
           }
         }
       }
@@ -301,14 +301,8 @@
         }
       }
     },
-    "A comp sim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach." : {
+    "A compsim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A Compsim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach."
-          }
-        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -415,6 +409,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "确认删除该分组所有还原成绩？"
+          }
+        }
+      }
+    },
+    "Are you sure you want to delete \"%@\"? All solves will be deleted and this cannot be undone." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定删除\"%@\"？此操作会删除分组里所有还原成绩。"
           }
         }
       }
@@ -559,6 +563,9 @@
         }
       }
     },
+    "Calculator" : {
+
+    },
     "Cancel" : {
       "localizations" : {
         "zh-Hans" : {
@@ -639,22 +646,6 @@
         }
       }
     },
-    "Comp Sim Group" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Compsim Group"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "比赛模拟还原组"
-          }
-        }
-      }
-    },
     "Compsim" : {
       "localizations" : {
         "en" : {
@@ -667,6 +658,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "比赛模拟模式"
+          }
+        }
+      }
+    },
+    "Compsim Group" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "比赛模拟还原组"
           }
         }
       }
@@ -706,7 +707,17 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "复制"
+            "value" : "拷贝"
+          }
+        }
+      }
+    },
+    "Copy Average" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拷贝"
           }
         }
       }
@@ -716,7 +727,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "复制打乱"
+            "value" : "拷贝打乱"
           }
         }
       }
@@ -737,6 +748,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新建"
+          }
+        }
+      }
+    },
+    "CSV (generic)" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSV (通用)"
           }
         }
       }
@@ -841,6 +862,16 @@
         }
       }
     },
+    "Customise" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑"
+          }
+        }
+      }
+    },
     "Customise Session" : {
       "localizations" : {
         "zh-Hans" : {
@@ -911,6 +942,16 @@
         }
       }
     },
+    "Delete Session" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除分组"
+          }
+        }
+      }
+    },
     "Delete Solve Group" : {
       "localizations" : {
         "zh-Hans" : {
@@ -940,6 +981,9 @@
           }
         }
       }
+    },
+    "Displays one scramble at a time. A timer is not shown. Tap to generate the next scramble." : {
+
     },
     "DNF" : {
       "localizations" : {
@@ -1061,12 +1105,32 @@
         }
       }
     },
+    "Font Casualness" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "字体随意性"
+          }
+        }
+      }
+    },
     "Font Settings" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "字体设置"
+          }
+        }
+      }
+    },
+    "Font Weight" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "字体粗细"
           }
         }
       }
@@ -1090,6 +1154,9 @@
           }
         }
       }
+    },
+    "Generate multiple scrambles at once, to share, save or use." : {
+
     },
     "Generate!" : {
       "localizations" : {
@@ -1270,6 +1337,19 @@
           }
         }
       }
+    },
+    "JSON (csTimer)" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "JSON (csTimer)"
+          }
+        }
+      }
+    },
+    "Just a timer. No scrambles are shown. Your solves are **not** recorded and are not saved to a session." : {
+
     },
     "L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'" : {
       "localizations" : {
@@ -1481,6 +1561,16 @@
         }
       }
     },
+    "Normal Sessions" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "普通分组"
+          }
+        }
+      }
+    },
     "not enough solves to\ndisplay graph" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1497,6 +1587,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "打乱次数..."
+          }
+        }
+      }
+    },
+    "ODF (MS Excel/Google Sheets)" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ODF (MS Excel/Google Sheets)"
           }
         }
       }
@@ -1651,6 +1751,16 @@
         }
       }
     },
+    "Pin" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标星"
+          }
+        }
+      }
+    },
     "Pin Session?" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1801,6 +1911,12 @@
         }
       }
     },
+    "Scramble Generator" : {
+
+    },
+    "Scramble Only" : {
+
+    },
     "Scramble Size: " : {
       "localizations" : {
         "zh-Hans" : {
@@ -1941,6 +2057,16 @@
         }
       }
     },
+    "Share Average" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享"
+          }
+        }
+      }
+    },
     "Show a button in the top right corner to enter zen mode." : {
       "localizations" : {
         "zh-Hans" : {
@@ -2043,6 +2169,9 @@
         }
       }
     },
+    "Simple average and mean calculator." : {
+
+    },
     "Skewb" : {
       "localizations" : {
         "zh-Hans" : {
@@ -2099,6 +2228,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Square-1"
+          }
+        }
+      }
+    },
+    "Standard Session" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "单项分组"
           }
         }
       }
@@ -2253,6 +2392,16 @@
         }
       }
     },
+    "time" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "单次"
+          }
+        }
+      }
+    },
     "Time" : {
       "localizations" : {
         "zh-Hans" : {
@@ -2313,6 +2462,16 @@
         }
       }
     },
+    "Timer" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计时器"
+          }
+        }
+      }
+    },
     "Timer Interface" : {
       "localizations" : {
         "zh-Hans" : {
@@ -2332,6 +2491,9 @@
           }
         }
       }
+    },
+    "Timer Only" : {
+
     },
     "Timer Settings" : {
       "localizations" : {
@@ -2443,6 +2605,16 @@
         }
       }
     },
+    "Typing" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手动输入"
+          }
+        }
+      }
+    },
     "Unlock Scramble" : {
       "localizations" : {
         "zh-Hans" : {
@@ -2469,6 +2641,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "解锁"
+          }
+        }
+      }
+    },
+    "Unpin" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消星标"
           }
         }
       }

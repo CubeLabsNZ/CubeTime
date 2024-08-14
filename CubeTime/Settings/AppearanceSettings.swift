@@ -160,8 +160,8 @@ struct AppearanceSettingsView: View {
                     }
                 }
                 
-                SettingsDragger(text: "Font Weight", value: $fontWeight, in: 300...800)
-                SettingsDragger(text: "Font Casualness", value: $fontCasual, in: 0...1)
+                SettingsDragger(text: String(localized: "Font Weight"), value: $fontWeight, in: 300...800)
+                SettingsDragger(text: String(localized: "Font Casualness"), value: $fontCasual, in: 0...1)
                 SettingsToggle(String(localized: "Cursive Font"), $fontCursive)
             }
             

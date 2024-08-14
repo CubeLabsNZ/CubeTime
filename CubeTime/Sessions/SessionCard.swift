@@ -153,7 +153,7 @@ struct SessionCard: View {
         .contextMenu(menuItems: {
             ContextMenuButton(delay: false,
                               action: { isShowingCustomizeDialog = true },
-                              title: "Customise",
+                              title: String(localized: "Customise"),
                               systemImage: "pencil", disableButton: false);
             
             ContextMenuButton(delay: true,
@@ -163,13 +163,13 @@ struct SessionCard: View {
                     try! managedObjectContext.save()
                 }
             },
-                              title: item.pinned ? "Unpin" : "Pin",
+                              title: item.pinned ? String(localized: "Unpin") : String(localized: "Pin"),
                               systemImage: item.pinned ? "pin.slash" : "pin", disableButton: false);
             Divider()
             
             ContextMenuButton(delay: false,
                               action: { isShowingDeleteDialog = true },
-                              title: "Delete Session",
+                              title: String(localized: "Delete Session"),
                               systemImage: "trash",
                               disableButton: allSessions.count <= 1)
             .foregroundColor(Color.red)
@@ -181,7 +181,7 @@ struct SessionCard: View {
                 .tint(Color("accent"))
         }
         
-        .confirmationDialog(String("Are you sure you want to delete \"\(self.item.name ?? "this session")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
+        .confirmationDialog(String(localized: "Are you sure you want to delete \"\(self.item.name ?? "this session")\"? All solves will be deleted and this cannot be undone."), isPresented: $isShowingDeleteDialog, titleVisibility: .visible) {
             Button("Confirm", role: .destructive) {
                 if item == stopwatchManager.currentSession {
                     var next: Session? = nil

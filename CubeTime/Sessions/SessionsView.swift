@@ -327,10 +327,10 @@ struct EventPicker: View {
                              onTapRun: {
                         sessionEventType = Int32(index)
                     }) {
-                        Image(element.name)
+                        Image(element.imageName)
                             .renderingMode(.template)
                             .resizable()
-                            .frame(width: imageSize, height: imageSize)
+                            .frame(width: imageSize * 1.2, height: imageSize * 1.2)
                     }
                 }
             }
