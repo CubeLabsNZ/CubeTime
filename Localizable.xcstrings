@@ -31,6 +31,16 @@
         }
       }
     },
+    " Note that this is only applicable in compact UI mode (i.e. when the floating panel is not shown)." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本设置只有在使用紧凑界面时有效"
+          }
+        }
+      }
+    },
     "-" : {
       "localizations" : {
         "zh-Hans" : {
@@ -293,6 +303,12 @@
     },
     "A comp sim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Compsim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -333,6 +349,12 @@
     },
     "Add New Session" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add new session"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -342,7 +364,14 @@
       }
     },
     "Algorithm Trainer" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "算法训练模式"
+          }
+        }
+      }
     },
     "All phases" : {
       "localizations" : {
@@ -356,6 +385,12 @@
     },
     "All Puzzles" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All puzzles"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -435,10 +470,24 @@
       }
     },
     "AVERAGES" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5次平均次数"
+          }
+        }
+      }
     },
     "BEST" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最快AO5"
+          }
+        }
+      }
     },
     "BEST AO5" : {
       "localizations" : {
@@ -592,6 +641,12 @@
     },
     "Comp Sim Group" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compsim Group"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -602,6 +657,12 @@
     },
     "Compsim" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compsim"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -771,7 +832,14 @@
       }
     },
     "Cursive Font" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "斜体字体"
+          }
+        }
+      }
     },
     "Customise Session" : {
       "localizations" : {
@@ -794,7 +862,14 @@
       }
     },
     "Dark Mode" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暗黑模式"
+          }
+        }
+      }
     },
     "Date" : {
       "localizations" : {
@@ -807,12 +882,21 @@
       }
     },
     "DEBUG BUILD" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "DEBUG BUILD"
+            "value" : "DEBUG"
+          }
+        }
+      }
+    },
+    "Default Session" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "默认分组"
           }
         }
       }
@@ -928,16 +1012,44 @@
       }
     },
     "Extra Extra Extra Large" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加加加大号"
+          }
+        }
+      }
     },
     "Extra Extra Large" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加加大号"
+          }
+        }
+      }
     },
     "Extra Large" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加大号"
+          }
+        }
+      }
     },
     "Extra Small" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加小号"
+          }
+        }
+      }
     },
     "Filters" : {
       "localizations" : {
@@ -970,12 +1082,11 @@
       }
     },
     "generate" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "生成"
+            "value" : "GENERATE"
           }
         }
       }
@@ -991,7 +1102,14 @@
       }
     },
     "Gesture Activation Distance" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手势激活距离"
+          }
+        }
+      }
     },
     "Got it!" : {
       "localizations" : {
@@ -1014,16 +1132,44 @@
       }
     },
     "Graph Animation" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "图标动画"
+          }
+        }
+      }
     },
     "Graph Glow" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "图表光晕效果"
+          }
+        }
+      }
     },
     "Haptic Feedback" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用触感反馈"
+          }
+        }
+      }
     },
     "Haptic Intensity" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "触感反馈模式"
+          }
+        }
+      }
     },
     "Has Comment" : {
       "localizations" : {
@@ -1056,14 +1202,21 @@
       }
     },
     "Hold Down Time: " : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计时器启动延时："
+          }
+        }
+      }
     },
     "iCloud unavailable" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "当前iCloud不可用"
+            "value" : "当前iCloud不可使用"
           }
         }
       }
@@ -1079,16 +1232,44 @@
       }
     },
     "Inspection Alert" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "观察语音提示"
+          }
+        }
+      }
     },
     "Inspection Alert Follows System Silent Mode" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "观察语音提示使用系统静音设置"
+          }
+        }
+      }
     },
     "Inspection Alert Type" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "观察语音提示模式"
+          }
+        }
+      }
     },
     "Inspection Counts Down" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "观察计时倒数"
+          }
+        }
+      }
     },
     "L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'" : {
       "localizations" : {
@@ -1100,8 +1281,35 @@
         }
       }
     },
+    "Language" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "语言"
+          }
+        }
+      }
+    },
+    "Language & Localisation" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "语言与地区设置"
+          }
+        }
+      }
+    },
     "Large (Default)" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大号（默认）"
+          }
+        }
+      }
     },
     "Licenses" : {
       "localizations" : {
@@ -1158,13 +1366,20 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "中位数"
+            "value" : "中位数："
           }
         }
       }
     },
     "Medium" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中号"
+          }
+        }
+      }
     },
     "Megaminx" : {
       "localizations" : {
@@ -1217,7 +1432,14 @@
       }
     },
     "Multiphase" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "多阶段分组模式"
+          }
+        }
+      }
     },
     "New %@ Session" : {
       "localizations" : {
@@ -1329,6 +1551,16 @@
         }
       }
     },
+    "Open settings" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开系统设置"
+          }
+        }
+      }
+    },
     "Order by" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1350,7 +1582,14 @@
       }
     },
     "Override System Appearance" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "覆盖系统外观"
+          }
+        }
+      }
     },
     "Penalty" : {
       "localizations" : {
@@ -1503,10 +1742,24 @@
       }
     },
     "REACHED" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "达到目标"
+          }
+        }
+      }
     },
     "REACHED TARGETS" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "达到目标"
+          }
+        }
+      }
     },
     "Reset" : {
       "localizations" : {
@@ -1549,7 +1802,14 @@
       }
     },
     "Scramble Size: " : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打乱字体大小："
+          }
+        }
+      }
     },
     "Search…" : {
       "localizations" : {
@@ -1681,17 +1941,67 @@
         }
       }
     },
+    "Show a button in the top right corner to enter zen mode." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在计时器界面的右上角显示禅模式。"
+          }
+        }
+      }
+    },
     "Show Cancel Inspection" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show cancel inspection"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示取消观察键"
+          }
+        }
+      }
     },
     "Show draw scramble on timer" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "主界面显示打乱图案"
+          }
+        }
+      }
     },
     "Show Previous Time" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show previous time"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示上一个时间"
+          }
+        }
+      }
     },
     "Show stats on timer" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "主界面显示统计数据"
+          }
+        }
+      }
     },
     "Show the previous time after a solve is deleted by swipe gesture. With this option off, the default time of 0.00 or 0.000 will be shown instead." : {
       "localizations" : {
@@ -1724,7 +2034,14 @@
       }
     },
     "Show zen mode button" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示禅模式键"
+          }
+        }
+      }
     },
     "Skewb" : {
       "localizations" : {
@@ -1737,7 +2054,14 @@
       }
     },
     "Small" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "小号"
+          }
+        }
+      }
     },
     "SOLVE %lld" : {
       "localizations" : {
@@ -1910,7 +2234,14 @@
       }
     },
     "TARGET" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "目标"
+          }
+        }
+      }
     },
     "Thanks for using this app! If you have any feedback (good or bad!), please open an issue on [our github page](https://github.com/CubeStuffs/CubeTime/issues) or [contact me personally](https://tim-xie.com/contact)." : {
       "localizations" : {
@@ -1973,7 +2304,14 @@
       }
     },
     "Time Trend Show: " : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "时间趋势显示："
+          }
+        }
+      }
     },
     "Timer Interface" : {
       "localizations" : {
@@ -1986,7 +2324,14 @@
       }
     },
     "Timer Mode" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计时器模式"
+          }
+        }
+      }
     },
     "Timer Settings" : {
       "localizations" : {
@@ -2009,7 +2354,14 @@
       }
     },
     "Timer Update" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计时器更新频率"
+          }
+        }
+      }
     },
     "Times" : {
       "localizations" : {
@@ -2032,7 +2384,14 @@
       }
     },
     "Times Displayed To: " : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "时间显示："
+          }
+        }
+      }
     },
     "To use the 'Boop' option, your phone must not be muted. 'Boop' plays a system sound, requiring your ringer to be unmuted." : {
       "localizations" : {
@@ -2055,7 +2414,14 @@
       }
     },
     "Touch Gesture Activation Distance" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手势激活距离"
+          }
+        }
+      }
     },
     "Turn on/off the glow effect on graphs." : {
       "localizations" : {
@@ -2122,7 +2488,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "v%@ 更新"
+            "value" : "v%@ 更新："
           }
         }
       }

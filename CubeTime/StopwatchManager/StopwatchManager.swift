@@ -317,7 +317,7 @@ class StopwatchManager: ObservableObject {
                 let sessionToSave = Session(context: moc) // Must use this variable else didset will fire prematurely
                 sessionToSave.scrambleType = 1
                 sessionToSave.sessionType = SessionType.playground.rawValue
-                sessionToSave.name = "Default Session"
+                sessionToSave.name = String(localized: "Default Session")
                 currentSession = sessionToSave
                 try! moc.save()
             }

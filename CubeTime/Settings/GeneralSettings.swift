@@ -129,9 +129,9 @@ struct GeneralSettingsView: View {
                         SettingsToggle(String(localized: "Show stats on timer"), $showStats)
                     }
                 }
-                var desc = "Show a button in the top right corner to enter zen mode."
+                var desc = String(localized: "Show a button in the top right corner to enter zen mode.")
                 if UIDevice.deviceIsPad {
-                    let _ = {desc += " Note that this is only applicable in compact UI mode (i.e. when the floating panel is not shown)."}()
+                    let _ = {desc += String(localized: " Note that this is only applicable in compact UI mode (i.e. when the floating panel is not shown).")}()
                 }
                 DescribedSetting(description: LocalizedStringKey.init(desc)) {
                     SettingsToggle(String(localized: "Show zen mode button"), $showZenMode)
@@ -182,6 +182,21 @@ struct GeneralSettingsView: View {
                 }
             }
             
+            SettingsGroup(Label("Language & Localisation", systemImage: "globe")) {
+                HStack {
+                    Text("Language")
+                        .font(.body.weight(.medium))
+
+                    Spacer()
+                    
+                    CTButton(type: .halfcoloured(nil), size: .medium, onTapRun: {
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                    }) {
+                        Text("Open settings")
+                    }
+                }
+            }
+
             CTButton(type: .halfcoloured(Color("red")), size: .large, expandWidth: true, onTapRun: {
                 showResetDialog = true
             }) {

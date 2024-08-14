@@ -86,7 +86,7 @@ struct SettingsCard: View {
         // this if statement is temporary for when there are only 3 blocks
         // keep ONLY the top statement (for general and appearance) to apply to all
         // once import and export is added
-        if info.name == "General" || info.name == "Appearance" {
+        if info.id == .general || info.id == .appearance {
             Button {
                 withAnimation(Animation.customSlowSpring) {
                     currentCard = info
@@ -95,20 +95,20 @@ struct SettingsCard: View {
                 ZStack {
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .fill(Color("overlay0"))
-                        .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
+                        .matchedGeometryEffect(id: "bg \(info.id)", in: namespace)
                         .frame(height: globalGeometrySize.height/3.5, alignment: .center)
                         .shadowLight(x: 0, y: 3)
                     
                     VStack {
                         HStack {
                             Text(info.name)
-                                .matchedGeometryEffect(id: info.name, in: namespace)
+                                .matchedGeometryEffect(id: info.id, in: namespace)
                                 .minimumScaleFactor(0.75)
-                                .lineLimit(info.name == "Appearance" ? 1 : 2)
+                                .lineLimit(info.id == .appearance ? 1 : 2)
                                 .allowsTightening(true)
                                 .font(.title2.weight(.bold))
-                                .padding(.horizontal, info.name == "Appearance" ? 14 : nil)
-                                .padding(.top, info.name == "Appearance" ? 15 : 12)
+                                .padding(.horizontal, info.id == .appearance ? 14 : nil)
+                                .padding(.top, info.id == .appearance ? 15 : 12)
                             
                             
                             Spacer()
@@ -139,20 +139,20 @@ struct SettingsCard: View {
                 ZStack {
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .fill(Color("overlay0"))
-                        .matchedGeometryEffect(id: "bg " + info.name, in: namespace)
+                        .matchedGeometryEffect(id: "bg \(info.id)", in: namespace)
                         .frame(height: globalGeometrySize.height/7, alignment: .center)
                         .shadowLight(x: 0, y: 3)
                     
                     VStack {
                         HStack {
                             Text(info.name)
-                                .matchedGeometryEffect(id: info.name, in: namespace)
+                                .matchedGeometryEffect(id: info.id, in: namespace)
                                 .minimumScaleFactor(0.75)
-                                .lineLimit(info.name == "Appearance" ? 1 : 2)
+                                .lineLimit(info.id == .appearance ? 1 : 2)
                                 .allowsTightening(true)
                                 .font(.title2.weight(.bold))
-                                .padding(.horizontal, info.name == "Appearance" ? 14 : nil)
-                                .padding(.top, info.name == "Appearance" ? 15 : 12)
+                                .padding(.horizontal, info.id == .appearance ? 14 : nil)
+                                .padding(.top, info.id == .appearance ? 15 : 12)
                             
                             Spacer()
                             
@@ -179,20 +179,19 @@ struct SettingsDetail: View {
     var namespace: Namespace.ID
     
     var body: some View {
-        if currentCard != nil {
+        if let currentCard {
             GeometryReader { geo in
                 ZStack {
                     BackgroundColour()
                         .zIndex(0)
                     
                     ScrollView {
-                        #warning("TODO:  use an enum for better i18n support")
-                        switch currentCard!.name {
-                        case "General":
+                        switch currentCard.id {
+                        case .general:
                             GeneralSettingsView()
-                        case "Appearance":
+                        case .appearance:
                             AppearanceSettingsView()
-                        case "Help &\nAbout Us":
+                        case .help:
                             AboutSettingsView(parentGeo: geo)
                         default:
                             EmptyView()
@@ -210,7 +209,7 @@ struct SettingsDetail: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12, style: .continuous)
                                 .fill(Color("overlay0"))
-                                .matchedGeometryEffect(id: "bg " + currentCard!.name, in: namespace)
+                                .matchedGeometryEffect(id: "bg " + currentCard.name, in: namespace)
                                 .ignoresSafeArea()
                                 .shadowLight(x: 0, y: 3)
                             
@@ -218,20 +217,20 @@ struct SettingsDetail: View {
                                 Spacer()
                                 
                                 HStack(alignment: .center) {
-                                    Text(currentCard!.name)
-                                        .matchedGeometryEffect(id: currentCard!.name, in: namespace)
+                                    Text(currentCard.name)
+                                        .matchedGeometryEffect(id: currentCard.id, in: namespace)
                                         .minimumScaleFactor(0.75)
     //                                    .lineLimit(1)
-                                        .lineLimit(currentCard!.name == "Appearance" ? 1 : 2)
+                                        .lineLimit(currentCard.id == .appearance ? 1 : 2)
                                         .allowsTightening(true)
                                         .font(.title2.weight(.bold))
                                     
 
                                     Spacer()
                                     
-                                    Image(systemName: currentCard!.icon)
-                                        .matchedGeometryEffect(id: currentCard!.icon, in: namespace)
-                                        .font(currentCard!.iconStyle)
+                                    Image(systemName: currentCard.icon)
+                                        .matchedGeometryEffect(id: currentCard.icon, in: namespace)
+                                        .font(currentCard.iconStyle)
                                 }
                                 .padding()
                             }
@@ -249,7 +248,7 @@ struct SettingsDetail: View {
                                 
                                 CTCloseButton {
                                     withAnimation(Animation.customSlowSpring) {
-                                        currentCard = nil
+                                        self.currentCard = nil
                                     }
                                 }
                                 .padding([.horizontal, .bottom])
