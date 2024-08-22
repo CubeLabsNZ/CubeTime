@@ -626,13 +626,23 @@ extension StopwatchManager {
         return nil
     }
         
-    func calculateMean(of count: Int, for solves: [Solve]) -> Average {
+    static func calculateMean(of count: Int, for solves: [Solve]) -> Average {
         let penalty: Penalty = solves.contains(where: { Penalty(rawValue: $0.penalty) == .dnf }) ? .dnf : .none
         let average: Double = solves.reduce(0, { $0 + $1.timeIncPen }) / Double(count)
         
         return Average(average: average, penalty: penalty)
     }
     
+    #warning("TODO: get rid of this simplesolve")
+    
+    static func calculateMean(of count: Int, for solves: [SimpleSolve]) -> Average {
+        let penalty: Penalty = solves.contains(where: { $0.penalty == .dnf }) ? .dnf : .none
+        let average: Double = solves.reduce(0, { $0 + $1.timeIncPen }) / Double(count)
+        
+        return Average(average: average, penalty: penalty)
+    }
+
+
    
     func getBpaWpa() -> (bpa: Average?, wpa: Average?) {
         if !(currentSession is CompSimSession) { return (nil, nil) }
@@ -646,8 +656,8 @@ extension StopwatchManager {
         if (lastGroupSolves.count == 4) {
             let sortedGroup = lastGroupSolves.sorted(by: Self.sortWithDNFsLast)
             
-            let bpa = calculateMean(of: 3, for: Array(sortedGroup.dropLast()))
-            let wpa = calculateMean(of: 3, for: Array(sortedGroup.dropFirst()))
+            let bpa = StopwatchManager.calculateMean(of: 3, for: Array(sortedGroup.dropLast()))
+            let wpa = StopwatchManager.calculateMean(of: 3, for: Array(sortedGroup.dropFirst()))
             
             return (bpa, wpa)
         }

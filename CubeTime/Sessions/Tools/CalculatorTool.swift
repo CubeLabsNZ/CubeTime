@@ -33,10 +33,11 @@ struct SimpleSolve: Comparable, Hashable {
 
 struct CalculatorTool: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-
+    
     @Namespace private var namespace
     
     @State private var calculatorType: CalculatorType = .average
+    @State private var numberOfSolves: Int = 5
     @State private var currentTime: String = ""
     
     @State private var solves: [SimpleSolve] = []
@@ -52,108 +53,119 @@ struct CalculatorTool: View {
                     .ignoresSafeArea()
                 
                 VStack {
-                    ToolHeader(name: tools[3].name, image: tools[3].iconName, content: {
-                        Picker("", selection: $calculatorType) {
-                            ForEach(CalculatorType.allCases, id: \.self) { t in
-                                Text(t.rawValue)
-                                    .tag(t)
+                    ToolHeader(name: tools[3].name, image: tools[3].iconName) {
+                        HStack(spacing: 4) {
+                            Picker("", selection: $calculatorType) {
+                                ForEach(CalculatorType.allCases, id: \.self) { t in
+                                    Text(t.rawValue)
+                                        .tag(t)
+                                }
                             }
+                            
+                            TextField("", value: $numberOfSolves, format: .number)
+                                .fixedSize()
+                                .textFieldStyle(.plain)
+                                .keyboardType(.numberPad)
+                                .foregroundColor(Color("accent"))
+                                .padding(.trailing, 12)
                         }
-                    })
+                    }
                     .frame(maxWidth: .infinity)
                     
                     VStack {
                         if (solves.count > 0) {
-                            VStack(spacing: 8) {
-                                ForEach(Array(zip(solves.indices, solves)), id: \.0) { index, solve in
-                                    HStack {
-                                        if (solves.count > 3 && (index == solves.firstIndex(of: solves.min() ?? SimpleSolve(time: 0.00, penalty: .none)) || index == solves.lastIndex(of: solves.max() ?? SimpleSolve(time: 0.00, penalty: .none)))) {
-                                            Text("(" + formatSolveTime(secs: solve.time, penalty: solve.penalty) + ")")
-                                                .font(.body.weight(.semibold))
-                                                .foregroundColor(Color("grey"))
-                                        } else {
-                                            Text(formatSolveTime(secs: solve.time, penalty: solve.penalty))
-                                                .font(.body.weight(.semibold))
-                                                .foregroundColor(Color("dark"))
-                                        }
-                                        
-                                        Spacer()
-                                        
-                                        ZStack {
-                                            RoundedRectangle(cornerRadius: 6, style: .continuous)
-                                                .fill(Color("overlay0"))
-                                                .frame(width: showEditFor != nil && showEditFor == index ? nil : 35, height: 35)
+                            ScrollView {
+                                VStack(spacing: 8) {
+                                    ForEach(Array(zip(solves.indices, solves)), id: \.0) { index, solve in
+                                        HStack {
+                                            if (calculatorType == .average && solves.count > 3 && (solve.timeIncPen <= solves.sorted()[StopwatchManager.getTrimSizeEachEnd(numberOfSolves) - 1].timeIncPen || solve.timeIncPen >= solves.sorted()[solves.count - StopwatchManager.getTrimSizeEachEnd(numberOfSolves)].timeIncPen)) {
+                                                Text("(" + formatSolveTime(secs: solve.time, penalty: solve.penalty) + ")")
+                                                    .font(.body.weight(.semibold))
+                                                    .foregroundColor(Color("grey"))
+                                            } else {
+                                                Text(formatSolveTime(secs: solve.time, penalty: solve.penalty))
+                                                    .font(.body.weight(.semibold))
+                                                    .foregroundColor(Color("dark"))
+                                            }
                                             
-                                            HStack {
-                                                if (showEditFor != nil && showEditFor == index) {
-                                                    CTButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
-                                                        self.solves[index].penalty = .plustwo
-                                                        showEditFor = nil
-                                                    }) {
-                                                        Image("+2.label")
-                                                            .imageScale(.medium)
-                                                    }
-                                                    
-                                                    CTButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
-                                                        self.solves[index].penalty = .dnf
-                                                        showEditFor = nil
-                                                    }) {
-                                                        Image(systemName: "xmark.circle")
-                                                            .imageScale(.medium)
-                                                    }
-                                                    
-                                                    CTButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
-                                                        self.solves[index].penalty = .none
-                                                        showEditFor = nil
-                                                    }) {
-                                                        Image(systemName: "checkmark.circle")
-                                                            .imageScale(.medium)
-                                                    }
-                                                    
-                                                    CTDivider(isHorizontal: false)
-                                                        .padding(.vertical, 8)
-                                                    
-                                                    CTButton(type: .coloured(Color("red")), size: .medium, square: true, hasShadow: false, hasBackground: false, onTapRun: {
-                                                        self.solves.remove(at: index)
-                                                        showEditFor = nil
-                                                    }) {
-                                                        Image(systemName: "trash")
-                                                            .imageScale(.medium)
-                                                    }
-                                                }
+                                            Spacer()
+                                            
+                                            ZStack {
+                                                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                                    .fill(Color("overlay0"))
+                                                    .frame(width: showEditFor != nil && showEditFor == index ? nil : 35, height: 35)
                                                 
-                                                CTButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
-                                                    
+                                                HStack {
                                                     if (showEditFor != nil && showEditFor == index) {
-                                                        editNumber = index
-                                                        showEditFor = nil
-                                                    } else {
-                                                        if (self.showEditFor == index) {
-                                                            self.showEditFor = nil
-                                                        } else {
-                                                            self.showEditFor = index
+                                                        CTButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
+                                                            self.solves[index].penalty = .plustwo
+                                                            showEditFor = nil
+                                                        }) {
+                                                            Image("+2.label")
+                                                                .imageScale(.medium)
+                                                        }
+                                                        
+                                                        CTButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
+                                                            self.solves[index].penalty = .dnf
+                                                            showEditFor = nil
+                                                        }) {
+                                                            Image(systemName: "xmark.circle")
+                                                                .imageScale(.medium)
+                                                        }
+                                                        
+                                                        CTButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
+                                                            self.solves[index].penalty = .none
+                                                            showEditFor = nil
+                                                        }) {
+                                                            Image(systemName: "checkmark.circle")
+                                                                .imageScale(.medium)
+                                                        }
+                                                        
+                                                        CTDivider(isHorizontal: false)
+                                                            .padding(.vertical, 8)
+                                                        
+                                                        CTButton(type: .coloured(Color("red")), size: .medium, square: true, hasShadow: false, hasBackground: false, onTapRun: {
+                                                            self.solves.remove(at: index)
+                                                            showEditFor = nil
+                                                        }) {
+                                                            Image(systemName: "trash")
+                                                                .imageScale(.medium)
                                                         }
                                                     }
-                                                }) {
-                                                    Image(systemName: "pencil")
-                                                        .imageScale(.medium)
+                                                    
+                                                    CTButton(type: .mono, size: .medium, square: true, hasShadow: false, onTapRun: {
+                                                        if (showEditFor != nil && showEditFor == index) {
+                                                            editNumber = index
+                                                            showEditFor = nil
+                                                        } else {
+                                                            if (self.showEditFor == index) {
+                                                                self.showEditFor = nil
+                                                            } else {
+                                                                self.showEditFor = index
+                                                            }
+                                                        }
+                                                    }) {
+                                                        Image(systemName: "pencil")
+                                                            .imageScale(.medium)
+                                                    }
                                                 }
+                                                .padding(.horizontal, 2)
                                             }
-                                            .padding(.horizontal, 2)
+                                            .clipped()
+                                            .animation(.customDampedSpring, value: showEditFor)
+                                            .fixedSize()
                                         }
-                                        .clipped()
-                                        .animation(.customDampedSpring, value: showEditFor)
-                                        .fixedSize()
                                     }
+                                    .clipped()
                                 }
-                                .clipped()
+                                .padding(10)
                             }
-                            .padding(10)
                             .background(
                                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                                     .fill(Color("overlay1"))
                             )
                             .padding(.top)
+                            .padding(.bottom, 4)
                         }
                         
                         Spacer()
@@ -163,21 +175,29 @@ struct CalculatorTool: View {
                                 if let editNumber = editNumber {
                                     Text("EDITING SOLVE \(editNumber + 1)")
                                 } else {
-                                    if (solves.count < 5) {
+                                    if (solves.count < numberOfSolves) {
                                         Text("SOLVE \(solves.count + 1)")
                                     } else {
-                                        Text("= " + formatSolveTime(secs: StopwatchManager.calculateAverage(forSortedSolves: solves.sorted(), count: 5, trim: 1),
-                                                                    penalty: solves.sorted()[3].penalty == .dnf ? Penalty.dnf : Penalty.none ))
-                                            .font(.largeTitle.weight(.bold))
+                                        Group {
+                                            if (calculatorType == .average) {
+                                                Text("= " + formatSolveTime(secs: StopwatchManager.calculateAverage(forSortedSolves: solves.sorted(), count: numberOfSolves, trim: 1),
+                                                                            penalty: solves.sorted()[3].penalty == .dnf ? Penalty.dnf : Penalty.none ))
+                                            } else {
+                                                let mean: Average = StopwatchManager.calculateMean(of: numberOfSolves, for: solves)
+                                                
+                                                Text("= " + formatSolveTime(secs: mean.average, penalty: mean.penalty))
+                                            }
+                                        }
+                                        .font(.title.weight(.bold))
                                     }
                                 }
                             }
                             .foregroundStyle(Color("dark"))
                             .font(.callout.weight(.semibold))
                             .padding(.top, 10)
-
+                            
                             Group {
-                                if (solves.count < 5 || editNumber != nil) {
+                                if (solves.count < numberOfSolves || editNumber != nil) {
                                     TextField("0.00", text: $currentTime)
                                         .focused($focused)
                                         .padding(.vertical, 6)

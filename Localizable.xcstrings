@@ -564,7 +564,14 @@
       }
     },
     "Calculator" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计算器"
+          }
+        }
+      }
     },
     "Cancel" : {
       "localizations" : {
@@ -983,7 +990,14 @@
       }
     },
     "Displays one scramble at a time. A timer is not shown. Tap to generate the next scramble." : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "专门生成单次打乱。没有计时器。点击屏幕更换打乱。"
+          }
+        }
+      }
     },
     "DNF" : {
       "localizations" : {
@@ -1156,7 +1170,14 @@
       }
     },
     "Generate multiple scrambles at once, to share, save or use." : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一次生成多个打乱，以供共享、保存或直接使用。"
+          }
+        }
+      }
     },
     "Generate!" : {
       "localizations" : {
@@ -1349,7 +1370,14 @@
       }
     },
     "Just a timer. No scrambles are shown. Your solves are **not** recorded and are not saved to a session." : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只有计时器。不会显示打乱。 你的还原时间是**不会**被记录的。"
+          }
+        }
+      }
     },
     "L' D R2 B2 D2 F2 R2 B2 D R2 D R2 U B' R F2 R U' F L2 D'" : {
       "localizations" : {
@@ -1912,10 +1940,24 @@
       }
     },
     "Scramble Generator" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打乱生成器"
+          }
+        }
+      }
     },
     "Scramble Only" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打乱模式"
+          }
+        }
+      }
     },
     "Scramble Size: " : {
       "localizations" : {
@@ -2170,7 +2212,14 @@
       }
     },
     "Simple average and mean calculator." : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计算平均成绩（去头尾和所有平均）"
+          }
+        }
+      }
     },
     "Skewb" : {
       "localizations" : {
@@ -2493,7 +2542,14 @@
       }
     },
     "Timer Only" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计时器模式"
+          }
+        }
+      }
     },
     "Timer Settings" : {
       "localizations" : {
