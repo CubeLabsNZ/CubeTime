@@ -360,7 +360,18 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         
         let delete = UIMenu(options: [.destructive, .displayInline], children: [ // For empty divide line
             UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) {_ in
-                self.stopwatchManager.delete(solve: solve)
+                let alert = UIAlertController(title: "Confirm Delete", message: "Are you sure you want to delete this solve?", preferredStyle: .alert)
+                
+                alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+                    // Perform the delete action if confirmed
+                    self.stopwatchManager.delete(solve: solve)
+                }))
+                
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                                
+                if let viewController = self.navigationController?.visibleViewController{
+                    viewController.present(alert, animated: true, completion: nil)
+                }
             }
         ])
         
