@@ -34,6 +34,7 @@ struct TimeDetailView: View {
     private let phases: Array<Double>?
     
     @State private var userComment: String
+    @State private var showAlert = false
     
     @Binding var currentSolve: Solve?
     
@@ -206,21 +207,35 @@ struct TimeDetailView: View {
                                 
                                 
                                 CTButton(type: .coloured(Color("red")), size: .large, square: true, onTapRun: {
-                                    if currentSolve == nil {
-                                        dismiss()
-                                    }
-
-                                    currentSolve = nil
-
-                                    withAnimation {
-                                        stopwatchManager.delete(solve: solve)
-                                    }
+                                    showAlert = true
                                 }) {
                                     Image(systemName: "trash")
                                 }
                             }
                             .padding(.top, 16)
                             .padding(.bottom, 4)
+                            .alert(isPresented: $showAlert){
+                                Alert(
+                                       title: Text("Are you sure you want to delete this time?"),
+                                       primaryButton: .cancel(
+                                           Text("Cancel"),
+                                           action: { }
+                                       ),
+                                       secondaryButton: .destructive(
+                                           Text("Delete Time"),
+                                           action: {
+                                               if currentSolve == nil {
+                                                   dismiss()
+                                               }
+                                               currentSolve = nil
+                                               
+                                               withAnimation {
+                                                   stopwatchManager.delete(solve: solve)
+                                               }
+                                           }
+                                       )
+                                   )
+                            }
                             
                             // END BUTTONS
                             
