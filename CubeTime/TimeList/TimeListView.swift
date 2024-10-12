@@ -289,6 +289,8 @@ struct TimeListView: View {
     
     @State var isCleaningSession = false
     
+    @State var showAlert = false
+    
     var body: some View {
         let sessionType = stopwatchManager.currentSession.sessionType
         NavigationView {
@@ -366,6 +368,7 @@ struct TimeListView: View {
                                         Label("Penalty", systemImage: "exclamationmark.triangle")
                                     }
                                     
+                                    
                                     if stopwatchManager.currentSession.sessionType != SessionType.compsim.rawValue {
                                         SessionPickerMenu(sessions: sessionType == SessionType.playground.rawValue ? sessionsCanMoveToPlaygroundContextMenu : stopwatchManager.sessionsCanMoveTo) { session in
                                             for object in stopwatchManager.timeListSolvesSelected {
@@ -379,14 +382,9 @@ struct TimeListView: View {
                                     
                                     Divider()
                                     
-                                    Button(role: .destructive) {
-                                        isSelectMode = false
-                                        for object in stopwatchManager.timeListSolvesSelected {
-                                            stopwatchManager.delete(solve: object)
-                                        }
-                                        
-                                        stopwatchManager.timeListSolvesSelected.removeAll()
-                                    } label: {
+                                    Button(role: .destructive, action: {
+                                        showAlert = true
+                                    }) {
                                         Label("Delete", systemImage: "trash")
                                     }
                                 }
@@ -399,6 +397,25 @@ struct TimeListView: View {
                                 .frame(width: 28, height: 28)
                             }
                             .frame(width: 28, height: 28)
+                            .alert(isPresented: $showAlert){
+                                Alert(
+                                       title: Text("Are you sure you want to delete this time?"),
+                                       primaryButton: .cancel(
+                                           Text("Cancel")
+                                       ),
+                                       secondaryButton: .destructive(
+                                           Text("Delete Time"),
+                                           action: {
+                                               isSelectMode = false
+                                               for object in stopwatchManager.timeListSolvesSelected {
+                                                   stopwatchManager.delete(solve: object)
+                                               }
+
+                                               stopwatchManager.timeListSolvesSelected.removeAll()
+                                           }
+                                       )
+                                   )
+                            }
                         }
                     }
                     
