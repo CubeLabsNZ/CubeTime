@@ -216,7 +216,7 @@ struct TimeDetailView: View {
                             .padding(.bottom, 4)
                             .alert(isPresented: $showAlert){
                                 Alert(
-                                       title: Text("Are you sure you want to delete this time?"),
+                                       title: Text("Are you sure you want to delete this solve?"),
                                        primaryButton: .cancel(
                                            Text("Cancel"),
                                            action: { }

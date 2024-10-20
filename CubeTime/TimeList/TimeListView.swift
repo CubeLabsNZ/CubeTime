@@ -397,24 +397,17 @@ struct TimeListView: View {
                                 .frame(width: 28, height: 28)
                             }
                             .frame(width: 28, height: 28)
-                            .alert(isPresented: $showAlert){
-                                Alert(
-                                       title: Text("Are you sure you want to delete this time?"),
-                                       primaryButton: .cancel(
-                                           Text("Cancel")
-                                       ),
-                                       secondaryButton: .destructive(
-                                           Text("Delete Time"),
-                                           action: {
-                                               isSelectMode = false
-                                               for object in stopwatchManager.timeListSolvesSelected {
-                                                   stopwatchManager.delete(solve: object)
-                                               }
+                            
+                            .confirmationDialog(String(localized: "Are you sure you want to delete the selected solves? This cannot be undone."), isPresented: $showAlert, titleVisibility: .visible) {
+                                Button("Confirm", role: .destructive) {
+                                    isSelectMode = false
+                                    for object in stopwatchManager.timeListSolvesSelected {
+                                        stopwatchManager.delete(solve: object)
+                                    }
 
-                                               stopwatchManager.timeListSolvesSelected.removeAll()
-                                           }
-                                       )
-                                   )
+                                    stopwatchManager.timeListSolvesSelected.removeAll()
+                                }
+                                Button("Cancel", role: .cancel) {}
                             }
                         }
                     }

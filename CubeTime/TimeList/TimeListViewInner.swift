@@ -360,7 +360,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         
         let delete = UIMenu(options: [.destructive, .displayInline], children: [ // For empty divide line
             UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) {_ in
-                let alert = UIAlertController(title: "Confirm Delete", message: "Are you sure you want to delete this solve?", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Confirm Delete", message: "Are you sure you want to delete this solve?", preferredStyle: .actionSheet)
                 
                 alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
                     // Perform the delete action if confirmed
@@ -374,6 +374,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
                 }
             }
         ])
+        
         
         let menuConfig = UIMenu(children: [copy, penaltyMenu, moveToMenu, delete])
         return UIContextMenuConfiguration(identifier: indexPath as NSCopying, previewProvider: nil, actionProvider: { _ in

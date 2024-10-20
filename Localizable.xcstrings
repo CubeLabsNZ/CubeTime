@@ -423,6 +423,9 @@
         }
       }
     },
+    "Are you sure you want to delete the selected solves? This cannot be undone." : {
+
+    },
     "Are you sure you want to delete this solve?" : {
       "localizations" : {
         "zh-Hans" : {
@@ -432,6 +435,9 @@
           }
         }
       }
+    },
+    "Are you sure you want to delete this time?" : {
+
     },
     "Are you sure you want to reset all appearance settings? Your solves and sessions will be kept." : {
       "localizations" : {
@@ -968,6 +974,9 @@
           }
         }
       }
+    },
+    "Delete Time" : {
+
     },
     "Descending" : {
       "localizations" : {
