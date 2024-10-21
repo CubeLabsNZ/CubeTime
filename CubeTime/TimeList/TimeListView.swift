@@ -291,6 +291,8 @@ struct TimeListView: View {
     
     @State var showAlert = false
     
+    @Preference(\.promptDelete) private var promptDelete
+    
     var body: some View {
         let sessionType = stopwatchManager.currentSession.sessionType
         NavigationView {
@@ -383,7 +385,12 @@ struct TimeListView: View {
                                     Divider()
                                     
                                     Button(role: .destructive, action: {
-                                        showAlert = true
+                                        if(promptDelete){
+                                            showAlert = true
+                                        }
+                                        else{
+                                            deleteSolves()
+                                        }
                                     }) {
                                         Label("Delete", systemImage: "trash")
                                     }
@@ -397,18 +404,6 @@ struct TimeListView: View {
                                 .frame(width: 28, height: 28)
                             }
                             .frame(width: 28, height: 28)
-                            
-                            .confirmationDialog(String(localized: "Are you sure you want to delete the selected solves? This cannot be undone."), isPresented: $showAlert, titleVisibility: .visible) {
-                                Button("Confirm", role: .destructive) {
-                                    isSelectMode = false
-                                    for object in stopwatchManager.timeListSolvesSelected {
-                                        stopwatchManager.delete(solve: object)
-                                    }
-
-                                    stopwatchManager.timeListSolvesSelected.removeAll()
-                                }
-                                Button("Cancel", role: .cancel) {}
-                            }
                         }
                     }
                     
@@ -454,6 +449,13 @@ struct TimeListView: View {
             Text("Are you sure you want to continue? This will delete every solve in this session!")
         }
         
+        .confirmationDialog(String(localized: "Are you sure you want to delete the selected solves? This cannot be undone."), isPresented: $showAlert, titleVisibility: .visible) {
+            Button("Confirm", role: .destructive) {
+                deleteSolves()
+            }
+            Button("Cancel", role: .cancel) {}
+        }
+        
         .sheet(item: $solve) { item in
             TimeDetailView(for: item, currentSolve: $solve)
                 .tint(Color("accent"))
@@ -484,4 +486,14 @@ struct TimeListView: View {
             }
         }
     }
+    
+    func deleteSolves() -> Void{
+        isSelectMode = false
+        for object in stopwatchManager.timeListSolvesSelected {
+            stopwatchManager.delete(solve: object)
+        }
+
+        stopwatchManager.timeListSolvesSelected.removeAll()
+    }
 }
+

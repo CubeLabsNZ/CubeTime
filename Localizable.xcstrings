@@ -436,9 +436,6 @@
         }
       }
     },
-    "Are you sure you want to delete this time?" : {
-
-    },
     "Are you sure you want to reset all appearance settings? Your solves and sessions will be kept." : {
       "localizations" : {
         "zh-Hans" : {
@@ -965,6 +962,9 @@
         }
       }
     },
+    "Delete Solve" : {
+
+    },
     "Delete Solve Group" : {
       "localizations" : {
         "zh-Hans" : {
@@ -974,9 +974,6 @@
           }
         }
       }
-    },
-    "Delete Time" : {
-
     },
     "Descending" : {
       "localizations" : {
@@ -1867,6 +1864,9 @@
           }
         }
       }
+    },
+    "Prompt before deleting solves" : {
+
     },
     "Puzzle Type" : {
       "localizations" : {

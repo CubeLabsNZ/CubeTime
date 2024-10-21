@@ -40,6 +40,8 @@ struct TimeDetailView: View {
     
     @FocusState private var commentFocus: Bool
     
+    @Preference(\.promptDelete) private var promptDelete
+    
     
     init(for solve: Solve, currentSolve: Binding<Solve?>?, sessionsCanMoveTo: Binding<[Session]?>? = nil, sessionsCanMoveTo_playground: Binding<[Session]?>? = nil) {
         self.solve = solve
@@ -207,7 +209,12 @@ struct TimeDetailView: View {
                                 
                                 
                                 CTButton(type: .coloured(Color("red")), size: .large, square: true, onTapRun: {
-                                    showAlert = true
+                                    if(promptDelete){
+                                        showAlert = true
+                                    }
+                                    else{
+                                        deleteSolve()
+                                    }
                                 }) {
                                     Image(systemName: "trash")
                                 }
@@ -222,16 +229,9 @@ struct TimeDetailView: View {
                                            action: { }
                                        ),
                                        secondaryButton: .destructive(
-                                           Text("Delete Time"),
+                                           Text("Delete Solve"),
                                            action: {
-                                               if currentSolve == nil {
-                                                   dismiss()
-                                               }
-                                               currentSolve = nil
-                                               
-                                               withAnimation {
-                                                   stopwatchManager.delete(solve: solve)
-                                               }
+                                               deleteSolve()
                                            }
                                        )
                                    )
@@ -368,6 +368,17 @@ struct TimeDetailView: View {
                     .navigationTitle("Time Detail")
                 }
             }
+        }
+    }
+    
+    func deleteSolve() -> Void{
+        if currentSolve == nil {
+            dismiss()
+        }
+        currentSolve = nil
+        
+        withAnimation {
+            stopwatchManager.delete(solve: solve)
         }
     }
 }
