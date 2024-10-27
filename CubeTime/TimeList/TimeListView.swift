@@ -289,6 +289,10 @@ struct TimeListView: View {
     
     @State var isCleaningSession = false
     
+    @State var showAlert = false
+    
+    @Preference(\.promptDelete) private var promptDelete
+    
     var body: some View {
         let sessionType = stopwatchManager.currentSession.sessionType
         NavigationView {
@@ -366,6 +370,7 @@ struct TimeListView: View {
                                         Label("Penalty", systemImage: "exclamationmark.triangle")
                                     }
                                     
+                                    
                                     if stopwatchManager.currentSession.sessionType != SessionType.compsim.rawValue {
                                         SessionPickerMenu(sessions: sessionType == SessionType.playground.rawValue ? sessionsCanMoveToPlaygroundContextMenu : stopwatchManager.sessionsCanMoveTo) { session in
                                             for object in stopwatchManager.timeListSolvesSelected {
@@ -379,14 +384,14 @@ struct TimeListView: View {
                                     
                                     Divider()
                                     
-                                    Button(role: .destructive) {
-                                        isSelectMode = false
-                                        for object in stopwatchManager.timeListSolvesSelected {
-                                            stopwatchManager.delete(solve: object)
+                                    Button(role: .destructive, action: {
+                                        if(promptDelete){
+                                            showAlert = true
                                         }
-                                        
-                                        stopwatchManager.timeListSolvesSelected.removeAll()
-                                    } label: {
+                                        else{
+                                            deleteSolves()
+                                        }
+                                    }) {
                                         Label("Delete", systemImage: "trash")
                                     }
                                 }
@@ -444,6 +449,13 @@ struct TimeListView: View {
             Text("Are you sure you want to continue? This will delete every solve in this session!")
         }
         
+        .confirmationDialog(String(localized: "Are you sure you want to delete the selected solves? This cannot be undone."), isPresented: $showAlert, titleVisibility: .visible) {
+            Button("Confirm", role: .destructive) {
+                deleteSolves()
+            }
+            Button("Cancel", role: .cancel) {}
+        }
+        
         .sheet(item: $solve) { item in
             TimeDetailView(for: item, currentSolve: $solve)
                 .tint(Color("accent"))
@@ -474,4 +486,14 @@ struct TimeListView: View {
             }
         }
     }
+    
+    func deleteSolves() -> Void{
+        isSelectMode = false
+        for object in stopwatchManager.timeListSolvesSelected {
+            stopwatchManager.delete(solve: object)
+        }
+
+        stopwatchManager.timeListSolvesSelected.removeAll()
+    }
 }
+

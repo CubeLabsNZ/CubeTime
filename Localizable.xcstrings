@@ -423,6 +423,9 @@
         }
       }
     },
+    "Are you sure you want to delete the selected solves? This cannot be undone." : {
+
+    },
     "Are you sure you want to delete this solve?" : {
       "localizations" : {
         "zh-Hans" : {
@@ -958,6 +961,9 @@
           }
         }
       }
+    },
+    "Delete Solve" : {
+
     },
     "Delete Solve Group" : {
       "localizations" : {
@@ -1858,6 +1864,9 @@
           }
         }
       }
+    },
+    "Prompt before deleting solves" : {
+
     },
     "Puzzle Type" : {
       "localizations" : {
