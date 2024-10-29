@@ -307,12 +307,12 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard let solve = dataSource.itemIdentifier(for: indexPath) else { return UIContextMenuConfiguration() }
         
-        let copy = UIAction(title: "Copy", image: UIImage(systemName: "doc.on.doc")) { _ in
+        let copy = UIAction(title: NSLocalizedString("Copy", comment: "locale"), image: UIImage(systemName: "doc.on.doc")) { _ in
             copySolve(solve: solve)
         }
         
         let pen = Penalty(rawValue: solve.penalty)!
-        let penNone = UIAction(title: "No Penalty", image: UIImage(systemName: "checkmark.circle"), state: pen == .none ? .on : .off) { _ in
+        let penNone = UIAction(title: NSLocalizedString("No Penalty", comment: "locale"), image: UIImage(systemName: "checkmark.circle"), state: pen == .none ? .on : .off) { _ in
             self.stopwatchManager.changePen(solve: solve, pen: .none)
         }
         let penPlusTwo = UIAction(title: "+2", image: UIImage(named: "+2.label"), state: pen == .plustwo ? .on : .off) { _ in
@@ -322,7 +322,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
             self.stopwatchManager.changePen(solve: solve, pen: .dnf)
         }
         
-        let penaltyMenu = UIMenu(title: "Penalty", image: UIImage(systemName: "exclamationmark.triangle"), options: .singleSelection, children: [penNone, penPlusTwo, penDNF])
+        let penaltyMenu = UIMenu(title: NSLocalizedString("Penalty", comment: "locale"), image: UIImage(systemName: "exclamationmark.triangle"), options: .singleSelection, children: [penNone, penPlusTwo, penDNF])
         
         
         let sessions = (stopwatchManager.currentSession.sessionType == SessionType.playground.rawValue ?
@@ -346,31 +346,31 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         }
         
         var moveToChildren: [UIMenuElement] = [
-            UIAction(title: "Only compatible sessions are shown", attributes: .disabled) {_ in}
+            UIAction(title: NSLocalizedString("Only compatible sessions are shown", comment: "locale"), attributes: .disabled) {_ in}
         ]
         
         if pinnedMenuItems.count > 0 {
-            moveToChildren.append(UIMenu(title: "Pinned Sessions", options: .displayInline, children: pinnedMenuItems))
+            moveToChildren.append(UIMenu(title: NSLocalizedString("Pinned Sessions", comment: "locale"), options: .displayInline, children: pinnedMenuItems))
         }
         
         if unpinnedMenuItems.count > 0 {
-            moveToChildren.append(UIMenu(title: "Other Sessions", options: .displayInline, children: unpinnedMenuItems))
+            moveToChildren.append(UIMenu(title: NSLocalizedString("Other Sessions", comment: "locale") , options: .displayInline, children: unpinnedMenuItems))
         }
         
-        let moveToMenu = UIMenu(title: "Move To", image: UIImage(systemName: "arrow.up.right"), children: moveToChildren)
+        let moveToMenu = UIMenu(title: NSLocalizedString("Move To", comment: "locale"), image: UIImage(systemName: "arrow.up.right"), children: moveToChildren)
         
         let delete = UIMenu(options: [.destructive, .displayInline], children: [ // For empty divide line
-            UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) {_ in
+            UIAction(title: NSLocalizedString("Delete", comment: "locale"), image: UIImage(systemName: "trash"), attributes: .destructive) {_ in
                 
                 if(self.promptDelete){
-                    let alert = UIAlertController(title: "Confirm Delete", message: "Are you sure you want to delete this solve?", preferredStyle: .actionSheet)
+                    let alert = UIAlertController(title: NSLocalizedString("Confirm Delete", comment: "locale"), message: "Are you sure you want to delete this solve?", preferredStyle: .actionSheet)
                     
-                    alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+                    alert.addAction(UIAlertAction(title: NSLocalizedString("Delete", comment: "locale"), style: .destructive, handler: { _ in
                         // Perform the delete action if confirmed
                         self.stopwatchManager.delete(solve: solve)
                     }))
                     
-                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                    alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "locale"), style: .cancel, handler: nil))
                     
                     if let viewController = self.navigationController?.visibleViewController{
                         viewController.present(alert, animated: true, completion: nil)

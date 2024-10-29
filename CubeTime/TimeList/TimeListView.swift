@@ -333,7 +333,7 @@ struct TimeListView: View {
                                         
                                         stopwatchManager.timeListSolvesSelected.removeAll()
                                     } label: {
-                                        Label("Copy", systemImage: "doc.on.doc")
+                                        Label(String(localized: "Copy"), systemImage: "doc.on.doc")
                                     }
                                     
                                     Menu {
@@ -344,7 +344,7 @@ struct TimeListView: View {
                                             
                                             stopwatchManager.timeListSolvesSelected.removeAll()
                                         } label: {
-                                            Label("No Penalty", systemImage: "checkmark.circle")
+                                            Label(String(localized: "No Penalty"), systemImage: "checkmark.circle")
                                         }
                                         
                                         Button {
@@ -364,10 +364,10 @@ struct TimeListView: View {
                                             
                                             stopwatchManager.timeListSolvesSelected.removeAll()
                                         } label: {
-                                            Label("DNF", systemImage: "xmark.circle")
+                                            Label(String(localized: "DNF"), systemImage: "xmark.circle")
                                         }
                                     } label: {
-                                        Label("Penalty", systemImage: "exclamationmark.triangle")
+                                        Label(String(localized: "Penalty"), systemImage: "exclamationmark.triangle")
                                     }
                                     
                                     
@@ -392,7 +392,7 @@ struct TimeListView: View {
                                             deleteSolves()
                                         }
                                     }) {
-                                        Label("Delete", systemImage: "trash")
+                                        Label(String(localized: "Delete"), systemImage: "trash")
                                     }
                                 }
                             } label: {

@@ -205,7 +205,7 @@ struct TimeDetailView: View {
                                 CTCopyButton(toCopy: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: "Copy Solve")
                                 
                                 
-                                CTShareButton(toShare: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: "Share Solve")
+                                CTShareButton(toShare: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: String(localized: "Share Solve"))
                                 
                                 
                                 CTButton(type: .coloured(Color("red")), size: .large, square: true, onTapRun: {

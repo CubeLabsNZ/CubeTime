@@ -13,7 +13,6 @@ struct AppearanceSettingsView: View {
     // system settings (appearance)
     @Preference(\.overrideDM) private var overrideSystemAppearance
     @Preference(\.dmBool) private var darkMode
-    @Preference(\.promptDelete) private var promptDelete
     
     
     @Preference(\.scrambleSize) private var scrambleSize
@@ -127,8 +126,6 @@ struct AppearanceSettingsView: View {
                 if overrideSystemAppearance {
                     SettingsToggle(String(localized: "Dark Mode"), $darkMode)
                 }
-                
-                SettingsToggle(String(localized: "Prompt before deleting solves"), $promptDelete)
             }
             
             

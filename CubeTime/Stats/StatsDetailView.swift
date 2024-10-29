@@ -142,7 +142,7 @@ struct StatsDetailView: View {
                     let shareStr = getShareStr(solves: solves)
                     
                     HStack(spacing: 8) {
-                        CTCopyButton(toCopy: shareStr, buttonText: String(localized: "Copy Average"))
+                        CTCopyButton(toCopy: shareStr, buttonText: "Copy Average")
                         
                         CTShareButton(toShare: shareStr, buttonText: String(localized: "Share Average"))
                     }

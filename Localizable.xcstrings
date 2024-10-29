@@ -424,7 +424,14 @@
       }
     },
     "Are you sure you want to delete the selected solves? This cannot be undone." : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确认删除所选还原？"
+          }
+        }
+      }
     },
     "Are you sure you want to delete this solve?" : {
       "localizations" : {
@@ -577,6 +584,7 @@
       }
     },
     "Cancel" : {
+      "comment" : "locale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -591,7 +599,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "清楚分组"
+            "value" : "清除分组"
           }
         }
       }
@@ -601,7 +609,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "确认清楚分组"
+            "value" : "确认清除分组"
           }
         }
       }
@@ -667,7 +675,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "比赛模拟模式"
+            "value" : "比赛模拟"
           }
         }
       }
@@ -688,6 +696,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "确认"
+          }
+        }
+      }
+    },
+    "Confirm Delete" : {
+      "comment" : "locale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确认删除"
           }
         }
       }
@@ -713,6 +732,7 @@
       }
     },
     "Copy" : {
+      "comment" : "locale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -727,7 +747,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "拷贝"
+            "value" : "拷贝平均"
           }
         }
       }
@@ -738,6 +758,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "拷贝打乱"
+          }
+        }
+      }
+    },
+    "Copy Solve" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拷贝还原"
           }
         }
       }
@@ -943,6 +973,7 @@
       }
     },
     "Delete" : {
+      "comment" : "locale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -963,7 +994,14 @@
       }
     },
     "Delete Solve" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除还原"
+          }
+        }
+      }
     },
     "Delete Solve Group" : {
       "localizations" : {
@@ -991,6 +1029,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在观察时显示「取消」建"
+          }
+        }
+      }
+    },
+    "Display a prompt before deleting solves." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除还原前显示提示。"
           }
         }
       }
@@ -1526,6 +1574,7 @@
       }
     },
     "Move To" : {
+      "comment" : "locale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1550,7 +1599,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "多阶段分组模式"
+            "value" : "多阶段分组"
           }
         }
       }
@@ -1576,6 +1625,7 @@
       }
     },
     "No Penalty" : {
+      "comment" : "locale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1656,6 +1706,7 @@
       }
     },
     "Only compatible sessions are shown" : {
+      "comment" : "locale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1706,6 +1757,7 @@
       }
     },
     "Other Sessions" : {
+      "comment" : "locale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1726,6 +1778,7 @@
       }
     },
     "Penalty" : {
+      "comment" : "locale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1806,6 +1859,7 @@
       }
     },
     "Pinned Sessions" : {
+      "comment" : "locale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1864,9 +1918,6 @@
           }
         }
       }
-    },
-    "Prompt before deleting solves" : {
-
     },
     "Puzzle Type" : {
       "localizations" : {
@@ -2003,7 +2054,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "选择所有"
+            "value" : "全选"
           }
         }
       }
@@ -2113,7 +2164,17 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "分享"
+            "value" : "分享平均"
+          }
+        }
+      }
+    },
+    "Share Solve" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享还原"
           }
         }
       }
@@ -2166,6 +2227,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "显示上一个时间"
+          }
+        }
+      }
+    },
+    "Show Solve Deletion Prompt" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示还原删除提示"
           }
         }
       }
@@ -2530,12 +2601,12 @@
         }
       }
     },
-    "Timer Interface" : {
+    "Timer Interface & Solves" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "计时器界面"
+            "value" : "计时器界面与还原"
           }
         }
       }
