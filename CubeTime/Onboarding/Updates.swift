@@ -281,7 +281,7 @@ struct Update: View {
                     Text("Major Additions: ")
                         .font(.title3).fontWeight(.semibold)
                     
-                    VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: 3) {
                         ForEach(majorAdditions, id: \.self) { point in
                             ListLine(point.depth, .init(stringLiteral: point.text))
                                 .if(point.depth == 1) { body in
@@ -296,7 +296,7 @@ struct Update: View {
                     Text("Minor Additions: ")
                         .font(.title3).fontWeight(.semibold)
                     
-                    VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: 3) {
                         ForEach(minorAdditions, id: \.self) { point in
                             ListLine(point.depth, .init(stringLiteral: point.text))
                         }
@@ -308,7 +308,7 @@ struct Update: View {
                     Text("Bug Fixes: ")
                         .font(.title3).fontWeight(.semibold)
                     
-                    VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: 3) {
                         ForEach(bugFixes, id: \.self) { point in
                             ListLine(point.depth, .init(stringLiteral: point.text))
                         }
