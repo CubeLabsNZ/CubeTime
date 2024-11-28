@@ -3,13 +3,14 @@ import SwiftUI
 
 func getSolveDateFormatter(_ date: Date) -> DateFormatter {
     let dateFormatter: DateFormatter = DateFormatter()
-    dateFormatter.locale = Locale(identifier: "en_NZ")
-    #warning("l10n")
+    dateFormatter.locale = Locale.current
     
     if (Calendar.current.isDateInToday(date)) {
-        dateFormatter.dateFormat = "h:mm:ss a"
+        dateFormatter.dateStyle = .none
+        dateFormatter.timeStyle = .medium
     } else {
-        dateFormatter.dateFormat = "dd/MM/yy"
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .none
     }
     
     return dateFormatter
