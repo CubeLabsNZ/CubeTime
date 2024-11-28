@@ -13,6 +13,7 @@ enum ProjectLicense: String {
     case tnoodle = "TNoodle"
     case chartview = "ChartView"
     case icons = "WCA Icons (Cubing Icons & Fonts)"
+    case confetti = "ConfettiSwiftUI"
     case recursivefont = "Recursive Font"
     case privacypolicy = "CubeTime Privacy Policy"
 }
@@ -36,6 +37,8 @@ struct LicensePopUpView: View {
                 ChartViewLicense()
             case .icons:
                 CubingIconsLicense()
+            case .confetti:
+                ConfettiLicense()
             case .recursivefont:
                 RecursiveLicense()
             case .privacypolicy:
@@ -62,6 +65,7 @@ struct LicensesView: View {
                     NavigationLink(ProjectLicense.tnoodle.rawValue, destination: LicensePopUpView(for: .tnoodle))
                     NavigationLink(ProjectLicense.chartview.rawValue, destination: LicensePopUpView(for: .chartview))
                     NavigationLink(ProjectLicense.icons.rawValue, destination: LicensePopUpView(for: .icons))
+                    NavigationLink(ProjectLicense.confetti.rawValue, destination: LicensePopUpView(for: .confetti))
                     NavigationLink(ProjectLicense.recursivefont.rawValue, destination: LicensePopUpView(for: .recursivefont))
                 }
                 
@@ -70,7 +74,7 @@ struct LicensesView: View {
                 }
             }
             .listStyle(.insetGrouped)
-            .navigationTitle("Boring stuff")
+            .navigationTitle("the boring stuff")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     CTDoneButton(onTapRun: {

@@ -311,6 +311,12 @@
         }
       }
     },
+    "A derivative of \"simibac's\" [ConfettiSwiftUI](https://github.com/simibac/ConfettiSwiftUI) library is used in CubeTime." : {
+
+    },
+    "A derivative of [ChartView](https://github.com/AppPear/ChartView) is used in the stats view of CubeTime." : {
+
+    },
     "A multiphase session gives you the ability to breakdown your solves into sections, such as memo/exec stages in blindfolded solving or stages in 3x3 solves.\n\nTap anywhere on the timer during a solve to record a phase lap. You can access your breakdown statistics in each time card and view overall statistics in the Stats view." : {
       "localizations" : {
         "zh-Hans" : {
@@ -554,6 +560,7 @@
       }
     },
     "Boring stuff" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2526,6 +2533,9 @@
           }
         }
       }
+    },
+    "the boring stuff" : {
+
     },
     "time" : {
       "localizations" : {

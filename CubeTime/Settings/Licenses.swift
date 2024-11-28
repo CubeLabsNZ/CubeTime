@@ -28,7 +28,7 @@ struct tnoodleLicense: View {
 struct ChartViewLicense: View {
     var body: some View {
         VStack {
-            Text(verbatim: "A derivative of ChartView is used in the stats view of CubeTime.")
+            Text("A derivative of [ChartView](https://github.com/AppPear/ChartView) is used in the stats view of CubeTime.")
             Divider()
             MITLicense(copyrightInfo: "2019 Andras Samu")
         }
@@ -42,6 +42,19 @@ struct CubingIconsLicense: View {
             Text(verbatim: "A derivative of \"Cubing's\" icons are used throughout CubeTime.")
             Divider()
             MITLicense(copyrightInfo: "2015 Devin Corr-Robinett")
+        }
+        .padding(.horizontal)
+        
+    }
+}
+
+
+struct ConfettiLicense: View {
+    var body: some View {
+        VStack {
+            Text("A derivative of \"simibac's\" [ConfettiSwiftUI](https://github.com/simibac/ConfettiSwiftUI) library is used in CubeTime.")
+            Divider()
+            MITLicense(copyrightInfo: "2020 Simon Bachmann")
         }
         .padding(.horizontal)
         
