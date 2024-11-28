@@ -3,35 +3,18 @@
 //  Confetti
 //
 //  Created by Simon Bachmann on 24.11.20.
+//  Created by Abdullah Alhaider on 24/03/2022.
 //
 
 import SwiftUI
 
-public enum ConfettiType:CaseIterable, Hashable {
-    
-    public enum Shape {
-        case circle
-        case triangle
-        case square
-        case slimRectangle
-        case roundedCross
-    }
-
-    case shape(Shape)
+public enum ConfettiType: Hashable {
     case text(String)
     case sfSymbol(symbolName: String)
     case image(String)
     
-    public var view:AnyView{
+    public var view: AnyView {
         switch self {
-        case .shape(.square):
-            return AnyView(Rectangle())
-        case .shape(.triangle):
-            return AnyView(Triangle())
-        case .shape(.slimRectangle):
-            return AnyView(SlimRectangle())
-        case .shape(.roundedCross):
-            return AnyView(RoundedCross())
         case let .text(text):
             return AnyView(Text(text))
         case .sfSymbol(let symbolName):
@@ -41,10 +24,6 @@ public enum ConfettiType:CaseIterable, Hashable {
         default:
             return AnyView(Circle())
         }
-    }
-    
-    public static var allCases: [ConfettiType] {
-        return [.shape(.circle), .shape(.triangle), .shape(.square), .shape(.slimRectangle), .shape(.roundedCross)]
     }
 }
 
@@ -58,23 +37,9 @@ public struct ConfettiCannon: View {
     @State var firstAppear = false
     @State var error = ""
     
-    /// renders configurable confetti animaiton
-    /// - Parameters:
-    ///   - counter: on any change of this variable the animation is run
-    ///   - num: amount of confettis
-    ///   - colors: list of colors that is applied to the default shapes
-    ///   - confettiSize: size that confettis and emojis are scaled to
-    ///   - rainHeight: vertical distance that confettis pass
-    ///   - fadesOut: reduce opacity towards the end of the animation
-    ///   - opacity: maximum opacity that is reached during the animation
-    ///   - openingAngle: boundary that defines the opening angle in degrees
-    ///   - closingAngle: boundary that defines the closing angle in degrees
-    ///   - radius: explosion radius
-    ///   - repetitions: number of repetitions of the explosion
-    ///   - repetitionInterval: duration between the repetitions
     public init(counter:Binding<Int>,
          num:Int = 20,
-         confettis:[ConfettiType] = ConfettiType.allCases,
+         confettis:[ConfettiType],
          colors:[Color] = [.blue, .red, .green, .yellow, .pink, .purple, .orange],
          confettiSize:CGFloat = 10.0,
          rainHeight: CGFloat = 600.0,
@@ -92,8 +57,6 @@ public struct ConfettiCannon: View {
         for confetti in confettis{
             for color in colors{
                 switch confetti {
-                case .shape(_):
-                    shapes.append(AnyView(confetti.view.foregroundColor(color).frame(width: confettiSize, height: confettiSize, alignment: .center)))
                 case .image(_):
                     shapes.append(AnyView(confetti.view.frame(maxWidth:confettiSize, maxHeight: confettiSize)))
                 default:
@@ -317,5 +280,46 @@ class ConfettiConfig: ObservableObject {
     
     var closingAngleRad:CGFloat{
         return CGFloat(closingAngle.degrees) * 180 / .pi
+    }
+}
+
+
+public extension View {
+    @ViewBuilder func confettiCannon(
+        counter: Binding<Int>,
+        num: Int = 20,
+        confettis: [ConfettiType],
+        colors: [Color] = [.blue, .red, .green, .yellow, .pink, .purple, .orange],
+        confettiSize: CGFloat = 10.0,
+        rainHeight: CGFloat = 600.0,
+        fadesOut: Bool = true,
+        opacity: Double = 1.0,
+        openingAngle: Angle = .degrees(60),
+        closingAngle: Angle = .degrees(120),
+        radius: CGFloat = 300,
+        repetitions: Int = 0,
+        repetitionInterval: Double = 1.0,
+        position: CGPoint = .zero
+    ) -> some View {
+        ZStack {
+            self
+            
+            ConfettiCannon(
+                counter: counter,
+                num: num,
+                confettis: confettis,
+                colors: colors,
+                confettiSize: confettiSize,
+                rainHeight: rainHeight,
+                fadesOut: fadesOut,
+                opacity: opacity,
+                openingAngle: openingAngle,
+                closingAngle: closingAngle,
+                radius: radius,
+                repetitions: repetitions,
+                repetitionInterval: repetitionInterval
+            )
+            .position(position)
+        }
     }
 }

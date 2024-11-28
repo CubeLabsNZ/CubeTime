@@ -403,6 +403,12 @@ class StopwatchManager: ObservableObject {
                         if let best = self.bestSingle {
                             if secondsElapsed == best.timeIncPen {
                                 self.confetti += 1
+                                
+                                if let loc = self.confettiLocation, #available(iOS 17.5, *) {
+                                    UINotificationFeedbackGenerator().notificationOccurred(UINotificationFeedbackGenerator.FeedbackType.success, at: loc)
+                                } else {
+                                    UINotificationFeedbackGenerator().notificationOccurred(UINotificationFeedbackGenerator.FeedbackType.success)
+                                }
                             }
                         }
                     }
