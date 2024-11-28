@@ -2233,9 +2233,15 @@
     },
     "Show Solve Deletion Prompt" : {
       "localizations" : {
-        "zh-Hans" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Show solve deletion prompt"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "显示还原删除提示"
           }
         }

@@ -55,7 +55,6 @@ class TimerController: ObservableObject {
             })
     }
     
-        
     @Published var secondsStr = formatSolveTime(secs: 0)
     
     @Published var inspectionSecs = 0 {
@@ -182,8 +181,6 @@ class TimerController: ObservableObject {
         
     }
 
-    
-    
     
     func start() {
         #if DEBUG

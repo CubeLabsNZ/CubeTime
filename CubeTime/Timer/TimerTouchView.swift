@@ -23,6 +23,11 @@ class TimerUIView: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         UIApplication.shared.isIdleTimerDisabled = true
+        
+        if timerController.mode == .running {
+            stopwatchManager.confettiLocation = touches.first!.location(in: nil)
+        }
+        
         timerController.touchDown()
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -184,57 +189,32 @@ struct TimerTouchView: UIViewControllerRepresentable {
     
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<TimerTouchView>) -> TimerUIView {
-        let v = TimerUIView(timerController: timerController, stopwatchManager: stopwatchManager, userHoldTime: holdDownTime)
+        let timerUIView = TimerUIView(timerController: timerController, stopwatchManager: stopwatchManager, userHoldTime: holdDownTime)
         
         let longPressGesture = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.longPress))
         longPressGesture.allowableMovement = gestureThreshold
         longPressGesture.minimumPressDuration = holdDownTime
         
-        //        longPressGesture.requiresExclusiveTouchType = ?
-        
         let pan = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.pan))
         pan.allowedScrollTypesMask = .all
         pan.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirectPointer.rawValue)]
-        v.view.addGestureRecognizer(pan)
+        timerUIView.view.addGestureRecognizer(pan)
         
         for direction in [UISwipeGestureRecognizer.Direction.up, UISwipeGestureRecognizer.Direction.down, UISwipeGestureRecognizer.Direction.left, UISwipeGestureRecognizer.Direction.right] {
             let gesture = UISwipeGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.swipe))
             gesture.direction = direction
             gesture.require(toFail: longPressGesture)
                         
-            v.view.addGestureRecognizer(gesture)
+            timerUIView.view.addGestureRecognizer(gesture)
         }
         
+        timerUIView.view.addGestureRecognizer(longPressGesture)
         
-        
-       
-        v.view.addGestureRecognizer(longPressGesture)
-        
-        
-        return v
+        return timerUIView
     }
     
     func updateUIViewController(_ uiView: TimerUIView, context: UIViewControllerRepresentableContext<TimerTouchView>) {
         uiView.userHoldTime = holdDownTime
-        /*
-        if stopwatchManager.scrambleStr == nil {
-            for gesture in uiView.gestureRecognizers! {
-                /*
-                if gesture is UISwipeGestureRecognizer && (gesture as! UISwipeGestureRecognizer).direction == UISwipeGestureRecognizer.Direction.right {
-                    uiView.removeGestureRecognizer(gesture)
-                } else */
-                if gesture is UILongPressGestureRecognizer {
-                    uiView.removeGestureRecognizer(gesture)
-                }
-            }
-        } else {
-            let longPressGesture = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.longPress))
-            longPressGesture.allowableMovement = gestureThreshold
-            longPressGesture.minimumPressDuration = userHoldTime
-            
-            uiView.addGestureRecognizer(longPressGesture)
-        }
-         */
     }
     
     class Coordinator: NSObject {

@@ -132,6 +132,9 @@ struct TabIcon: View {
     var namespace: Namespace.ID
     let hasLittleGuy: Bool
     
+    @Preference(\.isStaticGradient) private var isStaticGradient
+    @EnvironmentObject var gradientManager: GradientManager
+
     init(currentTab: Binding<Tab>, assignedTab: Tab, systemIconName: String, systemIconNameSelected: String, namespace: Namespace.ID, hasLittleGuy: Bool = true) {
         self._currentTab = currentTab
         self.assignedTab = assignedTab
@@ -141,11 +144,12 @@ struct TabIcon: View {
         self.hasLittleGuy = hasLittleGuy
     }
     
+    
     var body: some View {
         ZStack {
             if (hasLittleGuy && currentTab == assignedTab) {
                 Capsule()
-                    .fill(currentTab == .timer ? AnyShapeStyle(GradientManager.getGradient(gradientSelected: 0, isStaticGradient: true).opacity(0.8)) : AnyShapeStyle(Color("dark")))
+                    .fill(currentTab == .timer ? AnyShapeStyle(GradientManager.getGradient(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient).opacity(0.8)) : AnyShapeStyle(Color("dark")))
                     .matchedGeometryEffect(id: "littleguy", in: namespace, properties: .frame)
                     .shadow(color: currentTab == .timer
                             ? Color("accent2")

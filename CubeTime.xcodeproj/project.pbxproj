@@ -29,6 +29,11 @@
 		238FB42029B8175C008EC1D4 /* GradientManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238FB41F29B8175C008EC1D4 /* GradientManager.swift */; };
 		239560A629C3056E00735035 /* SplashPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 239560A529C3056E00735035 /* SplashPad.storyboard */; };
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
+		239AC6982CF853340061DD1D /* Triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239AC6952CF853340061DD1D /* Triangle.swift */; };
+		239AC6992CF853340061DD1D /* SlimRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239AC6942CF853340061DD1D /* SlimRectangle.swift */; };
+		239AC69A2CF853340061DD1D /* ConfettiSwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239AC6922CF853340061DD1D /* ConfettiSwiftUI.swift */; };
+		239AC69B2CF853340061DD1D /* RoundedCross.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239AC6932CF853340061DD1D /* RoundedCross.swift */; };
+		239AC69C2CF853340061DD1D /* View+ConfettiCannon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239AC6972CF853340061DD1D /* View+ConfettiCannon.swift */; };
 		23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */; };
 		23AAF99629B0219200C5C1FF /* TimeTrendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AAF99529B0219200C5C1FF /* TimeTrendViewController.swift */; };
 		23AAF99829B072F900C5C1FF /* StatsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AAF99729B072F900C5C1FF /* StatsDetailView.swift */; };
@@ -149,6 +154,11 @@
 		238FB41F29B8175C008EC1D4 /* GradientManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientManager.swift; sourceTree = "<group>"; };
 		239560A529C3056E00735035 /* SplashPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SplashPad.storyboard; sourceTree = "<group>"; };
 		2397131E2791032300268DFA /* AveragePhases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AveragePhases.swift; sourceTree = "<group>"; };
+		239AC6922CF853340061DD1D /* ConfettiSwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiSwiftUI.swift; sourceTree = "<group>"; };
+		239AC6932CF853340061DD1D /* RoundedCross.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCross.swift; sourceTree = "<group>"; };
+		239AC6942CF853340061DD1D /* SlimRectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlimRectangle.swift; sourceTree = "<group>"; };
+		239AC6952CF853340061DD1D /* Triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Triangle.swift; sourceTree = "<group>"; };
+		239AC6972CF853340061DD1D /* View+ConfettiCannon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ConfettiCannon.swift"; sourceTree = "<group>"; };
 		23AAF99529B0219200C5C1FF /* TimeTrendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrendViewController.swift; sourceTree = "<group>"; };
 		23AAF99729B072F900C5C1FF /* StatsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsDetailView.swift; sourceTree = "<group>"; };
 		23AB648329385D310049993B /* NewSessionRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSessionRootView.swift; sourceTree = "<group>"; };
@@ -279,9 +289,30 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
+		239AC6912CF853270061DD1D /* Confetti */ = {
+			isa = PBXGroup;
+			children = (
+				239AC6922CF853340061DD1D /* ConfettiSwiftUI.swift */,
+				239AC6962CF853340061DD1D /* Shapes */,
+				239AC6972CF853340061DD1D /* View+ConfettiCannon.swift */,
+			);
+			path = Confetti;
+			sourceTree = "<group>";
+		};
+		239AC6962CF853340061DD1D /* Shapes */ = {
+			isa = PBXGroup;
+			children = (
+				239AC6932CF853340061DD1D /* RoundedCross.swift */,
+				239AC6942CF853340061DD1D /* SlimRectangle.swift */,
+				239AC6952CF853340061DD1D /* Triangle.swift */,
+			);
+			path = Shapes;
+			sourceTree = "<group>";
+		};
 		23A73F5C276B0AA100153748 /* Timer */ = {
 			isa = PBXGroup;
 			children = (
+				239AC6912CF853270061DD1D /* Confetti */,
 				23DE3BDC274DDBE200254D29 /* TimerView.swift */,
 				23B7AC3929BAB2E300B5C9B4 /* TimerTools.swift */,
 				2326435F28C4927600F6322E /* TimerHeader.swift */,
@@ -704,6 +735,11 @@
 				23B7AC3C29BB049F00B5C9B4 /* CalculatorTool.swift in Sources */,
 				23CB6D0E29AC3DFB00C60EF8 /* TimeDetailView.swift in Sources */,
 				231B2E2E29BDECF9007E5DC2 /* HelperButtons.swift in Sources */,
+				239AC6982CF853340061DD1D /* Triangle.swift in Sources */,
+				239AC6992CF853340061DD1D /* SlimRectangle.swift in Sources */,
+				239AC69A2CF853340061DD1D /* ConfettiSwiftUI.swift in Sources */,
+				239AC69B2CF853340061DD1D /* RoundedCross.swift in Sources */,
+				239AC69C2CF853340061DD1D /* View+ConfettiCannon.swift in Sources */,
 				23DE3BDB274DDBE200254D29 /* CubeTimeApp.swift in Sources */,
 				23D7722429B1E3540044AFBA /* NewSessionView.swift in Sources */,
 				7D7DDF2327955AFF00362DE9 /* PenButton.swift in Sources */,

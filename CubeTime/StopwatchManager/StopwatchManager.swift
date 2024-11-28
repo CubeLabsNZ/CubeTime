@@ -128,6 +128,10 @@ class StopwatchManager: ObservableObject {
     @Published var showUnlockScrambleConfirmation = false
     @Published var showPenOptions = false
     
+    /* confetti */
+    @Published var confetti: Int = 0
+    @Published var confettiLocation: CGPoint?
+    
     @Published var currentSolveth: Int?
     
     @Published var solveItem: Solve!
@@ -393,6 +397,16 @@ class StopwatchManager: ObservableObject {
                 }
                 
                 self.updateStats()
+                
+                DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.1) {
+                    DispatchQueue.main.async {
+                        if let best = self.bestSingle {
+                            if secondsElapsed == best.timeIncPen {
+                                self.confetti += 1
+                            }
+                        }
+                    }
+                }
             },
             onTouchUp: {
                 if self.showPenOptions {

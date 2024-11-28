@@ -37,16 +37,19 @@ struct TimerTime: View {
     @EnvironmentObject var timerController: TimerController
     @Environment(\.horizontalSizeClass) private var hSizeClass
     
+    @Preference(\.isStaticGradient) private var isStaticGradient
+    @EnvironmentObject var gradientManager: GradientManager
+
     var body: some View {
         let fontSize: CGFloat = (UIDevice.deviceIsPad && hSizeClass == .regular)
             ? timerController.mode == .running ? 88 : 66
             : timerController.mode == .running ? 70 : 56
         
-        HStack{
+        HStack {
             Text(timerController.secondsStr)
                 .modifier(DynamicText())
-                // for smaller phones (iPhoneSE and test sim), disable animation to larger text
-                // to prevent text clipping and other UI problems
+            // for smaller phones (iPhoneSE and test sim), disable animation to larger text
+            // to prevent text clipping and other UI problems
                 .ifelse (UIDevice.deviceModelName == "iPhoneSE") { view in
                     return view
                         .font(Font(CTFontCreateWithFontDescriptor(fontManager.ctFontDescBold, 54, nil)))
@@ -54,7 +57,19 @@ struct TimerTime: View {
                     return view
                         .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: fontSize))
                 }
-            
+                .confettiCannon(
+                    counter: $stopwatchManager.confetti,
+                    num: 100,
+                    confettis: PUZZLE_TYPES.map { .image($0.imageName) },
+                    colors: GradientManager.getGradientColours(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient),
+                    confettiSize: 15,
+                    fadesOut: true,
+                    openingAngle: Angle(degrees: 0),
+                    closingAngle: Angle(degrees: 360),
+                    radius: 200,
+                    position: stopwatchManager.confettiLocation ?? .zero
+                )
+
             Group {
                 if (timerController.mode == .inspecting) {
                     if (15..<17 ~= timerController.inspectionSecs) {
