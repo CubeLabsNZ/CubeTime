@@ -103,7 +103,7 @@ class TimerController: ObservableObject {
     
     
     private var timer: Timer?
-    private var timerStartTime: Date?
+    private var timerStartTime: UInt64?
     var secondsElapsed = 0.0
     
     
@@ -203,16 +203,20 @@ class TimerController: ObservableObject {
 
         secondsElapsed = 0
         secondsStr = formatSolveTime(secs: 0)
-        timerStartTime = Date()
+        timerStartTime = clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW)
 
         if sm.timeDpWhenRunning == -1 {
             self.secondsStr = "..."
         } else {
             timer = Timer.scheduledTimer(withTimeInterval: 1/60, repeats: true) { [self] timer in
-                self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
+                self.secondsElapsed = getElapsedTime()
                 self.secondsStr = formatSolveTime(secs: self.secondsElapsed, dp: sm.timeDpWhenRunning)
             }
         }
+    }
+    
+    private func getElapsedTime() -> Double {
+        return Double(clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW) - timerStartTime!) / 1e9
     }
     
     
@@ -227,7 +231,7 @@ class TimerController: ObservableObject {
             self.secondsElapsed = time
         } else {
             prevDownStoppedTimer = true
-            self.secondsElapsed = -timerStartTime!.timeIntervalSinceNow
+            self.secondsElapsed = getElapsedTime()
         }
         
         self.secondsStr = formatSolveTime(secs: self.secondsElapsed)
@@ -329,7 +333,7 @@ class TimerController: ObservableObject {
     // multiphase
     func lap() {
         currentMPCount += 1
-        phaseTimes.append(-timerStartTime!.timeIntervalSinceNow)
+        phaseTimes.append(getElapsedTime())
         feedbackStyle?.impactOccurred(intensity: 0.5)
     }
 }
