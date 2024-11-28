@@ -31,6 +31,9 @@
 		2397131F2791032300268DFA /* AveragePhases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397131E2791032300268DFA /* AveragePhases.swift */; };
 		239AC69A2CF853340061DD1D /* Confetti.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239AC6922CF853340061DD1D /* Confetti.swift */; };
 		239AC6A02CF85EF50061DD1D /* TimeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239AC69F2CF85EE80061DD1D /* TimeCardView.swift */; };
+		239AC6A22CF8783D0061DD1D /* InterVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 239AC6A12CF8783D0061DD1D /* InterVariable.ttf */; };
+		239AC6A32CF8783D0061DD1D /* InterVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 239AC6A12CF8783D0061DD1D /* InterVariable.ttf */; };
+		239AC6A42CF8783D0061DD1D /* InterVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 239AC6A12CF8783D0061DD1D /* InterVariable.ttf */; };
 		23A1CDBD29399FE000F0895D /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 23A1CDBC29399FE000F0895D /* SwiftfulLoadingIndicators */; };
 		23AAF99629B0219200C5C1FF /* TimeTrendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AAF99529B0219200C5C1FF /* TimeTrendViewController.swift */; };
 		23AAF99829B072F900C5C1FF /* StatsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AAF99729B072F900C5C1FF /* StatsDetailView.swift */; };
@@ -153,6 +156,7 @@
 		2397131E2791032300268DFA /* AveragePhases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AveragePhases.swift; sourceTree = "<group>"; };
 		239AC6922CF853340061DD1D /* Confetti.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Confetti.swift; sourceTree = "<group>"; };
 		239AC69F2CF85EE80061DD1D /* TimeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardView.swift; sourceTree = "<group>"; };
+		239AC6A12CF8783D0061DD1D /* InterVariable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = InterVariable.ttf; sourceTree = "<group>"; };
 		23AAF99529B0219200C5C1FF /* TimeTrendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTrendViewController.swift; sourceTree = "<group>"; };
 		23AAF99729B072F900C5C1FF /* StatsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsDetailView.swift; sourceTree = "<group>"; };
 		23AB648329385D310049993B /* NewSessionRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSessionRootView.swift; sourceTree = "<group>"; };
@@ -256,6 +260,7 @@
 		23034727278C31AE00553A7D /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				239AC6A12CF8783D0061DD1D /* InterVariable.ttf */,
 				AF7697DD293C537900FF1C50 /* RecMonoVariable.ttf */,
 			);
 			path = Fonts;
@@ -648,6 +653,7 @@
 				236850DD2C54D5CA00548BEA /* Localizable.xcstrings in Resources */,
 				239560A629C3056E00735035 /* SplashPad.storyboard in Resources */,
 				23AB648C293867EA0049993B /* 12sec-audio.wav in Resources */,
+				239AC6A42CF8783D0061DD1D /* InterVariable.ttf in Resources */,
 				23AB648D293867EA0049993B /* 8sec-audio.wav in Resources */,
 				AF7697DE293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */,
 				23D01FE327A4AA5D0019FCE5 /* Splash.storyboard in Resources */,
@@ -659,6 +665,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF7697DF293C5A9C00FF1C50 /* RecMonoVariable.ttf in Resources */,
+				239AC6A32CF8783D0061DD1D /* InterVariable.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -667,6 +674,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF7697E0293C5A9D00FF1C50 /* RecMonoVariable.ttf in Resources */,
+				239AC6A22CF8783D0061DD1D /* InterVariable.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

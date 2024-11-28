@@ -11,7 +11,7 @@ import Combine
 import CoreText
 
 class FontManager: ObservableObject {
-    let sm = SettingsManager.standard
+    let settingsManager = SettingsManager.standard
     
     @Published var ctFontScramble: Font!
     @Published var ctFontDescBold: CTFontDescriptor!
@@ -33,7 +33,7 @@ class FontManager: ObservableObject {
     var subscriber: AnyCancellable?
     
     init() {
-        subscriber = sm.preferencesChangedSubject
+        subscriber = settingsManager.preferencesChangedSubject
             .filter { item in
                 (self.changeOnKeys as [AnyKeyPath]).contains(item)
             }
@@ -45,8 +45,8 @@ class FontManager: ObservableObject {
     
     private func updateFont() {
             // weight, casual, cursive
-        let variations = [2003265652: sm.fontWeight, 1128354636: sm.fontCasual, 1129468758: sm.fontCursive ? 1 : 0]
-        let variationsTimer = [2003265652: sm.fontWeight + 200, 1128354636: sm.fontCasual, 1129468758: sm.fontCursive ? 1 : 0]
+        let variations = [2003265652: settingsManager.fontWeight, 1128354636: settingsManager.fontCasual, 1129468758: settingsManager.fontCursive ? 1 : 0]
+        let variationsTimer = [2003265652: settingsManager.fontWeight + 200, 1128354636: settingsManager.fontCasual, 1129468758: settingsManager.fontCursive ? 1 : 0]
         
         ctFontDesc = CTFontDescriptorCreateWithAttributes([
             kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
@@ -58,17 +58,26 @@ class FontManager: ObservableObject {
             kCTFontVariationAttribute: variationsTimer
         ] as! CFDictionary)
         
-        ctFontScramble = Font(CTFontCreateWithFontDescriptor(ctFontDesc, CGFloat(sm.scrambleSize), nil))
+        ctFontScramble = Font(CTFontCreateWithFontDescriptor(ctFontDesc, CGFloat(settingsManager.scrambleSize), nil))
     }
 }
 
-struct RecursiveMono: ViewModifier {
+
+enum CTCustomFontType {
+    case recursive
+    case inter
+}
+
+struct CTCustomFont: ViewModifier {
     @ScaledMetric var size: CGFloat
-    let weight: Int
     
-    init(size: CGFloat, weight: Int) {
+    let weight: Int
+    let font: CTCustomFontType
+    
+    init(size: CGFloat, weight: Int, font: CTCustomFontType) {
         self._size = ScaledMetric(wrappedValue: size)
         self.weight = weight
+        self.font = font
     }
     
     func body(content: Content) -> some View {
@@ -126,17 +135,20 @@ struct RecursiveMono: ViewModifier {
 
 extension View {
     func recursiveMono(size: CGFloat, weight: Font.Weight=Font.Weight.regular) -> some View {
-        modifier(RecursiveMono(size: size,
-                               weight: RecursiveMono.weightToValue(weight: weight)))
+        modifier(CTCustomFont(size: size,
+                              weight: CTCustomFont.weightToValue(weight: weight),
+                              font: .recursive))
     }
     
     func recursiveMono(style: Font.TextStyle, weight: Font.Weight=Font.Weight.regular) -> some View {
-        modifier(RecursiveMono(size: RecursiveMono.styleToValue(style: style),
-                               weight: RecursiveMono.weightToValue(weight: weight)))
+        modifier(CTCustomFont(size: CTCustomFont.styleToValue(style: style),
+                              weight: CTCustomFont.weightToValue(weight: weight),
+                              font: .recursive))
     }
     
     func recursiveMono(style: Font.TextStyle, weightValue: Int) -> some View {
-        modifier(RecursiveMono(size: RecursiveMono.styleToValue(style: style),
-                               weight: weightValue))
+        modifier(CTCustomFont(size: CTCustomFont.styleToValue(style: style),
+                              weight: weightValue,
+                              font: .recursive))
     }
 }
