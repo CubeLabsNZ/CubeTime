@@ -66,13 +66,15 @@ struct SessionCardBase: View {
             Spacer()
             
             if !forExportUse {
-                Image(PUZZLE_TYPES[scrambleType].imageName)
-                    .resizable()
-                    .frame(width: 45, height: 45)
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(Color("dark"))
-                    .padding([.vertical, .trailing], 10)
-                    .frame(maxHeight: .infinity, alignment: .topTrailing)
+                if sessionType != .timerOnly {
+                    Image(PUZZLE_TYPES[scrambleType].imageName)
+                        .resizable()
+                        .frame(width: 45, height: 45)
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(Color("dark"))
+                        .padding([.vertical, .trailing], 10)
+                        .frame(maxHeight: .infinity, alignment: .topTrailing)
+                }
             } else if selected {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.body.weight(.semibold))

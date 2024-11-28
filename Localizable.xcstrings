@@ -964,7 +964,6 @@
       }
     },
     "DEBUG BUILD" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1226,7 +1225,6 @@
       }
     },
     "generate" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
