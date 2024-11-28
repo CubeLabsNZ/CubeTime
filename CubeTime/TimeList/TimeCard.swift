@@ -66,7 +66,7 @@ struct TimeCard: View {
                 copySolve(solve: solve)
             } label: {
                 Label {
-                    Text("Copy")
+                    Text(String(localized: "Copy"))
                 } icon: {
                     Image(systemName: "doc.on.doc")
                 }
@@ -76,7 +76,7 @@ struct TimeCard: View {
                 Button {
                     stopwatchManager.changePen(solve: self.solve, pen: .none)
                 } label: {
-                    Label("No Penalty", systemImage: "checkmark.circle")
+                    Label(String(localized: "No Penalty"), systemImage: "checkmark.circle")
                 }
                 
                 Button {
@@ -91,7 +91,7 @@ struct TimeCard: View {
                     Label("DNF", systemImage: "xmark.circle")
                 }
             } label: {
-                Label("Penalty", systemImage: "exclamationmark.triangle")
+                Label(String(localized: "Penalty"), systemImage: "exclamationmark.triangle")
             }
             
             if sessionType != SessionType.compsim.rawValue {
@@ -116,7 +116,7 @@ struct TimeCard: View {
                 }
             } label: {
                 Label {
-                    Text("Delete")
+                    Text(String(localized: "Delete"))
                 } icon: {
                     Image(systemName: "trash")
                 }

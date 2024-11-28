@@ -52,6 +52,7 @@ final class SettingsManager {
         fontCasual = 0.0
         fontCursive = false
         showZenMode = false
+        promptDelete = false
     }
 
     init(userDefaults: NSUbiquitousKeyValueStore) {
@@ -162,6 +163,9 @@ final class SettingsManager {
     
     @UserDefault("showZenMode")
     var showZenMode: Bool = false
+    
+    @UserDefault("promptDelete")
+    var promptDelete: Bool = false
 }
 
 @propertyWrapper

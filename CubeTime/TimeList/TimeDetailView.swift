@@ -35,10 +35,13 @@ struct TimeDetailView: View {
     private let phases: Array<Double>?
     
     @State private var userComment: String
+    @State private var showAlert = false
     
     @Binding var currentSolve: Solve?
     
     @FocusState private var commentFocus: Bool
+    
+    @Preference(\.promptDelete) private var promptDelete
     
     
     init(for solve: Solve, currentSolve: Binding<Solve?>?, sessionsCanMoveTo: Binding<[Session]?>? = nil, sessionsCanMoveTo_playground: Binding<[Session]?>? = nil) {
@@ -203,18 +206,15 @@ struct TimeDetailView: View {
                                 CTCopyButton(toCopy: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: "Copy Solve")
                                 
                                 
-                                CTShareButton(toShare: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: "Share Solve")
+                                CTShareButton(toShare: getShareStr(solve: solve, phases: (solve as? MultiphaseSolve)?.phases), buttonText: String(localized: "Share Solve"))
                                 
                                 
                                 CTButton(type: .coloured(Color("red")), size: .large, square: true, onTapRun: {
-                                    if currentSolve == nil {
-                                        dismiss()
+                                    if(promptDelete){
+                                        showAlert = true
                                     }
-
-                                    currentSolve = nil
-
-                                    withAnimation {
-                                        stopwatchManager.delete(solve: solve)
+                                    else{
+                                        deleteSolve()
                                     }
                                 }) {
                                     Image(systemName: "trash")
@@ -222,6 +222,21 @@ struct TimeDetailView: View {
                             }
                             .padding(.top, 16)
                             .padding(.bottom, 4)
+                            .alert(isPresented: $showAlert){
+                                Alert(
+                                       title: Text("Are you sure you want to delete this solve?"),
+                                       primaryButton: .cancel(
+                                           Text("Cancel"),
+                                           action: { }
+                                       ),
+                                       secondaryButton: .destructive(
+                                           Text("Delete Solve"),
+                                           action: {
+                                               deleteSolve()
+                                           }
+                                       )
+                                   )
+                            }
                             
                             // END BUTTONS
                             
@@ -354,6 +369,17 @@ struct TimeDetailView: View {
                     .navigationTitle("Time Detail")
                 }
             }
+        }
+    }
+    
+    func deleteSolve() -> Void{
+        if currentSolve == nil {
+            dismiss()
+        }
+        currentSolve = nil
+        
+        withAnimation {
+            stopwatchManager.delete(solve: solve)
         }
     }
 }

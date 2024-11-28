@@ -60,7 +60,7 @@ struct CTShareButton: UIViewControllerRepresentable {
 // MARK: - Copy Button
 struct CTCopyButton: View {
     let toCopy: String
-    let buttonText: String
+    let buttonText: LocalizedStringKey
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     
     @State private var offsetValue: CGFloat = -25

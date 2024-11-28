@@ -49,15 +49,16 @@ struct GeneralSettingsView: View {
     @Preference(\.gestureDistance) private var gestureActivationDistance
     @Preference(\.gestureDistanceTrackpad) private var gestureDistanceTrackpad
     
-    // show previous time after delete
+    // timer interface & solves
     @Preference(\.showPrevTime) private var showPrevTime
-    
+    @Preference(\.promptDelete) private var promptDelete
+
     // statistics
     @Preference(\.displayDP) private var displayDP
     @Preference(\.timeTrendSolves) private var timeTrendSolves
     
     @State private var showResetDialog = false
-        
+
     @EnvironmentObject var stopwatchManager: StopwatchManager
     
     var body: some View {
@@ -140,10 +141,14 @@ struct GeneralSettingsView: View {
                 }
             }
             
-            SettingsGroup(Label("Timer Interface", systemImage: "rectangle.and.pencil.and.ellipsis")) {
+            SettingsGroup(Label("Timer Interface & Solves", systemImage: "rectangle.and.pencil.and.ellipsis")) {
                 DescribedSetting(description: "Show the previous time after a solve is deleted by swipe gesture. With this option off, the default time of 0.00 or 0.000 will be shown instead.") {
                     SettingsToggle(String(localized: "Show Previous Time"), $showPrevTime)
                 }
+                
+                DescribedSetting(description: "Display a prompt before deleting solves.", {
+                    SettingsToggle(String(localized: "Show Solve Deletion Prompt"), $promptDelete)
+                })
             }
             
             SettingsGroup(Label("Accessibility", systemImage: "eye")) {
