@@ -1,0 +1,6 @@
+clean_build: true
+project: CubeTime.xcodeproj
+schemes:
+- CubeTime
+targets:
+- CubeTime
