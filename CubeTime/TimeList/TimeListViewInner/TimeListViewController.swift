@@ -3,64 +3,6 @@ import UIKit
 import SwiftUI
 import Combine
 
-let checkboxUIImage = UIImage(systemName: "checkmark.circle.fill")!
-
-class TimeCardView: UIStackView {
-    let checkbox = UIImageView(image: checkboxUIImage)
-    
-    required init(coder: NSCoder) {
-        fatalError("error")
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        checkbox.contentMode = .scaleAspectFit
-        checkbox.isHidden = true
-        
-        var config = UIImage.SymbolConfiguration(paletteColors: [UIColor(named: "accent")!, UIColor(named: "overlay0")!])
-        config = config.applying(UIImage.SymbolConfiguration(weight: .semibold))
-        checkbox.preferredSymbolConfiguration = config
-        checkbox.layer.shadowColor = UIColor.black.cgColor
-        checkbox.layer.shadowOffset = .init(width: 0, height: 2)
-        checkbox.layer.shadowRadius = 8
-        checkbox.layer.shadowOpacity = 0.12
-
-        self.axis = .vertical
-        self.alignment = .center
-        self.distribution = .equalCentering
-        self.spacing = 0
-        
-        self.addArrangedSubview(UIView())
-        self.addArrangedSubview(checkbox)
-        self.addArrangedSubview(UIView())
-    }
-}
-
-
-class TimeCardTextLabel: UILabel {
-    required init() {
-        super.init(frame: CGRect.zero)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("error")
-    }
-    
-    override func drawText(in rect: CGRect) {
-        let insets = UIEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
-        super.drawText(in: rect.inset(by: insets))
-    }
-    
-    override var intrinsicContentSize: CGSize {
-        get {
-            var contentSize = super.intrinsicContentSize
-            contentSize.width += 8
-            return contentSize
-        }
-    }
-}
-
 
 class TimeCardCell: UICollectionViewCell {
     lazy var timeCardView: TimeCardView = {
@@ -68,7 +10,7 @@ class TimeCardCell: UICollectionViewCell {
     }()
     
     var item: Solve!
-    let label = TimeCardTextLabel()
+    let label = TimeCardLabel()
     weak var viewController: TimeListViewController?
     var gesture: UITapGestureRecognizer!
     var switchedToStackView = false
@@ -96,7 +38,6 @@ class TimeCardCell: UICollectionViewCell {
         self.label.adjustsFontSizeToFitWidth = true
         
         self.contentView.addSubview(label)
-        
     }
     
     override func updateConfiguration(using state: UICellConfigurationState) {
@@ -104,15 +45,18 @@ class TimeCardCell: UICollectionViewCell {
             switchedToStackView = true
             label.removeFromSuperview()
             self.contentView.addSubview(timeCardView)
+            
+            timeCardView.frame = contentView.bounds
             timeCardView.insertArrangedSubview(label, at: 1)
         }
         
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.82, initialSpringVelocity: 1) { [ weak self] in
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.82, initialSpringVelocity: 1) { [weak self] in
             guard let self else { return }
             self.layer.backgroundColor = UIColor(named: self.isSelected ? "indent0" : "overlay0")!.cgColor
         }
+        
         if switchedToStackView && (self.timeCardView.checkbox.isHidden != !self.isSelected) {
-            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.82, initialSpringVelocity: 1) { [ weak self] in
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.82, initialSpringVelocity: 1) { [weak self] in
                 guard let self else {return}
                 self.timeCardView.checkbox.isHidden = !self.isSelected
             }
@@ -149,9 +93,9 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     }()
 
     
-    var mySelecting = false {
+    var isSelecting = false {
         didSet {
-            if mySelecting == false {
+            if isSelecting == false {
                 collectionView.indexPathsForSelectedItems?.forEach { indexPath in
                     collectionView.deselectItem(at: indexPath, animated: true)
                     if let solve = dataSource.itemIdentifier(for: indexPath) { // For some reason .removeAll causes hang..
@@ -160,8 +104,8 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
                 }
             }
             
-            collectionView.allowsSelection = mySelecting
-            collectionView.allowsMultipleSelection = mySelecting
+            collectionView.allowsSelection = isSelecting
+            collectionView.allowsMultipleSelection = isSelecting
         }
     }
     
@@ -214,7 +158,6 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
                let phase = shownPhase,
                let phases = multiphaseSolve.phases,
                let time = ([0] + phases).chunked().map({ $0[1] - $0[0] })[safe: Int(phase)] {
-//               let time = phases[safe: Int(phase)] {
                 cell.label.text = formatSolveTime(secs: time)
             } else {
                 cell.label.text = item.timeText
@@ -390,7 +333,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     }
         
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if mySelecting {
+        if isSelecting {
             self.stopwatchManager.timeListSolvesSelected.insert(self.stopwatchManager.timeListSolvesFiltered[indexPath.item])
         } else {
             onClickSolve(stopwatchManager.timeListSolvesFiltered[indexPath.item])
@@ -398,7 +341,7 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
     }
     
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        if mySelecting {
+        if isSelecting {
             self.stopwatchManager.timeListSolvesSelected.remove(self.stopwatchManager.timeListSolvesFiltered[indexPath.item])
         }
     }
@@ -429,6 +372,8 @@ struct TimeListInner: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-        uiViewController.mySelecting = isSelectMode
+        DispatchQueue.main.async {
+            uiViewController.isSelecting = isSelectMode
+        }
     }
 }

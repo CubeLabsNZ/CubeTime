@@ -7,7 +7,7 @@ struct TimeCard: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     
     @EnvironmentObject var stopwatchManager: StopwatchManager
-    
+
     var solve: Solve
     
     let formattedTime: String

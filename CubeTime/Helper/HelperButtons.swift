@@ -141,7 +141,9 @@ struct CTButton<Base: View>: View {
          @ViewBuilder _ content: @escaping () -> Base) {
         
         self.button = Button {
-            onTapRun()
+            DispatchQueue.main.async {
+                onTapRun()
+            }
         } label: {
             CTBubble(type: type,
                      size: size,
