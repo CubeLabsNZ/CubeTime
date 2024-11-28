@@ -59,55 +59,35 @@ extension Solve {
 extension Session {
     var typeName: String {
         get {
-            switch (SessionType(rawValue: sessionType)!) {
-            case .standard:
+            if SessionType(rawValue: sessionType) == .standard {
                 return PUZZLE_TYPES[Int(scrambleType)].name
-            case .algtrainer:
-                return String(localized: "Algorithm Trainer")
-            case .multiphase:
-                return String(localized: "Multiphase")
-            case .playground:
-                return String(localized: "Playground")
-            case .compsim:
-                return String(localized: "Compsim")
+            } else {
+                return SessionType(rawValue: sessionType)!.name()
             }
         }
     }
     
-    @ViewBuilder func icon(size: CGFloat=24) -> some View {
-        let scaledSize = size * 0.88
-        
-        switch (SessionType(rawValue: sessionType)!) {
-        case .standard:
+    @ViewBuilder func icon(size: CGFloat = 24) -> some View {
+        if SessionType(rawValue: sessionType)! == .standard {
             Image(PUZZLE_TYPES[Int(scrambleType)].imageName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: size, height: size)
-        case .algtrainer:
-            Image(systemName: "command.square").font(.system(size: scaledSize))
-        case .multiphase:
-            Image(systemName: "square.stack").font(.system(size: scaledSize))
-        case .playground:
-            Image(systemName: "square.on.square").font(.system(size: scaledSize))
-        case .compsim:
-            Image(systemName: "globe.asia.australia").font(.system(size: scaledSize))
+        } else {
+            SessionType(rawValue: sessionType)!.icon(size: size)
         }
     }
     
     var shortcutName: String {
         get {
-            let scrname = PUZZLE_TYPES[Int(scrambleType)].name
+            let scrambleName = PUZZLE_TYPES[Int(scrambleType)].name
             switch (SessionType(rawValue: sessionType)!) {
             case .standard:
-                return scrname
-            case .algtrainer:
-                return self.typeName + " - " + scrname
-            case .multiphase:
-                return self.typeName + " - " + scrname
-            case .playground:
+                return scrambleName
+            case .multiphase, .algtrainer, .compsim:
+                return self.typeName + "[\(scrambleName)]"
+            case .playground, .timerOnly:
                 return self.typeName
-            case .compsim:
-                return self.typeName + " - " + scrname
             }
         }
     }
@@ -167,12 +147,69 @@ enum Penalty: Int16, Hashable {
     }
 }
 
+#warning("NEVER CHANGE ORDER OR WILL BRICK")
 enum SessionType: Int16 {
     case standard
     case algtrainer
     case multiphase
     case playground
     case compsim
+    case timerOnly
+    
+    func name() -> String {
+        switch self {
+        case .standard:
+            "Standard"
+        case .algtrainer:
+            "Algorithm Trainer"
+        case .multiphase:
+            "Multiphase"
+        case .playground:
+            "Playground"
+        case .compsim:
+            "Compsim"
+        case .timerOnly:
+            "Timer Only"
+        }
+    }
+    
+    func description() -> String {
+        switch self {
+        case .standard:
+            return String(localized: "Standard session has one scramble type that cannot be changed later on.")
+        case .algtrainer:
+            return String(localized: "Algorithm trainer, to train a specific subset of algorithms.")
+        case .multiphase:
+            return String(localized: "A multiphase session gives you the ability to breakdown your solves into sections, such as memo/exec stages in blindfolded solving or stages in 3x3 solves.\n\nTap anywhere on the timer during a solve to record a phase lap. You can access your breakdown statistics in each time card and view overall statistics in the Stats view.")
+        case .playground:
+            return String(localized: "A playground session allows you to quickly change the scramble type within a session without having to specify a scramble type for the whole session.")
+        case .compsim:
+            return String(localized: "A compsim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach.")
+        case .timerOnly:
+            return String(localized: "Timer only sessions do not have a scramble or a session type. Solves will be recorded and stats calculated, but no scrambles are associated with solves.")
+        }
+    }
+    
+    func iconName() -> String {
+        switch self {
+        case .standard:
+            "timer.square"
+        case .algtrainer:
+            "command.square"
+        case .multiphase:
+            "square.stack"
+        case .playground:
+            "square.on.square"
+        case .compsim:
+            "globe.asia.australia"
+        case .timerOnly:
+            "timer"
+        }
+    }
+    
+    @ViewBuilder func icon(size: CGFloat = 24) -> some View {
+        Image(systemName: self.iconName()).font(.system(size: size * 0.88))
+    }
 }
 
 
@@ -231,5 +268,4 @@ struct SessionTypeIcon {
     var size: CGFloat = 26
     var iconName: String = ""
     var padding: (leading: CGFloat, trailing: CGFloat) = (8, 4)
-    var weight: Font.Weight = .regular
 }

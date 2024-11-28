@@ -364,6 +364,7 @@
       }
     },
     "Algorithm Trainer" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -372,6 +373,9 @@
           }
         }
       }
+    },
+    "Algorithm trainer, to train a specific subset of algorithms." : {
+
     },
     "All phases" : {
       "localizations" : {
@@ -960,6 +964,7 @@
       }
     },
     "DEBUG BUILD" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1221,6 +1226,7 @@
       }
     },
     "generate" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2384,6 +2390,9 @@
         }
       }
     },
+    "Standard session has one scramble type that cannot be changed later on." : {
+
+    },
     "Start Over" : {
       "localizations" : {
         "zh-Hans" : {
@@ -2646,6 +2655,9 @@
           }
         }
       }
+    },
+    "Timer only sessions do not have a scramble or a session type. Solves will be recorded and stats calculated, but no scrambles are associated with solves." : {
+
     },
     "Timer Settings" : {
       "localizations" : {

@@ -166,6 +166,8 @@ struct CTButton<Base: View>: View {
 struct CTBubble<V: View>: View {
     let content: V
     
+    let size: CTButtonSize
+    
     let colourBg: Color
     let colourFg: Color
     let colourShadow: Color
@@ -233,6 +235,8 @@ struct CTBubble<V: View>: View {
 
         
         self.supportsDynamicResizing = supportsDynamicResizing
+        
+        self.size = size
         
         switch (size) {
         case .bubble:
@@ -337,6 +341,9 @@ struct CTBubble<V: View>: View {
             .foregroundColor(self.colourFg)
             .font(self.fontType)
             .padding(.horizontal, square ? 0 : self.horizontalPadding)
+            .if(self.size == .bubble) { view in
+                view.padding(.trailing, 1)
+            }
         }
         .contentShape(RoundedRectangle(cornerRadius: self.cornerRadius, style: .continuous))
         .fixedSize(horizontal: !expandWidth, vertical: true)
@@ -458,22 +465,25 @@ struct SessionPickerMenu<Content: View>: View {
                 let unpinnedidx = sessions.firstIndex(where: {!$0.pinned}) ?? sessions.count
                 let pinned = sessions[0..<unpinnedidx]
                 let unpinned = sessions[unpinnedidx..<sessions.count]
+                
                 Divider()
+                
                 Section("Pinned Sessions") {
                     ForEach(pinned) { session in
                         Button {
                             clickSession(session)
                         } label: {
-                            Label(session.name!, systemImage: iconNamesForType[SessionType(rawValue:session.sessionType)!]!)
+                            Label(session.name!, systemImage: SessionType(rawValue:session.sessionType)!.iconName())
                         }
                     }
                 }
+                
                 Section("Other Sessions") {
                     ForEach(unpinned) { session in
                         Button {
                             clickSession(session)
                         } label: {
-                            Label(session.name!, systemImage: iconNamesForType[SessionType(rawValue:session.sessionType)!]!)
+                            Label(session.name!, systemImage: SessionType(rawValue:session.sessionType)!.iconName())
                         }
                     }
                 }

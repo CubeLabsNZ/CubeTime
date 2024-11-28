@@ -35,22 +35,21 @@ struct NewSessionView: View {
             ScrollView {
                 VStack (spacing: 16) {
                     VStack (alignment: .center, spacing: 0) {
-                        if sessionType != SessionType.playground {
+                        if sessionType != SessionType.playground && sessionType != SessionType.timerOnly {
                             PuzzleHeaderImage(imageName: PUZZLE_TYPES[Int(sessionEventType)].imageName)
                         }
                         
                         SessionNameField(name: $name)
-                            .if(sessionType == SessionType.playground) { view in
+                            .if(sessionType == SessionType.playground || sessionType == SessionType.timerOnly) { view in
                                 view.padding(.top)
                             }
                         
-                        if let sessionDescription = sessionDescriptions[sessionType] {
-                            Text(sessionDescription)
-                                .font(.callout)
-                                .multilineTextAlignment(.leading)
-                                .foregroundColor(Color("grey"))
-                                .padding([.horizontal, .bottom])
-                        }
+                        
+                        Text(sessionType.description())
+                            .font(.callout)
+                            .multilineTextAlignment(.leading)
+                            .foregroundColor(Color("grey"))
+                            .padding([.horizontal, .bottom])
                     }
                     .modifier(CardBlockBackground())
                     .frame(minHeight: otherBigFrameHeight)
@@ -75,7 +74,7 @@ struct NewSessionView: View {
                         CompSimTargetEntry(targetStr: $targetStr)
                     }
                     
-                    if sessionType != .playground {
+                    if sessionType != .playground && sessionType != .timerOnly {
                         EventPicker(sessionEventType: $sessionEventType)
                     }
                     

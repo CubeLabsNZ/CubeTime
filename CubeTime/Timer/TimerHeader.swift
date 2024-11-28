@@ -130,7 +130,7 @@ struct TimerHeader: View {
                     }
                     .padding(.trailing)
                 case .compsim:
-                    let solveth: Int = stopwatchManager.currentSolveth!+1
+                    let solveth: Int = 1 + (stopwatchManager.currentSolveth ?? 0)
                     
                     Text("SOLVE \(solveth == 6 ? 1 : solveth)")
                         .font(.system(size: 15, weight: .regular))

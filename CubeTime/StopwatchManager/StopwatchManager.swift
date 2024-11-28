@@ -288,7 +288,7 @@ class StopwatchManager: ObservableObject {
                 localizedTitle: session.name ?? "Unknown Session",
                 localizedSubtitle: session.shortcutName,
                 icon: UIApplicationShortcutIcon(
-                    systemImageName: iconNamesForType[SessionType(rawValue: session.sessionType)!]!
+                    systemImageName: SessionType(rawValue: session.sessionType)!.iconName()
                 ),
                 userInfo: ["id": session.objectID.uriRepresentation().absoluteString as NSString]
             )
@@ -398,7 +398,7 @@ class StopwatchManager: ObservableObject {
                 
                 self.updateStats()
                 
-                DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.1) {
+                DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.05) {
                     DispatchQueue.main.async {
                         if let best = self.bestSingle {
                             if secondsElapsed == best.timeIncPen {

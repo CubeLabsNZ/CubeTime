@@ -12,22 +12,6 @@ let sessionTypeForID: [SessionType: Session.Type] = [
     .compsim: CompSimSession.self
 ]
 
-let sessionDescriptions: [SessionType: String] = [
-    .multiphase: String(localized: "A multiphase session gives you the ability to breakdown your solves into sections, such as memo/exec stages in blindfolded solving or stages in 3x3 solves.\n\nTap anywhere on the timer during a solve to record a phase lap. You can access your breakdown statistics in each time card and view overall statistics in the Stats view."),
-    .playground: String(localized: "A playground session allows you to quickly change the scramble type within a session without having to specify a scramble type for the whole session."),
-    .compsim: String(localized: "A compsim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach.")
-]
-
-
-let iconNamesForType: [SessionType: String] = [
-    .standard: "timer.square",
-    .algtrainer: "command.square",
-    .multiphase: "square.stack",
-    .playground: "square.on.square",
-    .compsim: "globe.asia.australia"
-]
-
-
 let PUZZLE_TYPES: [PuzzleType] = [
     PuzzleType(name: String(localized: "2x2"), cstimerName: "222so", imageName: "puzzle-2x2"),
     PuzzleType(name: String(localized: "3x3"), cstimerName: "333", imageName: "puzzle-3x3"),

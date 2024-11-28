@@ -9,7 +9,7 @@ struct NewSessionTypeCard: View {
         HStack {
             Group {
                 Image(systemName: icon.iconName)
-                    .font(.system(size: icon.size, weight: icon.weight))
+                    .font(.system(size: icon.size))
                     .padding(.leading, icon.padding.leading)
                     .padding(.trailing, icon.padding.trailing)
                     .padding(.vertical, 8)
@@ -106,7 +106,14 @@ struct NewSessionRootView: View {
                         
                         NewSessionTypeCardGroup(title: String(localized: "Other Sessions")) {
                             NavigationLink(destination: NewSessionView(sessionType: SessionType.compsim, typeName: "Compsim", showNewSessionPopUp: $showNewSessionPopUp)) {
-                                NewSessionTypeCard(name: String(localized: "Compsim"), icon: SessionTypeIcon(iconName: "globe.asia.australia", weight: .medium))
+                                NewSessionTypeCard(name: String(localized: "Compsim"), icon: SessionTypeIcon(size: 24, iconName: "globe.asia.australia"))
+                            }
+                            
+                            CTDivider()
+                                .padding(.leading, 48)
+                            
+                            NavigationLink(destination: NewSessionView(sessionType: SessionType.timerOnly, typeName: "Timer Only", showNewSessionPopUp: $showNewSessionPopUp)) {
+                                NewSessionTypeCard(name: String(localized: "Timer Only"), icon: SessionTypeIcon(size: 24, iconName: "timer"))
                             }
                         }
                     }

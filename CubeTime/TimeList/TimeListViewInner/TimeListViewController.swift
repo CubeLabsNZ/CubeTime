@@ -277,13 +277,13 @@ final class TimeListViewController: UICollectionViewController, UICollectionView
         let unpinned = sessions[unpinnedidx..<sessions.count]
         
         let pinnedMenuItems = pinned.map { session in
-            UIAction(title: session.name!, image: UIImage(systemName: iconNamesForType[SessionType(rawValue:session.sessionType)!]!)) {_ in
+            UIAction(title: session.name!, image: UIImage(systemName: SessionType(rawValue: session.sessionType)!.iconName())) {_ in
                 self.stopwatchManager.moveSolve(solve: solve, to: session)
             }
         }
         
         let unpinnedMenuItems = unpinned.map { session in
-            UIAction(title: session.name!, image: UIImage(systemName: iconNamesForType[SessionType(rawValue:session.sessionType)!]!)) {_ in
+            UIAction(title: session.name!, image: UIImage(systemName: SessionType(rawValue: session.sessionType)!.iconName())) {_ in
                 self.stopwatchManager.moveSolve(solve: solve, to: session)
             }
         }

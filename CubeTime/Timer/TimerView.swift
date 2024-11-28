@@ -37,9 +37,6 @@ struct TimerTime: View {
     @EnvironmentObject var timerController: TimerController
     @Environment(\.horizontalSizeClass) private var hSizeClass
     
-    @Preference(\.isStaticGradient) private var isStaticGradient
-    @EnvironmentObject var gradientManager: GradientManager
-
     var body: some View {
         let fontSize: CGFloat = (UIDevice.deviceIsPad && hSizeClass == .regular)
             ? timerController.mode == .running ? 88 : 66
@@ -57,18 +54,6 @@ struct TimerTime: View {
                     return view
                         .modifier(AnimatingFontSize(font: fontManager.ctFontDescBold, fontSize: fontSize))
                 }
-                .confettiCannon(
-                    counter: $stopwatchManager.confetti,
-                    num: 100,
-                    confettis: PUZZLE_TYPES.map { .image($0.imageName) },
-                    colors: GradientManager.getGradientColours(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient),
-                    confettiSize: 15,
-                    fadesOut: true,
-                    openingAngle: Angle(degrees: 0),
-                    closingAngle: Angle(degrees: 360),
-                    radius: 200,
-                    position: stopwatchManager.confettiLocation ?? .zero
-                )
 
             Group {
                 if (timerController.mode == .inspecting) {
@@ -157,7 +142,7 @@ struct TimerView: View {
     @EnvironmentObject var scrambleController: ScrambleController
     @EnvironmentObject var tabRouter: TabRouter
     
-    @StateObject var gm = GradientManager()
+    @StateObject var gradientManager = GradientManager()
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.globalGeometrySize) var globalGeometrySize
@@ -173,7 +158,9 @@ struct TimerView: View {
     @Preference(\.showPrevTime) private var showPrevTime
     @Preference(\.inputMode) private var inputMode
     @Preference(\.showZenMode) private var showZenMode
-    
+    @Preference(\.isStaticGradient) private var isStaticGradient
+
+
     
     // FOCUS STATES
     @FocusState private var targetFocused: Bool
@@ -548,6 +535,18 @@ struct TimerView: View {
         
         .statusBar(hidden: stopwatchManager.hideUI)
         .ignoresSafeArea(.keyboard)
+        .confettiCannon(
+            counter: $stopwatchManager.confetti,
+            num: 80,
+            confettis: PUZZLE_TYPES.map { .image($0.imageName) },
+            colors: GradientManager.getGradientColours(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient),
+            confettiSize: 16,
+            fadesOut: true,
+            openingAngle: Angle(degrees: 0),
+            closingAngle: Angle(degrees: 360),
+            radius: 200,
+            position: stopwatchManager.confettiLocation ?? .zero
+        )
     }
 }
 
