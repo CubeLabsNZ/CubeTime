@@ -186,7 +186,7 @@ enum SessionType: Int16 {
         case .compsim:
             return String(localized: "A compsim (Competition Simulation) session mimics a competition scenario better by recording a non-rolling session. Your solves will be split up into averages of 5 that can be accessed in your times and statistics view.\n\nStart by choosing a target to reach.")
         case .timerOnly:
-            return String(localized: "Timer only sessions do not have a scramble or a session type. Solves will be recorded and stats calculated, but no scrambles are associated with solves.")
+            return String(localized: "Timer only sessions do not have a scramble type, but no scrambles are associated with solves.")
         }
     }
     

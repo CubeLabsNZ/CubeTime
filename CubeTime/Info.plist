@@ -15,6 +15,7 @@
 	</array>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Rubik.ttf</string>
 		<string>RecMonoVariable.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>

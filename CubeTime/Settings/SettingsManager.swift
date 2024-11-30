@@ -149,6 +149,9 @@ final class SettingsManager {
     @UserDefault("graphAnimation")
     var graphAnimation: Bool = true
     
+    @UserDefault("showConfetti")
+    var showConfetti: Bool = true
+    
     @UserDefault("scrambleSize")
     var scrambleSize: Int = UIDevice.deviceIsPad ? 26 : 18
     

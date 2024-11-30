@@ -9,7 +9,8 @@ struct AppearanceSettingsView: View {
     @Preference(\.isStaticGradient) private var isStaticGradient
     @Preference(\.graphGlow) private var graphGlow
     @Preference(\.graphAnimation) private var graphAnimation
-    
+    @Preference(\.showConfetti) private var showConfetti
+
     // system settings (appearance)
     @Preference(\.overrideDM) private var overrideSystemAppearance
     @Preference(\.dmBool) private var darkMode
@@ -29,7 +30,7 @@ struct AppearanceSettingsView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            SettingsGroup(Label("Colours", systemImage: "paintbrush.pointed.fill")) {
+            SettingsGroup(Label("General Appearance", systemImage: "paintbrush.pointed.fill")) {
                 DescribedSetting(description: "Customise the gradients used in stats. By default, the gradient is set to \"Static\". You can choose to set it to \"Dynamic\", where the gradient will change throughout the day.") {
                     HStack() {
                         Text("Gradient")
@@ -117,6 +118,10 @@ struct AppearanceSettingsView: View {
                 
                 DescribedSetting(description: "Turn on/off the line animation for the time trend graph.", {
                     SettingsToggle(String(localized: "Graph Animation"), $graphAnimation)
+                })
+                
+                DescribedSetting(description: "Show a confetti animation when a new best time is recorded.", {
+                    SettingsToggle(String(localized: "Show Confetti"), $showConfetti)
                 })
             }
             .clipped()

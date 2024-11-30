@@ -89,6 +89,7 @@ struct CubeTime: App {
                         }
                 }
                 .environment(\.managedObjectContext, moc)
+                // .environment(\.font, Font(FontManager.fontFor(size: 17, weight: 400, font: .recursive)))
                 .environmentObject(stopwatchManager)
                 .environmentObject(fontManager)
                 .environmentObject(tabRouter)

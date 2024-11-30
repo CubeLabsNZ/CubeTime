@@ -156,6 +156,7 @@ struct TimerView: View {
     @Preference(\.showCancelInspection) private var showCancelInspection
     @Preference(\.scrambleSize) private var scrambleSize
     @Preference(\.showPrevTime) private var showPrevTime
+    @Preference(\.showConfetti) private var showConfetti
     @Preference(\.inputMode) private var inputMode
     @Preference(\.showZenMode) private var showZenMode
     @Preference(\.isStaticGradient) private var isStaticGradient
@@ -535,18 +536,21 @@ struct TimerView: View {
         
         .statusBar(hidden: stopwatchManager.hideUI)
         .ignoresSafeArea(.keyboard)
-        .confettiCannon(
-            counter: $stopwatchManager.confetti,
-            num: 80,
-            confettis: PUZZLE_TYPES.map { .image($0.imageName) },
-            colors: GradientManager.getGradientColours(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient),
-            confettiSize: 16,
-            fadesOut: true,
-            openingAngle: Angle(degrees: 0),
-            closingAngle: Angle(degrees: 360),
-            radius: 200,
-            position: stopwatchManager.confettiLocation ?? .zero
-        )
+        .if (showConfetti) { view in
+            view
+                .confettiCannon(
+                    counter: $stopwatchManager.confetti,
+                    num: 80,
+                    confettis: PUZZLE_TYPES.map { .image($0.imageName) },
+                    colors: GradientManager.getGradientColours(gradientSelected: gradientManager.appGradient, isStaticGradient: isStaticGradient),
+                    confettiSize: 16,
+                    fadesOut: true,
+                    openingAngle: Angle(degrees: 0),
+                    closingAngle: Angle(degrees: 360),
+                    radius: 200,
+                    position: stopwatchManager.confettiLocation ?? .zero
+                )
+        }
     }
 }
 

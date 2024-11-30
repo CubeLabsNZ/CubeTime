@@ -312,10 +312,10 @@
       }
     },
     "A derivative of \"simibac's\" [ConfettiSwiftUI](https://github.com/simibac/ConfettiSwiftUI) library is used in CubeTime." : {
-
+      "shouldTranslate" : false
     },
     "A derivative of [ChartView](https://github.com/AppPear/ChartView) is used in the stats view of CubeTime." : {
-
+      "shouldTranslate" : false
     },
     "A multiphase session gives you the ability to breakdown your solves into sections, such as memo/exec stages in blindfolded solving or stages in 3x3 solves.\n\nTap anywhere on the timer during a solve to record a phase lap. You can access your breakdown statistics in each time card and view overall statistics in the Stats view." : {
       "localizations" : {
@@ -563,17 +563,6 @@
         }
       }
     },
-    "Boring stuff" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无聊的东西"
-          }
-        }
-      }
-    },
     "Bug Fixes: " : {
       "localizations" : {
         "zh-Hans" : {
@@ -636,6 +625,7 @@
       }
     },
     "Colours" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1223,6 +1213,9 @@
           }
         }
       }
+    },
+    "General Appearance" : {
+
     },
     "generate" : {
       "localizations" : {
@@ -2200,6 +2193,9 @@
         }
       }
     },
+    "Show a confetti animation when a new best time is recorded." : {
+
+    },
     "Show Cancel Inspection" : {
       "localizations" : {
         "en" : {
@@ -2215,6 +2211,9 @@
           }
         }
       }
+    },
+    "Show Confetti" : {
+
     },
     "Show draw scramble on timer" : {
       "localizations" : {
@@ -2252,7 +2251,7 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "显示还原删除提示"
           }
         }
@@ -2389,7 +2388,14 @@
       }
     },
     "Standard session has one scramble type that cannot be changed later on." : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "普通模式有一种固定的魔方打乱。"
+          }
+        }
+      }
     },
     "Start Over" : {
       "localizations" : {
@@ -2542,7 +2548,14 @@
       }
     },
     "the boring stuff" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无聊的东西"
+          }
+        }
+      }
     },
     "time" : {
       "localizations" : {
@@ -2654,8 +2667,15 @@
         }
       }
     },
-    "Timer only sessions do not have a scramble or a session type. Solves will be recorded and stats calculated, but no scrambles are associated with solves." : {
-
+    "Timer only sessions do not have a scramble type, but no scrambles are associated with solves." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "计时器模式没有打乱步骤，但还原会被记录并有统计数据。"
+          }
+        }
+      }
     },
     "Timer Settings" : {
       "localizations" : {

@@ -350,15 +350,15 @@ func setupNavbarAppearance() -> Void {
 func setupNavTitleAppearance() -> Void {
     let navBarAppearance = UINavigationBar.appearance()
     
-    let variations = [2003265652: 650.0, 1128354636: 0.0, 1129468758: 0]
+    let variations = [2003265652: 550.0]
     
     let uiFontDesc = UIFontDescriptor(fontAttributes: [
-        .name: "RecursiveSansLinearLightCasual-Regular",
+        .name: "Rubik",
         kCTFontVariationAttribute as UIFontDescriptor.AttributeName: variations
     ])
     
     let metrics = UIFontMetrics(forTextStyle: .largeTitle)
-    let font = metrics.scaledFont(for: UIFont(descriptor: uiFontDesc, size: 34))
+    let font = metrics.scaledFont(for: UIFont(descriptor: uiFontDesc, size: 32))
     
     navBarAppearance.largeTitleTextAttributes = [NSAttributedString.Key.font: font]
 }

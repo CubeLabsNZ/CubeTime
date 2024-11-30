@@ -17,13 +17,24 @@ class FontManager: ObservableObject {
     @Published var ctFontDescBold: CTFontDescriptor!
     @Published var ctFontDesc: CTFontDescriptor!
     
-    static func fontFor(size: CGFloat, weight: Int) -> CTFont {
-        let desc = CTFontDescriptorCreateWithAttributes([
-            kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
-            kCTFontVariationAttribute: [2003265652: weight,
-                                        1128354636: 0,
-                                        1129468758: 0]
-        ] as! CFDictionary)
+    static func fontFor(size: CGFloat, weight: Int, font: CTCustomFontType = .recursive) -> CTFont {
+        var desc: CTFontDescriptor!
+        
+        switch font {
+        case .recursive:
+            desc = CTFontDescriptorCreateWithAttributes([
+                kCTFontNameAttribute: "RecursiveSansLinearLightMonospace-Regular",
+                kCTFontVariationAttribute: [2003265652: weight,
+                                            1128354636: 0,
+                                            1129468758: 0]
+            ] as! CFDictionary)
+            
+        case .rubik:
+            desc = CTFontDescriptorCreateWithAttributes([
+                kCTFontNameAttribute: "Rubik",
+                kCTFontVariationAttribute: [2003265652: weight]
+            ] as! CFDictionary)
+        }
         
         return CTFontCreateWithFontDescriptor(desc, size, nil)
     }
@@ -65,7 +76,7 @@ class FontManager: ObservableObject {
 
 enum CTCustomFontType {
     case recursive
-    case inter
+    case rubik
 }
 
 struct CTCustomFont: ViewModifier {
@@ -82,7 +93,7 @@ struct CTCustomFont: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .font(Font(FontManager.fontFor(size: size, weight: weight)))
+            .font(Font(FontManager.fontFor(size: size, weight: weight, font: self.font)))
     }
 
     static func weightToValue(weight: Font.Weight) -> Int {
@@ -152,3 +163,21 @@ extension View {
                               font: .recursive))
     }
 }
+
+
+//extension Font {
+//    static func system(size: CGFloat, weight: Font.Weight? = nil, design: Font.Design? = nil) -> Font {
+//        return Font(FontManager.fontFor(size: size, weight: CTCustomFont.weightToValue(weight: weight ?? Font.Weight.regular) + 100, font: .recursive))
+//    }
+//    
+//    static let caption = Font(FontManager.fontFor(size: 11, weight: CTCustomFont.weightToValue(weight: .regular), font: .recursive))
+//    static let caption2 = Font(FontManager.fontFor(size: 12, weight: CTCustomFont.weightToValue(weight: .regular), font: .recursive))
+//    static let footnote = Font(FontManager.fontFor(size: 13, weight: CTCustomFont.weightToValue(weight: .regular), font: .recursive))
+//    static let subheadline = Font(FontManager.fontFor(size: 15, weight: CTCustomFont.weightToValue(weight: .semibold), font: .recursive))
+//    static let callout = Font(FontManager.fontFor(size: 17, weight: CTCustomFont.weightToValue(weight: .regular), font: .recursive))
+//    static let body = Font(FontManager.fontFor(size: 17, weight: CTCustomFont.weightToValue(weight: .regular), font: .recursive))
+//    static let title3 = Font(FontManager.fontFor(size: 20, weight: CTCustomFont.weightToValue(weight: .regular), font: .recursive))
+//    static let title2 = Font(FontManager.fontFor(size: 22, weight: CTCustomFont.weightToValue(weight: .regular), font: .recursive))
+//    static let title = Font(FontManager.fontFor(size: 28, weight: CTCustomFont.weightToValue(weight: .regular), font: .recursive))
+//    static let largeTitle = Font(FontManager.fontFor(size: 34, weight: CTCustomFont.weightToValue(weight: .regular), font: .recursive))
+//}
